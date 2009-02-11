@@ -178,6 +178,26 @@ _set_ssif_ctx_errnum_by_errno(ipmi_ssif_ctx_t ctx, int __errno)
     ctx->errnum = IPMI_SSIF_ERR_SYSTEM_ERROR;
 }
 
+static void
+_set_ssif_errnum_by_fiid_object(ipmi_ssif_ctx_t ctx, fiid_obj_t obj)
+{
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    return;
+
+  if (!fiid_obj_valid(obj))
+    {
+      SSIF_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
+      return;
+    }
+
+  if (fiid_obj_errnum(obj) == FIID_ERR_SUCCESS)
+    ctx->errnum = IPMI_SSIF_ERR_SUCCESS;
+  else if (fiid_obj_errnum(obj) == FIID_ERR_OUT_OF_MEMORY)
+    ctx->errnum = IPMI_SSIF_ERR_OUT_OF_MEMORY;
+  else
+    ctx->errnum = IPMI_SSIF_ERR_INTERNAL_ERROR;
+}
+
 union ipmi_i2c_smbus_data
 {
   uint8_t  byte;
@@ -786,11 +806,23 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
   assert(fiid_obj_valid(obj_cmd_rq));
   assert(fiid_obj_packet_valid(obj_cmd_rq));
 
-  SSIF_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
+  if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0)
+    {
+      SSIF_ERRNO_TO_SSIF_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+
+  if ((cmd_len = fiid_obj_len_bytes(obj_cmd_rq)) < 0)
+    {
+      SSIF_FIID_OBJECT_ERROR_TO_SSIF_ERRNUM(ctx, obj_cmd_rq);
+      goto cleanup;
+    }
   
-  SSIF_FIID_OBJ_LEN_BYTES(cmd_len, obj_cmd_rq);
-  
-  SSIF_FIID_OBJ_CREATE(obj_hdr, tmpl_hdr_kcs);
+  if (!(obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
+    {
+      SSIF_ERRNO_TO_SSIF_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   pkt_len = hdr_len + cmd_len;
 
@@ -846,13 +878,29 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
   assert(ctx->magic == IPMI_SSIF_CTX_MAGIC);
   assert(fiid_obj_valid(obj_cmd_rs));
 
-  SSIF_FIID_TEMPLATE_LEN_BYTES(hdr_len, tmpl_hdr_kcs);
+  if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0)
+    {
+      SSIF_ERRNO_TO_SSIF_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-  SSIF_FIID_OBJ_TEMPLATE(tmpl, obj_cmd_rs);
+  if (!(tmpl = fiid_obj_template(obj_cmd_rs)))
+    {
+      SSIF_FIID_OBJECT_ERROR_TO_SSIF_ERRNUM(ctx, obj_cmd_rs);
+      goto cleanup;
+    }
 
-  SSIF_FIID_TEMPLATE_LEN_BYTES(cmd_len, tmpl);
+  if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
+    {
+      SSIF_ERRNO_TO_SSIF_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-  SSIF_FIID_OBJ_CREATE(obj_hdr, tmpl_hdr_kcs);
+  if (!(obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
+    {
+      SSIF_ERRNO_TO_SSIF_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   pkt_len = hdr_len + cmd_len;
   
@@ -886,7 +934,7 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  SSIF_FIID_TEMPLATE_FREE(tmpl);
+  FIID_TEMPLATE_FREE(tmpl);
   FIID_OBJ_DESTROY(obj_hdr);
   if (pkt)
     free(pkt);

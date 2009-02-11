@@ -43,16 +43,28 @@ extern "C" {
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
+#define KCS_SET_ERRNUM(__ctx, __errnum)                                 \
+  do {                                                                  \
+    (__ctx)->errnum = (__errnum);                                       \
+    __MSG_TRACE(ipmi_kcs_ctx_errormsg((__ctx)), (__errnum));            \
+  } while (0)
+
 #define KCS_ERRNO_TO_KCS_ERRNUM(__ctx, __errno)                         \
   do {                                                                  \
     _set_kcs_ctx_errnum_by_errno((__ctx), (__errno));                   \
     __ERRNO_TRACE(__errno);                                             \
   } while (0)   
 
-#define KCS_SET_ERRNUM(__ctx, __errnum)                                 \
+#define KCS_FIID_OBJECT_ERROR_TO_KCS_ERRNUM(__ctx, __obj)               \
+  do {                                                                  \
+    _set_kcs_errnum_by_fiid_object((__ctx), (__obj));                   \
+    __MSG_TRACE(fiid_obj_errormsg((__obj)), fiid_obj_errnum((__obj)));  \
+  } while (0)
+
+#define SSIF_SET_ERRNUM(__ctx, __errnum)                                \
   do {                                                                  \
     (__ctx)->errnum = (__errnum);                                       \
-    __MSG_TRACE(ipmi_kcs_ctx_errormsg((__ctx)), (__errnum));            \
+    __MSG_TRACE(ipmi_ssif_ctx_errormsg((__ctx)), (__errnum));           \
   } while (0)
 
 #define SSIF_ERRNO_TO_SSIF_ERRNUM(__ctx, __errno)                       \
@@ -61,10 +73,16 @@ extern "C" {
     __ERRNO_TRACE(__errno);                                             \
   } while (0)   
 
-#define SSIF_SET_ERRNUM(__ctx, __errnum)                                \
+#define SSIF_FIID_OBJECT_ERROR_TO_SSIF_ERRNUM(__ctx, __obj)             \
+  do {                                                                  \
+    _set_ssif_errnum_by_fiid_object((__ctx), (__obj));                  \
+    __MSG_TRACE(fiid_obj_errormsg((__obj)), fiid_obj_errnum((__obj)));  \
+  } while (0)
+
+#define OPENIPMI_SET_ERRNUM(__ctx, __errnum)                            \
   do {                                                                  \
     (__ctx)->errnum = (__errnum);                                       \
-    __MSG_TRACE(ipmi_ssif_ctx_errormsg((__ctx)), (__errnum));           \
+    __MSG_TRACE(ipmi_openipmi_ctx_errormsg((__ctx)), (__errnum));       \
   } while (0)
 
 #define OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM(__ctx, __errno)               \
@@ -73,10 +91,10 @@ extern "C" {
     __ERRNO_TRACE(__errno);                                             \
   } while (0)   
 
-#define OPENIPMI_SET_ERRNUM(__ctx, __errnum)                            \
+#define SUNBMC_SET_ERRNUM(__ctx, __errnum)                              \
   do {                                                                  \
     (__ctx)->errnum = (__errnum);                                       \
-    __MSG_TRACE(ipmi_openipmi_ctx_errormsg((__ctx)), (__errnum));       \
+    __MSG_TRACE(ipmi_sunbmc_ctx_errormsg((__ctx)), (__errnum));         \
   } while (0)
 
 #define SUNBMC_ERRNO_TO_SUNBMC_ERRNUM(__ctx, __errno)                   \
@@ -84,12 +102,6 @@ extern "C" {
     _set_sunbmc_ctx_errnum_by_errno((__ctx), (__errno));                \
     __ERRNO_TRACE(__errno);                                             \
   } while (0)   
-
-#define SUNBMC_SET_ERRNUM(__ctx, __errnum)                              \
-  do {                                                                  \
-    (__ctx)->errnum = (__errnum);                                       \
-    __MSG_TRACE(ipmi_sunbmc_ctx_errormsg((__ctx)), (__errnum));         \
-  } while (0)
 
 #ifdef __cplusplus
 }
