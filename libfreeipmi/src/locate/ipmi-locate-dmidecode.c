@@ -464,7 +464,11 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
   fipmiu8 *buf;
   int rv = -1;
   
-  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {

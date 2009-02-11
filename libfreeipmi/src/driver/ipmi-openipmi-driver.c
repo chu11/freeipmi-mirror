@@ -261,7 +261,11 @@ ipmi_openipmi_ctx_errormsg(ipmi_openipmi_ctx_t ctx)
 int8_t 
 ipmi_openipmi_ctx_get_driver_device(ipmi_openipmi_ctx_t ctx, char **driver_device)
 {
-  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!driver_device)
     {
@@ -277,7 +281,11 @@ ipmi_openipmi_ctx_get_driver_device(ipmi_openipmi_ctx_t ctx, char **driver_devic
 int8_t 
 ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, unsigned int *flags)
 {
-  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!flags)
     {
@@ -293,7 +301,11 @@ ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, unsigned int *flags)
 int8_t 
 ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
 {
-  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!device)
     {
@@ -318,7 +330,11 @@ ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
 int8_t 
 ipmi_openipmi_ctx_set_flags(ipmi_openipmi_ctx_t ctx, unsigned int flags)
 {
-  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (flags & ~IPMI_OPENIPMI_FLAGS_MASK)
     {
@@ -337,7 +353,11 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
   unsigned int addr = IPMI_SLAVE_ADDRESS_BMC;
   char *device;
 
-  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (ctx->io_init)
     goto out;
@@ -540,7 +560,11 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
                    fiid_obj_t obj_cmd_rq,
                    fiid_obj_t obj_cmd_rs)
 {
-  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      return (-1);
+    }
  
   if (!IPMI_BMC_LUN_VALID(lun)
       || !IPMI_NET_FN_RQ_VALID(net_fn)
@@ -581,7 +605,11 @@ ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
 			fiid_obj_t obj_cmd_rq,
 			fiid_obj_t obj_cmd_rs)
 {
-  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      return (-1);
+    }
  
   if (!IPMI_BMC_LUN_VALID(lun)
       || !IPMI_NET_FN_RQ_VALID(net_fn)

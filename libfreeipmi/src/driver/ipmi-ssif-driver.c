@@ -490,7 +490,11 @@ ipmi_ssif_ctx_errormsg(ipmi_ssif_ctx_t ctx)
 int8_t
 ipmi_ssif_ctx_get_driver_device(ipmi_ssif_ctx_t ctx, char **driver_device)
 {
-  ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_ssif_ctx_errormsg(ctx), ipmi_ssif_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!driver_device)
     {
@@ -506,7 +510,11 @@ ipmi_ssif_ctx_get_driver_device(ipmi_ssif_ctx_t ctx, char **driver_device)
 int8_t
 ipmi_ssif_ctx_get_driver_address(ipmi_ssif_ctx_t ctx, uint8_t *driver_address)
 {
-  ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_ssif_ctx_errormsg(ctx), ipmi_ssif_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!driver_address)
     {
@@ -522,7 +530,11 @@ ipmi_ssif_ctx_get_driver_address(ipmi_ssif_ctx_t ctx, uint8_t *driver_address)
 int8_t
 ipmi_ssif_ctx_get_flags(ipmi_ssif_ctx_t ctx, unsigned int *flags)
 {
-  ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_ssif_ctx_errormsg(ctx), ipmi_ssif_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!flags)
     {
@@ -538,7 +550,11 @@ ipmi_ssif_ctx_get_flags(ipmi_ssif_ctx_t ctx, unsigned int *flags)
 int8_t
 ipmi_ssif_ctx_set_driver_device(ipmi_ssif_ctx_t ctx, char* driver_device)
 {
-  ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_ssif_ctx_errormsg(ctx), ipmi_ssif_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!driver_device)
     {
@@ -563,7 +579,11 @@ ipmi_ssif_ctx_set_driver_device(ipmi_ssif_ctx_t ctx, char* driver_device)
 int8_t
 ipmi_ssif_ctx_set_driver_address(ipmi_ssif_ctx_t ctx, uint8_t driver_address)
 {
-  ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_ssif_ctx_errormsg(ctx), ipmi_ssif_ctx_errnum(ctx));
+      return (-1);
+    }
 
   ctx->driver_address = driver_address;
   ctx->errnum = IPMI_SSIF_ERR_SUCCESS;
@@ -573,7 +593,11 @@ ipmi_ssif_ctx_set_driver_address(ipmi_ssif_ctx_t ctx, uint8_t driver_address)
 int8_t
 ipmi_ssif_ctx_set_flags(ipmi_ssif_ctx_t ctx, unsigned int flags)
 {
-  ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_ssif_ctx_errormsg(ctx), ipmi_ssif_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (flags & ~IPMI_SSIF_FLAGS_MASK)
     {
@@ -589,7 +613,11 @@ ipmi_ssif_ctx_set_flags(ipmi_ssif_ctx_t ctx, unsigned int flags)
 int8_t
 ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
 {
-  ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_ssif_ctx_errormsg(ctx), ipmi_ssif_ctx_errnum(ctx));
+      return (-1);
+    }
   
   if (!ctx->driver_device)
     {
@@ -634,7 +662,11 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
   int32_t count;
   int lock_flag = 0;
 
-  ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_ssif_ctx_errormsg(ctx), ipmi_ssif_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!buf || !buf_len)
     {
@@ -700,7 +732,11 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
   int32_t count = 0;
   int32_t rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_ssif_ctx_errormsg(ctx), ipmi_ssif_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   if (!buf || !buf_len)
     {
@@ -864,7 +900,11 @@ ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
 	       fiid_obj_t obj_cmd_rq,
 	       fiid_obj_t obj_cmd_rs)
 {
-  ERR(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_ssif_ctx_errormsg(ctx), ipmi_ssif_ctx_errnum(ctx));
+      return (-1);
+    }
  
   if (!IPMI_BMC_LUN_VALID(lun)
       || !IPMI_NET_FN_RQ_VALID(net_fn)

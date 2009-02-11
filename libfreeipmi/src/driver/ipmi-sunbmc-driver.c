@@ -211,7 +211,11 @@ ipmi_sunbmc_ctx_errormsg(ipmi_sunbmc_ctx_t ctx)
 int8_t 
 ipmi_sunbmc_ctx_get_driver_device(ipmi_sunbmc_ctx_t ctx, char **driver_device)
 {
-  ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sunbmc_ctx_errormsg(ctx), ipmi_sunbmc_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!driver_device)
     {
@@ -227,7 +231,11 @@ ipmi_sunbmc_ctx_get_driver_device(ipmi_sunbmc_ctx_t ctx, char **driver_device)
 int8_t 
 ipmi_sunbmc_ctx_get_flags(ipmi_sunbmc_ctx_t ctx, unsigned int *flags)
 {
-  ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sunbmc_ctx_errormsg(ctx), ipmi_sunbmc_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!flags)
     {
@@ -243,7 +251,11 @@ ipmi_sunbmc_ctx_get_flags(ipmi_sunbmc_ctx_t ctx, unsigned int *flags)
 int8_t 
 ipmi_sunbmc_ctx_set_driver_device(ipmi_sunbmc_ctx_t ctx, char *device)
 {
-  ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sunbmc_ctx_errormsg(ctx), ipmi_sunbmc_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!device)
     {
@@ -268,7 +280,11 @@ ipmi_sunbmc_ctx_set_driver_device(ipmi_sunbmc_ctx_t ctx, char *device)
 int8_t 
 ipmi_sunbmc_ctx_set_flags(ipmi_sunbmc_ctx_t ctx, unsigned int flags)
 {
-  ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sunbmc_ctx_errormsg(ctx), ipmi_sunbmc_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (flags & ~IPMI_SUNBMC_FLAGS_MASK)
     {
@@ -290,7 +306,11 @@ ipmi_sunbmc_ctx_io_init(ipmi_sunbmc_ctx_t ctx)
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H) && defined(IOCTL_IPMI_INTERFACE_METHOD)) */
   char *device;
 
-  ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sunbmc_ctx_errormsg(ctx), ipmi_sunbmc_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (ctx->io_init)
     goto out;
@@ -574,7 +594,11 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
                  fiid_obj_t obj_cmd_rq,
                  fiid_obj_t obj_cmd_rs)
 {
-  ERR(ctx && ctx->magic == IPMI_SUNBMC_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sunbmc_ctx_errormsg(ctx), ipmi_sunbmc_ctx_errnum(ctx));
+      return (-1);
+    }
  
   if (!IPMI_BMC_LUN_VALID(lun)
       || !IPMI_NET_FN_RQ_VALID(net_fn)

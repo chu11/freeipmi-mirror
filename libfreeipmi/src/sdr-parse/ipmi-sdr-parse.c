@@ -132,7 +132,11 @@ ipmi_sdr_parse_ctx_errormsg(ipmi_sdr_parse_ctx_t ctx)
 int
 ipmi_sdr_parse_ctx_get_flags(ipmi_sdr_parse_ctx_t ctx, unsigned int *flags)
 {
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!flags)
     {
@@ -147,7 +151,11 @@ ipmi_sdr_parse_ctx_get_flags(ipmi_sdr_parse_ctx_t ctx, unsigned int *flags)
 int
 ipmi_sdr_parse_ctx_set_flags(ipmi_sdr_parse_ctx_t ctx, unsigned int flags)
 {
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (flags & ~IPMI_SDR_PARSE_FLAGS_MASK)
     {
@@ -171,7 +179,11 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -405,7 +417,11 @@ ipmi_sdr_parse_sensor_owner_id (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -468,7 +484,11 @@ ipmi_sdr_parse_sensor_owner_lun (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -530,7 +550,11 @@ ipmi_sdr_parse_sensor_number (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -581,7 +605,11 @@ ipmi_sdr_parse_entity_id_instance_type (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -654,7 +682,11 @@ ipmi_sdr_parse_sensor_type (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -703,7 +735,11 @@ ipmi_sdr_parse_event_reading_type_code (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -753,7 +789,11 @@ ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
   int32_t len = 0;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -804,7 +844,11 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -904,7 +948,11 @@ ipmi_sdr_parse_sensor_capabilities (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -1017,7 +1065,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -1305,7 +1357,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -1589,7 +1645,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -1830,7 +1890,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -2065,7 +2129,11 @@ ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -2222,7 +2290,11 @@ ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -2377,7 +2449,11 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val, val1, val2;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -2519,6 +2595,11 @@ _sensor_decode_value (ipmi_sdr_parse_ctx_t ctx,
   int rv = -1;
   
   assert(ctx);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
   assert(ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
   assert(value_ptr);
   
@@ -2570,7 +2651,11 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -2787,7 +2872,11 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3025,7 +3114,11 @@ ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3162,7 +3255,11 @@ ipmi_sdr_parse_hysteresis (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3222,7 +3319,11 @@ ipmi_sdr_parse_container_entity (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3284,7 +3385,11 @@ ipmi_sdr_parse_device_id_string (ipmi_sdr_parse_ctx_t ctx,
   int32_t len = 0;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3333,7 +3438,11 @@ ipmi_sdr_parse_device_type (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3394,7 +3503,11 @@ ipmi_sdr_parse_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3460,7 +3573,11 @@ ipmi_sdr_parse_general_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3580,7 +3697,11 @@ ipmi_sdr_parse_fru_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3688,7 +3809,11 @@ ipmi_sdr_parse_fru_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3748,7 +3873,11 @@ ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_parse_c
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3807,7 +3936,11 @@ ipmi_sdr_parse_manufacturer_id (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3855,7 +3988,11 @@ ipmi_sdr_parse_product_id (ipmi_sdr_parse_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {
@@ -3903,7 +4040,11 @@ ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
   int32_t len = 0;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_PARSE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_parse_ctx_errormsg(ctx), ipmi_sdr_parse_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!sdr_record || !sdr_record_len)
     {

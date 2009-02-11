@@ -188,7 +188,8 @@ static void
 _ipmi_outofband_free (ipmi_ctx_t ctx)
 {
   /* Function Note: No need to set errnum - just return */
-  assert(ctx && ctx->magic == IPMI_CTX_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_CTX_MAGIC);
 
   FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_rmcp_hdr);
   FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_lan_session_hdr);
@@ -209,7 +210,8 @@ static void
 _ipmi_inband_free (ipmi_ctx_t ctx)
 {
   /* Function Note: No need to set errnum - just return */
-  assert(ctx && ctx->magic == IPMI_CTX_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_CTX_MAGIC);
   
   if (ctx->type == IPMI_DEVICE_KCS && ctx->io.inband.kcs_ctx)
     ipmi_kcs_ctx_destroy(ctx->io.inband.kcs_ctx);
@@ -237,7 +239,8 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
   struct hostent *hptr;
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
 
-  assert(ctx && ctx->magic == IPMI_CTX_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_CTX_MAGIC);
   assert(hostname);
 
   memset(&hent, '\0', sizeof(struct hostent));
@@ -301,7 +304,8 @@ _setup_socket (ipmi_ctx_t ctx)
 {
   struct sockaddr_in addr;
 
-  assert(ctx && ctx->magic == IPMI_CTX_MAGIC);
+  assert(ctx);
+  assert(ctx->magic == IPMI_CTX_MAGIC);
 
   /* Open client (local) UDP socket */
   /* achu: ephemeral ports are > 1023, so no way we will bind to an IPMI port */

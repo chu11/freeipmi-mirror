@@ -49,7 +49,11 @@ ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
 {
   struct ipmi_locate_info linfo;
 
-  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if ((type != IPMI_INTERFACE_KCS
        && type != IPMI_INTERFACE_SMIC

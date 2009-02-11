@@ -430,7 +430,11 @@ ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
   uint64_t strobed;
   struct ipmi_locate_info linfo;
 
-  ERR(ctx && ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
     {

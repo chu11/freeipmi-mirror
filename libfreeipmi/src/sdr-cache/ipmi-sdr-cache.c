@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.10.2.5 2009-02-10 22:40:39 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.10.2.6 2009-02-11 21:22:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -146,7 +146,11 @@ ipmi_sdr_cache_ctx_errormsg(ipmi_sdr_cache_ctx_t ctx)
 int
 ipmi_sdr_cache_ctx_get_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int *flags)
 {
-  ERR(ctx && ctx->magic == IPMI_SDR_CACHE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (!flags)
     {
@@ -161,7 +165,11 @@ ipmi_sdr_cache_ctx_get_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int *flags)
 int
 ipmi_sdr_cache_ctx_set_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int flags)
 {
-  ERR(ctx && ctx->magic == IPMI_SDR_CACHE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (flags & ~IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP)
     {
@@ -176,7 +184,11 @@ ipmi_sdr_cache_ctx_set_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int flags)
 char *
 ipmi_sdr_cache_ctx_get_debug_prefix(ipmi_sdr_cache_ctx_t ctx)
 {
-  ERR_NULL_RETURN(ctx && ctx->magic == IPMI_SDR_CACHE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      return NULL;
+    }
 
   return ctx->debug_prefix;
 }
@@ -184,7 +196,11 @@ ipmi_sdr_cache_ctx_get_debug_prefix(ipmi_sdr_cache_ctx_t ctx)
 int
 ipmi_sdr_cache_ctx_set_debug_prefix(ipmi_sdr_cache_ctx_t ctx, const char *prefix)
 {
-  ERR(ctx && ctx->magic == IPMI_SDR_CACHE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (ctx->debug_prefix)
     {

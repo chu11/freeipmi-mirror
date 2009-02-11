@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-delete.c,v 1.5.10.5 2009-02-10 22:40:39 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-delete.c,v 1.5.10.6 2009-02-11 21:22:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -49,7 +49,11 @@
 int 
 ipmi_sdr_cache_delete(ipmi_sdr_cache_ctx_t ctx, char *filename)
 {
-  ERR(ctx && ctx->magic == IPMI_SDR_CACHE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      return (-1);
+    }
   
   if (!filename)
     {

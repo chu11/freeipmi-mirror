@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.22.2.8 2009-02-11 19:18:24 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.22.2.9 2009-02-11 21:22:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -572,7 +572,11 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t ctx,
   int fd = -1;
   int rv = -1;
 
-  ERR(ctx && ctx->magic == IPMI_SDR_CACHE_CTX_MAGIC);
+  if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      return (-1);
+    }
 
   /* Version cannot be 0h according to the IPMI spec */
   if (!ipmi_ctx
