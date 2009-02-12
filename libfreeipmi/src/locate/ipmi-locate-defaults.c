@@ -100,7 +100,7 @@ ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
       break;
     default:
       /* Should not reach */
-      ERR_EXIT(0);
+      assert(0);
     }
 
   memcpy(info, &linfo, sizeof(struct ipmi_locate_info));

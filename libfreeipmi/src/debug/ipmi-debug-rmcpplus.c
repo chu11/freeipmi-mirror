@@ -214,7 +214,11 @@ _dump_rmcpplus_payload_data(int fd,
 	  goto cleanup;
 	}
 
-      ERR_EXIT (!((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
+      if ((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0)
+        {
+          ERRNO_TRACE(errno);
+	  goto cleanup;
+        }
       
       if ((ipmi_payload_len - indx) >= obj_lan_msg_trlr_len)
         obj_cmd_len = (ipmi_payload_len - indx) - obj_lan_msg_trlr_len;
@@ -496,7 +500,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
           && ipmi_payload_len);
   
   ERR_CLEANUP (!((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0));
-  ERR_EXIT (!(cipher_keylen < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
+  assert(!(cipher_keylen < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
   
   if (confidentiality_key_len < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH)
     {
@@ -506,7 +510,8 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
   confidentiality_key_len = IPMI_CRYPT_AES_CBC_128_KEY_LENGTH;
   
   ERR_CLEANUP (!((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0));
-  ERR_EXIT (cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
+  assert(cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
+
   if (ipmi_payload_len < IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH)
     {
       SET_ERRNO(EINVAL);
@@ -816,10 +821,18 @@ _dump_rmcpplus_session_trlr(int fd,
 
   FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
 
-  ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, 
-                                                                     "pad_length")) < 0));
-  ERR_EXIT (!((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, 
-                                                                      "next_header")) < 0));
+  if ((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, 
+                                                             "pad_length")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
+  if ((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, 
+                                                              "next_header")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   if (pkt_len < (pad_length_field_len))
     {

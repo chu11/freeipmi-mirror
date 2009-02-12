@@ -40,7 +40,6 @@ extern "C" {
 #define ERR_WRAPPER_STR_MAX_LEN 4096
 
 #if defined (IPMI_TRACE)
-
 #define __MSG_TRACE(__msgtracestr, __msgtracenum)                       \
 do {                                                                    \
   fprintf (stderr,                                                      \
@@ -85,12 +84,6 @@ do {                                                                    \
   __ERRNO_TRACE(__errno);                                               \
 } while (0)
 
-#define ERR_LOG(expr)                                                   \
-do {                                                                    \
-  __ERRNO_TRACE(errno);                                                 \
-  expr;                                                                 \
-} while (0)   
-
 #define ERR(expr)                                                       \
 do {                                                                    \
   if (!(expr))                                                          \
@@ -106,33 +99,6 @@ do {                                                                    \
     {                                                                   \
       __ERRNO_TRACE(errno);                                             \
       goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
-#define ERR_EXIT(expr)                                                  \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __ERRNO_TRACE(errno);                                             \
-      exit(1);                                                          \
-    }                                                                   \
-} while (0)
-
-#define ERR_NULL_RETURN(expr)                                           \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __ERRNO_TRACE(errno);                                             \
-      return (NULL);                                                    \
-    }                                                                   \
-} while (0)
-
-#define ERR_VOID_RETURN(expr)                                           \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __ERRNO_TRACE(errno);                                             \
-      return;                                                           \
     }                                                                   \
 } while (0)
 

@@ -25,6 +25,7 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/util/ipmi-rmcpplus-util.h"
@@ -111,7 +112,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
 
   ERR_CLEANUP (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
 
-  ERR_EXIT (crypt_digest_len == expected_digest_len);
+  assert (crypt_digest_len == expected_digest_len);
 
   if (sik_len < expected_digest_len)
     {
@@ -1141,9 +1142,13 @@ ipmi_rmcpplus_check_packet_session_authentication_code(int8_t integrity_algorith
   
   ERR_CLEANUP (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
      
-  ERR_EXIT (crypt_digest_len == expected_digest_len);
+  assert (crypt_digest_len == expected_digest_len);
   
-  ERR_EXIT (!((rmcp_header_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0));
+  if ((rmcp_header_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
   FIID_OBJ_GET_DATA_LEN_CLEANUP(authentication_code_len,
                                 obj_rmcpplus_session_trlr,

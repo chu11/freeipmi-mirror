@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_config.c,v 1.11 2009-01-13 01:02:20 chu11 Exp $
+ *  $Id: ipmidetectd_config.c,v 1.11.10.1 2009-02-12 19:46:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -68,7 +68,7 @@ _config_default(void)
   conf.ipmidetectd_server_port = IPMIDETECTD_SERVER_PORT_DEFAULT;
 
   if (!(conf.hosts = hostlist_create(NULL)))
-    ERR_EXIT(("hostlist_create: %s", strerror(errno)));
+    IPMIDETECTD_EXIT(("hostlist_create: %s", strerror(errno)));
 }
 
 static void
@@ -138,7 +138,7 @@ _cmdline_parse(int argc, char **argv)
 #ifndef NDEBUG
 	case 'c':       /* --config-file */
           if (!(conf.config_file = strdup(optarg)))
-	    ERR_EXIT(("strdup: %s", strerror(errno)));
+	    IPMIDETECTD_EXIT(("strdup: %s", strerror(errno)));
           break;
         case 'd':       /* --debug */
           conf.debug++;
@@ -146,7 +146,7 @@ _cmdline_parse(int argc, char **argv)
 #endif /* NDEBUG */
         case '?':
         default:
-          ERR_EXIT(("unknown command line option '%c'", c));
+          IPMIDETECTD_EXIT(("unknown command line option '%c'", c));
         }          
     }
 }
@@ -162,7 +162,7 @@ _cb_host(conffile_t cf,
 	 int app_data)
 {
   if (!hostlist_push(conf.hosts, data->string))
-    ERR_EXIT(("hostlist_push: %s", strerror(errno)));
+    IPMIDETECTD_EXIT(("hostlist_push: %s", strerror(errno)));
   return 0;
 }
 
@@ -214,7 +214,7 @@ _config_file_parse(void)
 
   if (!(cf = conffile_handle_create()))
     {
-      ERR_DEBUG(("conffile_handle_create"));
+      IPMIDETECTD_DEBUG(("conffile_handle_create"));
       goto cleanup;
     }
 
@@ -229,9 +229,9 @@ _config_file_parse(void)
 	goto cleanup;
 
       if (conffile_errmsg(cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
-        ERR_EXIT(("conffile_parse: %d", conffile_errnum(cf)));
+        IPMIDETECTD_EXIT(("conffile_parse: %d", conffile_errnum(cf)));
       else
-        ERR_EXIT(("conffile_parse: %s", buf));
+        IPMIDETECTD_EXIT(("conffile_parse: %s", buf));
     }
 
  cleanup:
@@ -255,5 +255,5 @@ ipmidetectd_config_setup(int argc, char **argv)
   _arguments_error_check();
 
   if (!hostlist_count(conf.hosts))
-    ERR_EXIT(("No nodes configured"));
+    IPMIDETECTD_EXIT(("No nodes configured"));
 }

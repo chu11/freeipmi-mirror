@@ -436,8 +436,8 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  md2_t ctx;
 		  uint8_t digest[MD2_DIGEST_LENGTH];
 		  
-		  ERR_EXIT(IPMI_1_5_MAX_PASSWORD_LENGTH == MD2_DIGEST_LENGTH);
-		  
+                  assert(IPMI_1_5_MAX_PASSWORD_LENGTH == MD2_DIGEST_LENGTH);
+
 		  md2_init(&ctx);
 		  md2_update_data(&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
 		  md2_update_data(&ctx, session_id_buf, session_id_len);
@@ -454,8 +454,8 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		{
 		  md5_t ctx;
 		  uint8_t digest[MD5_DIGEST_LENGTH];
-		  
-		  ERR_EXIT(IPMI_1_5_MAX_PASSWORD_LENGTH == MD5_DIGEST_LENGTH);
+
+                  assert(IPMI_1_5_MAX_PASSWORD_LENGTH == MD5_DIGEST_LENGTH);
 		  
 		  md5_init(&ctx);
 		  md5_update_data(&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);

@@ -563,8 +563,17 @@ _construct_payload_buf(uint8_t payload_type,
 
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
     {
-      ERR_EXIT (!((obj_lan_msg_hdr_len = fiid_obj_len_bytes (obj_lan_msg_hdr)) < 0));
-      ERR_EXIT (!((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
+      /* XXX */
+#if 0
+      if ((obj_lan_msg_hdr_len = fiid_obj_len_bytes (obj_lan_msg_hdr)) < 0)
+#endif
+        FIID_OBJ_LEN_BYTES_CLEANUP(obj_lan_msg_hdr_len, obj_lan_msg_hdr);
+        
+      if ((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0)
+        {
+          ERRNO_TRACE(errno);
+	  goto cleanup;
+        }
     }
 
   ERR_CLEANUP (!((obj_cmd_len = fiid_obj_len_bytes (obj_cmd)) < 0));
@@ -574,7 +583,7 @@ _construct_payload_buf(uint8_t payload_type,
   if (payload_len > IPMI_MAX_PAYLOAD_LENGTH)
     {
       SET_ERRNO(EINVAL);
-      return (-1);
+      goto cleanup;
     }
   
   if (payload_len > payload_buf_len)
@@ -596,9 +605,12 @@ _construct_payload_buf(uint8_t payload_type,
     {
       FIID_OBJ_CREATE_CLEANUP(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
 
-      ERR_EXIT (!((checksum_start_offset = fiid_template_field_end_bytes (tmpl_lan_msg_hdr_rq, 
-                                                                          "checksum1")) < 0));
-      
+      if ((checksum_start_offset = fiid_template_field_end_bytes (tmpl_lan_msg_hdr_rq, 
+                                                                  "checksum1")) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       checksum = ipmi_checksum (payload_buf + checksum_start_offset, indx - checksum_start_offset);
 
       FIID_OBJ_SET_ALL_CLEANUP (obj_lan_msg_trlr, &checksum, sizeof(checksum));
@@ -686,7 +698,7 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
   
   ERR (!((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0));
 
-  ERR_EXIT (!(cipher_keylen < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
+  assert (!(cipher_keylen < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
 
   if (confidentiality_key_len < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH)
     {
@@ -698,7 +710,7 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
 
   ERR (!((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0));
 
-  ERR_EXIT (cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
+  assert (cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
      
   ERR (!((iv_len = ipmi_get_random(iv, IPMI_CRYPT_AES_CBC_128_IV_LENGTH)) < 0));
 
@@ -859,10 +871,18 @@ _construct_session_trlr_pad(uint8_t integrity_algorithm,
           && fiid_obj_valid(obj_rmcpplus_session_trlr)
           && fiid_obj_template_compare(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr));
 
-  ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, 
-                                                                     "pad_length")) < 0)); 
-  ERR_EXIT (!((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, 
-                                                                      "next_header")) < 0));
+  if ((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, 
+                                                             "pad_length")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+  if ((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, 
+                                                              "next_header")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   
   ipmi_msg_len += pad_length_field_len;
   ipmi_msg_len += next_header_field_len;
@@ -987,7 +1007,7 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       
   ERR_CLEANUP (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
       
-  ERR_EXIT (crypt_digest_len == expected_digest_len);
+  assert (crypt_digest_len == expected_digest_len);
       
   memset(hash_data, '\0', IPMI_MAX_PAYLOAD_LENGTH);
       
@@ -1476,7 +1496,11 @@ _deconstruct_payload_buf(uint8_t payload_type,
 
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
     {
-      ERR_EXIT (!((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
+      if ((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0)
+        {
+          ERRNO_TRACE(errno);
+          return (-1);
+        }
   
       FIID_OBJ_CLEAR (obj_lan_msg_hdr);
       FIID_OBJ_SET_ALL_LEN(len, 
@@ -1610,7 +1634,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
 
   ERR (!((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0));
 
-  ERR_EXIT (!(cipher_keylen < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
+  assert (!(cipher_keylen < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
 
   if (confidentiality_key_len < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH)
     {
@@ -1622,7 +1646,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
 
   ERR (!((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0));
 
-  ERR_EXIT (cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
+  assert (cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
 
   if (ipmi_payload_len < IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH)
     {
@@ -2035,8 +2059,16 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       else /* IPMI_INTEGRITY_ALGORITHM_MD5_128 */
         authentication_code_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
 
-      ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "pad_length")) < 0)); 
-      ERR_EXIT (!((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "next_header")) < 0));
+      if ((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "pad_length")) < 0)
+        {
+          ERRNO_TRACE(errno);
+          return (-1);
+        }
+      if ((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "next_header")) < 0)
+        {
+          ERRNO_TRACE(errno);
+          return (-1);
+        }
       
       /* achu: There needs to be atleast the next_header and pad_length fields */
       if ((pkt_len - indx) < (authentication_code_len + pad_length_field_len + next_header_field_len))
