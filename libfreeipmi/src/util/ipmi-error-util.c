@@ -53,7 +53,11 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                                  char *errstr, 
                                  size_t len)
 {
-  ERR_EINVAL (errstr);
+  if (!errstr)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   switch (comp_code)
     {
@@ -140,7 +144,11 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
   /* Command specific completion codes */
   if ((comp_code >= 0x80) && (comp_code <= 0xBE)) 
     {
-      ERR_EINVAL (IPMI_NET_FN_VALID(netfn));
+      if (!IPMI_NET_FN_VALID(netfn))
+        {
+          SET_ERRNO(EINVAL);
+          return (-1);
+        }
       
       switch (netfn)
         {
@@ -494,7 +502,8 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
           break;
           
         default:
-	  ERR_EINVAL (0);
+          SET_ERRNO(EINVAL);
+          return (-1);
         }
 
       SNPRINTF_RETURN ("No error message found for command "
@@ -521,16 +530,29 @@ ipmi_completion_code_strerror_cmd_r (fiid_obj_t obj_cmd,
   int32_t _len;
 
   /* The netfn need not be valid */
-  ERR_EINVAL (fiid_obj_valid(obj_cmd) && errstr);
+  if (!fiid_obj_valid(obj_cmd)
+      || !errstr)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, "cmd");
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, "comp_code");
 
   FIID_OBJ_FIELD_LEN (_len, obj_cmd, "cmd");
-  ERR_EINVAL (_len);
+  if (!_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_FIELD_LEN (_len, obj_cmd, "comp_code");
-  ERR_EINVAL (_len);
+  if (!_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_GET(obj_cmd, "cmd", &cmd);
   FIID_OBJ_GET(obj_cmd, "comp_code", &comp_code);
@@ -544,7 +566,11 @@ ipmi_rmcpplus_status_strerror_r(uint8_t rmcpplus_status_code,
                                 char *errstr,
                                 size_t len)
 {
-  ERR_EINVAL (errstr);
+  if (!errstr)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (rmcpplus_status_code) 
     {

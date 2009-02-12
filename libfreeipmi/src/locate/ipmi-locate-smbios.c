@@ -189,7 +189,8 @@ _ipmi_smbios_register_spacing (uint8_t register_spacing_boundary, uint8_t *regis
     default:
       *register_spacing = 0;
       /* Should not reach */
-      ERR_EINVAL(0);
+      SET_ERRNO(EINVAL);
+      return (-1);
     }
 }
 

@@ -38,13 +38,21 @@ ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag)
   uint64_t val;
   int32_t len;
 
-  ERR_EINVAL (fiid_obj_valid(pong));
+  if (!fiid_obj_valid(pong))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(pong, tmpl_cmd_asf_presence_pong);
 
   FIID_OBJ_FIELD_LEN (len, pong, "message_tag");
 
-  ERR_EINVAL (len);
+  if (!len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_GET (pong, "message_tag", &val);
 

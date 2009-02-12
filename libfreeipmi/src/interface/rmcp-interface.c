@@ -48,8 +48,12 @@ fiid_template_t tmpl_rmcp_hdr =
 int8_t
 fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr) 
 {
-  ERR_EINVAL (RMCP_HDR_MESSAGE_CLASS_VALID(message_class)
-	      && fiid_obj_valid(obj_rmcp_hdr));
+  if (!RMCP_HDR_MESSAGE_CLASS_VALID(message_class)
+      || !fiid_obj_valid(obj_rmcp_hdr))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
 
@@ -80,10 +84,14 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
 {
   int32_t obj_cmd_len, obj_rmcp_hdr_len;
 
-  ERR_EINVAL (fiid_obj_valid(obj_rmcp_hdr) 
-	      && fiid_obj_valid(obj_cmd)
-	      && pkt
-	      && pkt_len);
+  if (!fiid_obj_valid(obj_rmcp_hdr) 
+      || !fiid_obj_valid(obj_cmd)
+      || !pkt
+      || !pkt_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
   /* FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_asf_presence_ping); */
@@ -111,9 +119,13 @@ unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fi
   uint32_t indx = 0;
   int32_t len;
 
-  ERR_EINVAL (pkt
-	      && fiid_obj_valid(obj_rmcp_hdr)
-	      && fiid_obj_valid(obj_cmd));
+  if (!pkt
+      || !fiid_obj_valid(obj_rmcp_hdr)
+      || !fiid_obj_valid(obj_cmd))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
   /* FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_asf_presence_pong); */

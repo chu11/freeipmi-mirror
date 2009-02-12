@@ -53,12 +53,20 @@ ipmi_lan_check_session_sequence_number (fiid_obj_t obj_lan_session_hdr, uint32_t
   uint64_t session_sequence_number_recv;
   int32_t len;
 
-  ERR_EINVAL (fiid_obj_valid(obj_lan_session_hdr));
+  if (!fiid_obj_valid(obj_lan_session_hdr))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_FIELD_LOOKUP (obj_lan_session_hdr, "session_sequence_number");
 
   FIID_OBJ_FIELD_LEN (len, obj_lan_session_hdr, "session_sequence_number");
-  ERR_EINVAL (len);
+  if (!len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_GET(obj_lan_session_hdr, "session_sequence_number", &session_sequence_number_recv);
 
@@ -71,12 +79,20 @@ ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_id)
   uint64_t session_id_recv;
   int32_t len;
 
-  ERR_EINVAL (fiid_obj_valid(obj_lan_session_hdr));
+  if (fiid_obj_valid(obj_lan_session_hdr))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_FIELD_LOOKUP (obj_lan_session_hdr, "session_id");
 
   FIID_OBJ_FIELD_LEN (len, obj_lan_session_hdr, "session_id");
-  ERR_EINVAL (len);
+  if (!len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_GET(obj_lan_session_hdr, "session_id", &session_id_recv);
 
@@ -99,15 +115,19 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
   uint64_t val;
   int rv = -1;
 
-  ERR_EINVAL (fiid_obj_valid(obj_lan_session_hdr_rs)
-              && fiid_obj_valid(obj_lan_msg_hdr_rs)
-              && fiid_obj_valid(obj_cmd)
-              && fiid_obj_valid(obj_lan_msg_trlr_rs)
-	      && (authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
-                  || authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
-                  || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
-                  || authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
-	      && !(authentication_code_data && authentication_code_data_len > IPMI_1_5_MAX_PASSWORD_LENGTH));
+  if (!fiid_obj_valid(obj_lan_session_hdr_rs)
+      || !fiid_obj_valid(obj_lan_msg_hdr_rs)
+      || !fiid_obj_valid(obj_cmd)
+      || !fiid_obj_valid(obj_lan_msg_trlr_rs)
+      || (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE
+          && authentication_type != IPMI_AUTHENTICATION_TYPE_MD2
+          && authentication_type != IPMI_AUTHENTICATION_TYPE_MD5
+          && authentication_type != IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
+      || (authentication_code_data && authentication_code_data_len > IPMI_1_5_MAX_PASSWORD_LENGTH))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_session_hdr_rs, tmpl_lan_session_hdr);
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr_rs, tmpl_lan_msg_hdr_rs);
@@ -242,13 +262,17 @@ ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt, uint64_t pkt_le
   uint8_t pwbuf[IPMI_1_5_MAX_PASSWORD_LENGTH];
   int rv = -1;
 
-  ERR_EINVAL (pkt 
-	      && (authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
-                  || authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
-                  || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
-                  || authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
-	      && !(authentication_code_data && authentication_code_data_len > IPMI_1_5_MAX_PASSWORD_LENGTH));
-
+  if (!pkt 
+      || (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE
+          && authentication_type != IPMI_AUTHENTICATION_TYPE_MD2
+          && authentication_type != IPMI_AUTHENTICATION_TYPE_MD5
+          && authentication_type != IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
+      || (authentication_code_data && authentication_code_data_len > IPMI_1_5_MAX_PASSWORD_LENGTH))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  
   FIID_TEMPLATE_LEN_BYTES (rmcp_hdr_len, tmpl_rmcp_hdr);
   FIID_TEMPLATE_FIELD_START_BYTES (authentication_type_index, 
 				   tmpl_lan_session_hdr, 
@@ -384,13 +408,21 @@ ipmi_lan_check_net_fn (fiid_obj_t obj_lan_msg_hdr, uint8_t net_fn)
   uint64_t net_fn_recv;
   int32_t len;
 
-  ERR_EINVAL (fiid_obj_valid(obj_lan_msg_hdr)
-	      && IPMI_NET_FN_VALID(net_fn));
+  if (!fiid_obj_valid(obj_lan_msg_hdr)
+      || !IPMI_NET_FN_VALID(net_fn))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_FIELD_LOOKUP (obj_lan_msg_hdr, "net_fn");
 
   FIID_OBJ_FIELD_LEN (len, obj_lan_msg_hdr, "net_fn");
-  ERR_EINVAL (len);
+  if (!len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_GET(obj_lan_msg_hdr, "net_fn", &net_fn_recv);
 
@@ -403,12 +435,20 @@ ipmi_lan_check_rq_seq (fiid_obj_t obj_lan_msg_hdr, uint8_t rq_seq)
   uint64_t rq_seq_recv;
   int32_t len;
 
-  ERR_EINVAL (fiid_obj_valid(obj_lan_msg_hdr));
+  if (!fiid_obj_valid(obj_lan_msg_hdr))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_FIELD_LOOKUP (obj_lan_msg_hdr, "rq_seq");
 
   FIID_OBJ_FIELD_LEN (len, obj_lan_msg_hdr, "rq_seq");
-  ERR_EINVAL (len);
+  if (!len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_GET(obj_lan_msg_hdr, "rq_seq", &rq_seq_recv);
 
@@ -426,20 +466,32 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
   uint32_t buflen;
   uint64_t val;
   
-  ERR_EINVAL (fiid_obj_valid(obj_lan_msg_hdr)
-              && fiid_obj_valid(obj_cmd)
-              && fiid_obj_valid(obj_lan_msg_trlr));
+  if (!fiid_obj_valid(obj_lan_msg_hdr)
+      || !fiid_obj_valid(obj_cmd)
+      || !fiid_obj_valid(obj_lan_msg_trlr))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs);
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
 
   FIID_OBJ_FIELD_LEN (len, obj_lan_msg_hdr, "checksum1");
   FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_lan_msg_hdr_rs, "checksum1");
-  ERR_EINVAL (len == req_len);
+  if (len != req_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_FIELD_LEN (len, obj_lan_msg_trlr, "checksum2");
   FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_lan_msg_trlr, "checksum2");
-  ERR_EINVAL (len == req_len);
+  if (len != req_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_LEN_BYTES (obj_lan_msg_hdr_len, obj_lan_msg_hdr);
   FIID_OBJ_LEN_BYTES (obj_cmd_len, obj_cmd);
@@ -483,7 +535,12 @@ ipmi_lan_check_packet_checksum (uint8_t *pkt, uint64_t pkt_len)
     checksum2_block_index, checksum2_block_len;
   uint8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;
 
-  ERR_EINVAL (pkt && pkt_len);
+  if (!pkt 
+      || !pkt_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_TEMPLATE_LEN_BYTES (rmcp_hdr_len, tmpl_rmcp_hdr);
 

@@ -80,13 +80,21 @@ ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
   uint64_t cmd_recv;
   int32_t len;
 
-  ERR_EINVAL (fiid_obj_valid(obj_cmd));
+  if (!fiid_obj_valid(obj_cmd))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, "cmd");
 
   FIID_OBJ_FIELD_LEN (len, obj_cmd, "cmd");
 
-  ERR_EINVAL (len);
+  if (!len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_GET(obj_cmd, "cmd", &cmd_recv);
 
@@ -99,13 +107,21 @@ ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code)
   uint64_t completion_code_recv;
   int32_t len;
 
-  ERR_EINVAL (fiid_obj_valid(obj_cmd));
+  if (!fiid_obj_valid(obj_cmd))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, "comp_code");
 
   FIID_OBJ_FIELD_LEN (len, obj_cmd, "comp_code");
 
-  ERR_EINVAL (len);
+  if (!len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_GET(obj_cmd, "comp_code", &completion_code_recv);
 
@@ -125,7 +141,11 @@ ipmi_get_random(uint8_t *buf, uint32_t buflen)
   int fd, rv;
 #endif /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */
 
-  ERR_EINVAL (buf);
+  if (!buf)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   if (!buflen)
     return (0);
@@ -159,7 +179,11 @@ ipmi_is_ipmi_1_5_packet(uint8_t *pkt, uint32_t pkt_len)
 
   FIID_TEMPLATE_LEN_BYTES(rmcp_hdr_len, tmpl_rmcp_hdr);
 
-  ERR_EINVAL (!(pkt_len <= rmcp_hdr_len));
+  if (pkt_len <= rmcp_hdr_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   auth_type = *(pkt + rmcp_hdr_len);
   auth_type &= 0x0F;
@@ -174,7 +198,11 @@ ipmi_is_ipmi_2_0_packet(uint8_t *pkt, uint32_t pkt_len)
 
   FIID_TEMPLATE_LEN_BYTES(rmcp_hdr_len, tmpl_rmcp_hdr);
 
-  ERR_EINVAL (!(pkt_len <= rmcp_hdr_len));
+  if (pkt_len <= rmcp_hdr_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   auth_type = *(pkt + rmcp_hdr_len);
   auth_type &= 0x0F;

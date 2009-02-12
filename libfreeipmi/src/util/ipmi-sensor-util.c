@@ -54,8 +54,13 @@ ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen)
 {
   int rv;
 
-  ERR_EINVAL(buf && buflen);
-  ERR_EINVAL((offset <= threshold_comparison_status_desc_max));
+  if (!buf 
+      || !buflen
+      || offset > threshold_comparison_status_desc_max)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   rv = snprintf(buf, buflen, threshold_comparison_status_desc[offset]);
   /* -1 to account for '\0' */
@@ -92,9 +97,13 @@ ipmi_sensor_decode_value (int8_t r_exponent,
 {
   double dval = 0.0;
   
-  ERR_EINVAL (value 
-	      && IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format)
-              && IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization));
+  if (!value 
+      || !IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format)
+      || !IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
+  {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
     
   if (analog_data_format == IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED)
     dval = (double) raw_data;
@@ -154,9 +163,13 @@ ipmi_sensor_decode_raw_value (int8_t r_exponent,
   double dval;
   uint8_t rval;
 
-  ERR_EINVAL (value 
-	      && IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format)
-              && IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization));
+  if (!value 
+      || !IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format)
+      || !IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
     
   dval = value;
   

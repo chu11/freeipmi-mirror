@@ -47,12 +47,20 @@ ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq)
   uint64_t rq_seq_recv;
   int32_t len;
 
-  ERR_EINVAL (fiid_obj_valid(obj_ipmb_msg_hdr));
+  if (!fiid_obj_valid(obj_ipmb_msg_hdr))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_FIELD_LOOKUP (obj_ipmb_msg_hdr, "rq_seq");
   
   FIID_OBJ_FIELD_LEN (len, obj_ipmb_msg_hdr, "rq_seq");
-  ERR_EINVAL (len);
+  if (!len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_GET(obj_ipmb_msg_hdr, "rq_seq", &rq_seq_recv);
   
@@ -71,20 +79,32 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
   uint32_t buflen;
   uint64_t val;
   
-  ERR_EINVAL (fiid_obj_valid(obj_ipmb_msg_hdr)
-              && fiid_obj_valid(obj_cmd)
-              && fiid_obj_valid(obj_ipmb_msg_trlr));
+  if (!fiid_obj_valid(obj_ipmb_msg_hdr)
+      || !fiid_obj_valid(obj_cmd)
+      || !fiid_obj_valid(obj_ipmb_msg_trlr))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rs);
   FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
 
   FIID_OBJ_FIELD_LEN (len, obj_ipmb_msg_hdr, "checksum1");
   FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_ipmb_msg_hdr_rs, "checksum1");
-  ERR_EINVAL (len == req_len);
+  if (len != req_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_FIELD_LEN (len, obj_ipmb_msg_trlr, "checksum2");
   FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_ipmb_msg_trlr, "checksum2");
-  ERR_EINVAL (len == req_len);
+  if (len != req_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_LEN_BYTES (obj_ipmb_msg_hdr_len, obj_ipmb_msg_hdr);
   FIID_OBJ_LEN_BYTES (obj_cmd_len, obj_cmd);

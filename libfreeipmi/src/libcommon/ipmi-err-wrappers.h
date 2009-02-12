@@ -136,16 +136,6 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define ERR_EINVAL(expr)                                                \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = EINVAL;                                                   \
-      __ERRNO_TRACE(errno);                                             \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
 #ifdef __cplusplus
 }
 #endif

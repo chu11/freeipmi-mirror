@@ -73,10 +73,14 @@ ipmi_crypt_hash(int hash_algorithm,
   unsigned int gcry_md_digest_len;
   uint8_t *digestPtr;
 
-  ERR_EINVAL (IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm)
-	      && !(hash_data && !hash_data_len)
-	      && digest
-	      && digest_len);
+  if (!IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm)
+      || (hash_data && !hash_data_len)
+      || !digest
+      || !digest_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
     
   ERR(ipmi_crypt_initialized);
 
@@ -120,7 +124,11 @@ ipmi_crypt_hash_digest_len(int hash_algorithm)
 {
   int gcry_md_algorithm;
 
-  ERR_EINVAL (IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm));
+  if (!IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   ERR(ipmi_crypt_initialized);
 
@@ -149,12 +157,16 @@ _cipher_crypt(int cipher_algorithm,
   gcry_cipher_hd_t h;
   gcry_error_t e;
 
-  ERR_EINVAL (cipher_algorithm == IPMI_CRYPT_CIPHER_AES
-	      && IPMI_CRYPT_CIPHER_MODE_VALID(cipher_mode)
-	      && iv
-	      && iv_len
-	      && data
-	      && data_len);
+  if (cipher_algorithm != IPMI_CRYPT_CIPHER_AES
+      || !IPMI_CRYPT_CIPHER_MODE_VALID(cipher_mode)
+      || !iv
+      || !iv_len
+      || !data
+      || !data_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   gcry_cipher_algorithm = GCRY_CIPHER_AES;
   expected_cipher_key_len = IPMI_CRYPT_AES_CBC_128_KEY_LENGTH;
@@ -172,9 +184,17 @@ _cipher_crypt(int cipher_algorithm,
   ERR (!(cipher_keylen < expected_cipher_key_len
 	 || cipher_blocklen != expected_cipher_block_len));
 
-  ERR_EINVAL (!(iv_len < cipher_blocklen));
+  if (iv_len < cipher_blocklen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  ERR_EINVAL ((data_len % cipher_blocklen == 0));
+  if (data_len % cipher_blocklen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   if (iv_len > cipher_blocklen)
     iv_len = cipher_blocklen;
@@ -264,8 +284,12 @@ _ipmi_crypt_cipher_info(int cipher_algorithm, int cipher_info)
   gcry_error_t e;
   size_t len;
 
-  ERR_EINVAL (cipher_algorithm == IPMI_CRYPT_CIPHER_AES
-	      && IPMI_CRYPT_CIPHER_INFO_VALID(cipher_info));
+  if (cipher_algorithm != IPMI_CRYPT_CIPHER_AES
+      || !IPMI_CRYPT_CIPHER_INFO_VALID(cipher_info))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   gcry_cipher_algorithm = GCRY_CIPHER_AES;
 

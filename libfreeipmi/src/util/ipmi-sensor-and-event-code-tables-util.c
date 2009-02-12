@@ -1545,7 +1545,8 @@ get_05_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (offset == 0x04)
     return _snprintf(buf, buflen, "Network controller #%d", event_data2);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1560,7 +1561,8 @@ get_0F_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (offset == 0x02 && event_data2 <= ipmi_sensor_type_code_0F_event_data2_offset_02_desc_max)
     return _snprintf (buf, buflen, ipmi_sensor_type_code_0F_event_data2_offset_02_desc[event_data2]);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1573,7 +1575,8 @@ get_10_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (offset == 0x01)
     return _snprintf(buf, buflen, "Event/Reading Type Code #%d", event_data2);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1760,7 +1763,8 @@ get_12_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (offset == 0x05)
     return _get_12_event_data2_message_offset_05(offset, event_data2, buf, buflen);
 
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1771,7 +1775,8 @@ get_19_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (offset == 0x00 && event_data2 <= ipmi_sensor_type_code_19_event_data2_offset_00_desc_max)
     return _snprintf (buf, buflen, ipmi_sensor_type_code_19_event_data2_offset_00_desc[event_data2]);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1805,7 +1810,8 @@ get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       return rv;
     }
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1934,7 +1940,8 @@ get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       return rv;
     }
 
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1970,7 +1977,8 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       return rv;
     }
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1981,7 +1989,8 @@ get_2B_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (event_data2 <= ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc_max)
     return _snprintf (buf, buflen, ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc[event_data2]);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2053,7 +2062,8 @@ get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
       return rv;
     }
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2064,7 +2074,8 @@ get_0C_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
   if (offset == 0x08)
     return _snprintf (buf, buflen, "Memory module/device #%d", event_data3);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2123,7 +2134,8 @@ get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
       return _snprintf (buf, buflen, "%d% full", event_data3);
     }
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2134,7 +2146,8 @@ get_19_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
   if (offset == 0x00 && event_data3 <= ipmi_sensor_type_code_19_event_data3_offset_00_desc_max)
     return _snprintf (buf, buflen, ipmi_sensor_type_code_19_event_data3_offset_00_desc[event_data3]);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2145,7 +2158,8 @@ get_1D_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
   if (offset == 0x07)
     return _snprintf (buf, buflen, "Channel Number used to deliver command that generated restart #%d", event_data3);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2164,7 +2178,8 @@ get_28_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
   if (offset == 0x05)
     return _snprintf (buf, buflen, "FRU Device ID/Slave Address #%d", event_data3);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2213,7 +2228,8 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
       return rv;
     }
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 /***************************************************/
@@ -2229,7 +2245,11 @@ _get_event_message(uint16_t offset,
 
   assert(buf && buflen);
 
-  ERR_EINVAL (!(offset > offset_max));
+  if (offset > offset_max)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   rv = snprintf(buf, buflen, string_array[offset]);
 
@@ -2249,7 +2269,12 @@ ipmi_get_generic_event_message (uint8_t event_reading_type_code,
 				char *buf,
 				unsigned int buflen)
 {
-  ERR_EINVAL (buf && buflen);
+  if (!buf 
+      || !buflen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (event_reading_type_code)
     {
@@ -2276,7 +2301,12 @@ ipmi_get_sensor_type_code_message (int sensor_type_code,
 				   char *buf, 
 				   unsigned int buflen)
 {
-  ERR_EINVAL (buf && buflen);
+  if (!buf 
+      || !buflen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (sensor_type_code)
     {
@@ -2316,7 +2346,8 @@ ipmi_get_sensor_type_code_message (int sensor_type_code,
     case 0x2C: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_2C_desc_max, ipmi_sensor_type_code_2C_desc);
     }
   
-  ERR_EINVAL(0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 int
@@ -2325,7 +2356,11 @@ ipmi_get_generic_event_message_short (uint8_t event_reading_type_code,
                                       char *buf,
                                       unsigned int buflen)
 {
-  ERR_EINVAL (buf && buflen);
+  if (!buf || !buflen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (event_reading_type_code)
     {
@@ -2352,7 +2387,11 @@ ipmi_get_sensor_type_code_message_short (int sensor_type_code,
                                          char *buf, 
                                          unsigned int buflen)
 {
-  ERR_EINVAL (buf && buflen);
+  if (!buf || !buflen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (sensor_type_code)
     {
@@ -2392,7 +2431,8 @@ ipmi_get_sensor_type_code_message_short (int sensor_type_code,
     case 0x2C: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_2C_short_desc_max, ipmi_sensor_type_code_2C_short_desc);
     }
   
-  ERR_EINVAL(0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 int
@@ -2402,7 +2442,11 @@ ipmi_get_event_data2_message (int sensor_type_code,
 			      char *buf, 
 			      unsigned int buflen)
 {
-  ERR_EINVAL (buf && buflen);
+  if (!buf || !buflen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (sensor_type_code)
     {
@@ -2420,7 +2464,8 @@ ipmi_get_event_data2_message (int sensor_type_code,
     case 0x2C: return get_2C_event_data2_message (offset, event_data2, buf, buflen);
     }
 
-  ERR_EINVAL(0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 int
@@ -2431,7 +2476,11 @@ ipmi_get_event_data3_message (int sensor_type_code,
 			      char *buf, 
 			      unsigned int buflen)
 {
-  ERR_EINVAL (buf && buflen);
+  if (!buf || !buflen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (sensor_type_code)
     {
@@ -2445,6 +2494,7 @@ ipmi_get_event_data3_message (int sensor_type_code,
     case 0x2A: return get_2A_event_data3_message (offset, event_data2, event_data3, buf, buflen);
     }
   
-  ERR_EINVAL(0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 

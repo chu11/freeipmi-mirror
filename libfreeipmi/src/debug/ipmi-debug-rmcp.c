@@ -67,7 +67,11 @@ ipmi_dump_rmcp_packet (int fd,
   int32_t len;
   int8_t rv = -1;
 
-  ERR_EINVAL (pkt && tmpl_cmd);
+  if (!pkt || !tmpl_cmd)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   ERR(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
 
