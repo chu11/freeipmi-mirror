@@ -76,11 +76,15 @@ ipmi_dump_sdr_record (int fd,
   /* Not enough for a real SDR record, just dump whatever we have */
   if (sdr_record_len <= sdr_record_header_len)
     {
-      ERR_CLEANUP (!(ipmi_obj_dump (fd, 
-                                    prefix, 
-                                    hdr, 
-                                    trlr, 
-                                    obj_sdr_record_header) < 0));
+      if (ipmi_obj_dump (fd, 
+                         prefix, 
+                         hdr, 
+                         trlr, 
+                         obj_sdr_record_header) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       rv = 0;
       goto cleanup;
     }
@@ -175,13 +179,21 @@ ipmi_dump_sdr_record (int fd,
         }
     }
 
-  ERR_CLEANUP (!(ipmi_obj_dump(fd, 
-                               prefix, 
-                               NULL, 
-                               NULL, 
-                               obj_sdr_record) < 0));
+  if (ipmi_obj_dump(fd, 
+                    prefix, 
+                    NULL, 
+                    NULL, 
+                    obj_sdr_record) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
-  ERR_CLEANUP (!(ipmi_debug_output_str(fd, prefix_buf, trlr) < 0));
+  if (ipmi_debug_output_str(fd, prefix_buf, trlr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   rv = 0;
  cleanup:

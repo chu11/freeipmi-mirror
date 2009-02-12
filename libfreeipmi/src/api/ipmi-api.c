@@ -150,7 +150,10 @@ ipmi_ctx_create(void)
   struct ipmi_ctx *ctx;
 
   if (!(ctx = (struct ipmi_ctx *)malloc(sizeof(struct ipmi_ctx))))
-    return NULL;
+    {
+      ERRNO_TRACE(errno);
+      return NULL;
+    }
 
   _ipmi_ctx_init(ctx);
   ctx->errnum = IPMI_ERR_SUCCESS;

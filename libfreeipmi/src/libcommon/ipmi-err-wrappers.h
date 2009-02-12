@@ -93,15 +93,6 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define ERR_CLEANUP(expr)                                               \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __ERRNO_TRACE(errno);                                             \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
 #ifdef __cplusplus
 }
 #endif

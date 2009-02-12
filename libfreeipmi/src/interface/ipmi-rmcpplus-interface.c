@@ -576,7 +576,7 @@ _construct_payload_buf(uint8_t payload_type,
         }
     }
 
-  ERR_CLEANUP (!((obj_cmd_len = fiid_obj_len_bytes (obj_cmd)) < 0));
+  FIID_OBJ_LEN_BYTES_CLEANUP(obj_cmd_len, obj_cmd);
   
   payload_len = obj_lan_msg_hdr_len + obj_cmd_len + obj_lan_msg_trlr_len;
   
@@ -979,7 +979,11 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       return (len);
     }
 
-  ERR_CLEANUP (!((authentication_code_len = _calculate_authentication_code_len(integrity_algorithm)) < 0));
+  if ((authentication_code_len = _calculate_authentication_code_len(integrity_algorithm)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
   /* Note: Integrity Key for HMAC_SHA1_96 and HMAC_MD5_128 is K1 */
            
@@ -1005,7 +1009,11 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       copy_digest_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
       
-  ERR_CLEANUP (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
+  if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
       
   assert (crypt_digest_len == expected_digest_len);
       
@@ -1046,16 +1054,24 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       hash_data_len += IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
   
-  ERR_CLEANUP (!((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,
-                                                         hash_flags,
-                                                         integrity_key,
-                                                         integrity_key_len,
-                                                         hash_data,
-                                                         hash_data_len,
-                                                         integrity_digest,
-                                                         IPMI_MAX_INTEGRITY_DATA_LENGTH)) < 0));
+  if ((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,
+                                              hash_flags,
+                                              integrity_key,
+                                              integrity_key_len,
+                                              hash_data,
+                                              hash_data_len,
+                                              integrity_digest,
+                                              IPMI_MAX_INTEGRITY_DATA_LENGTH)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  ERR_CLEANUP (integrity_digest_len == crypt_digest_len);
+  if (integrity_digest_len != crypt_digest_len)
+    {
+      SET_ERRNO(EINVAL);
+      goto cleanup;
+    }
   
   if (integrity_digest_len > authentication_code_buf_len)
     {
@@ -1407,9 +1423,13 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
       FIID_OBJ_DUP_CLEANUP (obj_rmcpplus_session_trlr_temp, obj_rmcpplus_session_trlr);
 
-      ERR_CLEANUP (!(_construct_session_trlr_pad(integrity_algorithm,
-                                                 (indx - obj_rmcp_hdr_len),
-                                                 obj_rmcpplus_session_trlr_temp) < 0));
+      if (_construct_session_trlr_pad(integrity_algorithm,
+                                      (indx - obj_rmcp_hdr_len),
+                                      obj_rmcpplus_session_trlr_temp) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       
       FIID_OBJ_BLOCK_LEN_BYTES_CLEANUP(len,
                                        obj_rmcpplus_session_trlr_temp,
@@ -1432,16 +1452,20 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
        * call must be done after the pad, pad length, and next header are copied into 
        * the pkt buffer.
        */
-      ERR_CLEANUP (!((authentication_code_len = _construct_session_trlr_authentication_code(integrity_algorithm,
-                                                                                            integrity_key,
-                                                                                            integrity_key_len,
-                                                                                            authentication_code_data,
-                                                                                            authentication_code_data_len,
-                                                                                            obj_rmcpplus_session_trlr_temp,
-                                                                                            pkt + obj_rmcp_hdr_len,
-                                                                                            indx - obj_rmcp_hdr_len,
-                                                                                            authentication_code_buf,
-                                                                                            IPMI_MAX_PAYLOAD_LENGTH)) < 0));
+      if ((authentication_code_len = _construct_session_trlr_authentication_code(integrity_algorithm,
+                                                                                 integrity_key,
+                                                                                 integrity_key_len,
+                                                                                 authentication_code_data,
+                                                                                 authentication_code_data_len,
+                                                                                 obj_rmcpplus_session_trlr_temp,
+                                                                                 pkt + obj_rmcp_hdr_len,
+                                                                                 indx - obj_rmcp_hdr_len,
+                                                                                 authentication_code_buf,
+                                                                                 IPMI_MAX_PAYLOAD_LENGTH)) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       
       if (authentication_code_len)
         {

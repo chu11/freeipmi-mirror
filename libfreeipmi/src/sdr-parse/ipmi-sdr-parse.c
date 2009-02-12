@@ -80,7 +80,11 @@ ipmi_sdr_parse_ctx_create(void)
 {
   struct ipmi_sdr_parse_ctx *ctx = NULL;
   
-  ERR_CLEANUP((ctx = (ipmi_sdr_parse_ctx_t)malloc(sizeof(struct ipmi_sdr_parse_ctx))));
+  if (!(ctx = (ipmi_sdr_parse_ctx_t)malloc(sizeof(struct ipmi_sdr_parse_ctx))))
+    {
+      ERRNO_TRACE(errno);
+      return NULL;
+    }
   memset(ctx, '\0', sizeof(struct ipmi_sdr_parse_ctx));
   ctx->magic = IPMI_SDR_PARSE_CTX_MAGIC;
   ctx->flags = IPMI_SDR_PARSE_FLAGS_DEFAULT;

@@ -1690,17 +1690,41 @@ _get_12_event_data2_message_offset_04(int offset, uint8_t event_data2, char *buf
 
   memset(buf, '\0', buflen);
 
-  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, alert, str_len, 0)) < 0));
+  if ((str_len = _strcat12(buf, buflen, alert, str_len, 0)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
-  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, power_off, str_len, 1)) < 0));
+  if ((str_len = _strcat12(buf, buflen, power_off, str_len, 1)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
-  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, reset, str_len, 2)) < 0));
+  if ((str_len = _strcat12(buf, buflen, reset, str_len, 2)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, power_cycle, str_len, 3)) < 0));
+  if ((str_len = _strcat12(buf, buflen, power_cycle, str_len, 3)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, oem_action, str_len, 4)) < 0));
+  if ((str_len = _strcat12(buf, buflen, oem_action, str_len, 4)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, diagnostic_interrupt, str_len, 5)) < 0));
+  if ((str_len = _strcat12(buf, buflen, diagnostic_interrupt, str_len, 5)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   rv = 0;
  cleanup:

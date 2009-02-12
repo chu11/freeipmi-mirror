@@ -84,7 +84,11 @@ ipmi_sel_parse_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ct
       return NULL;
     }
 
-  ERR_CLEANUP((ctx = (ipmi_sel_parse_ctx_t)malloc(sizeof(struct ipmi_sel_parse_ctx))));
+  if (!(ctx = (ipmi_sel_parse_ctx_t)malloc(sizeof(struct ipmi_sel_parse_ctx))))
+    {
+      ERRNO_TRACE(errno);
+      return NULL;
+    }
   memset(ctx, '\0', sizeof(struct ipmi_sel_parse_ctx));
   ctx->magic = IPMI_SEL_PARSE_CTX_MAGIC;
   ctx->flags = IPMI_SEL_PARSE_FLAGS_DEFAULT;
@@ -94,15 +98,29 @@ ipmi_sel_parse_ctx_create(ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_ct
   ctx->ipmi_ctx = ipmi_ctx;
   ctx->sdr_cache_ctx = sdr_cache_ctx;
 
-  ERR_CLEANUP((ctx->sel_entries = list_create((ListDelF)free)));
+  if (!(ctx->sel_entries = list_create((ListDelF)free)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
-  ERR_CLEANUP((ctx->sdr_parse_ctx = ipmi_sdr_parse_ctx_create()));
+  if (!(ctx->sdr_parse_ctx = ipmi_sdr_parse_ctx_create()))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
   return ctx;
 
  cleanup:
   if (ctx)
-    free(ctx);
+    {
+      if (ctx->sel_entries)
+        list_destroy(ctx->sel_entries);
+      if (ctx->sdr_parse_ctx)
+        ipmi_sdr_parse_ctx_destroy(ctx->sdr_parse_ctx);
+      free(ctx);
+    }
   return NULL;
 }
 

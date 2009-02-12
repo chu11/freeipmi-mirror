@@ -446,24 +446,40 @@ ipmi_ssif_ctx_create(void)
 {
   ipmi_ssif_ctx_t ctx = NULL;
 
-  ERR_CLEANUP ((ctx = (ipmi_ssif_ctx_t)malloc(sizeof(struct ipmi_ssif_ctx))));
+  if (!(ctx = (ipmi_ssif_ctx_t)malloc(sizeof(struct ipmi_ssif_ctx))))
+    {
+      ERRNO_TRACE(errno);
+      return (NULL);
+    }
   memset(ctx, '\0', sizeof(struct ipmi_ssif_ctx));
 
   ctx->magic = IPMI_SSIF_CTX_MAGIC;
-  ERR_CLEANUP ((ctx->driver_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));
+  if (!(ctx->driver_device = strdup(IPMI_DEFAULT_I2C_DEVICE)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   ctx->driver_address = IPMI_DEFAULT_SSIF_IPMB_ADDR;
   ctx->flags = IPMI_SSIF_FLAGS_DEFAULT;
   ctx->device_fd = -1;
   ctx->io_init = 0;
 
-  ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init ()) < 0));
+  if ((ctx->semid = ipmi_mutex_init ()) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
   ctx->errnum = IPMI_SSIF_ERR_SUCCESS;
   return ctx;
 
  cleanup:
   if (ctx)
-    free(ctx);
+    {
+      if (ctx->driver_device)
+        free(ctx->driver_device);
+      free(ctx);
+    }
   return (NULL);
 }
 

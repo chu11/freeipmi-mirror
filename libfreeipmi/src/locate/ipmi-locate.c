@@ -59,7 +59,11 @@ ipmi_locate_ctx_create(void)
 {
   ipmi_locate_ctx_t ctx = NULL;
 
-  ERR_CLEANUP ((ctx = (ipmi_locate_ctx_t)malloc(sizeof(struct ipmi_locate_ctx))));
+  if (!(ctx = (ipmi_locate_ctx_t)malloc(sizeof(struct ipmi_locate_ctx))))
+    {
+      ERRNO_TRACE(errno);
+      return NULL;
+    }
   memset(ctx, '\0', sizeof(struct ipmi_locate_ctx));
 
   ctx->magic = IPMI_LOCATE_CTX_MAGIC;

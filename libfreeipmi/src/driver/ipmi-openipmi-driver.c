@@ -197,7 +197,11 @@ ipmi_openipmi_ctx_create(void)
 {
   ipmi_openipmi_ctx_t ctx = NULL;
 
-  ERR_CLEANUP ((ctx = (ipmi_openipmi_ctx_t)malloc(sizeof(struct ipmi_openipmi_ctx))));
+  if (!(ctx = (ipmi_openipmi_ctx_t)malloc(sizeof(struct ipmi_openipmi_ctx))))
+    {
+      ERRNO_TRACE(errno);
+      return (NULL);
+    }
   memset(ctx, '\0', sizeof(struct ipmi_openipmi_ctx));
 
   ctx->magic = IPMI_OPENIPMI_CTX_MAGIC;

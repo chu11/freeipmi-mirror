@@ -328,7 +328,11 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   FIID_TEMPLATE_FIELD_LEN_BYTES_CLEANUP(len,
 					tmpl_lan_session_hdr,
 					"ipmi_msg_len");
-  ERR_CLEANUP (len == 1);
+  if (len != 1)
+    {
+      SET_ERRNO(EINVAL);
+      goto cleanup;
+    }
   indx += len;
 
   msg_data_ptr = (pkt + indx);

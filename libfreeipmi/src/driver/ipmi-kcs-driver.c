@@ -248,7 +248,11 @@ ipmi_kcs_ctx_create(void)
 {
   ipmi_kcs_ctx_t ctx = NULL;
 
-  ERR_CLEANUP ((ctx = (ipmi_kcs_ctx_t)malloc(sizeof(struct ipmi_kcs_ctx))));
+  if (!(ctx = (ipmi_kcs_ctx_t)malloc(sizeof(struct ipmi_kcs_ctx))))
+    {
+      ERRNO_TRACE(errno);
+      return (NULL);
+    }
   memset(ctx, '\0', sizeof(struct ipmi_kcs_ctx));
 
   ctx->magic = IPMI_KCS_CTX_MAGIC;
@@ -258,7 +262,11 @@ ipmi_kcs_ctx_create(void)
   ctx->poll_interval = IPMI_KCS_SLEEP_USECS;
   ctx->io_init = 0;
 
-  ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init ()) < 0));
+  if ((ctx->semid = ipmi_mutex_init ()) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return ctx;
 

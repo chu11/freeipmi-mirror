@@ -31,16 +31,6 @@ extern "C" {
 #define IPMI_DEBUG_MAX_HDR_LEN 1024
 #define IPMI_DEBUG_MAX_PKT_LEN 65536
 
-#define IPMI_DEBUG_DPRINTF(args) \
-        do { \
-          ERR (!((ipmi_debug_dprintf args) < 0)); \
-        } while(0) 
-
-#define IPMI_DEBUG_DPRINTF_CLEANUP(args) \
-        do { \
-          ERR_CLEANUP (!((ipmi_debug_dprintf args) < 0)); \
-        } while(0) 
-
 /* Portable version of the extremely unportable Linux dprintf() */
 int ipmi_debug_dprintf(int fd, char *fmt, ...);
 
