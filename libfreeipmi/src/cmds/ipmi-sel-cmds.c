@@ -327,8 +327,12 @@ fill_cmd_clear_sel (uint16_t reservation_id,
                     uint8_t operation, 
                     fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_SEL_CLEAR_OPERATION_VALID(operation)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_SEL_CLEAR_OPERATION_VALID(operation)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_clear_sel_rq);
 
@@ -383,8 +387,12 @@ int8_t
 fill_cmd_get_auxiliary_log_status (uint8_t log_type,
                                    fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
-              && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_auxiliary_log_status_rq);
   
@@ -402,10 +410,14 @@ fill_cmd_set_auxiliary_log_status (uint8_t log_type,
                                    uint8_t log_data_len,
                                    fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
-              && log_data
-              && log_data_len
-              && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_AUXILIARY_LOG_TYPE_VALID(log_type)
+      || !log_data
+      || !log_data_len
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_auxiliary_log_status_rq);
   

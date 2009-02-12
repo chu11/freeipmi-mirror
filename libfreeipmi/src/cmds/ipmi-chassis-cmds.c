@@ -401,7 +401,11 @@ fiid_template_t tmpl_cmd_get_power_on_hours_counter_rs =
 int8_t
 fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq)
 { 
-  ERR_EINVAL (fiid_obj_valid (obj_cmd_rq));
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_chassis_capabilities_rq);
 
@@ -414,7 +418,11 @@ fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq)
 int8_t
 fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq)
 { 
-  ERR_EINVAL (fiid_obj_valid (obj_cmd_rq));
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_chassis_status_rq);
 
@@ -427,8 +435,12 @@ int8_t
 fill_cmd_chassis_control (uint8_t chassis_control,
                           fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHASSIS_CONTROL_VALID (chassis_control)
-              && fiid_obj_valid (obj_cmd_rq));
+  if (!IPMI_CHASSIS_CONTROL_VALID (chassis_control)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_chassis_control_rq);
 
@@ -444,9 +456,13 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
                            uint8_t *force_identify,
                            fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL ((!force_identify 
-               || IPMI_CHASSIS_FORCE_IDENTIFY_VALID (*force_identify))
-              && fiid_obj_valid (obj_cmd_rq));
+  if ((force_identify 
+       && !IPMI_CHASSIS_FORCE_IDENTIFY_VALID (*force_identify))
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_chassis_identify_rq);
 
@@ -473,11 +489,15 @@ fill_cmd_set_front_panel_enables (uint8_t disable_power_off_button_for_power_off
                                   uint8_t disable_standby_button_for_entering_standby,
                                   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHASSIS_BUTTON_VALID(disable_power_off_button_for_power_off_only)
-              && IPMI_CHASSIS_BUTTON_VALID(disable_reset_button)
-              && IPMI_CHASSIS_BUTTON_VALID(disable_diagnostic_interrupt_button)
-              && IPMI_CHASSIS_BUTTON_VALID(disable_standby_button_for_entering_standby)
-              && fiid_obj_valid (obj_cmd_rq));
+  if (!IPMI_CHASSIS_BUTTON_VALID(disable_power_off_button_for_power_off_only)
+      || !IPMI_CHASSIS_BUTTON_VALID(disable_reset_button)
+      || !IPMI_CHASSIS_BUTTON_VALID(disable_diagnostic_interrupt_button)
+      || !IPMI_CHASSIS_BUTTON_VALID(disable_standby_button_for_entering_standby)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_front_panel_enables_rq);
 
@@ -497,8 +517,12 @@ int8_t
 fill_cmd_set_power_restore_policy (uint8_t power_restore_policy,
                                    fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_POWER_RESTORE_POLICY_VALID (power_restore_policy)
-              && fiid_obj_valid (obj_cmd_rq));
+  if (!IPMI_POWER_RESTORE_POLICY_VALID (power_restore_policy)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_power_restore_policy_rq);
 
@@ -518,7 +542,11 @@ int8_t
 fill_cmd_set_power_cycle_interval (uint8_t interval, 
                                    fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid (obj_cmd_rq));
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_power_cycle_interval_rq);
 
@@ -532,7 +560,11 @@ fill_cmd_set_power_cycle_interval (uint8_t interval,
 int8_t 
 fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid (obj_cmd_rq));
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_system_restart_cause_rq);
 
@@ -548,10 +580,14 @@ fill_cmd_set_system_boot_options (uint8_t parameter_selector,
                                   uint8_t data_len,
                                   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector) 
-              && configuration_parameter_data != NULL 
-              && data_len > 0
-              && fiid_obj_valid (obj_cmd_rq));
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector) 
+      || !configuration_parameter_data
+      || !data_len
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_rq);
   
@@ -568,8 +604,12 @@ int8_t
 fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
                                                  fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS_VALID (value)
-              && fiid_obj_valid (obj_cmd_rq));
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS_VALID (value)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_set_in_progress_rq);
 
@@ -594,17 +634,21 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_ha
                                                         uint8_t *oem_handled_boot_info,
                                                         fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL ((!bios_or_post_handled_boot_info 
-                  || IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*bios_or_post_handled_boot_info))
-              && (!os_loader_handled_boot_info 
-                  || IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*os_loader_handled_boot_info))
-              && (!os_or_service_partition_handled_boot_info 
-                  || IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*os_or_service_partition_handled_boot_info))
-              && (!sms_handled_boot_info 
-                  || IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*sms_handled_boot_info))
-              && (!oem_handled_boot_info 
-                  || IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*oem_handled_boot_info))
-              && fiid_obj_valid (obj_cmd_rq));
+  if ((bios_or_post_handled_boot_info 
+       && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*bios_or_post_handled_boot_info))
+      || !(os_loader_handled_boot_info 
+           && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*os_loader_handled_boot_info))
+      || !(os_or_service_partition_handled_boot_info 
+           && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*os_or_service_partition_handled_boot_info))
+      || !(sms_handled_boot_info 
+           && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*sms_handled_boot_info))
+      || !(oem_handled_boot_info 
+           && !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (*oem_handled_boot_info))
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq);
 
@@ -684,12 +728,16 @@ fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_
                                                                    uint8_t dont_clear_on_PEF,
                                                                    fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_power_up)
-              && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_pushbutton_reset_soft_reset)
-              && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_watchdog_timeout)
-              && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_chassis_control)
-              && IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_PEF)
-              && fiid_obj_valid (obj_cmd_rq));
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_power_up)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_pushbutton_reset_soft_reset)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_watchdog_timeout)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_chassis_control)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID (dont_clear_on_PEF)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq);
   
@@ -726,23 +774,27 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
                                              uint8_t bios_shared_mode_override,
                                              fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_valid)
-              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_persistent)
-              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (cmos_clear)
-              && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BIOS_BOOT_TYPE_VALID (bios_boot_type)
-              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_keyboard)
-              && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_VALID (boot_device)
-              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (screen_blank)
-              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_reset_button)
-              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_via_power_button)
-              && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VALID (firmware_bios_verbosity)
-              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (force_progress_event_traps)
-              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (user_password_bypass)
-              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_sleep_button)
-              && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_VALID (console_redirection)
-              && IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (bios_shared_mode_override)
-              && IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_BIOS_MUX_CONTROL_OVERRIDE_VALID (bios_mux_control_override)
-              && fiid_obj_valid (obj_cmd_rq));
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_valid)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (boot_flags_persistent)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (cmos_clear)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BIOS_BOOT_TYPE_VALID (bios_boot_type)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_keyboard)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_VALID (boot_device)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (screen_blank)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_reset_button)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_via_power_button)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VALID (firmware_bios_verbosity)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (force_progress_event_traps)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (user_password_bypass)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (lock_out_sleep_button)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_VALID (console_redirection)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID (bios_shared_mode_override)
+      || !IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_BIOS_MUX_CONTROL_OVERRIDE_VALID (bios_mux_control_override)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_flags_rq);
 
@@ -779,8 +831,12 @@ fill_cmd_get_system_boot_options (uint8_t parameter_selector,
                                  uint8_t block_selector,
                                  fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
-              && fiid_obj_valid (obj_cmd_rq));
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_system_boot_options_rq);
 
@@ -796,7 +852,11 @@ fill_cmd_get_system_boot_options (uint8_t parameter_selector,
 int8_t
 fill_cmd_get_power_on_hours_counter (fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid (obj_cmd_rq));
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_power_on_hours_counter_rq);
 

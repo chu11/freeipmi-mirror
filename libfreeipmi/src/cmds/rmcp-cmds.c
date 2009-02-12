@@ -66,7 +66,11 @@ fiid_template_t tmpl_cmd_asf_presence_pong =
 int8_t
 fill_cmd_asf_presence_ping(uint8_t message_tag, fiid_obj_t obj_cmd)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd));
+  if (!fiid_obj_valid(obj_cmd))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_asf_presence_ping);
 

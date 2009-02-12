@@ -519,7 +519,7 @@ fiid_template_t tmpl_cmd_pet_acknowledge_rs =
 int8_t 
 fill_cmd_get_pef_capabilities (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
     {
       SET_ERRNO(EINVAL);
       return (-1);
@@ -535,7 +535,7 @@ fill_cmd_get_pef_capabilities (fiid_obj_t obj_cmd_rq)
 int8_t
 fill_cmd_arm_pef_postpone_timer (uint8_t pef_postpone_timeout, fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
     {
       SET_ERRNO(EINVAL);
       return (-1);
