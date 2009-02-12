@@ -77,7 +77,7 @@ do {                                                                    \
 #define SET_ERRNO(__errno)                                              \
 do {                                                                    \
   errno = (__errno);                                                    \
-  __ERRNO_TRACE((__errno));                                             \
+  __ERRNO_TRACE(errno);                                                 \
 } while (0)
 
 #define ERRNO_TRACE(__errno)                                            \

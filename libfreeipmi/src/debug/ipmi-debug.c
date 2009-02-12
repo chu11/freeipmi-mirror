@@ -78,7 +78,11 @@ ipmi_obj_dump (int fd,
   fiid_iterator_t iter = NULL;
   int rv = -1;
 
-  ERR_EINVAL (fiid_obj_valid(obj));
+  if (!fiid_obj_valid(obj))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   ERR(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
 
@@ -171,9 +175,13 @@ ipmi_obj_dump_ipmb (int fd,
   int ret1, ret2;
   int rv = -1;
 
-  ERR_EINVAL (fiid_obj_valid(obj) 
-              && tmpl_ipmb_msg_hdr
-              && tmpl_ipmb_cmd);
+  if (!fiid_obj_valid(obj) 
+      || !tmpl_ipmb_msg_hdr
+      || !tmpl_ipmb_cmd)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   if ((ret1 = fiid_obj_template_compare(obj, tmpl_cmd_send_message_rq)) < 0)
     return -1;
@@ -181,7 +189,11 @@ ipmi_obj_dump_ipmb (int fd,
   if ((ret2 = fiid_obj_template_compare(obj, tmpl_cmd_get_message_rs)) < 0)
     return -1;
 
-  ERR_EINVAL ((ret1 || ret2));
+  if (!ret1 && !ret2)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   ERR(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
 

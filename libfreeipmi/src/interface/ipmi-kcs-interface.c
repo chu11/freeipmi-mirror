@@ -49,9 +49,13 @@ fill_hdr_ipmi_kcs (uint8_t lun,
 		   uint8_t fn, 
 		   fiid_obj_t obj_kcs_hdr)
 {
-  ERR_EINVAL (IPMI_BMC_LUN_VALID(lun)
-	      && IPMI_NET_FN_VALID(fn)
-	      && fiid_obj_valid(obj_kcs_hdr));
+  if (!IPMI_BMC_LUN_VALID(lun)
+      || !IPMI_NET_FN_VALID(fn)
+      || !fiid_obj_valid(obj_kcs_hdr))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_kcs_hdr, tmpl_hdr_kcs);
 
@@ -69,9 +73,13 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
 {
   int32_t obj_cmd_len, obj_kcs_hdr_len;
 
-  ERR_EINVAL (fiid_obj_valid(obj_kcs_hdr)
-	      && fiid_obj_valid(obj_cmd)
-	      && pkt);
+  if (!fiid_obj_valid(obj_kcs_hdr)
+      || !fiid_obj_valid(obj_cmd)
+      || !pkt)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_kcs_hdr, tmpl_hdr_kcs);
   FIID_OBJ_PACKET_VALID(obj_kcs_hdr);
@@ -101,9 +109,13 @@ unassemble_ipmi_kcs_pkt (uint8_t *pkt,
   uint32_t indx = 0;
   int32_t len;
 
-  ERR_EINVAL (pkt
-	      && fiid_obj_valid(obj_kcs_hdr)
-	      && fiid_obj_valid(obj_cmd));
+  if (!pkt
+      || !fiid_obj_valid(obj_kcs_hdr)
+      || !fiid_obj_valid(obj_cmd))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_kcs_hdr, tmpl_hdr_kcs);
 

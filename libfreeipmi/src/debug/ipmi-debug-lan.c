@@ -381,7 +381,13 @@ ipmi_dump_lan_packet (int fd,
                       fiid_template_t tmpl_lan_msg_hdr, 
                       fiid_template_t tmpl_cmd)
 {
-  ERR_EINVAL (pkt && tmpl_lan_msg_hdr && tmpl_cmd);
+  if (!pkt 
+      || !tmpl_lan_msg_hdr 
+      || !tmpl_cmd)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   return _ipmi_dump_lan_packet (fd, 
                                 prefix, 
@@ -409,11 +415,15 @@ ipmi_dump_lan_packet_ipmb (int fd,
 {
   int ret1, ret2;
 
-  ERR_EINVAL (pkt
-              && tmpl_lan_msg_hdr
-              && tmpl_cmd
-              && tmpl_ipmb_msg_hdr
-              && tmpl_ipmb_cmd);
+  if (!pkt
+      || !tmpl_lan_msg_hdr
+      || !tmpl_cmd
+      || !tmpl_ipmb_msg_hdr
+      || !tmpl_ipmb_cmd)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   if ((ret1 = fiid_template_compare(tmpl_cmd, tmpl_cmd_send_message_rq)) < 0)
     return -1;
@@ -421,7 +431,11 @@ ipmi_dump_lan_packet_ipmb (int fd,
   if ((ret2 = fiid_template_compare(tmpl_cmd, tmpl_cmd_get_message_rs)) < 0)
     return -1;
 
-  ERR_EINVAL ((ret1 || ret2));
+  if (!ret1 && !ret2)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   return _ipmi_dump_lan_packet (fd, 
                                 prefix, 

@@ -95,11 +95,15 @@ fill_ipmb_msg_hdr (uint8_t rs_addr,
   int32_t checksum_len;
   uint8_t checksum;
 
-  ERR_EINVAL (IPMI_NET_FN_VALID(net_fn)
-	      && IPMI_BMC_LUN_VALID(rs_lun)
-	      && IPMI_BMC_LUN_VALID(rq_lun)
-	      && !(rq_seq > IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX)
-	      && fiid_obj_valid(obj_ipmb_msg_hdr));
+  if (!IPMI_NET_FN_VALID(net_fn)
+      || !IPMI_BMC_LUN_VALID(rs_lun)
+      || !IPMI_BMC_LUN_VALID(rq_lun)
+      || (rq_seq > IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX)
+      || !fiid_obj_valid(obj_ipmb_msg_hdr))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rq);
 
@@ -139,9 +143,13 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
   uint8_t checksum;
   int32_t rv = -1;
 
-  ERR_EINVAL (fiid_obj_valid(obj_ipmb_msg_hdr) 
-	      && fiid_obj_valid(obj_cmd) 
-              && fiid_obj_valid(obj_ipmb_msg));
+  if (!fiid_obj_valid(obj_ipmb_msg_hdr) 
+      || !fiid_obj_valid(obj_cmd) 
+      || !fiid_obj_valid(obj_ipmb_msg))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rq);
   FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg, tmpl_ipmb_msg);
@@ -221,10 +229,14 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
   int32_t obj_ipmb_msg_trlr_len;
   int32_t len;
 
-  ERR_EINVAL (fiid_obj_valid(obj_ipmb_msg)
-	      && fiid_obj_valid(obj_ipmb_msg_hdr) 
-	      && fiid_obj_valid(obj_cmd)
-	      && fiid_obj_valid(obj_ipmb_msg_trlr));
+  if (!fiid_obj_valid(obj_ipmb_msg)
+      || !fiid_obj_valid(obj_ipmb_msg_hdr) 
+      || !fiid_obj_valid(obj_cmd)
+      || !fiid_obj_valid(obj_ipmb_msg_trlr))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rs);
   FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);

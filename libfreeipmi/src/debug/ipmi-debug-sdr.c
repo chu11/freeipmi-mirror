@@ -55,7 +55,11 @@ ipmi_dump_sdr_record (int fd,
   int32_t sdr_record_header_len;
   int8_t rv = -1;
 
-  ERR_EINVAL (sdr_record);
+  if (!sdr_record)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   ERR(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
 
