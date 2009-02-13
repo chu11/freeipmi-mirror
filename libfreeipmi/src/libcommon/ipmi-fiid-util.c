@@ -47,6 +47,8 @@ set_errno_by_fiid_object(fiid_obj_t obj)
     errno = 0;
   else if (fiid_obj_errnum(obj) == FIID_ERR_OUT_OF_MEMORY)
     errno = ENOMEM;
+  else if (fiid_obj_errnum(obj) == FIID_ERR_OVERFLOW)
+    errno = ENOSPC;
   else
     errno = EINVAL;
 }
@@ -58,6 +60,8 @@ set_errno_by_fiid_iterator(fiid_iterator_t iter)
     errno = 0;
   else if (fiid_iterator_errnum(iter) == FIID_ERR_OUT_OF_MEMORY)
     errno = ENOMEM;
+  else if (fiid_iterator_errnum(iter) == FIID_ERR_OVERFLOW)
+    errno = ENOSPC;
   else
     errno = EINVAL;
 }

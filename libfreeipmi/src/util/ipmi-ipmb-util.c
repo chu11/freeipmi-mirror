@@ -56,7 +56,11 @@ ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq)
   
   FIID_OBJ_FIELD_LOOKUP (obj_ipmb_msg_hdr, "rq_seq");
   
-  FIID_OBJ_FIELD_LEN (len, obj_ipmb_msg_hdr, "rq_seq");
+  if ((len = fiid_obj_field_len (obj_ipmb_msg_hdr, "rq_seq")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_ipmb_msg_hdr);
+      return (-1);
+    }
   if (!len)
     {
       SET_ERRNO(EINVAL);
@@ -91,7 +95,11 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
   FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rs);
   FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
 
-  FIID_OBJ_FIELD_LEN (len, obj_ipmb_msg_hdr, "checksum1");
+  if ((len = fiid_obj_field_len (obj_ipmb_msg_hdr, "checksum1")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_ipmb_msg_hdr);
+      return (-1);
+    }
   if ((req_len = fiid_template_field_len(tmpl_ipmb_msg_hdr_rs, "checksum1")) < 0)
     {
       ERRNO_TRACE(errno);
@@ -103,7 +111,11 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
       return (-1);
     }
 
-  FIID_OBJ_FIELD_LEN (len, obj_ipmb_msg_trlr, "checksum2");
+  if ((len = fiid_obj_field_len (obj_ipmb_msg_trlr, "checksum2")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_ipmb_msg_trlr);
+      return (-1);
+    }
   if ((req_len = fiid_template_field_len(tmpl_ipmb_msg_trlr, "checksum2")) < 0)
     {
       ERRNO_TRACE(errno);

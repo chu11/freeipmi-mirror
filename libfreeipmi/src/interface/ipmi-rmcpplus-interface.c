@@ -1006,10 +1006,13 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
 
   memset(authentication_code_buf, '\0', authentication_code_buf_len);
 
-  FIID_OBJ_FIELD_LEN_BYTES(len,
-                           obj_rmcpplus_session_trlr,
-                           "authentication_code");
-
+  if ((len = fiid_obj_field_len_bytes(obj_rmcpplus_session_trlr,
+                                      "authentication_code")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_trlr);
+      return (-1);
+    }
+  
   if (len)
     {
       FIID_OBJ_GET_DATA_LEN(len,
@@ -1192,7 +1195,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    * a ipmi_payload_len is required but may not be set yet.
    */
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "authentication_type");
+  if ((len = fiid_obj_field_len (obj_rmcpplus_session_hdr, "authentication_type")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_hdr);
+      return (-1);
+    }
   if ((req_len = fiid_template_field_len(tmpl_rmcpplus_session_hdr, "authentication_type")) < 0)
     {
       ERRNO_TRACE(errno);
@@ -1204,7 +1211,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       return (-1);
     }
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "reserved1");
+  if ((len = fiid_obj_field_len (obj_rmcpplus_session_hdr, "reserved1")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_hdr);
+      return (-1);
+    }
   if ((req_len = fiid_template_field_len(tmpl_rmcpplus_session_hdr, "reserved1")) < 0)
     {
       ERRNO_TRACE(errno);
@@ -1216,7 +1227,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       return (-1);
     }
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "payload_type");
+  if ((len = fiid_obj_field_len (obj_rmcpplus_session_hdr, "payload_type")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_hdr);
+      return (-1);
+    }
   if ((req_len = fiid_template_field_len(tmpl_rmcpplus_session_hdr, "payload_type")) < 0)
     {
       ERRNO_TRACE(errno);
@@ -1228,7 +1243,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       return (-1);
     }
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "payload_type.authenticated");
+  if ((len = fiid_obj_field_len (obj_rmcpplus_session_hdr, "payload_type.authenticated")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_hdr);
+      return (-1);
+    }
   if ((req_len = fiid_template_field_len(tmpl_rmcpplus_session_hdr, "payload_type.authenticated")) < 0)
     {
       ERRNO_TRACE(errno);
@@ -1240,7 +1259,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       return (-1);
     }
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "payload_type.encrypted");
+  if ((len = fiid_obj_field_len (obj_rmcpplus_session_hdr, "payload_type.encrypted")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_hdr);
+      return (-1);
+    }
   if ((req_len = fiid_template_field_len(tmpl_rmcpplus_session_hdr, "payload_type.encrypted")) < 0)
     {
       ERRNO_TRACE(errno);
@@ -1252,7 +1275,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       return (-1);
     }
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "session_id");
+  if ((len = fiid_obj_field_len (obj_rmcpplus_session_hdr, "session_id")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_hdr);
+      return (-1);
+    }
   if ((req_len = fiid_template_field_len(tmpl_rmcpplus_session_hdr, "session_id")) < 0)
     {
       ERRNO_TRACE(errno);
@@ -1264,7 +1291,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       return (-1);
     }
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "session_sequence_number");
+  if ((len = fiid_obj_field_len (obj_rmcpplus_session_hdr, "session_sequence_number")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_hdr);
+      return (-1);
+    }
   if ((req_len = fiid_template_field_len(tmpl_rmcpplus_session_hdr, "session_sequence_number")) < 0)
     {
       ERRNO_TRACE(errno);
@@ -1363,7 +1394,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
        * Can't use FIID_OBJ_PACKET_VALID() on obj_rmcpplus_session_trlr b/c
        * integrity pad, pad length, and authentication code may not be set.
        */
-      FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_trlr, "next_header");
+      if ((len = fiid_obj_field_len (obj_rmcpplus_session_trlr, "next_header")) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_trlr);
+          return (-1);
+        }
       if ((req_len = fiid_template_field_len(tmpl_rmcpplus_session_trlr, "next_header")) < 0)
         {
           ERRNO_TRACE(errno);
@@ -1376,8 +1411,16 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
         }
     }
 
-  FIID_OBJ_FIELD_LEN(oem_iana_len, obj_rmcpplus_session_hdr, "oem_iana");
-  FIID_OBJ_FIELD_LEN(oem_payload_id_len, obj_rmcpplus_session_hdr, "oem_payload_id");
+  if ((oem_iana_len = fiid_obj_field_len(obj_rmcpplus_session_hdr, "oem_iana")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_hdr);
+      return (-1);
+    }
+  if ((oem_payload_id_len = fiid_obj_field_len(obj_rmcpplus_session_hdr, "oem_payload_id")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_hdr);
+      return (-1);
+    }
 
   /* achu: The OEM payload type isn't supported, but I'll leave this
    * code for the sake of potential future support
@@ -1437,10 +1480,13 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   /* 
    * Copy Session Header into packet
    */
-  FIID_OBJ_BLOCK_LEN_BYTES(len,
-                           obj_rmcpplus_session_hdr,
-                           "authentication_type",
-                           "session_sequence_number");
+  if ((len = fiid_obj_block_len_bytes(obj_rmcpplus_session_hdr,
+                                      "authentication_type",
+                                      "session_sequence_number")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_hdr);
+      return (-1);
+    }
   if (len > (pkt_len - indx))
     {
       SET_ERRNO(ENOSPC);
@@ -1543,10 +1589,13 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           goto cleanup;
         }
       
-      FIID_OBJ_BLOCK_LEN_BYTES_CLEANUP(len,
-                                       obj_rmcpplus_session_trlr_temp,
-                                       "integrity_pad",
-                                       "next_header");
+      if ((len = fiid_obj_block_len_bytes(obj_rmcpplus_session_trlr_temp,
+                                          "integrity_pad",
+                                          "next_header")) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_trlr_temp);
+          goto cleanup;
+        }
       if (len > (pkt_len - indx))
         {
           SET_ERRNO(ENOSPC);

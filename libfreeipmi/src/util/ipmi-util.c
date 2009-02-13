@@ -89,7 +89,11 @@ ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
 
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, "cmd");
 
-  FIID_OBJ_FIELD_LEN (len, obj_cmd, "cmd");
+  if ((len = fiid_obj_field_len (obj_cmd, "cmd")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
 
   if (!len)
     {
@@ -116,7 +120,11 @@ ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code)
 
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, "comp_code");
 
-  FIID_OBJ_FIELD_LEN (len, obj_cmd, "comp_code");
+  if ((len = fiid_obj_field_len (obj_cmd, "comp_code")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
 
   if (!len)
     {
