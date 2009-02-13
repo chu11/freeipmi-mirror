@@ -34,6 +34,9 @@
 	* libfreeipmi/src/libcommon/ipmi-trace.h: Renamed from
 	libfreeipmi/src/libcommon/ipmi-err-wrappers.h.
 
+	* libfreeipmi/src/libcommon/ipmi-fiid-util.h,
+	libfreeipmi/src/libcommon/ipmi-fiid-util.c: New files.
+
 	* libfreeipmi/src/api/: Remove use of IPMI_ERR_LIBRARY_ERROR,
 	replace with IPMI_ERR_INTERNAL_ERROR.
 
