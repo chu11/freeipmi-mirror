@@ -60,6 +60,8 @@ void api_set_api_errnum_by_sunbmc_errnum(ipmi_ctx_t ctx, int sunbmc_errnum);
 
 int api_fiid_obj_packet_valid(ipmi_ctx_t ctx, fiid_obj_t obj);
 
+int api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tmpl);
+
 int api_fiid_obj_get(ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
 
 int api_ipmi_cmd(ipmi_ctx_t ctx,
