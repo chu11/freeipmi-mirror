@@ -239,7 +239,11 @@ fill_rmcpplus_session_hdr (uint8_t payload_type,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
+  if (fiid_obj_template_compare(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_rmcpplus_session_hdr);
 
@@ -271,7 +275,11 @@ fill_rmcpplus_session_trlr(fiid_obj_t obj_rmcpplus_session_trlr)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
+  if (fiid_obj_template_compare(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_CLEAR (obj_rmcpplus_session_trlr);
 
@@ -303,7 +311,11 @@ fill_rmcpplus_payload(uint8_t *confidentiality_header,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_rmcpplus_payload);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_rmcpplus_payload) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   
@@ -347,7 +359,11 @@ fill_rmcpplus_open_session (uint8_t message_tag,
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_rmcpplus_open_session_request);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_rmcpplus_open_session_request) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
@@ -446,7 +462,11 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_rmcpplus_rakp_message_1);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_rmcpplus_rakp_message_1) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
@@ -505,7 +525,11 @@ fill_rmcpplus_rakp_message_3(uint8_t message_tag,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_rmcpplus_rakp_message_3);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_rmcpplus_rakp_message_3) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
@@ -1000,7 +1024,11 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
           && authentication_code_buf
           && authentication_code_buf_len);
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
+  if (fiid_obj_template_compare(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   /* Check if the user provided an authentication code, if so, use it */
 
@@ -1184,8 +1212,16 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
+  if (fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  if (fiid_obj_template_compare(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_PACKET_VALID(obj_rmcp_hdr);
   FIID_OBJ_PACKET_VALID(obj_cmd);
@@ -1362,7 +1398,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           SET_ERRNO(EINVAL);
           return (-1);
         }
-      FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq);
+      if (fiid_obj_template_compare(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          return (-1);
+        }
       FIID_OBJ_PACKET_VALID(obj_lan_msg_hdr);
     }
   else if (payload_type == IPMI_PAYLOAD_TYPE_SOL)
@@ -1375,11 +1415,29 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
         }
     }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
-    FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_open_session_request);
+    {
+      if (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_request) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          return (-1);
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
-    FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_rakp_message_1);
+    {
+      if (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_1) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          return (-1);
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
-    FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_rakp_message_3);
+    {
+      if (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_3) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          return (-1);
+        }
+    }
   
   if (session_id && payload_authenticated == IPMI_PAYLOAD_FLAG_AUTHENTICATED)
     {
@@ -1388,7 +1446,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           SET_ERRNO(EINVAL);
           return (-1);
         }
-      FIID_OBJ_TEMPLATE_COMPARE (obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
+      if (fiid_obj_template_compare (obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          return (-1);
+        }
 
       /*
        * Can't use FIID_OBJ_PACKET_VALID() on obj_rmcpplus_session_trlr b/c
@@ -2074,10 +2136,26 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
+  if (fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  if (fiid_obj_template_compare(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  if (fiid_obj_template_compare(obj_rmcpplus_payload, tmpl_rmcpplus_payload) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  if (fiid_obj_template_compare(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   /*
    * Extract RMCP header
@@ -2182,8 +2260,8 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       || (session_id
           && payload_authenticated == IPMI_PAYLOAD_FLAG_AUTHENTICATED
           && !(integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
-                || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
-                || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128))
+               || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
+               || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128))
       || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
           && payload_encrypted != IPMI_PAYLOAD_FLAG_UNENCRYPTED)
       || !ipmi_payload_len)
@@ -2200,8 +2278,16 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           SET_ERRNO(EINVAL);
           return (-1);
         }
-      FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs);
-      FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
+      if (fiid_obj_template_compare(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          return (-1);
+        }
+      if (fiid_obj_template_compare(obj_lan_msg_trlr, tmpl_lan_msg_trlr) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          return (-1);
+        }
     }
   else if (payload_type == IPMI_PAYLOAD_TYPE_SOL)
     {
@@ -2213,11 +2299,29 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
         }
     }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
-    FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_open_session_response);
+    {
+      if (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_response) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          return (-1);
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)
-    FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_rakp_message_2);
+    {
+      if (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          return (-1);
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-    FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_rakp_message_4);
+    {
+      if (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          return (-1);
+        }
+    }
   
   if (session_id && payload_authenticated == IPMI_PAYLOAD_FLAG_AUTHENTICATED)
     {
@@ -2226,7 +2330,11 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           SET_ERRNO(EINVAL);
           return (-1);
         }
-      FIID_OBJ_TEMPLATE_COMPARE (obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
+      if (fiid_obj_template_compare (obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          return (-1);
+        }
     }
 
   if (pkt_len - indx < ipmi_payload_len)

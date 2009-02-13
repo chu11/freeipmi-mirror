@@ -526,7 +526,11 @@ fill_cmd_get_pef_capabilities (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_pef_capabilities_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_pef_capabilities_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_PEF_CAPABILITIES);
@@ -542,7 +546,11 @@ fill_cmd_arm_pef_postpone_timer (uint8_t pef_postpone_timeout, fiid_obj_t obj_cm
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_arm_pef_postpone_timer_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_arm_pef_postpone_timer_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_ARM_PEF_POSTPONE_TIMER);
@@ -564,7 +572,11 @@ fill_cmd_set_pef_configuration_parameters (fiid_obj_t obj_cmd_rq,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -595,7 +607,11 @@ fill_cmd_set_pef_configuration_parameters_pef_control (uint8_t pef,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_control_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_control_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -630,7 +646,11 @@ fill_cmd_set_pef_configuration_parameters_pef_action_global_control (uint8_t ale
       return (-1);
     }
     
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_action_global_control_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_action_global_control_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -655,7 +675,11 @@ fill_cmd_set_pef_configuration_parameters_pef_startup_delay (uint8_t pef_startup
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_startup_delay_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_startup_delay_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -674,7 +698,11 @@ fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (uint8_t pef_a
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_alert_startup_delay_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_pef_alert_startup_delay_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -731,7 +759,11 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table (uint8_t filter_num
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_event_filter_table_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_event_filter_table_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -787,7 +819,11 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (uint8_t filt
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_event_filter_table_data1_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_event_filter_table_data1_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq,"cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -814,7 +850,11 @@ fill_cmd_set_pef_configuration_parameters_alert_string_keys (uint8_t string_sele
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_alert_string_keys_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_alert_string_keys_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS); 
@@ -846,7 +886,11 @@ fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_selector
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_alert_strings_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_alert_strings_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS); 
@@ -884,8 +928,12 @@ fill_cmd_set_pef_configuration_parameters_alert_policy_table (uint8_t alert_poli
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, 
-			     tmpl_cmd_set_pef_configuration_parameters_alert_policy_table_rq);
+  if (fiid_obj_template_compare (obj_cmd_rq,
+                                 tmpl_cmd_set_pef_configuration_parameters_alert_policy_table_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -920,7 +968,11 @@ fill_cmd_get_pef_configuration_parameters (uint8_t parameter_selector,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_pef_configuration_parameters_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_PEF_CONFIGURATION_PARAMETERS);
@@ -944,7 +996,11 @@ fill_cmd_set_last_processed_event_id (uint8_t set_record_id_for_last_record,
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_last_processed_event_id_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_last_processed_event_id_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAST_PROCESSED_EVENT_ID);
@@ -963,7 +1019,11 @@ fill_cmd_get_last_processed_event_id (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_last_processed_event_id_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_last_processed_event_id_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_LAST_PROCESSED_EVENT_ID);
@@ -989,7 +1049,11 @@ fill_cmd_alert_immediate (uint8_t channel_number,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_alert_immediate_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_alert_immediate_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_ALERT_IMMEDIATE);
@@ -1017,7 +1081,11 @@ fill_cmd_pet_acknowledge (uint16_t sequence_number,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_pet_acknowledge_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_pet_acknowledge_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_PET_ACKNOWLEDGE);

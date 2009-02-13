@@ -408,7 +408,11 @@ fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_chassis_capabilities_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_chassis_capabilities_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
  
@@ -425,7 +429,11 @@ fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_chassis_status_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_chassis_status_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHASSIS_STATUS);
@@ -443,7 +451,11 @@ fill_cmd_chassis_control (uint8_t chassis_control,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_chassis_control_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_chassis_control_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CHASSIS_CONTROL);
@@ -465,7 +477,11 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_chassis_identify_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_chassis_identify_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
@@ -500,7 +516,11 @@ fill_cmd_set_front_panel_enables (uint8_t disable_power_off_button_for_power_off
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_front_panel_enables_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_front_panel_enables_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
@@ -525,7 +545,11 @@ fill_cmd_set_power_restore_policy (uint8_t power_restore_policy,
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_power_restore_policy_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_power_restore_policy_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
@@ -549,7 +573,11 @@ fill_cmd_set_power_cycle_interval (uint8_t interval,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_power_cycle_interval_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_power_cycle_interval_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
@@ -567,7 +595,11 @@ fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_system_restart_cause_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_system_restart_cause_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
@@ -590,7 +622,11 @@ fill_cmd_set_system_boot_options (uint8_t parameter_selector,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_system_boot_options_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
@@ -612,7 +648,11 @@ fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_set_in_progress_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_system_boot_options_set_in_progress_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
@@ -651,7 +691,11 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_ha
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
@@ -740,7 +784,11 @@ fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
@@ -797,7 +845,11 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_flags_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_flags_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
@@ -839,7 +891,11 @@ fill_cmd_get_system_boot_options (uint8_t parameter_selector,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_system_boot_options_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_system_boot_options_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_BOOT_OPTIONS);
@@ -859,7 +915,11 @@ fill_cmd_get_power_on_hours_counter (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_power_on_hours_counter_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_power_on_hours_counter_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 

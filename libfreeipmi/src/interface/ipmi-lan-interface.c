@@ -108,7 +108,11 @@ fill_lan_session_hdr  (uint8_t authentication_type,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_lan_session_hdr, tmpl_lan_session_hdr);
+  if (fiid_obj_template_compare(obj_lan_session_hdr, tmpl_lan_session_hdr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_lan_session_hdr);
   FIID_OBJ_SET (obj_lan_session_hdr, "authentication_type", authentication_type);
@@ -141,7 +145,11 @@ fill_lan_msg_hdr (uint8_t rs_addr,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq);
+  if (fiid_obj_template_compare(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_lan_msg_hdr);
   FIID_OBJ_SET (obj_lan_msg_hdr, "rs_addr", rs_addr);
@@ -274,9 +282,21 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_lan_session_hdr, tmpl_lan_session_hdr);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq);
+  if (fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  if (fiid_obj_template_compare(obj_lan_session_hdr, tmpl_lan_session_hdr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  if (fiid_obj_template_compare(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   FIID_OBJ_PACKET_VALID(obj_rmcp_hdr);
 
   /* 
@@ -586,10 +606,26 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_lan_session_hdr, tmpl_lan_session_hdr);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
+  if (fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  if (fiid_obj_template_compare(obj_lan_session_hdr, tmpl_lan_session_hdr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  if (fiid_obj_template_compare(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  if (fiid_obj_template_compare(obj_lan_msg_trlr, tmpl_lan_msg_trlr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   indx = 0;
   FIID_OBJ_CLEAR(obj_rmcp_hdr);

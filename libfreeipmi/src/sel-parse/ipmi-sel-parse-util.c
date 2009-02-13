@@ -55,12 +55,6 @@ sel_parse_set_sel_parse_errnum_by_fiid_object(ipmi_sel_parse_ctx_t ctx, fiid_obj
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     return;
 
-  if (!fiid_obj_valid(obj))
-    {
-      SEL_PARSE_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return;
-    }
-
   if (fiid_obj_errnum(obj) == FIID_ERR_SUCCESS)
     ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
   else if (fiid_obj_errnum(obj) == FIID_ERR_OUT_OF_MEMORY)
@@ -77,12 +71,6 @@ sel_parse_fiid_obj_get(ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj, char *field, ui
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     return (-1);
-
-  if (!fiid_obj_valid(obj))
-    {
-      SEL_PARSE_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
 
   if ((ret = fiid_obj_get(obj, field, &lval)) < 0)
     {

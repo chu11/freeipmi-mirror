@@ -737,7 +737,11 @@ fill_cmd_set_sensor_hysteresis (uint8_t sensor_number,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sensor_hysteresis_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_sensor_hysteresis_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_HYSTERESIS);   
@@ -766,7 +770,11 @@ fill_cmd_get_sensor_hysteresis (uint8_t sensor_number,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sensor_hysteresis_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sensor_hysteresis_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_HYSTERESIS);   
@@ -792,7 +800,11 @@ fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sensor_thresholds_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_sensor_thresholds_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_THRESHOLDS);   
@@ -877,7 +889,11 @@ fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sensor_thresholds_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sensor_thresholds_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_THRESHOLDS);   
@@ -904,7 +920,11 @@ fill_cmd_set_sensor_event_enable (uint8_t sensor_number,
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_EVENT_ENABLE);   
@@ -983,7 +1003,11 @@ fill_cmd_set_sensor_event_enable_threshold (uint8_t sensor_number,
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_EVENT_ENABLE);   
@@ -1100,7 +1124,11 @@ fill_cmd_set_sensor_event_enable_discrete (uint8_t sensor_number,
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_EVENT_ENABLE);   
@@ -1156,7 +1184,11 @@ fill_cmd_get_sensor_event_enable (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sensor_event_enable_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sensor_event_enable_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_EVENT_ENABLE);   
@@ -1174,7 +1206,11 @@ fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sensor_reading_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sensor_reading_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_READING);   

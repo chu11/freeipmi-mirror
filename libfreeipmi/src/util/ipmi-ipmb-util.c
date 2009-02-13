@@ -92,8 +92,16 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rs);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
+  if (fiid_obj_template_compare(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rs) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  if (fiid_obj_template_compare(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   if ((len = fiid_obj_field_len (obj_ipmb_msg_hdr, "checksum1")) < 0)
     {

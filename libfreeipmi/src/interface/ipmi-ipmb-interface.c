@@ -106,7 +106,11 @@ fill_ipmb_msg_hdr (uint8_t rs_addr,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rq);
+  if (fiid_obj_template_compare(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_ipmb_msg_hdr);
   FIID_OBJ_SET (obj_ipmb_msg_hdr, "rs_addr", rs_addr);
@@ -152,8 +156,16 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rq);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg, tmpl_ipmb_msg);
+  if (fiid_obj_template_compare(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  if (fiid_obj_template_compare(obj_ipmb_msg, tmpl_ipmb_msg) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_PACKET_VALID(obj_ipmb_msg_hdr);
   FIID_OBJ_PACKET_VALID(obj_cmd);
@@ -255,8 +267,16 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rs);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
+  if (fiid_obj_template_compare(obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rs) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  if (fiid_obj_template_compare(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   memset (buf, '\0', IPMB_MAX_LEN+1);
 

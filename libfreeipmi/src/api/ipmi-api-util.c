@@ -64,12 +64,6 @@ api_set_api_errnum_by_fiid_object(ipmi_ctx_t ctx, fiid_obj_t obj)
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
 
-  if (!fiid_obj_valid(obj))
-    {
-      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return;
-    }
-
   if (fiid_obj_errnum(obj) == FIID_ERR_SUCCESS)
     ctx->errnum = IPMI_ERR_SUCCESS;
   else if (fiid_obj_errnum(obj) == FIID_ERR_OUT_OF_MEMORY)
@@ -84,12 +78,6 @@ api_set_api_errnum_by_bad_response(ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
 
-  if (!fiid_obj_valid(obj_cmd_rs))
-    {
-      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return;
-    }
-  
   if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_NODE_BUSY) == 1
       || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_OUT_OF_SPACE) == 1
       || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_SDR_UPDATE_MODE) == 1
@@ -250,41 +238,6 @@ api_fiid_obj_packet_valid(ipmi_ctx_t ctx, fiid_obj_t obj)
 }
 
 int
-api_fiid_obj_template_compare(ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tmpl)
-{
-  int ret;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return (-1);
-
-  if (!fiid_obj_valid(obj))
-    {
-      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-
-  if (!fiid_obj_valid(obj))
-    {
-      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
- 
-  if ((ret = fiid_obj_template_compare (obj, tmpl)) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj);
-      return (-1);
-    }
-
-  if (!ret)
-    {
-      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  return (0);
-}
-
-int
 api_fiid_obj_get(ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val)
 {
   uint64_t lval;
@@ -292,12 +245,6 @@ api_fiid_obj_get(ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val)
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return (-1);
-
-  if (!fiid_obj_valid(obj))
-    {
-      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
 
   if ((ret = fiid_obj_get(obj, field, &lval)) < 0)
     {
@@ -326,18 +273,6 @@ api_ipmi_cmd(ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return (-1);
-
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-
-  if (!fiid_obj_valid(obj_cmd_rs))
-    {
-      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
 
   /* Note: ctx->errnum set in call to ipmi_cmd() */
   if (ipmi_cmd(ctx,
@@ -374,18 +309,6 @@ api_ipmi_cmd_ipmb(ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return (-1);
-
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-
-  if (!fiid_obj_valid(obj_cmd_rs))
-    {
-      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
 
   /* Note: ctx->errnum set in call to ipmi_cmd_ipmb() */
   if (ipmi_cmd_ipmb(ctx,

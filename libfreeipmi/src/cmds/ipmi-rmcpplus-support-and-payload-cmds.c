@@ -376,7 +376,11 @@ fill_cmd_activate_payload (uint8_t payload_type,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_activate_payload_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_activate_payload_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_ACTIVATE_PAYLOAD);
@@ -414,7 +418,11 @@ fill_cmd_activate_payload_sol (uint8_t payload_type,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_activate_payload_sol_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_activate_payload_sol_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_ACTIVATE_PAYLOAD);
@@ -447,7 +455,11 @@ fill_cmd_deactivate_payload (uint8_t payload_type,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_deactivate_payload_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_deactivate_payload_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_DEACTIVATE_PAYLOAD);
@@ -474,7 +486,11 @@ fill_cmd_suspend_resume_payload_encryption (uint8_t payload_type,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_suspend_resume_payload_encryption_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_suspend_resume_payload_encryption_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION);
@@ -499,7 +515,11 @@ fill_cmd_get_payload_activation_status (uint8_t payload_type,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_payload_activation_status_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_payload_activation_status_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_PAYLOAD_ACTIVATION_STATUS);
@@ -520,7 +540,11 @@ fill_cmd_get_payload_instance_info (uint8_t payload_type,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_payload_instance_info_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_payload_instance_info_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_PAYLOAD_INSTANCE_INFO);
@@ -574,7 +598,11 @@ fill_cmd_set_user_payload_access (uint8_t channel_number,
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_user_payload_access_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_user_payload_access_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PAYLOAD_ACCESS);
@@ -617,7 +645,11 @@ fill_cmd_get_user_payload_access (uint8_t channel_number,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_user_payload_access_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_user_payload_access_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_PAYLOAD_ACCESS);
@@ -640,7 +672,11 @@ fill_cmd_get_channel_payload_support (uint8_t channel_number,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_payload_support_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_channel_payload_support_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_PAYLOAD_SUPPORT);
@@ -663,7 +699,11 @@ fill_cmd_get_channel_payload_version (uint8_t channel_number,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_payload_version_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_channel_payload_version_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION);
@@ -691,7 +731,11 @@ fill_cmd_get_channel_oem_payload_info (uint8_t channel_number,
       return (-1);
     }
     
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_oem_payload_info_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_channel_oem_payload_info_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO);

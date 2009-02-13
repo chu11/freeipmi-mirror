@@ -149,7 +149,11 @@ fill_cmd_get_repository_info (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sdr_repository_info_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sdr_repository_info_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SDR_REPOSITORY_INFO);
@@ -165,7 +169,11 @@ fill_cmd_get_repository_allocation_info (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sdr_repository_allocation_info_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sdr_repository_allocation_info_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SDR_REPOSITORY_ALLOCATION_INFO);
@@ -181,7 +189,11 @@ fill_cmd_reserve_sdr_repository (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_reserve_sdr_repository_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_reserve_sdr_repository_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_RESERVE_SDR_REPOSITORY);
@@ -201,7 +213,11 @@ fill_cmd_get_sdr (uint16_t reservation_id,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sdr_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sdr_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SDR);
@@ -221,7 +237,11 @@ fill_cmd_get_sdr_repository_time (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sdr_repository_time_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sdr_repository_time_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SDR_REPOSITORY_TIME);
@@ -238,7 +258,11 @@ fill_cmd_set_sdr_repository_time (uint32_t time, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sdr_repository_time_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_sdr_repository_time_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SDR_REPOSITORY_TIME);

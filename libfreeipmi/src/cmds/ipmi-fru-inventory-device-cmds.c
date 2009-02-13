@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.6.10.4 2009-02-13 21:22:30 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.6.10.5 2009-02-13 23:33:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -107,7 +107,11 @@ fill_cmd_get_fru_inventory_area_info (uint8_t fru_device_id,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_fru_inventory_area_info_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_fru_inventory_area_info_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_FRU_INVENTORY_AREA_INFO);
@@ -127,7 +131,11 @@ fill_cmd_read_fru_data (uint8_t fru_device_id,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_read_fru_data_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_read_fru_data_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_READ_FRU_DATA);
@@ -152,7 +160,11 @@ fill_cmd_write_fru_data (uint8_t fru_device_id,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_write_fru_data_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_write_fru_data_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_WRITE_FRU_DATA);

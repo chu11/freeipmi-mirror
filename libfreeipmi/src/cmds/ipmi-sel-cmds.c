@@ -238,7 +238,11 @@ fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sel_info_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sel_info_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_INFO);
@@ -254,7 +258,11 @@ fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sel_allocation_info_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sel_allocation_info_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_ALLOCATION_INFO);
@@ -270,7 +278,11 @@ fill_cmd_reserve_sel (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_reserve_sel_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_reserve_sel_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_RESERVE_SEL);
@@ -290,7 +302,11 @@ fill_cmd_get_sel_entry (uint16_t reservation_id,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sel_entry_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sel_entry_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_ENTRY);
@@ -313,7 +329,11 @@ fill_cmd_delete_sel_entry (uint16_t reservation_id,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_delete_sel_entry_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_delete_sel_entry_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DELETE_SEL_ENTRY); 
@@ -335,7 +355,11 @@ fill_cmd_clear_sel (uint16_t reservation_id,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_clear_sel_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_clear_sel_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   /* achu: the "CLR" is exactly from the spec.  I know it looks dumb */
   FIID_OBJ_CLEAR (obj_cmd_rq);
@@ -358,7 +382,11 @@ fill_cmd_get_sel_time (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sel_time_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sel_time_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_TIME); 
@@ -375,7 +403,11 @@ fill_cmd_set_sel_time (uint32_t time, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sel_time_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_sel_time_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SEL_TIME); 
@@ -395,7 +427,11 @@ fill_cmd_get_auxiliary_log_status (uint8_t log_type,
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_auxiliary_log_status_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_auxiliary_log_status_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_AUXILIARY_LOG_STATUS); 
@@ -420,7 +456,11 @@ fill_cmd_set_auxiliary_log_status (uint8_t log_type,
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_auxiliary_log_status_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_auxiliary_log_status_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_AUXILIARY_LOG_STATUS); 

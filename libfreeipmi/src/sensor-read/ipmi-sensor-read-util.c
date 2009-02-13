@@ -55,12 +55,6 @@ sensor_read_set_sensor_read_errnum_by_fiid_object(ipmi_sensor_read_ctx_t ctx, fi
   if (!ctx || ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
     return;
 
-  if (!fiid_obj_valid(obj))
-    {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return;
-    }
-
   if (fiid_obj_errnum(obj) == FIID_ERR_SUCCESS)
     ctx->errnum = IPMI_SENSOR_READ_ERR_SUCCESS;
   else if (fiid_obj_errnum(obj) == FIID_ERR_OUT_OF_MEMORY)
@@ -77,12 +71,6 @@ sensor_read_fiid_obj_get(ipmi_sensor_read_ctx_t ctx, fiid_obj_t obj, char *field
 
   if (!ctx || ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
     return (-1);
-
-  if (!fiid_obj_valid(obj))
-    {
-      SENSOR_READ_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
 
   if ((ret = fiid_obj_get(obj, field, &lval)) < 0)
     {

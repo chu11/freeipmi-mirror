@@ -73,7 +73,11 @@ fill_cmd_asf_presence_ping(uint8_t message_tag, fiid_obj_t obj_cmd)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_asf_presence_ping);
+  if (fiid_obj_template_compare(obj_cmd, tmpl_cmd_asf_presence_ping) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd);
   FIID_OBJ_SET (obj_cmd, "iana_enterprise_number", htonl(RMCP_ASF_IANA_ENTERPRISE_NUM));

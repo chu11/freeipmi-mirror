@@ -61,12 +61,6 @@ locate_set_locate_errnum_by_fiid_object(ipmi_locate_ctx_t ctx, fiid_obj_t obj)
   if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
     return;
 
-  if (!fiid_obj_valid(obj))
-    {
-      LOCATE_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return;
-    }
-
   if (fiid_obj_errnum(obj) == FIID_ERR_SUCCESS)
     ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
   else if (fiid_obj_errnum(obj) == FIID_ERR_OUT_OF_MEMORY)
@@ -83,12 +77,6 @@ locate_fiid_obj_get(ipmi_locate_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t
 
   if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
     return (-1);
-
-  if (!fiid_obj_valid(obj))
-    {
-      LOCATE_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
 
   if ((ret = fiid_obj_get(obj, field, &lval)) < 0)
     {

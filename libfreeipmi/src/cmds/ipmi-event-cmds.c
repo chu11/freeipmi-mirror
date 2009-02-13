@@ -84,7 +84,11 @@ fill_cmd_set_event_receiver (uint8_t event_receiver_slave_address,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_event_receiver_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_event_receiver_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_EVENT_RECEIVER);
@@ -103,7 +107,11 @@ fill_cmd_get_event_receiver (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_event_receiver_rq);
+  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_event_receiver_rq) != 1)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_EVENT_RECEIVER);

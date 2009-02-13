@@ -46,7 +46,6 @@ void locate_set_locate_errnum_by_fiid_object(ipmi_locate_ctx_t ctx, fiid_obj_t o
 
 int locate_fiid_obj_get(ipmi_locate_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
 
-
 #ifdef __cplusplus
 }
 #endif
