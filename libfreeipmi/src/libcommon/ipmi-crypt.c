@@ -40,28 +40,48 @@ GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
 static int ipmi_crypt_initialized = 0;
 
-/* XXX */
-#define GCRY_ERR(expr)                          \
-  do {                                          \
-    if (!(expr))                                \
-      {                                         \
-        __ERRNO_TRACE(errno);                   \
-        return (-1);                            \
-      }                                         \
-  } while (0)
+static int
+_gpg_error_to_errno(gcry_error_t e)
+{
+  /* be lazy right now */
+  if (e == GPG_ERR_NO_ERROR)
+    return 0;
+  else
+    return EINVAL;
+}
 
 int8_t
 ipmi_crypt_init(void)
 {
   gcry_error_t e;
 
-  GCRY_ERR (!((e = gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) != GPG_ERR_NO_ERROR));
+  if ((e = gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) != GPG_ERR_NO_ERROR)
+    {
+      ERR_TRACE(gcry_strerror(e), e);
+      SET_ERRNO(_gpg_error_to_errno(e));
+      return (-1);
+    }
 
-  GCRY_ERR (gcry_check_version(GCRYPT_VERSION));
+  if (!gcry_check_version(GCRYPT_VERSION))
+    {
+      ERR_TRACE(gcry_strerror(e), e);
+      SET_ERRNO(_gpg_error_to_errno(e));
+      return (-1);
+    }
 
-  GCRY_ERR (!((e = gcry_control(GCRYCTL_DISABLE_SECMEM, 0)) != GPG_ERR_NO_ERROR));
+  if ((e = gcry_control(GCRYCTL_DISABLE_SECMEM, 0)) != GPG_ERR_NO_ERROR)
+    {
+      ERR_TRACE(gcry_strerror(e), e);
+      SET_ERRNO(_gpg_error_to_errno(e));
+      return (-1);
+    }
   
-  GCRY_ERR (!((e = gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0)) != GPG_ERR_NO_ERROR));
+  if ((e = gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0)) != GPG_ERR_NO_ERROR)
+    {
+      ERR_TRACE(gcry_strerror(e), e);
+      SET_ERRNO(_gpg_error_to_errno(e));
+      return (-1);
+    }
 
   ipmi_crypt_initialized++;
   return (0);
@@ -77,11 +97,12 @@ ipmi_crypt_hash(int hash_algorithm,
                 uint8_t *digest,
                 uint32_t digest_len)
 {
-  gcry_md_hd_t h;
+  gcry_md_hd_t h = NULL;
   gcry_error_t e;
   int gcry_md_algorithm, gcry_md_flags = 0;
   unsigned int gcry_md_digest_len;
   uint8_t *digestPtr;
+  int32_t rv = -1;
 
   if (!IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm)
       || (hash_data && !hash_data_len)
@@ -106,11 +127,25 @@ ipmi_crypt_hash(int hash_algorithm,
   if (hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC)
     gcry_md_flags |= GCRY_MD_FLAG_HMAC;
 
-  GCRY_ERR (!((gcry_md_digest_len = gcry_md_get_algo_dlen(gcry_md_algorithm)) > digest_len));
+  if ((gcry_md_digest_len = gcry_md_get_algo_dlen(gcry_md_algorithm)) > digest_len)
+    {
+      ERR_TRACE(gcry_strerror(e), e);
+      SET_ERRNO(_gpg_error_to_errno(e));
+      return (-1);
+    }
 
-  GCRY_ERR (!((e = gcry_md_open(&h, gcry_md_algorithm, gcry_md_flags)) != GPG_ERR_NO_ERROR));
+  if ((e = gcry_md_open(&h, gcry_md_algorithm, gcry_md_flags)) != GPG_ERR_NO_ERROR)
+    {
+      ERR_TRACE(gcry_strerror(e), e);
+      SET_ERRNO(_gpg_error_to_errno(e));
+      return (-1);
+    }
       
-  GCRY_ERR (h);
+  if (!h)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   /* achu: Technically any key length can be supplied.  We'll assume
    * callers have checked if the key is of a length they care about.
@@ -119,18 +154,32 @@ ipmi_crypt_hash(int hash_algorithm,
    * that a zero padded password of some length should be the key.
    */
   if ((hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC) && key && key_len)
-    GCRY_ERR (!((e = gcry_md_setkey(h, key, key_len)) != GPG_ERR_NO_ERROR));
+    {
+      if ((e = gcry_md_setkey(h, key, key_len)) != GPG_ERR_NO_ERROR)
+        {
+          ERR_TRACE(gcry_strerror(e), e);
+          SET_ERRNO(_gpg_error_to_errno(e));
+          goto cleanup;
+        }
+    }
 
   if (hash_data && hash_data_len)
     gcry_md_write(h, (void *)hash_data, hash_data_len);
 
   gcry_md_final(h);
 
-  GCRY_ERR ((digestPtr = gcry_md_read(h, gcry_md_algorithm)));
+  if (!(digestPtr = gcry_md_read(h, gcry_md_algorithm)))
+    {
+      SET_ERRNO(EINVAL);
+      goto cleanup;
+    }
 
   memcpy(digest, digestPtr, gcry_md_digest_len);
-  gcry_md_close(h);
-  return (gcry_md_digest_len);
+  rv = gcry_md_digest_len;
+ cleanup:
+  if (h)
+    gcry_md_close(h);
+  return (rv);
 }
 
 int32_t
@@ -172,8 +221,9 @@ _cipher_crypt(int cipher_algorithm,
   int gcry_cipher_algorithm, gcry_cipher_mode = 0;
   int cipher_keylen, cipher_blocklen;
   int expected_cipher_key_len, expected_cipher_block_len;
-  gcry_cipher_hd_t h;
+  gcry_cipher_hd_t h = NULL;
   gcry_error_t e;
+  int32_t rv = -1;
 
   if (cipher_algorithm != IPMI_CRYPT_CIPHER_AES
       || !IPMI_CRYPT_CIPHER_MODE_VALID(cipher_mode)
@@ -238,35 +288,70 @@ _cipher_crypt(int cipher_algorithm,
       return (-1);
     }
 
-  GCRY_ERR (!((e = gcry_cipher_open(&h,
-                                    gcry_cipher_algorithm,
-                                    gcry_cipher_mode,
-                                    0) != GPG_ERR_NO_ERROR)));
+  if ((e = gcry_cipher_open(&h,
+                            gcry_cipher_algorithm,
+                            gcry_cipher_mode,
+                            0) != GPG_ERR_NO_ERROR))
+    {
+      ERR_TRACE(gcry_strerror(e), e);
+      SET_ERRNO(_gpg_error_to_errno(e));
+      return (-1);
+    }
   
   if (key && key_len)
-    GCRY_ERR (!((e = gcry_cipher_setkey(h,
-                                        (void *)key,
-                                        key_len)) != GPG_ERR_NO_ERROR));
+    {
+      if ((e = gcry_cipher_setkey(h,
+                                  (void *)key,
+                                  key_len)) != GPG_ERR_NO_ERROR)
+        {
+          ERR_TRACE(gcry_strerror(e), e);
+          SET_ERRNO(_gpg_error_to_errno(e));
+          goto cleanup;
+        }
+    }
 
   if (iv && iv_len)
-    GCRY_ERR (!((e = gcry_cipher_setiv(h, (void *)iv, iv_len)) != GPG_ERR_NO_ERROR));
+    {
+      if ((e = gcry_cipher_setiv(h, (void *)iv, iv_len)) != GPG_ERR_NO_ERROR)
+        {
+          ERR_TRACE(gcry_strerror(e), e);
+          SET_ERRNO(_gpg_error_to_errno(e));
+          goto cleanup;
+        }
+    }
 
   if (encrypt_flag)
-    GCRY_ERR (!((e = gcry_cipher_encrypt(h,
-                                         (void *)data,
-                                         data_len,
-                                         NULL,
-                                         0)) != GPG_ERR_NO_ERROR));
+    {
+      if ((e = gcry_cipher_encrypt(h,
+                                   (void *)data,
+                                   data_len,
+                                   NULL,
+                                   0)) != GPG_ERR_NO_ERROR)
+        {
+          ERR_TRACE(gcry_strerror(e), e);
+          SET_ERRNO(_gpg_error_to_errno(e));
+          goto cleanup;
+        }
+    }
   else
-    GCRY_ERR (!((e = gcry_cipher_decrypt(h,
-                                         (void *)data,
-                                         data_len,
-                                         NULL,
-                                         0)) != GPG_ERR_NO_ERROR));
+    {
+      if ((e = gcry_cipher_decrypt(h,
+                                   (void *)data,
+                                   data_len,
+                                   NULL,
+                                   0)) != GPG_ERR_NO_ERROR)
+        {
+          ERR_TRACE(gcry_strerror(e), e);
+          SET_ERRNO(_gpg_error_to_errno(e));
+          goto cleanup;
+        }
+    }
 
-  gcry_cipher_close(h);
-
-  return (data_len);
+  rv = data_len;
+ cleanup:
+  if (h)
+    gcry_cipher_close(h);
+  return (rv);
 }
 
 int32_t
@@ -338,10 +423,15 @@ _ipmi_crypt_cipher_info(int cipher_algorithm, int cipher_info)
       return (-1);
     }
 
-  GCRY_ERR (!((e = gcry_cipher_algo_info(gcry_cipher_algorithm,
-                                         gcry_crypt_cipher_info_what,
-                                         NULL,
-                                         &len)) != GPG_ERR_NO_ERROR));
+  if ((e = gcry_cipher_algo_info(gcry_cipher_algorithm,
+                                 gcry_crypt_cipher_info_what,
+                                 NULL,
+                                 &len)) != GPG_ERR_NO_ERROR)
+    {
+      ERR_TRACE(gcry_strerror(e), e);
+      SET_ERRNO(_gpg_error_to_errno(e));
+      return (-1);
+    }
 
   return (len);
 }
