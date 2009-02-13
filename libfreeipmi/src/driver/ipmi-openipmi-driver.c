@@ -212,11 +212,6 @@ ipmi_openipmi_ctx_create(void)
 
   ctx->errnum = IPMI_OPENIPMI_ERR_SUCCESS;
   return ctx;
-
- cleanup:
-  if (ctx)
-    free(ctx);
-  return (NULL);
 }
 
 void

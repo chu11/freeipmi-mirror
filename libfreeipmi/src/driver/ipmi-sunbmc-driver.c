@@ -162,11 +162,6 @@ ipmi_sunbmc_ctx_create(void)
 
   ctx->errnum = IPMI_SUNBMC_ERR_SUCCESS;
   return ctx;
-
- cleanup:
-  if (ctx)
-    free(ctx);
-  return (NULL);
 }
 
 void

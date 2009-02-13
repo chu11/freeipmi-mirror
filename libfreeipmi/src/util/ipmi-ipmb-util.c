@@ -112,7 +112,11 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
   FIID_OBJ_GET (obj_ipmb_msg_hdr, "checksum1", &val);
   checksum1_recv = val;
 
-  ERR ((buf = (uint8_t *)alloca(obj_ipmb_msg_hdr_len + 1)));
+  if (!(buf = (uint8_t *)alloca(obj_ipmb_msg_hdr_len + 1)))
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   /* achu: The rq_addr isn't in the ipmb_msg_hdr response, but it's
    * part of the calculated checksum stored in the header.  If you're
@@ -130,7 +134,11 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
   checksum2_recv = val;
 
   buflen = obj_ipmb_msg_hdr_len + obj_cmd_len;
-  ERR ((buf = (uint8_t *)alloca(buflen)));
+  if (!(buf = (uint8_t *)alloca(buflen)))
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   len = 0;
   FIID_OBJ_GET_BLOCK_LEN(obj_len, obj_ipmb_msg_hdr, "rs_addr", "rq_seq", buf, buflen - len);

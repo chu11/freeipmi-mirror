@@ -655,7 +655,11 @@ ipmi_lan_sendto (int s,
   memset (_buf, 0, _len);
   memcpy (_buf, buf, len);
   
-  ERR (!((bytes_sent = sendto (s, _buf, _len, flags, to, tolen)) < 0));
+  if ((bytes_sent = sendto (s, _buf, _len, flags, to, tolen)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return (bytes_sent - pad_len);
 }
@@ -686,7 +690,11 @@ ipmi_lan_recvfrom (int s,
   
   recv_buf = alloca (recv_buf_len);
   
-  ERR (!((bytes_recvd = recvfrom (s, recv_buf, recv_buf_len, flags, from, fromlen)) < 0));
+  if ((bytes_recvd = recvfrom (s, recv_buf, recv_buf_len, flags, from, fromlen)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   
   memcpy (buf, recv_buf, bytes_recvd);
   return (bytes_recvd);

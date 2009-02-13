@@ -92,9 +92,17 @@ _ipmi_dump_kcs_packet (int fd,
   assert((!tmpl_ipmb_msg_hdr && !tmpl_ipmb_cmd)
          || (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd));
 
-  ERR(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
+  if (ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  ERR(!(ipmi_debug_output_str (fd, prefix_buf, hdr) < 0));
+  if (ipmi_debug_output_str (fd, prefix_buf, hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   /* Dump kcs header */
   

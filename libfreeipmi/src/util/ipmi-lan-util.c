@@ -196,7 +196,11 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
       FIID_OBJ_LEN_BYTES_CLEANUP (obj_lan_msg_trlr_len, obj_lan_msg_trlr_rs);
       
       buflen = obj_lan_msg_hdr_len + obj_cmd_len + obj_lan_msg_trlr_len;
-      ERR ((buf = (uint8_t *)alloca(buflen)));
+      if (!(buf = (uint8_t *)alloca(buflen)))
+        {
+          ERRNO_TRACE(errno);
+          return (-1);
+        }
       
       len = 0;
       FIID_OBJ_GET_ALL_LEN_CLEANUP (obj_len, obj_lan_msg_hdr_rs, buf + len, buflen - len);
@@ -499,7 +503,11 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
 
   FIID_OBJ_GET (obj_lan_msg_hdr, "checksum1", &val);
   checksum1_recv = val;
-  ERR ((buf = (uint8_t *)alloca(obj_lan_msg_hdr_len)));
+  if (!(buf = (uint8_t *)alloca(obj_lan_msg_hdr_len)))
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   FIID_OBJ_GET_BLOCK_LEN(len, obj_lan_msg_hdr, "rq_addr", "net_fn", buf, obj_lan_msg_hdr_len);
   checksum1_calc = ipmi_checksum(buf, len);
 
@@ -510,7 +518,11 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
   checksum2_recv = val;
 
   buflen = obj_lan_msg_hdr_len + obj_cmd_len;
-  ERR ((buf = (uint8_t *)alloca(buflen)));
+  if (!(buf = (uint8_t *)alloca(buflen)))
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   len = 0;
   FIID_OBJ_GET_BLOCK_LEN(obj_len, obj_lan_msg_hdr, "rs_addr", "rq_seq", buf, buflen - len);

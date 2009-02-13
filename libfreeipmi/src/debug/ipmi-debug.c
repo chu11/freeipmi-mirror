@@ -84,9 +84,17 @@ ipmi_obj_dump (int fd,
       return (-1);
     }
   
-  ERR(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
+  if (ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  ERR(!(ipmi_debug_output_str (fd, prefix_buf, hdr) < 0));
+  if (ipmi_debug_output_str (fd, prefix_buf, hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   FIID_ITERATOR_CREATE (iter, obj);
 
@@ -194,7 +202,6 @@ ipmi_obj_dump_ipmb (int fd,
   int32_t obj_ipmb_cmd_len = 0;
   int32_t ipmb_hdr_len = 0;
   int32_t ipmb_cmd_len = 0;
-  int ret1, ret2;
   int rv = -1;
 
   if (!fiid_obj_valid(obj) 
@@ -205,21 +212,21 @@ ipmi_obj_dump_ipmb (int fd,
       return (-1);
     }
 
-  if ((ret1 = fiid_obj_template_compare(obj, tmpl_cmd_send_message_rq)) < 0)
-    return -1;
-
-  if ((ret2 = fiid_obj_template_compare(obj, tmpl_cmd_get_message_rs)) < 0)
-    return -1;
-
-  if (!ret1 && !ret2)
+  FIID_OBJ_TEMPLATE_COMPARE2(obj,
+                             tmpl_cmd_send_message_rq,
+                             tmpl_cmd_get_message_rs);
+  
+  if (ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
-  
-  ERR(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
 
-  ERR(!(ipmi_debug_output_str (fd, prefix_buf, hdr) < 0));
+  if (ipmi_debug_output_str (fd, prefix_buf, hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   FIID_OBJ_DUP_CLEANUP (obj_cmd, obj);
   FIID_OBJ_CREATE_CLEANUP (obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr);

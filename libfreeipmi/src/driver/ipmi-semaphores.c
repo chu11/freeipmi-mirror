@@ -58,7 +58,11 @@ ipmi_mutex_init (void)
      */
     key = ftok (IPMI_DEBUG_IPCKEY, IPMI_INBAND_DEBUG_PROJ_ID);
 #else /* !NDEBUG */
-  ERR(!((key = ftok (IPMI_IPCKEY, IPMI_INBAND_PROJ_ID)) == ((key_t)-1)));
+  if ((key = ftok (IPMI_IPCKEY, IPMI_INBAND_PROJ_ID)) == ((key_t)-1))
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 #endif /* NDEBUG */
 
   if ((semid = semget (key, 1, IPC_CREAT | IPC_EXCL | 0600)) < 0)
@@ -66,14 +70,20 @@ ipmi_mutex_init (void)
       if (errno == EEXIST) /* You are not the first one */
 	{ 
 	  /* Get the orignial semid */
-	  ERR (!((semid = semget (key, 1, IPC_CREAT | 0600)) < 0));
+	  if ((semid = semget (key, 1, IPC_CREAT | 0600)) < 0)
+            {
+              ERRNO_TRACE(errno);
+              return (-1);
+            }
           
 	  /* achu: errno may not get reset, so put it back to 0 */
 	  errno = 0;
 
 	  return (semid);
 	}
-      ERR (0); /* FAIL */
+
+      ERRNO_TRACE(errno);
+      return (-1);
     }
   
   /* You are the first one. Initialize the mutex now */
@@ -82,7 +92,11 @@ ipmi_mutex_init (void)
     unsigned short values[1];
     values[0] = 1;
     mutex_init.array = values;
-    ERR (!(semctl (semid, 0, SETALL, mutex_init) < 0));
+    if (semctl (semid, 0, SETALL, mutex_init) < 0)
+      {
+        ERRNO_TRACE(errno);
+        return (-1);
+      }
   }
   return (semid);
 }
@@ -97,7 +111,8 @@ ipmi_mutex_lock (int semid)
         /* While blocked in this system call, the process caught a signal */
         if (errno == EINTR)
           continue;
-        ERR(0);
+        ERRNO_TRACE(errno);
+        return (-1);
       }
     break;
   } while (1);
@@ -117,7 +132,12 @@ ipmi_mutex_unlock (int semid)
 {
   /* achu: don't check for valid semid - responsibility of calling libs */
   
-  ERR (!(semop (semid, &mutex_unlock_buf, 1) < 0));
+  if (semop (semid, &mutex_unlock_buf, 1) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+
   /* If you are in a loop to go grab LOCK again, Other tasks will
      never get a chance until you break. Give fair chance to other
      tasks as well. This is probably because of scheduler

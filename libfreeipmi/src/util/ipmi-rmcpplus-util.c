@@ -217,8 +217,13 @@ _calculate_k_rakp_hmac(int hash_algorithm,
       return (-1);
     }
 
-  ERR (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
-  ERR (crypt_digest_len == expected_digest_len);
+  if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+
+  assert (crypt_digest_len == expected_digest_len);
 
   /* SPEC: achu: I believe the length of the constant you pass in
    * is the digest_len, atleast according to IPMI 2.0 Spec Section
@@ -226,16 +231,24 @@ _calculate_k_rakp_hmac(int hash_algorithm,
    * value repeated up to the HMAC block size in length starting
    * with the constant 01h".
    */
-  ERR (!((computed_digest_len =  ipmi_crypt_hash(hash_algorithm,
-						 IPMI_CRYPT_HASH_FLAGS_HMAC,
-						 sik_key,
-						 crypt_digest_len,
-						 constant,
-						 IPMI_KEY_CONSTANT_LENGTH,
-						 k,
-						 k_len)) < 0));
+  if ((computed_digest_len =  ipmi_crypt_hash(hash_algorithm,
+                                              IPMI_CRYPT_HASH_FLAGS_HMAC,
+                                              sik_key,
+                                              crypt_digest_len,
+                                              constant,
+                                              IPMI_KEY_CONSTANT_LENGTH,
+                                              k,
+                                              k_len)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  ERR (!(computed_digest_len != crypt_digest_len));
+  if (computed_digest_len != crypt_digest_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   return (computed_digest_len);
 }

@@ -649,11 +649,15 @@ _construct_payload_confidentiality_none(uint8_t payload_type,
 
   FIID_OBJ_CLEAR (obj_rmcpplus_payload);
 
-  ERR (!((payload_len = _construct_payload_buf(payload_type,
-                                               obj_lan_msg_hdr, 
-                                               obj_cmd, 
-                                               payload_buf, 
-                                               IPMI_MAX_PAYLOAD_LENGTH)) < 0));
+  if ((payload_len = _construct_payload_buf(payload_type,
+                                            obj_lan_msg_hdr, 
+                                            obj_cmd, 
+                                            payload_buf, 
+                                            IPMI_MAX_PAYLOAD_LENGTH)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   FIID_OBJ_SET_DATA (obj_rmcpplus_payload,
                      "payload_data",
@@ -696,7 +700,11 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
           && fiid_obj_valid(obj_rmcpplus_payload)
           && fiid_obj_template_compare(obj_rmcpplus_payload, tmpl_rmcpplus_payload) == 1);
   
-  ERR (!((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0));
+  if ((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   assert (!(cipher_keylen < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
 
@@ -708,19 +716,35 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
 
   confidentiality_key_len = IPMI_CRYPT_AES_CBC_128_KEY_LENGTH;
 
-  ERR (!((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0));
+  if ((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   assert (cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
      
-  ERR (!((iv_len = ipmi_get_random(iv, IPMI_CRYPT_AES_CBC_128_IV_LENGTH)) < 0));
-
-  ERR (!(iv_len != IPMI_CRYPT_AES_CBC_128_IV_LENGTH));
+  if ((iv_len = ipmi_get_random(iv, IPMI_CRYPT_AES_CBC_128_IV_LENGTH)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+  
+  if (iv_len != IPMI_CRYPT_AES_CBC_128_IV_LENGTH)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
     
-  ERR (!((payload_len = _construct_payload_buf(payload_type,
-                                               obj_lan_msg_hdr, 
-                                               obj_cmd, 
-                                               payload_buf, 
-                                               IPMI_MAX_PAYLOAD_LENGTH)) < 0));
+  if ((payload_len = _construct_payload_buf(payload_type,
+                                            obj_lan_msg_hdr, 
+                                            obj_cmd, 
+                                            payload_buf, 
+                                            IPMI_MAX_PAYLOAD_LENGTH)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   /* Pad the data appropriately */
 
@@ -742,15 +766,24 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
     }
 
   /* +1 for pad length field */
-  ERR (!((encrypt_len = ipmi_crypt_cipher_encrypt(IPMI_CRYPT_CIPHER_AES,
-                                                  IPMI_CRYPT_CIPHER_MODE_CBC,
-                                                  confidentiality_key,
-                                                  confidentiality_key_len,
-                                                  iv,
-                                                  iv_len,
-                                                  payload_buf,
-                                                  payload_len + pad_len + 1)) < 0));
-  ERR (!(encrypt_len != (payload_len + pad_len + 1)));
+  if ((encrypt_len = ipmi_crypt_cipher_encrypt(IPMI_CRYPT_CIPHER_AES,
+                                               IPMI_CRYPT_CIPHER_MODE_CBC,
+                                               confidentiality_key,
+                                               confidentiality_key_len,
+                                               iv,
+                                               iv_len,
+                                               payload_buf,
+                                               payload_len + pad_len + 1)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+
+  if (encrypt_len != (payload_len + pad_len + 1))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR (obj_rmcpplus_payload);
 
@@ -1373,15 +1406,19 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    */
   FIID_OBJ_CREATE (obj_rmcpplus_payload, tmpl_rmcpplus_payload);
 
-  ERR (!((payload_len = _construct_payload(payload_type,
-                                           payload_encrypted,
-                                           authentication_algorithm,
-                                           confidentiality_algorithm,
-                                           obj_lan_msg_hdr,
-                                           obj_cmd,
-                                           confidentiality_key,
-                                           confidentiality_key_len,
-                                           obj_rmcpplus_payload)) < 0));
+  if ((payload_len = _construct_payload(payload_type,
+                                        payload_encrypted,
+                                        authentication_algorithm,
+                                        confidentiality_algorithm,
+                                        obj_lan_msg_hdr,
+                                        obj_cmd,
+                                        confidentiality_key,
+                                        confidentiality_key_len,
+                                        obj_rmcpplus_payload)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   
   /* 
    * Copy IPMI Payload Length into packet
@@ -1601,12 +1638,16 @@ _deconstruct_payload_confidentiality_none(uint8_t payload_type,
   /* achu: No encryption, so ipmi_payload_len is the length of 
    * the msg_hdr, cmd, and msg_trlr.
    */
-  ERR (!(_deconstruct_payload_buf(payload_type,
-                                  obj_lan_msg_hdr,
-                                  obj_cmd,
-                                  obj_lan_msg_trlr,
-                                  pkt,
-                                  ipmi_payload_len) < 0));
+  if (_deconstruct_payload_buf(payload_type,
+                               obj_lan_msg_hdr,
+                               obj_cmd,
+                               obj_lan_msg_trlr,
+                               pkt,
+                               ipmi_payload_len) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   FIID_OBJ_CLEAR(obj_rmcpplus_payload);
       
@@ -1656,7 +1697,11 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
           && pkt
           && ipmi_payload_len);
 
-  ERR (!((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0));
+  if ((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   assert (!(cipher_keylen < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
 
@@ -1668,7 +1713,11 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
 
   confidentiality_key_len = IPMI_CRYPT_AES_CBC_128_KEY_LENGTH;
 
-  ERR (!((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0));
+  if ((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   assert (cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
 
@@ -1696,15 +1745,24 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
                     iv,
                     IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
 
-  ERR (!((decrypt_len = ipmi_crypt_cipher_decrypt(IPMI_CRYPT_CIPHER_AES,
-                                                  IPMI_CRYPT_CIPHER_MODE_CBC,
-                                                  confidentiality_key,
-                                                  confidentiality_key_len,
-                                                  iv,
-                                                  IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH,
-                                                  payload_buf,
-                                                  payload_data_len)) < 0));
-  ERR (!((decrypt_len != payload_data_len)));
+  if ((decrypt_len = ipmi_crypt_cipher_decrypt(IPMI_CRYPT_CIPHER_AES,
+                                               IPMI_CRYPT_CIPHER_MODE_CBC,
+                                               confidentiality_key,
+                                               confidentiality_key_len,
+                                               iv,
+                                               IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH,
+                                               payload_buf,
+                                               payload_data_len)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+
+  if (decrypt_len != payload_data_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   pad_length = payload_buf[payload_data_len - 1];
   if (pad_length > IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH)
@@ -1733,12 +1791,16 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
   
   /* achu: User is responsible for checking if padding is not corrupt  */
   
-  ERR (!(_deconstruct_payload_buf(payload_type,
-                                  obj_lan_msg_hdr, 
-                                  obj_cmd, 
-                                  obj_lan_msg_trlr,
-                                  payload_buf,
-                                  cmd_data_len) < 0));
+  if (_deconstruct_payload_buf(payload_type,
+                               obj_lan_msg_hdr, 
+                               obj_cmd, 
+                               obj_lan_msg_trlr,
+                               payload_buf,
+                               cmd_data_len) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return (0);
 }
@@ -2049,18 +2111,22 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   /* 
    * Deconstruct/Decrypt Payload
    */
-  ERR (!(_deconstruct_payload(payload_type,
-                              payload_encrypted,
-                              authentication_algorithm,
-                              confidentiality_algorithm,
-                              obj_rmcpplus_payload,
-                              obj_lan_msg_hdr,
-                              obj_cmd,
-                              obj_lan_msg_trlr,
-                              confidentiality_key,
-                              confidentiality_key_len,
-                              pkt + indx,
-                              ipmi_payload_len) < 0));
+  if (_deconstruct_payload(payload_type,
+                           payload_encrypted,
+                           authentication_algorithm,
+                           confidentiality_algorithm,
+                           obj_rmcpplus_payload,
+                           obj_lan_msg_hdr,
+                           obj_cmd,
+                           obj_lan_msg_trlr,
+                           confidentiality_key,
+                           confidentiality_key_len,
+                           pkt + indx,
+                           ipmi_payload_len) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   indx += ipmi_payload_len;
 
   if (pkt_len <= indx)
