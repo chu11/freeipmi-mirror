@@ -121,8 +121,12 @@ _ipmi_dump_lan_packet (int fd,
 
   /* Dump rmcp header */
   
-  FIID_OBJ_CREATE_CLEANUP (obj_rmcp_hdr, tmpl_rmcp_hdr);
-  
+  if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
+
   FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_rmcp_hdr, pkt + indx, pkt_len - indx);
   indx += len;
 
@@ -145,7 +149,11 @@ _ipmi_dump_lan_packet (int fd,
   /* Dump session header */
   /* Output of session header depends on the auth code */
 
-  FIID_OBJ_CREATE_CLEANUP (obj_session_hdr, tmpl_lan_session_hdr);
+  if (!(obj_session_hdr = fiid_obj_create (tmpl_lan_session_hdr)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_BLOCK_LEN_CLEANUP(len, 
 				 obj_session_hdr, 
@@ -222,7 +230,11 @@ _ipmi_dump_lan_packet (int fd,
 
   /* Dump message header */
 
-  FIID_OBJ_CREATE_CLEANUP (obj_lan_msg_hdr, tmpl_lan_msg_hdr);
+  if (!(obj_lan_msg_hdr = fiid_obj_create (tmpl_lan_msg_hdr)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_lan_msg_hdr, pkt + indx, pkt_len - indx);
   indx += len;
@@ -248,14 +260,36 @@ _ipmi_dump_lan_packet (int fd,
 
   /* Dump command data */
 
-  FIID_OBJ_CREATE_CLEANUP (obj_cmd, tmpl_cmd);
+  if (!(obj_cmd = fiid_obj_create (tmpl_cmd)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
+
   if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd)
     {
-      FIID_OBJ_CREATE_CLEANUP (obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr);
-      FIID_OBJ_CREATE_CLEANUP (obj_ipmb_cmd, tmpl_ipmb_cmd);
-      FIID_OBJ_CREATE_CLEANUP (obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
+      if (!(obj_ipmb_msg_hdr = fiid_obj_create (tmpl_ipmb_msg_hdr)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+      if (!(obj_ipmb_cmd = fiid_obj_create (tmpl_ipmb_cmd)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+      if (!(obj_ipmb_msg_trlr = fiid_obj_create (tmpl_ipmb_msg_trlr)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
     }
-  FIID_OBJ_CREATE_CLEANUP (obj_lan_msg_trlr, tmpl_lan_msg_trlr);
+
+  if (!(obj_lan_msg_trlr = fiid_obj_create (tmpl_lan_msg_trlr)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   if ((obj_lan_msg_trlr_len = fiid_template_len_bytes(tmpl_lan_msg_trlr)) < 0)
     {
@@ -398,7 +432,11 @@ _ipmi_dump_lan_packet (int fd,
 
   /* Dump unexpected stuff */
   
-  FIID_OBJ_CREATE_CLEANUP (obj_unexpected_data, tmpl_unexpected_data);
+  if (!(obj_unexpected_data = fiid_obj_create (tmpl_unexpected_data)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_unexpected_data, pkt + indx, pkt_len - indx);
   indx += len;

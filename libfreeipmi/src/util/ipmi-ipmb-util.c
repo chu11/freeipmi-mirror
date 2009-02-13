@@ -91,7 +91,11 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
   FIID_OBJ_TEMPLATE_COMPARE(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
 
   FIID_OBJ_FIELD_LEN (len, obj_ipmb_msg_hdr, "checksum1");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_ipmb_msg_hdr_rs, "checksum1");
+  if ((req_len = fiid_template_field_len(tmpl_ipmb_msg_hdr_rs, "checksum1")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   if (len != req_len)
     {
       SET_ERRNO(EINVAL);
@@ -99,7 +103,11 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
     }
 
   FIID_OBJ_FIELD_LEN (len, obj_ipmb_msg_trlr, "checksum2");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_ipmb_msg_trlr, "checksum2");
+  if ((req_len = fiid_template_field_len(tmpl_ipmb_msg_trlr, "checksum2")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   if (len != req_len)
     {
       SET_ERRNO(EINVAL);

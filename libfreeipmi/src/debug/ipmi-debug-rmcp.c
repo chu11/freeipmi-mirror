@@ -87,7 +87,11 @@ ipmi_dump_rmcp_packet (int fd,
 
   /* Dump rmcp header */
   
-  FIID_OBJ_CREATE_CLEANUP (obj_rmcp_hdr, tmpl_rmcp_hdr);
+  if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_rmcp_hdr, pkt + indx, pkt_len - indx);
   indx += len;
@@ -106,7 +110,11 @@ ipmi_dump_rmcp_packet (int fd,
   
   /* Dump command data */
   
-  FIID_OBJ_CREATE_CLEANUP (obj_cmd, tmpl_cmd);
+  if (!(obj_cmd = fiid_obj_create (tmpl_cmd)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_cmd, pkt + indx, pkt_len - indx);
   indx += len;
@@ -125,7 +133,11 @@ ipmi_dump_rmcp_packet (int fd,
   
   /* Dump unexpected stuff */
   
-  FIID_OBJ_CREATE_CLEANUP (obj_unexpected_data, tmpl_unexpected_data);
+  if (!(obj_unexpected_data = fiid_obj_create (tmpl_unexpected_data)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_unexpected_data, pkt + indx, pkt_len - indx);
   indx += len;

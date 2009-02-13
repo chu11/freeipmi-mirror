@@ -229,9 +229,21 @@ ipmi_obj_dump_ipmb (int fd,
     }
 
   FIID_OBJ_DUP_CLEANUP (obj_cmd, obj);
-  FIID_OBJ_CREATE_CLEANUP (obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr);
-  FIID_OBJ_CREATE_CLEANUP (obj_ipmb_cmd, tmpl_ipmb_cmd);
-  FIID_OBJ_CREATE_CLEANUP (obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
+  if (!(obj_ipmb_msg_hdr = fiid_obj_create (tmpl_ipmb_msg_hdr)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
+  if (!(obj_ipmb_cmd = fiid_obj_create (tmpl_ipmb_cmd)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
+  if (!(obj_ipmb_msg_trlr = fiid_obj_create (tmpl_ipmb_msg_trlr)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   memset(ipmb_buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
   FIID_OBJ_GET_DATA_LEN_CLEANUP (ipmb_buf_len,

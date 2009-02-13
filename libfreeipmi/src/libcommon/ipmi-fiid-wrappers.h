@@ -114,69 +114,6 @@ do {                                                        \
   __FIID_ERRNUM_SET_ERRNO(___itererrnum);                   \
 } while (0)
 
-#define FIID_TEMPLATE_LEN_BYTES_CLEANUP(__len, __tmpl)                   \
-do {                                                                     \
-  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                \
-    {                                                                    \
-      __FIID_TRACE;                                                      \
-      goto cleanup;                                                      \
-    }                                                                    \
-} while (0)
-
-#define FIID_TEMPLATE_FIELD_START_BYTES(__len, __tmpl, __field)                      \
-do {                                                                                 \
-  if (((__len) = fiid_template_field_start_bytes ((__tmpl), (__field))) < 0)         \
-    {                                                                                \
-      __FIID_TRACE;                                                                  \
-      return (-1);                                                                   \
-    }                                                                                \
-} while (0)
-
-#define FIID_TEMPLATE_FIELD_START_BYTES_CLEANUP(__len, __tmpl, __field)              \
-do {                                                                                 \
-  if (((__len) = fiid_template_field_start_bytes ((__tmpl), (__field))) < 0)         \
-    {                                                                                \
-      __FIID_TRACE;                                                                  \
-      goto cleanup;                                                                  \
-    }                                                                                \
-} while (0)
-
-#define FIID_TEMPLATE_FIELD_LEN(__len, __tmpl, __field)                            \
-do {                                                                               \
-  if (((__len) = fiid_template_field_len ((__tmpl), (__field))) < 0)               \
-    {                                                                              \
-      __FIID_TRACE;                                                                \
-      return (-1);                                                                 \
-    }                                                                              \
-} while (0)
-
-#define FIID_TEMPLATE_FIELD_LEN_BYTES(__len, __tmpl, __field)                      \
-do {                                                                               \
-  if (((__len) = fiid_template_field_len_bytes ((__tmpl), (__field))) < 0)         \
-    {                                                                              \
-      __FIID_TRACE;                                                                \
-      return (-1);                                                                 \
-    }                                                                              \
-} while (0)
-
-#define FIID_TEMPLATE_FIELD_LEN_BYTES_CLEANUP(__len, __tmpl, __field)              \
-do {                                                                               \
-  if (((__len) = fiid_template_field_len_bytes ((__tmpl), (__field))) < 0)         \
-    {                                                                              \
-      __FIID_TRACE;                                                                \
-      goto cleanup;                                                                \
-    }                                                                              \
-} while (0)
-
-#define FIID_TEMPLATE_BLOCK_LEN_BYTES(__len, __tmpl, __field_start, __field_end)                        \
-do {                                                                                                    \
-  if (((__len) = fiid_template_block_len_bytes ((__tmpl), (__field_start), (__field_end))) < 0)         \
-    {                                                                                                   \
-      __FIID_TRACE;                                                                                     \
-      return (-1);                                                                                      \
-    }                                                                                                   \
-} while (0)
-
 #define FIID_TEMPLATE_COMPARE(__tmpl1, __tmpl2)                              \
 do {                                                                         \
     int __ret;                                                               \
@@ -213,24 +150,6 @@ do {                                                                         \
 do {                                           \
   if ((__tmpl))                                \
     fiid_template_free((__tmpl));              \
-} while (0)
-
-#define FIID_OBJ_CREATE(__obj, __tmpl)                \
-do {                                                  \
-  if (!((__obj) = fiid_obj_create(__tmpl)))           \
-    {                                                 \
-      __FIID_TRACE;                                   \
-      return (-1);                                    \
-    }                                                 \
-} while (0)
-
-#define FIID_OBJ_CREATE_CLEANUP(__obj, __tmpl)        \
-do {                                                  \
-  if (!((__obj) = fiid_obj_create(__tmpl)))           \
-    {                                                 \
-      __FIID_TRACE;                                   \
-      goto cleanup;                                   \
-    }                                                 \
 } while (0)
 
 #define FIID_OBJ_DESTROY(__obj)                \

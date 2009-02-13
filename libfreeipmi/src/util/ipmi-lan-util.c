@@ -284,9 +284,13 @@ ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt, uint64_t pkt_le
       return (-1);
     }
 
-  FIID_TEMPLATE_FIELD_START_BYTES (authentication_type_index, 
-				   tmpl_lan_session_hdr, 
-				   "authentication_type");
+  if ((authentication_type_index = fiid_template_field_start_bytes(tmpl_lan_session_hdr,
+                                                                   "authentication_type")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+
   authentication_type_offset = rmcp_hdr_len + authentication_type_index;
 
   if (pkt_len < authentication_type_offset)
@@ -302,9 +306,13 @@ ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt, uint64_t pkt_le
   if (authentication_type_recv == IPMI_AUTHENTICATION_TYPE_NONE)
     return 1;
 
-  FIID_TEMPLATE_FIELD_START_BYTES (authentication_code_index, 
-				   tmpl_lan_session_hdr, 
-				   "authentication_code");
+  if ((authentication_code_index = fiid_template_field_start_bytes(tmpl_lan_session_hdr,
+                                                                   "authentication_code")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+
   authentication_code_offset = rmcp_hdr_len + authentication_code_index;
 
   if (pkt_len < (authentication_code_offset + IPMI_1_5_MAX_PASSWORD_LENGTH))
@@ -318,19 +326,39 @@ ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt, uint64_t pkt_le
       uint32_t session_id_offset, session_sequence_number_offset, data_offset;
       int32_t session_id_len, session_sequence_number_len;
       
-      FIID_TEMPLATE_FIELD_START_BYTES_CLEANUP (session_id_index, 
-					       tmpl_lan_session_hdr, 
-					       "session_id");
-      FIID_TEMPLATE_FIELD_START_BYTES_CLEANUP (session_sequence_number_index, 
-					       tmpl_lan_session_hdr, 
-					       "session_sequence_number");
-      FIID_TEMPLATE_FIELD_LEN_BYTES_CLEANUP (session_id_len,
-					     tmpl_lan_session_hdr,
-					     "session_id");
-      FIID_TEMPLATE_FIELD_LEN_BYTES_CLEANUP (session_sequence_number_len, 
-					     tmpl_lan_session_hdr, 
-					     "session_sequence_number");
-      FIID_TEMPLATE_LEN_BYTES_CLEANUP (data_index, tmpl_lan_session_hdr);
+      if ((session_id_index = fiid_template_field_start_bytes(tmpl_lan_session_hdr,
+                                                              "session_id")) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+
+      if ((session_sequence_number_index = fiid_template_field_start_bytes (tmpl_lan_session_hdr, 
+                                                                            "session_sequence_number")) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+
+      if ((session_id_len = fiid_template_field_len_bytes (tmpl_lan_session_hdr,
+                                                           "session_id")) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+      
+      if ((session_sequence_number_len = fiid_template_field_len_bytes (tmpl_lan_session_hdr, 
+                                                                        "session_sequence_number")) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+
+      if ((data_index = fiid_template_len_bytes(tmpl_lan_session_hdr)) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       
       session_id_offset = rmcp_hdr_len + session_id_index;
       session_sequence_number_offset = rmcp_hdr_len + session_sequence_number_index;
@@ -488,7 +516,11 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
 
   FIID_OBJ_FIELD_LEN (len, obj_lan_msg_hdr, "checksum1");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_lan_msg_hdr_rs, "checksum1");
+  if ((req_len = fiid_template_field_len(tmpl_lan_msg_hdr_rs, "checksum1")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   if (len != req_len)
     {
       SET_ERRNO(EINVAL);
@@ -496,7 +528,11 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
     }
 
   FIID_OBJ_FIELD_LEN (len, obj_lan_msg_trlr, "checksum2");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_lan_msg_trlr, "checksum2");
+  if ((req_len = fiid_template_field_len(tmpl_lan_msg_trlr, "checksum2")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   if (len != req_len)
     {
       SET_ERRNO(EINVAL);
@@ -566,33 +602,44 @@ ipmi_lan_check_packet_checksum (uint8_t *pkt, uint64_t pkt_len)
       return (-1);
     }
 
-  FIID_TEMPLATE_FIELD_START_BYTES (authentication_type_start_bytes, 
-				   tmpl_lan_session_hdr, 
-				   "authentication_type");
+  if ((authentication_type_start_bytes = fiid_template_field_start_bytes(tmpl_lan_session_hdr,
+                                                                         "authentication_type")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   
   authentication_type_offset = rmcp_hdr_len + authentication_type_start_bytes;
   authentication_type = pkt[authentication_type_offset];
 
-  FIID_TEMPLATE_BLOCK_LEN_BYTES (msg_hdr_len1,
-				 tmpl_lan_session_hdr,
-				 "authentication_type",
-				 "session_id");
+  if ((msg_hdr_len1 = fiid_template_block_len_bytes(tmpl_lan_session_hdr,
+                                                    "authentication_type",
+                                                    "session_id")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     authentication_code_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
   else
     authentication_code_len = 0;
 
-  FIID_TEMPLATE_FIELD_LEN_BYTES(msg_hdr_len2,
-				tmpl_lan_session_hdr,
-				"ipmi_msg_len");
+  if ((msg_hdr_len2 = fiid_template_field_len_bytes(tmpl_lan_session_hdr, "ipmi_msg_len")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   checksum1_block_index = rmcp_hdr_len + msg_hdr_len1 + authentication_code_len + msg_hdr_len2;
 
-  FIID_TEMPLATE_BLOCK_LEN_BYTES(checksum1_block_len,
-				tmpl_lan_msg_hdr_rs,
-				"rq_addr",
-				"net_fn");
+  if ((checksum1_block_len = fiid_template_block_len_bytes(tmpl_lan_msg_hdr_rs,
+                                                           "rq_addr",
+                                                           "net_fn")) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if (pkt_len < (checksum1_block_index + checksum1_block_len + 1))
     return (0);

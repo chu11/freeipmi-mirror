@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.c,v 1.10.2.5 2009-02-11 19:18:24 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-common.c,v 1.10.2.6 2009-02-13 18:43:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -169,18 +169,37 @@ ipmi_sdr_cache_record_type_str(ipmi_sdr_cache_ctx_t ctx,
   assert(sdr_record);
   assert(sdr_record_len);
 
-  FIID_TEMPLATE_LEN_BYTES_CLEANUP(sdr_record_header_len, tmpl_sdr_record_header);
+  if ((sdr_record_header_len = fiid_template_len_bytes(tmpl_sdr_record_header)) < 0)
+    {
+      SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (sdr_record_len < sdr_record_header_len)
     goto cleanup;
   
-  FIID_OBJ_CREATE_CLEANUP(obj_sdr_record_header, tmpl_sdr_record_header);
+  if (!(obj_sdr_record_header = fiid_obj_create(tmpl_sdr_record_header)))
+    {
+      SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all(obj_sdr_record_header,
+                       sdr_record,
+                       sdr_record_header_len) < 0)
+    {
+      SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM(ctx, obj_sdr_record_header);
+      goto cleanup;
+    }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record_header,
-			   sdr_record,
-			   sdr_record_header_len);
-  
-  FIID_OBJ_GET_CLEANUP(obj_sdr_record_header, "record_type", &record_type);
+  if (sdr_cache_fiid_obj_get(ctx, 
+                             obj_sdr_record_header, 
+                             "record_type", 
+                             &record_type) < 0)
+    {
+      SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM(ctx, obj_sdr_record_header);
+      goto cleanup;
+    }
 
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     rv = "SDR Full Sensor Record";

@@ -1596,8 +1596,12 @@ _get_12_event_data2_message_offset_03(int offset, uint8_t event_data2, char *buf
   fiid_obj_t obj = NULL;
   int rv = -1;
 
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
-  
+  if (!(obj = fiid_obj_create(tmpl_event_data2)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
+
   FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
   
   FIID_OBJ_GET_CLEANUP (obj, "log_type", &val);
@@ -1666,7 +1670,11 @@ _get_12_event_data2_message_offset_04(int offset, uint8_t event_data2, char *buf
   int str_len = 0;
   int rv = -1; 
 
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  if (!(obj = fiid_obj_create(tmpl_event_data2)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
   
@@ -1750,7 +1758,11 @@ _get_12_event_data2_message_offset_05(int offset, uint8_t event_data2, char *buf
   fiid_obj_t obj = NULL;
   int rv = -1;
 
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  if (!(obj = fiid_obj_create(tmpl_event_data2)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
   
@@ -1820,7 +1832,11 @@ get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       fiid_obj_t obj = NULL;
       int rv = -1;
 
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+      if (!(obj = fiid_obj_create( tmpl_event_data2)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
 
@@ -1853,7 +1869,11 @@ get_21_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   
   assert(buf && buflen);
   
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  if (!(obj = fiid_obj_create(tmpl_event_data2)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
   
@@ -1886,7 +1906,11 @@ get_23_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   
   assert(buf && buflen);
 
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  if (!(obj = fiid_obj_create(tmpl_event_data2)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
   
@@ -1938,7 +1962,11 @@ get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       char *str = NULL;
       int rv = -1;
 
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
       
@@ -1985,7 +2013,11 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       fiid_obj_t obj = NULL;
       int rv = -1;
 
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
       
@@ -2035,7 +2067,11 @@ get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   
   assert(buf && buflen);
 
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  if (!(obj = fiid_obj_create(tmpl_event_data2)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
   
@@ -2072,7 +2108,11 @@ get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
       fiid_obj_t obj = NULL;
       int rv = -1;
 
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data3);
+      if (!(obj = fiid_obj_create(tmpl_event_data3)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
 
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
       
@@ -2128,7 +2168,11 @@ get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 	char *str2 = NULL;
 	int rv = -1;
         
-	FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data3);
+	if (!(obj = fiid_obj_create(tmpl_event_data3)))
+          {
+            ERRNO_TRACE(errno);
+            goto cleanup;
+          }
         
         FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
       
@@ -2227,7 +2271,11 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
       char *str = NULL;
       int rv = -1;
 
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data3);
+      if (!(obj = fiid_obj_create(tmpl_event_data3)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
 
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
       

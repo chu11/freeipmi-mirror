@@ -79,7 +79,11 @@ ipmi_dump_sdr_record (int fd,
       goto cleanup;
     }
 
-  FIID_OBJ_CREATE(obj_sdr_record_header, tmpl_sdr_record_header);
+  if (!(obj_sdr_record_header = fiid_obj_create(tmpl_sdr_record_header)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record_header,
                            sdr_record,
@@ -105,30 +109,102 @@ ipmi_dump_sdr_record (int fd,
   record_type = val;
 
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_full_sensor_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_full_sensor_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_compact_sensor_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_compact_sensor_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_event_only_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_event_only_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD)
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_entity_association_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_entity_association_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD)
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_device_relative_entity_association_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_device_relative_entity_association_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_generic_device_locator_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_generic_device_locator_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
-      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_fru_device_locator_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_fru_device_locator_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
-      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_management_controller_device_locator_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_management_controller_device_locator_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
-      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_management_controller_confirmation_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_management_controller_confirmation_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD)
-      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_bmc_message_channel_info_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_bmc_message_channel_info_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_OEM_RECORD)
-      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_oem_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_oem_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else
-    /* I don't know this record_type, maybe its in a newer spec?? */
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_record_header);
+    {
+      /* I don't know this record_type, maybe its in a newer spec?? */
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_record_header)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   
   FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record,
                            sdr_record,

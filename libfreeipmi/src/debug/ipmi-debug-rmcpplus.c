@@ -72,7 +72,12 @@ _dump_rmcpplus_session_hdr(int fd,
   /*
    * Extract auth_type and payload information
    */
-  FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
+  if (!(obj_rmcpplus_session_hdr = fiid_obj_create(tmpl_rmcpplus_session_hdr)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
+
   FIID_OBJ_SET_BLOCK_LEN_CLEANUP(obj_len,
 				 obj_rmcpplus_session_hdr,
 				 "authentication_type",
@@ -200,7 +205,12 @@ _dump_rmcpplus_payload_data(int fd,
 
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
     {
-      FIID_OBJ_CREATE_CLEANUP(obj_lan_msg_hdr, tmpl_lan_msg_hdr);
+      if (!(obj_lan_msg_hdr = fiid_obj_create(tmpl_lan_msg_hdr)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+
       FIID_OBJ_SET_ALL_LEN_CLEANUP(len, 
                                    obj_lan_msg_hdr,
                                    pkt + indx,
@@ -238,7 +248,11 @@ _dump_rmcpplus_payload_data(int fd,
           uint8_t ipmb_buf[IPMI_DEBUG_MAX_PKT_LEN];
           int32_t ipmb_buf_len = 0;
 
-          FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_cmd);
+          if (!(obj_cmd = fiid_obj_create(tmpl_cmd)))
+            {
+              ERRNO_TRACE(errno);
+              goto cleanup;
+            }
           
           FIID_OBJ_CLEAR_CLEANUP (obj_cmd);
           FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
@@ -349,7 +363,11 @@ _dump_rmcpplus_payload_data(int fd,
 
       if (obj_cmd_len)
         {
-          FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_cmd);
+          if (!(obj_cmd = fiid_obj_create(tmpl_cmd)))
+            {
+              ERRNO_TRACE(errno);
+              goto cleanup;
+            }
           
           FIID_OBJ_CLEAR_CLEANUP (obj_cmd);
           FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
@@ -379,7 +397,12 @@ _dump_rmcpplus_payload_data(int fd,
     {
       /* Dump trailer */
 
-      FIID_OBJ_CREATE_CLEANUP(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
+      if (!(obj_lan_msg_trlr = fiid_obj_create(tmpl_lan_msg_trlr)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+
       FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
                                     obj_lan_msg_trlr,
                                     pkt + indx,
@@ -448,7 +471,11 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
           && pkt
           && ipmi_payload_len);
 
-  FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
+  if (!(obj_rmcpplus_payload = fiid_obj_create(tmpl_rmcpplus_payload)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
   FIID_OBJ_SET_DATA_CLEANUP (obj_rmcpplus_payload, 
                              "payload_data",
@@ -581,7 +608,11 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
   indx += IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH;
   memcpy(payload_buf, pkt + indx, payload_data_len);
 
-  FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
+  if (!(obj_rmcpplus_payload = fiid_obj_create(tmpl_rmcpplus_payload)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
   FIID_OBJ_SET_DATA_CLEANUP(obj_rmcpplus_payload,
                             "confidentiality_header",
@@ -709,7 +740,11 @@ _dump_rmcpplus_payload_rakp(int fd,
           && pkt
           && ipmi_payload_len);
   
-  FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
+  if (!(obj_rmcpplus_payload = fiid_obj_create(tmpl_rmcpplus_payload)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
   FIID_OBJ_SET_DATA_CLEANUP(obj_rmcpplus_payload, 
 			    "payload_data",
@@ -727,17 +762,53 @@ _dump_rmcpplus_payload_rakp(int fd,
     }
 
   if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
-    FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_open_session_request);
+    {
+      if (!(obj_cmd = fiid_obj_create (tmpl_rmcpplus_open_session_request)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
-    FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_open_session_response);
+    {
+      if (!(obj_cmd = fiid_obj_create (tmpl_rmcpplus_open_session_response)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
-    FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_rakp_message_1);
+    {
+      if (!(obj_cmd = fiid_obj_create (tmpl_rmcpplus_rakp_message_1)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)
-    FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_rakp_message_2);
+    {
+      if (!(obj_cmd = fiid_obj_create (tmpl_rmcpplus_rakp_message_2)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
-    FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_rakp_message_3);
+    {
+      if (!(obj_cmd = fiid_obj_create (tmpl_rmcpplus_rakp_message_3)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else /* IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4 */
-    FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_rakp_message_4);
+    {
+      if (!(obj_cmd = fiid_obj_create (tmpl_rmcpplus_rakp_message_4)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
 			
   FIID_OBJ_SET_ALL_CLEANUP(obj_cmd,
 			   pkt,
@@ -897,7 +968,11 @@ _dump_rmcpplus_session_trlr(int fd,
   else
     authentication_code_len = 0; /* just in case IPMI implementation is bogus */
 
-  FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
+  if (!(obj_rmcpplus_session_trlr = fiid_obj_create(tmpl_rmcpplus_session_trlr)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
   if ((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, 
                                                              "pad_length")) < 0)
@@ -1065,7 +1140,11 @@ _ipmi_dump_rmcpplus_packet (int fd,
 
   /* Dump rmcp header */
 
-  FIID_OBJ_CREATE_CLEANUP(obj_rmcp_hdr, tmpl_rmcp_hdr);
+  if (!(obj_rmcp_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   FIID_OBJ_SET_ALL_LEN_CLEANUP(obj_rmcp_hdr_len,
                                obj_rmcp_hdr,
                                pkt + indx,
@@ -1230,7 +1309,11 @@ _ipmi_dump_rmcpplus_packet (int fd,
  dump_extra:
   if ((pkt_len - indx) > 0)
     {
-      FIID_OBJ_CREATE_CLEANUP(obj_unexpected_data, tmpl_unexpected_data);
+      if (!(obj_unexpected_data = fiid_obj_create(tmpl_unexpected_data)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
 
       FIID_OBJ_SET_ALL_LEN_CLEANUP (obj_len, obj_unexpected_data, pkt + indx, pkt_len - indx);
       indx += obj_len;

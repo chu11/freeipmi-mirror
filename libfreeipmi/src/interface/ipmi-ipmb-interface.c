@@ -207,7 +207,11 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
   indx += len;
   checksum_data_count += len;
 
-  FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
+  if (!(obj_ipmb_msg_trlr = fiid_obj_create(tmpl_ipmb_msg_trlr)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
   checksum = ipmi_checksum (checksum_data_ptr, checksum_data_count);
   
