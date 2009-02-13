@@ -70,11 +70,6 @@ ipmi_locate_ctx_create(void)
 
   ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
   return ctx;
-
- cleanup:
-  if (ctx)
-    free(ctx);
-  return (NULL);
 }
 
 void

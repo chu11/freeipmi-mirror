@@ -278,7 +278,12 @@ ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt, uint64_t pkt_le
       return (-1);
     }
   
-  FIID_TEMPLATE_LEN_BYTES (rmcp_hdr_len, tmpl_rmcp_hdr);
+  if ((rmcp_hdr_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+
   FIID_TEMPLATE_FIELD_START_BYTES (authentication_type_index, 
 				   tmpl_lan_session_hdr, 
 				   "authentication_type");
@@ -555,7 +560,11 @@ ipmi_lan_check_packet_checksum (uint8_t *pkt, uint64_t pkt_len)
       return (-1);
     }
   
-  FIID_TEMPLATE_LEN_BYTES (rmcp_hdr_len, tmpl_rmcp_hdr);
+  if ((rmcp_hdr_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   FIID_TEMPLATE_FIELD_START_BYTES (authentication_type_start_bytes, 
 				   tmpl_lan_session_hdr, 

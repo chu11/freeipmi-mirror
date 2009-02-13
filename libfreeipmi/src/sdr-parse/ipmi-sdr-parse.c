@@ -90,11 +90,6 @@ ipmi_sdr_parse_ctx_create(void)
   ctx->flags = IPMI_SDR_PARSE_FLAGS_DEFAULT;
 
   return ctx;
-
- cleanup:
-  if (ctx)
-    free(ctx);
-  return NULL;
 }
 
 void

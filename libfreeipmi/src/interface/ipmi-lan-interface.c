@@ -171,12 +171,27 @@ _ipmi_lan_pkt_rq_min_size(uint8_t authentication_type, fiid_obj_t obj_cmd)
 
   assert(IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type) && fiid_obj_valid(obj_cmd));
 
-  FIID_TEMPLATE_LEN_BYTES (len, tmpl_rmcp_hdr);
+  if ((len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   msg_len += len;
-  FIID_TEMPLATE_LEN_BYTES (len, tmpl_lan_msg_hdr_rq);
+
+  if ((len = fiid_template_len_bytes(tmpl_lan_msg_hdr_rq)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   msg_len += len;
-  FIID_TEMPLATE_LEN_BYTES (len, tmpl_lan_msg_trlr);
+
+  if ((len = fiid_template_len_bytes(tmpl_lan_msg_trlr)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   msg_len += len;
+
   FIID_TEMPLATE_BLOCK_LEN_BYTES (len,
 				 tmpl_lan_session_hdr,
 				 "authentication_type",
@@ -589,7 +604,11 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   if (pkt_len <= indx)
     return 0;
   
-  FIID_TEMPLATE_LEN_BYTES (obj_lan_msg_trlr_len, tmpl_lan_msg_trlr);
+  if ((obj_lan_msg_trlr_len = fiid_template_len_bytes(tmpl_lan_msg_trlr)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   
   if ((pkt_len - indx) >= obj_lan_msg_trlr_len)
     obj_cmd_len = (pkt_len - indx) - obj_lan_msg_trlr_len;

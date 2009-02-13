@@ -114,15 +114,6 @@ do {                                                        \
   __FIID_ERRNUM_SET_ERRNO(___itererrnum);                   \
 } while (0)
 
-#define FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                           \
-do {                                                                     \
-  if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                \
-    {                                                                    \
-      __FIID_TRACE;                                                      \
-      return (-1);                                                       \
-    }                                                                    \
-} while (0)
-
 #define FIID_TEMPLATE_LEN_BYTES_CLEANUP(__len, __tmpl)                   \
 do {                                                                     \
   if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)                \

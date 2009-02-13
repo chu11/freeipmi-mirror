@@ -128,8 +128,7 @@ ipmi_crypt_hash(int hash_algorithm,
 
   if ((gcry_md_digest_len = gcry_md_get_algo_dlen(gcry_md_algorithm)) > digest_len)
     {
-      ERR_TRACE(gcry_strerror(e), e);
-      SET_ERRNO(_gpg_error_to_errno(e));
+      SET_ERRNO(EINVAL);
       return (-1);
     }
 

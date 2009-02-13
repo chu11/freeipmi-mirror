@@ -157,13 +157,21 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
   FIID_OBJ_PACKET_VALID(obj_ipmb_msg_hdr);
   FIID_OBJ_PACKET_VALID(obj_cmd);
 
-  FIID_TEMPLATE_LEN_BYTES (len, tmpl_ipmb_msg_hdr_rq);
+  if ((len = fiid_template_len_bytes(tmpl_ipmb_msg_hdr_rq)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   required_len += len;
   
   FIID_OBJ_LEN_BYTES (len, obj_cmd);
   required_len += len;
 
-  FIID_TEMPLATE_LEN_BYTES (len, tmpl_ipmb_msg_trlr);
+  if ((len = fiid_template_len_bytes(tmpl_ipmb_msg_trlr)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   required_len += len;
 
   if (IPMB_MAX_LEN < required_len)
@@ -254,7 +262,11 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
   if (buf_len <= indx)
     return 0;
   
-  FIID_TEMPLATE_LEN_BYTES (obj_ipmb_msg_trlr_len, tmpl_ipmb_msg_trlr);
+  if ((obj_ipmb_msg_trlr_len = fiid_template_len_bytes(tmpl_ipmb_msg_trlr)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   
   if ((buf_len - indx) >= obj_ipmb_msg_trlr_len)
     ipmb_msg_len = (buf_len - indx) - obj_ipmb_msg_trlr_len;

@@ -73,7 +73,11 @@ ipmi_dump_sdr_record (int fd,
       return (-1);
     }
 
-  FIID_TEMPLATE_LEN_BYTES(sdr_record_header_len, tmpl_sdr_record_header);
+  if ((sdr_record_header_len = fiid_template_len_bytes(tmpl_sdr_record_header)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
   FIID_OBJ_CREATE(obj_sdr_record_header, tmpl_sdr_record_header);
   

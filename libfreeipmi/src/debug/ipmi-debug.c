@@ -254,7 +254,11 @@ ipmi_obj_dump_ipmb (int fd,
 
   if (ipmb_buf_len)
     {
-      FIID_TEMPLATE_LEN_BYTES (obj_ipmb_msg_trlr_len, tmpl_ipmb_msg_trlr);
+      if ((obj_ipmb_msg_trlr_len = fiid_template_len_bytes(tmpl_ipmb_msg_trlr)) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
 
       FIID_OBJ_SET_ALL_LEN_CLEANUP (ipmb_hdr_len,
 				    obj_ipmb_msg_hdr,

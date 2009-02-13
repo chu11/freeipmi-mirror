@@ -1453,7 +1453,11 @@ ipmi_rmcpplus_calculate_payload_type(uint8_t *pkt, uint32_t pkt_len)
       return (-1);
     }
 
-  FIID_TEMPLATE_LEN_BYTES(rmcp_hdr_len, tmpl_rmcp_hdr);
+  if ((rmcp_hdr_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if (pkt_len <= rmcp_hdr_len)
     {

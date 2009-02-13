@@ -177,7 +177,11 @@ ipmi_is_ipmi_1_5_packet(uint8_t *pkt, uint32_t pkt_len)
   int32_t rmcp_hdr_len;
   uint8_t auth_type;
 
-  FIID_TEMPLATE_LEN_BYTES(rmcp_hdr_len, tmpl_rmcp_hdr);
+  if ((rmcp_hdr_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if (pkt_len <= rmcp_hdr_len)
     {
@@ -196,7 +200,11 @@ ipmi_is_ipmi_2_0_packet(uint8_t *pkt, uint32_t pkt_len)
   int32_t rmcp_hdr_len;
   uint8_t auth_type;
 
-  FIID_TEMPLATE_LEN_BYTES(rmcp_hdr_len, tmpl_rmcp_hdr);
+  if ((rmcp_hdr_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if (pkt_len <= rmcp_hdr_len)
     {
