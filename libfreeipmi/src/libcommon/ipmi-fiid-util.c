@@ -56,6 +56,12 @@ set_errno_by_fiid_object(fiid_obj_t obj)
 void 
 set_errno_by_fiid_iterator(fiid_iterator_t iter)
 {
+  if (!iter)
+    {
+      SET_ERRNO(EINVAL);
+      return;
+    }
+
   if (fiid_iterator_errnum(iter) == FIID_ERR_SUCCESS)
     errno = 0;
   else if (fiid_iterator_errnum(iter) == FIID_ERR_OUT_OF_MEMORY)

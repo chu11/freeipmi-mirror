@@ -1234,19 +1234,54 @@ _ipmi_dump_rmcpplus_packet (int fd,
           goto cleanup;
         }
     }
-
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
-    FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_open_session_request);
+    {
+      if (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_request) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          goto cleanup;
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
-    FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_open_session_response);
+    {
+      if (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_response) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          goto cleanup;
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
-    FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_rakp_message_1);
+    {
+      if (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_1) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          goto cleanup;
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)
-    FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_rakp_message_2);
+    {
+      if (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_2) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          goto cleanup;
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
-    FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_rakp_message_3);
+    {
+      if (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_3) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          goto cleanup;
+        }
+    }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-    FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_rakp_message_4);
+    {
+      if (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_4) != 1)
+        {
+          SET_ERRNO(EINVAL);
+          goto cleanup;
+        }
+    }
 
   /* Dump Payload */
 

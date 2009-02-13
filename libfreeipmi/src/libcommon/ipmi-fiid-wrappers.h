@@ -101,38 +101,6 @@ do {                                                    \
   __FIID_ERRNUM_SET_ERRNO(___objerrnum);                \
 } while (0)
 
-#define FIID_TEMPLATE_COMPARE(__tmpl1, __tmpl2)                              \
-do {                                                                         \
-    int __ret;                                                               \
-    if ((__ret = fiid_template_compare ((__tmpl1), (__tmpl2))) < 0)          \
-      {                                                                      \
-        __FIID_TRACE;                                                        \
-        return (-1);                                                         \
-      }                                                                      \
-    if (!__ret)                                                              \
-      {                                                                      \
-	errno = EINVAL;                                                      \
-        __FIID_TRACE;                                                        \
-	return (-1);                                                         \
-      }                                                                      \
-} while (0)
-
-#define FIID_TEMPLATE_COMPARE_CLEANUP(__tmpl1, __tmpl2)                      \
-do {                                                                         \
-    int __ret;                                                               \
-    if ((__ret = fiid_template_compare ((__tmpl1), (__tmpl2))) < 0)          \
-      {                                                                      \
-        __FIID_TRACE;                                                        \
-        goto cleanup;                                                        \
-      }                                                                      \
-    if (!__ret)                                                              \
-      {                                                                      \
-	errno = EINVAL;                                                      \
-        __FIID_TRACE;                                                        \
-	goto cleanup;                                                        \
-      }                                                                      \
-} while (0)
-
 #define FIID_TEMPLATE_FREE(__tmpl)             \
 do {                                           \
   if ((__tmpl))                                \
