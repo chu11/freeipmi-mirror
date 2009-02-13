@@ -713,56 +713,6 @@ do {                                                                   \
       }                                                                \
 } while (0)
 
-#define FIID_ITERATOR_CREATE(__iter, __obj)                          \
-do {                                                                 \
-  if (!((__iter) = fiid_iterator_create((__obj))))                   \
-    {                                                                \
-      __FIID_OBJ_TRACE((__obj));                                     \
-      __FIID_OBJ_SET_ERRNO((__obj));                                 \
-      goto cleanup;                                                  \
-    }                                                                \
-} while (0)
-
-#define FIID_ITERATOR_KEY(__key, __iter)                             \
-do {                                                                 \
-  if (!((__key) = fiid_iterator_key((__iter))))                      \
-    {                                                                \
-      __FIID_ITER_TRACE((__iter));                                   \
-      __FIID_ITER_SET_ERRNO((__iter));                               \
-      goto cleanup;                                                  \
-    }                                                                \
-} while (0)
-
-#define FIID_ITERATOR_FIELD_LEN(__field_len, __iter)                 \
-do {                                                                 \
-  if (((__field_len) = fiid_iterator_field_len((__iter))) < 0)       \
-    {                                                                \
-      __FIID_ITER_TRACE((__iter));                                   \
-      __FIID_ITER_SET_ERRNO((__iter));                               \
-      goto cleanup;                                                  \
-    }                                                                \
-} while (0)
-
-#define FIID_ITERATOR_GET(__iter, __val)                             \
-do {                                                                 \
-  if (fiid_iterator_get((__iter), (__val)) < 0)                      \
-    {                                                                \
-      __FIID_ITER_TRACE((__iter));                                   \
-      __FIID_ITER_SET_ERRNO((__iter));                               \
-      goto cleanup;                                                  \
-    }                                                                \
-} while (0)
-
-#define FIID_ITERATOR_GET_DATA_LEN(__len, __iter, __data, __data_len)   \
-do {                                                                             \
-  if (((__len) = fiid_iterator_get_data((__iter), (__data), (__data_len))) < 0)  \
-    {                                                                            \
-      __FIID_ITER_TRACE((__iter));                                               \
-      __FIID_ITER_SET_ERRNO((__iter));                                           \
-      goto cleanup;                                                              \
-    }                                                                            \
-} while (0)
-
 #ifdef __cplusplus
 }
 #endif

@@ -43,6 +43,8 @@
 #include "ipmi-api-util.h"
 #include "ipmi-lan-session-common.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 
 fiid_template_t tmpl_lan_raw =

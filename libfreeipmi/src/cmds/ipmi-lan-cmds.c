@@ -31,6 +31,7 @@
 #include "freeipmi/spec/ipmi-lan-parameter-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
 
+#include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 

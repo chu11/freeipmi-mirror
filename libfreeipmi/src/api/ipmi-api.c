@@ -81,6 +81,7 @@
 #include "ipmi-ssif-driver-api.h"
 
 #include "libcommon/ipmi-crypt.h"
+#include "libcommon/ipmi-fiid-util.h"
 
 #include "freeipmi-portability.h"
 #include "debug-util.h"

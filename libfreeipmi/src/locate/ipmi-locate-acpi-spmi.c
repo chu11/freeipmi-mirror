@@ -48,6 +48,8 @@
 #include "ipmi-locate-trace.h"
 #include "ipmi-locate-util.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 
 #define IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_MEMORY IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY

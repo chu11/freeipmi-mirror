@@ -34,6 +34,7 @@
 
 #include "ipmi-debug-common.h"
 
+#include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 

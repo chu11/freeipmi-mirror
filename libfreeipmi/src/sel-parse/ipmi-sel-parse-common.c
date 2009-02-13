@@ -43,6 +43,8 @@
 #include "ipmi-sel-parse-trace.h"
 #include "ipmi-sel-parse-util.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 
 int

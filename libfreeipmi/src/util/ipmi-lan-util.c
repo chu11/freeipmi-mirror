@@ -40,6 +40,7 @@
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/util/ipmi-util.h"
 
+#include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 #include "libcommon/ipmi-md2.h"

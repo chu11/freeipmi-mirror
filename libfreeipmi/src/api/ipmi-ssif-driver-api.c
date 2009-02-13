@@ -44,6 +44,8 @@
 #include "ipmi-api-util.h"
 #include "ipmi-ssif-driver-api.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 
 int

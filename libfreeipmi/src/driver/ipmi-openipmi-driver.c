@@ -60,6 +60,8 @@
 
 #include "ipmi-driver-trace.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 
 #define IPMI_OPENIPMI_BUFLEN    1024

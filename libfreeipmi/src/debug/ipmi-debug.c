@@ -35,13 +35,15 @@
 
 #include "freeipmi/debug/ipmi-debug.h"
 
-#include "ipmi-debug-common.h"
-
-#include "libcommon/ipmi-bit-ops.h"
-#include "libcommon/ipmi-trace.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
 #include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
+
+#include "libcommon/ipmi-bit-ops.h"
+#include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-trace.h"
+#include "libcommon/ipmi-fiid-wrappers.h"
+
+#include "ipmi-debug-common.h"
 
 #include "freeipmi-portability.h"
 
@@ -96,17 +98,29 @@ ipmi_obj_dump (int fd,
       return (-1);
     }
 
-  FIID_ITERATOR_CREATE (iter, obj);
+  if (!(iter = fiid_iterator_create(obj)))
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
 
   while (!fiid_iterator_end(iter))
     {
       int32_t field_len;
       char *key = NULL;
 
-      FIID_ITERATOR_KEY(key, iter);
-
-      FIID_ITERATOR_FIELD_LEN(field_len, iter);
-    
+      if (!(key = fiid_iterator_key(iter)))
+        {
+          FIID_ITERATOR_ERROR_TO_ERRNO(iter);
+          goto cleanup;
+        }
+      
+      if (!(field_len = fiid_iterator_field_len(iter)))
+        {
+          FIID_ITERATOR_ERROR_TO_ERRNO(iter);
+          goto cleanup;
+        }
+      
       if (!field_len)
         {
           fiid_iterator_next(iter);
@@ -126,7 +140,11 @@ ipmi_obj_dump (int fd,
         {
           uint64_t val = 0;
 
-	  FIID_ITERATOR_GET (iter, &val);
+          if (fiid_iterator_get(iter, &val) < 0)
+            {
+              FIID_ITERATOR_ERROR_TO_ERRNO(iter);
+              goto cleanup;
+            }
 
           if (ipmi_debug_dprintf(fd, "[%16"PRIX64"h] = %s[%2db]\n", (uint64_t) val, key, field_len) < 0)
             {
@@ -145,8 +163,12 @@ ipmi_obj_dump (int fd,
               goto cleanup;
             }
 
-	  FIID_ITERATOR_GET_DATA_LEN(len, iter, buf, IPMI_DEBUG_MAX_BUF_LEN);
-       
+          if ((len = fiid_iterator_get_data(iter, buf, IPMI_DEBUG_MAX_BUF_LEN)) < 0)
+            {
+              FIID_ITERATOR_ERROR_TO_ERRNO(iter);
+              goto cleanup;
+            }
+
           if (ipmi_debug_output_byte_array(fd, prefix_buf, buf, len) < 0)
             {
               ERRNO_TRACE(errno);

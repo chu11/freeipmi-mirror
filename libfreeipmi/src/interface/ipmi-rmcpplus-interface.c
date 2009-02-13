@@ -40,6 +40,7 @@
 #include "freeipmi/util/ipmi-util.h"
 
 #include "libcommon/ipmi-crypt.h"
+#include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 #include "libcommon/ipmi-md5.h"

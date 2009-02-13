@@ -35,6 +35,8 @@
 #include "ipmi-api-util.h"
 #include "ipmi-sunbmc-driver-api.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 
 fiid_template_t tmpl_sunbmc_raw =

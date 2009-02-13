@@ -70,6 +70,8 @@
 
 #include "ipmi-driver-trace.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 
 #define IPMI_SUNBMC_BUFLEN    1024

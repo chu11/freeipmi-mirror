@@ -45,6 +45,8 @@
 #include "ipmi-driver-trace.h"
 #include "ipmi-semaphores.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 
 #define IPMI_KCS_SLEEP_USECS                  0x01

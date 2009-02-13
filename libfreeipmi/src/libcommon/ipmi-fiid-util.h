@@ -39,6 +39,8 @@ extern "C" {
 
 void set_errno_by_fiid_object(fiid_obj_t obj);
 
+void set_errno_by_fiid_iterator(fiid_iterator_t iter);
+
 #ifdef __cplusplus
 }
 #endif

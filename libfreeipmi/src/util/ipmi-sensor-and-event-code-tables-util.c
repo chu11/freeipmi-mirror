@@ -34,6 +34,7 @@
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/fiid/fiid.h"
 
+#include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 

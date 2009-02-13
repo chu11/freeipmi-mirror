@@ -44,6 +44,8 @@
 #include "ipmi-sdr-parse-trace.h"
 #include "ipmi-sdr-parse-util.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 #include "debug-util.h"
 

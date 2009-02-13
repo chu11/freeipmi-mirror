@@ -49,6 +49,8 @@
 #include "ipmi-sensor-read-trace.h"
 #include "ipmi-sensor-read-util.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 #include "debug-util.h"
 

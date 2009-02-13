@@ -53,6 +53,8 @@
 #include "ipmi-api-util.h"
 #include "ipmi-kcs-driver-api.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 #include "debug-util.h"
 

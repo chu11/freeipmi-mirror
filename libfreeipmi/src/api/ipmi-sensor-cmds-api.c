@@ -36,6 +36,8 @@
 #include "ipmi-api-trace.h"
 #include "ipmi-api-util.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */

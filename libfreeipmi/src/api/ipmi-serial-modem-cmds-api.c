@@ -38,6 +38,8 @@
 #include "ipmi-api-trace.h"
 #include "ipmi-api-util.h"
 
+#include "libcommon/ipmi-fiid-util.h"
+
 #include "freeipmi-portability.h"
 
 int8_t 
