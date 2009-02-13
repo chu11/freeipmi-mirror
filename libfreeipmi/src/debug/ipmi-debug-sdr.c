@@ -222,14 +222,24 @@ ipmi_dump_sdr_record (int fd,
       event_reading_type_code = val;
 
       if ((IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code)))
-        FIID_OBJ_COPY_CLEANUP(obj_temp,
-                              obj_sdr_record,
-                              tmpl_sdr_full_sensor_record_threshold_based_sensors);
+        {
+          if (!(obj_temp = fiid_obj_copy(obj_sdr_record, 
+                                         tmpl_sdr_full_sensor_record_threshold_based_sensors)))
+            {
+              FIID_OBJECT_ERROR_TO_ERRNO(obj_sdr_record);
+              goto cleanup;
+            }
+        }
       else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code)
                || IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
-        FIID_OBJ_COPY_CLEANUP(obj_temp,
-                              obj_sdr_record,
-                              tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
+        {
+          if (!(obj_temp = fiid_obj_copy(obj_sdr_record, 
+                                         tmpl_sdr_full_sensor_record_non_threshold_based_sensors)))
+            {
+              FIID_OBJECT_ERROR_TO_ERRNO(obj_sdr_record);
+              goto cleanup;
+            }
+        }
 
       if (obj_temp)
         {
@@ -252,14 +262,24 @@ ipmi_dump_sdr_record (int fd,
        */
 
       if ((IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code)))
-        FIID_OBJ_COPY_CLEANUP(obj_temp,
-                              obj_sdr_record,
-                              tmpl_sdr_compact_sensor_record_threshold_based_sensors);
+        {
+          if (!(obj_temp = fiid_obj_copy(obj_sdr_record,
+                                         tmpl_sdr_compact_sensor_record_threshold_based_sensors)))
+            {
+              FIID_OBJECT_ERROR_TO_ERRNO(obj_sdr_record);
+              goto cleanup;
+            }
+        }
       else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code)
                || IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
-        FIID_OBJ_COPY_CLEANUP(obj_temp,
-                              obj_sdr_record,
-                              tmpl_sdr_compact_sensor_record_non_threshold_based_sensors);
+        {
+          if (!(obj_temp = fiid_obj_copy(obj_sdr_record,
+                                         tmpl_sdr_compact_sensor_record_non_threshold_based_sensors)))
+            {
+              FIID_OBJECT_ERROR_TO_ERRNO(obj_sdr_record);
+              goto cleanup;
+            }
+        }
 
       if (obj_temp)
         {

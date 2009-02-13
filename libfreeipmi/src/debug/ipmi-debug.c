@@ -250,7 +250,11 @@ ipmi_obj_dump_ipmb (int fd,
       return (-1);
     }
 
-  FIID_OBJ_DUP_CLEANUP (obj_cmd, obj);
+  if (!(obj_cmd = fiid_obj_dup(obj)))
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   if (!(obj_ipmb_msg_hdr = fiid_obj_create (tmpl_ipmb_msg_hdr)))
     {
       ERRNO_TRACE(errno);

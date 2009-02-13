@@ -192,9 +192,21 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
       memset(pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
       memcpy(pwbuf, authentication_code_data, authentication_code_data_len);
 
-      FIID_OBJ_LEN_BYTES_CLEANUP (obj_lan_msg_hdr_len, obj_lan_msg_hdr_rs);
-      FIID_OBJ_LEN_BYTES_CLEANUP (obj_cmd_len, obj_cmd);
-      FIID_OBJ_LEN_BYTES_CLEANUP (obj_lan_msg_trlr_len, obj_lan_msg_trlr_rs);
+      if ((obj_lan_msg_hdr_len = fiid_obj_len_bytes (obj_lan_msg_hdr_rs)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_lan_msg_hdr_rs);
+          goto cleanup;
+        }
+      if ((obj_cmd_len = fiid_obj_len_bytes (obj_cmd)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+          goto cleanup;
+        }
+      if ((obj_lan_msg_trlr_len = fiid_obj_len_bytes (obj_lan_msg_trlr_rs)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_lan_msg_trlr_rs);
+          goto cleanup;
+        }
       
       buflen = obj_lan_msg_hdr_len + obj_cmd_len + obj_lan_msg_trlr_len;
       if (!(buf = (uint8_t *)alloca(buflen)))
@@ -540,8 +552,16 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
       return (-1);
     }
 
-  FIID_OBJ_LEN_BYTES (obj_lan_msg_hdr_len, obj_lan_msg_hdr);
-  FIID_OBJ_LEN_BYTES (obj_cmd_len, obj_cmd);
+  if ((obj_lan_msg_hdr_len = fiid_obj_len_bytes (obj_lan_msg_hdr)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_lan_msg_hdr);
+      return (-1);
+    }
+  if ((obj_cmd_len = fiid_obj_len_bytes (obj_cmd)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
 
   FIID_OBJ_GET (obj_lan_msg_hdr, "checksum1", &val);
   checksum1_recv = val;

@@ -165,7 +165,11 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
     }
   required_len += len;
   
-  FIID_OBJ_LEN_BYTES (len, obj_cmd);
+  if ((len = fiid_obj_len_bytes(obj_cmd)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
   required_len += len;
 
   if ((len = fiid_template_len_bytes(tmpl_ipmb_msg_trlr)) < 0)

@@ -86,8 +86,16 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
   FIID_OBJ_PACKET_VALID(obj_kcs_hdr);
   FIID_OBJ_PACKET_VALID(obj_cmd);
 
-  FIID_OBJ_LEN_BYTES (obj_kcs_hdr_len, obj_kcs_hdr);
-  FIID_OBJ_LEN_BYTES (obj_cmd_len, obj_cmd);
+  if ((obj_kcs_hdr_len = fiid_obj_len_bytes(obj_kcs_hdr)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_kcs_hdr);
+      return (-1);
+    }
+  if ((obj_cmd_len = fiid_obj_len_bytes(obj_cmd)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
 
   if (pkt_len < (obj_kcs_hdr_len + obj_cmd_len))
     {

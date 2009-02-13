@@ -564,20 +564,23 @@ _construct_payload_buf(uint8_t payload_type,
 
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
     {
-      /* XXX */
-#if 0
-      if ((obj_lan_msg_hdr_len = fiid_obj_len_bytes (obj_lan_msg_hdr)) < 0)
-#endif
-        FIID_OBJ_LEN_BYTES_CLEANUP(obj_lan_msg_hdr_len, obj_lan_msg_hdr);
-        
+      if ((obj_lan_msg_hdr_len = fiid_obj_len_bytes(obj_lan_msg_hdr)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_lan_msg_hdr);
+          goto cleanup;
+        }
       if ((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0)
         {
           ERRNO_TRACE(errno);
 	  goto cleanup;
         }
     }
-
-  FIID_OBJ_LEN_BYTES_CLEANUP(obj_cmd_len, obj_cmd);
+  
+  if ((obj_cmd_len = fiid_obj_len_bytes(obj_cmd)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      goto cleanup;
+    }
   
   payload_len = obj_lan_msg_hdr_len + obj_cmd_len + obj_lan_msg_trlr_len;
   
@@ -1417,7 +1420,12 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    * Copy RMCP header into packet
    */
   indx = 0;
-  FIID_OBJ_LEN_BYTES(obj_rmcp_hdr_len, obj_rmcp_hdr);
+  if ((obj_rmcp_hdr_len = fiid_obj_len_bytes(obj_rmcp_hdr)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcp_hdr);
+      return (-1);
+    }
+
   if (obj_rmcp_hdr_len > (pkt_len - indx))
     {
       SET_ERRNO(ENOSPC);
@@ -1484,7 +1492,12 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                         "ipmi_payload_len",
                         payload_len);
   
-  FIID_OBJ_LEN_BYTES_CLEANUP(obj_len, obj_session_hdr_temp);
+  if ((obj_len = fiid_obj_len_bytes(obj_session_hdr_temp)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_session_hdr_temp);
+      goto cleanup;
+    }
+
   if (obj_len > (pkt_len - indx))
     {
       SET_ERRNO(ENOSPC);
@@ -1497,7 +1510,12 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    * Copy IPMI Payload into packet
    */
 
-  FIID_OBJ_LEN_BYTES_CLEANUP(obj_len, obj_rmcpplus_payload);
+  if ((obj_len = fiid_obj_len_bytes(obj_rmcpplus_payload)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_payload);
+      goto cleanup;
+    }
+
   if (obj_len > (pkt_len - indx))
     {
       SET_ERRNO(ENOSPC);
@@ -1511,7 +1529,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       uint8_t authentication_code_buf[IPMI_MAX_PAYLOAD_LENGTH];
       int32_t authentication_code_len;
 
-      FIID_OBJ_DUP_CLEANUP (obj_rmcpplus_session_trlr_temp, obj_rmcpplus_session_trlr);
+      if (!(obj_rmcpplus_session_trlr_temp = fiid_obj_dup(obj_rmcpplus_session_trlr)))
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_trlr);
+          goto cleanup;
+        }
 
       if (_construct_session_trlr_pad(integrity_algorithm,
                                       (indx - obj_rmcp_hdr_len),

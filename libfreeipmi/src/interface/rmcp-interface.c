@@ -98,8 +98,16 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
   FIID_OBJ_PACKET_VALID(obj_rmcp_hdr);
   FIID_OBJ_PACKET_VALID(obj_cmd);
 
-  FIID_OBJ_LEN_BYTES (obj_rmcp_hdr_len, obj_rmcp_hdr);
-  FIID_OBJ_LEN_BYTES (obj_cmd_len, obj_cmd);
+  if ((obj_rmcp_hdr_len = fiid_obj_len_bytes (obj_rmcp_hdr)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
+  if ((obj_cmd_len = fiid_obj_len_bytes (obj_cmd)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
 
   if (pkt_len < (obj_rmcp_hdr_len + obj_cmd_len))
     {

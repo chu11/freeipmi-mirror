@@ -115,8 +115,16 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
       return (-1);
     }
 
-  FIID_OBJ_LEN_BYTES (obj_ipmb_msg_hdr_len, obj_ipmb_msg_hdr);
-  FIID_OBJ_LEN_BYTES (obj_cmd_len, obj_cmd);
+  if ((obj_ipmb_msg_hdr_len = fiid_obj_len_bytes (obj_ipmb_msg_hdr)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_ipmb_msg_hdr);
+      return (-1);
+    }
+  if ((obj_cmd_len = fiid_obj_len_bytes (obj_cmd)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
 
   FIID_OBJ_GET (obj_ipmb_msg_hdr, "checksum1", &val);
   checksum1_recv = val;

@@ -215,7 +215,12 @@ _ipmi_lan_pkt_rq_min_size(uint8_t authentication_type, fiid_obj_t obj_cmd)
     }
   msg_len += len;
 
-  FIID_OBJ_LEN_BYTES (len, obj_cmd);
+  if ((len = fiid_obj_len_bytes(obj_cmd)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
+
   msg_len += len;
 
   return msg_len;
