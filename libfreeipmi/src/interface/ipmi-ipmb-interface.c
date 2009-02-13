@@ -39,7 +39,7 @@
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/util/ipmi-util.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"

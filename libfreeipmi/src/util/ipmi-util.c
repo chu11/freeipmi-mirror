@@ -54,7 +54,7 @@
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"

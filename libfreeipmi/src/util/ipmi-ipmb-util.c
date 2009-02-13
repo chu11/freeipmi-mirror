@@ -35,7 +35,7 @@
 #include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/util/ipmi-util.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"

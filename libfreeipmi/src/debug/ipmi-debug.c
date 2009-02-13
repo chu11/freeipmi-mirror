@@ -38,7 +38,7 @@
 #include "ipmi-debug-common.h"
 
 #include "libcommon/ipmi-bit-ops.h"
-#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 #include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"

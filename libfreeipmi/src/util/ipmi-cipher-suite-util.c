@@ -26,7 +26,7 @@
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 #include "freeipmi/record-format/ipmi-cipher-suite-record-format.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
 

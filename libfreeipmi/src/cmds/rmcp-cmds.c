@@ -30,7 +30,7 @@
 #include "freeipmi/cmds/rmcp-cmds.h"
 #include "freeipmi/interface/rmcp-interface.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"

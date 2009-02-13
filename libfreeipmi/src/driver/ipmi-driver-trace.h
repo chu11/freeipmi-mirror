@@ -40,7 +40,7 @@ extern "C" {
 #include "freeipmi/util/ipmi-error-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
 #define KCS_SET_ERRNUM(__ctx, __errnum)                                 \

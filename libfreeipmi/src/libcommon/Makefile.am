@@ -1,10 +1,10 @@
 noinst_HEADERS = \
 	ipmi-bit-ops.h \
 	ipmi-crypt.h \
-	ipmi-err-wrappers.h \
 	ipmi-fiid-wrappers.h \
 	ipmi-md2.h \
-	ipmi-md5.h
+	ipmi-md5.h \
+	ipmi-trace.h
 
 noinst_LTLIBRARIES = libcommon.la
 

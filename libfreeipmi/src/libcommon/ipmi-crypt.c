@@ -33,8 +33,7 @@
 GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
 #include "ipmi-crypt.h"
-
-#include "ipmi-err-wrappers.h"
+#include "ipmi-trace.h"
 
 #include "freeipmi-portability.h"
 

@@ -39,7 +39,7 @@
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 
 #include "libcommon/ipmi-crypt.h"
-#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"

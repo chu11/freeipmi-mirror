@@ -35,7 +35,7 @@ extern "C" {
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
 #define SENSOR_READ_SET_ERRNUM(__ctx, __errnum)                            \

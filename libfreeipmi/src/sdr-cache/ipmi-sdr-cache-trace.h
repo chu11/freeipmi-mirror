@@ -35,7 +35,7 @@ extern "C" {
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "ipmi-sdr-cache-util.h"
