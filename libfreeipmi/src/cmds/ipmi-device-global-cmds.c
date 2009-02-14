@@ -227,9 +227,9 @@ fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_device_id_rq) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_device_id_rq) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 
@@ -247,9 +247,9 @@ fill_cmd_cold_reset (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_cold_reset_rq) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_cold_reset_rq) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 
@@ -267,9 +267,9 @@ fill_cmd_warm_reset (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_warm_reset_rq) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_warm_reset_rq) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 
@@ -298,9 +298,9 @@ fill_cmd_set_acpi_power_state (uint8_t system_power_state_enumeration,
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_acpi_power_state_rq) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_acpi_power_state_rq) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 
@@ -322,9 +322,9 @@ fill_cmd_get_acpi_power_state (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_acpi_power_state_rq) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_acpi_power_state_rq) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 
@@ -342,9 +342,9 @@ fill_cmd_get_self_test_results (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_self_test_results_rq) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_self_test_results_rq) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 
@@ -362,10 +362,10 @@ fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_device_guid_rq) != 1
-      && fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_device_guid_format_rs) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_device_guid_rq) < 0
+      && Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_device_guid_format_rs) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 

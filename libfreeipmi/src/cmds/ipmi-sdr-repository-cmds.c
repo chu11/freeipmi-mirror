@@ -149,9 +149,9 @@ fill_cmd_get_repository_info (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sdr_repository_info_rq) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sdr_repository_info_rq) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 
@@ -169,9 +169,9 @@ fill_cmd_get_repository_allocation_info (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sdr_repository_allocation_info_rq) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sdr_repository_allocation_info_rq) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 
@@ -189,9 +189,9 @@ fill_cmd_reserve_sdr_repository (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_reserve_sdr_repository_rq) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_reserve_sdr_repository_rq) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 
@@ -213,9 +213,9 @@ fill_cmd_get_sdr (uint16_t reservation_id,
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sdr_rq) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sdr_rq) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 
@@ -237,9 +237,9 @@ fill_cmd_get_sdr_repository_time (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sdr_repository_time_rq) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_sdr_repository_time_rq) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
   
@@ -258,9 +258,9 @@ fill_cmd_set_sdr_repository_time (uint32_t time, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
   
-  if (fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_sdr_repository_time_rq) != 1)
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_sdr_repository_time_rq) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
   

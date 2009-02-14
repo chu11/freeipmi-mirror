@@ -219,36 +219,7 @@ stacks of parameters) that come with having long parameters lists and
 the atrocities of having gigantic 25+ parameter function calls in
 code.
 
-5) Error tracing/syslogging macros
-----------------------------------
-
-Throughout libfreeipmi, you will see various macros such as:
-
-ERR
-
-or 
-
-FIID_OBJ_CREATE_CLEANUP
-
-These are macros that will expand to something along the lines of the
-following:
-
-#define ERR(expr)                                                       \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-The primary purpose of these macros is to log a trace of errors to
-stderr/syslog when appropriate debugging is enabled.  It has allowed
-the FreeIPMI developers to debug issues very quickly and figure out
-vendor IPMI compliance very quickly.
-
-6) Fiid vs. other Marshalling/Unmarshalling Styles
+5) Fiid vs. other Marshalling/Unmarshalling Styles
 --------------------------------------------------
 
 Several programmers have asked us why we have chosen a relatively
@@ -566,7 +537,7 @@ pwopr2: : IPMI Trailer:
 pwopr2: : --------------
 pwopr2: [              1Fh] = checksum2[ 8b]
 
-7) Non-generic error messages
+6) Non-generic error messages
 -----------------------------
 
 Under some circumstances, it may be preferred to return generic error
@@ -586,7 +557,7 @@ for users to determine why they failed to connect properly.  The
 overall worth of implementing a generic "Permission Denied" error
 message just doesn't seem worth it now.
 
-8) Get Channel Authentication Capabilities Command
+7) Get Channel Authentication Capabilities Command
 --------------------------------------------------
 
 The Get Channel Authentication Capabilities Command is typically the
@@ -656,7 +627,7 @@ provided by the checking of these values provides more than the
 negative implications.  Changes in the overall industry implementation
 could change this viewpoint later.
 
-9) Configuration tool callback design
+8) Configuration tool callback design
 -------------------------------------
 
 Bmc-config, Pef-config, Ipmi-sensors-config, and Ipmi-chassis-config
@@ -721,8 +692,8 @@ C) In the beginning of the Configtools development, 'FieldA' type
 fields were a bit more common than 'FieldB' type fields.  Currently,
 it's about 50-50.
 
-10) Dealing with workarounds
-----------------------------
+9) Dealing with workarounds
+---------------------------
 
 There is an admitted conflict in determining whether vendor compliance
 issues should be handled automatically vs. a specified workaround.

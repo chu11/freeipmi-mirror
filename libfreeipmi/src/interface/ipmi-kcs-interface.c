@@ -58,9 +58,9 @@ fill_hdr_ipmi_kcs (uint8_t lun,
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_kcs_hdr, tmpl_hdr_kcs) != 1)
+  if (Fiid_obj_template_compare(obj_kcs_hdr, tmpl_hdr_kcs) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 
@@ -86,9 +86,9 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_kcs_hdr, tmpl_hdr_kcs) != 1)
+  if (Fiid_obj_template_compare(obj_kcs_hdr, tmpl_hdr_kcs) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
   FIID_OBJ_PACKET_VALID(obj_kcs_hdr);
@@ -134,9 +134,9 @@ unassemble_ipmi_kcs_pkt (uint8_t *pkt,
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_kcs_hdr, tmpl_hdr_kcs) != 1)
+  if (Fiid_obj_template_compare(obj_kcs_hdr, tmpl_hdr_kcs) < 0)
     {
-      SET_ERRNO(EINVAL);
+      ERRNO_TRACE(errno);
       return (-1);
     }
 

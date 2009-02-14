@@ -41,6 +41,8 @@ void set_errno_by_fiid_object(fiid_obj_t obj);
 
 void set_errno_by_fiid_iterator(fiid_iterator_t iter);
 
+int Fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl);
+
 #ifdef __cplusplus
 }
 #endif

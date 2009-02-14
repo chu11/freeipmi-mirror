@@ -234,9 +234,12 @@ ipmi_obj_dump_ipmb (int fd,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE2(obj,
-                             tmpl_cmd_send_message_rq,
-                             tmpl_cmd_get_message_rs);
+  if (Fiid_obj_template_compare(obj, tmpl_cmd_send_message_rq) < 0
+      && Fiid_obj_template_compare(obj, tmpl_cmd_get_message_rs) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   
   if (ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
     {
