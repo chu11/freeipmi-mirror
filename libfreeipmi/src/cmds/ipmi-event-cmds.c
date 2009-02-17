@@ -28,9 +28,8 @@
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 
-#include "ipmi-cmds-util.h"
-
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-wrappers.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
@@ -92,11 +91,11 @@ fill_cmd_set_event_receiver (uint8_t event_receiver_slave_address,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_EVENT_RECEIVER);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "event_receiver_slave_address", event_receiver_slave_address);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "event_receiver_lun", event_receiver_lun);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_EVENT_RECEIVER);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "event_receiver_slave_address", event_receiver_slave_address);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "event_receiver_lun", event_receiver_lun);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   return (0);
 }
 
@@ -115,7 +114,7 @@ fill_cmd_get_event_receiver (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_EVENT_RECEIVER);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_EVENT_RECEIVER);
   return (0);
 }

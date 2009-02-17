@@ -34,9 +34,8 @@
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
 
-#include "ipmi-cmds-util.h"
-
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-wrappers.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
@@ -697,16 +696,16 @@ fill_cmd_clear_message_flags (uint8_t receive_message_queue,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CLEAR_MESSAGE_FLAGS);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "clear_receive_message_queue", receive_message_queue);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "clear_event_message_buffer", event_message_buffer);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "clear_watchdog_pre_timeout_interrupt_flag", watchdog_pre_timeout_interrupt_flag);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "clear_oem_0", oem_0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "clear_oem_1", oem_1);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "clear_oem_2", oem_2);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CLEAR_MESSAGE_FLAGS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "clear_receive_message_queue", receive_message_queue);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "clear_event_message_buffer", event_message_buffer);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "clear_watchdog_pre_timeout_interrupt_flag", watchdog_pre_timeout_interrupt_flag);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "clear_oem_0", oem_0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "clear_oem_1", oem_1);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "clear_oem_2", oem_2);
   return (0);
 }
 
@@ -725,8 +724,8 @@ fill_cmd_get_message_flags (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_MESSAGE_FLAGS);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_MESSAGE_FLAGS);
   return (0);
 }
 
@@ -749,12 +748,12 @@ fill_cmd_enable_message_channel_receive (uint8_t channel_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_ENABLE_MESSAGE_CHANNEL_RECEIVE);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_operation", channel_operation);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_ENABLE_MESSAGE_CHANNEL_RECEIVE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_operation", channel_operation);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   return (0);
 }
 
@@ -773,8 +772,8 @@ fill_cmd_get_message (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_MESSAGE);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_MESSAGE);
   return (0);
 }
 
@@ -805,16 +804,16 @@ fill_cmd_send_message (uint8_t channel_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SEND_MESSAGE);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "send_message_with_authentication", message_authentication);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "send_message_with_encryption", message_encryption);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "tracking_operation", tracking_operation);
-  CMDS_FIID_OBJ_SET_DATA (obj_cmd_rq,
-                     "message_data",
-                     message_data,
-                     message_data_len);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SEND_MESSAGE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "send_message_with_authentication", message_authentication);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "send_message_with_encryption", message_encryption);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "tracking_operation", tracking_operation);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+                          "message_data",
+                          message_data,
+                          message_data_len);
   return (0);
 }
 
@@ -833,8 +832,8 @@ fill_cmd_read_event_message_buffer (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_READ_EVENT_MESSAGE_BUFFER);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_READ_EVENT_MESSAGE_BUFFER);
   return (0);
 }
 
@@ -855,10 +854,10 @@ fill_cmd_get_system_interface_capabilities (uint8_t system_interface,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_INTERFACE_CAPABILITIES);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "system_interface", system_interface); 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_INTERFACE_CAPABILITIES);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "system_interface", system_interface); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   return (0);
 }
 
@@ -877,8 +876,8 @@ fill_cmd_get_bt_interface_capabilities (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_BT_INTERFACE_CAPABILITIES);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_BT_INTERFACE_CAPABILITIES);
   return (0);
 }
 
@@ -901,12 +900,12 @@ fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number); 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_level", maximum_privilege_level);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_level", maximum_privilege_level);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   return (0);
 }
 
@@ -931,12 +930,12 @@ fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number); 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "get_ipmi_v2.0_extended_data", get_ipmi_v20_extended_data);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_level", maximum_privilege_level);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "get_ipmi_v2.0_extended_data", get_ipmi_v20_extended_data);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_level", maximum_privilege_level);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
   return (0);
 }
@@ -963,14 +962,14 @@ fill_cmd_get_channel_cipher_suites (uint8_t channel_number,
       return (-1);
     }
   
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_CIPHER_SUITES);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number); 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "payload_type", payload_type); 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "list_index", list_index); 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "list_algorithm_type", list_algorithm_type);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_CIPHER_SUITES);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "payload_type", payload_type); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "list_index", list_index); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "list_algorithm_type", list_algorithm_type);
   return (0);
 }
 
@@ -999,17 +998,17 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SESSION_CHALLENGE);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "authentication_type", authentication_type);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SESSION_CHALLENGE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "authentication_type", authentication_type);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (user_name)
     strncpy((char *)buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
   
-  CMDS_FIID_OBJ_SET_DATA (obj_cmd_rq, "user_name", buf, IPMI_MAX_USER_NAME_LENGTH);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "user_name", buf, IPMI_MAX_USER_NAME_LENGTH);
   
   return (0);
 }
@@ -1040,25 +1039,25 @@ fill_cmd_activate_session (uint8_t authentication_type,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_ACTIVATE_SESSION);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "authentication_type", authentication_type);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_level", maximum_privilege_level);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_ACTIVATE_SESSION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "authentication_type", authentication_type);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_level", maximum_privilege_level);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   
   /* achu: challenge string must be zero extended */
   memset(buf, '\0', IPMI_CHALLENGE_STRING_LENGTH);
   memcpy(buf, challenge_string, challenge_string_len);
   
-  CMDS_FIID_OBJ_SET_DATA (obj_cmd_rq,
-		     "challenge_string",
-		     buf,
-		     IPMI_CHALLENGE_STRING_LENGTH);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+                          "challenge_string",
+                          buf,
+                          IPMI_CHALLENGE_STRING_LENGTH);
 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, 
-                "initial_outbound_sequence_number", 
-                initial_outbound_sequence_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, 
+                     "initial_outbound_sequence_number", 
+                     initial_outbound_sequence_number);
 
   return (0);
 }
@@ -1080,10 +1079,10 @@ fill_cmd_set_session_privilege_level (uint8_t privilege_level,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "privilege_level", privilege_level);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "privilege_level", privilege_level);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   return (0);
 }  
 
@@ -1103,9 +1102,9 @@ fill_cmd_close_session (uint32_t close_session_id,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CLOSE_SESSION);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "session_id", close_session_id);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CLOSE_SESSION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "session_id", close_session_id);
   return (0);
 }  
 
@@ -1140,18 +1139,18 @@ fill_cmd_set_channel_access (uint8_t channel_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_CHANNEL_ACCESS);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "ipmi_messaging_access_mode", ipmi_messaging_access_mode);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_level_authentication", user_level_authentication);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "per_message_authentication", per_message_authentication);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "pef_alerting", pef_alerting);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_access_set", channel_access_set);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_privilege_level_limit", channel_privilege_level_limit);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_privilege_level_limit_set", channel_privilege_level_limit_set);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_CHANNEL_ACCESS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "ipmi_messaging_access_mode", ipmi_messaging_access_mode);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_level_authentication", user_level_authentication);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "per_message_authentication", per_message_authentication);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "pef_alerting", pef_alerting);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_access_set", channel_access_set);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_privilege_level_limit", channel_privilege_level_limit);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_privilege_level_limit_set", channel_privilege_level_limit_set);
   return 0;
 }
 
@@ -1174,12 +1173,12 @@ fill_cmd_get_channel_access (uint8_t channel_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_ACCESS);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_access_get", channel_access_get);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_ACCESS);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_access_get", channel_access_get);
 
   return 0;
 }
@@ -1200,10 +1199,10 @@ fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_INFO_COMMAND);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_INFO_COMMAND);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   
   return 0;
 }
@@ -1237,13 +1236,13 @@ fill_cmd_set_channel_security_keys(uint8_t channel_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_CHANNEL_SECURITY_KEYS);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "key_id", key_id);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_CHANNEL_SECURITY_KEYS);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "key_id", key_id);
   if (operation == IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY)
     {
       uint8_t buf[IPMI_MAX_K_LENGTH];
@@ -1259,10 +1258,10 @@ fill_cmd_set_channel_security_keys(uint8_t channel_number,
       else
 	buf_len = IPMI_MAX_K_G_LENGTH;
       
-      CMDS_FIID_OBJ_SET_DATA (obj_cmd_rq,
-			 "key_value",
-			 buf,
-			 buf_len);
+      FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+                              "key_value",
+                              buf,
+                              buf_len);
     }
   return (0);
 }
@@ -1294,19 +1293,19 @@ fill_cmd_set_user_access (uint8_t channel_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_ACCESS_COMMAND);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_ipmi_messaging", user_ipmi_messaging);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_link_authentication", user_link_authentication);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_restricted_to_callback", user_restricted_to_callback);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "change_bits_in_byte", 1);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_privilege_level_limit", user_privilege_level_limit);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_session_limit", user_session_limit);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_ACCESS_COMMAND);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_ipmi_messaging", user_ipmi_messaging);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_link_authentication", user_link_authentication);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_restricted_to_callback", user_restricted_to_callback);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "change_bits_in_byte", 1);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_privilege_level_limit", user_privilege_level_limit);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_session_limit", user_session_limit);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
 
   return 0;
 }
@@ -1329,12 +1328,12 @@ fill_cmd_get_user_access (uint8_t channel_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_ACCESS_COMMAND);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_ACCESS_COMMAND);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
   return 0;
 }
@@ -1363,17 +1362,17 @@ fill_cmd_set_user_name (uint8_t user_id,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_NAME);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_NAME);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
   
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (user_name)
     strncpy((char *)buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
       
-  CMDS_FIID_OBJ_SET_DATA (obj_cmd_rq, "user_name", buf, IPMI_MAX_USER_NAME_LENGTH);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "user_name", buf, IPMI_MAX_USER_NAME_LENGTH);
   
   return 0;
 }
@@ -1393,10 +1392,10 @@ fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_NAME_COMMAND);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_NAME_COMMAND);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
 
   return 0;
 }
@@ -1427,12 +1426,12 @@ fill_cmd_set_user_password (uint8_t user_id,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_COMMAND);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "operation.reserved", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_COMMAND);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operation.reserved", 0);
 
   if (operation == IPMI_PASSWORD_OPERATION_SET_PASSWORD
       || operation == IPMI_PASSWORD_OPERATION_TEST_PASSWORD)
@@ -1442,7 +1441,7 @@ fill_cmd_set_user_password (uint8_t user_id,
       if (password)
         strncpy((char *)buf, password, IPMI_1_5_MAX_PASSWORD_LENGTH);
       
-      CMDS_FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, IPMI_1_5_MAX_PASSWORD_LENGTH);
+      FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, IPMI_1_5_MAX_PASSWORD_LENGTH);
     }
 
   return 0;
@@ -1484,13 +1483,13 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_COMMAND);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "password_size", password_size);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "operation.reserved", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_COMMAND);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "password_size", password_size);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operation.reserved", 0);
 
   if (operation == IPMI_PASSWORD_OPERATION_SET_PASSWORD
       || operation == IPMI_PASSWORD_OPERATION_TEST_PASSWORD)
@@ -1507,7 +1506,7 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
       if (password)
         strncpy((char *)buf, password, buf_max_len);
 
-      CMDS_FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, buf_max_len);
+      FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, buf_max_len);
     }
 
   return 0;

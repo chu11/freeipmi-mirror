@@ -33,6 +33,7 @@
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-wrappers.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
@@ -64,9 +65,10 @@ fill_hdr_ipmi_kcs (uint8_t lun,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_kcs_hdr);
-  FIID_OBJ_SET (obj_kcs_hdr, "lun", lun);
-  FIID_OBJ_SET (obj_kcs_hdr, "net_fn", fn);
+  FILL_FIID_OBJ_CLEAR (obj_kcs_hdr);
+  FILL_FIID_OBJ_SET (obj_kcs_hdr, "lun", lun);
+  FILL_FIID_OBJ_SET (obj_kcs_hdr, "net_fn", fn);
+
   return 0;
 }
 

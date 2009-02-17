@@ -3,6 +3,7 @@ noinst_HEADERS = \
 	ipmi-crypt.h \
 	ipmi-fiid-wrappers.h \
 	ipmi-fiid-util.h \
+	ipmi-fill-wrappers.h \
 	ipmi-md2.h \
 	ipmi-md5.h \
 	ipmi-trace.h

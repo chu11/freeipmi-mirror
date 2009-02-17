@@ -1,20 +1,20 @@
 /* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+    Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2, or (at your option)
+    any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-*/
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -27,9 +27,8 @@
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 
-#include "ipmi-cmds-util.h"
-
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-wrappers.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
@@ -246,8 +245,8 @@ fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_INFO);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_INFO);
   return 0;
 }
 
@@ -266,8 +265,8 @@ fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_ALLOCATION_INFO);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_ALLOCATION_INFO);
   return 0;
 }
 
@@ -286,8 +285,8 @@ fill_cmd_reserve_sel (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_RESERVE_SEL);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_RESERVE_SEL);
   return 0;
 }
 
@@ -310,12 +309,12 @@ fill_cmd_get_sel_entry (uint16_t reservation_id,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_ENTRY);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reservation_id", reservation_id);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "record_id", record_id);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "offset_into_record", offset_into_record);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "bytes_to_read", bytes_to_read);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_ENTRY);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reservation_id", reservation_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "record_id", record_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "offset_into_record", offset_into_record);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "bytes_to_read", bytes_to_read);
   
   return 0;
 }
@@ -337,10 +336,10 @@ fill_cmd_delete_sel_entry (uint16_t reservation_id,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DELETE_SEL_ENTRY); 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reservation_id", reservation_id);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "record_id", record_id);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DELETE_SEL_ENTRY); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reservation_id", reservation_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "record_id", record_id);
   
   return 0;
 }
@@ -364,13 +363,13 @@ fill_cmd_clear_sel (uint16_t reservation_id,
     }
 
   /* achu: the "CLR" is exactly from the spec.  I know it looks dumb */
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CLEAR_SEL);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reservation_id", reservation_id);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "C", 'C'); 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "L", 'L');
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "R", 'R');
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CLEAR_SEL);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reservation_id", reservation_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "C", 'C'); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "L", 'L');
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "R", 'R');
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
   
   return 0;
 }
@@ -390,8 +389,8 @@ fill_cmd_get_sel_time (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_TIME); 
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_TIME); 
   
   return 0;
 }
@@ -411,9 +410,9 @@ fill_cmd_set_sel_time (uint32_t time, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SEL_TIME); 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "time", time);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SEL_TIME); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "time", time);
   
   return 0;
 }
@@ -435,10 +434,10 @@ fill_cmd_get_auxiliary_log_status (uint8_t log_type,
       return (-1);
     }
   
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_AUXILIARY_LOG_STATUS); 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "log_type", log_type);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_AUXILIARY_LOG_STATUS); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "log_type", log_type);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
   return 0;
 }
@@ -464,15 +463,15 @@ fill_cmd_set_auxiliary_log_status (uint8_t log_type,
       return (-1);
     }
   
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_AUXILIARY_LOG_STATUS); 
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "log_type", log_type);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_AUXILIARY_LOG_STATUS); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "log_type", log_type);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   
-  CMDS_FIID_OBJ_SET_DATA (obj_cmd_rq,
-                     "log_data",
-                     log_data,
-                     log_data_len);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+                          "log_data",
+                          log_data,
+                          log_data_len);
   
   return 0;
 }

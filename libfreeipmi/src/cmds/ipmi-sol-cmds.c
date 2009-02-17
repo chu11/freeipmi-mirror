@@ -30,9 +30,8 @@
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
 #include "freeipmi/spec/ipmi-sol-parameter-spec.h"
 
-#include "ipmi-cmds-util.h"
-
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-wrappers.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
@@ -325,18 +324,18 @@ fill_sol_payload_data (uint8_t packet_sequence_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_sol_payload);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "packet_sequence_number", packet_sequence_number);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "packet_ack_nack_sequence_number", packet_ack_nack_sequence_number);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "reserved2", 0);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "accepted_character_count", accepted_character_count);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "operation_status", operation_status);
+  FILL_FIID_OBJ_CLEAR (obj_sol_payload);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "packet_sequence_number", packet_sequence_number);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "packet_ack_nack_sequence_number", packet_ack_nack_sequence_number);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "accepted_character_count", accepted_character_count);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "operation_status", operation_status);
   if (character_data && character_data_len)
-    CMDS_FIID_OBJ_SET_DATA (obj_sol_payload,
-                       "character_data",
-                       character_data,
-                       character_data_len);
+    FILL_FIID_OBJ_SET_DATA (obj_sol_payload,
+                            "character_data",
+                            character_data,
+                            character_data_len);
   
   return 0;
 }
@@ -375,25 +374,25 @@ fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_sol_payload);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "packet_sequence_number", packet_sequence_number);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "packet_ack_nack_sequence_number", packet_ack_nack_sequence_number);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "reserved2", 0);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "accepted_character_count", accepted_character_count);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "flush_outbound", flush_outbound);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "flush_inbound", flush_inbound);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "drop_dcd_dsr", drop_dcd_dsr);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "cts_pause", cts_pause);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "generate_break", generate_break);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "ring_wor", ring_wor);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "nack", nack);
-  CMDS_FIID_OBJ_SET (obj_sol_payload, "reserved3", 0);
+  FILL_FIID_OBJ_CLEAR (obj_sol_payload);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "packet_sequence_number", packet_sequence_number);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "packet_ack_nack_sequence_number", packet_ack_nack_sequence_number);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "accepted_character_count", accepted_character_count);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "flush_outbound", flush_outbound);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "flush_inbound", flush_inbound);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "drop_dcd_dsr", drop_dcd_dsr);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "cts_pause", cts_pause);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "generate_break", generate_break);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "ring_wor", ring_wor);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "nack", nack);
+  FILL_FIID_OBJ_SET (obj_sol_payload, "reserved3", 0);
   if (character_data && character_data_len)
-    CMDS_FIID_OBJ_SET_DATA (obj_sol_payload,
-                       "character_data",
-                       character_data,
-                       character_data_len);
+    FILL_FIID_OBJ_SET_DATA (obj_sol_payload,
+                            "character_data",
+                            character_data,
+                            character_data_len);
   
   return 0;
 }
@@ -420,15 +419,15 @@ fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
-  CMDS_FIID_OBJ_SET_DATA (obj_cmd_rq,
-                     "configuration_parameter_data",
-                     configuration_parameter_data,
-                     configuration_parameter_data_len);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+                          "configuration_parameter_data",
+                          configuration_parameter_data,
+                          configuration_parameter_data_len);
   
   return 0;
 }
@@ -453,13 +452,13 @@ fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
       return (-1);
     }
   
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_ENABLE);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "sol_enable", sol_enable);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_ENABLE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "sol_enable", sol_enable);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
   return 0;
 }
@@ -487,15 +486,15 @@ fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_nu
       return (-1);
     }
   
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_AUTHENTICATION);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "sol_privilege_level", sol_privilege_level);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "force_sol_payload_authentication", force_sol_payload_authentication);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "force_sol_payload_encryption", force_sol_payload_encryption);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_AUTHENTICATION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "sol_privilege_level", sol_privilege_level);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "force_sol_payload_authentication", force_sol_payload_authentication);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "force_sol_payload_encryption", force_sol_payload_encryption);
 
   return 0;
 }
@@ -519,13 +518,13 @@ fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
       return (-1);
     }
   
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_CHARACTER_ACCUMULATE_INTERVAL_AND_SEND_THRESHOLD);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "character_accumulate_interval", character_accumulate_interval);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "character_send_threshold", character_send_threshold);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_CHARACTER_ACCUMULATE_INTERVAL_AND_SEND_THRESHOLD);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "character_accumulate_interval", character_accumulate_interval);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "character_send_threshold", character_send_threshold);
 
   return 0;
 }
@@ -549,14 +548,14 @@ fill_cmd_set_sol_configuration_parameters_sol_retry (uint8_t channel_number,
       return (-1);
     }
   
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_RETRY);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "retry_count", retry_count);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "retry_interval", retry_interval);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_RETRY);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "retry_count", retry_count);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "retry_interval", retry_interval);
 
   return 0;
 }
@@ -580,13 +579,13 @@ fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (uint8_t cha
       return (-1);
     }
   
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_NON_VOLATILE_BIT_RATE);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "bit_rate", bit_rate);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_NON_VOLATILE_BIT_RATE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "bit_rate", bit_rate);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
   return 0;
 }
@@ -610,13 +609,13 @@ fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (uint8_t channel
       return (-1);
     }
   
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_VOLATILE_BIT_RATE);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "bit_rate", bit_rate);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_VOLATILE_BIT_RATE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "bit_rate", bit_rate);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
   return 0;
 }
@@ -639,12 +638,12 @@ fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t chann
       return (-1);
     }
   
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_PAYLOAD_PORT_NUMBER);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "port_number", port_number);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_PAYLOAD_PORT_NUMBER);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "port_number", port_number);
 
   return 0;
 }
@@ -672,14 +671,14 @@ fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS);  
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "get_parameter", get_parameter);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "get_parameter", get_parameter);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
   
   return 0;
 }

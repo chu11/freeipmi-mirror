@@ -42,6 +42,7 @@
 #include "freeipmi/util/ipmi-util.h"
 
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-wrappers.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 #include "libcommon/ipmi-md2.h"
@@ -114,10 +115,10 @@ fill_lan_session_hdr  (uint8_t authentication_type,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_lan_session_hdr);
-  FIID_OBJ_SET (obj_lan_session_hdr, "authentication_type", authentication_type);
-  FIID_OBJ_SET (obj_lan_session_hdr, "session_sequence_number", session_sequence_number);
-  FIID_OBJ_SET (obj_lan_session_hdr, "session_id", session_id);
+  FILL_FIID_OBJ_CLEAR (obj_lan_session_hdr);
+  FILL_FIID_OBJ_SET (obj_lan_session_hdr, "authentication_type", authentication_type);
+  FILL_FIID_OBJ_SET (obj_lan_session_hdr, "session_sequence_number", session_sequence_number);
+  FILL_FIID_OBJ_SET (obj_lan_session_hdr, "session_id", session_id);
 
   /* authentication_code_data calculated in assemble_ipmi_lan_pkt */
   /* ipmi_msg_len calculated in assemble_ipmi_lan_pkt */
@@ -151,10 +152,10 @@ fill_lan_msg_hdr (uint8_t rs_addr,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_lan_msg_hdr);
-  FIID_OBJ_SET (obj_lan_msg_hdr, "rs_addr", rs_addr);
-  FIID_OBJ_SET (obj_lan_msg_hdr, "net_fn", net_fn);
-  FIID_OBJ_SET (obj_lan_msg_hdr, "rs_lun", rs_lun);
+  FILL_FIID_OBJ_CLEAR (obj_lan_msg_hdr);
+  FILL_FIID_OBJ_SET (obj_lan_msg_hdr, "rs_addr", rs_addr);
+  FILL_FIID_OBJ_SET (obj_lan_msg_hdr, "net_fn", net_fn);
+  FILL_FIID_OBJ_SET (obj_lan_msg_hdr, "rs_lun", rs_lun);
   
   FIID_OBJ_GET_BLOCK_LEN (checksum_len,
 			  obj_lan_msg_hdr, 
@@ -164,10 +165,10 @@ fill_lan_msg_hdr (uint8_t rs_addr,
 			  1024);
 
   checksum = ipmi_checksum(checksum_buf, checksum_len);
-  FIID_OBJ_SET (obj_lan_msg_hdr, "checksum1", checksum);
-  FIID_OBJ_SET (obj_lan_msg_hdr, "rq_addr", IPMI_LAN_SOFTWARE_ID_REMOTE_CONSOLE_SOFTWARE);
-  FIID_OBJ_SET (obj_lan_msg_hdr, "rq_lun", IPMI_BMC_IPMB_LUN_BMC);
-  FIID_OBJ_SET (obj_lan_msg_hdr, "rq_seq", rq_seq);
+  FILL_FIID_OBJ_SET (obj_lan_msg_hdr, "checksum1", checksum);
+  FILL_FIID_OBJ_SET (obj_lan_msg_hdr, "rq_addr", IPMI_LAN_SOFTWARE_ID_REMOTE_CONSOLE_SOFTWARE);
+  FILL_FIID_OBJ_SET (obj_lan_msg_hdr, "rq_lun", IPMI_BMC_IPMB_LUN_BMC);
+  FILL_FIID_OBJ_SET (obj_lan_msg_hdr, "rq_seq", rq_seq);
 
   return (0);
 }

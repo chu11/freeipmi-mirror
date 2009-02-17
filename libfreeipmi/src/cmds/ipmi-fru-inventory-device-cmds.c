@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.6.10.7 2009-02-17 17:47:41 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.6.10.8 2009-02-17 18:19:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -37,9 +37,8 @@
 #include "freeipmi/cmds/ipmi-fru-inventory-device-cmds.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 
-#include "ipmi-cmds-util.h"
-
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-wrappers.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
@@ -115,9 +114,9 @@ fill_cmd_get_fru_inventory_area_info (uint8_t fru_device_id,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_FRU_INVENTORY_AREA_INFO);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "fru_device_id", fru_device_id);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_FRU_INVENTORY_AREA_INFO);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "fru_device_id", fru_device_id);
   return (0);
 }
 
@@ -139,11 +138,11 @@ fill_cmd_read_fru_data (uint8_t fru_device_id,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_READ_FRU_DATA);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "fru_device_id", fru_device_id);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "fru_inventory_offset_to_read", fru_inventory_offset_to_read);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "count_to_read", count_to_read);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_READ_FRU_DATA);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "fru_device_id", fru_device_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "fru_inventory_offset_to_read", fru_inventory_offset_to_read);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "count_to_read", count_to_read);
   return (0);
 }
 
@@ -168,11 +167,11 @@ fill_cmd_write_fru_data (uint8_t fru_device_id,
       return (-1);
     }
 
-  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_WRITE_FRU_DATA);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "fru_device_id", fru_device_id);
-  CMDS_FIID_OBJ_SET (obj_cmd_rq, "fru_inventory_offset_to_write", fru_inventory_offset_to_write);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_WRITE_FRU_DATA);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "fru_device_id", fru_device_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "fru_inventory_offset_to_write", fru_inventory_offset_to_write);
   if (data_to_write && data_to_write_len)
-    CMDS_FIID_OBJ_SET_DATA (obj_cmd_rq, "data_to_write", data_to_write, data_to_write_len);
+    FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "data_to_write", data_to_write, data_to_write_len);
   return (0);
 }

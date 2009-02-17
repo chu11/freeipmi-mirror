@@ -40,6 +40,7 @@
 #include "freeipmi/util/ipmi-util.h"
 
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-wrappers.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
@@ -112,10 +113,10 @@ fill_ipmb_msg_hdr (uint8_t rs_addr,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_ipmb_msg_hdr);
-  FIID_OBJ_SET (obj_ipmb_msg_hdr, "rs_addr", rs_addr);
-  FIID_OBJ_SET (obj_ipmb_msg_hdr, "net_fn", net_fn);
-  FIID_OBJ_SET (obj_ipmb_msg_hdr, "rs_lun", rs_lun);
+  FILL_FIID_OBJ_CLEAR (obj_ipmb_msg_hdr);
+  FILL_FIID_OBJ_SET (obj_ipmb_msg_hdr, "rs_addr", rs_addr);
+  FILL_FIID_OBJ_SET (obj_ipmb_msg_hdr, "net_fn", net_fn);
+  FILL_FIID_OBJ_SET (obj_ipmb_msg_hdr, "rs_lun", rs_lun);
   
   FIID_OBJ_GET_BLOCK_LEN (checksum_len,
 			  obj_ipmb_msg_hdr, 
@@ -125,10 +126,10 @@ fill_ipmb_msg_hdr (uint8_t rs_addr,
 			  1024);
 
   checksum = ipmi_checksum(checksum_buf, checksum_len);
-  FIID_OBJ_SET (obj_ipmb_msg_hdr, "checksum1", checksum);
-  FIID_OBJ_SET (obj_ipmb_msg_hdr, "rq_addr", rq_addr);
-  FIID_OBJ_SET (obj_ipmb_msg_hdr, "rq_lun", rq_lun);
-  FIID_OBJ_SET (obj_ipmb_msg_hdr, "rq_seq", rq_seq);
+  FILL_FIID_OBJ_SET (obj_ipmb_msg_hdr, "checksum1", checksum);
+  FILL_FIID_OBJ_SET (obj_ipmb_msg_hdr, "rq_addr", rq_addr);
+  FILL_FIID_OBJ_SET (obj_ipmb_msg_hdr, "rq_lun", rq_lun);
+  FILL_FIID_OBJ_SET (obj_ipmb_msg_hdr, "rq_seq", rq_seq);
 
   return (0);
 }
