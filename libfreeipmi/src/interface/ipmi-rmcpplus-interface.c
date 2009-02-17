@@ -480,10 +480,10 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
   FILL_FIID_OBJ_SET (obj_cmd_rq, 
                      "managed_system_session_id", 
                      managed_system_session_id);
-  FIID_OBJ_SET_DATA (obj_cmd_rq,
-                     "remote_console_random_number",
-                     remote_console_random_number,
-                     remote_console_random_number_len);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+                          "remote_console_random_number",
+                          remote_console_random_number,
+                          remote_console_random_number_len);
   FILL_FIID_OBJ_SET (obj_cmd_rq, 
                      "requested_maximum_privilege_level", 
                      requested_maximum_privilege_level);
@@ -658,7 +658,11 @@ _construct_payload_buf(uint8_t payload_type,
         }
       checksum = ipmi_checksum (payload_buf + checksum_start_offset, indx - checksum_start_offset);
 
-      FIID_OBJ_SET_ALL_CLEANUP (obj_lan_msg_trlr, &checksum, sizeof(checksum));
+      if (fiid_obj_set_all(obj_lan_msg_trlr, &checksum, sizeof(checksum)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_lan_msg_trlr);
+          goto cleanup;
+        }
 
       if ((len = fiid_obj_get_all(obj_lan_msg_trlr,
                                   payload_buf + indx,
@@ -1019,14 +1023,24 @@ _construct_session_trlr_pad(uint8_t integrity_algorithm,
     }
 
   if (pad_length)
-    FIID_OBJ_SET_DATA (obj_rmcpplus_session_trlr,
-                       "integrity_pad",
-                       pad_bytes,
-                       pad_length);
+    {
+      if (fiid_obj_set_data (obj_rmcpplus_session_trlr,
+                             "integrity_pad",
+                             pad_bytes,
+                             pad_length) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_trlr);
+          return (-1);
+        }
+    }
 
-  FIID_OBJ_SET (obj_rmcpplus_session_trlr,
-		"pad_length",
-		pad_length);
+  if (fiid_obj_set (obj_rmcpplus_session_trlr,
+                    "pad_length",
+                    pad_length) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_trlr);
+      return (-1);
+    }
   
   return (0);
 }
@@ -2109,15 +2123,23 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
       return (-1);
     }
 
-  FIID_OBJ_SET_DATA(obj_rmcpplus_payload,
-                    "payload_data",
-                    payload_buf,
-                    cmd_data_len);
-
-  FIID_OBJ_SET_DATA(obj_rmcpplus_payload,
-                    "confidentiality_trailer",
-                    payload_buf + cmd_data_len,
-                    pad_length + 1);
+  if (fiid_obj_set_data(obj_rmcpplus_payload,
+                        "payload_data",
+                        payload_buf,
+                        cmd_data_len) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_payload);
+      return (-1);
+    }
+  
+  if (fiid_obj_set_data(obj_rmcpplus_payload,
+                        "confidentiality_trailer",
+                        payload_buf + cmd_data_len,
+                        pad_length + 1) , 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_payload);
+      return (-1);
+    }
   
   /* achu: User is responsible for checking if padding is not corrupt  */
   
@@ -2379,12 +2401,15 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    */
   if (payload_type == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT)
     {
-      FIID_OBJ_SET_BLOCK_LEN(obj_len,
-                             obj_rmcpplus_session_hdr,
-                             "oem_iana",
-                             "oem_payload_id",
-                             pkt + indx,
-                             pkt_len - indx);
+      if ((obj_len = fiid_obj_set_block(obj_rmcpplus_session_hdr,
+                                        "oem_iana",
+                                        "oem_payload_id",
+                                        pkt + indx,
+                                        pkt_len - indx)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_hdr);
+          return (-1);
+        }
       indx += obj_len;
       
       if (pkt_len <= indx)
@@ -2394,12 +2419,15 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   /* 
    * Extract Session ID, Session Sequence Number, and Payload Length
    */
-  FIID_OBJ_SET_BLOCK_LEN(obj_len,
-                         obj_rmcpplus_session_hdr,
-                         "session_id",
-                         "ipmi_payload_len",
-                         pkt + indx,
-                         pkt_len - indx);
+  if ((obj_len = fiid_obj_set_block(obj_rmcpplus_session_hdr,
+                                    "session_id",
+                                    "ipmi_payload_len",
+                                    pkt + indx,
+                                    pkt_len - indx)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_hdr);
+      return (-1);
+    }
   indx += obj_len;
   
   if (pkt_len <= indx)

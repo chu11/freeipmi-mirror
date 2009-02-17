@@ -155,13 +155,33 @@ unassemble_ipmi_kcs_pkt (uint8_t *pkt,
       return (-1);
     }
 
-  FIID_OBJ_SET_ALL_LEN (len, obj_kcs_hdr, pkt + indx, pkt_len - indx);
+  if (fiid_obj_clear(obj_kcs_hdr) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_kcs_hdr);
+      return (-1);
+    }
+
+  if ((len = fiid_obj_set_all (obj_kcs_hdr, pkt + indx, pkt_len - indx)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_kcs_hdr);
+      return (-1);
+    }
   indx += len;
 
   if (pkt_len <= indx)
     return 0;
 
-  FIID_OBJ_SET_ALL_LEN (len, obj_cmd, pkt + indx, pkt_len - indx);
+  if (fiid_obj_clear(obj_cmd) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
+
+  if ((len = fiid_obj_set_all (obj_cmd, pkt + indx, pkt_len - indx)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
   indx += len;
 
   return 0;

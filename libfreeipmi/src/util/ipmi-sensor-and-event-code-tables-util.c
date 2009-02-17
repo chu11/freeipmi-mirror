@@ -1602,8 +1602,12 @@ _get_12_event_data2_message_offset_03(int offset, uint8_t event_data2, char *buf
       ERRNO_TRACE(errno);
       goto cleanup;
     }
-
-  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+ 
+  if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   
   FIID_OBJ_GET_CLEANUP (obj, "log_type", &val);
   log_type = val;
@@ -1677,7 +1681,11 @@ _get_12_event_data2_message_offset_04(int offset, uint8_t event_data2, char *buf
       goto cleanup;
     }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   
   FIID_OBJ_GET_CLEANUP (obj, "alert", &val);
   alert = val;
@@ -1765,7 +1773,11 @@ _get_12_event_data2_message_offset_05(int offset, uint8_t event_data2, char *buf
       goto cleanup;
     }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   
   FIID_OBJ_GET_CLEANUP (obj, "timestamp_clock_type", &val);
   timestamp_clock_type = val;
@@ -1839,7 +1851,11 @@ get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
           goto cleanup;
         }
       
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+      if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj);
+          goto cleanup;
+        }
 
       FIID_OBJ_GET_CLEANUP (obj, "restart_cause", &val);
 
@@ -1876,7 +1892,11 @@ get_21_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       goto cleanup;
     }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   
   FIID_OBJ_GET_CLEANUP (obj, "slot_connector_type", &val);
   
@@ -1913,7 +1933,11 @@ get_23_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       goto cleanup;
     }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   
   FIID_OBJ_GET_CLEANUP (obj, "timer_at_expiration", &val);
   timer_at_expiration = val;
@@ -1969,7 +1993,11 @@ get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
           goto cleanup;
         }
       
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+      if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj);
+          goto cleanup;
+        }
       
       FIID_OBJ_GET_CLEANUP (obj, "private_bus_id", &val);
       private_bus_id = val;
@@ -2020,7 +2048,11 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
           goto cleanup;
         }
       
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+      if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj);
+          goto cleanup;
+        }
       
       FIID_OBJ_GET_CLEANUP (obj, "user_id", &val);
              
@@ -2074,7 +2106,11 @@ get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       goto cleanup;
     }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   
   FIID_OBJ_GET_CLEANUP (obj, "previous_state_offset", &val);
   previous_state_offset = val;
@@ -2115,7 +2151,11 @@ get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
           goto cleanup;
         }
 
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
+      if (fiid_obj_set_all(obj, &event_data3, sizeof(uint8_t)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj);
+          goto cleanup;
+        }
       
       FIID_OBJ_GET_CLEANUP (obj, "event_type", &val);
       
@@ -2175,7 +2215,11 @@ get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
             goto cleanup;
           }
         
-        FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
+        if (fiid_obj_set_all(obj, &event_data3, sizeof(uint8_t)) < 0)
+          {
+            FIID_OBJECT_ERROR_TO_ERRNO(obj);
+            goto cleanup;
+          }
       
         FIID_OBJ_GET_CLEANUP (obj, "event_offset", &val);
 	event_offset = val;
@@ -2278,7 +2322,11 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
           goto cleanup;
         }
 
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
+      if (fiid_obj_set_all(obj, &event_data3, sizeof(uint8_t)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj);
+          goto cleanup;
+        }
       
       FIID_OBJ_GET_CLEANUP (obj, "channel_number", &val);
       channel_number = val;

@@ -86,9 +86,13 @@ ipmi_dump_sdr_record (int fd,
       goto cleanup;
     }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record_header,
-                           sdr_record,
-                           sdr_record_len);
+  if (fiid_obj_set_all(obj_sdr_record_header,
+                       sdr_record,
+                       sdr_record_len) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_sdr_record_header);
+      goto cleanup;
+    }
   
   /* Not enough for a real SDR record, just dump whatever we have */
   if (sdr_record_len <= sdr_record_header_len)
@@ -207,9 +211,13 @@ ipmi_dump_sdr_record (int fd,
         }
     }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record,
-                           sdr_record,
-                           sdr_record_len);
+  if (fiid_obj_set_all(obj_sdr_record,
+                       sdr_record,
+                       sdr_record_len) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_sdr_record);
+      goto cleanup;
+    }
 
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     {

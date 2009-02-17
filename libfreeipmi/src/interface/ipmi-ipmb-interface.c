@@ -246,7 +246,11 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
 
   checksum = ipmi_checksum (checksum_data_ptr, checksum_data_count);
   
-  FIID_OBJ_SET_ALL_CLEANUP (obj_ipmb_msg_trlr, &checksum, sizeof(checksum));
+  if (fiid_obj_set_all(obj_ipmb_msg_trlr, &checksum, sizeof(checksum)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_ipmb_msg_trlr);
+      goto cleanup;
+    }
   
   if ((len = fiid_obj_get_all(obj_ipmb_msg_trlr, buf + indx, IPMB_MAX_LEN - indx)) < 0)
     {
@@ -255,7 +259,11 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
     }
   indx += len;
 
-  FIID_OBJ_SET_ALL_LEN_CLEANUP(len, obj_ipmb_msg, buf, indx);
+  if ((len = fiid_obj_set_all(obj_ipmb_msg, buf, indx)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_ipmb_msg);
+      goto cleanup;
+    }
 
   rv = len;
  cleanup:

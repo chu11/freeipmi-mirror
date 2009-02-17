@@ -309,11 +309,14 @@ ipmi_obj_dump_ipmb (int fd,
           goto cleanup;
         }
 
-      FIID_OBJ_SET_ALL_LEN_CLEANUP (ipmb_hdr_len,
-				    obj_ipmb_msg_hdr,
-				    ipmb_buf,
-				    ipmb_buf_len);
-
+      if ((ipmb_hdr_len = fiid_obj_set_all (obj_ipmb_msg_hdr,
+                                            ipmb_buf,
+                                            ipmb_buf_len)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(ipmb_hdr_len);
+          goto cleanup;
+        }
+      
       if (ipmi_obj_dump(fd,
                         prefix,
                         ipmb_msg_hdr,
@@ -331,10 +334,13 @@ ipmi_obj_dump_ipmb (int fd,
       
       if (obj_ipmb_cmd_len)
         {
-          FIID_OBJ_SET_ALL_LEN_CLEANUP (ipmb_cmd_len,
-                                        obj_ipmb_cmd,
-                                        ipmb_buf + ipmb_hdr_len,
-                                        obj_ipmb_cmd_len);
+          if ((ipmb_cmd_len = fiid_obj_set_all (obj_ipmb_cmd,
+                                                ipmb_buf + ipmb_hdr_len,
+                                                obj_ipmb_cmd_len)) < 0)
+            {
+              FIID_OBJECT_ERROR_TO_ERRNO(ipmb_cmd_len);
+              goto cleanup;
+            }
           
           if (ipmi_obj_dump(fd,
                             prefix,
@@ -347,9 +353,13 @@ ipmi_obj_dump_ipmb (int fd,
             }
         }
       
-      FIID_OBJ_SET_ALL_CLEANUP (obj_ipmb_msg_trlr,
-                                ipmb_buf + ipmb_hdr_len + ipmb_cmd_len,
-                                (ipmb_buf_len - ipmb_hdr_len - ipmb_cmd_len));
+      if (fiid_obj_set_all(obj_ipmb_msg_trlr,
+                           ipmb_buf + ipmb_hdr_len + ipmb_cmd_len,
+                           (ipmb_buf_len - ipmb_hdr_len - ipmb_cmd_len)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_ipmb_msg_trlr);
+          goto cleanup;
+        }
       
       if (ipmi_obj_dump(fd,
                         prefix,

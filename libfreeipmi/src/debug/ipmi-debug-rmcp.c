@@ -94,7 +94,11 @@ ipmi_dump_rmcp_packet (int fd,
       goto cleanup;
     }
   
-  FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_rmcp_hdr, pkt + indx, pkt_len - indx);
+  if ((len = fiid_obj_set_all (obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcp_hdr);
+      goto cleanup;
+    }
   indx += len;
   
   if (ipmi_obj_dump(fd, prefix, rmcp_hdr, NULL, obj_rmcp_hdr) < 0)
@@ -117,7 +121,11 @@ ipmi_dump_rmcp_packet (int fd,
       goto cleanup;
     }
   
-  FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_cmd, pkt + indx, pkt_len - indx);
+  if ((len = fiid_obj_set_all (obj_cmd, pkt + indx, pkt_len - indx)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      goto cleanup;
+    }
   indx += len;
   
   if (ipmi_obj_dump(fd, prefix, rmcp_cmd, NULL, obj_cmd) < 0)
@@ -140,7 +148,11 @@ ipmi_dump_rmcp_packet (int fd,
       goto cleanup;
     }
   
-  FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_unexpected_data, pkt + indx, pkt_len - indx);
+  if ((len = fiid_obj_set_all (obj_unexpected_data, pkt + indx, pkt_len - indx)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_unexpected_data);
+      goto cleanup;
+    }
   indx += len;
   
   if (ipmi_obj_dump(fd, prefix, unexpected_hdr, NULL, obj_unexpected_data) < 0)
