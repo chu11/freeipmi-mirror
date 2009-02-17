@@ -119,16 +119,6 @@ do {                                           \
     }                                          \
 } while (0)
 
-#define FIID_OBJ_CLEAR(__obj)                            \
-do {                                                     \
-    if (fiid_obj_clear ((__obj)) < 0)                    \
-      {                                                  \
-         __FIID_OBJ_TRACE((__obj));                      \
-         __FIID_OBJ_SET_ERRNO((__obj));                  \
-         return (-1);                                    \
-      }                                                  \
-} while (0)
-
 #define FIID_OBJ_FIELD_LOOKUP(__obj, __field)                       \
 do {                                                                \
     int32_t __ret;                                                  \
@@ -323,46 +313,6 @@ do {                                                                    \
          goto cleanup;                                                  \
       }                                                                 \
     *__localval_ptr = __localval;                                       \
-} while (0)
-
-#define FIID_OBJ_GET_ALL_LEN(__len, __obj, __data, __data_len)              \
-do {                                                                        \
-    if (((__len) = fiid_obj_get_all ((__obj), (__data), (__data_len))) < 0) \
-      {                                                                     \
-         __FIID_OBJ_TRACE((__obj));                                         \
-         __FIID_OBJ_SET_ERRNO((__obj));                                     \
-         return (-1);                                                       \
-      }                                                                     \
-} while (0)
-
-#define FIID_OBJ_GET_ALL_LEN_CLEANUP(__len, __obj, __data, __data_len)      \
-do {                                                                        \
-    if (((__len) = fiid_obj_get_all ((__obj), (__data), (__data_len))) < 0) \
-      {                                                                     \
-         __FIID_OBJ_TRACE((__obj));                                         \
-         __FIID_OBJ_SET_ERRNO((__obj));                                     \
-         goto cleanup;                                                      \
-      }                                                                     \
-} while (0)
-
-#define FIID_OBJ_GET_BLOCK_LEN(__len, __obj, __field_start, __field_end, __data, __data_len)                  \
-do {                                                                                                          \
-    if (((__len) = fiid_obj_get_block ((__obj), (__field_start), (__field_end), (__data), (__data_len))) < 0) \
-      {                                                                                                       \
-         __FIID_OBJ_TRACE((__obj));                                                                           \
-         __FIID_OBJ_SET_ERRNO((__obj));                                                                       \
-         return (-1);                                                                                         \
-      }                                                                                                       \
-} while (0)
-
-#define FIID_OBJ_GET_BLOCK_LEN_CLEANUP(__len, __obj, __field_start, __field_end, __data, __data_len)          \
-do {                                                                                                          \
-    if (((__len) = fiid_obj_get_block ((__obj), (__field_start), (__field_end), (__data), (__data_len))) < 0) \
-      {                                                                                                       \
-         __FIID_OBJ_TRACE((__obj));                                                                           \
-         __FIID_OBJ_SET_ERRNO((__obj));                                                                       \
-         goto cleanup;                                                                                        \
-      }                                                                                                       \
 } while (0)
 
 #define FIID_OBJ_PACKET_VALID(__obj)                   \

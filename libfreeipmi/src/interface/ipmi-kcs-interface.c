@@ -114,8 +114,21 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
     }
 
   memset (pkt, 0, pkt_len);
-  FIID_OBJ_GET_ALL_LEN (obj_kcs_hdr_len, obj_kcs_hdr, pkt, pkt_len);
-  FIID_OBJ_GET_ALL_LEN (obj_cmd_len, obj_cmd, pkt + obj_kcs_hdr_len, pkt_len - obj_kcs_hdr_len);
+  if ((obj_kcs_hdr_len = fiid_obj_get_all (obj_kcs_hdr, 
+                                           pkt, 
+                                           pkt_len)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_kcs_hdr);
+      return (-1);
+    }
+  if ((obj_cmd_len = fiid_obj_get_all (obj_cmd, 
+                                       pkt + obj_kcs_hdr_len, 
+                                       pkt_len - obj_kcs_hdr_len)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
+
   return (obj_kcs_hdr_len + obj_cmd_len);
 }
 

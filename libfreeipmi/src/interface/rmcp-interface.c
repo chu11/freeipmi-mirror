@@ -29,6 +29,7 @@
 
 #include "freeipmi/interface/rmcp-interface.h"
 
+#include "libcommon/ipmi-fill-wrappers.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
 
@@ -61,13 +62,13 @@ fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_rmcp_hdr);
-  FIID_OBJ_SET (obj_rmcp_hdr, "version", RMCP_VERSION_1_0);
-  FIID_OBJ_SET (obj_rmcp_hdr, "reserved", 0);
-  FIID_OBJ_SET (obj_rmcp_hdr, "sequence_number", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
-  FIID_OBJ_SET (obj_rmcp_hdr, "message_class.class", message_class);
-  FIID_OBJ_SET (obj_rmcp_hdr, "message_class.reserved", 0);
-  FIID_OBJ_SET (obj_rmcp_hdr, "message_class.ack", RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_NORMAL);
+  FILL_FIID_OBJ_CLEAR (obj_rmcp_hdr);
+  FILL_FIID_OBJ_SET (obj_rmcp_hdr, "version", RMCP_VERSION_1_0);
+  FILL_FIID_OBJ_SET (obj_rmcp_hdr, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_rmcp_hdr, "sequence_number", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
+  FILL_FIID_OBJ_SET (obj_rmcp_hdr, "message_class.class", message_class);
+  FILL_FIID_OBJ_SET (obj_rmcp_hdr, "message_class.reserved", 0);
+  FILL_FIID_OBJ_SET (obj_rmcp_hdr, "message_class.ack", RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_NORMAL);
   return 0;
 }
 
@@ -123,8 +124,21 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
     }
 
   memset (pkt, '\0', pkt_len);
-  FIID_OBJ_GET_ALL_LEN (obj_rmcp_hdr_len, obj_rmcp_hdr, pkt, pkt_len);
-  FIID_OBJ_GET_ALL_LEN (obj_cmd_len, obj_cmd, pkt + obj_rmcp_hdr_len, pkt_len - obj_rmcp_hdr_len);
+  if ((obj_rmcp_hdr_len = fiid_obj_get_all (obj_rmcp_hdr, 
+                                            pkt, 
+                                            pkt_len)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcp_hdr);
+      return (-1);
+    }
+  if ((obj_cmd_len = fiid_obj_get_all (obj_cmd, 
+                                       pkt + obj_rmcp_hdr_len, 
+                                       pkt_len - obj_rmcp_hdr_len)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
+
   return (obj_rmcp_hdr_len + obj_cmd_len);
 }  
 
@@ -148,13 +162,33 @@ unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fi
       return (-1);
     }
 
-  FIID_OBJ_SET_ALL_LEN(len, obj_rmcp_hdr, pkt + indx, pkt_len - indx);
+  if (fiid_obj_clear(obj_rmcp_hdr) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcp_hdr);
+      return (-1);
+    }
+
+  if ((len = fiid_obj_set_all(obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcp_hdr);
+      return (-1);
+    }
   indx += len;
 
   if (pkt_len <= indx)
     return 0;
 
-  FIID_OBJ_SET_ALL_LEN(len, obj_cmd, pkt + indx, pkt_len - indx);
+  if (fiid_obj_clear(obj_cmd) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
+
+  if ((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
   indx += len;
 
   return 0;
