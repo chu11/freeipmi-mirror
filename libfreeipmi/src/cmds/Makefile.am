@@ -1,3 +1,6 @@
+noinst_HEADERS = \
+	ipmi-cmds-util.h
+
 noinst_LTLIBRARIES = libcmds.la
 
 libcmds_la_CPPFLAGS = \

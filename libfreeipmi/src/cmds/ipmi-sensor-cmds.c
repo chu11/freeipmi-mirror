@@ -743,14 +743,14 @@ fill_cmd_set_sensor_hysteresis (uint8_t sensor_number,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_HYSTERESIS);   
-  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  FIID_OBJ_SET (obj_cmd_rq, "hysteresis_mask", hysteresis_mask);
-  FIID_OBJ_SET (obj_cmd_rq, 
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_HYSTERESIS);   
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "hysteresis_mask", hysteresis_mask);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, 
                 "positive_going_threshold_hysteresis_value", 
                 positive_going_threshold_hysteresis_value);
-  FIID_OBJ_SET (obj_cmd_rq, 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, 
                 "negative_going_threshold_hysteresis_value", 
                 negative_going_threshold_hysteresis_value);
 
@@ -776,10 +776,10 @@ fill_cmd_get_sensor_hysteresis (uint8_t sensor_number,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_HYSTERESIS);   
-  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  FIID_OBJ_SET (obj_cmd_rq, "hysteresis_mask", hysteresis_mask);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_HYSTERESIS);   
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "hysteresis_mask", hysteresis_mask);
   
   return 0;
 }
@@ -806,75 +806,75 @@ fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_THRESHOLDS);   
-  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_THRESHOLDS);   
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
   if (lower_non_critical_threshold)
     {
-      FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "lower_non_critical_threshold", *lower_non_critical_threshold);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "lower_non_critical_threshold", *lower_non_critical_threshold);
     }
   else
     {
-      FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_critical_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "lower_non_critical_threshold", 0);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_critical_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "lower_non_critical_threshold", 0);
     }
 
   if (lower_critical_threshold)
     {
-      FIID_OBJ_SET (obj_cmd_rq, "set_lower_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "lower_critical_threshold", *lower_critical_threshold);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_lower_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "lower_critical_threshold", *lower_critical_threshold);
     }
   else
     {
-      FIID_OBJ_SET (obj_cmd_rq, "set_lower_critical_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "lower_critical_threshold", 0);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_lower_critical_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "lower_critical_threshold", 0);
     }
 
   if (lower_non_recoverable_threshold)
     {
-      FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "lower_non_recoverable_threshold", *lower_non_recoverable_threshold);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_SET);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "lower_non_recoverable_threshold", *lower_non_recoverable_threshold);
     }
   else
     {
-      FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "lower_non_recoverable_threshold", 0);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "lower_non_recoverable_threshold", 0);
     }
 
   if (upper_non_critical_threshold)
     {
-      FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "upper_non_critical_threshold", *upper_non_critical_threshold);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "upper_non_critical_threshold", *upper_non_critical_threshold);
     }
   else
     {
-      FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_critical_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "upper_non_critical_threshold", 0);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_critical_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "upper_non_critical_threshold", 0);
     }
 
   if (upper_critical_threshold)
     {
-      FIID_OBJ_SET (obj_cmd_rq, "set_upper_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "upper_critical_threshold", *upper_critical_threshold);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_upper_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "upper_critical_threshold", *upper_critical_threshold);
     }
   else
     {
-      FIID_OBJ_SET (obj_cmd_rq, "set_upper_critical_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "upper_critical_threshold", 0);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_upper_critical_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "upper_critical_threshold", 0);
     }
 
   if (upper_non_recoverable_threshold)
     {
-      FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "upper_non_recoverable_threshold", *upper_non_recoverable_threshold);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_SET);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "upper_non_recoverable_threshold", *upper_non_recoverable_threshold);
     }
   else
     {
-      FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
-      FIID_OBJ_SET (obj_cmd_rq, "upper_non_recoverable_threshold", 0);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "upper_non_recoverable_threshold", 0);
     }
 
   return 0;
@@ -895,9 +895,9 @@ fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_THRESHOLDS);   
-  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_THRESHOLDS);   
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
   
   return 0;
 }
@@ -926,15 +926,15 @@ fill_cmd_set_sensor_event_enable (uint8_t sensor_number,
       return (-1);
     }
   
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_EVENT_ENABLE);   
-  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "event_message_action", event_message_action);
-  FIID_OBJ_SET (obj_cmd_rq, "scanning_on_this_sensor", scanning_on_this_sensor);
-  FIID_OBJ_SET (obj_cmd_rq, "all_event_messages", all_event_messages);
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_bitmask", assertion_event_bitmask);
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_bitmask", deassertion_event_bitmask);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_EVENT_ENABLE);   
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "event_message_action", event_message_action);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "scanning_on_this_sensor", scanning_on_this_sensor);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "all_event_messages", all_event_messages);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_bitmask", assertion_event_bitmask);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_bitmask", deassertion_event_bitmask);
   
   return 0;
 }
@@ -1009,41 +1009,41 @@ fill_cmd_set_sensor_event_enable_threshold (uint8_t sensor_number,
       return (-1);
     }
   
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_EVENT_ENABLE);   
-  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "event_message_action", event_message_action);
-  FIID_OBJ_SET (obj_cmd_rq, "scanning_on_this_sensor", scanning_on_this_sensor);
-  FIID_OBJ_SET (obj_cmd_rq, "all_event_messages", all_event_messages);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_EVENT_ENABLE);   
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "event_message_action", event_message_action);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "scanning_on_this_sensor", scanning_on_this_sensor);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "all_event_messages", all_event_messages);
 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_non_critical_going_low", assertion_event_lower_non_critical_going_low); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_non_critical_going_high", assertion_event_lower_non_critical_going_high); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_critical_going_low", assertion_event_lower_critical_going_low); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_critical_going_high", assertion_event_lower_critical_going_high); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_non_recoverable_going_low", assertion_event_lower_non_recoverable_going_low); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_non_recoverable_going_high", assertion_event_lower_non_recoverable_going_high); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_non_critical_going_low", assertion_event_upper_non_critical_going_low); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_non_critical_going_high", assertion_event_upper_non_critical_going_high); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_critical_going_low", assertion_event_upper_critical_going_low); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_critical_going_high", assertion_event_upper_critical_going_high); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_non_recoverable_going_low", assertion_event_upper_non_recoverable_going_low); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_non_recoverable_going_high", assertion_event_upper_non_recoverable_going_high); 
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_non_critical_going_low", assertion_event_lower_non_critical_going_low); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_non_critical_going_high", assertion_event_lower_non_critical_going_high); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_critical_going_low", assertion_event_lower_critical_going_low); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_critical_going_high", assertion_event_lower_critical_going_high); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_non_recoverable_going_low", assertion_event_lower_non_recoverable_going_low); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_non_recoverable_going_high", assertion_event_lower_non_recoverable_going_high); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_non_critical_going_low", assertion_event_upper_non_critical_going_low); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_non_critical_going_high", assertion_event_upper_non_critical_going_high); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_critical_going_low", assertion_event_upper_critical_going_low); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_critical_going_high", assertion_event_upper_critical_going_high); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_non_recoverable_going_low", assertion_event_upper_non_recoverable_going_low); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_non_recoverable_going_high", assertion_event_upper_non_recoverable_going_high); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0); 
     
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_non_critical_going_low", deassertion_event_lower_non_critical_going_low); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_non_critical_going_high", deassertion_event_lower_non_critical_going_high); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_critical_going_low", deassertion_event_lower_critical_going_low); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_critical_going_high", deassertion_event_lower_critical_going_high); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_non_recoverable_going_low", deassertion_event_lower_non_recoverable_going_low); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_non_recoverable_going_high", deassertion_event_lower_non_recoverable_going_high); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_critical_going_low", deassertion_event_upper_non_critical_going_low); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_critical_going_high", deassertion_event_upper_non_critical_going_high); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_critical_going_low", deassertion_event_upper_critical_going_low); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_critical_going_high", deassertion_event_upper_critical_going_high); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_recoverable_going_low", deassertion_event_upper_non_recoverable_going_low); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_recoverable_going_high", deassertion_event_upper_non_recoverable_going_high); 
-  FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_non_critical_going_low", deassertion_event_lower_non_critical_going_low); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_non_critical_going_high", deassertion_event_lower_non_critical_going_high); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_critical_going_low", deassertion_event_lower_critical_going_low); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_critical_going_high", deassertion_event_lower_critical_going_high); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_non_recoverable_going_low", deassertion_event_lower_non_recoverable_going_low); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_non_recoverable_going_high", deassertion_event_lower_non_recoverable_going_high); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_critical_going_low", deassertion_event_upper_non_critical_going_low); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_critical_going_high", deassertion_event_upper_non_critical_going_high); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_critical_going_low", deassertion_event_upper_critical_going_low); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_critical_going_high", deassertion_event_upper_critical_going_high); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_recoverable_going_low", deassertion_event_upper_non_recoverable_going_low); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_recoverable_going_high", deassertion_event_upper_non_recoverable_going_high); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0); 
 
   return 0;
 }
@@ -1130,47 +1130,47 @@ fill_cmd_set_sensor_event_enable_discrete (uint8_t sensor_number,
       return (-1);
     }
   
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_EVENT_ENABLE);   
-  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "event_message_action", event_message_action);
-  FIID_OBJ_SET (obj_cmd_rq, "scanning_on_this_sensor", scanning_on_this_sensor);
-  FIID_OBJ_SET (obj_cmd_rq, "all_event_messages", all_event_messages);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_EVENT_ENABLE);   
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "event_message_action", event_message_action);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "scanning_on_this_sensor", scanning_on_this_sensor);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "all_event_messages", all_event_messages);
 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_0", assertion_event_state_bit_0); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_1", assertion_event_state_bit_1); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_2", assertion_event_state_bit_2); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_3", assertion_event_state_bit_3); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_4", assertion_event_state_bit_4); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_5", assertion_event_state_bit_5); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_6", assertion_event_state_bit_6); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_7", assertion_event_state_bit_7); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_8", assertion_event_state_bit_8); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_9", assertion_event_state_bit_9); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_10", assertion_event_state_bit_10); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_11", assertion_event_state_bit_11); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_12", assertion_event_state_bit_12); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_13", assertion_event_state_bit_13); 
-  FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_14", assertion_event_state_bit_14); 
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_0", assertion_event_state_bit_0); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_1", assertion_event_state_bit_1); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_2", assertion_event_state_bit_2); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_3", assertion_event_state_bit_3); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_4", assertion_event_state_bit_4); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_5", assertion_event_state_bit_5); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_6", assertion_event_state_bit_6); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_7", assertion_event_state_bit_7); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_8", assertion_event_state_bit_8); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_9", assertion_event_state_bit_9); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_10", assertion_event_state_bit_10); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_11", assertion_event_state_bit_11); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_12", assertion_event_state_bit_12); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_13", assertion_event_state_bit_13); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_14", assertion_event_state_bit_14); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0); 
     
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_0", deassertion_event_state_bit_0); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_1", deassertion_event_state_bit_1); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_2", deassertion_event_state_bit_2); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_3", deassertion_event_state_bit_3); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_4", deassertion_event_state_bit_4); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_5", deassertion_event_state_bit_5); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_6", deassertion_event_state_bit_6); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_7", deassertion_event_state_bit_7); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_8", deassertion_event_state_bit_8); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_9", deassertion_event_state_bit_9); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_10", deassertion_event_state_bit_10); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_11", deassertion_event_state_bit_11); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_12", deassertion_event_state_bit_12); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_13", deassertion_event_state_bit_13); 
-  FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_14", deassertion_event_state_bit_14); 
-  FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_0", deassertion_event_state_bit_0); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_1", deassertion_event_state_bit_1); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_2", deassertion_event_state_bit_2); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_3", deassertion_event_state_bit_3); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_4", deassertion_event_state_bit_4); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_5", deassertion_event_state_bit_5); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_6", deassertion_event_state_bit_6); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_7", deassertion_event_state_bit_7); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_8", deassertion_event_state_bit_8); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_9", deassertion_event_state_bit_9); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_10", deassertion_event_state_bit_10); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_11", deassertion_event_state_bit_11); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_12", deassertion_event_state_bit_12); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_13", deassertion_event_state_bit_13); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_14", deassertion_event_state_bit_14); 
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0); 
 
   return 0;
 }
@@ -1190,9 +1190,9 @@ fill_cmd_get_sensor_event_enable (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_EVENT_ENABLE);   
-  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_EVENT_ENABLE);   
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
   
   return 0;
 }
@@ -1212,9 +1212,9 @@ fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_READING);   
-  FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_READING);   
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
   
   return 0;
 }

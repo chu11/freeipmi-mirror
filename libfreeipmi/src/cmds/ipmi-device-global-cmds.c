@@ -27,6 +27,8 @@
 #include "freeipmi/cmds/ipmi-device-global-cmds.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 
+#include "ipmi-cmds-util.h"
+
 #include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
@@ -233,8 +235,8 @@ fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_DEVICE_ID);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_DEVICE_ID);
   return (0);
 }
 
@@ -253,8 +255,8 @@ fill_cmd_cold_reset (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_COLD_RESET);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_COLD_RESET);
   return (0);
 }
 
@@ -273,8 +275,8 @@ fill_cmd_warm_reset (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_WARM_RESET);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_WARM_RESET);
   return (0);
 }
 
@@ -304,12 +306,12 @@ fill_cmd_set_acpi_power_state (uint8_t system_power_state_enumeration,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_ACPI_POWER_STATE);
-  FIID_OBJ_SET (obj_cmd_rq, "system_power_state_enumeration", system_power_state_enumeration);
-  FIID_OBJ_SET (obj_cmd_rq, "set_system_power_state", set_system_power_state);
-  FIID_OBJ_SET (obj_cmd_rq, "device_power_state_enumeration", device_power_state_enumeration);
-  FIID_OBJ_SET (obj_cmd_rq, "set_device_power_state", set_device_power_state);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_ACPI_POWER_STATE);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "system_power_state_enumeration", system_power_state_enumeration);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_system_power_state", set_system_power_state);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "device_power_state_enumeration", device_power_state_enumeration);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_device_power_state", set_device_power_state);
   return (0);
 }
 
@@ -328,8 +330,8 @@ fill_cmd_get_acpi_power_state (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_ACPI_POWER_STATE);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_ACPI_POWER_STATE);
   return (0);
 }
 
@@ -348,8 +350,8 @@ fill_cmd_get_self_test_results (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SELF_TEST_RESULTS);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SELF_TEST_RESULTS);
   return (0);
 }
 
@@ -369,7 +371,7 @@ fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_DEVICE_GUID);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_DEVICE_GUID);
   return (0);
 }

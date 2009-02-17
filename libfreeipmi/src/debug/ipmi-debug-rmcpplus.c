@@ -255,7 +255,12 @@ _dump_rmcpplus_payload_data(int fd,
               goto cleanup;
             }
           
-          FIID_OBJ_CLEAR_CLEANUP (obj_cmd);
+          if (fiid_obj_clear(obj_cmd) < 0)
+            {
+              FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+              goto cleanup;
+            }
+
           FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
                                         obj_cmd,
                                         pkt + indx,
@@ -271,7 +276,11 @@ _dump_rmcpplus_payload_data(int fd,
                                              ipmb_buf,
                                              IPMI_DEBUG_MAX_PKT_LEN);
               
-              FIID_OBJ_CLEAR_FIELD_CLEANUP (obj_cmd, "message_data");
+              if (fiid_obj_clear_field(obj_cmd, "message_data") < 0)
+                {
+                  FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+                  goto cleanup;
+                }
             }
 
           if (ipmi_obj_dump (fd, 
@@ -370,7 +379,12 @@ _dump_rmcpplus_payload_data(int fd,
               goto cleanup;
             }
           
-          FIID_OBJ_CLEAR_CLEANUP (obj_cmd);
+          if (fiid_obj_clear(obj_cmd) < 0)
+            {
+              FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+              goto cleanup;
+            }
+
           FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
                                         obj_cmd,
                                         pkt + indx,
@@ -1049,8 +1063,12 @@ _dump_rmcpplus_session_trlr(int fd,
     }
 
   /* Clear out data */
-  FIID_OBJ_CLEAR_CLEANUP(obj_rmcpplus_session_trlr);
-
+  if (fiid_obj_clear(obj_rmcpplus_session_trlr) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_trlr);
+      goto cleanup;
+    }
+  
   rv = indx;
  cleanup:
   FIID_OBJ_DESTROY(obj_rmcpplus_session_trlr);

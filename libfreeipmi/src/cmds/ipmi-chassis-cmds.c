@@ -29,6 +29,8 @@
 #include <freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h>
 #include <freeipmi/spec/ipmi-cmd-spec.h>
 
+#include "ipmi-cmds-util.h"
+
 #include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
@@ -414,9 +416,9 @@ fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
  
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHASSIS_CAPABILITIES);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHASSIS_CAPABILITIES);
   return 0;
 }
 
@@ -435,8 +437,8 @@ fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHASSIS_STATUS);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHASSIS_STATUS);
   return 0; 
 }
 
@@ -457,10 +459,10 @@ fill_cmd_chassis_control (uint8_t chassis_control,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CHASSIS_CONTROL);
-  FIID_OBJ_SET (obj_cmd_rq, "chassis_control", chassis_control);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CHASSIS_CONTROL);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "chassis_control", chassis_control);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   return 0;
 }  
 
@@ -483,16 +485,16 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CHASSIS_IDENTIFY);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CHASSIS_IDENTIFY);
   if (identify_interval)
     {
-      FIID_OBJ_SET (obj_cmd_rq, "identify_interval", *identify_interval);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "identify_interval", *identify_interval);
       if (force_identify)
         {
-          FIID_OBJ_SET (obj_cmd_rq, "force_identify", *force_identify);
-          FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+          CMDS_FIID_OBJ_SET (obj_cmd_rq, "force_identify", *force_identify);
+          CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
         }
     }
 
@@ -522,14 +524,14 @@ fill_cmd_set_front_panel_enables (uint8_t disable_power_off_button_for_power_off
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_FRONT_PANEL_ENABLES);
-  FIID_OBJ_SET (obj_cmd_rq, "disable_power_off_button_for_power_off_only", disable_power_off_button_for_power_off_only);
-  FIID_OBJ_SET (obj_cmd_rq, "disable_reset_button", disable_reset_button);
-  FIID_OBJ_SET (obj_cmd_rq, "disable_diagnostic_interrupt_button", disable_diagnostic_interrupt_button);
-  FIID_OBJ_SET (obj_cmd_rq, "disable_standby_button_for_entering_standby", disable_standby_button_for_entering_standby);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_FRONT_PANEL_ENABLES);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "disable_power_off_button_for_power_off_only", disable_power_off_button_for_power_off_only);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "disable_reset_button", disable_reset_button);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "disable_diagnostic_interrupt_button", disable_diagnostic_interrupt_button);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "disable_standby_button_for_entering_standby", disable_standby_button_for_entering_standby);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   
   return 0;
 }
@@ -551,14 +553,14 @@ fill_cmd_set_power_restore_policy (uint8_t power_restore_policy,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq,
+  CMDS_FIID_OBJ_SET (obj_cmd_rq,
                 "cmd", 
                 IPMI_CMD_SET_POWER_RESTORE_POLICY); 
 
-  FIID_OBJ_SET (obj_cmd_rq, "power_restore_policy", power_restore_policy);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "power_restore_policy", power_restore_policy);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   
   return 0;
 }
@@ -579,10 +581,10 @@ fill_cmd_set_power_cycle_interval (uint8_t interval,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_POWER_CYCLE_INTERVAL);
-  FIID_OBJ_SET (obj_cmd_rq, "interval", interval);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_POWER_CYCLE_INTERVAL);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "interval", interval);
   return 0;
 }
 
@@ -601,9 +603,9 @@ fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_RESTART_CAUSE);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_RESTART_CAUSE);
   return 0;
 }
 
@@ -628,12 +630,12 @@ fill_cmd_set_system_boot_options (uint8_t parameter_selector,
       return (-1);
     }
   
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
 
-  FIID_OBJ_SET_DATA (obj_cmd_rq, "configuration_parameter_data", configuration_parameter_data, data_len); 
+  CMDS_FIID_OBJ_SET_DATA (obj_cmd_rq, "configuration_parameter_data", configuration_parameter_data, data_len); 
   return 0;
 }
 
@@ -654,15 +656,15 @@ fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
 
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SET_IN_PROGRESS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SET_IN_PROGRESS);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
 
-  FIID_OBJ_SET (obj_cmd_rq, "set_in_progress", value);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_in_progress", value);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
   return 0;
 }
@@ -697,71 +699,71 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_ha
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_INFO_ACKNOWLEDGE);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_INFO_ACKNOWLEDGE);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
 
   if (bios_or_post_handled_boot_info)
     {
-      FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_0", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
-      FIID_OBJ_SET (obj_cmd_rq, "bios_or_post_handled_boot_info", *bios_or_post_handled_boot_info);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_0", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "bios_or_post_handled_boot_info", *bios_or_post_handled_boot_info);
     }
   else
     {
-      FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_0", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
-      FIID_OBJ_SET (obj_cmd_rq, "bios_or_post_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_0", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "bios_or_post_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
     }
 
   if (os_loader_handled_boot_info)
     {
-      FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_1", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
-      FIID_OBJ_SET (obj_cmd_rq, "os_loader_handled_boot_info", *os_loader_handled_boot_info);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_1", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "os_loader_handled_boot_info", *os_loader_handled_boot_info);
     }
   else
     {
-      FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_1", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
-      FIID_OBJ_SET (obj_cmd_rq, "os_loader_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_1", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "os_loader_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
     }
 
   if (os_or_service_partition_handled_boot_info)
     {
-      FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_2", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
-      FIID_OBJ_SET (obj_cmd_rq, "os_or_service_partition_handled_boot_info", *os_or_service_partition_handled_boot_info);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_2", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "os_or_service_partition_handled_boot_info", *os_or_service_partition_handled_boot_info);
     }
   else
     {
-      FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_2", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
-      FIID_OBJ_SET (obj_cmd_rq, "os_or_service_partition_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_2", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "os_or_service_partition_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
     }
 
   if (sms_handled_boot_info)
     {
-      FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_3", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
-      FIID_OBJ_SET (obj_cmd_rq, "sms_handled_boot_info", *sms_handled_boot_info);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_3", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "sms_handled_boot_info", *sms_handled_boot_info);
     }
   else
     {
-      FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_3", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
-      FIID_OBJ_SET (obj_cmd_rq, "sms_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_3", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "sms_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
     }
 
   if (oem_handled_boot_info)
     {
-      FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_4", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
-      FIID_OBJ_SET (obj_cmd_rq, "oem_handled_boot_info", *oem_handled_boot_info);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_4", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "oem_handled_boot_info", *oem_handled_boot_info);
     }
   else
     {
-      FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_4", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
-      FIID_OBJ_SET (obj_cmd_rq, "oem_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_4", IPMI_CHASSIS_BOOT_OPTIONS_DISABLE);
+      CMDS_FIID_OBJ_SET (obj_cmd_rq, "oem_handled_boot_info", IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_UNACKNOWLEDGE);
     }
 
-  FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_5", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
-  FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_6", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
-  FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_7", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0x7);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_5", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_6", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "enable_write_bit_7", IPMI_CHASSIS_BOOT_OPTIONS_ENABLE);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0x7);
   return 0;
 }
 
@@ -790,16 +792,16 @@ fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_
       return (-1);
     }
   
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
-  FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", dont_clear_on_power_up);
-  FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", dont_clear_on_pushbutton_reset_soft_reset);
-  FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", dont_clear_on_watchdog_timeout);
-  FIID_OBJ_SET (obj_cmd_rq, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", dont_clear_on_chassis_control);
-  FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", dont_clear_on_PEF);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_power_up_via_power_pushbutton_or_wake_event", dont_clear_on_power_up);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_pushbutton_reset_soft_reset", dont_clear_on_pushbutton_reset_soft_reset);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_watchdog_timeout", dont_clear_on_watchdog_timeout);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "dont_automatically_clear_boot_flag_valid_bit_if_chassis_control_command_not_received_within_60_second_timeout", dont_clear_on_chassis_control);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "dont_clear_valid_bit_on_reset_power_cycle_caused_by_PEF", dont_clear_on_PEF);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   
   return 0;
 }
@@ -851,29 +853,29 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_FLAGS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "bios_boot_type", bios_boot_type);
-  FIID_OBJ_SET (obj_cmd_rq, "boot_flags_persistent", boot_flags_persistent);
-  FIID_OBJ_SET (obj_cmd_rq, "boot_flags_valid", boot_flags_valid);
-  FIID_OBJ_SET (obj_cmd_rq, "lock_out_reset_button", lock_out_reset_button);
-  FIID_OBJ_SET (obj_cmd_rq, "screen_blank", screen_blank);
-  FIID_OBJ_SET (obj_cmd_rq, "boot_device", boot_device);
-  FIID_OBJ_SET (obj_cmd_rq, "lock_keyboard", lock_keyboard);
-  FIID_OBJ_SET (obj_cmd_rq, "cmos_clear", cmos_clear);
-  FIID_OBJ_SET (obj_cmd_rq, "console_redirection", console_redirection);
-  FIID_OBJ_SET (obj_cmd_rq, "lock_out_sleep_button", lock_out_sleep_button);
-  FIID_OBJ_SET (obj_cmd_rq, "user_password_bypass", user_password_bypass);
-  FIID_OBJ_SET (obj_cmd_rq, "force_progress_event_traps", force_progress_event_traps);
-  FIID_OBJ_SET (obj_cmd_rq, "firmware_bios_verbosity", firmware_bios_verbosity);
-  FIID_OBJ_SET (obj_cmd_rq, "lock_out_via_power_button", lock_out_via_power_button);
-  FIID_OBJ_SET (obj_cmd_rq, "bios_mux_control_override", bios_mux_control_override);
-  FIID_OBJ_SET (obj_cmd_rq, "bios_shared_mode_override", bios_shared_mode_override);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_FLAGS);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "bios_boot_type", bios_boot_type);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "boot_flags_persistent", boot_flags_persistent);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "boot_flags_valid", boot_flags_valid);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "lock_out_reset_button", lock_out_reset_button);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "screen_blank", screen_blank);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "boot_device", boot_device);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "lock_keyboard", lock_keyboard);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmos_clear", cmos_clear);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "console_redirection", console_redirection);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "lock_out_sleep_button", lock_out_sleep_button);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "user_password_bypass", user_password_bypass);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "force_progress_event_traps", force_progress_event_traps);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "firmware_bios_verbosity", firmware_bios_verbosity);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "lock_out_via_power_button", lock_out_via_power_button);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "bios_mux_control_override", bios_mux_control_override);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "bios_shared_mode_override", bios_shared_mode_override);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
 
   return 0;
 }
@@ -897,12 +899,12 @@ fill_cmd_get_system_boot_options (uint8_t parameter_selector,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_BOOT_OPTIONS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
-  FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_BOOT_OPTIONS);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
   return 0;
 }
   
@@ -921,9 +923,9 @@ fill_cmd_get_power_on_hours_counter (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_POWER_ON_HOURS_COUNTER);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_POWER_ON_HOURS_COUNTER);
   return 0;
 }
 

@@ -281,7 +281,11 @@ ipmi_obj_dump_ipmb (int fd,
                                  ipmb_buf,
                                  IPMI_DEBUG_MAX_PKT_LEN);
   
-  FIID_OBJ_CLEAR_FIELD_CLEANUP (obj_cmd, "message_data");
+  if (fiid_obj_clear_field(obj_cmd, "message_data") < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      goto cleanup;
+    }
   
   if (ipmi_obj_dump(fd,
                     prefix,

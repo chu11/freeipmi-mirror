@@ -129,42 +129,6 @@ do {                                                     \
       }                                                  \
 } while (0)
 
-#define FIID_OBJ_CLEAR_NO_RETURN(__obj)                  \
-do {                                                     \
-    if ((__obj))                                         \
-      fiid_obj_clear ((__obj));                          \
-} while (0)
-
-#define FIID_OBJ_CLEAR_CLEANUP(__obj)                    \
-do {                                                     \
-    if (fiid_obj_clear ((__obj)) < 0)                    \
-      {                                                  \
-         __FIID_OBJ_TRACE((__obj));                      \
-         __FIID_OBJ_SET_ERRNO((__obj));                  \
-         goto cleanup;                                   \
-      }                                                  \
-} while (0)
-
-#define FIID_OBJ_CLEAR_FIELD(__obj, __field)             \
-do {                                                     \
-    if (fiid_obj_clear_field ((__obj), (__field)) < 0)   \
-      {                                                  \
-         __FIID_OBJ_TRACE((__obj));                      \
-         __FIID_OBJ_SET_ERRNO((__obj));                  \
-         return (-1);                                    \
-      }                                                  \
-} while (0)
-
-#define FIID_OBJ_CLEAR_FIELD_CLEANUP(__obj, __field)     \
-do {                                                     \
-    if (fiid_obj_clear_field ((__obj), (__field)) < 0)   \
-      {                                                  \
-         __FIID_OBJ_TRACE((__obj));                      \
-         __FIID_OBJ_SET_ERRNO((__obj));                  \
-	 goto cleanup;                                   \
-      }                                                  \
-} while (0)
-
 #define FIID_OBJ_FIELD_LOOKUP(__obj, __field)                       \
 do {                                                                \
     int32_t __ret;                                                  \

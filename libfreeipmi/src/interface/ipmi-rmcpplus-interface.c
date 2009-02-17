@@ -955,7 +955,11 @@ _construct_session_trlr_pad(uint8_t integrity_algorithm,
   if (ipmi_msg_len % IPMI_INTEGRITY_PAD_MULTIPLE)
     pad_length = IPMI_INTEGRITY_PAD_MULTIPLE - (ipmi_msg_len % IPMI_INTEGRITY_PAD_MULTIPLE);
   
-  FIID_OBJ_CLEAR_FIELD (obj_rmcpplus_session_trlr, "integrity_pad");
+  if (fiid_obj_clear_field(obj_rmcpplus_session_trlr, "integrity_pad") < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_trlr);
+      return (-1);
+    }
 
   if (pad_length)
     FIID_OBJ_SET_DATA (obj_rmcpplus_session_trlr,
@@ -1594,7 +1598,12 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       ERRNO_TRACE(errno);
       goto cleanup;
     }
-  FIID_OBJ_CLEAR_CLEANUP (obj_session_hdr_temp);
+
+  if (fiid_obj_clear(obj_session_hdr_temp) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_session_hdr_temp);
+      goto cleanup;
+    }
 
   FIID_OBJ_SET_CLEANUP (obj_session_hdr_temp, 
                         "ipmi_payload_len",
@@ -1706,7 +1715,8 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
  cleanup:
   FIID_OBJ_DESTROY(obj_rmcpplus_payload);
   FIID_OBJ_DESTROY(obj_session_hdr_temp);
-  FIID_OBJ_CLEAR_NO_RETURN(obj_rmcpplus_session_trlr_temp);
+  if (obj_rmcpplus_session_trlr_temp)
+    fiid_obj_clear(obj_rmcpplus_session_trlr_temp);
   FIID_OBJ_DESTROY(obj_rmcpplus_session_trlr_temp);
   return (rv);
 }

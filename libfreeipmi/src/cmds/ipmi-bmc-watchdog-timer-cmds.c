@@ -27,6 +27,8 @@
 #include "freeipmi/cmds/ipmi-bmc-watchdog-timer-cmds.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 
+#include "ipmi-cmds-util.h"
+
 #include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-trace.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
@@ -124,8 +126,8 @@ fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_RESET_WATCHDOG_TIMER);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_RESET_WATCHDOG_TIMER);
   return (0);
 }
 
@@ -166,26 +168,26 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_WATCHDOG_TIMER);
-  FIID_OBJ_SET (obj_cmd_rq, "timer_use", timer_use);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "stop_timer", stop_timer);
-  FIID_OBJ_SET (obj_cmd_rq, "log", log);
-  FIID_OBJ_SET (obj_cmd_rq, "timeout_action", timeout_action);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "pre_timeout_interrupt", pre_timeout_interrupt);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "pre_timeout_interval", pre_timeout_interval);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "timer_use_expiration_flag.bios_frb2", timer_use_expiration_flag_bios_frb2);
-  FIID_OBJ_SET (obj_cmd_rq, "timer_use_expiration_flag.bios_post", timer_use_expiration_flag_bios_post);
-  FIID_OBJ_SET (obj_cmd_rq, "timer_use_expiration_flag.os_load", timer_use_expiration_flag_os_load);
-  FIID_OBJ_SET (obj_cmd_rq, "timer_use_expiration_flag.sms_os", timer_use_expiration_flag_sms_os);
-  FIID_OBJ_SET (obj_cmd_rq, "timer_use_expiration_flag.oem", timer_use_expiration_flag_oem);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved5", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved6", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "initial_countdown_value", initial_countdown_value);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_WATCHDOG_TIMER);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "timer_use", timer_use);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "stop_timer", stop_timer);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "log", log);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "timeout_action", timeout_action);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "pre_timeout_interrupt", pre_timeout_interrupt);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "pre_timeout_interval", pre_timeout_interval);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "timer_use_expiration_flag.bios_frb2", timer_use_expiration_flag_bios_frb2);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "timer_use_expiration_flag.bios_post", timer_use_expiration_flag_bios_post);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "timer_use_expiration_flag.os_load", timer_use_expiration_flag_os_load);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "timer_use_expiration_flag.sms_os", timer_use_expiration_flag_sms_os);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "timer_use_expiration_flag.oem", timer_use_expiration_flag_oem);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved5", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "reserved6", 0);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "initial_countdown_value", initial_countdown_value);
 
   return (0);
 }
@@ -205,7 +207,7 @@ fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_WATCHDOG_TIMER);
+  CMDS_FIID_OBJ_CLEAR (obj_cmd_rq);
+  CMDS_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_WATCHDOG_TIMER);
   return (0);
 }
