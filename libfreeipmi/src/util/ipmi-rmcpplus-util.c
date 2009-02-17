@@ -146,7 +146,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
 
   /* This part of the spec is wierd, gotta hack it out */
   if (name_only_lookup)
-     priv_byte |= 0x10;
+    priv_byte |= 0x10;
   priv_byte |= (requested_privilege_level & 0xF);
 
   memcpy(hash_data + hash_data_len, 
@@ -715,7 +715,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
   buf_index++;
   /* This part of the spec is wierd, gotta hack it out */
   if (name_only_lookup)
-     priv_byte |= 0x10;
+    priv_byte |= 0x10;
   priv_byte |= (requested_privilege_level & 0xF);
   buf[buf_index] = priv_byte;
   buf_index++;
@@ -795,11 +795,14 @@ ipmi_rmcpplus_check_payload_pad(uint8_t confidentiality_algorithm,
       int8_t pad_len;
       int i;
 
-      FIID_OBJ_GET_DATA_LEN(confidentiality_trailer_len,
-                            obj_rmcpplus_payload,
-                            "confidentiality_trailer",
-                            confidentiality_trailer,
-                            IPMI_MAX_CONFIDENTIALITY_TRAILER_LENGTH);
+      if ((confidentiality_trailer_len = fiid_obj_get_data(obj_rmcpplus_payload,
+                                                           "confidentiality_trailer",
+                                                           confidentiality_trailer,
+                                                           IPMI_MAX_CONFIDENTIALITY_TRAILER_LENGTH)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_payload);
+          return (-1);
+        }
 
       if (!confidentiality_trailer_len)
 	return (0);
@@ -846,10 +849,15 @@ ipmi_rmcpplus_check_integrity_pad(fiid_obj_t obj_rmcpplus_session_trlr)
   if (pad_length > IPMI_INTEGRITY_PAD_MULTIPLE)
     return (0);
 
-  FIID_OBJ_GET_DATA(obj_rmcpplus_session_trlr,
-                    "integrity_pad",
-                    integrity_pad,
-                    IPMI_MAX_INTEGRITY_PAD_LENGTH);
+  memset(integrity_pad, '\0', IPMI_MAX_INTEGRITY_PAD_LENGTH);
+  if (fiid_obj_get_data(obj_rmcpplus_session_trlr,
+                        "integrity_pad",
+                        integrity_pad,
+                        IPMI_MAX_INTEGRITY_PAD_LENGTH) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_trlr);
+      return (-1);
+    }
   
   for (i = 0; i < pad_length; i++)
     {
@@ -933,11 +941,14 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(int8_t authenticatio
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
 
-  FIID_OBJ_GET_DATA_LEN_CLEANUP(key_exchange_authentication_code_len,
-                                obj_cmd,
-                                "key_exchange_authentication_code",
-                                key_exchange_authentication_code,
-                                IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
+  if ((key_exchange_authentication_code_len = fiid_obj_get_data(obj_cmd,
+                                                                "key_exchange_authentication_code",
+                                                                key_exchange_authentication_code,
+                                                                IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      goto cleanup;
+    }
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE)
     {
@@ -1098,11 +1109,14 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value(int8_t authentication_algorithm
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
 
-  FIID_OBJ_GET_DATA_LEN_CLEANUP(integrity_check_value_len,
-                                obj_cmd,
-                                "integrity_check_value",
-                                integrity_check_value,
-                                IPMI_MAX_INTEGRITY_CHECK_VALUE_LENGTH);
+  if ((integrity_check_value_len = fiid_obj_get_data(obj_cmd,
+                                                     "integrity_check_value",
+                                                     integrity_check_value,
+                                                     IPMI_MAX_INTEGRITY_CHECK_VALUE_LENGTH)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      goto cleanup;
+    }
   
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE)
     {
@@ -1235,11 +1249,14 @@ ipmi_rmcpplus_check_packet_session_authentication_code(int8_t integrity_algorith
       goto cleanup;
     }
 
-  FIID_OBJ_GET_DATA_LEN_CLEANUP(authentication_code_len,
-                                obj_rmcpplus_session_trlr,
-                                "authentication_code",
-                                authentication_code,
-                                IPMI_MAX_INTEGRITY_DATA_LENGTH);
+  if ((authentication_code_len = fiid_obj_get_data(obj_rmcpplus_session_trlr,
+                                                   "authentication_code",
+                                                   authentication_code,
+                                                   IPMI_MAX_INTEGRITY_DATA_LENGTH)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_trlr);
+      goto cleanup;
+    }
 
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
     {

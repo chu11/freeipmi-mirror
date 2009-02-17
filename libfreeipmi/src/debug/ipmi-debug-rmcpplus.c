@@ -270,12 +270,16 @@ _dump_rmcpplus_payload_data(int fd,
           if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd)
             {
               memset(ipmb_buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-              FIID_OBJ_GET_DATA_LEN_CLEANUP (ipmb_buf_len,
-                                             obj_cmd,
-                                             "message_data",
-                                             ipmb_buf,
-                                             IPMI_DEBUG_MAX_PKT_LEN);
-              
+
+              if ((ipmb_buf_len = fiid_obj_get_data(obj_cmd,
+                                                    "message_data",
+                                                    ipmb_buf,
+                                                    IPMI_DEBUG_MAX_PKT_LEN)) < 0)
+                {
+                  FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+                  goto cleanup;
+                }
+
               if (fiid_obj_clear_field(obj_cmd, "message_data") < 0)
                 {
                   FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);

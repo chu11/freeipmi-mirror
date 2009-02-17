@@ -165,11 +165,14 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
     return (0);
 
   memset(authentication_code_recv, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
-  FIID_OBJ_GET_DATA_LEN(authentication_code_recv_len,
-                        obj_lan_session_hdr_rs,
-                        "authentication_code",
-                        authentication_code_recv,
-                        IPMI_1_5_MAX_PASSWORD_LENGTH);
+  if ((authentication_code_recv_len = fiid_obj_get_data(obj_lan_session_hdr_rs,
+                                                        "authentication_code",
+                                                        authentication_code_recv,
+                                                        IPMI_1_5_MAX_PASSWORD_LENGTH)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_lan_session_hdr_rs);
+      return (-1);
+    }
   
   if (authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
     {
@@ -193,17 +196,23 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
       uint8_t *buf;
       uint32_t buflen;
 
-      FIID_OBJ_GET_DATA_LEN_CLEANUP (session_id_len,
-				     obj_lan_session_hdr_rs,
-				     "session_id",
-				     session_id_buf,
-				     1024);
-
-      FIID_OBJ_GET_DATA_LEN_CLEANUP (session_sequence_number_len,
-				     obj_lan_session_hdr_rs,
-				     "session_sequence_number",
-				     session_sequence_number_buf,
-				     1024);
+      if ((session_id_len = fiid_obj_get_data (obj_lan_session_hdr_rs,
+                                               "session_id",
+                                               session_id_buf,
+                                               1024)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_lan_session_hdr_rs);
+          goto cleanup;
+        }
+      
+      if ((session_sequence_number_len = fiid_obj_get_data (obj_lan_session_hdr_rs,
+                                                            "session_sequence_number",
+                                                            session_sequence_number_buf,
+                                                            1024)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_lan_session_hdr_rs);
+          goto cleanup;
+        }
       
       /* Must zero extend password.  No null termination is required.
        * Also, must memcpy instead of strcpy, password need not be

@@ -475,10 +475,14 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
       
       if (authentication_len)
 	{
-	  FIID_OBJ_GET_DATA_CLEANUP (obj_lan_session_hdr, 
-				     "authentication_code",
-				     pwbuf,
-				     IPMI_1_5_MAX_PASSWORD_LENGTH);
+          if (fiid_obj_get_data (obj_lan_session_hdr, 
+                                 "authentication_code",
+                                 pwbuf,
+                                 IPMI_1_5_MAX_PASSWORD_LENGTH) < 0)
+            {
+              FIID_OBJECT_ERROR_TO_ERRNO(obj_lan_session_hdr);
+              goto cleanup;
+            }
 
           memcpy (authentication_code_field_ptr,
 		  pwbuf,
@@ -503,17 +507,23 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 	      uint8_t session_sequence_number_buf[1024];
 	      int32_t session_id_len, session_sequence_number_len;
 	      
-	      FIID_OBJ_GET_DATA_LEN_CLEANUP (session_id_len,
-					     obj_lan_session_hdr,
-					     "session_id",
-					     session_id_buf,
-					     1024);
+	      if ((session_id_len = fiid_obj_get_data(obj_lan_session_hdr,
+                                                      "session_id",
+                                                      session_id_buf,
+                                                      1024)) < 0)
+                {
+                  FIID_OBJECT_ERROR_TO_ERRNO(obj_lan_session_hdr);
+                  goto cleanup;
+                }
 	      
-	      FIID_OBJ_GET_DATA_LEN_CLEANUP (session_sequence_number_len,
-					     obj_lan_session_hdr,
-					     "session_sequence_number",
-					     session_sequence_number_buf,
-					     1024);
+	      if ((session_sequence_number_len = fiid_obj_get_data(obj_lan_session_hdr,
+                                                                   "session_sequence_number",
+                                                                   session_sequence_number_buf,
+                                                                   1024)) < 0)
+                {
+                  FIID_OBJECT_ERROR_TO_ERRNO(obj_lan_session_hdr);
+                  goto cleanup;
+                }
 
 	      if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
 		{

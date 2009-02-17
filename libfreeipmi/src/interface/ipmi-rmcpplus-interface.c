@@ -1048,11 +1048,14 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
   
   if (len)
     {
-      FIID_OBJ_GET_DATA_LEN(len,
-                            obj_rmcpplus_session_trlr,
-                            "authentication_code",
-                            authentication_code_buf,
-                            authentication_code_buf_len);
+      if ((len = fiid_obj_get_data(obj_rmcpplus_session_trlr,
+                                   "authentication_code",
+                                   authentication_code_buf,
+                                   authentication_code_buf_len)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcpplus_session_trlr);
+          return (-1);
+        }
       return (len);
     }
 
