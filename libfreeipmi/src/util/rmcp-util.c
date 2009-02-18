@@ -62,7 +62,11 @@ ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag)
       return (-1);
     }
 
-  FIID_OBJ_GET (pong, "message_tag", &val);
+  if (Fiid_obj_get (pong, "message_tag", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if (message_tag == val)
     return 1;

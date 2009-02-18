@@ -103,8 +103,16 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
       ERRNO_TRACE(errno);
       return (-1);
     }
-  FIID_OBJ_PACKET_VALID(obj_rmcp_hdr);
-  FIID_OBJ_PACKET_VALID(obj_cmd);
+  if (Fiid_obj_packet_valid(obj_rmcp_hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+  if (Fiid_obj_packet_valid(obj_cmd) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if ((obj_rmcp_hdr_len = fiid_obj_len_bytes (obj_rmcp_hdr)) < 0)
     {

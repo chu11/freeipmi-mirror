@@ -73,6 +73,26 @@ set_errno_by_fiid_iterator(fiid_iterator_t iter)
 }
 
 int
+Fiid_obj_packet_valid(fiid_obj_t obj)
+{
+  int ret;
+
+  if ((ret = fiid_obj_packet_valid(obj)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      return (-1);
+    }
+
+  if (!ret)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
 Fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl)
 {
   int ret;
@@ -84,8 +104,48 @@ Fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl)
     }
   if (!ret)
     {
-      errno = EINVAL;
+      SET_ERRNO(EINVAL);
       return (-1);
     }
+  return (0);
+}
+
+int
+Fiid_obj_field_lookup(fiid_obj_t obj, char *field)
+{
+  int ret;
+
+  if ((ret = fiid_obj_field_lookup(obj, field)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      return (-1);
+    }
+  if (!ret)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+  return (0);
+}
+
+int
+Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
+{
+  uint64_t lval;
+  int ret;
+
+  if ((ret = fiid_obj_get(obj, field, &lval)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      return (-1);
+    }
+
+  if (!ret)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+
+  *val = lval;
   return (0);
 }

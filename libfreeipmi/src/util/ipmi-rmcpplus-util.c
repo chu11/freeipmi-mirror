@@ -841,7 +841,11 @@ ipmi_rmcpplus_check_integrity_pad(fiid_obj_t obj_rmcpplus_session_trlr)
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_rmcpplus_session_trlr, "pad_length", &pad_length);
+  if (Fiid_obj_get(obj_rmcpplus_session_trlr, "pad_length", &pad_length) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if (!pad_length)
     return (1);
@@ -1366,7 +1370,11 @@ ipmi_rmcpplus_check_payload_type(fiid_obj_t obj_rmcpplus_session_hdr, uint8_t pa
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_rmcpplus_session_hdr, "payload_type", &val);
+  if (Fiid_obj_get(obj_rmcpplus_session_hdr, "payload_type", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return ((payload_type == val) ? 1 : 0);
 }
@@ -1400,7 +1408,11 @@ ipmi_rmcpplus_check_status_code(fiid_obj_t obj_cmd,
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_cmd, "rmcpplus_status_code", &val);
+  if (Fiid_obj_get(obj_cmd, "rmcpplus_status_code", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return ((status_code == val) ? 1 : 0);
 }
@@ -1434,7 +1446,11 @@ ipmi_rmcpplus_check_message_tag(fiid_obj_t obj_cmd, uint8_t message_tag)
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_cmd, "message_tag", &val);
+  if (Fiid_obj_get(obj_cmd, "message_tag", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return ((message_tag == val) ? 1 : 0);
 }
@@ -1466,7 +1482,11 @@ ipmi_rmcpplus_check_remote_console_session_id(fiid_obj_t obj_cmd, uint32_t remot
       return (-1);
     }
   
-  FIID_OBJ_GET(obj_cmd, "remote_console_session_id", &val);
+  if (Fiid_obj_get(obj_cmd, "remote_console_session_id", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return ((remote_console_session_id == val) ? 1 : 0);
 }
@@ -1502,7 +1522,11 @@ ipmi_rmcpplus_check_session_id(fiid_obj_t obj_rmcpplus_session_hdr,
       return (-1);
     }
   
-  FIID_OBJ_GET(obj_rmcpplus_session_hdr, "session_id", &val);
+  if (Fiid_obj_get(obj_rmcpplus_session_hdr, "session_id", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return ((session_id == val) ? 1 : 0);
 }

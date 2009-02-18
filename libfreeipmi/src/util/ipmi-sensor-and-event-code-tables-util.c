@@ -1609,10 +1609,18 @@ _get_12_event_data2_message_offset_03(int offset, uint8_t event_data2, char *buf
       goto cleanup;
     }
   
-  FIID_OBJ_GET_CLEANUP (obj, "log_type", &val);
+  if (fiid_obj_get (obj, "log_type", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   log_type = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "log_entry_action", &val);
+  if (fiid_obj_get (obj, "log_entry_action", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   log_entry_action = val;
           
   if (log_type <= ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc_max)
@@ -1687,22 +1695,46 @@ _get_12_event_data2_message_offset_04(int offset, uint8_t event_data2, char *buf
       goto cleanup;
     }
   
-  FIID_OBJ_GET_CLEANUP (obj, "alert", &val);
+  if (fiid_obj_get (obj, "alert", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   alert = val;
 	
-  FIID_OBJ_GET_CLEANUP (obj, "power_off", &val);
+  if (fiid_obj_get (obj, "power_off", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   power_off = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "reset", &val);
+  if (fiid_obj_get (obj, "reset", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   reset = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "power_cycle", &val);
+  if (fiid_obj_get (obj, "power_cycle", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   power_cycle = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "oem_action", &val);
+  if (fiid_obj_get (obj, "oem_action", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   oem_action = val;
 
-  FIID_OBJ_GET_CLEANUP (obj, "diagnostic_interrupt", &val);
+  if (fiid_obj_get (obj, "diagnostic_interrupt", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   diagnostic_interrupt = val;
 
   memset(buf, '\0', buflen);
@@ -1779,10 +1811,18 @@ _get_12_event_data2_message_offset_05(int offset, uint8_t event_data2, char *buf
       goto cleanup;
     }
   
-  FIID_OBJ_GET_CLEANUP (obj, "timestamp_clock_type", &val);
+  if (fiid_obj_get (obj, "timestamp_clock_type", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   timestamp_clock_type = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "first_second", &val);
+  if (fiid_obj_get (obj, "first_second", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   first_second = val;
   
   if (timestamp_clock_type <= ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc_max)
@@ -1857,7 +1897,11 @@ get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
           goto cleanup;
         }
 
-      FIID_OBJ_GET_CLEANUP (obj, "restart_cause", &val);
+      if (fiid_obj_get (obj, "restart_cause", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
 
       if (val <= ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc_max)
         rv = _snprintf (buf, buflen, ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc[val]);
@@ -1898,7 +1942,11 @@ get_21_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       goto cleanup;
     }
   
-  FIID_OBJ_GET_CLEANUP (obj, "slot_connector_type", &val);
+  if (fiid_obj_get (obj, "slot_connector_type", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   if (val <= ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max)
     rv = _snprintf (buf, buflen, ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc[val]);
@@ -1939,10 +1987,18 @@ get_23_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       goto cleanup;
     }
   
-  FIID_OBJ_GET_CLEANUP (obj, "timer_at_expiration", &val);
+  if (fiid_obj_get (obj, "timer_at_expiration", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   timer_at_expiration = val;
 
-  FIID_OBJ_GET_CLEANUP (obj, "interrupt_type", &val);
+  if (fiid_obj_get (obj, "interrupt_type", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   interrupt_type = val;
 
   if (timer_at_expiration <= ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc_max)
@@ -1999,13 +2055,25 @@ get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
           goto cleanup;
         }
       
-      FIID_OBJ_GET_CLEANUP (obj, "private_bus_id", &val);
+      if (fiid_obj_get (obj, "private_bus_id", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       private_bus_id = val;
 
-      FIID_OBJ_GET_CLEANUP (obj, "lun", &val);
+      if (fiid_obj_get (obj, "lun", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       lun = val;
 
-      FIID_OBJ_GET_CLEANUP (obj, "fru_device", &val);
+      if (fiid_obj_get (obj, "fru_device", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       fru_device = val;
   
       if (fru_device <= ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc_max)
@@ -2054,7 +2122,11 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
           goto cleanup;
         }
       
-      FIID_OBJ_GET_CLEANUP (obj, "user_id", &val);
+      if (fiid_obj_get (obj, "user_id", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
              
       if (val == 0x0)
 	rv = _snprintf(buf, buflen, "User ID for user that activated session = Unspecified");
@@ -2112,10 +2184,18 @@ get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       goto cleanup;
     }
   
-  FIID_OBJ_GET_CLEANUP (obj, "previous_state_offset", &val);
+  if (fiid_obj_get (obj, "previous_state_offset", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   previous_state_offset = val;
 
-  FIID_OBJ_GET_CLEANUP (obj, "cause_of_state_change", &val);
+  if (fiid_obj_get (obj, "cause_of_state_change", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   cause_of_state_change = val;
   
   if (cause_of_state_change <= ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc_max)
@@ -2157,7 +2237,11 @@ get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
           goto cleanup;
         }
       
-      FIID_OBJ_GET_CLEANUP (obj, "event_type", &val);
+      if (fiid_obj_get (obj, "event_type", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       
       if (val <= ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc_max)
         rv = _snprintf (buf, buflen, ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc[val]);
@@ -2221,13 +2305,25 @@ get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
             goto cleanup;
           }
       
-        FIID_OBJ_GET_CLEANUP (obj, "event_offset", &val);
+        if (fiid_obj_get (obj, "event_offset", &val) < 0)
+          {
+            ERRNO_TRACE(errno);
+            goto cleanup;
+          }
 	event_offset = val;
 
-        FIID_OBJ_GET_CLEANUP (obj, "assertion_deassertion_e", &val);
+        if (fiid_obj_get (obj, "assertion_deassertion_e", &val) < 0)
+          {
+            ERRNO_TRACE(errno);
+            goto cleanup;
+          }
 	assertion_deassertion_event = val;
 
-        FIID_OBJ_GET_CLEANUP (obj, "logging_disabled_all_ev", &val);
+        if (fiid_obj_get (obj, "logging_disabled_all_ev", &val) < 0)
+          {
+            ERRNO_TRACE(errno);
+            goto cleanup;
+          }
 	logging_disabled_all_events = val;
 
         if (assertion_deassertion_event <= ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc_max)
@@ -2328,10 +2424,18 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
           goto cleanup;
         }
       
-      FIID_OBJ_GET_CLEANUP (obj, "channel_number", &val);
+      if (fiid_obj_get (obj, "channel_number", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       channel_number = val;
       
-      FIID_OBJ_GET_CLEANUP (obj, "deactivation_cause", &val);
+      if (fiid_obj_get (obj, "deactivation_cause", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       deactivation_cause = val;
       
       /* output deactivation case only if deactivation offset occurred */

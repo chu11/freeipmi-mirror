@@ -538,8 +538,16 @@ ipmi_completion_code_strerror_cmd_r (fiid_obj_t obj_cmd,
       return (-1);
     }
   
-  FIID_OBJ_FIELD_LOOKUP (obj_cmd, "cmd");
-  FIID_OBJ_FIELD_LOOKUP (obj_cmd, "comp_code");
+  if (Fiid_obj_field_lookup (obj_cmd, "cmd") < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+  if (Fiid_obj_field_lookup (obj_cmd, "comp_code") < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if ((_len = fiid_obj_field_len (obj_cmd, "cmd")) < 0)
     {
@@ -563,8 +571,16 @@ ipmi_completion_code_strerror_cmd_r (fiid_obj_t obj_cmd,
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_cmd, "cmd", &cmd);
-  FIID_OBJ_GET(obj_cmd, "comp_code", &comp_code);
+  if (Fiid_obj_get(obj_cmd, "cmd", &cmd) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+  if (Fiid_obj_get(obj_cmd, "comp_code", &comp_code) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   
   return ipmi_completion_code_strerror_r (cmd, netfn, comp_code, errstr, len); 
 }

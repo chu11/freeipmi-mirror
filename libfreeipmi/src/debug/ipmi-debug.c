@@ -313,7 +313,7 @@ ipmi_obj_dump_ipmb (int fd,
                                             ipmb_buf,
                                             ipmb_buf_len)) < 0)
         {
-          FIID_OBJECT_ERROR_TO_ERRNO(ipmb_hdr_len);
+          FIID_OBJECT_ERROR_TO_ERRNO(obj_ipmb_msg_hdr);
           goto cleanup;
         }
       
@@ -338,7 +338,7 @@ ipmi_obj_dump_ipmb (int fd,
                                                 ipmb_buf + ipmb_hdr_len,
                                                 obj_ipmb_cmd_len)) < 0)
             {
-              FIID_OBJECT_ERROR_TO_ERRNO(ipmb_cmd_len);
+              FIID_OBJECT_ERROR_TO_ERRNO(obj_ipmb_cmd);
               goto cleanup;
             }
           

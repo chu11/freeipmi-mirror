@@ -110,7 +110,11 @@ ipmi_dump_sdr_record (int fd,
       goto cleanup;
     }
   
-  FIID_OBJ_GET_CLEANUP(obj_sdr_record_header, "record_type", &val);
+  if (Fiid_obj_get(obj_sdr_record_header, "record_type", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   record_type = val;
 
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
@@ -224,9 +228,13 @@ ipmi_dump_sdr_record (int fd,
       uint8_t event_reading_type_code;
       fiid_obj_t obj_temp = NULL;
 
-      FIID_OBJ_GET_CLEANUP(obj_sdr_record, 
-                           "event_reading_type_code",
-                           &val);
+      if (Fiid_obj_get(obj_sdr_record, 
+                       "event_reading_type_code",
+                       &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       event_reading_type_code = val;
 
       if ((IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code)))
@@ -260,9 +268,13 @@ ipmi_dump_sdr_record (int fd,
       uint8_t event_reading_type_code;
       fiid_obj_t obj_temp = NULL;
 
-      FIID_OBJ_GET_CLEANUP(obj_sdr_record, 
-                           "event_reading_type_code",
-                           &val);
+      if (Fiid_obj_get(obj_sdr_record, 
+                       "event_reading_type_code",
+                       &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       event_reading_type_code = val;
 
       /* achu: shouldn't be possible for this to be a threshold based

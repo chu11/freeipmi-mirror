@@ -54,7 +54,11 @@ ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq)
       return (-1);
     }
   
-  FIID_OBJ_FIELD_LOOKUP (obj_ipmb_msg_hdr, "rq_seq");
+  if (Fiid_obj_field_lookup(obj_ipmb_msg_hdr, "rq_seq") < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   
   if ((len = fiid_obj_field_len (obj_ipmb_msg_hdr, "rq_seq")) < 0)
     {
@@ -67,7 +71,11 @@ ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq)
       return (-1);
     }
   
-  FIID_OBJ_GET(obj_ipmb_msg_hdr, "rq_seq", &rq_seq_recv);
+  if (Fiid_obj_get(obj_ipmb_msg_hdr, "rq_seq", &rq_seq_recv) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   
   return ((((uint8_t)rq_seq_recv) == rq_seq) ? 1 : 0);
 }
@@ -146,7 +154,12 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
       return (-1);
     }
 
-  FIID_OBJ_GET (obj_ipmb_msg_hdr, "checksum1", &val);
+  if (Fiid_obj_get (obj_ipmb_msg_hdr, "checksum1", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+
   checksum1_recv = val;
 
   if (!(buf = (uint8_t *)alloca(obj_ipmb_msg_hdr_len + 1)))
@@ -175,7 +188,12 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
   if (checksum1_recv != checksum1_calc)
     return (0);
 
-  FIID_OBJ_GET (obj_ipmb_msg_trlr, "checksum2", &val);
+  if (Fiid_obj_get (obj_ipmb_msg_trlr, "checksum2", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+
   checksum2_recv = val;
 
   buflen = obj_ipmb_msg_hdr_len + obj_cmd_len;

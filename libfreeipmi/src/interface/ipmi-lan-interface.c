@@ -301,11 +301,15 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
       ERRNO_TRACE(errno);
       return (-1);
     }
-  FIID_OBJ_PACKET_VALID(obj_rmcp_hdr);
+  if (Fiid_obj_packet_valid(obj_rmcp_hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   /* 
    * ipmi_msg_len is calculted in this function, so we can't use
-   * FIID_OBJ_PACKET_VALID() b/c ipmi_msg_len is probably not set yet.
+   * fiid_obj_packet_valid() b/c ipmi_msg_len is probably not set yet.
    */
 
   if ((len = fiid_obj_field_len (obj_lan_session_hdr, "authentication_type")) < 0)
@@ -356,10 +360,25 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
       return (-1);
     }
 
-  FIID_OBJ_PACKET_VALID(obj_lan_msg_hdr);
-  FIID_OBJ_PACKET_VALID(obj_cmd);
+  if (Fiid_obj_packet_valid(obj_lan_msg_hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+  if (Fiid_obj_packet_valid(obj_cmd) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_GET (obj_lan_session_hdr, "authentication_type", &authentication_type);
+  if (fiid_obj_get(obj_lan_session_hdr,
+                   "authentication_type",
+                   &authentication_type) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE
       && authentication_type != IPMI_AUTHENTICATION_TYPE_MD2
       && authentication_type != IPMI_AUTHENTICATION_TYPE_MD5
@@ -699,9 +718,13 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
     }
   indx += len;
 
-  FIID_OBJ_GET (obj_lan_session_hdr, 
-		"authentication_type", 
-		&authentication_type);
+  if (Fiid_obj_get (obj_lan_session_hdr, 
+                    "authentication_type", 
+                    &authentication_type) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if (!IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type))
     {

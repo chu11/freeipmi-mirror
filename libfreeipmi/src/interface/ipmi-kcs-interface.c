@@ -93,8 +93,17 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
       ERRNO_TRACE(errno);
       return (-1);
     }
-  FIID_OBJ_PACKET_VALID(obj_kcs_hdr);
-  FIID_OBJ_PACKET_VALID(obj_cmd);
+
+  if (Fiid_obj_packet_valid(obj_kcs_hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+  if (Fiid_obj_packet_valid(obj_cmd) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if ((obj_kcs_hdr_len = fiid_obj_len_bytes(obj_kcs_hdr)) < 0)
     {

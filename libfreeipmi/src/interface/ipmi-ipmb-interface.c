@@ -171,8 +171,16 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
       return (-1);
     }
 
-  FIID_OBJ_PACKET_VALID(obj_ipmb_msg_hdr);
-  FIID_OBJ_PACKET_VALID(obj_cmd);
+  if (Fiid_obj_packet_valid(obj_ipmb_msg_hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+  if (Fiid_obj_packet_valid(obj_cmd) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if ((len = fiid_template_len_bytes(tmpl_ipmb_msg_hdr_rq)) < 0)
     {

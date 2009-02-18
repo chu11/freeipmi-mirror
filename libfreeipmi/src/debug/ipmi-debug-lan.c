@@ -188,7 +188,13 @@ _ipmi_dump_lan_packet (int fd,
       goto cleanup;
     }
 
-  FIID_OBJ_GET_CLEANUP (obj_session_hdr, "authentication_type", &authentication_type);
+  if (Fiid_obj_get (obj_session_hdr,
+                    "authentication_type",
+                    &authentication_type) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {
