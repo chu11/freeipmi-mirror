@@ -48,6 +48,11 @@
 	* common/src/toolcommon/, bmc-watchdog, ipmi-locate/: Adjust for
 	new locate API.
 
+	* common/src/toolcommon/tool-fiid-wrapers.h: Renamed to
+	tool-fiid-util.h for consistency.  Rename all macros.
+
+	* Update all tools appropriately for cleanup changes.
+
 2009-02-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/ipmi-err-wrappers-api.c: New file.
