@@ -30,7 +30,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 config_err_t 
 get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_num)
@@ -97,7 +97,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
       return CONFIG_ERR_SUCCESS;
     }
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs);
 
   if ((rc = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -137,7 +137,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
   *channel_num = state_data->sol_channel_number;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 
@@ -156,7 +156,7 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
       return CONFIG_ERR_SUCCESS;
     }
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_user_access_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_user_access_rs);
 
   if ((rc = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -194,6 +194,6 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
   *number_of_users = state_data->number_of_users;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }

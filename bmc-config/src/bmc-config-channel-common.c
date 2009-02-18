@@ -34,7 +34,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 /* convenience struct */
 struct channel_access
@@ -159,7 +159,7 @@ _get_channel_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_channel_access_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_channel_access_rs);
 
   if (ipmi_cmd_get_channel_access (state_data->ipmi_ctx,
                                    channel_number,
@@ -176,27 +176,27 @@ _get_channel_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, "ipmi_messaging_access_mode", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "ipmi_messaging_access_mode", &val);
   ch->access_mode = val;
 
   /* yes/no is backwards here, see ipmi spec */
-  _FIID_OBJ_GET (obj_cmd_rs, "user_level_authentication", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_level_authentication", &val);
   ch->user_level_authentication = (val ? 0 : 1);
 
   /* yes/no is backwards here, see ipmi spec */
-  _FIID_OBJ_GET (obj_cmd_rs, "per_message_authentication", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "per_message_authentication", &val);
   ch->per_message_authentication = (val ? 0 : 1);
 
   /* yes/no is backwards here, see ipmi spec */
-  _FIID_OBJ_GET (obj_cmd_rs, "pef_alerting", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "pef_alerting", &val);
   ch->pef_alerting = (val ? 0 : 1);
 
-  _FIID_OBJ_GET (obj_cmd_rs, "channel_privilege_level_limit", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "channel_privilege_level_limit", &val);
   ch->channel_privilege_limit = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -227,7 +227,7 @@ _set_channel_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_channel_access_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_channel_access_rs);
 
   /* yes/no is backwards several places, see ipmi spec */
 
@@ -256,7 +256,7 @@ _set_channel_access (bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

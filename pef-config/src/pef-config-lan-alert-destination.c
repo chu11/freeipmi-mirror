@@ -34,7 +34,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 #define PEF_CONFIG_MAXIPADDRLEN 16
 #define PEF_CONFIG_MAXMACADDRLEN 24
@@ -71,7 +71,7 @@ _get_destination_type(pef_config_state_data_t *state_data,
 
   destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_destination_type_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_destination_type_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -96,21 +96,21 @@ _get_destination_type(pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, "destination_type", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "destination_type", &val);
   dt->alert_destination_type = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "alert_acknowledge", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "alert_acknowledge", &val);
   dt->alert_acknowledge = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "alert_acknowledge_timeout", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "alert_acknowledge_timeout", &val);
   dt->alert_acknowledge_timeout = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "retries", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "retries", &val);
   dt->alert_retries = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -131,7 +131,7 @@ _set_destination_type(pef_config_state_data_t *state_data,
 
   destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -160,7 +160,7 @@ _set_destination_type(pef_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -365,7 +365,7 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
 
   destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -390,13 +390,13 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, "gateway_selector", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "gateway_selector", &val);
   da->alert_gateway = val;
 
-  _FIID_OBJ_GET_DATA (obj_cmd_rs,
-                      "alerting_ip_address",
-                      alert_ip_address_bytes,
-                      4);
+  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs,
+                          "alerting_ip_address",
+                          alert_ip_address_bytes,
+                          4);
   
   memset(da->alert_ip, '\0', PEF_CONFIG_MAXIPADDRLEN+1);
   snprintf (da->alert_ip,
@@ -407,10 +407,10 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
             alert_ip_address_bytes[2],
             alert_ip_address_bytes[3]);
 
-  _FIID_OBJ_GET_DATA (obj_cmd_rs,
-                      "alerting_mac_address",
-                      alert_mac_address_bytes,
-                      6);
+  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs,
+                          "alerting_mac_address",
+                          alert_mac_address_bytes,
+                          6);
   
   memset(da->alert_mac, '\0', PEF_CONFIG_MAXMACADDRLEN+1);
   snprintf (da->alert_mac,
@@ -425,7 +425,7 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -448,7 +448,7 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
 
   destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -486,7 +486,7 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

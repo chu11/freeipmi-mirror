@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.40 2009-02-03 22:48:21 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.40.2.1 2009-02-18 19:04:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -48,7 +48,7 @@
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 #include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
 
@@ -101,7 +101,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
                  device_id_str,
                  device_id);
 
-  _FIID_OBJ_CREATE(fru_get_inventory_rs, tmpl_cmd_get_fru_inventory_area_info_rs);
+  TOOL_FIID_OBJ_CREATE(fru_get_inventory_rs, tmpl_cmd_get_fru_inventory_area_info_rs);
 
   if (ipmi_cmd_get_fru_inventory_area_info (state_data->ipmi_ctx,
                                             device_id,
@@ -121,9 +121,9 @@ _output_fru(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (fru_get_inventory_rs,
-                 "fru_inventory_area_size",
-                 &state_data->fru_inventory_area_size);
+  TOOL_FIID_OBJ_GET (fru_get_inventory_rs,
+                     "fru_inventory_area_size",
+                     &state_data->fru_inventory_area_size);
 
   if (state_data->prog_data->args->verbose_count >= 2)
     pstdout_printf(state_data->pstate,
@@ -138,7 +138,7 @@ _output_fru(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_TEMPLATE_LEN_BYTES(common_header_len, tmpl_fru_common_header);
+  TOOL_FIID_TEMPLATE_LEN_BYTES(common_header_len, tmpl_fru_common_header);
 
   memset(frubuf, '\0', IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1);
 
@@ -172,28 +172,28 @@ _output_fru(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(fru_common_header, tmpl_fru_common_header);
+  TOOL_FIID_OBJ_CREATE(fru_common_header, tmpl_fru_common_header);
 
-  _FIID_OBJ_SET_ALL_LEN(len, fru_common_header, frubuf, common_header_len);
+  TOOL_FIID_OBJ_SET_ALL_LEN(len, fru_common_header, frubuf, common_header_len);
 
-  _FIID_OBJ_GET (fru_common_header,
-                 "format_version",
-                 &format_version);
-  _FIID_OBJ_GET (fru_common_header, 
-                 "internal_use_area_starting_offset", 
-                 &internal_use_area_starting_offset);
-  _FIID_OBJ_GET (fru_common_header, 
-                 "chassis_info_area_starting_offset", 
-                 &chassis_info_area_starting_offset);
-  _FIID_OBJ_GET (fru_common_header, 
-                 "board_info_area_starting_offset", 
-                 &board_info_area_starting_offset);
-  _FIID_OBJ_GET (fru_common_header, 
-                 "product_info_area_starting_offset", 
-                 &product_info_area_starting_offset);
-  _FIID_OBJ_GET (fru_common_header, 
-                 "multirecord_area_starting_offset", 
-                 &multirecord_area_starting_offset);
+  TOOL_FIID_OBJ_GET (fru_common_header,
+                     "format_version",
+                     &format_version);
+  TOOL_FIID_OBJ_GET (fru_common_header, 
+                     "internal_use_area_starting_offset", 
+                     &internal_use_area_starting_offset);
+  TOOL_FIID_OBJ_GET (fru_common_header, 
+                     "chassis_info_area_starting_offset", 
+                     &chassis_info_area_starting_offset);
+  TOOL_FIID_OBJ_GET (fru_common_header, 
+                     "board_info_area_starting_offset", 
+                     &board_info_area_starting_offset);
+  TOOL_FIID_OBJ_GET (fru_common_header, 
+                     "product_info_area_starting_offset", 
+                     &product_info_area_starting_offset);
+  TOOL_FIID_OBJ_GET (fru_common_header, 
+                     "multirecord_area_starting_offset", 
+                     &multirecord_area_starting_offset);
 
   if (state_data->prog_data->args->verbose_count >= 2)
     {
@@ -285,8 +285,8 @@ _output_fru(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(fru_get_inventory_rs);
-  _FIID_OBJ_DESTROY(fru_common_header);
+  TOOL_FIID_OBJ_DESTROY(fru_get_inventory_rs);
+  TOOL_FIID_OBJ_DESTROY(fru_common_header);
   return (rv);
 }
 

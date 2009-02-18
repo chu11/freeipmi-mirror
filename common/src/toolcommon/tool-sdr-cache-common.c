@@ -55,134 +55,9 @@
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
 
-#define MAXIPADDRLEN 128
-
-#define IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD                          0x0001
-#define IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD                       0x0002
-#define IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD                           0x0004
-#define IPMI_SDR_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD                   0x0008     
-#define IPMI_SDR_RECORD_TYPE_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD   0x0010
-#define IPMI_SDR_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD               0x0020
-#define IPMI_SDR_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD                   0x0040
-#define IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD 0x0080
-#define IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD   0x0100
-#define IPMI_SDR_RECORD_TYPE_BMC_MESSAGE_CHANNEL_INFO_RECORD             0x0200
-#define IPMI_SDR_RECORD_TYPE_OEM_RECORD                                  0x0400
-
-#include "freeipmi/record-format/ipmi-sdr-record-format.h"
-#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
-#include "freeipmi/spec/ipmi-sensor-units-spec.h"
-#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
-#include "freeipmi/util/ipmi-sensor-util.h"
-
 #include "tool-sdr-cache-common.h"
-#include "tool-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
-
-/* achu:
- *
- * We don't have "state_data" so can't use most of the 
- * tool-fiid-wrappers.h.
- */
-
-#define _SDR_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                      \
-  do {                                                                   \
-    if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)              \
-      {                                                                  \
-        PSTDOUT_PERROR(pstate, "fiid_template_len_bytes");               \
-        goto cleanup;                                                    \
-      }                                                                  \
-  } while (0)
-
-#define _SDR_FIID_OBJ_CREATE(__obj, __tmpl)                              \
-  do {                                                                   \
-    if (!((__obj) = fiid_obj_create ((__tmpl))))                         \
-      {                                                                  \
-        PSTDOUT_PERROR(pstate, "fiid_obj_create");                       \
-        goto cleanup;                                                    \
-      }                                                                  \
-  } while (0)
-
-#define _SDR_FIID_OBJ_COPY(__obj_dest, __obj_src, __alt_tmpl)            \
-  do {                                                                   \
-    if (!((__obj_dest) = fiid_obj_copy ((__obj_src), (__alt_tmpl))))     \
-      {                                                                  \
-        PSTDOUT_FPRINTF(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_copy: %s\n",                           \
-                        fiid_obj_errormsg((__obj_src)));                 \
-        goto cleanup;                                                    \
-      }                                                                  \
-  } while (0)
-
-#define _SDR_FIID_OBJ_GET(__obj, __field, __val)                         \
-  do {                                                                   \
-    uint64_t __tmp_val = 0, *__val_ptr;                                  \
-    int8_t __ret;                                                        \
-    __val_ptr = (__val);                                                 \
-    if ((__ret = fiid_obj_get ((__obj), (__field), &__tmp_val)) < 0)     \
-      {                                                                  \
-        PSTDOUT_FPRINTF(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_get: %s\n",                            \
-                        fiid_obj_errormsg((__obj)));                     \
-        goto cleanup;                                                    \
-      }                                                                  \
-    if (!__ret)                                                          \
-      {                                                                  \
-        PSTDOUT_FPRINTF(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_get: field %s: no data\n",             \
-                        __field);                                        \
-        goto cleanup;                                                    \
-      }                                                                  \
-    *__val_ptr = __tmp_val;                                              \
-  } while (0)
-
-#define _SDR_FIID_OBJ_GET_DATA(__obj, __field, __data, __datalen)        \
-  do {                                                                   \
-    if (fiid_obj_get_data ((__obj),                                      \
-                           (__field),                                    \
-                           (__data),                                     \
-                           (__datalen)) < 0)                             \
-      {                                                                  \
-        PSTDOUT_FPRINTF(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_get_data: %s\n",                       \
-                        fiid_obj_errormsg((__obj)));                     \
-        goto cleanup;                                                    \
-      }                                                                  \
-  } while (0)
-
-#define _SDR_FIID_OBJ_GET_DATA_LEN(__len, __obj, __field, __data, __datalen) \
-  do {                                                                       \
-    if (((__len) = fiid_obj_get_data ((__obj),                               \
-                                      (__field),                             \
-                                      (__data),                              \
-                                      (__datalen))) < 0)                     \
-      {                                                                      \
-        PSTDOUT_FPRINTF(pstate,                                              \
-                        stderr,                                              \
-                        "fiid_obj_get_data: %s\n",                           \
-                        fiid_obj_errormsg((__obj)));                         \
-        goto cleanup;                                                        \
-      }                                                                      \
-  } while (0)
-
-#define _SDR_FIID_OBJ_SET_ALL(__obj, __data, __datalen)                  \
-  do {                                                                   \
-    if (fiid_obj_set_all ((__obj),                                       \
-                          (__data),                                      \
-                          (__datalen)) < 0)                              \
-      {                                                                  \
-        PSTDOUT_FPRINTF(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_set_all: %s\n",                        \
-                        fiid_obj_errormsg((__obj)));                     \
-        goto cleanup;                                                    \
-      }                                                                  \
-  } while (0)
 
 static int
 _get_home_directory (pstdout_state_t pstate,
@@ -198,6 +73,7 @@ _get_home_directory (pstdout_state_t pstate,
   char *tbuf;
   int ret;
 
+  assert(pstate);
   assert(buf);
   assert(buflen);
 
@@ -210,7 +86,7 @@ _get_home_directory (pstdout_state_t pstate,
 
   if (!(tbuf = alloca (tbuf_len)))
     {
-      PSTDOUT_PERROR(pstate, "alloca");
+      pstdout_perror(pstate, "alloca");
       return -1;
     }
   
@@ -223,14 +99,14 @@ _get_home_directory (pstdout_state_t pstate,
                   tbuf_len,
                   &(pwdptr)) != 0)
     {
-      PSTDOUT_PERROR(pstate, "getpwuid_r");
+      pstdout_perror(pstate, "getpwuid_r");
       return -1;
     }
 
   if (!pwdptr) 
     {
       /* User not found - can't figure out cache directory */
-      PSTDOUT_PERROR(pstate, "getpwuid_r");
+      pstdout_perror(pstate, "getpwuid_r");
       return -1;
     }
 #elif defined(HAVE_FUNC_GETPWUID_R_4)
@@ -239,7 +115,7 @@ _get_home_directory (pstdout_state_t pstate,
                   tbuf,
                   tbuf_len) != 0)
     {
-      PSTDOUT_PERROR(pstate, "getpwuid_r");
+      pstdout_perror(pstate, "getpwuid_r");
       return -1;
     }
 #endif /* !defined(HAVE_FUNC_GETPWUID_R_4) */
@@ -249,7 +125,7 @@ _get_home_directory (pstdout_state_t pstate,
       if (!access (pwd.pw_dir, R_OK|W_OK|X_OK)) {
         if (strlen(pwd.pw_dir) > (buflen - 1))
           {
-            PSTDOUT_FPRINTF(pstate, 
+            pstdout_fprintf(pstate, 
                             stderr,
                             "internal overflow error\n");
             return -1;
@@ -265,13 +141,13 @@ _get_home_directory (pstdout_state_t pstate,
                       PACKAGE_NAME, 
                       pwd.pw_name)) < 0)
     {
-      PSTDOUT_PERROR(pstate, "snprintf");
+      pstdout_perror(pstate, "snprintf");
       return -1;
     }
 
   if (ret >= buflen)
     {
-      PSTDOUT_FPRINTF(pstate, 
+      pstdout_fprintf(pstate, 
                       stderr,
                       "snprintf invalid bytes written\n");
       return -1;
@@ -283,7 +159,7 @@ _get_home_directory (pstdout_state_t pstate,
 	{
 	  if (mkdir (buf, FREEIPMI_CONFIG_DIRECTORY_MODE) < 0)
             {
-              PSTDOUT_FPRINTF(pstate,
+              pstdout_fprintf(pstate,
                               stderr,
                               "Cannot make cache directory: %s: %s\n",
                               buf,
@@ -293,7 +169,7 @@ _get_home_directory (pstdout_state_t pstate,
 	}
       else
         {
-          PSTDOUT_FPRINTF(pstate,
+          pstdout_fprintf(pstate,
                           stderr,
                           "Cannot access cache directory: %s\n",
                           buf);
@@ -313,6 +189,7 @@ _get_config_directory (pstdout_state_t pstate,
   char tbuf[MAXPATHLEN+1];
   int ret;
 
+  assert(pstate);
   assert(buf);
   assert(buflen);
 
@@ -328,7 +205,7 @@ _get_config_directory (pstdout_state_t pstate,
     {
       if (strlen(cache_dir) > (MAXPATHLEN - 1))
         {
-          PSTDOUT_FPRINTF(pstate, 
+          pstdout_fprintf(pstate, 
                           stderr,
                           "internal overflow error\n");
           return -1;
@@ -341,7 +218,7 @@ _get_config_directory (pstdout_state_t pstate,
             {
               if (mkdir (tbuf, FREEIPMI_CONFIG_DIRECTORY_MODE) < 0)
                 {
-                  PSTDOUT_FPRINTF(pstate,
+                  pstdout_fprintf(pstate,
                                   stderr,
                                   "Cannot make cache directory: %s: %s\n",
                                   tbuf,
@@ -351,7 +228,7 @@ _get_config_directory (pstdout_state_t pstate,
             }
           else
             {
-              PSTDOUT_FPRINTF(pstate,
+              pstdout_fprintf(pstate,
                               stderr,
                               "Cannot access cache directory: %s\n",
                               tbuf);
@@ -366,13 +243,13 @@ _get_config_directory (pstdout_state_t pstate,
                       tbuf,
                       PACKAGE_NAME)) < 0)
     {
-      PSTDOUT_PERROR(pstate, "snprintf");
+      pstdout_perror(pstate, "snprintf");
       return -1;
     }
 
   if (ret >= buflen)
     {
-      PSTDOUT_FPRINTF(pstate, 
+      pstdout_fprintf(pstate, 
                       stderr,
                       "snprintf invalid bytes written\n");
       return -1;
@@ -390,6 +267,7 @@ sdr_cache_get_cache_directory (pstdout_state_t pstate,
   char tbuf[MAXPATHLEN+1];
   int ret;
 
+  assert(pstate);
   assert(buf);
   assert(buflen);
   
@@ -406,13 +284,13 @@ sdr_cache_get_cache_directory (pstdout_state_t pstate,
                       tbuf,
                       SDR_CACHE_DIR)) < 0)
     {
-      PSTDOUT_PERROR(pstate, "snprintf");
+      pstdout_perror(pstate, "snprintf");
       return -1;
     }
   
   if (ret >= buflen)
     {
-      PSTDOUT_FPRINTF(pstate, 
+      pstdout_fprintf(pstate, 
                       stderr,
                       "snprintf invalid bytes written\n");
       return -1;
@@ -433,6 +311,7 @@ sdr_cache_get_cache_filename (pstdout_state_t pstate,
   char *ptr;
   int ret;
 
+  assert(pstate);
   assert(buf);
   assert(buflen);
 
@@ -459,13 +338,13 @@ sdr_cache_get_cache_filename (pstdout_state_t pstate,
                       hostname ? hostname : "localhost")) < 0)
     
     {
-      PSTDOUT_PERROR(pstate, "snprintf");
+      pstdout_perror(pstate, "snprintf");
       return -1;
     }
   
   if (ret >= buflen)
     {
-      PSTDOUT_FPRINTF(pstate, 
+      pstdout_fprintf(pstate, 
                       stderr,
                       "snprintf invalid bytes written\n");
       return -1;
@@ -482,6 +361,8 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
   char cachebuf[MAXPATHLEN+1];
   int ret;
   
+  assert(pstate);
+
   memset(configbuf, '\0', MAXPATHLEN+1);
   memset(cachebuf, '\0', MAXPATHLEN+1);
 
@@ -495,7 +376,7 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
   ret = mkdir (configbuf, FREEIPMI_CONFIG_DIRECTORY_MODE);
   if (ret < 0 && errno != EEXIST)
     {
-      PSTDOUT_FPRINTF(pstate,
+      pstdout_fprintf(pstate,
                       stderr,
                       "Cannot make cache directory: %s: %s\n",
                       configbuf,
@@ -513,7 +394,7 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
   ret = mkdir (cachebuf, FREEIPMI_CONFIG_DIRECTORY_MODE);
   if (ret < 0 && errno != EEXIST)
     {
-      PSTDOUT_FPRINTF(pstate,
+      pstdout_fprintf(pstate,
                       stderr,
                       "Cannot make cache directory: %s: %s\n",
                       cachebuf,
@@ -558,6 +439,8 @@ sdr_cache_create_directory (pstdout_state_t pstate,
   char cachedirectorybuf[MAXPATHLEN+1];
   struct stat buf;
 
+  assert(pstate);
+
   if (sdr_cache_get_cache_directory (pstate,
                                      cache_dir,
                                      cachedirectorybuf,
@@ -589,6 +472,7 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
+  assert(pstate);
   assert(ipmi_ctx);
   
   if (sdr_cache_create_directory (pstate, cache_dir) < 0)
@@ -624,7 +508,7 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                             quiet_cache ? NULL : _sdr_cache_create_callback,
                             quiet_cache ? NULL : (void *)&count) < 0)
     {
-      PSTDOUT_FPRINTF(pstate,
+      pstdout_fprintf(pstate,
                       stderr,
                       "ipmi_sdr_cache_create: %s\n",
                       ipmi_sdr_cache_ctx_errormsg(ctx));
@@ -654,6 +538,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
+  assert(pstate);
 
   memset(cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (sdr_cache_get_cache_filename(pstate,
@@ -674,7 +559,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
         {
           if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_INVALID)
             {
-              PSTDOUT_FPRINTF(pstate,
+              pstdout_fprintf(pstate,
                               stderr,
                               "SDR Cache '%s' invalid: Please flush the cache and regenerate it\n",
                               cachefilenamebuf);
@@ -682,7 +567,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
             }
           else if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
             {
-              PSTDOUT_FPRINTF(pstate,
+              pstdout_fprintf(pstate,
                               stderr,
                               "SDR Cache '%s' out of date: Please flush the cache and regenerate it\n",
                               cachefilenamebuf);
@@ -691,7 +576,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
             }
           else
             {
-              PSTDOUT_FPRINTF(pstate,
+              pstdout_fprintf(pstate,
                               stderr,
                               "ipmi_sdr_cache_open: %s: %s\n",
                               cachefilenamebuf,
@@ -719,7 +604,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                               ipmi_ctx,
                               cachefilenamebuf) < 0)
         {
-          PSTDOUT_FPRINTF(pstate,
+          pstdout_fprintf(pstate,
                           stderr,
                           "ipmi_sdr_cache_open: %s: %s\n",
                           cachefilenamebuf,
@@ -744,6 +629,7 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
+  assert(pstate);
 
   memset(cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (sdr_cache_get_cache_filename(pstate,
@@ -754,11 +640,11 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
     goto cleanup;
   
   if (!quiet_cache)
-    PSTDOUT_PRINTF (pstate, "Flushing cache: %s\n", cachefilenamebuf);
+    pstdout_printf (pstate, "Flushing cache: %s\n", cachefilenamebuf);
       
   if (ipmi_sdr_cache_delete(ctx, cachefilenamebuf) < 0)
     {
-      PSTDOUT_FPRINTF(pstate,
+      pstdout_fprintf(pstate,
                       stderr,
                       "ipmi_sdr_cache_delete: %s\n",
                       ipmi_sdr_cache_ctx_errormsg(ctx));

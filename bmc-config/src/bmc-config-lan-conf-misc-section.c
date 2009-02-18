@@ -34,7 +34,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 /* convenience struct */
 struct bmc_generated_arp_control
@@ -56,7 +56,7 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(ac);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -81,15 +81,15 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, "bmc_generated_gratuitous_arps", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bmc_generated_gratuitous_arps", &val);
   ac->bmc_generated_gratuitous_arps = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "bmc_generated_arp_responses", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bmc_generated_arp_responses", &val);
   ac->bmc_generated_arp_responses = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -105,7 +105,7 @@ _set_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(ac);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -131,7 +131,7 @@ _set_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 
 }
@@ -220,7 +220,7 @@ gratuitous_arp_interval_checkout (const char *section_name,
   uint8_t channel_number;
   uint64_t val;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -245,7 +245,7 @@ gratuitous_arp_interval_checkout (const char *section_name,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, "gratuitous_arp_interval", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "gratuitous_arp_interval", &val);
 
   if (config_section_update_keyvalue_output_int(state_data->pstate,
                                                 kv, 
@@ -254,7 +254,7 @@ gratuitous_arp_interval_checkout (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -269,7 +269,7 @@ gratuitous_arp_interval_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -288,7 +288,7 @@ gratuitous_arp_interval_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 
 }

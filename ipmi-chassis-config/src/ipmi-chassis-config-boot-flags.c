@@ -33,7 +33,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 /* convenience struct */
 struct boot_flags_data
@@ -66,7 +66,7 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
   assert(state_data);
   assert(data);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_system_boot_options_boot_flags_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_system_boot_options_boot_flags_rs);
 
   if (ipmi_cmd_get_system_boot_options_boot_flags (state_data->ipmi_ctx, 
                                                    IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR,
@@ -83,54 +83,54 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, "boot_flags_persistent", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "boot_flags_persistent", &val);
   data->boot_flags_persistent = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "bios_boot_type", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bios_boot_type", &val);
   data->bios_boot_type = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "cmos_clear", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "cmos_clear", &val);
   data->cmos_clear = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "lock_keyboard", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "lock_keyboard", &val);
   data->lock_keyboard = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "screen_blank", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "screen_blank", &val);
   data->screen_blank = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "boot_device", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "boot_device", &val);
   data->boot_device = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "lock_out_reset_button", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "lock_out_reset_button", &val);
   data->lock_out_reset_button = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "lock_out_via_power_button", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "lock_out_via_power_button", &val);
   data->lock_out_power_button = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "lock_out_sleep_button", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "lock_out_sleep_button", &val);
   data->lock_out_sleep_button = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "firmware_bios_verbosity", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "firmware_bios_verbosity", &val);
   data->firmware_bios_verbosity = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "force_progress_event_traps", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "force_progress_event_traps", &val);
   data->force_progress_event_traps = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "user_password_bypass", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_password_bypass", &val);
   data->user_password_bypass = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "console_redirection", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "console_redirection", &val);
   data->console_redirection = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "bios_mux_control_override", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bios_mux_control_override", &val);
   data->bios_mux_control_override = val; 
 
-  _FIID_OBJ_GET (obj_cmd_rs, "bios_shared_mode_override", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bios_shared_mode_override", &val);
   data->bios_shared_mode_override = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -144,7 +144,7 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
   assert(state_data);
   assert(data);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
 
   /* achu (workaround)
    *
@@ -184,7 +184,7 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -561,7 +561,7 @@ chassis_boot_flags_post (const char *section_name,
    * that a boot configuration change has taken place.
    */
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
 
   if (ipmi_cmd_set_system_boot_options_boot_info_acknowledge (state_data->ipmi_ctx,
                                                               &boot_info_acknowledge,
@@ -583,7 +583,7 @@ chassis_boot_flags_post (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

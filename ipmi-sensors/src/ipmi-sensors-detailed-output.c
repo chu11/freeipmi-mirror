@@ -36,7 +36,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 #define ALL_EVENT_MESSAGES_DISABLED "All Event Messages Disabled"
 #define SENSOR_SCANNING_DISABLED    "Sensor Scanning Disabled"
@@ -583,7 +583,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_hysteresis_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_hysteresis_rs);
 
   if (ipmi_cmd_get_sensor_hysteresis (state_data->ipmi_ctx,
                                       sensor_number,
@@ -612,14 +612,14 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs,
-                 "positive_going_threshold_hysteresis_value",
-                 &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                     "positive_going_threshold_hysteresis_value",
+                     &val);
   positive_going_threshold_hysteresis_raw = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs,
-                 "negative_going_threshold_hysteresis_value",
-                 &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                     "negative_going_threshold_hysteresis_value",
+                     &val);
   negative_going_threshold_hysteresis_raw = val;
 
   /* achu: Well, compact records don't have the values to compute a
@@ -750,7 +750,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 
@@ -842,7 +842,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
         }
     }
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_event_enable_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_event_enable_rs);
   
   if (ipmi_cmd_get_sensor_event_enable (state_data->ipmi_ctx,
                                         sensor_number,
@@ -871,9 +871,9 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs,
-                 "all_event_messages",
-                 &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                     "all_event_messages",
+                     &val);
   
   if (val == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE)
     {
@@ -903,9 +903,9 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs,
-                 "scanning_on_this_sensor",
-                 &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                     "scanning_on_this_sensor",
+                     &val);
 
   if (val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
     {
@@ -929,10 +929,10 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
    * disabled.
    */
 
-  _FIID_OBJ_GET_WITH_RV (field_len,
-                         obj_cmd_rs,
-                         "assertion_event_bitmask",
-                         &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (field_len,
+                             obj_cmd_rs,
+                             "assertion_event_bitmask",
+                             &val);
   if (field_len)
     {
       if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
@@ -965,10 +965,10 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
         goto cleanup;
     }
 
-  _FIID_OBJ_GET_WITH_RV (field_len,
-                         obj_cmd_rs,
-                         "deassertion_event_bitmask",
-                         &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (field_len,
+                             obj_cmd_rs,
+                             "deassertion_event_bitmask",
+                             &val);
   if (field_len)
     {
       if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
@@ -1003,7 +1003,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 

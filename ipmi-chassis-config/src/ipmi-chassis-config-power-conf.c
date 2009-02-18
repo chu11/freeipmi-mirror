@@ -33,7 +33,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 static config_err_t
 power_restore_policy_checkout (const char *section_name,
@@ -45,7 +45,7 @@ power_restore_policy_checkout (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   uint64_t val;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs);
   
   if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
@@ -59,7 +59,7 @@ power_restore_policy_checkout (const char *section_name,
       goto cleanup;
     }
   
-  _FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_restore_policy", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_restore_policy", &val);
   
   if (config_section_update_keyvalue_output(state_data->pstate,
                                             kv,
@@ -68,7 +68,7 @@ power_restore_policy_checkout (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -81,7 +81,7 @@ power_restore_policy_commit (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_power_restore_policy_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_power_restore_policy_rs);
   
   if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
                                          power_restore_policy_number (kv->value_input),
@@ -99,7 +99,7 @@ power_restore_policy_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -128,7 +128,7 @@ power_cycle_interval_commit (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_power_cycle_interval_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_power_cycle_interval_rs);
   
   if (ipmi_cmd_set_power_cycle_interval (state_data->ipmi_ctx,
                                          atoi (kv->value_input),
@@ -146,7 +146,7 @@ power_cycle_interval_commit (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

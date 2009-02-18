@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.19 2009-01-30 18:04:10 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.19.4.1 2009-02-18 19:04:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -41,7 +41,7 @@
 #include "ipmi-fru-util.h"
 
 #include "freeipmi-portability.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 static char *
 voltage_str(uint8_t voltage)
@@ -106,7 +106,7 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
   
-  _FIID_TEMPLATE_LEN_BYTES (tmpl_record_length, tmpl_fru_power_supply_information);
+  TOOL_FIID_TEMPLATE_LEN_BYTES (tmpl_record_length, tmpl_fru_power_supply_information);
 
   if (tmpl_record_length != record_length)
     {
@@ -118,79 +118,79 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(obj_record, tmpl_fru_power_supply_information);
+  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_power_supply_information);
 
-  _FIID_OBJ_SET_ALL_LEN(len, 
-                        obj_record, 
-                        frubuf, 
-                        record_length);
+  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
+                            obj_record, 
+                            frubuf, 
+                            record_length);
 
-  _FIID_OBJ_GET(obj_record,
-                "overall_capacity",
-                &overall_capacity);
-  _FIID_OBJ_GET(obj_record,
-                "peak_va",
-                &peak_va);
-  _FIID_OBJ_GET(obj_record,
-                "inrush_current",
-                &inrush_current);
-  _FIID_OBJ_GET(obj_record,
-                "inrush_interval",
-                &inrush_interval);
-  _FIID_OBJ_GET(obj_record,
-                "low_end_input_voltage_range_1",
-                &low_end_input_voltage_range_1);
-  _FIID_OBJ_GET(obj_record,
-                "high_end_input_voltage_range_1",
-                &high_end_input_voltage_range_1);
-  _FIID_OBJ_GET(obj_record,
-                "low_end_input_voltage_range_2",
-                &low_end_input_voltage_range_2);
-  _FIID_OBJ_GET(obj_record,
-                "high_end_input_voltage_range_2",
-                &high_end_input_voltage_range_2);
-  _FIID_OBJ_GET(obj_record,
-                "low_end_input_frequency_range",
-                &low_end_input_frequency_range);
-  _FIID_OBJ_GET(obj_record,
-                "high_end_input_frequency_range",
-                &high_end_input_frequency_range);
-  _FIID_OBJ_GET(obj_record,
-                "ac_dropout_tolerance",
-                &ac_dropout_tolerance);
-  _FIID_OBJ_GET(obj_record,
-                "predictive_fail_support",
-                &predictive_fail_support);
-  _FIID_OBJ_GET(obj_record,
-                "power_factor_correction",
-                &power_factor_correction);
-  _FIID_OBJ_GET(obj_record,
-                "autoswitch",
-                &autoswitch);
-  _FIID_OBJ_GET(obj_record,
-                "hot_swap_support",
-                &hot_swap_support);
-  _FIID_OBJ_GET(obj_record,
-                "tachometer_pulses_per_rotation_predictive_fail_polarity",
-                &tachometer_pulses_per_rotation_predictive_fail_polarity);
-  _FIID_OBJ_GET(obj_record,
-                "peak_capacity",
-                &peak_capacity);
-  _FIID_OBJ_GET(obj_record,
-                "hold_up_time",
-                &hold_up_time);
-  _FIID_OBJ_GET(obj_record,
-                "voltage_1",
-                &voltage_1);
-  _FIID_OBJ_GET(obj_record,
-                "voltage_2",
-                &voltage_2);
-  _FIID_OBJ_GET(obj_record,
-                "total_combined_wattage",
-                &total_combined_wattage);
-  _FIID_OBJ_GET(obj_record,
-                "predictive_fail_tachometer_lower_threshold",
-                &predictive_fail_tachometer_lower_threshold); 
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "overall_capacity",
+                    &overall_capacity);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "peak_va",
+                    &peak_va);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "inrush_current",
+                    &inrush_current);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "inrush_interval",
+                    &inrush_interval);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "low_end_input_voltage_range_1",
+                    &low_end_input_voltage_range_1);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "high_end_input_voltage_range_1",
+                    &high_end_input_voltage_range_1);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "low_end_input_voltage_range_2",
+                    &low_end_input_voltage_range_2);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "high_end_input_voltage_range_2",
+                    &high_end_input_voltage_range_2);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "low_end_input_frequency_range",
+                    &low_end_input_frequency_range);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "high_end_input_frequency_range",
+                    &high_end_input_frequency_range);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "ac_dropout_tolerance",
+                    &ac_dropout_tolerance);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "predictive_fail_support",
+                    &predictive_fail_support);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "power_factor_correction",
+                    &power_factor_correction);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "autoswitch",
+                    &autoswitch);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "hot_swap_support",
+                    &hot_swap_support);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "tachometer_pulses_per_rotation_predictive_fail_polarity",
+                    &tachometer_pulses_per_rotation_predictive_fail_polarity);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "peak_capacity",
+                    &peak_capacity);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "hold_up_time",
+                    &hold_up_time);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "voltage_1",
+                    &voltage_1);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "voltage_2",
+                    &voltage_2);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "total_combined_wattage",
+                    &total_combined_wattage);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "predictive_fail_tachometer_lower_threshold",
+                    &predictive_fail_tachometer_lower_threshold); 
 
   pstdout_printf(state_data->pstate,
                  "  FRU Power Supply Overall Capacity: %u Watts\n",
@@ -277,7 +277,7 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -315,7 +315,7 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
   
-  _FIID_TEMPLATE_LEN_BYTES (tmpl_record_length, tmpl_fru_dc_output);
+  TOOL_FIID_TEMPLATE_LEN_BYTES (tmpl_record_length, tmpl_fru_dc_output);
 
   if (tmpl_record_length != record_length)
     {
@@ -327,37 +327,37 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(obj_record, tmpl_fru_dc_output);
+  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_dc_output);
 
-  _FIID_OBJ_SET_ALL_LEN(len, 
-                        obj_record, 
-                        frubuf, 
-                        record_length);
+  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
+                            obj_record, 
+                            frubuf, 
+                            record_length);
 
-  _FIID_OBJ_GET(obj_record,
-                "output_number",
-                &output_number);
-  _FIID_OBJ_GET(obj_record,
-                "standby",
-                &standby);
-  _FIID_OBJ_GET(obj_record,
-                "nominal_voltage",
-                &nominal_voltage);
-  _FIID_OBJ_GET(obj_record,
-                "maximum_negative_voltage_deviation",
-                &maximum_negative_voltage_deviation);
-  _FIID_OBJ_GET(obj_record,
-                "maximum_positive_voltage_deviation",
-                &maximum_positive_voltage_deviation);
-  _FIID_OBJ_GET(obj_record,
-                "ripple_and_noise_pk_pk",
-                &ripple_and_noise_pk_pk);
-  _FIID_OBJ_GET(obj_record,
-                "minimum_current_draw",
-                &minimum_current_draw);
-  _FIID_OBJ_GET(obj_record,
-                "maximum_current_draw",
-                &maximum_current_draw);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "output_number",
+                    &output_number);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "standby",
+                    &standby);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "nominal_voltage",
+                    &nominal_voltage);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "maximum_negative_voltage_deviation",
+                    &maximum_negative_voltage_deviation);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "maximum_positive_voltage_deviation",
+                    &maximum_positive_voltage_deviation);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "ripple_and_noise_pk_pk",
+                    &ripple_and_noise_pk_pk);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "minimum_current_draw",
+                    &minimum_current_draw);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "maximum_current_draw",
+                    &maximum_current_draw);
 
   pstdout_printf(state_data->pstate,
                  "  FRU DC Output Output Number: %u\n",
@@ -386,7 +386,7 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -423,7 +423,7 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
   
-  _FIID_TEMPLATE_LEN_BYTES (tmpl_record_length, tmpl_fru_dc_load);
+  TOOL_FIID_TEMPLATE_LEN_BYTES (tmpl_record_length, tmpl_fru_dc_load);
 
   if (tmpl_record_length != record_length)
     {
@@ -435,34 +435,34 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(obj_record, tmpl_fru_dc_load);
+  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_dc_load);
 
-  _FIID_OBJ_SET_ALL_LEN(len, 
-                        obj_record, 
-                        frubuf, 
-                        record_length);
+  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
+                            obj_record, 
+                            frubuf, 
+                            record_length);
 
-  _FIID_OBJ_GET(obj_record,
-                "output_number",
-                &output_number);
-  _FIID_OBJ_GET(obj_record,
-                "nominal_voltage",
-                &nominal_voltage);
-  _FIID_OBJ_GET(obj_record,
-                "specd_minimum_voltage",
-                &specd_minimum_voltage);
-  _FIID_OBJ_GET(obj_record,
-                "specd_maximum_voltage",
-                &specd_maximum_voltage);
-  _FIID_OBJ_GET(obj_record,
-                "specd_ripple_and_noise_pk_pk",
-                &specd_ripple_and_noise_pk_pk);
-  _FIID_OBJ_GET(obj_record,
-                "minimum_current_load",
-                &minimum_current_load);
-  _FIID_OBJ_GET(obj_record,
-                "maximum_current_load",
-                &maximum_current_load);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "output_number",
+                    &output_number);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "nominal_voltage",
+                    &nominal_voltage);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "specd_minimum_voltage",
+                    &specd_minimum_voltage);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "specd_maximum_voltage",
+                    &specd_maximum_voltage);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "specd_ripple_and_noise_pk_pk",
+                    &specd_ripple_and_noise_pk_pk);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "minimum_current_load",
+                    &minimum_current_load);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "maximum_current_load",
+                    &maximum_current_load);
 
   pstdout_printf(state_data->pstate,
                  "  FRU DC Load Output Number: %u\n",
@@ -488,7 +488,7 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -525,9 +525,9 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
     }
   
   /* Variable Length Record - So need to check min length */
-  _FIID_TEMPLATE_FIELD_START_BYTES (min_tmpl_record_length, 
-                                    tmpl_fru_management_access_record,
-                                    "record");
+  TOOL_FIID_TEMPLATE_FIELD_START_BYTES (min_tmpl_record_length, 
+                                        tmpl_fru_management_access_record,
+                                        "record");
   
   if (record_length < min_tmpl_record_length)
     {
@@ -538,22 +538,22 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
  
-  _FIID_OBJ_CREATE(obj_record, tmpl_fru_management_access_record);
+  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_management_access_record);
 
-  _FIID_OBJ_SET_ALL_LEN(len, 
-                        obj_record, 
-                        frubuf, 
-                        record_length);
+  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
+                            obj_record, 
+                            frubuf, 
+                            record_length);
 
-  _FIID_OBJ_GET(obj_record,
-                "sub_record_type",
-                &sub_record_type);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "sub_record_type",
+                    &sub_record_type);
 
-  _FIID_OBJ_GET_DATA_LEN(len,
-                         obj_record,
-                         "record",
-                         managementaccessbuf,
-                         FRU_BUF_LEN);
+  TOOL_FIID_OBJ_GET_DATA_LEN(len,
+                             obj_record,
+                             "record",
+                             managementaccessbuf,
+                             FRU_BUF_LEN);
 
   if (!len)
     {
@@ -622,7 +622,7 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -660,9 +660,9 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
     }
   
   /* Variable Length Record - So need to check min length */
-  _FIID_TEMPLATE_FIELD_START_BYTES (min_tmpl_record_length, 
-                                    tmpl_fru_base_compatibility_record,
-                                    "code_range_mask");
+  TOOL_FIID_TEMPLATE_FIELD_START_BYTES (min_tmpl_record_length, 
+                                        tmpl_fru_base_compatibility_record,
+                                        "code_range_mask");
 
   if (record_length < min_tmpl_record_length)
     {
@@ -674,34 +674,34 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(obj_record, tmpl_fru_base_compatibility_record);
+  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_base_compatibility_record);
 
-  _FIID_OBJ_SET_ALL_LEN(len, 
-                        obj_record, 
-                        frubuf, 
-                        record_length);
+  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
+                            obj_record, 
+                            frubuf, 
+                            record_length);
 
-  _FIID_OBJ_GET(obj_record,
-                "manufacturer_id",
-                &manufacturer_id);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "manufacturer_id",
+                    &manufacturer_id);
 
-  _FIID_OBJ_GET(obj_record,
-                "entity_id_code",
-                &entity_id_code);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "entity_id_code",
+                    &entity_id_code);
 
-  _FIID_OBJ_GET(obj_record,
-                "compatibility_base",
-                &compatibility_base);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "compatibility_base",
+                    &compatibility_base);
 
-  _FIID_OBJ_GET(obj_record,
-                "compatibility_code_start_value",
-                &compatibility_code_start_value);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "compatibility_code_start_value",
+                    &compatibility_code_start_value);
 
-  _FIID_OBJ_GET_DATA_LEN(len,
-                         obj_record,
-                         "code_range_mask",
-                         codemaskbuf,
-                         FRU_BUF_LEN);
+  TOOL_FIID_OBJ_GET_DATA_LEN(len,
+                             obj_record,
+                             "code_range_mask",
+                             codemaskbuf,
+                             FRU_BUF_LEN);
 
   if (IPMI_IANA_ENTERPRISE_ID_VALID(manufacturer_id)
       && ipmi_iana_enterprise_numbers[manufacturer_id])
@@ -745,7 +745,7 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -783,9 +783,9 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
     }
   
   /* Variable Length Record - So need to check min length */
-  _FIID_TEMPLATE_FIELD_START_BYTES (min_tmpl_record_length, 
-                                    tmpl_fru_extended_compatibility_record,
-                                    "code_range_mask");
+  TOOL_FIID_TEMPLATE_FIELD_START_BYTES (min_tmpl_record_length, 
+                                        tmpl_fru_extended_compatibility_record,
+                                        "code_range_mask");
 
   if (record_length < min_tmpl_record_length)
     {
@@ -797,34 +797,34 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(obj_record, tmpl_fru_extended_compatibility_record);
+  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_extended_compatibility_record);
 
-  _FIID_OBJ_SET_ALL_LEN(len, 
-                        obj_record, 
-                        frubuf, 
-                        record_length);
+  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
+                            obj_record, 
+                            frubuf, 
+                            record_length);
 
-  _FIID_OBJ_GET(obj_record,
-                "manufacturer_id",
-                &manufacturer_id);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "manufacturer_id",
+                    &manufacturer_id);
 
-  _FIID_OBJ_GET(obj_record,
-                "entity_id_code",
-                &entity_id_code);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "entity_id_code",
+                    &entity_id_code);
 
-  _FIID_OBJ_GET(obj_record,
-                "compatibility_base",
-                &compatibility_base);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "compatibility_base",
+                    &compatibility_base);
 
-  _FIID_OBJ_GET(obj_record,
-                "compatibility_code_start_value",
-                &compatibility_code_start_value);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "compatibility_code_start_value",
+                    &compatibility_code_start_value);
 
-  _FIID_OBJ_GET_DATA_LEN(len,
-                         obj_record,
-                         "code_range_mask",
-                         codemaskbuf,
-                         FRU_BUF_LEN);
+  TOOL_FIID_OBJ_GET_DATA_LEN(len,
+                             obj_record,
+                             "code_range_mask",
+                             codemaskbuf,
+                             FRU_BUF_LEN);
 
   pstdout_printf(state_data->pstate,
                  "  FRU Extended Compatibility Manufacturer ID: %Xh\n",
@@ -861,7 +861,7 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -896,9 +896,9 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
     }
   
   /* Variable Length Record - So need to check min length */
-  _FIID_TEMPLATE_FIELD_START_BYTES (min_tmpl_record_length, 
-                                    tmpl_fru_oem_record,
-                                    "oem_data");
+  TOOL_FIID_TEMPLATE_FIELD_START_BYTES (min_tmpl_record_length, 
+                                        tmpl_fru_oem_record,
+                                        "oem_data");
 
   if (record_length < min_tmpl_record_length)
     {
@@ -910,22 +910,22 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(obj_record, tmpl_fru_oem_record);
+  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_oem_record);
 
-  _FIID_OBJ_SET_ALL_LEN(len,
-                        obj_record, 
-                        frubuf, 
-                        record_length);
+  TOOL_FIID_OBJ_SET_ALL_LEN(len,
+                            obj_record, 
+                            frubuf, 
+                            record_length);
 
-  _FIID_OBJ_GET(obj_record,
-                "manufacturer_id",
-                &manufacturer_id);
+  TOOL_FIID_OBJ_GET(obj_record,
+                    "manufacturer_id",
+                    &manufacturer_id);
 
-  _FIID_OBJ_GET_DATA_LEN(len,
-                         obj_record,
-                         "oem_data",
-                         oemdatabuf,
-                         FRU_BUF_LEN);
+  TOOL_FIID_OBJ_GET_DATA_LEN(len,
+                             obj_record,
+                             "oem_data",
+                             oemdatabuf,
+                             FRU_BUF_LEN);
 
   pstdout_printf(state_data->pstate,
                  "  FRU OEM Manufacturer ID: %Xh\n",
@@ -952,7 +952,7 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY(obj_record);
   return rv;
 }
 
@@ -978,7 +978,7 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
   assert(state_data);
   assert(offset);
 
-  _FIID_TEMPLATE_LEN_BYTES(record_header_length, tmpl_fru_multirecord_area_header);
+  TOOL_FIID_TEMPLATE_LEN_BYTES(record_header_length, tmpl_fru_multirecord_area_header);
 
   if ((offset*8 + record_header_length) > state_data->fru_inventory_area_size)
     {
@@ -1000,7 +1000,7 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
   
-  _FIID_OBJ_CREATE(fru_multirecord_header, tmpl_fru_multirecord_area_header);
+  TOOL_FIID_OBJ_CREATE(fru_multirecord_header, tmpl_fru_multirecord_area_header);
 
   multirecord_offset = offset*8;
   while (multirecord_offset < state_data->fru_inventory_area_size)
@@ -1035,26 +1035,26 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
           goto cleanup;
         }
       
-      _FIID_OBJ_SET_ALL_LEN(len, 
-                            fru_multirecord_header, 
-                            frubuf,
-                            record_header_length);
+      TOOL_FIID_OBJ_SET_ALL_LEN(len, 
+                                fru_multirecord_header, 
+                                frubuf,
+                                record_header_length);
       
-      _FIID_OBJ_GET (fru_multirecord_header,
-                     "record_type_id",
-                     &record_type_id);
-      _FIID_OBJ_GET (fru_multirecord_header,
-                     "record_format_version",
-                     &record_format_version);
-      _FIID_OBJ_GET (fru_multirecord_header,
-                     "end_of_list",
-                     &end_of_list);
-      _FIID_OBJ_GET (fru_multirecord_header,
-                     "record_length",
-                     &record_length);
-      _FIID_OBJ_GET (fru_multirecord_header,
-                     "record_checksum",
-                     &record_checksum);
+      TOOL_FIID_OBJ_GET (fru_multirecord_header,
+                         "record_type_id",
+                         &record_type_id);
+      TOOL_FIID_OBJ_GET (fru_multirecord_header,
+                         "record_format_version",
+                         &record_format_version);
+      TOOL_FIID_OBJ_GET (fru_multirecord_header,
+                         "end_of_list",
+                         &end_of_list);
+      TOOL_FIID_OBJ_GET (fru_multirecord_header,
+                         "record_length",
+                         &record_length);
+      TOOL_FIID_OBJ_GET (fru_multirecord_header,
+                         "record_checksum",
+                         &record_checksum);
 
       if (state_data->prog_data->args->verbose_count >= 2)
         {
@@ -1245,7 +1245,7 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(fru_multirecord_header);
+  TOOL_FIID_OBJ_DESTROY(fru_multirecord_header);
   return (rv);
 
 }

@@ -34,7 +34,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 #define BMC_MAXIPADDRLEN 16
 #define BMC_MAXMACADDRLEN 24
@@ -58,7 +58,7 @@ ip_address_source_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -83,7 +83,7 @@ ip_address_source_checkout (const char *section_name,
       goto cleanup;
     }
   
-  _FIID_OBJ_GET (obj_cmd_rs, "ip_address_source", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "ip_address_source", &val);
 
   if (config_section_update_keyvalue_output(state_data->pstate,
                                             kv,
@@ -92,7 +92,7 @@ ip_address_source_checkout (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -107,7 +107,7 @@ ip_address_source_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -132,7 +132,7 @@ ip_address_source_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -149,7 +149,7 @@ ip_address_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_ip_address_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_ip_address_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -174,10 +174,10 @@ ip_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                      "ip_address", 
-                      ip_address_bytes,
-                      4);
+  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                          "ip_address", 
+                          ip_address_bytes,
+                          4);
 
   memset(ip_address_str, '\0', BMC_MAXIPADDRLEN+1);
   snprintf(ip_address_str, 
@@ -195,7 +195,7 @@ ip_address_checkout (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -216,7 +216,7 @@ ip_address_commit (const char *section_name,
                                      &ip_address_val) < 0)
     goto cleanup;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -241,7 +241,7 @@ ip_address_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -258,7 +258,7 @@ mac_address_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_mac_address_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_mac_address_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -283,10 +283,10 @@ mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                      "mac_address", 
-                      mac_address_bytes,
-                      6);
+  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                          "mac_address", 
+                          mac_address_bytes,
+                          6);
   
   memset(mac_address_str, '\0', BMC_MAXMACADDRLEN+1);
   snprintf(mac_address_str, 
@@ -306,7 +306,7 @@ mac_address_checkout (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 
 }
@@ -328,7 +328,7 @@ mac_address_commit (const char *section_name,
                                     &mac_address_val) < 0)
     goto cleanup;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -353,7 +353,7 @@ mac_address_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -370,7 +370,7 @@ subnet_mask_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -395,10 +395,10 @@ subnet_mask_checkout (const char *section_name,
       goto cleanup;
     }
   
-  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                      "subnet_mask", 
-                      subnet_mask_bytes,
-                      4);
+  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                          "subnet_mask", 
+                          subnet_mask_bytes,
+                          4);
 
   memset(subnet_mask_str, '\0', BMC_MAXIPADDRLEN + 1);
   snprintf (subnet_mask_str, 
@@ -416,7 +416,7 @@ subnet_mask_checkout (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -437,7 +437,7 @@ subnet_mask_commit (const char *section_name,
                                      &subnet_mask_val) < 0)
     goto cleanup;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -462,7 +462,7 @@ subnet_mask_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -479,7 +479,7 @@ default_gateway_address_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -504,10 +504,10 @@ default_gateway_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                      "ip_address", 
-                      ip_address_bytes,
-                      4);
+  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                          "ip_address", 
+                          ip_address_bytes,
+                          4);
   
   memset(ip_address_str, '\0', BMC_MAXIPADDRLEN + 1);
   snprintf (ip_address_str, 
@@ -525,7 +525,7 @@ default_gateway_address_checkout (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 
 }
@@ -547,7 +547,7 @@ default_gateway_address_commit (const char *section_name,
                                      &ip_address_val) < 0)
     goto cleanup;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -572,7 +572,7 @@ default_gateway_address_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -589,7 +589,7 @@ default_gateway_mac_address_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_default_gateway_mac_address_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_default_gateway_mac_address_rs);
   
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -614,10 +614,10 @@ default_gateway_mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                      "mac_address", 
-                      mac_address_bytes,
-                      6);
+  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                          "mac_address", 
+                          mac_address_bytes,
+                          6);
   
   memset(mac_address_str, '\0', BMC_MAXMACADDRLEN + 1);
   snprintf (mac_address_str, 
@@ -637,7 +637,7 @@ default_gateway_mac_address_checkout (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 
 }
@@ -659,7 +659,7 @@ default_gateway_mac_address_commit (const char *section_name,
                                     &mac_address_val) < 0)
     goto cleanup;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -684,7 +684,7 @@ default_gateway_mac_address_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -701,7 +701,7 @@ backup_gateway_address_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -726,10 +726,10 @@ backup_gateway_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                      "ip_address", 
-                      ip_address_bytes,
-                      4);
+  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                          "ip_address", 
+                          ip_address_bytes,
+                          4);
   
   memset(ip_address_str, '\0', BMC_MAXIPADDRLEN+1);
   snprintf (ip_address_str, 
@@ -747,7 +747,7 @@ backup_gateway_address_checkout (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -768,7 +768,7 @@ backup_gateway_address_commit (const char *section_name,
                                      &ip_address_val) < 0)
     goto cleanup;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -793,7 +793,7 @@ backup_gateway_address_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -810,7 +810,7 @@ backup_gateway_mac_address_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_address_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_address_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -835,10 +835,10 @@ backup_gateway_mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  _FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                      "mac_address", 
-                      mac_address_bytes,
-                      6);
+  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
+                          "mac_address", 
+                          mac_address_bytes,
+                          6);
   
   memset(mac_address_str, '\0', BMC_MAXMACADDRLEN+1);
   snprintf (mac_address_str, 
@@ -858,7 +858,7 @@ backup_gateway_mac_address_checkout (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -879,7 +879,7 @@ backup_gateway_mac_address_commit (const char *section_name,
                                     &mac_address_val) < 0)
     goto cleanup;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -904,7 +904,7 @@ backup_gateway_mac_address_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -921,7 +921,7 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(vi);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -946,15 +946,15 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  _FIID_OBJ_GET (obj_cmd_rs, "vlan_id", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "vlan_id", &val);
   vi->vlan_id = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "vlan_id_enable", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "vlan_id_enable", &val);
   vi->vlan_id_enable = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -970,7 +970,7 @@ _set_vlan_id (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(vi);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -996,7 +996,7 @@ _set_vlan_id (bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -1095,7 +1095,7 @@ vlan_priority_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -1120,7 +1120,7 @@ vlan_priority_checkout (const char *section_name,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, "vlan_priority", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "vlan_priority", &val);
 
   if (config_section_update_keyvalue_output_int(state_data->pstate,
                                                 kv,
@@ -1129,7 +1129,7 @@ vlan_priority_checkout (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -1144,7 +1144,7 @@ vlan_priority_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -1169,7 +1169,7 @@ vlan_priority_commit (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

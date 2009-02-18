@@ -32,7 +32,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 #include "tool-sdr-cache-common.h"
 
 /* event field strings */
@@ -480,7 +480,7 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_event_enable_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_event_enable_rs);
 
   if (ipmi_cmd_get_sensor_event_enable (state_data->ipmi_ctx,
                                         sensor_number,
@@ -496,10 +496,10 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, "all_event_messages", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "all_event_messages", &val);
   data->all_event_messages = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "scanning_on_this_sensor", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "scanning_on_this_sensor", &val);
   data->scanning_on_this_sensor = val;
 
   if (data->all_event_messages == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE)
@@ -509,10 +509,10 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
       goto out;
     }
 
-  _FIID_OBJ_GET_WITH_RV (field_len,
-                         obj_cmd_rs,
-                         "assertion_event_bitmask",
-                         &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (field_len,
+                             obj_cmd_rs,
+                             "assertion_event_bitmask",
+                             &val);
 
   /* assertion event bitmask need not be returned */
   if (field_len)
@@ -520,10 +520,10 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
   else
     data->assertion_bits = 0;
 
-  _FIID_OBJ_GET_WITH_RV (field_len,
-                         obj_cmd_rs,
-                         "deassertion_event_bitmask",
-                         &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (field_len,
+                             obj_cmd_rs,
+                             "deassertion_event_bitmask",
+                             &val);
 
   /* deassertion event bitmask need not be returned */
   if (field_len)
@@ -534,7 +534,7 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
  out:
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -576,7 +576,7 @@ _set_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sensor_event_enable_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sensor_event_enable_rs);
 
   if (ipmi_cmd_set_sensor_event_enable (state_data->ipmi_ctx,
                                         sensor_number,
@@ -599,7 +599,7 @@ _set_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

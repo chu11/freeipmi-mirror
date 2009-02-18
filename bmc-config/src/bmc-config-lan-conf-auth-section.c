@@ -33,7 +33,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 /* convenience structs */
 struct bmc_authentication_level {
@@ -75,7 +75,7 @@ _get_authentication_type_support (bmc_config_state_data_t *state_data)
   
   assert(state_data);
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs);
   
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -100,25 +100,25 @@ _get_authentication_type_support (bmc_config_state_data_t *state_data)
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, "none", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "none", &val);
   state_data->authentication_type_none = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "md2", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "md2", &val);
   state_data->authentication_type_md2 = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "md5", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "md5", &val);
   state_data->authentication_type_md5 = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "straight_password", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "straight_password", &val);
   state_data->authentication_type_straight_password = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "oem_proprietary", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "oem_proprietary", &val);
   state_data->authentication_type_oem_proprietary = val;
   
   state_data->authentication_type_initialized++;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv); 
 }
 
@@ -135,7 +135,7 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(al);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs);
   
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -160,84 +160,84 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  _FIID_OBJ_GET (obj_cmd_rs, "callback_level.none", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "callback_level.none", &val);
   al->callback_level_none = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "callback_level.md2", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "callback_level.md2", &val);
   al->callback_level_md2 = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "callback_level.md5", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "callback_level.md5", &val);
   al->callback_level_md5 = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "callback_level.straight_password", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "callback_level.straight_password", &val);
   al->callback_level_straight_password = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "callback_level.oem_proprietary", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "callback_level.oem_proprietary", &val);
   al->callback_level_oem_proprietary = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "user_level.none", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_level.none", &val);
   al->user_level_none = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "user_level.md2", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_level.md2", &val);
   al->user_level_md2 = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "user_level.md5", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_level.md5", &val);
   al->user_level_md5 = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "user_level.straight_password", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_level.straight_password", &val);
   al->user_level_straight_password = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "user_level.oem_proprietary", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_level.oem_proprietary", &val);
   al->user_level_oem_proprietary = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "operator_level.none", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "operator_level.none", &val);
   al->operator_level_none = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "operator_level.md2", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "operator_level.md2", &val);
   al->operator_level_md2 = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "operator_level.md5", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "operator_level.md5", &val);
   al->operator_level_md5 = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "operator_level.straight_password", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "operator_level.straight_password", &val);
   al->operator_level_straight_password = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "operator_level.oem_proprietary", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "operator_level.oem_proprietary", &val);
   al->operator_level_oem_proprietary = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "admin_level.none", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "admin_level.none", &val);
   al->admin_level_none = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "admin_level.md2", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "admin_level.md2", &val);
   al->admin_level_md2 = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "admin_level.md5", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "admin_level.md5", &val);
   al->admin_level_md5 = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "admin_level.straight_password", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "admin_level.straight_password", &val);
   al->admin_level_straight_password = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "admin_level.oem_proprietary", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "admin_level.oem_proprietary", &val);
   al->admin_level_oem_proprietary = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "oem_level.none", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "oem_level.none", &val);
   al->oem_level_none = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "oem_level.md2", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "oem_level.md2", &val);
   al->oem_level_md2 = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "oem_level.md5", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "oem_level.md5", &val);
   al->oem_level_md5 = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "oem_level.straight_password", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "oem_level.straight_password", &val);
   al->oem_level_straight_password = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "oem_level.oem_proprietary", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "oem_level.oem_proprietary", &val);
   al->oem_level_oem_proprietary = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -253,7 +253,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(al);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -302,7 +302,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

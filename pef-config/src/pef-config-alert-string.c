@@ -34,7 +34,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 /* achu: presumably there is no maximum.  We could read/write blocks
    forever based on block numbers.  However, we need to have some
@@ -63,7 +63,7 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs);
 
   if (ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (state_data->ipmi_ctx,
                                                                    IPMI_GET_PEF_PARAMETER,
@@ -81,15 +81,15 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, "filter_number", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "filter_number", &val);
   ask->event_filter_number = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "set_number_for_string", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "set_number_for_string", &val);
   ask->alert_string_set = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -108,7 +108,7 @@ _set_alert_string_keys (pef_config_state_data_t *state_data,
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
 
   if (ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (state_data->ipmi_ctx,
                                                                    string_selector,
@@ -128,7 +128,7 @@ _set_alert_string_keys (pef_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -235,7 +235,7 @@ alert_string_checkout (const char *section_name,
 
   memset(alert_string, '\0', PEF_ALERT_STRING_MAX_LEN+1);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs);
 
   if (!((PEF_ALERT_STRING_MAX_LEN) % 16))
     blocks = (PEF_ALERT_STRING_MAX_LEN)/16;
@@ -246,7 +246,7 @@ alert_string_checkout (const char *section_name,
     {
       int j;
 
-      _FIID_OBJ_CLEAR(obj_cmd_rs);
+      TOOL_FIID_OBJ_CLEAR(obj_cmd_rs);
 
       if (ipmi_cmd_get_pef_configuration_parameters_alert_string (state_data->ipmi_ctx,
                                                                   IPMI_GET_PEF_PARAMETER,
@@ -268,10 +268,10 @@ alert_string_checkout (const char *section_name,
        * whatever is passed in, so don't check for overflow errors
        * from Fiid_obj_get_data.
        */
-      _FIID_OBJ_GET_DATA (obj_cmd_rs,
-                          "string_data",
-                          alert_string + (i * 16),
-                          PEF_ALERT_STRING_MAX_LEN - (i * 16));
+      TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs,
+                              "string_data",
+                              alert_string + (i * 16),
+                              PEF_ALERT_STRING_MAX_LEN - (i * 16));
 
       /* Check if we've found a nul character */
       for (j = 0; j < 16; j++)
@@ -289,7 +289,7 @@ alert_string_checkout (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 
 }
@@ -311,7 +311,7 @@ alert_string_commit (const char *section_name,
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
   
   alert_string_len = strlen((char *)kv->value_input);
 
@@ -365,7 +365,7 @@ alert_string_commit (const char *section_name,
  cleanup:
   if (alert_string_buf)
     free(alert_string_buf);
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 
 }
