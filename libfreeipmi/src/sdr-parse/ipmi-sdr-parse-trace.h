@@ -36,7 +36,6 @@ extern "C" {
 #include <errno.h>
 
 #include "libcommon/ipmi-trace.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
 
 #define SDR_PARSE_SET_ERRNUM(__ctx, __errnum)                          \
   do {                                                                 \

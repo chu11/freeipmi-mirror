@@ -29,9 +29,8 @@
 
 #include "freeipmi/interface/rmcp-interface.h"
 
-#include "libcommon/ipmi-fill-wrappers.h"
+#include "libcommon/ipmi-fill-util.h"
 #include "libcommon/ipmi-trace.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 

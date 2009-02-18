@@ -28,7 +28,6 @@
 #include "freeipmi/cmds/rmcp-cmds.h"
 
 #include "libcommon/ipmi-trace.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
 

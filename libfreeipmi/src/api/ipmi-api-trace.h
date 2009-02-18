@@ -41,7 +41,6 @@ extern "C" {
 #include "freeipmi/util/ipmi-util.h"
 
 #include "libcommon/ipmi-trace.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "ipmi-api-util.h"
 

@@ -1,9 +1,8 @@
 noinst_HEADERS = \
 	ipmi-bit-ops.h \
 	ipmi-crypt.h \
-	ipmi-fiid-wrappers.h \
 	ipmi-fiid-util.h \
-	ipmi-fill-wrappers.h \
+	ipmi-fill-util.h \
 	ipmi-md2.h \
 	ipmi-md5.h \
 	ipmi-trace.h

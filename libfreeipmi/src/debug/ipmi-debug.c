@@ -40,8 +40,8 @@
 
 #include "libcommon/ipmi-bit-ops.h"
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-util.h"
 #include "libcommon/ipmi-trace.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "ipmi-debug-common.h"
 

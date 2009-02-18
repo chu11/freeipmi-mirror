@@ -17,8 +17,8 @@
 
 */
 
-#ifndef _IPMI_FILL_WRAPPERS_H
-#define	_IPMI_FILL_WRAPPERS_H 1
+#ifndef _IPMI_FILL_UTIL_H
+#define	_IPMI_FILL_UTIL_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -67,4 +67,4 @@ do {                                                                        \
 }
 #endif
 
-#endif /* ipmi-fill-wrappers.h */
+#endif /* ipmi-fill-util.h */

@@ -36,7 +36,6 @@ extern "C" {
 #include <errno.h>
 
 #include "libcommon/ipmi-trace.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
 
 #include "ipmi-locate-util.h"
 
