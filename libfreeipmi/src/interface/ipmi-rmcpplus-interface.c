@@ -1326,7 +1326,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       ERRNO_TRACE(errno);
       return (-1);
     }
-  if (len == req_len)
+  if (len != req_len)
     {
       SET_ERRNO(EINVAL);
       return (-1);
@@ -1342,7 +1342,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       ERRNO_TRACE(errno);
       return (-1);
     }
-  if (len == req_len)
+  if (len != req_len)
     {
       SET_ERRNO(EINVAL);
       return (-1);
@@ -1358,7 +1358,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       ERRNO_TRACE(errno);
       return (-1);
     }
-  if (len == req_len)
+  if (len != req_len)
     {
       SET_ERRNO(EINVAL);
       return (-1);
@@ -1374,7 +1374,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       ERRNO_TRACE(errno);
       return (-1);
     }
-  if (len == req_len)
+  if (len != req_len)
     {
       SET_ERRNO(EINVAL);
       return (-1);
@@ -1390,7 +1390,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       ERRNO_TRACE(errno);
       return (-1);
     }
-  if (len == req_len)
+  if (len != req_len)
     {
       SET_ERRNO(EINVAL);
       return (-1);
@@ -1406,7 +1406,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       ERRNO_TRACE(errno);
       return (-1);
     }
-  if (len == req_len)
+  if (len != req_len)
     {
       SET_ERRNO(EINVAL);
       return (-1);
@@ -1422,7 +1422,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       ERRNO_TRACE(errno);
       return (-1);
     }
-  if (len == req_len)
+  if (len != req_len)
     {
       SET_ERRNO(EINVAL);
       return (-1);
