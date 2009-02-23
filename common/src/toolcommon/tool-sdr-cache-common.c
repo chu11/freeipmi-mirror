@@ -73,7 +73,6 @@ _get_home_directory (pstdout_state_t pstate,
   char *tbuf;
   int ret;
 
-  assert(pstate);
   assert(buf);
   assert(buflen);
 
@@ -86,7 +85,7 @@ _get_home_directory (pstdout_state_t pstate,
 
   if (!(tbuf = alloca (tbuf_len)))
     {
-      pstdout_perror(pstate, "alloca");
+      PSTDOUT_PERROR(pstate, "alloca");
       return -1;
     }
   
@@ -99,14 +98,14 @@ _get_home_directory (pstdout_state_t pstate,
                   tbuf_len,
                   &(pwdptr)) != 0)
     {
-      pstdout_perror(pstate, "getpwuid_r");
+      PSTDOUT_PERROR(pstate, "getpwuid_r");
       return -1;
     }
 
   if (!pwdptr) 
     {
       /* User not found - can't figure out cache directory */
-      pstdout_perror(pstate, "getpwuid_r");
+      PSTDOUT_PERROR(pstate, "getpwuid_r");
       return -1;
     }
 #elif defined(HAVE_FUNC_GETPWUID_R_4)
@@ -115,7 +114,7 @@ _get_home_directory (pstdout_state_t pstate,
                   tbuf,
                   tbuf_len) != 0)
     {
-      pstdout_perror(pstate, "getpwuid_r");
+      PSTDOUT_PERROR(pstate, "getpwuid_r");
       return -1;
     }
 #endif /* !defined(HAVE_FUNC_GETPWUID_R_4) */
@@ -125,7 +124,7 @@ _get_home_directory (pstdout_state_t pstate,
       if (!access (pwd.pw_dir, R_OK|W_OK|X_OK)) {
         if (strlen(pwd.pw_dir) > (buflen - 1))
           {
-            pstdout_fprintf(pstate, 
+            PSTDOUT_FPRINTF(pstate, 
                             stderr,
                             "internal overflow error\n");
             return -1;
@@ -141,13 +140,13 @@ _get_home_directory (pstdout_state_t pstate,
                       PACKAGE_NAME, 
                       pwd.pw_name)) < 0)
     {
-      pstdout_perror(pstate, "snprintf");
+      PSTDOUT_PERROR(pstate, "snprintf");
       return -1;
     }
 
   if (ret >= buflen)
     {
-      pstdout_fprintf(pstate, 
+      PSTDOUT_FPRINTF(pstate, 
                       stderr,
                       "snprintf invalid bytes written\n");
       return -1;
@@ -159,7 +158,7 @@ _get_home_directory (pstdout_state_t pstate,
 	{
 	  if (mkdir (buf, FREEIPMI_CONFIG_DIRECTORY_MODE) < 0)
             {
-              pstdout_fprintf(pstate,
+              PSTDOUT_FPRINTF(pstate,
                               stderr,
                               "Cannot make cache directory: %s: %s\n",
                               buf,
@@ -169,7 +168,7 @@ _get_home_directory (pstdout_state_t pstate,
 	}
       else
         {
-          pstdout_fprintf(pstate,
+          PSTDOUT_FPRINTF(pstate,
                           stderr,
                           "Cannot access cache directory: %s\n",
                           buf);
@@ -189,7 +188,6 @@ _get_config_directory (pstdout_state_t pstate,
   char tbuf[MAXPATHLEN+1];
   int ret;
 
-  assert(pstate);
   assert(buf);
   assert(buflen);
 
@@ -205,7 +203,7 @@ _get_config_directory (pstdout_state_t pstate,
     {
       if (strlen(cache_dir) > (MAXPATHLEN - 1))
         {
-          pstdout_fprintf(pstate, 
+          PSTDOUT_FPRINTF(pstate, 
                           stderr,
                           "internal overflow error\n");
           return -1;
@@ -218,7 +216,7 @@ _get_config_directory (pstdout_state_t pstate,
             {
               if (mkdir (tbuf, FREEIPMI_CONFIG_DIRECTORY_MODE) < 0)
                 {
-                  pstdout_fprintf(pstate,
+                  PSTDOUT_FPRINTF(pstate,
                                   stderr,
                                   "Cannot make cache directory: %s: %s\n",
                                   tbuf,
@@ -228,7 +226,7 @@ _get_config_directory (pstdout_state_t pstate,
             }
           else
             {
-              pstdout_fprintf(pstate,
+              PSTDOUT_FPRINTF(pstate,
                               stderr,
                               "Cannot access cache directory: %s\n",
                               tbuf);
@@ -243,13 +241,13 @@ _get_config_directory (pstdout_state_t pstate,
                       tbuf,
                       PACKAGE_NAME)) < 0)
     {
-      pstdout_perror(pstate, "snprintf");
+      PSTDOUT_PERROR(pstate, "snprintf");
       return -1;
     }
 
   if (ret >= buflen)
     {
-      pstdout_fprintf(pstate, 
+      PSTDOUT_FPRINTF(pstate, 
                       stderr,
                       "snprintf invalid bytes written\n");
       return -1;
@@ -267,7 +265,6 @@ sdr_cache_get_cache_directory (pstdout_state_t pstate,
   char tbuf[MAXPATHLEN+1];
   int ret;
 
-  assert(pstate);
   assert(buf);
   assert(buflen);
   
@@ -284,13 +281,13 @@ sdr_cache_get_cache_directory (pstdout_state_t pstate,
                       tbuf,
                       SDR_CACHE_DIR)) < 0)
     {
-      pstdout_perror(pstate, "snprintf");
+      PSTDOUT_PERROR(pstate, "snprintf");
       return -1;
     }
   
   if (ret >= buflen)
     {
-      pstdout_fprintf(pstate, 
+      PSTDOUT_FPRINTF(pstate, 
                       stderr,
                       "snprintf invalid bytes written\n");
       return -1;
@@ -311,7 +308,6 @@ sdr_cache_get_cache_filename (pstdout_state_t pstate,
   char *ptr;
   int ret;
 
-  assert(pstate);
   assert(buf);
   assert(buflen);
 
@@ -338,13 +334,13 @@ sdr_cache_get_cache_filename (pstdout_state_t pstate,
                       hostname ? hostname : "localhost")) < 0)
     
     {
-      pstdout_perror(pstate, "snprintf");
+      PSTDOUT_PERROR(pstate, "snprintf");
       return -1;
     }
   
   if (ret >= buflen)
     {
-      pstdout_fprintf(pstate, 
+      PSTDOUT_FPRINTF(pstate, 
                       stderr,
                       "snprintf invalid bytes written\n");
       return -1;
@@ -361,8 +357,6 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
   char cachebuf[MAXPATHLEN+1];
   int ret;
   
-  assert(pstate);
-
   memset(configbuf, '\0', MAXPATHLEN+1);
   memset(cachebuf, '\0', MAXPATHLEN+1);
 
@@ -376,7 +370,7 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
   ret = mkdir (configbuf, FREEIPMI_CONFIG_DIRECTORY_MODE);
   if (ret < 0 && errno != EEXIST)
     {
-      pstdout_fprintf(pstate,
+      PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "Cannot make cache directory: %s: %s\n",
                       configbuf,
@@ -394,7 +388,7 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
   ret = mkdir (cachebuf, FREEIPMI_CONFIG_DIRECTORY_MODE);
   if (ret < 0 && errno != EEXIST)
     {
-      pstdout_fprintf(pstate,
+      PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "Cannot make cache directory: %s: %s\n",
                       cachebuf,
@@ -439,8 +433,6 @@ sdr_cache_create_directory (pstdout_state_t pstate,
   char cachedirectorybuf[MAXPATHLEN+1];
   struct stat buf;
 
-  assert(pstate);
-
   if (sdr_cache_get_cache_directory (pstate,
                                      cache_dir,
                                      cachedirectorybuf,
@@ -472,7 +464,6 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(pstate);
   assert(ipmi_ctx);
   
   if (sdr_cache_create_directory (pstate, cache_dir) < 0)
@@ -508,7 +499,7 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                             quiet_cache ? NULL : _sdr_cache_create_callback,
                             quiet_cache ? NULL : (void *)&count) < 0)
     {
-      pstdout_fprintf(pstate,
+      PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "ipmi_sdr_cache_create: %s\n",
                       ipmi_sdr_cache_ctx_errormsg(ctx));
@@ -538,7 +529,6 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(pstate);
 
   memset(cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (sdr_cache_get_cache_filename(pstate,
@@ -559,7 +549,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
         {
           if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_INVALID)
             {
-              pstdout_fprintf(pstate,
+              PSTDOUT_FPRINTF(pstate,
                               stderr,
                               "SDR Cache '%s' invalid: Please flush the cache and regenerate it\n",
                               cachefilenamebuf);
@@ -567,7 +557,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
             }
           else if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
             {
-              pstdout_fprintf(pstate,
+              PSTDOUT_FPRINTF(pstate,
                               stderr,
                               "SDR Cache '%s' out of date: Please flush the cache and regenerate it\n",
                               cachefilenamebuf);
@@ -576,7 +566,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
             }
           else
             {
-              pstdout_fprintf(pstate,
+              PSTDOUT_FPRINTF(pstate,
                               stderr,
                               "ipmi_sdr_cache_open: %s: %s\n",
                               cachefilenamebuf,
@@ -604,7 +594,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                               ipmi_ctx,
                               cachefilenamebuf) < 0)
         {
-          pstdout_fprintf(pstate,
+          PSTDOUT_FPRINTF(pstate,
                           stderr,
                           "ipmi_sdr_cache_open: %s: %s\n",
                           cachefilenamebuf,
@@ -629,7 +619,6 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
   int rv = -1;
 
   assert(ctx);
-  assert(pstate);
 
   memset(cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (sdr_cache_get_cache_filename(pstate,
@@ -640,11 +629,11 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
     goto cleanup;
   
   if (!quiet_cache)
-    pstdout_printf (pstate, "Flushing cache: %s\n", cachefilenamebuf);
+    PSTDOUT_PRINTF (pstate, "Flushing cache: %s\n", cachefilenamebuf);
       
   if (ipmi_sdr_cache_delete(ctx, cachefilenamebuf) < 0)
     {
-      pstdout_fprintf(pstate,
+      PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "ipmi_sdr_cache_delete: %s\n",
                       ipmi_sdr_cache_ctx_errormsg(ctx));
