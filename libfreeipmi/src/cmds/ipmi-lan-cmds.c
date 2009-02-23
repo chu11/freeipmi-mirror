@@ -919,7 +919,7 @@ _fill_lan_mac_address(uint8_t parameter_selector,
           || parameter_selector == IPMI_LAN_PARAMETER_DEFAULT_GATEWAY_MAC_ADDRESS
           || parameter_selector == IPMI_LAN_PARAMETER_BACKUP_GATEWAY_MAC_ADDRESS)
          && IPMI_CHANNEL_NUMBER_VALID(channel_number)
-         && !fiid_obj_valid(obj_cmd_rq));
+         && fiid_obj_valid(obj_cmd_rq));
     
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
