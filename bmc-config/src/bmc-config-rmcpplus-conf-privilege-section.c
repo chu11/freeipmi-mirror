@@ -34,7 +34,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 static config_err_t
 _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
@@ -63,7 +63,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 
   if (!state_data->cipher_suite_entry_count)
     {
-      _FIID_OBJ_CREATE(obj_cmd_count_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs);
+      TOOL_FIID_OBJ_CREATE(obj_cmd_count_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs);
 
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (state_data->ipmi_ctx, 
 												   channel_number, 
@@ -77,12 +77,12 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
                             stderr,
                             "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support: %s\n",
                             ipmi_ctx_errormsg(state_data->ipmi_ctx));
-          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+          if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
-      _FIID_OBJ_GET (obj_cmd_count_rs, "cipher_suite_entry_count", &val);
+      TOOL_FIID_OBJ_GET (obj_cmd_count_rs, "cipher_suite_entry_count", &val);
 
       state_data->cipher_suite_entry_count = val;
 
@@ -92,7 +92,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 
   if (!state_data->cipher_suite_id_supported_set)
     {
-      _FIID_OBJ_CREATE(obj_cmd_id_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs);
+      TOOL_FIID_OBJ_CREATE(obj_cmd_id_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs);
 
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (state_data->ipmi_ctx, 
 											     channel_number, 
@@ -106,7 +106,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
                             stderr,
                             "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries: %s\n",
                             ipmi_ctx_errormsg(state_data->ipmi_ctx));
-          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+          if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -148,7 +148,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 	  else if (i == 15)
 	    field = "cipher_suite_id_entry_P";
 
-	  _FIID_OBJ_GET (obj_cmd_id_rs, field, &val);
+	  TOOL_FIID_OBJ_GET (obj_cmd_id_rs, field, &val);
 	  
 	  state_data->cipher_suite_id_supported[i] = val;
 	}
@@ -158,7 +158,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
   
   if (!state_data->cipher_suite_priv_set)
     {
-      _FIID_OBJ_CREATE(obj_cmd_priv_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs);
+      TOOL_FIID_OBJ_CREATE(obj_cmd_priv_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs);
 
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (state_data->ipmi_ctx, 
 												      channel_number, 
@@ -172,7 +172,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
                             stderr,
                             "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_level: %s\n",
                             ipmi_ctx_errormsg(state_data->ipmi_ctx));
-          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+          if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -214,7 +214,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 	  else if (i == 15)
 	    field = "maximum_privilege_for_cipher_suite_16";
 
-	  _FIID_OBJ_GET (obj_cmd_priv_rs, field, &val);
+	  TOOL_FIID_OBJ_GET (obj_cmd_priv_rs, field, &val);
 	  
 	  state_data->cipher_suite_priv[i] = val;
 	}
@@ -224,9 +224,9 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_count_rs);
-  _FIID_OBJ_DESTROY(obj_cmd_id_rs);
-  _FIID_OBJ_DESTROY(obj_cmd_priv_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_count_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_id_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_priv_rs);
   return (rv);
 }
 
@@ -282,7 +282,7 @@ id_commit (const char *section_name,
   if ((ret = _rmcpplus_cipher_suite_id_privilege_setup(state_data)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -321,7 +321,7 @@ id_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -330,7 +330,7 @@ id_commit (const char *section_name,
   rv = CONFIG_ERR_SUCCESS;
   
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

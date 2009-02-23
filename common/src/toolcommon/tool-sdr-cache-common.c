@@ -55,134 +55,9 @@
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
 
-#define MAXIPADDRLEN 128
-
-#define IPMI_SDR_RECORD_TYPE_FULL_SENSOR_RECORD                          0x0001
-#define IPMI_SDR_RECORD_TYPE_COMPACT_SENSOR_RECORD                       0x0002
-#define IPMI_SDR_RECORD_TYPE_EVENT_ONLY_RECORD                           0x0004
-#define IPMI_SDR_RECORD_TYPE_ENTITY_ASSOCIATION_RECORD                   0x0008     
-#define IPMI_SDR_RECORD_TYPE_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD   0x0010
-#define IPMI_SDR_RECORD_TYPE_GENERIC_DEVICE_LOCATOR_RECORD               0x0020
-#define IPMI_SDR_RECORD_TYPE_FRU_DEVICE_LOCATOR_RECORD                   0x0040
-#define IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD 0x0080
-#define IPMI_SDR_RECORD_TYPE_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD   0x0100
-#define IPMI_SDR_RECORD_TYPE_BMC_MESSAGE_CHANNEL_INFO_RECORD             0x0200
-#define IPMI_SDR_RECORD_TYPE_OEM_RECORD                                  0x0400
-
-#include "freeipmi/record-format/ipmi-sdr-record-format.h"
-#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
-#include "freeipmi/spec/ipmi-sensor-units-spec.h"
-#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
-#include "freeipmi/util/ipmi-sensor-util.h"
-
 #include "tool-sdr-cache-common.h"
-#include "tool-fiid-wrappers.h"
 
 #include "freeipmi-portability.h"
-
-/* achu:
- *
- * We don't have "state_data" so can't use most of the 
- * tool-fiid-wrappers.h.
- */
-
-#define _SDR_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                      \
-  do {                                                                   \
-    if (((__len) = fiid_template_len_bytes ((__tmpl))) < 0)              \
-      {                                                                  \
-        PSTDOUT_PERROR(pstate, "fiid_template_len_bytes");               \
-        goto cleanup;                                                    \
-      }                                                                  \
-  } while (0)
-
-#define _SDR_FIID_OBJ_CREATE(__obj, __tmpl)                              \
-  do {                                                                   \
-    if (!((__obj) = fiid_obj_create ((__tmpl))))                         \
-      {                                                                  \
-        PSTDOUT_PERROR(pstate, "fiid_obj_create");                       \
-        goto cleanup;                                                    \
-      }                                                                  \
-  } while (0)
-
-#define _SDR_FIID_OBJ_COPY(__obj_dest, __obj_src, __alt_tmpl)            \
-  do {                                                                   \
-    if (!((__obj_dest) = fiid_obj_copy ((__obj_src), (__alt_tmpl))))     \
-      {                                                                  \
-        PSTDOUT_FPRINTF(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_copy: %s\n",                           \
-                        fiid_obj_errormsg((__obj_src)));                 \
-        goto cleanup;                                                    \
-      }                                                                  \
-  } while (0)
-
-#define _SDR_FIID_OBJ_GET(__obj, __field, __val)                         \
-  do {                                                                   \
-    uint64_t __tmp_val = 0, *__val_ptr;                                  \
-    int8_t __ret;                                                        \
-    __val_ptr = (__val);                                                 \
-    if ((__ret = fiid_obj_get ((__obj), (__field), &__tmp_val)) < 0)     \
-      {                                                                  \
-        PSTDOUT_FPRINTF(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_get: %s\n",                            \
-                        fiid_obj_errormsg((__obj)));                     \
-        goto cleanup;                                                    \
-      }                                                                  \
-    if (!__ret)                                                          \
-      {                                                                  \
-        PSTDOUT_FPRINTF(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_get: field %s: no data\n",             \
-                        __field);                                        \
-        goto cleanup;                                                    \
-      }                                                                  \
-    *__val_ptr = __tmp_val;                                              \
-  } while (0)
-
-#define _SDR_FIID_OBJ_GET_DATA(__obj, __field, __data, __datalen)        \
-  do {                                                                   \
-    if (fiid_obj_get_data ((__obj),                                      \
-                           (__field),                                    \
-                           (__data),                                     \
-                           (__datalen)) < 0)                             \
-      {                                                                  \
-        PSTDOUT_FPRINTF(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_get_data: %s\n",                       \
-                        fiid_obj_errormsg((__obj)));                     \
-        goto cleanup;                                                    \
-      }                                                                  \
-  } while (0)
-
-#define _SDR_FIID_OBJ_GET_DATA_LEN(__len, __obj, __field, __data, __datalen) \
-  do {                                                                       \
-    if (((__len) = fiid_obj_get_data ((__obj),                               \
-                                      (__field),                             \
-                                      (__data),                              \
-                                      (__datalen))) < 0)                     \
-      {                                                                      \
-        PSTDOUT_FPRINTF(pstate,                                              \
-                        stderr,                                              \
-                        "fiid_obj_get_data: %s\n",                           \
-                        fiid_obj_errormsg((__obj)));                         \
-        goto cleanup;                                                        \
-      }                                                                      \
-  } while (0)
-
-#define _SDR_FIID_OBJ_SET_ALL(__obj, __data, __datalen)                  \
-  do {                                                                   \
-    if (fiid_obj_set_all ((__obj),                                       \
-                          (__data),                                      \
-                          (__datalen)) < 0)                              \
-      {                                                                  \
-        PSTDOUT_FPRINTF(pstate,                                          \
-                        stderr,                                          \
-                        "fiid_obj_set_all: %s\n",                        \
-                        fiid_obj_errormsg((__obj)));                     \
-        goto cleanup;                                                    \
-      }                                                                  \
-  } while (0)
 
 static int
 _get_home_directory (pstdout_state_t pstate,
@@ -667,12 +542,12 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                           ipmi_ctx,
                           cachefilenamebuf) < 0)
     {
-      if (ipmi_sdr_cache_ctx_errnum(ctx) != IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
-          && !((ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_INVALID
-                || ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE)
+      if (ipmi_sdr_cache_ctx_errnum(ctx) != IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
+          && !((ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_INVALID
+                || ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
                && sdr_cache_recreate))
         {
-          if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_INVALID)
+          if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_INVALID)
             {
               PSTDOUT_FPRINTF(pstate,
                               stderr,
@@ -680,7 +555,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
                               cachefilenamebuf);
               goto cleanup;
             }
-          else if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE)
+          else if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
             {
               PSTDOUT_FPRINTF(pstate,
                               stderr,
@@ -701,9 +576,9 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
         }
     }
 
-  if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
-      || ((ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_INVALID
-           || ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE)
+  if (ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
+      || ((ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_INVALID
+           || ipmi_sdr_cache_ctx_errnum(ctx) == IPMI_SDR_CACHE_ERR_CACHE_OUT_OF_DATE)
           && sdr_cache_recreate))
     {
       if (sdr_cache_create (ctx,

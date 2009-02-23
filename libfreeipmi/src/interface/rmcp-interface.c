@@ -29,8 +29,8 @@
 
 #include "freeipmi/interface/rmcp-interface.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "libcommon/ipmi-fill-util.h"
+#include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
 
@@ -48,18 +48,26 @@ fiid_template_t tmpl_rmcp_hdr =
 int8_t
 fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr) 
 {
-  ERR_EINVAL (RMCP_HDR_MESSAGE_CLASS_VALID(message_class)
-	      && fiid_obj_valid(obj_rmcp_hdr));
+  if (!RMCP_HDR_MESSAGE_CLASS_VALID(message_class)
+      || !fiid_obj_valid(obj_rmcp_hdr))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
+  if (Fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_rmcp_hdr);
-  FIID_OBJ_SET (obj_rmcp_hdr, "version", RMCP_VERSION_1_0);
-  FIID_OBJ_SET (obj_rmcp_hdr, "reserved", 0);
-  FIID_OBJ_SET (obj_rmcp_hdr, "sequence_number", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
-  FIID_OBJ_SET (obj_rmcp_hdr, "message_class.class", message_class);
-  FIID_OBJ_SET (obj_rmcp_hdr, "message_class.reserved", 0);
-  FIID_OBJ_SET (obj_rmcp_hdr, "message_class.ack", RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_NORMAL);
+  FILL_FIID_OBJ_CLEAR (obj_rmcp_hdr);
+  FILL_FIID_OBJ_SET (obj_rmcp_hdr, "version", RMCP_VERSION_1_0);
+  FILL_FIID_OBJ_SET (obj_rmcp_hdr, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_rmcp_hdr, "sequence_number", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
+  FILL_FIID_OBJ_SET (obj_rmcp_hdr, "message_class.class", message_class);
+  FILL_FIID_OBJ_SET (obj_rmcp_hdr, "message_class.reserved", 0);
+  FILL_FIID_OBJ_SET (obj_rmcp_hdr, "message_class.ack", RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_NORMAL);
   return 0;
 }
 
@@ -80,24 +88,64 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
 {
   int32_t obj_cmd_len, obj_rmcp_hdr_len;
 
-  ERR_EINVAL (fiid_obj_valid(obj_rmcp_hdr) 
-	      && fiid_obj_valid(obj_cmd)
-	      && pkt
-	      && pkt_len);
+  if (!fiid_obj_valid(obj_rmcp_hdr) 
+      || !fiid_obj_valid(obj_cmd)
+      || !pkt
+      || !pkt_len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
-  /* FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_asf_presence_ping); */
-  FIID_OBJ_PACKET_VALID(obj_rmcp_hdr);
-  FIID_OBJ_PACKET_VALID(obj_cmd);
+  if (Fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+  if (Fiid_obj_packet_valid(obj_rmcp_hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
+  if (Fiid_obj_packet_valid(obj_cmd) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_LEN_BYTES (obj_rmcp_hdr_len, obj_rmcp_hdr);
-  FIID_OBJ_LEN_BYTES (obj_cmd_len, obj_cmd);
+  if ((obj_rmcp_hdr_len = fiid_obj_len_bytes (obj_rmcp_hdr)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
+  if ((obj_cmd_len = fiid_obj_len_bytes (obj_cmd)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
 
-  ERR_EMSGSIZE (!(pkt_len < (obj_rmcp_hdr_len + obj_cmd_len)));
+  if (pkt_len < (obj_rmcp_hdr_len + obj_cmd_len))
+    {
+      SET_ERRNO(EMSGSIZE);
+      return (-1);
+    }
 
   memset (pkt, '\0', pkt_len);
-  FIID_OBJ_GET_ALL_LEN (obj_rmcp_hdr_len, obj_rmcp_hdr, pkt, pkt_len);
-  FIID_OBJ_GET_ALL_LEN (obj_cmd_len, obj_cmd, pkt + obj_rmcp_hdr_len, pkt_len - obj_rmcp_hdr_len);
+  if ((obj_rmcp_hdr_len = fiid_obj_get_all (obj_rmcp_hdr, 
+                                            pkt, 
+                                            pkt_len)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcp_hdr);
+      return (-1);
+    }
+  if ((obj_cmd_len = fiid_obj_get_all (obj_cmd, 
+                                       pkt + obj_rmcp_hdr_len, 
+                                       pkt_len - obj_rmcp_hdr_len)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
+
   return (obj_rmcp_hdr_len + obj_cmd_len);
 }  
 
@@ -107,20 +155,47 @@ unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fi
   uint32_t indx = 0;
   int32_t len;
 
-  ERR_EINVAL (pkt
-	      && fiid_obj_valid(obj_rmcp_hdr)
-	      && fiid_obj_valid(obj_cmd));
+  if (!pkt
+      || !fiid_obj_valid(obj_rmcp_hdr)
+      || !fiid_obj_valid(obj_cmd))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
-  /* FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_asf_presence_pong); */
+  if (Fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_SET_ALL_LEN(len, obj_rmcp_hdr, pkt + indx, pkt_len - indx);
+  if (fiid_obj_clear(obj_rmcp_hdr) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcp_hdr);
+      return (-1);
+    }
+
+  if ((len = fiid_obj_set_all(obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcp_hdr);
+      return (-1);
+    }
   indx += len;
 
   if (pkt_len <= indx)
     return 0;
 
-  FIID_OBJ_SET_ALL_LEN(len, obj_cmd, pkt + indx, pkt_len - indx);
+  if (fiid_obj_clear(obj_cmd) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
+
+  if ((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      return (-1);
+    }
   indx += len;
 
   return 0;

@@ -27,8 +27,7 @@
 #include "freeipmi/util/rmcp-util.h"
 #include "freeipmi/cmds/rmcp-cmds.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
 
@@ -38,15 +37,35 @@ ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag)
   uint64_t val;
   int32_t len;
 
-  ERR_EINVAL (fiid_obj_valid(pong));
+  if (!fiid_obj_valid(pong))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(pong, tmpl_cmd_asf_presence_pong);
+  if (Fiid_obj_template_compare(pong, tmpl_cmd_asf_presence_pong) < 0)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_FIELD_LEN (len, pong, "message_tag");
+  if ((len = fiid_obj_field_len(pong, "message_tag")) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(pong);
+      return (-1);
+    }
 
-  ERR_EINVAL (len);
+  if (!len)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_GET (pong, "message_tag", &val);
+  if (Fiid_obj_get (pong, "message_tag", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   if (message_tag == val)
     return 1;

@@ -34,7 +34,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 /* convenience struct */
 struct user_access {
@@ -101,7 +101,7 @@ _get_user_access(bmc_config_state_data_t *state_data,
                            &channel_number)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_user_access_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_user_access_rs);
 
   if (ipmi_cmd_get_user_access (state_data->ipmi_ctx,
                                 channel_number,
@@ -131,32 +131,32 @@ _get_user_access(bmc_config_state_data_t *state_data,
                                           IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
         (*username_not_set_yet) = 1;
 
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, "user_ipmi_messaging", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_ipmi_messaging", &val);
   ua->user_ipmi_messaging = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "user_link_authentication", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_link_authentication", &val);
   ua->user_link_authentication = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "user_restricted_to_callback", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_restricted_to_callback", &val);
   ua->user_restricted_to_callback = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "user_privilege_level_limit", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_privilege_level_limit", &val);
   ua->privilege_limit = val;
 
   /* XXX: no way to retrieve */
   ua->session_limit = 0;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "user_id_enable_status", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_id_enable_status", &val);
   ua->user_id_enable_status = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -184,7 +184,7 @@ _set_user_access (bmc_config_state_data_t *state_data,
                            &channel_number)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_access_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_access_rs);
 
   /* achu: special case, because the session limit cannot be
    * retrieved.  So if we're committing, we have to get the pre-loaded
@@ -216,14 +216,14 @@ _set_user_access (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_set_user_access: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -241,7 +241,7 @@ username_checkout (const char *section_name,
 
   userid = atoi (section_name + strlen ("User"));
 		    
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_user_name_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_user_name_rs);
 
   /* achu: *2 b/c of CONFIG_USERNAME_NOT_SET_YET_STR */
   memset(username, '\0', IPMI_MAX_USER_NAME_LENGTH*2+1);
@@ -255,7 +255,7 @@ username_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_user_name: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
 
       /* 
@@ -283,10 +283,10 @@ username_checkout (const char *section_name,
   if (userid == 1)
     strcpy ((char *)username, "NULL");
   else
-    _FIID_OBJ_GET_DATA (obj_cmd_rs,
-                        "user_name",
-                        username,
-                        IPMI_MAX_USER_NAME_LENGTH);
+    TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs,
+                            "user_name",
+                            username,
+                            IPMI_MAX_USER_NAME_LENGTH);
 
  got_data:
 
@@ -310,7 +310,7 @@ username_checkout (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -335,7 +335,7 @@ username_commit (const char *section_name,
         return CONFIG_ERR_NON_FATAL_ERROR;
     }
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_name_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_name_rs);
 
   if (ipmi_cmd_set_user_name (state_data->ipmi_ctx,
                               userid,
@@ -348,14 +348,14 @@ username_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_user_name: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -446,7 +446,7 @@ enable_user_commit (const char *section_name,
   uint8_t user_status;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
 
   if (same (kv->value_input, "yes"))
     user_status = IPMI_PASSWORD_OPERATION_ENABLE_USER;
@@ -488,7 +488,7 @@ enable_user_commit (const char *section_name,
                             stderr,
                             "ipmi_cmd_set_user_password: attempting workaround\n");
 
-          _FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_user_password_rq);
+          TOOL_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_user_password_rq);
 
           if (fill_cmd_set_user_password (userid,
                                           user_status,
@@ -498,10 +498,10 @@ enable_user_commit (const char *section_name,
             goto cleanup;
           
           /* Force the password to be filled in with a length */
-          _FIID_OBJ_SET_DATA (obj_cmd_rq,
-                              "password",
-                              (uint8_t *)password,
-                              IPMI_1_5_MAX_PASSWORD_LENGTH);
+          TOOL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+                                  "password",
+                                  (uint8_t *)password,
+                                  IPMI_1_5_MAX_PASSWORD_LENGTH);
           
           if (ipmi_cmd (state_data->ipmi_ctx,
                         IPMI_BMC_IPMB_LUN_BMC,
@@ -514,21 +514,21 @@ enable_user_commit (const char *section_name,
                                 stderr,
                                 "ipmi_cmd: %s\n",
                                 ipmi_ctx_errormsg(state_data->ipmi_ctx));
-              if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+              if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
                 rv = CONFIG_ERR_NON_FATAL_ERROR;
               goto cleanup;
             }
 
           if (ipmi_check_completion_code_success(obj_cmd_rs) != 1)
             {
-              if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+              if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
                 rv = CONFIG_ERR_NON_FATAL_ERROR;
               goto cleanup;
             }
         }
       else
         {
-          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+          if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }      
@@ -536,8 +536,8 @@ enable_user_commit (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rq);
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rq);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -554,7 +554,7 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
   assert(password);
   assert(is_same);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
 
   if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
                                   userid,
@@ -587,7 +587,7 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
                             stderr,
                             "ipmi_cmd_set_user_password: %s\n",
                             ipmi_ctx_errormsg(state_data->ipmi_ctx));
-          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+          if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
         }
       goto cleanup;
@@ -598,7 +598,7 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
  done:
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -651,7 +651,7 @@ password_commit (const char *section_name,
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
 
   if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
                                   userid,
@@ -665,14 +665,14 @@ password_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_user_password: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -701,7 +701,7 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
   assert(password);
   assert(is_same);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
 
   if (ipmi_cmd_set_user_password_v20 (state_data->ipmi_ctx,
                                       userid,
@@ -718,7 +718,7 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
                        "comp_code",
                        &comp_code) < 0)
         {
-          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+          if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -736,7 +736,7 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
                             stderr,
                             "ipmi_cmd_set_user_password_v20: %s\n",
                             ipmi_ctx_errormsg(state_data->ipmi_ctx));
-          if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+          if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
         }
       goto cleanup;
@@ -747,7 +747,7 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
  done:
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -813,7 +813,7 @@ password20_commit (const char *section_name,
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
 
   if (ipmi_cmd_set_user_password_v20 (state_data->ipmi_ctx,
                                       userid,
@@ -828,14 +828,14 @@ password20_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_user_password_v20: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 
 }
@@ -1164,7 +1164,7 @@ sol_payload_access_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_user_payload_access_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_user_payload_access_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -1182,7 +1182,7 @@ sol_payload_access_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_user_payload_access: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
 
       /*
@@ -1213,7 +1213,7 @@ sol_payload_access_checkout (const char *section_name,
     }
   
   /* standard_payload_1 is the SOL payload type */
-  _FIID_OBJ_GET (obj_cmd_rs, "standard_payload_1", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "standard_payload_1", &val);
   
   if (config_section_update_keyvalue_output(state_data->pstate,
                                             kv,
@@ -1223,7 +1223,7 @@ sol_payload_access_checkout (const char *section_name,
  out:
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -1240,7 +1240,7 @@ sol_payload_access_commit (const char *section_name,
   uint8_t channel_number;
   uint8_t operation;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_payload_access_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_payload_access_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -1279,14 +1279,14 @@ sol_payload_access_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_user_payload_access: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

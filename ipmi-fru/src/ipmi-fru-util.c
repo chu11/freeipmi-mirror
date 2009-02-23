@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.27 2009-01-30 18:04:10 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.28 2009-02-23 22:29:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -41,7 +41,7 @@
 #include "ipmi-fru-util.h"
 
 #include "freeipmi-portability.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 #define FRU_COUNT_TO_READ_BLOCK_SIZE  16
 
@@ -63,7 +63,7 @@ ipmi_fru_read_fru_data (ipmi_fru_state_data_t *state_data,
   assert(frubuflen);
   assert(fru_read_bytes <= frubuflen);
 
-  _FIID_OBJ_CREATE(fru_read_data_rs, tmpl_cmd_read_fru_data_rs);
+  TOOL_FIID_OBJ_CREATE(fru_read_data_rs, tmpl_cmd_read_fru_data_rs);
 
   if ((offset_in_bytes + fru_read_bytes) > state_data->fru_inventory_area_size)
     {
@@ -82,7 +82,7 @@ ipmi_fru_read_fru_data (ipmi_fru_state_data_t *state_data,
 
       memset(buf, '\0', FRU_BUF_LEN+1);
 
-      _FIID_OBJ_CLEAR(fru_read_data_rs);
+      TOOL_FIID_OBJ_CLEAR(fru_read_data_rs);
 
       if ((fru_read_bytes - num_bytes_read) < FRU_COUNT_TO_READ_BLOCK_SIZE)
         count_to_read = fru_read_bytes - num_bytes_read;
@@ -107,9 +107,9 @@ ipmi_fru_read_fru_data (ipmi_fru_state_data_t *state_data,
           goto cleanup;
         }
         
-      _FIID_OBJ_GET (fru_read_data_rs, 
-                     "count_returned",
-                     &count_returned);
+      TOOL_FIID_OBJ_GET (fru_read_data_rs, 
+                         "count_returned",
+                         &count_returned);
 
       if (!count_returned)
         {
@@ -121,11 +121,11 @@ ipmi_fru_read_fru_data (ipmi_fru_state_data_t *state_data,
           goto cleanup;
         }
 
-      _FIID_OBJ_GET_DATA_LEN(len,
-                             fru_read_data_rs,
-                             "requested_data",
-                             buf,
-                             FRU_BUF_LEN);
+      TOOL_FIID_OBJ_GET_DATA_LEN(len,
+                                 fru_read_data_rs,
+                                 "requested_data",
+                                 buf,
+                                 FRU_BUF_LEN);
       
       if (count_returned != len)
         {
@@ -145,7 +145,7 @@ ipmi_fru_read_fru_data (ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(fru_read_data_rs);
+  TOOL_FIID_OBJ_DESTROY(fru_read_data_rs);
   return rv;
 }
 
@@ -510,7 +510,7 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
   assert(str);
   assert(info_area_length);
   
-  _FIID_TEMPLATE_LEN_BYTES(info_area_header_len, tmpl_fru_info_area_header);
+  TOOL_FIID_TEMPLATE_LEN_BYTES(info_area_header_len, tmpl_fru_info_area_header);
   
   if ((offset_in_bytes + info_area_header_len) > state_data->fru_inventory_area_size)
     {
@@ -533,20 +533,20 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(fru_info_area_header, tmpl_fru_info_area_header);
+  TOOL_FIID_OBJ_CREATE(fru_info_area_header, tmpl_fru_info_area_header);
 
-  _FIID_OBJ_SET_ALL_LEN(len, 
-                        fru_info_area_header, 
-                        frubuf,
-                        info_area_header_len);
+  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
+                            fru_info_area_header, 
+                            frubuf,
+                            info_area_header_len);
 
-  _FIID_OBJ_GET (fru_info_area_header,
-                 "format_version",
-                 &format_version);
+  TOOL_FIID_OBJ_GET (fru_info_area_header,
+                     "format_version",
+                     &format_version);
 
-  _FIID_OBJ_GET (fru_info_area_header, 
-                 "info_area_length", 
-                 info_area_length);
+  TOOL_FIID_OBJ_GET (fru_info_area_header, 
+                     "info_area_length", 
+                     info_area_length);
   
   if (state_data->prog_data->args->verbose_count >= 2)
     {
@@ -589,7 +589,7 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
   
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(fru_info_area_header);
+  TOOL_FIID_OBJ_DESTROY(fru_info_area_header);
   return (rv);
 }
 

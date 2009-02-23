@@ -38,10 +38,12 @@
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
 
-#include "ipmi-ctx.h"
-#include "ipmi-err-wrappers-api.h"
-#include "ipmi-fiid-wrappers-api.h"
+#include "ipmi-api-defs.h"
+#include "ipmi-api-trace.h"
+#include "ipmi-api-util.h"
 #include "ipmi-lan-session-common.h"
+
+#include "libcommon/ipmi-fiid-util.h"
 
 #include "freeipmi-portability.h"
 
@@ -57,38 +59,42 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
 	      fiid_obj_t obj_cmd_rs)
 {
   uint8_t authentication_type;
-  uint32_t internal_workaround_flags = 0;
+  unsigned int internal_workaround_flags = 0;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_LAN)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
   if (!ctx->io.outofband.sockfd)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
   
-  API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
+  if (api_fiid_obj_packet_valid(ctx, obj_cmd_rq) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
   
   if (ctx->type != IPMI_DEVICE_LAN)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -125,23 +131,23 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
   int rv = -1;
   int32_t len;
   uint8_t authentication_type;
-  uint32_t internal_workaround_flags = 0;
+  unsigned int internal_workaround_flags = 0;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_LAN)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
   if (!ctx->io.outofband.sockfd)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
@@ -150,18 +156,26 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
       || !buf_rs
       || !buf_rs_len)
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_LAN)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_lan_raw);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_lan_raw);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_lan_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_lan_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all (obj_cmd_rq,
                         buf_rq,
@@ -199,8 +213,8 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
   rv = len;
 
  cleanup:
-  API_FIID_OBJ_DESTROY (obj_cmd_rq);
-  API_FIID_OBJ_DESTROY (obj_cmd_rs);
+  FIID_OBJ_DESTROY (obj_cmd_rq);
+  FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }
 
@@ -214,34 +228,38 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_LAN_2_0)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
   if (!ctx->io.outofband.sockfd)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
  
-  API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
+  if (api_fiid_obj_packet_valid(ctx, obj_cmd_rq) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
   
   if (ctx->type != IPMI_DEVICE_LAN_2_0)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -288,19 +306,19 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_LAN_2_0)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
   if (!ctx->io.outofband.sockfd)
     {
-      API_SET_ERRNUM(IPMI_ERR_DEVICE_NOT_OPEN);
+      API_SET_ERRNUM(ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
 
@@ -309,18 +327,26 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
       || !buf_rs
       || !buf_rs_len)
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }   
 
   if (ctx->type != IPMI_DEVICE_LAN_2_0)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rq, tmpl_lan_raw);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_lan_raw);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_lan_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_lan_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all (obj_cmd_rq,
                         buf_rq,
@@ -367,7 +393,7 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
   rv = len;
 
  cleanup:
-  API_FIID_OBJ_DESTROY (obj_cmd_rq);
-  API_FIID_OBJ_DESTROY (obj_cmd_rs);
+  FIID_OBJ_DESTROY (obj_cmd_rq);
+  FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }

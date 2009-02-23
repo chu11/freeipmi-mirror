@@ -77,6 +77,7 @@ ipmi_open(const char *progname,
           unsigned int errmsglen)
 {
   ipmi_ctx_t ipmi_ctx = NULL;
+  ipmi_locate_ctx_t locate_ctx = NULL;
   unsigned int workaround_flags;
 
   if (!(ipmi_ctx = ipmi_ctx_create()))
@@ -84,6 +85,15 @@ ipmi_open(const char *progname,
       snprintf(errmsg, 
                errmsglen, 
                "ipmi_ctx_create: %s",
+               strerror(errno));
+      goto cleanup;
+    }
+
+  if (!(locate_ctx = ipmi_locate_ctx_create()))
+    {
+      snprintf(errmsg, 
+               errmsglen, 
+               "ipmi_locate_ctx_create: %s",
                strerror(errno));
       goto cleanup;
     }
@@ -195,7 +205,7 @@ ipmi_open(const char *progname,
         }
 
       if (cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
-        {
+        {         
           struct ipmi_locate_info locate_info;
 
           /* achu: 
@@ -211,7 +221,9 @@ ipmi_open(const char *progname,
            * excessive early probing).  It's a justified cost to me.
            */
           
-          if (!ipmi_locate_discover_device_info (IPMI_INTERFACE_KCS, &locate_info))
+          if (!ipmi_locate_discover_device_info (locate_ctx,
+                                                 IPMI_INTERFACE_KCS,
+                                                 &locate_info))
             {
               if (!(ipmi_ctx_open_inband (ipmi_ctx,
                                           IPMI_DEVICE_KCS,
@@ -224,7 +236,9 @@ ipmi_open(const char *progname,
                 goto out;
             }
 
-          if (!ipmi_locate_discover_device_info (IPMI_INTERFACE_SSIF, &locate_info))
+          if (!ipmi_locate_discover_device_info (locate_ctx,
+                                                 IPMI_INTERFACE_SSIF, 
+                                                 &locate_info))
             {
               if (!(ipmi_ctx_open_inband (ipmi_ctx,
                                           IPMI_DEVICE_SSIF,
@@ -311,6 +325,8 @@ ipmi_open(const char *progname,
     }
 
  out:
+  if (locate_ctx)
+    ipmi_locate_ctx_destroy(locate_ctx);
   return ipmi_ctx;
 
  cleanup:
@@ -319,6 +335,8 @@ ipmi_open(const char *progname,
       ipmi_ctx_close (ipmi_ctx);
       ipmi_ctx_destroy (ipmi_ctx);
     }
+  if (locate_ctx)
+    ipmi_locate_ctx_destroy(locate_ctx);
   return NULL;
 }              
 

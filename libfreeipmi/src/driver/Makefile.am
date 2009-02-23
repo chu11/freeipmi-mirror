@@ -1,4 +1,5 @@
 noinst_HEADERS = \
+	ipmi-driver-trace.h \
 	ipmi-semaphores.h
 
 noinst_LTLIBRARIES = libdriver.la

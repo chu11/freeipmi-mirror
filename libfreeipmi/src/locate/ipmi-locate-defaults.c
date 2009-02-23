@@ -33,26 +33,36 @@
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "ipmi-locate-defs.h"
+#include "ipmi-locate-trace.h"
+#include "ipmi-locate-util.h"
 
 #include "freeipmi-portability.h"
 
 /* achu: Used to be in ipmi-smic-api.h, but that is now removed. */
 #define IPMI_SMIC_SMS_IO_BASE_DEFAULT    0x0CA9
 
-static int
-_ipmi_locate_defaults_get_device_info (int *locate_errnum,
-                                       ipmi_interface_type_t type,
-                                       struct ipmi_locate_info *info)
+int
+ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
+                                      ipmi_interface_type_t type,
+                                      struct ipmi_locate_info *info)
 {
   struct ipmi_locate_info linfo;
 
-  assert(locate_errnum);
+  if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
+    {
+      ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+      return (-1);
+    }
 
-  LOCATE_ERR_PARAMETERS ((type == IPMI_INTERFACE_KCS
-                          || type == IPMI_INTERFACE_SMIC
-                          || type == IPMI_INTERFACE_SSIF) 
-                         && info);
+  if ((type != IPMI_INTERFACE_KCS
+       && type != IPMI_INTERFACE_SMIC
+       && type != IPMI_INTERFACE_SSIF) 
+      || !info)
+    {
+      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_PARAMETERS);
+      return (-1);
+    }
   
   memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
   linfo.interface_type = type;
@@ -90,27 +100,9 @@ _ipmi_locate_defaults_get_device_info (int *locate_errnum,
       break;
     default:
       /* Should not reach */
-      ERR_EXIT(0);
+      assert(0);
     }
 
   memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
-  return 0;
-}
-
-int
-ipmi_locate_defaults_get_device_info (ipmi_interface_type_t type,
-                                      struct ipmi_locate_info *info)
-{
-  int errnum;
-  int *locate_errnum;
-
-  locate_errnum = &errnum;
-
-  if (_ipmi_locate_defaults_get_device_info(&errnum, type, info) < 0)
-    {
-      if (!errnum)
-        LOCATE_ERRNUM_SET(IPMI_LOCATE_ERR_INTERNAL_ERROR);
-      return errnum;
-    }
   return 0;
 }

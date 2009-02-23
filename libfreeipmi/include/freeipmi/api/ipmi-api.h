@@ -74,9 +74,8 @@ enum ipmi_errnum
     IPMI_ERR_DRIVER_PATH_REQUIRED = 32,
     IPMI_ERR_IPMI_ERROR = 33,
     IPMI_ERR_SYSTEM_ERROR = 34,
-    IPMI_ERR_LIBRARY_ERROR = 35,
-    IPMI_ERR_INTERNAL_ERROR = 36,
-    IPMI_ERR_ERRNUMRANGE = 37,
+    IPMI_ERR_INTERNAL_ERROR = 35,
+    IPMI_ERR_ERRNUMRANGE = 36,
   };
 typedef enum ipmi_errnum ipmi_errnum_type_t;
 
@@ -128,8 +127,8 @@ int ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                              uint8_t privilege_level,
                              unsigned int session_timeout,
                              unsigned int retransmission_timeout, 
-                             uint32_t workaround_flags,
-                             uint32_t flags);
+                             unsigned int workaround_flags,
+                             unsigned int flags);
 
 int ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                                  const char *hostname,
@@ -141,8 +140,8 @@ int ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                                  uint8_t cipher_suite_id,
                                  unsigned int session_timeout,
                                  unsigned int retransmission_timeout, 
-                                 uint32_t workaround_flags,
-                                 uint32_t flags);
+                                 unsigned int workaround_flags,
+                                 unsigned int flags);
 
 int ipmi_ctx_open_inband (ipmi_ctx_t ctx,
                           ipmi_driver_type_t driver_type, 
@@ -150,8 +149,8 @@ int ipmi_ctx_open_inband (ipmi_ctx_t ctx,
                           uint16_t driver_address, 
                           uint8_t register_spacing,
                           char *driver_device, 
-                          uint32_t workaround_flags,
-                          uint32_t flags);
+                          unsigned int workaround_flags,
+                          unsigned int flags);
 
 int ipmi_cmd (ipmi_ctx_t ctx, 
 	      uint8_t lun, 

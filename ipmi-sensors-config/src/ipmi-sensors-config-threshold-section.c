@@ -33,7 +33,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 #include "tool-sdr-cache-common.h"
 
 /* 3% range is what we'll go with right now */
@@ -273,7 +273,7 @@ threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_thresholds_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_thresholds_rs);
 
   if (ipmi_cmd_get_sensor_thresholds (state_data->ipmi_ctx,
                                       sensor_number,
@@ -285,7 +285,7 @@ threshold_checkout (const char *section_name,
                         "ipmi_cmd_get_sensor_thresholds: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
 
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
 
       /*
@@ -341,7 +341,7 @@ threshold_checkout (const char *section_name,
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  _FIID_OBJ_GET (obj_cmd_rs, readable_str, &readable);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, readable_str, &readable);
 
   if (!readable)
     {
@@ -356,7 +356,7 @@ threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, threshold_str, &threshold_raw);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, threshold_str, &threshold_raw);
 
   if ((ret = _decode_value(state_data,
                            sdr_record,
@@ -375,7 +375,7 @@ threshold_checkout (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -446,7 +446,7 @@ threshold_commit (const char *section_name,
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sensor_thresholds_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sensor_thresholds_rs);
 
   if (ipmi_cmd_set_sensor_thresholds (state_data->ipmi_ctx,
                                       sensor_number,
@@ -463,14 +463,14 @@ threshold_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_sensor_thresholds: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -488,7 +488,7 @@ _get_hysteresis (ipmi_sensors_config_state_data_t *state_data,
   assert(positive_going_threshold_hysteresis_value);
   assert(negative_going_threshold_hysteresis_value);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_hysteresis_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_hysteresis_rs);
 
   if (ipmi_cmd_get_sensor_hysteresis (state_data->ipmi_ctx,
                                       sensor_number,
@@ -500,20 +500,20 @@ _get_hysteresis (ipmi_sensors_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_get_sensor_hysteresis: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
-  _FIID_OBJ_GET (obj_cmd_rs, "positive_going_threshold_hysteresis_value", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "positive_going_threshold_hysteresis_value", &val);
   *positive_going_threshold_hysteresis_value = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "negative_going_threshold_hysteresis_value", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "negative_going_threshold_hysteresis_value", &val);
   *negative_going_threshold_hysteresis_value = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -725,7 +725,7 @@ hysteresis_threshold_commit (const char *section_name,
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sensor_hysteresis_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sensor_hysteresis_rs);
 
   if (ipmi_cmd_set_sensor_hysteresis (state_data->ipmi_ctx,
                                       sensor_number,
@@ -739,14 +739,14 @@ hysteresis_threshold_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_sensor_hysteresis: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

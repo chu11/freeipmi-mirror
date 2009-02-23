@@ -24,22 +24,22 @@
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/sdr-cache/ipmi-sdr-cache.h>
 
-#define IPMI_SEL_PARSE_CTX_ERR_SUCCESS                                 0
-#define IPMI_SEL_PARSE_CTX_ERR_CONTEXT_NULL                            1
-#define IPMI_SEL_PARSE_CTX_ERR_CONTEXT_INVALID                         2
-#define IPMI_SEL_PARSE_CTX_ERR_PARAMETERS                              3
-#define IPMI_SEL_PARSE_CTX_ERR_OUT_OF_MEMORY                           4
-#define IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR                         5
-#define IPMI_SEL_PARSE_CTX_ERR_NO_SEL_ENTRIES                          6
-#define IPMI_SEL_PARSE_CTX_ERR_SEL_ENTRIES_LIST_END                    7
-#define IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY                       8
-#define IPMI_SEL_PARSE_CTX_ERR_NOT_FOUND                               9
-#define IPMI_SEL_PARSE_CTX_ERR_CALLBACK_ERROR                         10
-#define IPMI_SEL_PARSE_CTX_ERR_IPMI_ERROR                             11 
-#define IPMI_SEL_PARSE_CTX_ERR_SYSTEM_ERROR                           12
-#define IPMI_SEL_PARSE_CTX_ERR_OVERFLOW                               13
-#define IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR                         14
-#define IPMI_SEL_PARSE_CTX_ERR_ERRNUMRANGE                            15
+#define IPMI_SEL_PARSE_ERR_SUCCESS                                 0
+#define IPMI_SEL_PARSE_ERR_CONTEXT_NULL                            1
+#define IPMI_SEL_PARSE_ERR_CONTEXT_INVALID                         2
+#define IPMI_SEL_PARSE_ERR_PARAMETERS                              3
+#define IPMI_SEL_PARSE_ERR_OUT_OF_MEMORY                           4
+#define IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR                         5
+#define IPMI_SEL_PARSE_ERR_NO_SEL_ENTRIES                          6
+#define IPMI_SEL_PARSE_ERR_SEL_ENTRIES_LIST_END                    7
+#define IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY                       8
+#define IPMI_SEL_PARSE_ERR_NOT_FOUND                               9
+#define IPMI_SEL_PARSE_ERR_CALLBACK_ERROR                         10
+#define IPMI_SEL_PARSE_ERR_IPMI_ERROR                             11 
+#define IPMI_SEL_PARSE_ERR_SYSTEM_ERROR                           12
+#define IPMI_SEL_PARSE_ERR_OVERFLOW                               13
+#define IPMI_SEL_PARSE_ERR_INTERNAL_ERROR                         14
+#define IPMI_SEL_PARSE_ERR_ERRNUMRANGE                            15
 
 #define IPMI_SEL_PARSE_FLAGS_DEFAULT                              0x0000
 #define IPMI_SEL_PARSE_FLAGS_DEBUG_DUMP                           0x0001
@@ -107,7 +107,7 @@ int ipmi_sel_parse_seek_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
 int ipmi_sel_parse_search_record_id(ipmi_sel_parse_ctx_t ctx, uint16_t record_id);
 
 /* SEL read functions - can be used after sel parsed or within callbacks 
- * - will return IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY if current sel entry
+ * - will return IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY if current sel entry
  *   is not appropriate for data requested.
  */
 

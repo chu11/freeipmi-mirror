@@ -34,7 +34,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 /* convenience structs */
 
@@ -64,7 +64,7 @@ _get_connection_mode (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(cm);
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_serial_modem_configuration_connection_mode_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_serial_modem_configuration_connection_mode_rs);
 
   if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -84,26 +84,26 @@ _get_connection_mode (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_get_serial_modem_configuration_connection_mode: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
-  _FIID_OBJ_GET (obj_cmd_rs, "basic_mode", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "basic_mode", &val);
   cm->basic_mode = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "ppp_mode", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "ppp_mode", &val);
   cm->ppp_mode = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "terminal_mode", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "terminal_mode", &val);
   cm->terminal_mode = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "connect_mode", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "connect_mode", &val);
   cm->connect_mode = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -119,7 +119,7 @@ _set_connection_mode (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(cm);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_serial_modem_configuration_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_serial_modem_configuration_rs);
   
   if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -140,14 +140,14 @@ _set_connection_mode (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_set_serial_modem_configuration_connection_mode: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
    
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -311,7 +311,7 @@ page_blackout_interval_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_serial_modem_configuration_page_blackout_interval_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_serial_modem_configuration_page_blackout_interval_rs);
 
   if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -331,12 +331,12 @@ page_blackout_interval_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_serial_modem_configuration_page_blackout_interval: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
-  _FIID_OBJ_GET (obj_cmd_rs, "page_blackout_interval", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "page_blackout_interval", &val);
 
   if (config_section_update_keyvalue_output_int(state_data->pstate,
                                                 kv,
@@ -345,7 +345,7 @@ page_blackout_interval_checkout (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 
 }
@@ -361,7 +361,7 @@ page_blackout_interval_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_serial_modem_configuration_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_serial_modem_configuration_rs);
 
   if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -379,14 +379,14 @@ page_blackout_interval_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_serial_modem_configuration_page_blackout_interval: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);	
 }
 
@@ -402,7 +402,7 @@ call_retry_interval_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_serial_modem_configuration_call_retry_interval_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_serial_modem_configuration_call_retry_interval_rs);
 
   if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -422,12 +422,12 @@ call_retry_interval_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_serial_modem_configuration_call_retry_interval: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
-  _FIID_OBJ_GET (obj_cmd_rs, "call_retry_interval", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "call_retry_interval", &val);
 
   if (config_section_update_keyvalue_output_int(state_data->pstate,
                                                 kv,
@@ -436,7 +436,7 @@ call_retry_interval_checkout (const char *section_name,
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -451,7 +451,7 @@ call_retry_interval_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_serial_modem_configuration_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_serial_modem_configuration_rs);
 
   if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -469,14 +469,14 @@ call_retry_interval_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_serial_modem_configuration_call_retry_interval: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);	
 }
 
@@ -493,7 +493,7 @@ _get_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(cs);
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings_rs);
 
   if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -513,23 +513,23 @@ _get_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
-  _FIID_OBJ_GET (obj_cmd_rs, "dtr_hangup", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "dtr_hangup", &val);
   cs->dtr_hangup = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "flow_control", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "flow_control", &val);
   cs->flow_control = val;
   
-  _FIID_OBJ_GET (obj_cmd_rs, "bit_rate", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bit_rate", &val);
   cs->bit_rate = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -545,7 +545,7 @@ _set_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(cs);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_serial_modem_configuration_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_serial_modem_configuration_rs);
 
   if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -565,14 +565,14 @@ _set_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);	
 }
 

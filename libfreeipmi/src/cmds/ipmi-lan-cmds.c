@@ -31,8 +31,9 @@
 #include "freeipmi/spec/ipmi-lan-parameter-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-util.h"
+#include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
 
@@ -690,26 +691,34 @@ fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                            uint8_t configuration_parameter_data_len,
 					   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && configuration_parameter_data
-	      && configuration_parameter_data_len
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !configuration_parameter_data
+      || !configuration_parameter_data_len
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, 
-		"cmd", 
-		IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, 
+                     "cmd", 
+                     IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
   
-  FIID_OBJ_SET_DATA (obj_cmd_rq, 
-                     "configuration_parameter_data", 
-                     configuration_parameter_data,
-                     configuration_parameter_data_len);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, 
+                          "configuration_parameter_data", 
+                          configuration_parameter_data,
+                          configuration_parameter_data_len);
   
   return 0;
 }
@@ -743,76 +752,84 @@ fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t c
                                                                        uint8_t oem_level_oem_proprietary,
                                                                        fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_none)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_md2)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_md5)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_straight_password)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_oem_proprietary)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_none)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_md2)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_md5)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_straight_password)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_oem_proprietary)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_none)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_md2)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_md5)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_straight_password)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_oem_proprietary)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_none)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_md2)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_md5)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_straight_password)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_oem_proprietary)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_none)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_md2)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_md5)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_straight_password)
-	      && IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_oem_proprietary)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_oem_proprietary)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_authentication_type_enables_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_authentication_type_enables_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_AUTHENTICATION_TYPE_ENABLES);
-  FIID_OBJ_SET (obj_cmd_rq, "callback_level.none", callback_level_none);
-  FIID_OBJ_SET (obj_cmd_rq, "callback_level.md2", callback_level_md2);
-  FIID_OBJ_SET (obj_cmd_rq, "callback_level.md5", callback_level_md5);
-  FIID_OBJ_SET (obj_cmd_rq, "callback_level.reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "callback_level.straight_password", callback_level_straight_password);
-  FIID_OBJ_SET (obj_cmd_rq, "callback_level.oem_proprietary", callback_level_oem_proprietary);
-  FIID_OBJ_SET (obj_cmd_rq, "callback_level.reserved2", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "user_level.none", user_level_none);
-  FIID_OBJ_SET (obj_cmd_rq, "user_level.md2", user_level_md2);
-  FIID_OBJ_SET (obj_cmd_rq, "user_level.md5", user_level_md5);
-  FIID_OBJ_SET (obj_cmd_rq, "user_level.reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "user_level.straight_password", user_level_straight_password);
-  FIID_OBJ_SET (obj_cmd_rq, "user_level.oem_proprietary", user_level_oem_proprietary);
-  FIID_OBJ_SET (obj_cmd_rq, "user_level.reserved2", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "operator_level.none", operator_level_none);
-  FIID_OBJ_SET (obj_cmd_rq, "operator_level.md2", operator_level_md2);
-  FIID_OBJ_SET (obj_cmd_rq, "operator_level.md5", operator_level_md5);
-  FIID_OBJ_SET (obj_cmd_rq, "operator_level.reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "operator_level.straight_password", operator_level_straight_password);
-  FIID_OBJ_SET (obj_cmd_rq, "operator_level.oem_proprietary", operator_level_oem_proprietary);
-  FIID_OBJ_SET (obj_cmd_rq, "operator_level.reserved2", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "admin_level.none", admin_level_none);
-  FIID_OBJ_SET (obj_cmd_rq, "admin_level.md2", admin_level_md2);
-  FIID_OBJ_SET (obj_cmd_rq, "admin_level.md5", admin_level_md5);
-  FIID_OBJ_SET (obj_cmd_rq, "admin_level.reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "admin_level.straight_password", admin_level_straight_password);
-  FIID_OBJ_SET (obj_cmd_rq, "admin_level.oem_proprietary", admin_level_oem_proprietary);
-  FIID_OBJ_SET (obj_cmd_rq, "admin_level.reserved2", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "oem_level.none", oem_level_none);
-  FIID_OBJ_SET (obj_cmd_rq, "oem_level.md2", oem_level_md2);
-  FIID_OBJ_SET (obj_cmd_rq, "oem_level.md5", oem_level_md5);
-  FIID_OBJ_SET (obj_cmd_rq, "oem_level.reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "oem_level.straight_password", oem_level_straight_password);
-  FIID_OBJ_SET (obj_cmd_rq, "oem_level.oem_proprietary", oem_level_oem_proprietary);
-  FIID_OBJ_SET (obj_cmd_rq, "oem_level.reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_AUTHENTICATION_TYPE_ENABLES);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "callback_level.none", callback_level_none);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "callback_level.md2", callback_level_md2);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "callback_level.md5", callback_level_md5);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "callback_level.reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "callback_level.straight_password", callback_level_straight_password);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "callback_level.oem_proprietary", callback_level_oem_proprietary);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "callback_level.reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_level.none", user_level_none);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_level.md2", user_level_md2);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_level.md5", user_level_md5);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_level.reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_level.straight_password", user_level_straight_password);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_level.oem_proprietary", user_level_oem_proprietary);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_level.reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operator_level.none", operator_level_none);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operator_level.md2", operator_level_md2);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operator_level.md5", operator_level_md5);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operator_level.reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operator_level.straight_password", operator_level_straight_password);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operator_level.oem_proprietary", operator_level_oem_proprietary);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operator_level.reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "admin_level.none", admin_level_none);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "admin_level.md2", admin_level_md2);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "admin_level.md5", admin_level_md5);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "admin_level.reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "admin_level.straight_password", admin_level_straight_password);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "admin_level.oem_proprietary", admin_level_oem_proprietary);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "admin_level.reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_level.none", oem_level_none);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_level.md2", oem_level_md2);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_level.md5", oem_level_md5);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_level.reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_level.straight_password", oem_level_straight_password);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_level.oem_proprietary", oem_level_oem_proprietary);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_level.reserved2", 0);
   return 0;
 }
 
@@ -828,12 +845,12 @@ _fill_lan_ip(uint8_t parameter_selector,
          && IPMI_CHANNEL_NUMBER_VALID(channel_number)
          && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
-  FIID_OBJ_SET (obj_cmd_rq, "ip_address", ip_address);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "ip_address", ip_address);
 
   return (0);
 }
@@ -843,10 +860,18 @@ fill_cmd_set_lan_configuration_parameters_ip_address (uint8_t channel_number,
                                                       uint32_t ip_address,
                                                       fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ip_address_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ip_address_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return (_fill_lan_ip(IPMI_LAN_PARAMETER_IP_ADDRESS,
                        channel_number,
@@ -859,19 +884,27 @@ fill_cmd_set_lan_configuration_parameters_ip_address_source (uint8_t channel_num
                                                              uint8_t ip_address_source,
                                                              fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && IPMI_IP_ADDRESS_SOURCE_VALID(ip_address_source)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_IP_ADDRESS_SOURCE_VALID(ip_address_source)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ip_address_source_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ip_address_source_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_IP_ADDRESS_SOURCE);
-  FIID_OBJ_SET (obj_cmd_rq, "ip_address_source", ip_address_source);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_IP_ADDRESS_SOURCE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "ip_address_source", ip_address_source);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
   return 0;
 }
@@ -887,13 +920,13 @@ _fill_lan_mac_address(uint8_t parameter_selector,
           || parameter_selector == IPMI_LAN_PARAMETER_BACKUP_GATEWAY_MAC_ADDRESS)
          && IPMI_CHANNEL_NUMBER_VALID(channel_number)
          && fiid_obj_valid(obj_cmd_rq));
-         
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
-  FIID_OBJ_SET (obj_cmd_rq, "mac_address", mac_address);
+    
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "mac_address", mac_address);
 
   return (0);
 }
@@ -903,10 +936,18 @@ fill_cmd_set_lan_configuration_parameters_mac_address (uint8_t channel_number,
                                                        uint64_t mac_address,
                                                        fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_mac_address_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_mac_address_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return (_fill_lan_mac_address(IPMI_LAN_PARAMETER_MAC_ADDRESS,
                                 channel_number,
@@ -919,17 +960,25 @@ fill_cmd_set_lan_configuration_parameters_subnet_mask (uint8_t channel_number,
                                                        uint32_t subnet_mask,
                                                        fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_subnet_mask_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_subnet_mask_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_SUBNET_MASK);
-  FIID_OBJ_SET (obj_cmd_rq, "subnet_mask", subnet_mask);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_SUBNET_MASK);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "subnet_mask", subnet_mask);
   
   return 0;
 }
@@ -940,21 +989,29 @@ fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (uint8_t cha
                                                                      uint8_t bmc_generated_arp_responses,
                                                                      fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(bmc_generated_gratuitous_arps)
-	      && IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(bmc_generated_arp_responses)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(bmc_generated_gratuitous_arps)
+      || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(bmc_generated_arp_responses)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_bmc_generated_arp_control_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_bmc_generated_arp_control_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_BMC_GENERATED_ARP_CONTROL);
-  FIID_OBJ_SET (obj_cmd_rq, "bmc_generated_gratuitous_arps", bmc_generated_gratuitous_arps);
-  FIID_OBJ_SET (obj_cmd_rq, "bmc_generated_arp_responses", bmc_generated_arp_responses);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_BMC_GENERATED_ARP_CONTROL);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "bmc_generated_gratuitous_arps", bmc_generated_gratuitous_arps);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "bmc_generated_arp_responses", bmc_generated_arp_responses);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
   return 0;
 }
@@ -964,17 +1021,25 @@ fill_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (uint8_t chann
                                                                    uint8_t gratuitous_arp_interval,
                                                                    fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number) 
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number) 
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_gratuitous_arp_interval_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_gratuitous_arp_interval_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_GRATUITOUS_ARP_INTERVAL);
-  FIID_OBJ_SET (obj_cmd_rq, "gratuitous_arp_interval", gratuitous_arp_interval);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_GRATUITOUS_ARP_INTERVAL);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "gratuitous_arp_interval", gratuitous_arp_interval);
   
   return 0;
 }
@@ -984,10 +1049,18 @@ fill_cmd_set_lan_configuration_parameters_default_gateway_address (uint8_t chann
                                                                    uint32_t ip_address,
                                                                    fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_default_gateway_address_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_default_gateway_address_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return (_fill_lan_ip(IPMI_LAN_PARAMETER_DEFAULT_GATEWAY_ADDRESS,
                        channel_number,
@@ -1000,10 +1073,18 @@ fill_cmd_set_lan_configuration_parameters_default_gateway_mac_address (uint8_t c
                                                                        uint64_t mac_address,
                                                                        fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_default_gateway_mac_address_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_default_gateway_mac_address_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return (_fill_lan_mac_address(IPMI_LAN_PARAMETER_DEFAULT_GATEWAY_MAC_ADDRESS,
                                 channel_number,
@@ -1016,10 +1097,18 @@ fill_cmd_set_lan_configuration_parameters_backup_gateway_address (uint8_t channe
                                                                   uint32_t ip_address,
                                                                   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_backup_gateway_address_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_backup_gateway_address_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return (_fill_lan_ip(IPMI_LAN_PARAMETER_BACKUP_GATEWAY_ADDRESS,
                        channel_number,
@@ -1032,10 +1121,18 @@ fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uint8_t ch
                                                                       uint64_t mac_address,
                                                                       fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_backup_gateway_mac_address_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_backup_gateway_mac_address_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
   return (_fill_lan_mac_address(IPMI_LAN_PARAMETER_BACKUP_GATEWAY_MAC_ADDRESS,
                                 channel_number,
@@ -1054,25 +1151,33 @@ fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_numb
   /* achu: community_string can be the max length.  Null termination in IPMI
    * packet not required.
    */
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-              && !(community_string
-                   && community_string_len > IPMI_MAX_COMMUNITY_STRING_LENGTH)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || (community_string
+          && community_string_len > IPMI_MAX_COMMUNITY_STRING_LENGTH)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
+
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_community_string_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_community_string_rq);
-  
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_COMMUNITY_STRING);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_COMMUNITY_STRING);
   
   /* achu: community_string should be zero extended */
   memset(buf, '\0', IPMI_MAX_COMMUNITY_STRING_LENGTH);
   if (community_string)
     strncpy((char *)buf, community_string, IPMI_MAX_COMMUNITY_STRING_LENGTH);
   
-  FIID_OBJ_SET_DATA (obj_cmd_rq, "community_string", buf, IPMI_MAX_COMMUNITY_STRING_LENGTH);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "community_string", buf, IPMI_MAX_COMMUNITY_STRING_LENGTH);
 
   return 0;
 }
@@ -1086,29 +1191,37 @@ fill_cmd_set_lan_configuration_parameters_destination_type (uint8_t channel_numb
                                                             uint8_t retries,
                                                             fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-              && IPMI_DESTINATION_SELECTOR_VALID(destination_selector)
-              && IPMI_DESTINATION_TYPE_VALID(destination_type)
-              && IPMI_ALERT_VALID(alert_acknowledge)
-              && (retries <= IPMI_ALERT_RETRIES_MAX)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_DESTINATION_SELECTOR_VALID(destination_selector)
+      || !IPMI_DESTINATION_TYPE_VALID(destination_type)
+      || !IPMI_ALERT_VALID(alert_acknowledge)
+      || (retries > IPMI_ALERT_RETRIES_MAX)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_destination_type_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_destination_type_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_DESTINATION_TYPE);
-  FIID_OBJ_SET (obj_cmd_rq, "destination_selector", destination_selector);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "destination_type", destination_type);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "alert_acknowledge", alert_acknowledge);
-  FIID_OBJ_SET (obj_cmd_rq, "alert_acknowledge_timeout", alert_acknowledge_timeout);
-  FIID_OBJ_SET (obj_cmd_rq, "retries", retries);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved5", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_DESTINATION_TYPE);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "destination_selector", destination_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "destination_type", destination_type);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "alert_acknowledge", alert_acknowledge);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "alert_acknowledge_timeout", alert_acknowledge_timeout);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "retries", retries);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved5", 0);
 
   return 0;
 }
@@ -1121,26 +1234,34 @@ fill_cmd_set_lan_configuration_parameters_destination_addresses (uint8_t channel
                                                                  uint64_t alerting_mac_address,
                                                                  fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-              && IPMI_DESTINATION_SELECTOR_VALID(destination_selector)
-              && IPMI_GATEWAY_SELECTOR_VALID(gateway_selector)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_DESTINATION_SELECTOR_VALID(destination_selector)
+      || !IPMI_GATEWAY_SELECTOR_VALID(gateway_selector)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_destination_addresses_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_destination_addresses_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
  
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_DESTINATION_ADDRESSES);
-  FIID_OBJ_SET (obj_cmd_rq, "destination_selector", destination_selector);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "address_format", IPMI_ADDRESS_FORMAT_IPV4);
-  FIID_OBJ_SET (obj_cmd_rq, "gateway_selector", gateway_selector);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "alerting_ip_address", alerting_ip_address);
-  FIID_OBJ_SET (obj_cmd_rq, "alerting_mac_address", alerting_mac_address);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_DESTINATION_ADDRESSES);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "destination_selector", destination_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "address_format", IPMI_ADDRESS_FORMAT_IPV4);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "gateway_selector", gateway_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "alerting_ip_address", alerting_ip_address);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "alerting_mac_address", alerting_mac_address);
 
   return 0;
 }
@@ -1151,20 +1272,28 @@ fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number,
                                                    uint8_t vlan_id_enable,
                                                    fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && IPMI_VLAN_ID_ENABLE_VALID(vlan_id_enable)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_VLAN_ID_ENABLE_VALID(vlan_id_enable)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_vlan_id_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_vlan_id_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_VLAN_ID);
-  FIID_OBJ_SET (obj_cmd_rq, "vlan_id", vlan_id);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "vlan_id_enable", vlan_id_enable);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_VLAN_ID);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "vlan_id", vlan_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "vlan_id_enable", vlan_id_enable);
 
   return 0;
 }
@@ -1174,19 +1303,27 @@ fill_cmd_set_lan_configuration_parameters_vlan_priority (uint8_t channel_number,
                                                          uint8_t vlan_priority,
                                                          fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_vlan_priority_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_vlan_priority_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_VLAN_PRIORITY);
-  FIID_OBJ_SET (obj_cmd_rq, "vlan_priority", vlan_priority);
-  FIID_OBJ_SET (obj_cmd_rq, "unspecified", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_VLAN_PRIORITY);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "vlan_priority", vlan_priority);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "unspecified", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
   return 0;
 }
@@ -1211,65 +1348,73 @@ fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
 											   uint8_t maximum_privilege_for_cipher_suite_16,
 											   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_1)
-		  || !maximum_privilege_for_cipher_suite_1)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_2)
-		  || !maximum_privilege_for_cipher_suite_2)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_3)
-		  || !maximum_privilege_for_cipher_suite_3)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_4)
-		  || !maximum_privilege_for_cipher_suite_4)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_5)
-		  || !maximum_privilege_for_cipher_suite_5)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_6)
-		  || !maximum_privilege_for_cipher_suite_6)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_7)
-		  || !maximum_privilege_for_cipher_suite_7)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_8)
-		  || !maximum_privilege_for_cipher_suite_8)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_9)
-		  || !maximum_privilege_for_cipher_suite_9)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_10)
-		  || !maximum_privilege_for_cipher_suite_10)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_11)
-		  || !maximum_privilege_for_cipher_suite_11)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_12)
-		  || !maximum_privilege_for_cipher_suite_12)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_13)
-		  || !maximum_privilege_for_cipher_suite_13)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_14)
-		  || !maximum_privilege_for_cipher_suite_14)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_15)
-		  || !maximum_privilege_for_cipher_suite_15)
-	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_16)
-		  || !maximum_privilege_for_cipher_suite_16)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_1)
+           || !maximum_privilege_for_cipher_suite_1)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_2)
+           || !maximum_privilege_for_cipher_suite_2)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_3)
+           || !maximum_privilege_for_cipher_suite_3)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_4)
+           || !maximum_privilege_for_cipher_suite_4)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_5)
+           || !maximum_privilege_for_cipher_suite_5)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_6)
+           || !maximum_privilege_for_cipher_suite_6)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_7)
+           || !maximum_privilege_for_cipher_suite_7)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_8)
+           || !maximum_privilege_for_cipher_suite_8)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_9)
+           || !maximum_privilege_for_cipher_suite_9)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_10)
+           || !maximum_privilege_for_cipher_suite_10)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_11)
+           || !maximum_privilege_for_cipher_suite_11)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_12)
+           || !maximum_privilege_for_cipher_suite_12)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_13)
+           || !maximum_privilege_for_cipher_suite_13)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_14)
+           || !maximum_privilege_for_cipher_suite_14)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_15)
+           || !maximum_privilege_for_cipher_suite_15)
+      || !(IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_16)
+           || !maximum_privilege_for_cipher_suite_16)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_1", maximum_privilege_for_cipher_suite_1); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_2", maximum_privilege_for_cipher_suite_2); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_3", maximum_privilege_for_cipher_suite_3); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_4", maximum_privilege_for_cipher_suite_4); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_5", maximum_privilege_for_cipher_suite_5); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_6", maximum_privilege_for_cipher_suite_6); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_7", maximum_privilege_for_cipher_suite_7); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_8", maximum_privilege_for_cipher_suite_8); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_9", maximum_privilege_for_cipher_suite_9); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_10", maximum_privilege_for_cipher_suite_10); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_11", maximum_privilege_for_cipher_suite_11); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_12", maximum_privilege_for_cipher_suite_12); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_13", maximum_privilege_for_cipher_suite_13); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_14", maximum_privilege_for_cipher_suite_14); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_15", maximum_privilege_for_cipher_suite_15); 
-  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_16", maximum_privilege_for_cipher_suite_16); 
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_1", maximum_privilege_for_cipher_suite_1); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_2", maximum_privilege_for_cipher_suite_2); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_3", maximum_privilege_for_cipher_suite_3); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_4", maximum_privilege_for_cipher_suite_4); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_5", maximum_privilege_for_cipher_suite_5); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_6", maximum_privilege_for_cipher_suite_6); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_7", maximum_privilege_for_cipher_suite_7); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_8", maximum_privilege_for_cipher_suite_8); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_9", maximum_privilege_for_cipher_suite_9); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_10", maximum_privilege_for_cipher_suite_10); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_11", maximum_privilege_for_cipher_suite_11); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_12", maximum_privilege_for_cipher_suite_12); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_13", maximum_privilege_for_cipher_suite_13); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_14", maximum_privilege_for_cipher_suite_14); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_15", maximum_privilege_for_cipher_suite_15); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_16", maximum_privilege_for_cipher_suite_16); 
 
   return 0;
 }
@@ -1282,21 +1427,29 @@ fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
                                            uint8_t block_selector,
                                            fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
-	      && IPMI_LAN_PARAMETER_VALID(parameter_selector)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
+      || !IPMI_LAN_PARAMETER_VALID(parameter_selector)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_lan_configuration_parameters_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_LAN_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "get_parameter", get_parameter);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
-  FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
-  FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "get_parameter", get_parameter);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
   
   return 0;
 }
@@ -1307,20 +1460,28 @@ fill_cmd_suspend_bmc_arps (uint8_t channel_number,
 			   uint8_t arp_response_suspend,
 			   fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(gratuitous_arp_suspend)
-	      && IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(arp_response_suspend)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(gratuitous_arp_suspend)
+      || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(arp_response_suspend)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_suspend_bmc_arps_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_suspend_bmc_arps_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SUSPEND_BMC_ARPS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "gratuitous_arp_suspend", gratuitous_arp_suspend);
-  FIID_OBJ_SET (obj_cmd_rq, "arp_response_suspend", arp_response_suspend);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SUSPEND_BMC_ARPS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "gratuitous_arp_suspend", gratuitous_arp_suspend);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "arp_response_suspend", arp_response_suspend);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   
   return 0;
 }
@@ -1330,18 +1491,26 @@ fill_cmd_get_ip_udp_rmcp_statistics (uint8_t channel_number,
                                      uint8_t clear_all_statistics, 
                                      fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && IPMI_CLEAR_ALL_STATISTICS_VALID(clear_all_statistics)
-	      && fiid_obj_valid(obj_cmd_rq));
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_CLEAR_ALL_STATISTICS_VALID(clear_all_statistics)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_ip_udp_rmcp_statistics_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_ip_udp_rmcp_statistics_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_IP_UDP_RMCP_STATISTICS);
-  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "clear_all_statistics", clear_all_statistics);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_IP_UDP_RMCP_STATISTICS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "clear_all_statistics", clear_all_statistics);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   
   return 0;
 }

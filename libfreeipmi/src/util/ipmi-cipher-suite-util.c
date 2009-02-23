@@ -26,7 +26,7 @@
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 #include "freeipmi/record-format/ipmi-cipher-suite-record-format.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
 
@@ -39,8 +39,12 @@ ipmi_cipher_suite_id_to_algorithms(uint8_t cipher_suite_id,
   uint8_t a, i, c;
 
   /* To avoid gcc warnings, add +1 to comparison */
-  ERR_EINVAL((cipher_suite_id + 1) >= 1
-	     && (cipher_suite_id + 1) <= 15);
+  if (!((cipher_suite_id + 1) >= 1
+        && (cipher_suite_id + 1) <= 15))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   if (cipher_suite_id == 0)
     a = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
@@ -96,13 +100,17 @@ ipmi_algorithms_to_cipher_suite_id(uint8_t authentication_algorithm,
 				   uint8_t confidentiality_algorithm,
 				   uint8_t *cipher_suite_id)
 {
-  ERR_EINVAL(IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
-	     && IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
-	     && IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
-	     && IPMI_CIPHER_SUITE_COMBINATION_VALID(authentication_algorithm,
-						    integrity_algorithm,
-						    confidentiality_algorithm)
-	     && cipher_suite_id);
+  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+      || !IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+      || !IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
+      || !IPMI_CIPHER_SUITE_COMBINATION_VALID(authentication_algorithm,
+                                              integrity_algorithm,
+                                              confidentiality_algorithm)
+      || !cipher_suite_id)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
       && integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE

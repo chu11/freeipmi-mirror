@@ -48,10 +48,12 @@
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/util/ipmi-util.h"
 
-#include "ipmi-ctx.h"
-#include "ipmi-err-wrappers-api.h"
-#include "ipmi-fiid-wrappers-api.h"
+#include "ipmi-api-defs.h"
+#include "ipmi-api-trace.h"
+#include "ipmi-api-util.h"
 #include "ipmi-kcs-driver-api.h"
+
+#include "libcommon/ipmi-fiid-util.h"
 
 #include "freeipmi-portability.h"
 #include "debug-util.h"
@@ -220,27 +222,35 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
-  API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
+  if (api_fiid_obj_packet_valid(ctx, obj_cmd_rq) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_KCS)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
-    API_FIID_OBJ_GET_NO_RETURN(obj_cmd_rq, "cmd", &cmd);
+    {
+      /* ignore error, continue on */
+      if (api_fiid_obj_get(ctx, obj_cmd_rq, "cmd", &cmd) < 0)
+        ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+    }
 
   {
     uint8_t *pkt;
@@ -252,8 +262,15 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
         API_ERRNO_TO_API_ERRNUM(ctx, errno);
         return (-1);
       }
-    API_FIID_OBJ_LEN_BYTES (cmd_len, obj_cmd_rq);
+
+    if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
+      {
+        API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rq);
+        return (-1);
+      }
+
     pkt_len = hdr_len + cmd_len;
+
     pkt = alloca (pkt_len);
     if (!pkt)
       {
@@ -335,7 +352,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
     if (!read_len)
       {
-        API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+        API_SET_ERRNUM(ctx, IPMI_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
 
@@ -353,7 +370,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
     rv = 0;
   cleanup:
-    API_FIID_TEMPLATE_FREE(tmpl);
+    FIID_TEMPLATE_FREE(tmpl);
     if (rv < 0)
       return (rv);
   }
@@ -378,9 +395,21 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
 	  && fiid_obj_valid(obj_cmd_rq)
 	  && fiid_obj_packet_valid(obj_cmd_rq));
 
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rq, tmpl_ipmb_msg_hdr_rq);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_rq, tmpl_ipmb_msg);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_send_cmd_rs, tmpl_cmd_send_message_rs);
+  if (!(obj_ipmb_msg_hdr_rq = fiid_obj_create(tmpl_ipmb_msg_hdr_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_ipmb_msg_rq = fiid_obj_create(tmpl_ipmb_msg)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_send_cmd_rs = fiid_obj_create(tmpl_cmd_send_message_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_ipmb_msg_hdr (ctx->rs_addr,
                          ctx->net_fn,
@@ -426,9 +455,9 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
   
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rq);
-  API_FIID_OBJ_DESTROY(obj_ipmb_msg_rq);
-  API_FIID_OBJ_DESTROY(obj_send_cmd_rs);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rq);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_rq);
+  FIID_OBJ_DESTROY(obj_send_cmd_rs);
   return (rv);
 }
 
@@ -451,13 +480,21 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
 	  && fiid_obj_valid(obj_ipmb_msg_trlr)
 	  && fiid_obj_valid(obj_cmd_rs));
 
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_rs, tmpl_ipmb_msg);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_get_cmd_rs, tmpl_cmd_get_message_rs);
+  if (!(obj_ipmb_msg_rs = fiid_obj_create(tmpl_ipmb_msg)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_get_cmd_rs = fiid_obj_create(tmpl_cmd_get_message_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_message (ctx, obj_get_cmd_rs) < 0)
     {
       if (ipmi_check_completion_code (obj_get_cmd_rs, IPMI_COMP_CODE_DATA_NOT_AVAILABLE) == 1)
-        API_SET_ERRNUM(IPMI_ERR_MESSAGE_TIMEOUT);
+        API_SET_ERRNUM(ctx, IPMI_ERR_MESSAGE_TIMEOUT);
       else
 	API_BAD_RESPONSE_TO_API_ERRNUM(ctx, obj_get_cmd_rs);
       goto cleanup;
@@ -491,8 +528,8 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_ipmb_msg_rs);
-  API_FIID_OBJ_DESTROY(obj_get_cmd_rs);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_rs);
+  FIID_OBJ_DESTROY(obj_get_cmd_rs);
   return (rv);
 }
 
@@ -510,27 +547,39 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
-  API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
+  if (api_fiid_obj_packet_valid(ctx, obj_cmd_rq) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_KCS)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_hdr_rs, tmpl_ipmb_msg_hdr_rs);
-  API_FIID_OBJ_CREATE_CLEANUP(obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr);
+  if (!(obj_ipmb_msg_hdr_rs = fiid_obj_create(tmpl_ipmb_msg_hdr_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_ipmb_msg_trlr = fiid_obj_create(tmpl_ipmb_msg_trlr)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   /* for debugging */
   ctx->tmpl_ipmb_cmd_rq = fiid_obj_template(obj_cmd_rq);
@@ -552,7 +601,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 	      
 	      if (reread_count > IPMI_KCS_IPMB_REREAD_COUNT)
                 {
-                  API_SET_ERRNUM(IPMI_ERR_MESSAGE_TIMEOUT);
+                  API_SET_ERRNUM(ctx, IPMI_ERR_MESSAGE_TIMEOUT);
                   goto cleanup;
                 }
 	      
@@ -588,7 +637,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 	  
 	  if (retransmission_count > IPMI_KCS_IPMB_RETRANSMISSION_COUNT)
             {
-              API_SET_ERRNUM(IPMI_ERR_MESSAGE_TIMEOUT);
+              API_SET_ERRNUM(ctx, IPMI_ERR_MESSAGE_TIMEOUT);
               goto cleanup;
             }
 	  
@@ -606,11 +655,11 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
   rv = 0;
  cleanup:
   ctx->io.inband.rq_seq = ((ctx->io.inband.rq_seq) + 1) % (IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
-  API_FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rs);
-  API_FIID_OBJ_DESTROY(obj_ipmb_msg_trlr);
-  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_hdr_rs);
+  FIID_OBJ_DESTROY(obj_ipmb_msg_trlr);
+  FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
   ctx->tmpl_ipmb_cmd_rq = NULL;
-  API_FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
+  FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
   ctx->tmpl_ipmb_cmd_rs = NULL;
   return (rv);
 }               
@@ -632,7 +681,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -641,13 +690,13 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
       || !buf_rs 
       || !buf_rs_len)
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_KCS)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -712,7 +761,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
 
   if (!bytes_read)
     {
-      API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_SYSTEM_ERROR);
       return -1;
     }
 

@@ -53,12 +53,11 @@
 #include "freeipmi/util/ipmi-sensor-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
-#include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-common.h"
+#include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-string.h"
-
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "ipmi-sel-parse-trace.h"
+#include "ipmi-sel-parse-util.h"
 
 #include "freeipmi-portability.h"
 
@@ -106,7 +105,7 @@ _invalid_sel_entry_common(ipmi_sel_parse_ctx_t ctx,
                           unsigned int *wlen)
 {
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(buf);
   assert(buflen);
   assert(!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
@@ -122,7 +121,7 @@ _invalid_sel_entry_common(ipmi_sel_parse_ctx_t ctx,
         }
       return 0;
     }
-  ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+  ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
   return -1;
 }
 
@@ -141,7 +140,7 @@ _find_sdr_record(ipmi_sel_parse_ctx_t ctx,
   int tmp_sdr_record_len;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(ctx->sdr_cache_ctx);   /* must be checked earlier */
   assert(system_event_record_data);
   assert(sdr_record);
@@ -159,7 +158,7 @@ _find_sdr_record(ipmi_sel_parse_ctx_t ctx,
        * generator_id be shifted over by one.  This is a special
        * "try again" corner case.
        */
-      if (ipmi_sdr_cache_ctx_errnum(ctx->sdr_cache_ctx) == IPMI_SDR_CACHE_CTX_ERR_NOT_FOUND
+      if (ipmi_sdr_cache_ctx_errnum(ctx->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND
           && (system_event_record_data->generator_id == (IPMI_SLAVE_ADDRESS_BMC << 1)))
         {
           if (!ipmi_sdr_cache_search_sensor(ctx->sdr_cache_ctx,
@@ -169,9 +168,9 @@ _find_sdr_record(ipmi_sel_parse_ctx_t ctx,
           /* else fall through to normal error path */
         }
 
-      if (ipmi_sdr_cache_ctx_errnum(ctx->sdr_cache_ctx) != IPMI_SDR_CACHE_CTX_ERR_NOT_FOUND)
+      if (ipmi_sdr_cache_ctx_errnum(ctx->sdr_cache_ctx) != IPMI_SDR_CACHE_ERR_NOT_FOUND)
         {
-          SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR);
+          SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR);
           return -1;
         }
       /* else can't find it */
@@ -185,13 +184,13 @@ _find_sdr_record(ipmi_sel_parse_ctx_t ctx,
                                                        tmp_sdr_record,
                                                        SDR_RECORD_LENGTH)) < 0)
     {
-      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_SDR_CACHE_ERROR);
+      SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_ERR_SDR_CACHE_ERROR);
       return -1;
     }
   
   if ((*sdr_record_len) < tmp_sdr_record_len)
     {
-      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+      SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -218,7 +217,7 @@ _get_sdr_id_string(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(system_event_record_data);
   assert(id_string);
   assert(id_string_len);
@@ -245,8 +244,8 @@ _get_sdr_id_string(ipmi_sel_parse_ctx_t ctx,
                                 (char *)id_string,
                                 id_string_len) < 0)
     {
-      if (ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD
-          || ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INCOMPLETE_SDR_RECORD)
+      if (ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
+          || ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
         rv = 0;
       goto cleanup;
     }
@@ -282,7 +281,7 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(system_event_record_data);
   assert(ipmi_event_reading_type_code_class(system_event_record_data->event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD);
   assert(reading);
@@ -309,8 +308,8 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
                                               sdr_record_len,
                                               &sdr_event_reading_type_code) < 0)
     {
-      if (ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD
-          || ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INCOMPLETE_SDR_RECORD)
+      if (ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
+          || ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
         rv = 0;
       goto cleanup;
     }
@@ -331,8 +330,8 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
                                            &linearization,
                                            &analog_data_format) < 0)
     {
-      if (ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD
-          || ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INCOMPLETE_SDR_RECORD)
+      if (ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
+          || ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
         rv = 0;
       goto cleanup;
     }
@@ -345,8 +344,8 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
                                    &sensor_base_unit_type,
                                    NULL) < 0)
     {
-      if (ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD
-          || ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_CTX_ERR_INCOMPLETE_SDR_RECORD)
+      if (ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD
+          || ipmi_sdr_parse_ctx_errnum(ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD)
         rv = 0;
       goto cleanup;
     }
@@ -378,7 +377,7 @@ _get_sensor_reading(ipmi_sel_parse_ctx_t ctx,
                                 raw_data,
                                 reading) < 0)
     {
-      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+      SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -409,7 +408,7 @@ _output_time(ipmi_sel_parse_ctx_t ctx,
   time_t t;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -448,7 +447,7 @@ _output_date(ipmi_sel_parse_ctx_t ctx,
   time_t t;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -497,7 +496,7 @@ _output_sensor_group(ipmi_sel_parse_ctx_t ctx,
   const char *sensor_type_str = NULL;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -535,7 +534,7 @@ _output_sensor_name(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -617,7 +616,7 @@ _output_event_offset(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -741,7 +740,7 @@ _output_event_data2(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1030,7 +1029,7 @@ _output_event_data3(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1249,7 +1248,7 @@ _output_event_data2_event_data3(ipmi_sel_parse_ctx_t ctx,
   int data3_ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1341,7 +1340,7 @@ _output_event_data2_event_data3(ipmi_sel_parse_ctx_t ctx,
 
   if (data2_ret || data3_ret)
     {
-      SEL_PARSE_ERRNUM_SET(IPMI_SEL_PARSE_CTX_ERR_INTERNAL_ERROR);
+      SEL_PARSE_SET_ERRNUM(ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -1398,7 +1397,7 @@ _output_event_data2_previous_state_or_severity(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1475,7 +1474,7 @@ _output_event_data2_previous_state_or_severity(ipmi_sel_parse_ctx_t ctx,
             }
           return 0;
         }
-      ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_INVALID_SEL_ENTRY;
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
       return -1;
     }
   
@@ -1575,7 +1574,7 @@ _output_event_direction(ipmi_sel_parse_ctx_t ctx,
   char *str = NULL;
   
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1611,7 +1610,7 @@ _output_manufacturer_id(ipmi_sel_parse_ctx_t ctx,
   uint32_t manufacturer_id;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1671,7 +1670,7 @@ _output_oem(ipmi_sel_parse_ctx_t ctx,
   int oem_index;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(sel_parse_entry);
   assert(buf);
   assert(buflen);
@@ -1720,7 +1719,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
   int ret;
 
   assert(ctx);
-  assert(ctx->magic == IPMI_SEL_PARSE_MAGIC);
+  assert(ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert(fmt);
   assert(record_buf);
   assert(record_buflen >= IPMI_SEL_RECORD_LENGTH);
@@ -1961,7 +1960,7 @@ sel_parse_format_record_string(ipmi_sel_parse_ctx_t ctx,
 
  out:
   rv = wlen;
-  ctx->errnum = IPMI_SEL_PARSE_CTX_ERR_SUCCESS;
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
  cleanup:
   return rv;
 }

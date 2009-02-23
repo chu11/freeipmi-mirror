@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.6 2009-01-13 01:02:36 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.7 2009-02-23 22:29:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -37,8 +37,9 @@
 #include "freeipmi/cmds/ipmi-fru-inventory-device-cmds.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-util.h"
+#include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
 
@@ -100,13 +101,21 @@ int8_t
 fill_cmd_get_fru_inventory_area_info (uint8_t fru_device_id,
                                       fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_fru_inventory_area_info_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_fru_inventory_area_info_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_FRU_INVENTORY_AREA_INFO);
-  FIID_OBJ_SET (obj_cmd_rq, "fru_device_id", fru_device_id);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_FRU_INVENTORY_AREA_INFO);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "fru_device_id", fru_device_id);
   return (0);
 }
 
@@ -116,15 +125,23 @@ fill_cmd_read_fru_data (uint8_t fru_device_id,
                         uint8_t count_to_read,
                         fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  if (!fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_read_fru_data_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_read_fru_data_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_READ_FRU_DATA);
-  FIID_OBJ_SET (obj_cmd_rq, "fru_device_id", fru_device_id);
-  FIID_OBJ_SET (obj_cmd_rq, "fru_inventory_offset_to_read", fru_inventory_offset_to_read);
-  FIID_OBJ_SET (obj_cmd_rq, "count_to_read", count_to_read);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_READ_FRU_DATA);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "fru_device_id", fru_device_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "fru_inventory_offset_to_read", fru_inventory_offset_to_read);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "count_to_read", count_to_read);
   return (0);
 }
 
@@ -135,17 +152,25 @@ fill_cmd_write_fru_data (uint8_t fru_device_id,
                          unsigned int data_to_write_len,
                          fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (!(data_to_write
-                && data_to_write_len > IPMI_FRU_DATA_MAX)
-              && fiid_obj_valid(obj_cmd_rq));
+  if ((data_to_write
+       && data_to_write_len > IPMI_FRU_DATA_MAX)
+      || !fiid_obj_valid(obj_cmd_rq))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_write_fru_data_rq);
+  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_write_fru_data_rq) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_WRITE_FRU_DATA);
-  FIID_OBJ_SET (obj_cmd_rq, "fru_device_id", fru_device_id);
-  FIID_OBJ_SET (obj_cmd_rq, "fru_inventory_offset_to_write", fru_inventory_offset_to_write);
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_WRITE_FRU_DATA);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "fru_device_id", fru_device_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "fru_inventory_offset_to_write", fru_inventory_offset_to_write);
   if (data_to_write && data_to_write_len)
-    FIID_OBJ_SET_DATA (obj_cmd_rq, "data_to_write", data_to_write, data_to_write_len);
+    FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "data_to_write", data_to_write, data_to_write_len);
   return (0);
 }

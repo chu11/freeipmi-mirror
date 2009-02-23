@@ -1,3 +1,60 @@
+2009-02-23  Albert Chu <chu11@llnl.gov>
+
+	Merge changes from libfreeipmi_cleanup_branch.
+
+	* libfreeipmi/: Massive code cleanup;
+
+	* libfreeipmi/src/drivers/: Add 'errormsg' functions.
+
+	* libfreeipmi/src/api/ipmi-ctx.h,
+	  libfreeipmi/src/api/ipmi-err-wrappers-api.h,
+	  libfreeipmi/src/api/ipmi-err-wrappers-api.c,
+	  libfreeipmi/src/api/ipmi-fiid-wrappers-api.h,
+	  libfreeipmi/src/api/ipmi-fiid-wrappers-api.c: Removed files.
+	
+	* libfreeipmi/src/api/ipmi-api-trace.h,
+	  libfreeipmi/src/api/ipmi-api-util.c,
+	  libfreeipmi/src/api/ipmi-api-util.c,
+	  libfreeipmi/src/locate/ipmi-locate-trace.h,
+	  libfreeipmi/src/locate/ipmi-locate-util.c,
+	  libfreeipmi/src/locate/ipmi-locate-util.c,
+	  libfreeipmi/src/sdr-parse/ipmi-sdr-parse-trace.h,
+	  libfreeipmi/src/sdr-parse/ipmi-sdr-parse-util.h,
+	  libfreeipmi/src/sdr-parse/ipmi-sdr-parse-util.c,
+	  libfreeipmi/src/sel-parse/ipmi-sel-parse-trace.h,
+	  libfreeipmi/src/sel-parse/ipmi-sel-parse-util.h,
+	  libfreeipmi/src/sel-parse/ipmi-sel-parse-util.c,
+	  libfreeipmi/src/sensor-read/ipmi-sensor-read-trace.h,
+	  libfreeipmi/src/sensor-read/ipmi-sensor-read-util.h,
+	  libfreeipmi/src/sensor-read/ipmi-sensor-read-util.c,
+	  libfreeipmi/src/api/ipmi-api-defs-trace.h,
+	  libfreeipmi/src/driver/ipmi-driver-trace.h,
+	  libfreeipmi/src/libcommon/ipmi-fill-util.h,
+	  libfreeipmi/src/libcommon/ipmi-fiid-util.h,
+	  libfreeipmi/src/libcommon/ipmi-fiid-util.c: New files.
+
+	* libfreeipmi/src/libcommon/ipmi-err-wrappers.h: Remove all
+	unnecessary macros.
+
+	* libfreeipmi/src/libcommon/ipmi-trace.h: Renamed from
+	libfreeipmi/src/libcommon/ipmi-err-wrappers.h.
+
+	* libfreeipmi/src/api/: Remove use of IPMI_ERR_LIBRARY_ERROR,
+	replace with IPMI_ERR_INTERNAL_ERROR.
+
+	* Rename all "IPMI_*_CTX_ERR" error codes to "IPMI_*_ERR" for
+	consistency throughout libs.
+
+	* libfreeipmi/src/locate/: Rework to use context style API.
+
+	* common/src/toolcommon/, bmc-watchdog, ipmi-locate/: Adjust for
+	new locate API.
+
+	* common/src/toolcommon/tool-fiid-wrapers.h: Renamed to
+	tool-fiid-util.h for consistency.  Rename all macros.
+
+	* Update all tools appropriately for cleanup changes.
+
 2009-02-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/api/ipmi-err-wrappers-api.c: New file.

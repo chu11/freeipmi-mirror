@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.23 2009-02-03 22:48:23 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.24 2009-02-23 22:29:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -141,7 +141,7 @@ struct ipmi_monitoring_sensor_reading {
 
 struct ipmi_monitoring_ctx {
   uint32_t magic;
-  unsigned int errnum;
+  int errnum;
 
   ipmi_sdr_cache_ctx_t sdr_cache_ctx;
 

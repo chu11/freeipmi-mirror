@@ -43,9 +43,11 @@
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 
-#include "ipmi-ctx.h"
-#include "ipmi-err-wrappers-api.h"
-#include "ipmi-fiid-wrappers-api.h"
+#include "ipmi-api-defs.h"
+#include "ipmi-api-trace.h"
+#include "ipmi-api-util.h"
+
+#include "libcommon/ipmi-fiid-util.h"
 
 #include "freeipmi-portability.h"
 
@@ -76,7 +78,7 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -99,7 +101,7 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
       || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_7)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -107,11 +109,15 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
                                     obj_cmd_rs, 
                                     tmpl_cmd_set_user_payload_access_rs) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_user_payload_access_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_payload_access_rq)))
+      {
+        API_ERRNO_TO_API_ERRNUM(ctx, errno);
+        goto cleanup;
+      }
 
   if (fill_cmd_set_user_payload_access (channel_number,
                                         user_id,
@@ -137,15 +143,19 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx,
-			    IPMI_BMC_IPMB_LUN_BMC,
-			    IPMI_NET_FN_APP_RQ,
-			    obj_cmd_rq,
-			    obj_cmd_rs);
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_APP_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }
 
@@ -160,14 +170,14 @@ ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -175,11 +185,15 @@ ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
                                     obj_cmd_rs, 
                                     tmpl_cmd_get_user_payload_access_rs) < 0)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
-  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_user_payload_access_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_user_payload_access_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (fill_cmd_get_user_payload_access (channel_number,
                                         user_id,
@@ -189,14 +203,18 @@ ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  API_ERR_IPMI_CMD_CLEANUP (ctx,
-			    IPMI_BMC_IPMB_LUN_BMC,
-			    IPMI_NET_FN_APP_RQ,
-			    obj_cmd_rq,
-			    obj_cmd_rs);
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_APP_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      goto cleanup;
+    }
 
   rv = 0;
  cleanup:
-  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY(obj_cmd_rq);
   return (rv);
 }

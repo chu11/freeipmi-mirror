@@ -31,7 +31,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 /* convenience struct */
 struct front_panel_buttons
@@ -66,7 +66,7 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   assert(state_data);
   assert(data);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs);
 
   if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
@@ -75,78 +75,78 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_get_chassis_status: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  _FIID_OBJ_GET_WITH_RV (flag,
-                         obj_cmd_rs, 
-                         "front_panel.standby_button_disabled", 
-                         &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (flag,
+                             obj_cmd_rs, 
+                             "front_panel.standby_button_disabled", 
+                             &val);
   if (flag)
     data->standby = val;
   else
     data->standby = BUTTON_UNKNOWN;
 
-  _FIID_OBJ_GET_WITH_RV (flag,
-                         obj_cmd_rs, 
-                         "front_panel.diagnostic_interrupt_button_disabled", 
-                         &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (flag,
+                             obj_cmd_rs, 
+                             "front_panel.diagnostic_interrupt_button_disabled", 
+                             &val);
   if (flag)
     data->diagnostic_interrupt = val;
   else
     data->diagnostic_interrupt = BUTTON_UNKNOWN;
 
-  _FIID_OBJ_GET_WITH_RV (flag,
-                         obj_cmd_rs, 
-                         "front_panel.reset_button_disabled", 
-                         &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (flag,
+                             obj_cmd_rs, 
+                             "front_panel.reset_button_disabled", 
+                             &val);
   if (flag)
     data->reset = val;
   else
     data->reset = BUTTON_UNKNOWN;
 
-  _FIID_OBJ_GET_WITH_RV (flag,
-                         obj_cmd_rs,
-                         "front_panel.power_off_button_disabled", 
-                         &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (flag,
+                             obj_cmd_rs,
+                             "front_panel.power_off_button_disabled", 
+                             &val);
   if (flag)
     data->power_off = val;
   else
     data->power_off = BUTTON_UNKNOWN;
 
-  _FIID_OBJ_GET_WITH_RV (flag,
-                         obj_cmd_rs, 
-                         "front_panel.standby_button_disable_allowed", 
-                         &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (flag,
+                             obj_cmd_rs, 
+                             "front_panel.standby_button_disable_allowed", 
+                             &val);
   if (flag)
     data->standby_disable_allowed = val;
   else
     data->standby_disable_allowed = BUTTON_DISABLE_UNKNOWN;
 
-  _FIID_OBJ_GET_WITH_RV (flag,
-                         obj_cmd_rs, 
-                         "front_panel.diagnostic_interrupt_button_disable_allowed", 
-                         &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (flag,
+                             obj_cmd_rs, 
+                             "front_panel.diagnostic_interrupt_button_disable_allowed", 
+                             &val);
   if (flag)
     data->diagnostic_interrupt_disable_allowed = val;
   else
     data->diagnostic_interrupt_disable_allowed = BUTTON_DISABLE_UNKNOWN;
   
-  _FIID_OBJ_GET_WITH_RV (flag,
-                         obj_cmd_rs, 
-                         "front_panel.reset_button_disable_allowed", 
-                         &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (flag,
+                             obj_cmd_rs, 
+                             "front_panel.reset_button_disable_allowed", 
+                             &val);
   if (flag)
     data->reset_disable_allowed = val;
   else
     data->reset_disable_allowed = BUTTON_DISABLE_UNKNOWN;
 
-  _FIID_OBJ_GET_WITH_RV (flag,
-                         obj_cmd_rs, 
-                         "front_panel.power_off_button_disable_allowed", 
-                         &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (flag,
+                             obj_cmd_rs, 
+                             "front_panel.power_off_button_disable_allowed", 
+                             &val);
   if (flag)
     data->power_off_disable_allowed = val;
   else
@@ -154,7 +154,7 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -168,7 +168,7 @@ _set_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   assert(state_data);
   assert(data);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_front_panel_enables_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_front_panel_enables_rs);
   
   if (ipmi_cmd_set_front_panel_enables (state_data->ipmi_ctx,
                                         data->power_off,
@@ -182,14 +182,14 @@ _set_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_set_front_panel_enables: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

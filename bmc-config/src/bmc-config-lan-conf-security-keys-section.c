@@ -35,7 +35,7 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "tool-common.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 static config_err_t
 _get_key(bmc_config_state_data_t *state_data,
@@ -53,7 +53,7 @@ _get_key(bmc_config_state_data_t *state_data,
   assert(key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
          || key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_channel_security_keys_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_channel_security_keys_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -74,16 +74,16 @@ _get_key(bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_set_channel_security_keys: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  _FIID_OBJ_GET_DATA_LEN (buf_len,
-                          obj_cmd_rs, 
-                          "key_value", 
-                          buf, 
-                          CONFIG_PARSE_BUFLEN);
+  TOOL_FIID_OBJ_GET_DATA_LEN (buf_len,
+                              obj_cmd_rs, 
+                              "key_value", 
+                              buf, 
+                              CONFIG_PARSE_BUFLEN);
 
   if (key_len < buf_len)
     {
@@ -96,7 +96,7 @@ _get_key(bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -114,7 +114,7 @@ _set_key(bmc_config_state_data_t *state_data,
   assert(key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
          || key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G);
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_channel_security_keys_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_channel_security_keys_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -135,14 +135,14 @@ _set_key(bmc_config_state_data_t *state_data,
                         stderr,
                         "ipmi_cmd_set_channel_security_keys: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

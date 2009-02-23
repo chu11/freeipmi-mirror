@@ -23,7 +23,7 @@
 
 #include "tool-cmdline-common.h"
 
-#define IPMI_CTX_ERRNUM_IS_FATAL_ERROR(__ipmi_ctx) \
+#define IPMI_ERRNUM_IS_FATAL_ERROR(__ipmi_ctx) \
 (((ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_CTX_NULL \
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_CTX_INVALID \
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_PERMISSION \
@@ -49,7 +49,6 @@
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_DRIVER_PATH_REQUIRED \
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_IPMI_ERROR \
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_SYSTEM_ERROR \
-  || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_LIBRARY_ERROR \
   || (ipmi_ctx_errnum((__ipmi_ctx))) == IPMI_ERR_INTERNAL_ERROR) ? 1 : 0)
 
 #define CONFIG_CHECKOUT_KEY_COMMENTED_OUT                       0x01

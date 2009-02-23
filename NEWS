@@ -81,12 +81,18 @@ o libfreeipmi
   - Add new sdr-parse sub library.
   - Add new sel-parse sub library.
   - Add new sensor-read sub library.
+  - The locate sub library now uses a context style API for
+    consistency to the rest of libfreeipmi.
   - More detailed KCS debug output with header information.
   - New error code IPMI_ERR_NOT_FOUND in libfreeipmi API sub library
     supported.
   - Add a number of 'errormsg' functions so common code of 
     foo_strerror(foo_errnum(ctx)) can be condensed to foo_errormsg(ctx).
+  - Various fixes to maintain consistency between sub library APIs.
   - Add IANA Enterprise Numbers support.
+  - Remove IPMI_ERR_LIBRARY_ERROR errnum.  Use IPMI_ERR_INTERNAL_ERROR
+    errnum instead.
+  - IPMI_*CTX_ERR* renamed to IPMI_*ERR* for consistency throughout.
 o libipmimonitoring
   - Support callback functions in API to monitor sensors as they
     are read/analyzed instead of after all sensors have been

@@ -32,7 +32,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 static config_err_t
 power_restore_policy_checkout (const char *section_name,
@@ -44,7 +44,7 @@ power_restore_policy_checkout (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   uint64_t val;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs);
 
   if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
@@ -53,12 +53,12 @@ power_restore_policy_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_chassis_status: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_restore_policy", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_restore_policy", &val);
 
   if (config_section_update_keyvalue_output(state_data->pstate,
                                             kv,
@@ -67,7 +67,7 @@ power_restore_policy_checkout (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -80,7 +80,7 @@ power_restore_policy_commit (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_power_restore_policy_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_power_restore_policy_rs);
   
   if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
                                          power_restore_policy_number (kv->value_input),
@@ -91,14 +91,14 @@ power_restore_policy_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_power_restore_policy: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

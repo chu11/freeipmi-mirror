@@ -34,8 +34,8 @@
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/fiid/fiid.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
 
@@ -1529,7 +1529,11 @@ _snprintf(char *buf, unsigned int buflen, char *fmt, ...)
   va_end(ap);
 
   /* -1 to account for '\0' */
-  ERR_ENOSPC(!(rv >= (buflen - 1)));
+  if (rv >= (buflen - 1))
+    {
+      SET_ERRNO(ENOSPC);
+      return (-1);
+    }
   return (0);
 }
 
@@ -1541,7 +1545,8 @@ get_05_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (offset == 0x04)
     return _snprintf(buf, buflen, "Network controller #%d", event_data2);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1556,7 +1561,8 @@ get_0F_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (offset == 0x02 && event_data2 <= ipmi_sensor_type_code_0F_event_data2_offset_02_desc_max)
     return _snprintf (buf, buflen, ipmi_sensor_type_code_0F_event_data2_offset_02_desc[event_data2]);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1569,7 +1575,8 @@ get_10_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (offset == 0x01)
     return _snprintf(buf, buflen, "Event/Reading Type Code #%d", event_data2);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1589,14 +1596,30 @@ _get_12_event_data2_message_offset_03(int offset, uint8_t event_data2, char *buf
   fiid_obj_t obj = NULL;
   int rv = -1;
 
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  if (!(obj = fiid_obj_create(tmpl_event_data2)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
+ 
+  if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
-  
-  FIID_OBJ_GET_CLEANUP (obj, "log_type", &val);
+  if (fiid_obj_get (obj, "log_type", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   log_type = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "log_entry_action", &val);
+  if (fiid_obj_get (obj, "log_entry_action", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   log_entry_action = val;
           
   if (log_type <= ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc_max)
@@ -1622,7 +1645,11 @@ _strcat12(char *buf, unsigned int buflen, uint8_t flag, int str_len, int index)
   if (flag)
     {
       str_len += strlen(ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[index]);
-      ERR_ENOSPC (!(str_len < buflen));
+      if (str_len < buflen)
+        {
+          SET_ERRNO(ENOSPC);
+          return (-1);
+        }
 
       if (str_len)
 	strcat(buf, ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[index]);
@@ -1655,41 +1682,97 @@ _get_12_event_data2_message_offset_04(int offset, uint8_t event_data2, char *buf
   int str_len = 0;
   int rv = -1; 
 
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  if (!(obj = fiid_obj_create(tmpl_event_data2)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   
-  FIID_OBJ_GET_CLEANUP (obj, "alert", &val);
+  if (fiid_obj_get (obj, "alert", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   alert = val;
 	
-  FIID_OBJ_GET_CLEANUP (obj, "power_off", &val);
+  if (fiid_obj_get (obj, "power_off", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   power_off = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "reset", &val);
+  if (fiid_obj_get (obj, "reset", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   reset = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "power_cycle", &val);
+  if (fiid_obj_get (obj, "power_cycle", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   power_cycle = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "oem_action", &val);
+  if (fiid_obj_get (obj, "oem_action", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   oem_action = val;
 
-  FIID_OBJ_GET_CLEANUP (obj, "diagnostic_interrupt", &val);
+  if (fiid_obj_get (obj, "diagnostic_interrupt", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   diagnostic_interrupt = val;
 
   memset(buf, '\0', buflen);
 
-  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, alert, str_len, 0)) < 0));
+  if ((str_len = _strcat12(buf, buflen, alert, str_len, 0)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
-  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, power_off, str_len, 1)) < 0));
+  if ((str_len = _strcat12(buf, buflen, power_off, str_len, 1)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
-  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, reset, str_len, 2)) < 0));
+  if ((str_len = _strcat12(buf, buflen, reset, str_len, 2)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, power_cycle, str_len, 3)) < 0));
+  if ((str_len = _strcat12(buf, buflen, power_cycle, str_len, 3)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, oem_action, str_len, 4)) < 0));
+  if ((str_len = _strcat12(buf, buflen, oem_action, str_len, 4)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, diagnostic_interrupt, str_len, 5)) < 0));
+  if ((str_len = _strcat12(buf, buflen, diagnostic_interrupt, str_len, 5)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   rv = 0;
  cleanup:
@@ -1715,14 +1798,30 @@ _get_12_event_data2_message_offset_05(int offset, uint8_t event_data2, char *buf
   fiid_obj_t obj = NULL;
   int rv = -1;
 
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  if (!(obj = fiid_obj_create(tmpl_event_data2)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   
-  FIID_OBJ_GET_CLEANUP (obj, "timestamp_clock_type", &val);
+  if (fiid_obj_get (obj, "timestamp_clock_type", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   timestamp_clock_type = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "first_second", &val);
+  if (fiid_obj_get (obj, "first_second", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   first_second = val;
   
   if (timestamp_clock_type <= ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc_max)
@@ -1752,7 +1851,8 @@ get_12_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (offset == 0x05)
     return _get_12_event_data2_message_offset_05(offset, event_data2, buf, buflen);
 
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1763,7 +1863,8 @@ get_19_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (offset == 0x00 && event_data2 <= ipmi_sensor_type_code_19_event_data2_offset_00_desc_max)
     return _snprintf (buf, buflen, ipmi_sensor_type_code_19_event_data2_offset_00_desc[event_data2]);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1783,11 +1884,23 @@ get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       fiid_obj_t obj = NULL;
       int rv = -1;
 
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+      if (!(obj = fiid_obj_create( tmpl_event_data2)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+      if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj);
+          goto cleanup;
+        }
 
-      FIID_OBJ_GET_CLEANUP (obj, "restart_cause", &val);
+      if (fiid_obj_get (obj, "restart_cause", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
 
       if (val <= ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc_max)
         rv = _snprintf (buf, buflen, ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc[val]);
@@ -1797,7 +1910,8 @@ get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       return rv;
     }
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1815,11 +1929,23 @@ get_21_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   
   assert(buf && buflen);
   
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  if (!(obj = fiid_obj_create(tmpl_event_data2)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   
-  FIID_OBJ_GET_CLEANUP (obj, "slot_connector_type", &val);
+  if (fiid_obj_get (obj, "slot_connector_type", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   if (val <= ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max)
     rv = _snprintf (buf, buflen, ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc[val]);
@@ -1848,14 +1974,30 @@ get_23_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   
   assert(buf && buflen);
 
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  if (!(obj = fiid_obj_create(tmpl_event_data2)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   
-  FIID_OBJ_GET_CLEANUP (obj, "timer_at_expiration", &val);
+  if (fiid_obj_get (obj, "timer_at_expiration", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   timer_at_expiration = val;
 
-  FIID_OBJ_GET_CLEANUP (obj, "interrupt_type", &val);
+  if (fiid_obj_get (obj, "interrupt_type", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   interrupt_type = val;
 
   if (timer_at_expiration <= ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc_max)
@@ -1900,17 +2042,37 @@ get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       char *str = NULL;
       int rv = -1;
 
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+      if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj);
+          goto cleanup;
+        }
       
-      FIID_OBJ_GET_CLEANUP (obj, "private_bus_id", &val);
+      if (fiid_obj_get (obj, "private_bus_id", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       private_bus_id = val;
 
-      FIID_OBJ_GET_CLEANUP (obj, "lun", &val);
+      if (fiid_obj_get (obj, "lun", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       lun = val;
 
-      FIID_OBJ_GET_CLEANUP (obj, "fru_device", &val);
+      if (fiid_obj_get (obj, "fru_device", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       fru_device = val;
   
       if (fru_device <= ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc_max)
@@ -1926,7 +2088,8 @@ get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       return rv;
     }
 
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1946,11 +2109,23 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       fiid_obj_t obj = NULL;
       int rv = -1;
 
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+      if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj);
+          goto cleanup;
+        }
       
-      FIID_OBJ_GET_CLEANUP (obj, "user_id", &val);
+      if (fiid_obj_get (obj, "user_id", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
              
       if (val == 0x0)
 	rv = _snprintf(buf, buflen, "User ID for user that activated session = Unspecified");
@@ -1962,7 +2137,8 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       return rv;
     }
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1973,7 +2149,8 @@ get_2B_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (event_data2 <= ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc_max)
     return _snprintf (buf, buflen, ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc[event_data2]);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -1994,14 +2171,30 @@ get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   
   assert(buf && buflen);
 
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  if (!(obj = fiid_obj_create(tmpl_event_data2)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  if (fiid_obj_set_all(obj, &event_data2, sizeof(uint8_t)) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj);
+      goto cleanup;
+    }
   
-  FIID_OBJ_GET_CLEANUP (obj, "previous_state_offset", &val);
+  if (fiid_obj_get (obj, "previous_state_offset", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   previous_state_offset = val;
 
-  FIID_OBJ_GET_CLEANUP (obj, "cause_of_state_change", &val);
+  if (fiid_obj_get (obj, "cause_of_state_change", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   cause_of_state_change = val;
   
   if (cause_of_state_change <= ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc_max)
@@ -2031,11 +2224,23 @@ get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
       fiid_obj_t obj = NULL;
       int rv = -1;
 
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data3);
+      if (!(obj = fiid_obj_create(tmpl_event_data3)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
 
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
+      if (fiid_obj_set_all(obj, &event_data3, sizeof(uint8_t)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj);
+          goto cleanup;
+        }
       
-      FIID_OBJ_GET_CLEANUP (obj, "event_type", &val);
+      if (fiid_obj_get (obj, "event_type", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       
       if (val <= ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc_max)
         rv = _snprintf (buf, buflen, ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc[val]);
@@ -2045,7 +2250,8 @@ get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
       return rv;
     }
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2056,7 +2262,8 @@ get_0C_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
   if (offset == 0x08)
     return _snprintf (buf, buflen, "Memory module/device #%d", event_data3);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2085,17 +2292,37 @@ get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 	char *str2 = NULL;
 	int rv = -1;
         
-	FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data3);
+	if (!(obj = fiid_obj_create(tmpl_event_data3)))
+          {
+            ERRNO_TRACE(errno);
+            goto cleanup;
+          }
         
-        FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
+        if (fiid_obj_set_all(obj, &event_data3, sizeof(uint8_t)) < 0)
+          {
+            FIID_OBJECT_ERROR_TO_ERRNO(obj);
+            goto cleanup;
+          }
       
-        FIID_OBJ_GET_CLEANUP (obj, "event_offset", &val);
+        if (fiid_obj_get (obj, "event_offset", &val) < 0)
+          {
+            ERRNO_TRACE(errno);
+            goto cleanup;
+          }
 	event_offset = val;
 
-        FIID_OBJ_GET_CLEANUP (obj, "assertion_deassertion_e", &val);
+        if (fiid_obj_get (obj, "assertion_deassertion_e", &val) < 0)
+          {
+            ERRNO_TRACE(errno);
+            goto cleanup;
+          }
 	assertion_deassertion_event = val;
 
-        FIID_OBJ_GET_CLEANUP (obj, "logging_disabled_all_ev", &val);
+        if (fiid_obj_get (obj, "logging_disabled_all_ev", &val) < 0)
+          {
+            ERRNO_TRACE(errno);
+            goto cleanup;
+          }
 	logging_disabled_all_events = val;
 
         if (assertion_deassertion_event <= ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc_max)
@@ -2115,7 +2342,8 @@ get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
       return _snprintf (buf, buflen, "%d% full", event_data3);
     }
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2126,7 +2354,8 @@ get_19_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
   if (offset == 0x00 && event_data3 <= ipmi_sensor_type_code_19_event_data3_offset_00_desc_max)
     return _snprintf (buf, buflen, ipmi_sensor_type_code_19_event_data3_offset_00_desc[event_data3]);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2137,7 +2366,8 @@ get_1D_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
   if (offset == 0x07)
     return _snprintf (buf, buflen, "Channel Number used to deliver command that generated restart #%d", event_data3);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2156,7 +2386,8 @@ get_28_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
   if (offset == 0x05)
     return _snprintf (buf, buflen, "FRU Device ID/Slave Address #%d", event_data3);
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 static int
@@ -2180,14 +2411,30 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
       char *str = NULL;
       int rv = -1;
 
-      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data3);
+      if (!(obj = fiid_obj_create(tmpl_event_data3)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
 
-      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
+      if (fiid_obj_set_all(obj, &event_data3, sizeof(uint8_t)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO(obj);
+          goto cleanup;
+        }
       
-      FIID_OBJ_GET_CLEANUP (obj, "channel_number", &val);
+      if (fiid_obj_get (obj, "channel_number", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       channel_number = val;
       
-      FIID_OBJ_GET_CLEANUP (obj, "deactivation_cause", &val);
+      if (fiid_obj_get (obj, "deactivation_cause", &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       deactivation_cause = val;
       
       /* output deactivation case only if deactivation offset occurred */
@@ -2205,7 +2452,8 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
       return rv;
     }
   
-  ERR_EINVAL (0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 /***************************************************/
@@ -2221,12 +2469,20 @@ _get_event_message(uint16_t offset,
 
   assert(buf && buflen);
 
-  ERR_EINVAL (!(offset > offset_max));
+  if (offset > offset_max)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   rv = snprintf(buf, buflen, string_array[offset]);
 
   /* -1 to account for '\0' */
-  ERR_ENOSPC(!(rv >= (buflen - 1)));
+  if (rv >= (buflen - 1))
+    {
+      SET_ERRNO(ENOSPC);
+      return (-1);
+    }
 
   return (0);
 }
@@ -2237,7 +2493,12 @@ ipmi_get_generic_event_message (uint8_t event_reading_type_code,
 				char *buf,
 				unsigned int buflen)
 {
-  ERR_EINVAL (buf && buflen);
+  if (!buf 
+      || !buflen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (event_reading_type_code)
     {
@@ -2264,7 +2525,12 @@ ipmi_get_sensor_type_code_message (int sensor_type_code,
 				   char *buf, 
 				   unsigned int buflen)
 {
-  ERR_EINVAL (buf && buflen);
+  if (!buf 
+      || !buflen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (sensor_type_code)
     {
@@ -2304,7 +2570,8 @@ ipmi_get_sensor_type_code_message (int sensor_type_code,
     case 0x2C: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_2C_desc_max, ipmi_sensor_type_code_2C_desc);
     }
   
-  ERR_EINVAL(0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 int
@@ -2313,7 +2580,11 @@ ipmi_get_generic_event_message_short (uint8_t event_reading_type_code,
                                       char *buf,
                                       unsigned int buflen)
 {
-  ERR_EINVAL (buf && buflen);
+  if (!buf || !buflen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (event_reading_type_code)
     {
@@ -2340,7 +2611,11 @@ ipmi_get_sensor_type_code_message_short (int sensor_type_code,
                                          char *buf, 
                                          unsigned int buflen)
 {
-  ERR_EINVAL (buf && buflen);
+  if (!buf || !buflen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (sensor_type_code)
     {
@@ -2380,7 +2655,8 @@ ipmi_get_sensor_type_code_message_short (int sensor_type_code,
     case 0x2C: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_2C_short_desc_max, ipmi_sensor_type_code_2C_short_desc);
     }
   
-  ERR_EINVAL(0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 int
@@ -2390,7 +2666,11 @@ ipmi_get_event_data2_message (int sensor_type_code,
 			      char *buf, 
 			      unsigned int buflen)
 {
-  ERR_EINVAL (buf && buflen);
+  if (!buf || !buflen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (sensor_type_code)
     {
@@ -2408,7 +2688,8 @@ ipmi_get_event_data2_message (int sensor_type_code,
     case 0x2C: return get_2C_event_data2_message (offset, event_data2, buf, buflen);
     }
 
-  ERR_EINVAL(0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 
 int
@@ -2419,7 +2700,11 @@ ipmi_get_event_data3_message (int sensor_type_code,
 			      char *buf, 
 			      unsigned int buflen)
 {
-  ERR_EINVAL (buf && buflen);
+  if (!buf || !buflen)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
   switch (sensor_type_code)
     {
@@ -2433,6 +2718,7 @@ ipmi_get_event_data3_message (int sensor_type_code,
     case 0x2A: return get_2A_event_data3_message (offset, event_data2, event_data3, buf, buflen);
     }
   
-  ERR_EINVAL(0);
+  SET_ERRNO(EINVAL);
+  return (-1);
 }
 

@@ -36,7 +36,7 @@
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 #include "tool-hostrange-common.h"
 
 static int32_t
@@ -46,7 +46,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
   int32_t rv = -1;
   uint64_t val = 0;
 
-  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_chassis_capabilities_rs);
+  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_chassis_capabilities_rs);
 
   if (ipmi_cmd_get_chassis_capabilities (state_data->ipmi_ctx, cmd_rs) != 0)
     {
@@ -57,59 +57,59 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (cmd_rs,
-                 "capabilities_flags.provides_intrusion_sensor",
-                 &val);
+  TOOL_FIID_OBJ_GET (cmd_rs,
+                     "capabilities_flags.provides_intrusion_sensor",
+                     &val);
   pstdout_printf (state_data->pstate, 
                   "Intrusion Sensor           : %s\n",
                   (val ? "Provided" : "Not Provided"));
 
-  _FIID_OBJ_GET (cmd_rs,
-                 "capabilities_flags.provides_front_panel_lockout",
-                 &val);
+  TOOL_FIID_OBJ_GET (cmd_rs,
+                     "capabilities_flags.provides_front_panel_lockout",
+                     &val);
   pstdout_printf (state_data->pstate, 
                   "Front Panel Lockout        : %s\n",
                   (val ? "Provided" : "Not Provided"));
 
-  _FIID_OBJ_GET (cmd_rs,
-                 "capabilities_flags.provides_diagnostic_interrupt",
-                 &val);
+  TOOL_FIID_OBJ_GET (cmd_rs,
+                     "capabilities_flags.provides_diagnostic_interrupt",
+                     &val);
   pstdout_printf (state_data->pstate, 
                   "Diagnostic Interrupt       : %s\n",
                   (val ? "Provided" : "Not Provided"));
 
-  _FIID_OBJ_GET (cmd_rs,
-                 "capabilities_flags.provides_power_interlock",
-                 &val);
+  TOOL_FIID_OBJ_GET (cmd_rs,
+                     "capabilities_flags.provides_power_interlock",
+                     &val);
   pstdout_printf (state_data->pstate, 
                   "Power Interlock            : %s\n",
                   (val ? "Provided" : "Not Provided"));
 
-  _FIID_OBJ_GET (cmd_rs,
-                 "fru_info_device_address",
-                 &val);
+  TOOL_FIID_OBJ_GET (cmd_rs,
+                     "fru_info_device_address",
+                     &val);
   pstdout_printf (state_data->pstate, 
                   "FRU Info Device Address    : %Xh %s\n",
                   (unsigned char) val,
                   (val ? "" : "(Unspecified)"));
 
-  _FIID_OBJ_GET (cmd_rs,
-                 "sdr_device_address",
-                 &val);
+  TOOL_FIID_OBJ_GET (cmd_rs,
+                     "sdr_device_address",
+                     &val);
   pstdout_printf (state_data->pstate, 
                   "SDR Device Address         : %Xh\n",
                   (unsigned char) val);
 
-  _FIID_OBJ_GET (cmd_rs,
-                 "sel_device_address",
-                 &val);
+  TOOL_FIID_OBJ_GET (cmd_rs,
+                     "sel_device_address",
+                     &val);
   pstdout_printf (state_data->pstate, 
                   "SEL Device Address         : %Xh\n",
                   (unsigned char) val);
 
-  _FIID_OBJ_GET (cmd_rs,
-                 "system_management_device_address",
-                 &val);
+  TOOL_FIID_OBJ_GET (cmd_rs,
+                     "system_management_device_address",
+                     &val);
   pstdout_printf (state_data->pstate, 
                   "Sys Mgmt Device Address    : %Xh\n",
                   (unsigned char) val);
@@ -128,7 +128,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  _FIID_OBJ_DESTROY (cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -141,7 +141,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
   int32_t rv = -1;
   int8_t flag;
 
-  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_chassis_status_rs);
+  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_chassis_status_rs);
 
   if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, cmd_rs) != 0)
     {
@@ -152,32 +152,32 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "current_power_state.power_is_on", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "current_power_state.power_is_on", &val);
   pstdout_printf (state_data->pstate, 
                   "System Power               : %s\n", 
                   val ? "on" : "off");
 
-  _FIID_OBJ_GET (cmd_rs, "current_power_state.power_overload", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "current_power_state.power_overload", &val);
   pstdout_printf (state_data->pstate, 
                   "System Power Overload      : %s\n", 
                   val ? "true" : "false");
  
-  _FIID_OBJ_GET (cmd_rs, "current_power_state.interlock", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "current_power_state.interlock", &val);
   pstdout_printf (state_data->pstate, 
                   "Interlock switch           : %s\n", 
                   val ? "active" : "Inactive");
 
-  _FIID_OBJ_GET (cmd_rs, "current_power_state.power_fault", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "current_power_state.power_fault", &val);
   pstdout_printf (state_data->pstate, 
                   "Power fault detected       : %s\n", 
                   val ? "true" : "false");
 
-  _FIID_OBJ_GET (cmd_rs, "current_power_state.power_control_fault", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "current_power_state.power_control_fault", &val);
   pstdout_printf (state_data->pstate, 
                   "Power control fault        : %s\n", 
                   val ? "true" : "false");
 
-  _FIID_OBJ_GET (cmd_rs, "current_power_state.power_restore_policy", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "current_power_state.power_restore_policy", &val);
   pstdout_printf (state_data->pstate, 
                   "Power restore policy       :");
 
@@ -202,35 +202,35 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     }
 
   temp_val = IPMI_LAST_POWER_EVENT_UNKNOWN;
-  _FIID_OBJ_GET (cmd_rs, "last_power_event.ac_failed", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "last_power_event.ac_failed", &val);
   if (val)
     {
       temp_val = IPMI_LAST_POWER_EVENT_AC_FAILED;
       goto print;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "last_power_event.power_down_caused_by_power_overload", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "last_power_event.power_down_caused_by_power_overload", &val);
   if (val)
     {
       temp_val = IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_OVERLOAD;
       goto print;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "last_power_event.power_down_caused_by_power_interlock_being_activated", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "last_power_event.power_down_caused_by_power_interlock_being_activated", &val);
   if (val)
     {
       temp_val = IPMI_LAST_POWER_EVENT_POWER_DOWN_INTERLOCK_ACTIVATED;
       goto print;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "last_power_event.power_down_caused_by_power_fault", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "last_power_event.power_down_caused_by_power_fault", &val);
   if (val)
     {
       temp_val = IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_FAULT;
       goto print;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "last_power_event.power_on_entered_via_ipmi", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "last_power_event.power_on_entered_via_ipmi", &val);
   if (val)
     temp_val = IPMI_LAST_POWER_EVENT_POWER_ON_VIA_IPMI;
 
@@ -264,14 +264,14 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate, "Misc Chassis status        :");
-  _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.chassis_intrusion_active", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "misc_chassis_state.chassis_intrusion_active", &val);
   if (val)
     {
       misc_chassis_status = 1;
       pstdout_printf (state_data->pstate, " Chassis Intrusion Active");
     }
 
-  _FIID_OBJ_GET (cmd_rs,  "misc_chassis_state.front_panel_lockout_active", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs,  "misc_chassis_state.front_panel_lockout_active", &val);
   if (val) 
     {
       if (misc_chassis_status)
@@ -283,7 +283,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                       " Front panel lockout active");
     }
 
-  _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.drive_fault", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "misc_chassis_state.drive_fault", &val);
   if (val)
     {
       if (misc_chassis_status)
@@ -294,7 +294,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                       "                             Drive Fault");
     }
 
-  _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.cooling_fan_fault_detected", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "misc_chassis_state.cooling_fan_fault_detected", &val);
   if (val)
     {
       if (misc_chassis_status)
@@ -305,7 +305,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                       "                             Cooling fan fault detected");
     }
 
-  _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.chassis_identify_command_and_state_info_supported", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "misc_chassis_state.chassis_identify_command_and_state_info_supported", &val);
   if (val)
     {
       if (misc_chassis_status)
@@ -315,7 +315,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       pstdout_printf (state_data->pstate, 
                       "                             Chassis Identify Command and State Info supported");
 
-      _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.chassis_identify_state", &val);
+      TOOL_FIID_OBJ_GET (cmd_rs, "misc_chassis_state.chassis_identify_state", &val);
       pstdout_printf (state_data->pstate, 
                       "\nChassis Identify state     : ");
       switch (val)
@@ -345,7 +345,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
   
   pstdout_printf (state_data->pstate, 
                   "Front panel capabilities   :");
-  _FIID_OBJ_GET_WITH_RV (flag, cmd_rs, "front_panel.power_off_button_disabled", &val);
+  TOOL_FIID_OBJ_GET_WITH_RV (flag, cmd_rs, "front_panel.power_off_button_disabled", &val);
   if (flag)
     {
       if (val)
@@ -355,7 +355,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                           " Power off button disabled");
         }
     
-      _FIID_OBJ_GET (cmd_rs, "front_panel.reset_button_disabled", &val);
+      TOOL_FIID_OBJ_GET (cmd_rs, "front_panel.reset_button_disabled", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -367,7 +367,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                           " Reset button disabled");
         }
     
-      _FIID_OBJ_GET (cmd_rs, "front_panel.diagnostic_interrupt_button_disabled", &val);
+      TOOL_FIID_OBJ_GET (cmd_rs, "front_panel.diagnostic_interrupt_button_disabled", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -378,7 +378,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                           " Diagnostic Interrupt Button disabled");
         }
 
-      _FIID_OBJ_GET (cmd_rs, "front_panel.standby_button_disabled", &val);
+      TOOL_FIID_OBJ_GET (cmd_rs, "front_panel.standby_button_disabled", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -389,7 +389,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                           "                            Standby button disabled");
         }
     
-      _FIID_OBJ_GET (cmd_rs, "front_panel.power_off_button_disable_allowed", &val);
+      TOOL_FIID_OBJ_GET (cmd_rs, "front_panel.power_off_button_disable_allowed", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -400,7 +400,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                           " Power off button disable allowed");
         }
      
-      _FIID_OBJ_GET (cmd_rs, "front_panel.reset_button_disable_allowed", &val);
+      TOOL_FIID_OBJ_GET (cmd_rs, "front_panel.reset_button_disable_allowed", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -411,7 +411,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                           " Reset button disable allowed");
         }
     
-      _FIID_OBJ_GET (cmd_rs, "front_panel.diagnostic_interrupt_button_disable_allowed", &val);
+      TOOL_FIID_OBJ_GET (cmd_rs, "front_panel.diagnostic_interrupt_button_disable_allowed", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -422,7 +422,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                           " Diagnostic interrupt button disable allowed");
         }
     
-      _FIID_OBJ_GET (cmd_rs, "front_panel.standby_button_disable_allowed", &val);
+      TOOL_FIID_OBJ_GET (cmd_rs, "front_panel.standby_button_disable_allowed", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -438,7 +438,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     
   rv = 0;
  cleanup:
-  _FIID_OBJ_DESTROY (cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -451,7 +451,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_chassis_control_rs);
+  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_chassis_control_rs);
 
   if (ipmi_cmd_chassis_control (state_data->ipmi_ctx, 
                                 args->args.chassis_control, 
@@ -466,7 +466,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  _FIID_OBJ_DESTROY (cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -479,7 +479,7 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_chassis_identify_rs);
+  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_chassis_identify_rs);
 
   if (ipmi_cmd_chassis_identify (state_data->ipmi_ctx, 
                                  (args->args.identify_args.identify_interval_set) ? &args->args.identify_args.identify_interval : NULL, 
@@ -495,7 +495,7 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  _FIID_OBJ_DESTROY (cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -509,7 +509,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_power_restore_policy_rs);
+  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_power_restore_policy_rs);
 
   if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
                                          args->args.power_restore_policy, 
@@ -527,15 +527,15 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
       char policy_supported[100];
       memset(policy_supported, 0, sizeof (policy_supported));
   
-      _FIID_OBJ_GET (cmd_rs, "powered_off_after_ac_mains_returns", &val);
+      TOOL_FIID_OBJ_GET (cmd_rs, "powered_off_after_ac_mains_returns", &val);
       if (val)
         sprintf (policy_supported, "always-off ");  
   
-      _FIID_OBJ_GET (cmd_rs, "always_powering_up_after_ac_mains_returns", &val);
+      TOOL_FIID_OBJ_GET (cmd_rs, "always_powering_up_after_ac_mains_returns", &val);
       if (val)
         strcat (policy_supported, "always-on ");
   
-      _FIID_OBJ_GET (cmd_rs, "restoring_power_to_state_when_ac_mains_was_lost", &val);
+      TOOL_FIID_OBJ_GET (cmd_rs, "restoring_power_to_state_when_ac_mains_was_lost", &val);
       if (val)
         strcat (policy_supported, "Restore");
   
@@ -546,7 +546,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  _FIID_OBJ_DESTROY (cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -559,7 +559,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_power_cycle_interval_rs);
+  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_power_cycle_interval_rs);
 
   if (ipmi_cmd_set_power_cycle_interval (state_data->ipmi_ctx, 
                                          args->args.power_cycle_interval, 
@@ -574,7 +574,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  _FIID_OBJ_DESTROY (cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -586,7 +586,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
   char restart_cause[256];
   int32_t rv = -1;
 
-  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_system_restart_cause_rs);
+  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_system_restart_cause_rs);
 
   if (ipmi_cmd_get_system_restart_cause (state_data->ipmi_ctx, cmd_rs) != 0)
     {
@@ -597,7 +597,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "restart_cause", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "restart_cause", &val);
   switch (val)
     {
     case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_UNKNOWN:
@@ -659,7 +659,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  _FIID_OBJ_DESTROY (cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
  
@@ -673,7 +673,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   uint32_t min, hrs;
   int32_t rv = -1;
 
-  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_power_on_hours_counter_rs);
+  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_power_on_hours_counter_rs);
   
   if (ipmi_cmd_get_power_on_hours_counter (state_data->ipmi_ctx, cmd_rs) != 0)
     {
@@ -684,10 +684,10 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "minutes_per_counter", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "minutes_per_counter", &val);
   minutes_per_counter = val;
 
-  _FIID_OBJ_GET (cmd_rs, "counter_reading", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "counter_reading", &val);
   counts = val; 
 
   min = counts / minutes_per_counter;
@@ -701,7 +701,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   rv = 0;
 
  cleanup:
-  _FIID_OBJ_DESTROY (cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -713,7 +713,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   int32_t rv = -1;
   char tmp[256];
 
-  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_system_boot_options_boot_flags_rs);
+  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_system_boot_options_boot_flags_rs);
   
   if (ipmi_cmd_get_system_boot_options_boot_flags ( state_data->ipmi_ctx, 
                                                     IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR, 
@@ -727,7 +727,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "bios_boot_type", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "bios_boot_type", &val);
   sprintf (tmp, "BIOS boot type                : ");
   switch (val)
     {
@@ -745,7 +745,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "lock_out_reset_button", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "lock_out_reset_button", &val);
   sprintf (tmp, "Lock out reset buttons        : ");
   switch (val)
     {
@@ -763,7 +763,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "screen_blank", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "screen_blank", &val);
   sprintf (tmp, "Screen blank                  : ");
   switch (val)
     {
@@ -781,7 +781,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "boot_device", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "boot_device", &val);
   sprintf (tmp, "Boot device selector          : ");
   switch (val)
     {
@@ -823,7 +823,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "lock_keyboard", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "lock_keyboard", &val);
   sprintf (tmp, "Lock keyboard                 : ");
   switch (val)
     {
@@ -841,7 +841,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "cmos_clear", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "cmos_clear", &val);
   sprintf (tmp, "Clear CMOS                    : ");
   switch (val)
     {
@@ -859,7 +859,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "console_redirection", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "console_redirection", &val);
   sprintf (tmp, "Console redirection control   : ");
   switch (val)
     {
@@ -881,7 +881,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
   
-  _FIID_OBJ_GET (cmd_rs, "lock_out_sleep_button", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "lock_out_sleep_button", &val);
   sprintf (tmp, "Lock out sleep button         : ");
   switch (val)
     {
@@ -899,7 +899,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "user_password_bypass", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "user_password_bypass", &val);
   sprintf (tmp, "User password bypass          : ");
   switch (val)
     {
@@ -917,7 +917,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "lock_out_reset_button", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "lock_out_reset_button", &val);
   sprintf (tmp, "Lock out reset button         : ");
   switch (val)
     {
@@ -935,7 +935,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "force_progress_event_traps", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "force_progress_event_traps", &val);
   sprintf (tmp, "Force progress event traps    : ");
   switch (val)
     {
@@ -953,7 +953,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "firmware_bios_verbosity", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "firmware_bios_verbosity", &val);
   sprintf (tmp, "Firmware BIOS verbosity level : ");
   switch (val)
     {
@@ -975,7 +975,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
 
-  _FIID_OBJ_GET (cmd_rs, "lock_out_via_power_button", &val);
+  TOOL_FIID_OBJ_GET (cmd_rs, "lock_out_via_power_button", &val);
   sprintf (tmp, "Lock out via power button     : ");
   switch (val)
     {
@@ -994,7 +994,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   pstdout_printf (state_data->pstate, "%s\n", tmp); 
   rv = 0;
  cleanup:
-  _FIID_OBJ_DESTROY (cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -1016,11 +1016,11 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  _FIID_OBJ_CREATE(get_boot_flags_rs, tmpl_cmd_get_system_boot_options_boot_flags_rs);
+  TOOL_FIID_OBJ_CREATE(get_boot_flags_rs, tmpl_cmd_get_system_boot_options_boot_flags_rs);
   
-  _FIID_OBJ_CREATE(boot_info_ack_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
+  TOOL_FIID_OBJ_CREATE(boot_info_ack_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
 
-  _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_system_boot_options_rs);
+  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_system_boot_options_rs);
 
   if (ipmi_cmd_get_system_boot_options_boot_flags (state_data->ipmi_ctx, 
                                                    IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR, 
@@ -1036,7 +1036,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (args->args.boot_option_args.bios_boot_type == -1)
     {
-      _FIID_OBJ_GET (get_boot_flags_rs, "bios_boot_type", &val);
+      TOOL_FIID_OBJ_GET (get_boot_flags_rs, "bios_boot_type", &val);
       bios_boot_type = val;
     }
   else
@@ -1047,7 +1047,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (args->args.boot_option_args.lock_out_reset_button == -1)
     {
-      _FIID_OBJ_GET (get_boot_flags_rs, "lock_out_reset_button", &val);
+      TOOL_FIID_OBJ_GET (get_boot_flags_rs, "lock_out_reset_button", &val);
       lock_out_reset_button = val;
     }
   else
@@ -1055,7 +1055,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (args->args.boot_option_args.screen_blank == -1)
     {
-      _FIID_OBJ_GET (get_boot_flags_rs, "screen_blank", &val);
+      TOOL_FIID_OBJ_GET (get_boot_flags_rs, "screen_blank", &val);
       screen_blank = val;
     }
   else
@@ -1063,7 +1063,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (args->args.boot_option_args.boot_device == -1)
     {
-      _FIID_OBJ_GET (get_boot_flags_rs, "boot_device", &val);
+      TOOL_FIID_OBJ_GET (get_boot_flags_rs, "boot_device", &val);
       boot_device = val;
     }
   else
@@ -1071,7 +1071,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (args->args.boot_option_args.lock_keyboard == -1)
     {
-      _FIID_OBJ_GET (get_boot_flags_rs, "lock_keyboard", &val);
+      TOOL_FIID_OBJ_GET (get_boot_flags_rs, "lock_keyboard", &val);
       lock_keyboard = val;
     }
   else
@@ -1079,7 +1079,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (args->args.boot_option_args.cmos_clear == -1)
     {
-      _FIID_OBJ_GET (get_boot_flags_rs, "cmos_clear", &val);
+      TOOL_FIID_OBJ_GET (get_boot_flags_rs, "cmos_clear", &val);
       cmos_clear = val;
     }
   else
@@ -1087,18 +1087,18 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (args->args.boot_option_args.console_redirection == -1)
     {
-      _FIID_OBJ_GET (get_boot_flags_rs, "console_redirection", &val);
+      TOOL_FIID_OBJ_GET (get_boot_flags_rs, "console_redirection", &val);
       console_redirection = val;
     }
   else
     console_redirection = args->args.boot_option_args.console_redirection;
 
-  _FIID_OBJ_GET (get_boot_flags_rs, "lock_out_sleep_button", &val);
+  TOOL_FIID_OBJ_GET (get_boot_flags_rs, "lock_out_sleep_button", &val);
   lock_out_sleep_button = val;
 
   if (args->args.boot_option_args.user_password_bypass == -1)
     {
-      _FIID_OBJ_GET (get_boot_flags_rs, "user_password_bypass", &val);
+      TOOL_FIID_OBJ_GET (get_boot_flags_rs, "user_password_bypass", &val);
       user_password_bypass = val;
     }
   else
@@ -1106,7 +1106,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (args->args.boot_option_args.force_progress_event_traps == -1)
     {
-      _FIID_OBJ_GET (get_boot_flags_rs, "force_progress_event_traps", &val);
+      TOOL_FIID_OBJ_GET (get_boot_flags_rs, "force_progress_event_traps", &val);
       force_progress_event_traps = val;
     }
   else
@@ -1114,19 +1114,19 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (args->args.boot_option_args.firmware_bios_verbosity == -1)
     {
-      _FIID_OBJ_GET (get_boot_flags_rs, "firmware_bios_verbosity", &val);
+      TOOL_FIID_OBJ_GET (get_boot_flags_rs, "firmware_bios_verbosity", &val);
       firmware_bios_verbosity = val;
     }
   else
     firmware_bios_verbosity = args->args.boot_option_args.firmware_bios_verbosity;
 
-  _FIID_OBJ_GET (get_boot_flags_rs, "lock_out_via_power_button", &val);
+  TOOL_FIID_OBJ_GET (get_boot_flags_rs, "lock_out_via_power_button", &val);
   lock_out_via_power_button = val;
 
-  _FIID_OBJ_GET (get_boot_flags_rs, "bios_mux_control_override", &val);
+  TOOL_FIID_OBJ_GET (get_boot_flags_rs, "bios_mux_control_override", &val);
   bios_mux_control_override = val;
 
-  _FIID_OBJ_GET (get_boot_flags_rs, "bios_shared_mode_override", &val);
+  TOOL_FIID_OBJ_GET (get_boot_flags_rs, "bios_shared_mode_override", &val);
   bios_shared_mode_override = val;
 
   if (ipmi_cmd_set_system_boot_options_boot_flags (state_data->ipmi_ctx, 
@@ -1172,9 +1172,9 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  _FIID_OBJ_DESTROY (get_boot_flags_rs);
-  _FIID_OBJ_DESTROY (boot_info_ack_cmd_rs);
-  _FIID_OBJ_DESTROY (cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (get_boot_flags_rs);
+  TOOL_FIID_OBJ_DESTROY (boot_info_ack_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 

@@ -32,7 +32,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 static config_err_t
 community_string_checkout (const char *section_name,
@@ -46,7 +46,7 @@ community_string_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_community_string_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_community_string_rs);
   
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -66,16 +66,16 @@ community_string_checkout (const char *section_name,
                         stderr,
                         "ipmi_cmd_get_lan_configuration_parameters_community_string: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
   memset(community_string,'\0', IPMI_MAX_COMMUNITY_STRING_LENGTH+1);
-  _FIID_OBJ_GET_DATA (obj_cmd_rs,
-                      "community_string",
-                      (uint8_t *)community_string,
-                      IPMI_MAX_COMMUNITY_STRING_LENGTH+1);
+  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs,
+                          "community_string",
+                          (uint8_t *)community_string,
+                          IPMI_MAX_COMMUNITY_STRING_LENGTH+1);
 
   if (config_section_update_keyvalue_output(state_data->pstate, 
                                             kv,
@@ -84,7 +84,7 @@ community_string_checkout (const char *section_name,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -99,7 +99,7 @@ community_string_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -118,14 +118,14 @@ community_string_commit (const char *section_name,
                         stderr,
                         "ipmi_cmd_set_lan_configuration_parameters_community_string: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

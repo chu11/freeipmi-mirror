@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.46 2009-02-03 22:48:22 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.47 2009-02-23 22:29:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -418,7 +418,7 @@ _ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
 
           if (ipmi_sdr_cache_search_record_id(c->sdr_cache_ctx, record_ids[i]) < 0)
             {
-              if (ipmi_sdr_cache_ctx_errnum(c->sdr_cache_ctx) == IPMI_SDR_CACHE_CTX_ERR_NOT_FOUND)
+              if (ipmi_sdr_cache_ctx_errnum(c->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
                 {
                   c->errnum = IPMI_MONITORING_ERR_SENSOR_NOT_FOUND;
                   goto cleanup;

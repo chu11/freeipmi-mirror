@@ -34,7 +34,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-wrappers.h"
+#include "tool-fiid-util.h"
 
 /* convenience struct */
 struct alert_policy_table {
@@ -63,7 +63,7 @@ _get_alert_policy_table (struct pef_config_state_data *state_data,
   
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs);
 
   if (ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (state_data->ipmi_ctx, 
 								    IPMI_GET_PEF_PARAMETER,
@@ -76,38 +76,38 @@ _get_alert_policy_table (struct pef_config_state_data *state_data,
                         stderr,
                         "ipmi_cmd_get_pef_configuration_parameters_alert_policy_table: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
 #if 0
-  _FIID_OBJ_GET (obj_cmd_rs, "alert_policy_entry_number", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "alert_policy_entry_number", &val);
 #endif
-  _FIID_OBJ_GET (obj_cmd_rs, "policy_number.policy_type", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "policy_number.policy_type", &val);
   apt->policy_type = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "policy_number.enabled", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "policy_number.enabled", &val);
   apt->policy_enabled = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "policy_number.policy_number", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "policy_number.policy_number", &val);
   apt->policy_number = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "channel_destination.destination_selector", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "channel_destination.destination_selector", &val);
   apt->destination_selector = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "channel_destination.channel_number", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "channel_destination.channel_number", &val);
   apt->channel_number = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "alert_string_key.alert_string_set_selector", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "alert_string_key.alert_string_set_selector", &val);
   apt->alert_string_set_selector = val;
 
-  _FIID_OBJ_GET (obj_cmd_rs, "alert_string_key.event_specific_alert_string", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "alert_string_key.event_specific_alert_string", &val);
   apt->event_specific_alert_string = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -126,7 +126,7 @@ _set_alert_policy_table (struct pef_config_state_data *state_data,
 
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
-  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
+  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
 
   if (ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (state_data->ipmi_ctx, 
 								    alert_policy_entry_number, 
@@ -144,14 +144,14 @@ _set_alert_policy_table (struct pef_config_state_data *state_data,
                         stderr,
                         "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
                         ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
       
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  _FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 

@@ -1,3 +1,8 @@
+noinst_HEADERS = \
+	ipmi-locate-defs.h \
+	ipmi-locate-trace.h \
+	ipmi-locate-util.h
+
 noinst_LTLIBRARIES = liblocate.la
 
 liblocate_la_CPPFLAGS = \
@@ -13,4 +18,5 @@ liblocate_la_SOURCES = \
 	ipmi-locate-defaults.c \
 	ipmi-locate-dmidecode.c \
 	ipmi-locate-pci.c \
-	ipmi-locate-smbios.c
+	ipmi-locate-smbios.c \
+	ipmi-locate-util.c

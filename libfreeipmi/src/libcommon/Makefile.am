@@ -1,10 +1,11 @@
 noinst_HEADERS = \
 	ipmi-bit-ops.h \
 	ipmi-crypt.h \
-	ipmi-err-wrappers.h \
-	ipmi-fiid-wrappers.h \
+	ipmi-fiid-util.h \
+	ipmi-fill-util.h \
 	ipmi-md2.h \
-	ipmi-md5.h
+	ipmi-md5.h \
+	ipmi-trace.h
 
 noinst_LTLIBRARIES = libcommon.la
 
@@ -20,5 +21,6 @@ libcommon_la_CPPFLAGS = \
 libcommon_la_SOURCES = \
 	ipmi-bit-ops.c \
 	ipmi-crypt.c \
+	ipmi-fiid-util.c \
 	ipmi-md2.c \
 	ipmi-md5.c

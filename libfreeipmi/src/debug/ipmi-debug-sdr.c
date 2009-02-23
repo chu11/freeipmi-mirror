@@ -34,8 +34,9 @@
 
 #include "ipmi-debug-common.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-util.h"
+#include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
 
@@ -55,84 +56,206 @@ ipmi_dump_sdr_record (int fd,
   int32_t sdr_record_header_len;
   int8_t rv = -1;
 
-  ERR_EINVAL (sdr_record);
+  if (!sdr_record)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  ERR(!(ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
+  if (ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  ERR(!(ipmi_debug_output_str (fd, prefix_buf, hdr) < 0));
+  if (ipmi_debug_output_str (fd, prefix_buf, hdr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      return (-1);
+    }
 
-  FIID_TEMPLATE_LEN_BYTES(sdr_record_header_len, tmpl_sdr_record_header);
+  if ((sdr_record_header_len = fiid_template_len_bytes(tmpl_sdr_record_header)) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
-  FIID_OBJ_CREATE(obj_sdr_record_header, tmpl_sdr_record_header);
+  if (!(obj_sdr_record_header = fiid_obj_create(tmpl_sdr_record_header)))
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record_header,
-                           sdr_record,
-                           sdr_record_len);
+  if (fiid_obj_set_all(obj_sdr_record_header,
+                       sdr_record,
+                       sdr_record_len) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_sdr_record_header);
+      goto cleanup;
+    }
   
   /* Not enough for a real SDR record, just dump whatever we have */
   if (sdr_record_len <= sdr_record_header_len)
     {
-      ERR_CLEANUP (!(ipmi_obj_dump (fd, 
-                                    prefix, 
-                                    hdr, 
-                                    trlr, 
-                                    obj_sdr_record_header) < 0));
+      if (ipmi_obj_dump (fd, 
+                         prefix, 
+                         hdr, 
+                         trlr, 
+                         obj_sdr_record_header) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       rv = 0;
       goto cleanup;
     }
   
-  FIID_OBJ_GET_CLEANUP(obj_sdr_record_header, "record_type", &val);
+  if (Fiid_obj_get(obj_sdr_record_header, "record_type", &val) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   record_type = val;
 
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_full_sensor_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_full_sensor_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_compact_sensor_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_compact_sensor_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_event_only_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_event_only_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD)
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_entity_association_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_entity_association_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD)
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_device_relative_entity_association_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_device_relative_entity_association_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_generic_device_locator_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_generic_device_locator_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
-      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_fru_device_locator_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_fru_device_locator_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
-      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_management_controller_device_locator_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_management_controller_device_locator_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD)
-      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_management_controller_confirmation_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_management_controller_confirmation_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD)
-      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_bmc_message_channel_info_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_bmc_message_channel_info_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else if (record_type == IPMI_SDR_FORMAT_OEM_RECORD)
-      FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_oem_record);
+    {
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_oem_record)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   else
-    /* I don't know this record_type, maybe its in a newer spec?? */
-    FIID_OBJ_CREATE_CLEANUP(obj_sdr_record, tmpl_sdr_record_header);
+    {
+      /* I don't know this record_type, maybe its in a newer spec?? */
+      if (!(obj_sdr_record = fiid_obj_create(tmpl_sdr_record_header)))
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
+    }
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj_sdr_record,
-                           sdr_record,
-                           sdr_record_len);
+  if (fiid_obj_set_all(obj_sdr_record,
+                       sdr_record,
+                       sdr_record_len) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO(obj_sdr_record);
+      goto cleanup;
+    }
 
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     {
       uint8_t event_reading_type_code;
       fiid_obj_t obj_temp = NULL;
 
-      FIID_OBJ_GET_CLEANUP(obj_sdr_record, 
-                           "event_reading_type_code",
-                           &val);
+      if (Fiid_obj_get(obj_sdr_record, 
+                       "event_reading_type_code",
+                       &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       event_reading_type_code = val;
 
       if ((IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code)))
-        FIID_OBJ_COPY_CLEANUP(obj_temp,
-                              obj_sdr_record,
-                              tmpl_sdr_full_sensor_record_threshold_based_sensors);
+        {
+          if (!(obj_temp = fiid_obj_copy(obj_sdr_record, 
+                                         tmpl_sdr_full_sensor_record_threshold_based_sensors)))
+            {
+              FIID_OBJECT_ERROR_TO_ERRNO(obj_sdr_record);
+              goto cleanup;
+            }
+        }
       else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code)
                || IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
-        FIID_OBJ_COPY_CLEANUP(obj_temp,
-                              obj_sdr_record,
-                              tmpl_sdr_full_sensor_record_non_threshold_based_sensors);
+        {
+          if (!(obj_temp = fiid_obj_copy(obj_sdr_record, 
+                                         tmpl_sdr_full_sensor_record_non_threshold_based_sensors)))
+            {
+              FIID_OBJECT_ERROR_TO_ERRNO(obj_sdr_record);
+              goto cleanup;
+            }
+        }
 
       if (obj_temp)
         {
@@ -145,9 +268,13 @@ ipmi_dump_sdr_record (int fd,
       uint8_t event_reading_type_code;
       fiid_obj_t obj_temp = NULL;
 
-      FIID_OBJ_GET_CLEANUP(obj_sdr_record, 
-                           "event_reading_type_code",
-                           &val);
+      if (Fiid_obj_get(obj_sdr_record, 
+                       "event_reading_type_code",
+                       &val) < 0)
+        {
+          ERRNO_TRACE(errno);
+          goto cleanup;
+        }
       event_reading_type_code = val;
 
       /* achu: shouldn't be possible for this to be a threshold based
@@ -155,14 +282,24 @@ ipmi_dump_sdr_record (int fd,
        */
 
       if ((IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code)))
-        FIID_OBJ_COPY_CLEANUP(obj_temp,
-                              obj_sdr_record,
-                              tmpl_sdr_compact_sensor_record_threshold_based_sensors);
+        {
+          if (!(obj_temp = fiid_obj_copy(obj_sdr_record,
+                                         tmpl_sdr_compact_sensor_record_threshold_based_sensors)))
+            {
+              FIID_OBJECT_ERROR_TO_ERRNO(obj_sdr_record);
+              goto cleanup;
+            }
+        }
       else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code)
                || IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
-        FIID_OBJ_COPY_CLEANUP(obj_temp,
-                              obj_sdr_record,
-                              tmpl_sdr_compact_sensor_record_non_threshold_based_sensors);
+        {
+          if (!(obj_temp = fiid_obj_copy(obj_sdr_record,
+                                         tmpl_sdr_compact_sensor_record_non_threshold_based_sensors)))
+            {
+              FIID_OBJECT_ERROR_TO_ERRNO(obj_sdr_record);
+              goto cleanup;
+            }
+        }
 
       if (obj_temp)
         {
@@ -171,13 +308,21 @@ ipmi_dump_sdr_record (int fd,
         }
     }
 
-  ERR_CLEANUP (!(ipmi_obj_dump(fd, 
-                               prefix, 
-                               NULL, 
-                               NULL, 
-                               obj_sdr_record) < 0));
+  if (ipmi_obj_dump(fd, 
+                    prefix, 
+                    NULL, 
+                    NULL, 
+                    obj_sdr_record) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
 
-  ERR_CLEANUP (!(ipmi_debug_output_str(fd, prefix_buf, trlr) < 0));
+  if (ipmi_debug_output_str(fd, prefix_buf, trlr) < 0)
+    {
+      ERRNO_TRACE(errno);
+      goto cleanup;
+    }
   
   rv = 0;
  cleanup:

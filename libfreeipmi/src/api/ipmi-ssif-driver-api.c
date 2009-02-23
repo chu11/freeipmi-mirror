@@ -39,10 +39,12 @@
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
 
-#include "ipmi-ctx.h"
-#include "ipmi-err-wrappers-api.h"
-#include "ipmi-fiid-wrappers-api.h"
+#include "ipmi-api-defs.h"
+#include "ipmi-api-trace.h"
+#include "ipmi-api-util.h"
 #include "ipmi-ssif-driver-api.h"
+
+#include "libcommon/ipmi-fiid-util.h"
 
 #include "freeipmi-portability.h"
 
@@ -53,22 +55,26 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
   if (!fiid_obj_valid(obj_cmd_rq)
       || !fiid_obj_valid(obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
-  API_FIID_OBJ_PACKET_VALID(obj_cmd_rq);
+  if (api_fiid_obj_packet_valid(ctx, obj_cmd_rq) < 0)
+    {
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      return (-1);
+    }
 
   if (ctx->type != IPMI_DEVICE_SSIF)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -83,7 +89,12 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
         return (-1);
       }
 
-    API_FIID_OBJ_LEN_BYTES (cmd_len, obj_cmd_rq);
+    if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
+      {
+        API_FIID_OBJECT_ERROR_TO_API_ERRNUM(ctx, obj_cmd_rq);
+        return (-1);
+      }
+
     pkt_len = hdr_len + cmd_len;
 
     pkt = alloca (pkt_len);
@@ -161,7 +172,7 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 
     if (!read_len)
       {
-        API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+        API_SET_ERRNUM(ctx, IPMI_ERR_SYSTEM_ERROR);
         goto cleanup;
       }
 
@@ -176,7 +187,7 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 
     rv = 0;
   cleanup:
-    API_FIID_TEMPLATE_FREE(tmpl);
+    FIID_TEMPLATE_FREE(tmpl);
     if (rv < 0)
       return (rv);
   }
@@ -200,7 +211,7 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      API_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
       return (-1);
     }
 
@@ -209,13 +220,13 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
       || !buf_rs 
       || !buf_rs_len)
     {
-      API_SET_ERRNUM(IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->type != IPMI_DEVICE_SSIF)
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -272,7 +283,7 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
 
   if (!bytes_read)
     {
-      API_SET_ERRNUM(IPMI_ERR_SYSTEM_ERROR);
+      API_SET_ERRNUM(ctx, IPMI_ERR_SYSTEM_ERROR);
       return -1;
     }
 

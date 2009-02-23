@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd.c,v 1.11 2009-01-13 01:02:20 chu11 Exp $
+ *  $Id: ipmidetectd.c,v 1.12 2009-02-23 22:29:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -60,7 +60,7 @@ _daemon_init(void)
   int i;
 
   if ((pid = fork()) < 0)
-    ERR_EXIT(("fork: %s", strerror(errno)));
+    IPMIDETECTD_EXIT(("fork: %s", strerror(errno)));
 
   if (pid != 0)                 /* Terminate Parent */
     exit(0);
@@ -68,10 +68,10 @@ _daemon_init(void)
   setsid();
 
   if (signal(SIGHUP, SIG_IGN) == SIG_ERR)
-    ERR_EXIT(("signal: %s", strerror(errno)));
+    IPMIDETECTD_EXIT(("signal: %s", strerror(errno)));
 
   if ((pid = fork()) < 0)
-    ERR_EXIT(("fork: %s", strerror(errno)));
+    IPMIDETECTD_EXIT(("fork: %s", strerror(errno)));
 
   if (pid != 0)                 /* Terminate 1st Child */
     exit(0);

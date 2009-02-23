@@ -2,7 +2,7 @@ noinst_HEADERS = \
 	tool-common.h \
 	tool-config-file-common.h \
 	tool-cmdline-common.h \
-	tool-fiid-wrappers.h \
+	tool-fiid-util.h \
 	tool-sdr-cache-common.h
 
 noinst_LTLIBRARIES = \

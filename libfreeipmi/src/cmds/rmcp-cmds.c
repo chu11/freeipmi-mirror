@@ -30,8 +30,9 @@
 #include "freeipmi/cmds/rmcp-cmds.h"
 #include "freeipmi/interface/rmcp-interface.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-fill-util.h"
+#include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
 
@@ -66,16 +67,24 @@ fiid_template_t tmpl_cmd_asf_presence_pong =
 int8_t
 fill_cmd_asf_presence_ping(uint8_t message_tag, fiid_obj_t obj_cmd)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd));
+  if (!fiid_obj_valid(obj_cmd))
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_asf_presence_ping);
+  if (Fiid_obj_template_compare(obj_cmd, tmpl_cmd_asf_presence_ping) < 0)
+    {
+      SET_ERRNO(EINVAL);
+      return (-1);
+    }
 
-  FIID_OBJ_CLEAR (obj_cmd);
-  FIID_OBJ_SET (obj_cmd, "iana_enterprise_number", htonl(RMCP_ASF_IANA_ENTERPRISE_NUM));
-  FIID_OBJ_SET (obj_cmd, "message_type", RMCP_ASF_MESSAGE_TYPE_PRESENCE_PING);
-  FIID_OBJ_SET (obj_cmd, "message_tag", message_tag);
-  FIID_OBJ_SET (obj_cmd, "reserved", 0);
-  FIID_OBJ_SET (obj_cmd, "data_length", 0x00);
+  FILL_FIID_OBJ_CLEAR (obj_cmd);
+  FILL_FIID_OBJ_SET (obj_cmd, "iana_enterprise_number", htonl(RMCP_ASF_IANA_ENTERPRISE_NUM));
+  FILL_FIID_OBJ_SET (obj_cmd, "message_type", RMCP_ASF_MESSAGE_TYPE_PRESENCE_PING);
+  FILL_FIID_OBJ_SET (obj_cmd, "message_tag", message_tag);
+  FILL_FIID_OBJ_SET (obj_cmd, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd, "data_length", 0x00);
   return 0;
 }
 

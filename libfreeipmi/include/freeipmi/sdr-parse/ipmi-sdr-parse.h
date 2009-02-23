@@ -22,17 +22,17 @@
 
 #include <stdint.h>
 
-#define IPMI_SDR_PARSE_CTX_ERR_SUCCESS                                 0
-#define IPMI_SDR_PARSE_CTX_ERR_CONTEXT_NULL                            1
-#define IPMI_SDR_PARSE_CTX_ERR_CONTEXT_INVALID                         2
-#define IPMI_SDR_PARSE_CTX_ERR_PARAMETERS                              3
-#define IPMI_SDR_PARSE_CTX_ERR_OUT_OF_MEMORY                           4
-#define IPMI_SDR_PARSE_CTX_ERR_INVALID_SDR_RECORD                      5
-#define IPMI_SDR_PARSE_CTX_ERR_INCOMPLETE_SDR_RECORD                   6
-#define IPMI_SDR_PARSE_CTX_ERR_CANNOT_PARSE_OR_CALCULATE               7
-#define IPMI_SDR_PARSE_CTX_ERR_SYSTEM_ERROR                            8
-#define IPMI_SDR_PARSE_CTX_ERR_INTERNAL_ERROR                          9
-#define IPMI_SDR_PARSE_CTX_ERR_ERRNUMRANGE                            10
+#define IPMI_SDR_PARSE_ERR_SUCCESS                                 0
+#define IPMI_SDR_PARSE_ERR_CONTEXT_NULL                            1
+#define IPMI_SDR_PARSE_ERR_CONTEXT_INVALID                         2
+#define IPMI_SDR_PARSE_ERR_PARAMETERS                              3
+#define IPMI_SDR_PARSE_ERR_OUT_OF_MEMORY                           4
+#define IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD                      5
+#define IPMI_SDR_PARSE_ERR_INCOMPLETE_SDR_RECORD                   6
+#define IPMI_SDR_PARSE_ERR_CANNOT_PARSE_OR_CALCULATE               7
+#define IPMI_SDR_PARSE_ERR_SYSTEM_ERROR                            8
+#define IPMI_SDR_PARSE_ERR_INTERNAL_ERROR                          9
+#define IPMI_SDR_PARSE_ERR_ERRNUMRANGE                            10
 
 #define IPMI_SDR_PARSE_FLAGS_DEFAULT                              0x0000
 

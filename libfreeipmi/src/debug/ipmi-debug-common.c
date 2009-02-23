@@ -34,8 +34,7 @@
 
 #include "ipmi-debug-common.h"
 
-#include "libcommon/ipmi-err-wrappers.h"
-#include "libcommon/ipmi-fiid-wrappers.h"
+#include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
 
@@ -113,19 +112,47 @@ ipmi_debug_output_str(int fd, const char *prefix, const char *str)
       char *ptr = (char *)str;
 
       if (prefix)
-        IPMI_DEBUG_DPRINTF((fd, "%s", prefix));
+        {
+          if (ipmi_debug_dprintf(fd, "%s", prefix) < 0)
+            {
+              ERRNO_TRACE(errno);
+              return (-1);
+            }
+        }
+
       while (*ptr != '\0')
         {
           if (*ptr == '\n')
             {
-              IPMI_DEBUG_DPRINTF((fd, "%c", *ptr++));
+              if (ipmi_debug_dprintf(fd, "%c", *ptr++) < 0)
+                {
+                  ERRNO_TRACE(errno);
+                  return (-1);
+                }
               if (prefix)
-                IPMI_DEBUG_DPRINTF((fd, "%s", prefix));
+                {
+                  if (ipmi_debug_dprintf(fd, "%s", prefix) < 0)
+                    {
+                      ERRNO_TRACE(errno);
+                      return (-1);
+                    }
+                }
             }
           else
-            IPMI_DEBUG_DPRINTF((fd, "%c", *ptr++));
+            {
+              if (ipmi_debug_dprintf(fd, "%c", *ptr++) < 0)
+                {
+                  ERRNO_TRACE(errno);
+                  return (-1);
+                }
+            }
         }
-      IPMI_DEBUG_DPRINTF((fd, "\n"));
+
+      if (ipmi_debug_dprintf(fd, "\n") < 0)
+        {
+          ERRNO_TRACE(errno);
+          return (-1);
+        }
     }
 
   return 0;
@@ -142,14 +169,35 @@ ipmi_debug_output_byte_array(int fd, const char *prefix, uint8_t *buf, uint32_t 
     {
       int i = 0;
       if (prefix)
-        IPMI_DEBUG_DPRINTF ((fd, "%s", prefix));
-      IPMI_DEBUG_DPRINTF ((fd, "[ "));
+        {
+          if (ipmi_debug_dprintf(fd, "%s", prefix) < 0)
+            {
+              ERRNO_TRACE(errno);
+              return (-1);
+            }
+        }
+
+      if (ipmi_debug_dprintf(fd, "[ ") < 0)
+        {
+          ERRNO_TRACE(errno);
+          return (-1);
+        }
+
       while (count < buf_len && i < IPMI_DEBUG_CHAR_PER_LINE)
 	{
-	  IPMI_DEBUG_DPRINTF ((fd, "%02Xh ", buf[count++]));
+	  if (ipmi_debug_dprintf(fd, "%02Xh ", buf[count++]) < 0)
+            {
+              ERRNO_TRACE(errno);
+              return (-1);
+            }
 	  i++;
 	}
-      IPMI_DEBUG_DPRINTF ((fd, "]\n"));
+
+      if (ipmi_debug_dprintf(fd, "]\n") < 0)
+        {
+          ERRNO_TRACE(errno);
+          return (-1);
+        }
     }
 
   return 0;
