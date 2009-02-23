@@ -83,7 +83,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
        && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
       || (k_g && !k_g_len)
       || (k_g && k_g_len > IPMI_MAX_K_G_LENGTH)
-      || remote_console_random_number
+      || !remote_console_random_number
       || (remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
       || !managed_system_random_number
       || (managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)

@@ -89,7 +89,7 @@ Fiid_obj_packet_valid(fiid_obj_t obj)
       return (-1);
     }
 
-  return (0);
+  return (1);                   /* return 1 like real call */
 }
 
 int
@@ -107,7 +107,7 @@ Fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl)
       SET_ERRNO(EINVAL);
       return (-1);
     }
-  return (0);
+  return (1);                   /* return 1 like real call */
 }
 
 int
@@ -125,7 +125,7 @@ Fiid_obj_field_lookup(fiid_obj_t obj, char *field)
       SET_ERRNO(EINVAL);
       return (-1);
     }
-  return (0);
+  return (1);                   /* return 1 like real call */
 }
 
 int
@@ -147,5 +147,5 @@ Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
     }
 
   *val = lval;
-  return (0);
+  return (1);                   /* return 1 like real call */
 }

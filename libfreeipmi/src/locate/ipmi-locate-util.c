@@ -91,5 +91,5 @@ locate_fiid_obj_get(ipmi_locate_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t
     }
 
   *val = lval;
-  return (0);
+  return (1);                   /* return 1 like real call */
 }

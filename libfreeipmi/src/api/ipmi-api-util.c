@@ -234,7 +234,7 @@ api_fiid_obj_packet_valid(ipmi_ctx_t ctx, fiid_obj_t obj)
       return (-1);
     }
 
-  return (0);
+  return (1);                   /* return 1 like real call */
 }
 
 int
@@ -269,7 +269,7 @@ api_fiid_obj_template_compare(ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tm
       return (-1);
     }
   
-  return (0);
+  return (1);                   /* return 1 like real call */
 } 
  
 int
@@ -294,7 +294,7 @@ api_fiid_obj_get(ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val)
     }
 
   *val = lval;
-  return (0);
+  return (1);                   /* return 1 like real call */
 }
 
 int

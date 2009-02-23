@@ -941,7 +941,7 @@ _construct_payload(uint8_t payload_type,
                    uint8_t *confidentiality_key,
                    uint32_t confidentiality_key_len,
                    fiid_obj_t obj_rmcpplus_payload)
-{
+{       
   assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
            || payload_type == IPMI_PAYLOAD_TYPE_SOL
            || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST

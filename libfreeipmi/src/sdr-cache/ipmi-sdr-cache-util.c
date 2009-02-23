@@ -109,5 +109,5 @@ sdr_cache_fiid_obj_get(ipmi_sdr_cache_ctx_t ctx, fiid_obj_t obj, char *field, ui
     }
 
   *val = lval;
-  return (0);
+  return (1);                   /* return 1 like real call */
 }
