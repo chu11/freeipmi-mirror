@@ -430,12 +430,7 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
     {
       API_ERRNO_TO_API_ERRNUM(ctx, errno);
       goto cleanup;
-    }
-  
-  {
-    API_ERRNO_TO_API_ERRNUM(ctx, errno);
-    goto cleanup;
-  }
+    } 
   if (!(ctx->io.outofband.rs.obj_rmcp_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
     {
       API_ERRNO_TO_API_ERRNUM(ctx, errno);

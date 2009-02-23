@@ -1171,14 +1171,18 @@ ipmi_cmd_get_channel_access (ipmi_ctx_t ctx,
     }
   
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_channel_access_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-    if (fill_cmd_get_channel_access (channel_number, 
-                                     channel_access_get,
-                                     obj_cmd_rq) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM(ctx, errno);
-        goto cleanup;
-      }
+  if (fill_cmd_get_channel_access (channel_number, 
+                                   channel_access_get,
+                                   obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (api_ipmi_cmd (ctx, 
                     IPMI_BMC_IPMB_LUN_BMC, 
@@ -1226,12 +1230,16 @@ ipmi_cmd_get_channel_info (ipmi_ctx_t ctx,
     }
   
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_channel_info_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-    if (fill_cmd_get_channel_info (channel_number, obj_cmd_rq) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM(ctx, errno);
-        goto cleanup;
-      }
+  if (fill_cmd_get_channel_info (channel_number, obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
@@ -1291,17 +1299,21 @@ ipmi_cmd_set_channel_security_keys (ipmi_ctx_t ctx,
     }
   
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_channel_security_keys_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-    if (fill_cmd_set_channel_security_keys (channel_number,
-                                            operation,
-                                            key_id,
-                                            key_value,
-                                            key_value_len,
-                                            obj_cmd_rq) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM(ctx, errno);
-        goto cleanup;
-      }
+  if (fill_cmd_set_channel_security_keys (channel_number,
+                                          operation,
+                                          key_id,
+                                          key_value,
+                                          key_value_len,
+                                          obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
   if (api_ipmi_cmd (ctx, 
                     IPMI_BMC_IPMB_LUN_BMC, 
@@ -1359,19 +1371,23 @@ ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
     }
   
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_access_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-    if (fill_cmd_set_user_access (channel_number,
-                                  user_ipmi_messaging,
-                                  user_link_authentication,
-                                  user_restricted_to_callback,
-                                  user_id,
-                                  user_privilege_level_limit,
-                                  user_session_number_limit,
-                                  obj_cmd_rq) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM(ctx, errno);
-        goto cleanup;
-      }
+  if (fill_cmd_set_user_access (channel_number,
+                                user_ipmi_messaging,
+                                user_link_authentication,
+                                user_restricted_to_callback,
+                                user_id,
+                                user_privilege_level_limit,
+                                user_session_number_limit,
+                                obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (api_ipmi_cmd (ctx, 
                     IPMI_BMC_IPMB_LUN_BMC, 
@@ -1420,13 +1436,17 @@ ipmi_cmd_get_user_access (ipmi_ctx_t ctx,
     }
   
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_user_access_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-    if (fill_cmd_get_user_access (channel_number, user_id, obj_cmd_rq) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM(ctx, errno);
-        goto cleanup;
-      }
-
+  if (fill_cmd_get_user_access (channel_number, user_id, obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
+  
   if (api_ipmi_cmd (ctx, 
                     IPMI_BMC_IPMB_LUN_BMC, 
                     IPMI_NET_FN_APP_RQ, 
@@ -1475,15 +1495,19 @@ ipmi_cmd_set_user_name (ipmi_ctx_t ctx,
     }
   
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_name_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-    if (fill_cmd_set_user_name (user_id, 
-                                user_name, 
-                                user_name_len,
-                                obj_cmd_rq) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM(ctx, errno);
-        goto cleanup;
-      }
+  if (fill_cmd_set_user_name (user_id, 
+                              user_name, 
+                              user_name_len,
+                              obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (api_ipmi_cmd (ctx, 
                     IPMI_BMC_IPMB_LUN_BMC, 
@@ -1530,12 +1554,16 @@ ipmi_cmd_get_user_name (ipmi_ctx_t ctx,
     }
   
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_user_name_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-    if (fill_cmd_get_user_name (user_id, obj_cmd_rq) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM(ctx, errno);
-        goto cleanup;
-      }
+  if (fill_cmd_get_user_name (user_id, obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (api_ipmi_cmd (ctx, 
                     IPMI_BMC_IPMB_LUN_BMC, 
@@ -1587,16 +1615,20 @@ ipmi_cmd_set_user_password (ipmi_ctx_t ctx,
     }
   
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_password_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
-    if (fill_cmd_set_user_password (user_id, 
-                                    operation, 
-                                    password, 
-                                    password_len,
-                                    obj_cmd_rq) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM(ctx, errno);
-        goto cleanup;
-      }
+  if (fill_cmd_set_user_password (user_id, 
+                                  operation, 
+                                  password, 
+                                  password_len,
+                                  obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (api_ipmi_cmd (ctx, 
                     IPMI_BMC_IPMB_LUN_BMC, 
@@ -1655,17 +1687,21 @@ ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
     }
   
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_password_v20_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
   
-    if (fill_cmd_set_user_password_v20 (user_id, 
-                                        password_size,
-                                        operation, 
-                                        password, 
-                                        password_len,
-                                        obj_cmd_rq) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM(ctx, errno);
-        goto cleanup;
-      }
+  if (fill_cmd_set_user_password_v20 (user_id, 
+                                      password_size,
+                                      operation, 
+                                      password, 
+                                      password_len,
+                                      obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      goto cleanup;
+    }
 
   if (api_ipmi_cmd (ctx, 
                     IPMI_BMC_IPMB_LUN_BMC, 

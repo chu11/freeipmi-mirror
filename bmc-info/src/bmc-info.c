@@ -60,7 +60,7 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
 
   TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_device_guid_rs);
 
-  if (ipmi_cmd_get_device_guid (state_data->ipmi_ctx, cmd_rs) != 0)
+  if (ipmi_cmd_get_device_guid (state_data->ipmi_ctx, cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -152,7 +152,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 
   TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_device_id_rs);
 
-  if (ipmi_cmd_get_device_id (state_data->ipmi_ctx, cmd_rs) != 0)
+  if (ipmi_cmd_get_device_id (state_data->ipmi_ctx, cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -328,7 +328,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
     {
       if (ipmi_cmd_get_channel_info (state_data->ipmi_ctx, 
 				     i, 
-				     data_rs) != 0)
+				     data_rs) < 0)
 	continue;
       
       TOOL_FIID_OBJ_GET (data_rs, 

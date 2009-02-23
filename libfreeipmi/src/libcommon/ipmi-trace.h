@@ -95,7 +95,7 @@ do {                                                                            
 #define FIID_ITERATOR_ERROR_TO_ERRNO(__iter)                                          \
 do {                                                                                  \
   set_errno_by_fiid_iterator((__iter));                                               \
-  __MSG_TRACE(fiid_iterator_errormsg((__iterator)), fiid_iterator_errnum((__iter)));  \
+  __MSG_TRACE(fiid_iterator_errormsg((__iter)), fiid_iterator_errnum((__iter)));      \
 } while (0)   
 
 #ifdef __cplusplus
