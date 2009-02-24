@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.20 2009-02-23 22:29:12 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.21 2009-02-24 22:18:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -66,7 +66,6 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
 {
   fiid_obj_t obj_record = NULL;
   int32_t tmpl_record_length;
-  int32_t len;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
   fru_err_t ret;
   uint64_t overall_capacity;
@@ -106,7 +105,14 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
   
-  TOOL_FIID_TEMPLATE_LEN_BYTES (tmpl_record_length, tmpl_fru_power_supply_information);
+  if ((tmpl_record_length = fiid_template_len_bytes(tmpl_fru_power_supply_information)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_template_len_bytes: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (tmpl_record_length != record_length)
     {
@@ -120,10 +126,16 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
 
   TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_power_supply_information);
 
-  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
-                            obj_record, 
-                            frubuf, 
-                            record_length);
+  if (fiid_obj_set_all(obj_record,
+                       frubuf,
+                       record_length) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set_all: %s\n",
+                      fiid_obj_errormsg(obj_record));
+      goto cleanup;
+    }
 
   TOOL_FIID_OBJ_GET(obj_record,
                     "overall_capacity",
@@ -289,7 +301,6 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
 {
   fiid_obj_t obj_record = NULL;
   int32_t tmpl_record_length;
-  int32_t len;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
   fru_err_t ret;
   uint64_t output_number;
@@ -315,7 +326,14 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
   
-  TOOL_FIID_TEMPLATE_LEN_BYTES (tmpl_record_length, tmpl_fru_dc_output);
+  if ((tmpl_record_length = fiid_template_len_bytes(tmpl_fru_dc_output)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_template_len_bytes: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (tmpl_record_length != record_length)
     {
@@ -329,10 +347,16 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
 
   TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_dc_output);
 
-  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
-                            obj_record, 
-                            frubuf, 
-                            record_length);
+  if (fiid_obj_set_all(obj_record,
+                       frubuf,
+                       record_length) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set_all: %s\n",
+                      fiid_obj_errormsg(obj_record));
+      goto cleanup;
+    }
 
   TOOL_FIID_OBJ_GET(obj_record,
                     "output_number",
@@ -398,7 +422,6 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
 {
   fiid_obj_t obj_record = NULL;
   int32_t tmpl_record_length;
-  int32_t len;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
   fru_err_t ret;
   uint64_t output_number;
@@ -423,7 +446,14 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
   
-  TOOL_FIID_TEMPLATE_LEN_BYTES (tmpl_record_length, tmpl_fru_dc_load);
+  if ((tmpl_record_length = fiid_template_len_bytes(tmpl_fru_dc_load)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_template_len_bytes: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (tmpl_record_length != record_length)
     {
@@ -437,10 +467,16 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
 
   TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_dc_load);
 
-  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
-                            obj_record, 
-                            frubuf, 
-                            record_length);
+  if (fiid_obj_set_all(obj_record,
+                       frubuf,
+                       record_length) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set_all: %s\n",
+                      fiid_obj_errormsg(obj_record));
+      goto cleanup;
+    }
 
   TOOL_FIID_OBJ_GET(obj_record,
                     "output_number",
@@ -525,9 +561,15 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
     }
   
   /* Variable Length Record - So need to check min length */
-  TOOL_FIID_TEMPLATE_FIELD_START_BYTES (min_tmpl_record_length, 
-                                        tmpl_fru_management_access_record,
-                                        "record");
+  if ((min_tmpl_record_length = fiid_template_field_start_bytes(tmpl_fru_management_access_record,
+                                                                "record")) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_template_field_start_bytes: 'record': %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
   if (record_length < min_tmpl_record_length)
     {
@@ -540,10 +582,16 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
  
   TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_management_access_record);
 
-  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
-                            obj_record, 
-                            frubuf, 
-                            record_length);
+  if (fiid_obj_set_all(obj_record,
+                       frubuf,
+                       record_length) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set_all: %s\n",
+                      fiid_obj_errormsg(obj_record));
+      goto cleanup;
+    }
 
   TOOL_FIID_OBJ_GET(obj_record,
                     "sub_record_type",
@@ -660,10 +708,16 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
     }
   
   /* Variable Length Record - So need to check min length */
-  TOOL_FIID_TEMPLATE_FIELD_START_BYTES (min_tmpl_record_length, 
-                                        tmpl_fru_base_compatibility_record,
-                                        "code_range_mask");
-
+  if ((min_tmpl_record_length = fiid_template_field_start_bytes(tmpl_fru_base_compatibility_record,
+                                                                "code_range_mask")) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_template_field_start_bytes: 'code_range_mask': %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
+  
   if (record_length < min_tmpl_record_length)
     {
       pstdout_fprintf(state_data->pstate,
@@ -676,10 +730,16 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
 
   TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_base_compatibility_record);
 
-  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
-                            obj_record, 
-                            frubuf, 
-                            record_length);
+  if (fiid_obj_set_all(obj_record,
+                       frubuf,
+                       record_length) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set_all: %s\n",
+                      fiid_obj_errormsg(obj_record));
+      goto cleanup;
+    }
 
   TOOL_FIID_OBJ_GET(obj_record,
                     "manufacturer_id",
@@ -783,9 +843,15 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
     }
   
   /* Variable Length Record - So need to check min length */
-  TOOL_FIID_TEMPLATE_FIELD_START_BYTES (min_tmpl_record_length, 
-                                        tmpl_fru_extended_compatibility_record,
-                                        "code_range_mask");
+  if ((min_tmpl_record_length = fiid_template_field_start_bytes(tmpl_fru_extended_compatibility_record,
+                                                                "code_range_mask")) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_template_field_start_bytes: 'code_range_mask': %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (record_length < min_tmpl_record_length)
     {
@@ -799,10 +865,16 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
 
   TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_extended_compatibility_record);
 
-  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
-                            obj_record, 
-                            frubuf, 
-                            record_length);
+  if (fiid_obj_set_all(obj_record,
+                       frubuf,
+                       record_length) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set_all: %s\n",
+                      fiid_obj_errormsg(obj_record));
+      goto cleanup;
+    }
 
   TOOL_FIID_OBJ_GET(obj_record,
                     "manufacturer_id",
@@ -896,9 +968,15 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
     }
   
   /* Variable Length Record - So need to check min length */
-  TOOL_FIID_TEMPLATE_FIELD_START_BYTES (min_tmpl_record_length, 
-                                        tmpl_fru_oem_record,
-                                        "oem_data");
+  if ((min_tmpl_record_length = fiid_template_field_start_bytes(tmpl_fru_oem_record,
+                                                                "oem_data")) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_template_field_start_bytes: 'oem_data': %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (record_length < min_tmpl_record_length)
     {
@@ -912,10 +990,16 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
 
   TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_oem_record);
 
-  TOOL_FIID_OBJ_SET_ALL_LEN(len,
-                            obj_record, 
-                            frubuf, 
-                            record_length);
+  if (fiid_obj_set_all(obj_record,
+                       frubuf,
+                       record_length) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set_all: %s\n",
+                      fiid_obj_errormsg(obj_record));
+      goto cleanup;
+    }
 
   TOOL_FIID_OBJ_GET(obj_record,
                     "manufacturer_id",
@@ -969,7 +1053,6 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
   uint64_t record_format_version;
   uint64_t record_length;
   uint64_t record_checksum;
-  int32_t len;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
   fru_err_t ret;
   uint32_t multirecord_offset = 0;
@@ -978,7 +1061,14 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
   assert(state_data);
   assert(offset);
 
-  TOOL_FIID_TEMPLATE_LEN_BYTES(record_header_length, tmpl_fru_multirecord_area_header);
+  if ((record_header_length = fiid_template_len_bytes(tmpl_fru_multirecord_area_header)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_template_len_bytes: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((offset*8 + record_header_length) > state_data->fru_inventory_area_size)
     {
@@ -1035,10 +1125,16 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
           goto cleanup;
         }
       
-      TOOL_FIID_OBJ_SET_ALL_LEN(len, 
-                                fru_multirecord_header, 
-                                frubuf,
-                                record_header_length);
+      if (fiid_obj_set_all(fru_multirecord_header,
+                           frubuf,
+                           record_header_length) < 0)
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "fiid_obj_set_all: %s\n",
+                          fiid_obj_errormsg(fru_multirecord_header));
+          goto cleanup;
+        }
       
       TOOL_FIID_OBJ_GET (fru_multirecord_header,
                          "record_type_id",

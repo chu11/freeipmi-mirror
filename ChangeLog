@@ -1,5 +1,11 @@
 2009-02-24  Albert Chu <chu11@llnl.gov>
 
+	* common/src/toolcommon/tool-fiid-util.h: Remove some macros.
+
+	* Adjust tools to use fiid library directly.
+	
+2009-02-24  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/ipmi-sel.8.pre.in: Note 1-Jan-1970 information.
 	
 2009-02-23  Albert Chu <chu11@llnl.gov>

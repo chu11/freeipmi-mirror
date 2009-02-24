@@ -246,7 +246,11 @@ alert_string_checkout (const char *section_name,
     {
       int j;
 
-      TOOL_FIID_OBJ_CLEAR(obj_cmd_rs);
+      if (fiid_obj_clear(obj_cmd_rs) < 0)
+        {
+          pstdout_perror(state_data->pstate, "fiid_obj_clear");
+          goto cleanup;
+        }
 
       if (ipmi_cmd_get_pef_configuration_parameters_alert_string (state_data->ipmi_ctx,
                                                                   IPMI_GET_PEF_PARAMETER,

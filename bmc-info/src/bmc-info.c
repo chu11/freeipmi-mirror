@@ -112,9 +112,14 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_COPY(intel_rs,
-                     device_id_rs,
-                     tmpl_cmd_get_device_id_sr870bn4_rs);
+  if (!(intel_rs = fiid_obj_copy(device_id_rs, tmpl_cmd_get_device_id_sr870bn4_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_copy: %s\n"
+                      fiid_obj_errormsg(device_id_rs));
+      goto cleanup;
+    }
 
   TOOL_FIID_OBJ_GET (intel_rs,
                      "auxiliary_firmware_revision_info.boot_code.major",

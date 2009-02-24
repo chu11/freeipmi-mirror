@@ -111,6 +111,16 @@ Contributions
 o Update Ganglia and Nagios plugins for changes in ipmi-sensors and
 ipmimonitoring.
 
+0.7.5 - 01/12/09
+----------------
+o In ipmi-fru, do not output error messages for FRU entries that do
+not exist on a motherboard.
+o In ipmi-sel, fix SEL message output corner case.
+o In ipmi-sel, ipmi-sensors, and ipmimonitoring, check that inputted
+record IDs are not illegal record ID values.
+o In bmc-config, fix "Enable_User" checkout corner case bug.
+o Fix/clarify minor documentation typos/wording.
+
 0.7.4 - 12/15/08
 ----------------
 o Change -I short option (for --chassis-identify) to -i in

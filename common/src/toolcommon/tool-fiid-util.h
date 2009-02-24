@@ -21,40 +21,6 @@
 
 #include "freeipmi/fiid/fiid.h"
 
-#define TOOL_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)                                     \
-  do {                                                                                  \
-    if (((__len) = fiid_template_len_bytes((__tmpl))) < 0)                              \
-      {                                                                                 \
-        pstdout_fprintf(state_data->pstate,                                             \
-                        stderr,                                                         \
-                        "fiid_template_len_bytes: %s\n",                                \
-                        strerror(errno));                                               \
-        goto cleanup;                                                                   \
-      }                                                                                 \
-  } while (0)
-
-#define TOOL_FIID_TEMPLATE_FIELD_START_BYTES(__len, __tmpl, __field)                    \
-  do {                                                                                  \
-    if (((__len) = fiid_template_field_start_bytes((__tmpl), (__field))) < 0)           \
-      {                                                                                 \
-        pstdout_fprintf(state_data->pstate,                                             \
-                        stderr,                                                         \
-                        "fiid_template_field_start_bytes: %s: %s\n",                    \
-                        (__field),                                                      \
-                        strerror(errno));                                               \
-        goto cleanup;                                                                   \
-      }                                                                                 \
-  } while (0)
-
-#define TOOL_FIID_OBJ_CLEAR(__obj)                                                      \
-  do {                                                                                  \
-    if (fiid_obj_clear ((__obj)) < 0)                                                   \
-      {                                                                                 \
-        pstdout_perror(state_data->pstate, "fiid_obj_clear");                           \
-        goto cleanup;                                                                   \
-      }                                                                                 \
-  } while (0)
-
 #define TOOL_FIID_OBJ_CREATE(__obj, __tmpl)                                             \
 do {                                                                                    \
   if (!((__obj) = fiid_obj_create((__tmpl))))                                           \
@@ -63,18 +29,6 @@ do {                                                                            
                       stderr,                                                           \
                       "fiid_obj_create: %s\n",                                          \
                       strerror(errno));                                                 \
-      goto cleanup;                                                                     \
-    }                                                                                   \
-} while (0)
-
-#define TOOL_FIID_OBJ_COPY(__obj_dest, __obj_src, __alt_tmpl)                           \
-do {                                                                                    \
-  if (!((__obj_dest) = fiid_obj_copy((__obj_src), (__alt_tmpl))))                       \
-    {                                                                                   \
-      pstdout_fprintf(state_data->pstate,                                               \
-                      stderr,                                                           \
-                      "fiid_obj_copy: %s\n",                                            \
-                      fiid_obj_errormsg((__obj_src)));                                  \
       goto cleanup;                                                                     \
     }                                                                                   \
 } while (0)
@@ -172,32 +126,6 @@ do {                                                                            
          goto cleanup;                                                                  \
       }                                                                                 \
 } while (0)
-
-#define TOOL_FIID_OBJ_SET_ALL(__obj, __data, __data_len)                                \
-do {                                                                                    \
-    if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)                         \
-      {                                                                                 \
-         pstdout_fprintf(state_data->pstate,                                            \
-                         stderr,                                                        \
-                         "fiid_obj_set_all: %s\n",                                      \
-                         fiid_obj_errormsg((__obj)));                                   \
-         goto cleanup;                                                                  \
-      }                                                                                 \
-} while (0)
-
-#define TOOL_FIID_OBJ_SET_ALL_LEN(__len, __obj, __data, __datalen)                      \
-  do {                                                                                  \
-    if (((__len) = fiid_obj_set_all ((__obj),                                           \
-                                     (__data),                                          \
-                                     (__datalen))) < 0)                                 \
-      {                                                                                 \
-        pstdout_fprintf(state_data->pstate,                                             \
-                        stderr,                                                         \
-                        "fiid_obj_set_all: %s\n",                                       \
-                        fiid_obj_errormsg((__obj)));                                    \
-        goto cleanup;                                                                   \
-      }                                                                                 \
-  } while (0)
 
 #define TOOL_FIID_OBJ_DESTROY(__obj)                                                    \
   do {                                                                                  \

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.41 2009-02-23 22:29:12 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.42 2009-02-24 22:18:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -85,7 +85,6 @@ _output_fru(ipmi_fru_state_data_t *state_data,
   uint64_t board_info_area_starting_offset;
   uint64_t product_info_area_starting_offset;
   uint64_t multirecord_area_starting_offset;
-  int32_t len;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
   fru_err_t ret;
 
@@ -138,7 +137,14 @@ _output_fru(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_TEMPLATE_LEN_BYTES(common_header_len, tmpl_fru_common_header);
+  if ((common_header_len = fiid_template_len_bytes(tmpl_fru_common_header)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_template_len_bytes: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   memset(frubuf, '\0', IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1);
 
@@ -174,7 +180,16 @@ _output_fru(ipmi_fru_state_data_t *state_data,
 
   TOOL_FIID_OBJ_CREATE(fru_common_header, tmpl_fru_common_header);
 
-  TOOL_FIID_OBJ_SET_ALL_LEN(len, fru_common_header, frubuf, common_header_len);
+  if (fiid_obj_set_all(fru_common_header,
+                       frubuf,
+                       common_header_len) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: %s\n",
+                      fiid_obj_errormsg(fru_common_header));
+      goto cleanup;
+    }
 
   TOOL_FIID_OBJ_GET (fru_common_header,
                      "format_version",

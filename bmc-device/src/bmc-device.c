@@ -756,9 +756,14 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_COPY(mca_cmd_rs,
-                     cmd_rs,
-                     tmpl_cmd_get_auxiliary_log_status_mca_rs);
+  if (!(mca_cmd_rs = fiid_obj_copy(cmd_rs, tmpl_cmd_get_auxiliary_log_status_mca_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_copy: %s\n"
+                      fiid_obj_errormsg(cmd_rs));
+      goto cleanup;
+    }
 
   TOOL_FIID_OBJ_GET (mca_cmd_rs,
                      "timestamp",

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.28 2009-02-23 22:29:12 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.29 2009-02-24 22:18:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -82,7 +82,11 @@ ipmi_fru_read_fru_data (ipmi_fru_state_data_t *state_data,
 
       memset(buf, '\0', FRU_BUF_LEN+1);
 
-      TOOL_FIID_OBJ_CLEAR(fru_read_data_rs);
+      if (fiid_obj_clear(fru_read_data_rs) < 0)
+        {
+          pstdout_perror(state_data->pstate, "fiid_obj_clear");
+          goto cleanup;
+        }
 
       if ((fru_read_bytes - num_bytes_read) < FRU_COUNT_TO_READ_BLOCK_SIZE)
         count_to_read = fru_read_bytes - num_bytes_read;
@@ -499,7 +503,6 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   fiid_obj_t fru_info_area_header = NULL;
-  int32_t len;
   int32_t info_area_header_len;
   uint64_t format_version;
   fru_err_t rv = FRU_ERR_FATAL_ERROR;
@@ -510,7 +513,14 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
   assert(str);
   assert(info_area_length);
   
-  TOOL_FIID_TEMPLATE_LEN_BYTES(info_area_header_len, tmpl_fru_info_area_header);
+  if ((info_area_header_len = fiid_template_len_bytes(tmpl_fru_info_area_header)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_template_len_bytes: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
   if ((offset_in_bytes + info_area_header_len) > state_data->fru_inventory_area_size)
     {
@@ -535,10 +545,16 @@ ipmi_fru_get_info_area_length(ipmi_fru_state_data_t *state_data,
 
   TOOL_FIID_OBJ_CREATE(fru_info_area_header, tmpl_fru_info_area_header);
 
-  TOOL_FIID_OBJ_SET_ALL_LEN(len, 
-                            fru_info_area_header, 
-                            frubuf,
-                            info_area_header_len);
+  if (fiid_obj_set_all(fru_info_area_header,
+                       frubuf,
+                       info_area_header_len) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set_all: %s\n",
+                      fiid_obj_errormsg(fru_info_area_header));
+      goto cleanup;
+    }
 
   TOOL_FIID_OBJ_GET (fru_info_area_header,
                      "format_version",
