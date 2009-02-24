@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.40 2009-01-13 01:02:18 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.41 2009-02-24 01:18:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -235,6 +235,9 @@ ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
   /* Retransmission timeout cannot be larger than the session timeout */
   if (c->config.retransmission_timeout_len > c->config.session_timeout_len)
     {
+      IPMICONSOLE_DEBUG(("retransmission_timeout_len (%u) > session_timeout_len (%u)",
+                         c->config.retransmission_timeout_len,
+                         c->config.session_timeout_len));
       errno = EINVAL;
       return -1;
     }
@@ -242,6 +245,9 @@ ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
   /* Keepalive timeout cannot be larger than the session timeout */
   if (c->config.keepalive_timeout_len > c->config.session_timeout_len)
     {
+      IPMICONSOLE_DEBUG(("keepalive_timeout_len (%u) > session_timeout_len (%u)",
+                         c->config.keepalive_timeout_len,
+                         c->config.session_timeout_len));
       errno = EINVAL;
       return -1;
     }
@@ -249,6 +255,9 @@ ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
   /* Retransmission timeout cannot be larger than the keepalive timeout */
   if (c->config.retransmission_timeout_len > c->config.keepalive_timeout_len)
     {
+      IPMICONSOLE_DEBUG(("retransmission_timeout_len (%u) > keepalive_timeout_len (%u)",
+                         c->config.retransmission_timeout_len,
+                         c->config.keepalive_timeout_len));
       errno = EINVAL;
       return -1;
     }
@@ -256,6 +265,9 @@ ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
   /* Retransmission keepalive timeout cannot be larger than the keepalive timeout */
   if (c->config.retransmission_keepalive_timeout_len > c->config.keepalive_timeout_len)
     {
+      IPMICONSOLE_DEBUG(("retransmission_keepalive_timeout_len (%u) > keepalive_timeout_len (%u)",
+                         c->config.retransmission_keepalive_timeout_len,
+                         c->config.keepalive_timeout_len));
       errno = EINVAL;
       return -1;
     }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.88 2009-01-23 01:01:53 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.89 2009-02-24 01:18:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -497,6 +497,7 @@ ipmiconsole_ctx_create(char *hostname,
       || (engine_config->behavior_flags & ~IPMICONSOLE_BEHAVIOR_MASK)
       || (engine_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK))
     {
+      IPMICONSOLE_DEBUG(("invalid input parameters"));
       errno = EINVAL;
       return NULL;
     }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.76 2009-01-23 01:01:53 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.77 2009-02-24 01:18:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -488,7 +488,8 @@ typedef void (*Ipmiconsole_callback)(void *);
  *   Bitwise OR of flags indicating how debug output should (or should
  *   not) be output. Pass 0 for default of no debugging.
  *
- * Returns 0 on success, -1 on error
+ * Returns 0 on success, -1 on error.  On error errno will be set to
+ * indicate error.
  */
 int ipmiconsole_engine_init(unsigned int thread_count, 
 			    unsigned int debug_flags);
@@ -559,7 +560,8 @@ int ipmiconsole_engine_init(unsigned int thread_count,
  *   routine.  If the callback will be required to process the context
  *   status, the context should be included in this argument.
  *
- * Returns 0 on success, -1 on error.  
+ * Returns 0 on success, -1 on error.  ipmiconsole_ctx_errnum() can be
+ * called to determine the cause of the error.
  */
 int ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
                               Ipmiconsole_callback callback,
@@ -574,7 +576,8 @@ int ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
  * an error occurred.  On an error, ipmiconsole_ctx_errnum() can be
  * used to determine the type of error that occured.
  *
- * Returns 0 on success, -1 on error.  
+ * Returns 0 on success, -1 on error.  ipmiconsole_ctx_errnum() can be
+ * called to determine the cause of the error.
  */
 int ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c);
 
@@ -625,7 +628,8 @@ void ipmiconsole_engine_teardown(int cleanup_sol_sessions);
  *   Ipmiconsole engine configuration.  See ipmiconsole_engine_config
  *   definition above.
  *
- * Returns ctx on success, NULL on error.
+ * Returns ctx on success, NULL on error.  On error errno will be set to
+ * indicate error.
  */
 ipmiconsole_ctx_t ipmiconsole_ctx_create(char *hostname,
 					 struct ipmiconsole_ipmi_config *ipmi_config,

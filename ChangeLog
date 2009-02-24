@@ -1,5 +1,10 @@
 2009-02-23  Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/src/libipmiconsole/: Add extra debug messages.  Add
+	extra header file documentation.
+	
+2009-02-23  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-chassis-config/src/ipmi-chassis-config-map.c: Fix typo
 	"FLOOPY" to "FLOPPY".
 	
