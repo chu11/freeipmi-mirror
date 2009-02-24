@@ -11,6 +11,13 @@ records store system event information and may be useful for debugging
 problems. Although output may vary dependent on individual SEL events,
 most entries will display the SEL record id, date of event, time of
 event, sensor group, sensor name, and the sensor event occurrence.
+
+Some timestamps in the SEL may report a date of 1-Jan-1970.  This
+timestamp is not necessarily incorrect.  It usually indicates a
+hardware event that occurred before a timestamp in firmware has been
+initialized.  For example, certain hardware components will have their
+internally clocks reset during a power cycle.
+
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>

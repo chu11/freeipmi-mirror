@@ -12,6 +12,7 @@ o In bmc-config, ipmi-chassis-config, ipmi-sensors,
   --config-file option.
 o In ipmi-chassis-config, fix typo of "FLOOPY" to "FLOPPY".
 o Fix bmc-watchdog init script portability to Suse.
+o Update ipmi-sel manpage.
 
 0.7.5 - 01/12/09
 ----------------
