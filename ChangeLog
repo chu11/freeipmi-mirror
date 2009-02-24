@@ -1,5 +1,10 @@
 2009-02-23  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-chassis-config/src/ipmi-chassis-config-map.c: Fix typo
+	"FLOOPY" to "FLOPPY".
+	
+2009-02-23  Albert Chu <chu11@llnl.gov>
+
 	Merge changes from libfreeipmi_cleanup_branch.
 
 	* libfreeipmi/: Massive code cleanup;
