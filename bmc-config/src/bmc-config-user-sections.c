@@ -490,18 +490,25 @@ enable_user_commit (const char *section_name,
 
           TOOL_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_user_password_rq);
 
-          if (fill_cmd_set_user_password (userid,
-                                          user_status,
-                                          password,
-                                          0,
-                                          obj_cmd_rq) < 0)
+          if (fill_cmd_set_user_password(userid,
+                                         user_status,
+                                         password,
+                                         0,
+                                         obj_cmd_rq) < 0)
             goto cleanup;
           
           /* Force the password to be filled in with a length */
-          TOOL_FIID_OBJ_SET_DATA (obj_cmd_rq,
-                                  "password",
-                                  (uint8_t *)password,
-                                  IPMI_1_5_MAX_PASSWORD_LENGTH);
+          if (fiid_obj_set_data(obj_cmd_rq,
+                                "password",
+                                (uint8_t *)password,
+                                IPMI_1_5_MAX_PASSWORD_LENGTH) < 0)
+            {
+              pstdout_fprintf(state_data->pstate, 
+                              stderr,
+                              "fiid_obj_set_data: 'password': %s\n",
+                              fiid_obj_errormsg(obj_cmd_rq));
+              goto cleanup;
+            }
           
           if (ipmi_cmd (state_data->ipmi_ctx,
                         IPMI_BMC_IPMB_LUN_BMC,

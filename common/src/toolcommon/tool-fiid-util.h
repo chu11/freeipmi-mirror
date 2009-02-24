@@ -103,30 +103,6 @@ do {                                                                            
       }                                                                                 \
 } while (0)
 
-#define TOOL_FIID_OBJ_SET(__obj, __field, __val)                                        \
-do {                                                                                    \
-    if (fiid_obj_set ((__obj), (__field), (__val)) < 0)                                 \
-      {                                                                                 \
-         pstdout_fprintf(state_data->pstate,                                            \
-                         stderr,                                                        \
-                         "fiid_obj_set: %s\n",                                          \
-                         fiid_obj_errormsg((__obj)));                                   \
-         goto cleanup;                                                                  \
-      }                                                                                 \
-} while (0)
-
-#define TOOL_FIID_OBJ_SET_DATA(__obj, __field, __data, __data_len)                      \
-do {                                                                                    \
-    if (fiid_obj_set_data ((__obj), (__field), (__data), (__data_len)) < 0)             \
-      {                                                                                 \
-         pstdout_fprintf(state_data->pstate,                                            \
-                         stderr,                                                        \
-                         "fiid_obj_set_data: %s\n",                                     \
-                         fiid_obj_errormsg((__obj)));                                   \
-         goto cleanup;                                                                  \
-      }                                                                                 \
-} while (0)
-
 #define TOOL_FIID_OBJ_DESTROY(__obj)                                                    \
   do {                                                                                  \
     if ((__obj))                                                                        \

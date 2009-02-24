@@ -161,8 +161,26 @@ _get_sdr_sensor_thresholds (ipmi_sensors_state_data_t *state_data,
   assert(fiid_obj_template_compare(obj_get_sensor_thresholds_rs, 
                                    tmpl_cmd_get_sensor_thresholds_rs) > 0);
   
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs, "cmd", IPMI_CMD_GET_SENSOR_THRESHOLDS);
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs, "comp_code", IPMI_COMP_CODE_COMMAND_SUCCESS);
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
+                   "cmd", 
+                   IPMI_CMD_GET_SENSOR_THRESHOLDS) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'cmd': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
+                   "comp_code", 
+                   IPMI_COMP_CODE_COMMAND_SUCCESS) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'comp_code': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
 
   if (ipmi_sdr_parse_threshold_readable (state_data->sdr_parse_ctx,
                                          sdr_record,
@@ -181,26 +199,76 @@ _get_sdr_sensor_thresholds (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
-                    "readable_thresholds.lower_non_critical_threshold", 
-                    lower_non_critical_threshold_readable);
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
-                    "readable_thresholds.lower_critical_threshold", 
-                    lower_critical_threshold_readable);
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
-                    "readable_thresholds.lower_non_recoverable_threshold", 
-                    lower_non_recoverable_threshold_readable);
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
-                    "readable_thresholds.upper_non_critical_threshold", 
-                    upper_non_critical_threshold_readable);
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
-                    "readable_thresholds.upper_critical_threshold", 
-                    upper_critical_threshold_readable);
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs, 
-                    "readable_thresholds.upper_non_recoverable_threshold", 
-                    upper_non_recoverable_threshold_readable);
-  
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs, "reserved", 0);
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
+                   "readable_thresholds.lower_non_critical_threshold", 
+                   lower_non_critical_threshold_readable) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'readable_thresholds.lower_non_critical_threshold': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
+                   "readable_thresholds.lower_critical_threshold", 
+                   lower_critical_threshold_readable) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'readable_thresholds.lower_critical_threshold': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
+                   "readable_thresholds.lower_non_recoverable_threshold", 
+                   lower_non_recoverable_threshold_readable) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'readable_thresholds.lower_non_recoverable_threshold': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
+                   "readable_thresholds.upper_non_critical_threshold", 
+                   upper_non_critical_threshold_readable) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'readable_thresholds.upper_non_critical_threshold': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
+                   "readable_thresholds.upper_critical_threshold", 
+                   upper_critical_threshold_readable) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'readable_thresholds.upper_critical_threshold': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
+                   "readable_thresholds.upper_non_recoverable_threshold", 
+                   upper_non_recoverable_threshold_readable) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'readable_thresholds.upper_non_recoverable_threshold': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
+                   "reserved", 
+                   0) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'reserved': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
   
   if (ipmi_sdr_parse_thresholds_raw (state_data->sdr_parse_ctx,
                                      sdr_record,
@@ -232,24 +300,66 @@ _get_sdr_sensor_thresholds (ipmi_sensors_state_data_t *state_data,
   if (upper_non_recoverable_threshold_readable)
     upper_non_recoverable_threshold = upper_non_recoverable_threshold_temp;
 
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs,
-                    "lower_non_critical_threshold",
-                    lower_non_critical_threshold);
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs,
-                    "lower_critical_threshold",
-                    lower_critical_threshold);
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs,
-                    "lower_non_recoverable_threshold",
-                    lower_non_recoverable_threshold);
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs,
-                    "upper_non_critical_threshold",
-                    upper_non_critical_threshold);
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs,
-                    "upper_critical_threshold",
-                    upper_critical_threshold);
-  TOOL_FIID_OBJ_SET(obj_get_sensor_thresholds_rs,
-                    "upper_non_recoverable_threshold",
-                    upper_non_recoverable_threshold);
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs,
+                   "lower_non_critical_threshold",
+                   lower_non_critical_threshold) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'lower_non_critical_threshold': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs,
+                   "lower_critical_threshold",
+                   lower_critical_threshold) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'lower_critical_threshold': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs,
+                   "lower_non_recoverable_threshold",
+                   lower_non_recoverable_threshold) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'lower_non_recoverable_threshold': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs,
+                   "upper_non_critical_threshold",
+                   upper_non_critical_threshold) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'upper_non_critical_threshold': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs,
+                   "upper_critical_threshold",
+                   upper_critical_threshold) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'upper_critical_threshold': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
+  if (fiid_obj_set(obj_get_sensor_thresholds_rs,
+                   "upper_non_recoverable_threshold",
+                   upper_non_recoverable_threshold) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_set: 'upper_non_recoverable_threshold': %s\n",
+                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      goto cleanup;
+    }
   
   rv = 0;
  cleanup:

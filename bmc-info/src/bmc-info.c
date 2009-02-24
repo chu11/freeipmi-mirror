@@ -116,7 +116,7 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
-                      "fiid_obj_copy: %s\n"
+                      "fiid_obj_copy: %s\n",
                       fiid_obj_errormsg(device_id_rs));
       goto cleanup;
     }

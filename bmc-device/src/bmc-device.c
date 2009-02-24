@@ -760,7 +760,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
-                      "fiid_obj_copy: %s\n"
+                      "fiid_obj_copy: %s\n",
                       fiid_obj_errormsg(cmd_rs));
       goto cleanup;
     }
