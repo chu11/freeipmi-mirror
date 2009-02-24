@@ -1,3 +1,8 @@
+2009-02-23  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-chassis-config/src/ipmi-chassis-config-map.c: Fix typo
+	"FLOOPY" to "FLOPPY".
+	
 2009-01-26  Albert Chu <chu11@llnl.gov>
 
 	* Suppot --config-file option in all tools.

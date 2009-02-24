@@ -124,7 +124,7 @@ boot_device_string (uint8_t value)
     case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_BIOS_SETUP:
       return "BIOS-SETUP";
     case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA:
-      return "FLOOPY";
+      return "FLOPPY";
     }
   return "";
 }

@@ -10,6 +10,7 @@ o In ipmi-sensors, don't output threshold related fields for
 o In bmc-config, ipmi-chassis-config, ipmi-sensors,
   ipmi-sensors-config, ipmimonitoring, and pef-config, support
   --config-file option.
+o In ipmi-chassis-config, fix typo of "FLOOPY" to "FLOPPY".
 o Fix bmc-watchdog init script portability to Suse.
 
 0.7.5 - 01/12/09
