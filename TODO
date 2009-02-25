@@ -162,3 +162,38 @@ http://www.gnu.org/software/freeipmi/index.html
 Release X.X.X Changes
 ---------------------
 
+
+To do this:
+
+1. The file to be distributed (for example, foo.tar.gz).
+
+2. Detached GPG binary signature for (1), (for example, foo.tar.gz.sig).
+
+gpg -b foo.tar.gz
+
+3. A clearsigned directive file, (for example, foo.tar.gz.directive.asc). 
+
+Format is:
+
+version: 1.1
+directory: freeipmi
+filename: freeipmi-0.X.X.tar.gz
+comment: FreeIPMI 0.X.X
+
+gpg --clearsign foo.tar.gz.directive
+
+4. Upload the file(s) via anonymous ftp to ftp-upload.gnu.org. If the
+upload is destined for ftp.gnu.org, place the file(s) in the
+/incoming/ftp directory. If the upload is destined for alpha.gnu.org,
+place the file(s) in the /incoming/alpha directory.
+
+Uploads are processed every five minutes. Uploads that are in progress
+while the upload processing script is running are handled properly, so
+do not worry about the timing of your upload. Uploaded files that
+belong to an incomplete triplet are deleted automatically after 24
+hours.
+
+Your designated upload email addresses (see Automated Upload
+Registration) are sent a message if there are any problems processing
+an upload for your package. You also receive a message when your
+upload has been successfully processed.
