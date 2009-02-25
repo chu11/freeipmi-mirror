@@ -80,73 +80,129 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET_WITH_RV (flag,
-                             obj_cmd_rs, 
-                             "front_panel.standby_button_disabled", 
-                             &val);
+  if ((flag = fiid_obj_get(obj_cmd_rs, 
+                           "front_panel.standby_button_disabled", 
+                           &val)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get: 'front_panel.standby_button_disabled': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
+
   if (flag)
     data->standby = val;
   else
     data->standby = BUTTON_UNKNOWN;
 
-  TOOL_FIID_OBJ_GET_WITH_RV (flag,
-                             obj_cmd_rs, 
-                             "front_panel.diagnostic_interrupt_button_disabled", 
-                             &val);
+  if ((flag = fiid_obj_get(obj_cmd_rs, 
+                           "front_panel.diagnostic_interrupt_button_disabled", 
+                           &val)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get: 'front_panel.diagnostic_interrupt_button_disabled': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
+
   if (flag)
     data->diagnostic_interrupt = val;
   else
     data->diagnostic_interrupt = BUTTON_UNKNOWN;
 
-  TOOL_FIID_OBJ_GET_WITH_RV (flag,
-                             obj_cmd_rs, 
-                             "front_panel.reset_button_disabled", 
-                             &val);
+  if ((flag = fiid_obj_get(obj_cmd_rs, 
+                           "front_panel.reset_button_disabled", 
+                           &val)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get: 'front_panel.reset_button_disabled': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
+
   if (flag)
     data->reset = val;
   else
     data->reset = BUTTON_UNKNOWN;
 
-  TOOL_FIID_OBJ_GET_WITH_RV (flag,
-                             obj_cmd_rs,
-                             "front_panel.power_off_button_disabled", 
-                             &val);
+  if ((flag = fiid_obj_get(obj_cmd_rs,
+                           "front_panel.power_off_button_disabled", 
+                           &val)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get: 'front_panel.power_off_button_disabled': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
+
   if (flag)
     data->power_off = val;
   else
     data->power_off = BUTTON_UNKNOWN;
 
-  TOOL_FIID_OBJ_GET_WITH_RV (flag,
-                             obj_cmd_rs, 
-                             "front_panel.standby_button_disable_allowed", 
-                             &val);
+  if ((flag = fiid_obj_get(obj_cmd_rs, 
+                           "front_panel.standby_button_disable_allowed", 
+                           &val)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get: 'front_panel.standby_button_disable_allowed': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
+
   if (flag)
     data->standby_disable_allowed = val;
   else
     data->standby_disable_allowed = BUTTON_DISABLE_UNKNOWN;
 
-  TOOL_FIID_OBJ_GET_WITH_RV (flag,
-                             obj_cmd_rs, 
-                             "front_panel.diagnostic_interrupt_button_disable_allowed", 
-                             &val);
+  if ((flag = fiid_obj_get(obj_cmd_rs, 
+                           "front_panel.diagnostic_interrupt_button_disable_allowed", 
+                           &val)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get: 'front_panel.diagnostic_interrupt_button_disable_allowed': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
+
   if (flag)
     data->diagnostic_interrupt_disable_allowed = val;
   else
     data->diagnostic_interrupt_disable_allowed = BUTTON_DISABLE_UNKNOWN;
   
-  TOOL_FIID_OBJ_GET_WITH_RV (flag,
-                             obj_cmd_rs, 
-                             "front_panel.reset_button_disable_allowed", 
-                             &val);
+  if ((flag = fiid_obj_get(obj_cmd_rs, 
+                           "front_panel.reset_button_disable_allowed", 
+                           &val)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get: 'front_panel.reset_button_disable_allowed': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
+
   if (flag)
     data->reset_disable_allowed = val;
   else
     data->reset_disable_allowed = BUTTON_DISABLE_UNKNOWN;
 
-  TOOL_FIID_OBJ_GET_WITH_RV (flag,
-                             obj_cmd_rs, 
-                             "front_panel.power_off_button_disable_allowed", 
-                             &val);
+  if ((flag = fiid_obj_get(obj_cmd_rs, 
+                           "front_panel.power_off_button_disable_allowed", 
+                           &val)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get: 'front_panel.power_off_button_disable_allowed': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
+
   if (flag)
     data->power_off_disable_allowed = val;
   else

@@ -79,11 +79,17 @@ _get_key(bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET_DATA_LEN (buf_len,
-                              obj_cmd_rs, 
-                              "key_value", 
-                              buf, 
-                              CONFIG_PARSE_BUFLEN);
+  if ((buf_len = fiid_obj_get_data(obj_cmd_rs, 
+                                   "key_value", 
+                                   buf, 
+                                   CONFIG_PARSE_BUFLEN)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'key_value': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (key_len < buf_len)
     {

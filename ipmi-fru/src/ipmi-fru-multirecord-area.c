@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.21 2009-02-24 22:18:18 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.22 2009-02-25 01:08:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -597,11 +597,17 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
                     "sub_record_type",
                     &sub_record_type);
 
-  TOOL_FIID_OBJ_GET_DATA_LEN(len,
-                             obj_record,
-                             "record",
-                             managementaccessbuf,
-                             FRU_BUF_LEN);
+  if ((len = fiid_obj_get_data(obj_record,
+                               "record",
+                               managementaccessbuf,
+                               FRU_BUF_LEN)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'record': %s\n",
+                      fiid_obj_errormsg(obj_record));
+      goto cleanup;
+    }
 
   if (!len)
     {
@@ -757,11 +763,17 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
                     "compatibility_code_start_value",
                     &compatibility_code_start_value);
 
-  TOOL_FIID_OBJ_GET_DATA_LEN(len,
-                             obj_record,
-                             "code_range_mask",
-                             codemaskbuf,
-                             FRU_BUF_LEN);
+  if ((len = fiid_obj_get_data(obj_record,
+                               "code_range_mask",
+                               codemaskbuf,
+                               FRU_BUF_LEN)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'code_range_mask': %s\n",
+                      fiid_obj_errormsg(obj_record));
+      goto cleanup;
+    }
 
   if (IPMI_IANA_ENTERPRISE_ID_VALID(manufacturer_id)
       && ipmi_iana_enterprise_numbers[manufacturer_id])
@@ -892,11 +904,17 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
                     "compatibility_code_start_value",
                     &compatibility_code_start_value);
 
-  TOOL_FIID_OBJ_GET_DATA_LEN(len,
-                             obj_record,
-                             "code_range_mask",
-                             codemaskbuf,
-                             FRU_BUF_LEN);
+  if ((len = fiid_obj_get_data(obj_record,
+                               "code_range_mask",
+                               codemaskbuf,
+                               FRU_BUF_LEN)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'code_range_mask': %s\n",
+                      fiid_obj_errormsg(obj_record));
+      goto cleanup;
+    }
 
   pstdout_printf(state_data->pstate,
                  "  FRU Extended Compatibility Manufacturer ID: %Xh\n",
@@ -1004,12 +1022,18 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
   TOOL_FIID_OBJ_GET(obj_record,
                     "manufacturer_id",
                     &manufacturer_id);
-
-  TOOL_FIID_OBJ_GET_DATA_LEN(len,
-                             obj_record,
-                             "oem_data",
-                             oemdatabuf,
-                             FRU_BUF_LEN);
+ 
+  if ((len = fiid_obj_get_data(obj_record,
+                               "oem_data",
+                               oemdatabuf,
+                               FRU_BUF_LEN)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'oem_data': %s\n",
+                      fiid_obj_errormsg(obj_record));
+      goto cleanup;
+    }
 
   pstdout_printf(state_data->pstate,
                  "  FRU OEM Manufacturer ID: %Xh\n",

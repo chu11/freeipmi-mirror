@@ -283,10 +283,19 @@ username_checkout (const char *section_name,
   if (userid == 1)
     strcpy ((char *)username, "NULL");
   else
-    TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs,
+    {
+      if (fiid_obj_get_data(obj_cmd_rs,
                             "user_name",
                             username,
-                            IPMI_MAX_USER_NAME_LENGTH);
+                            IPMI_MAX_USER_NAME_LENGTH) < 0)
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "fiid_obj_get_data: 'user_name': %s\n",
+                          fiid_obj_errormsg(obj_cmd_rs));
+          goto cleanup;
+        }
+    }
 
  got_data:
 

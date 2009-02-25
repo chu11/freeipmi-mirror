@@ -345,7 +345,18 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
   
   pstdout_printf (state_data->pstate, 
                   "Front panel capabilities   :");
-  TOOL_FIID_OBJ_GET_WITH_RV (flag, cmd_rs, "front_panel.power_off_button_disabled", &val);
+
+  if ((flag = fiid_obj_get(cmd_rs,
+                           "front_panel.power_off_button_disabled",
+                           &val)) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get: 'front_panel.power_off_button_disabled': %s\n",
+                      fiid_obj_errormsg(cmd_rs));
+      goto cleanup;
+    }
+
   if (flag)
     {
       if (val)

@@ -72,10 +72,17 @@ community_string_checkout (const char *section_name,
     }
   
   memset(community_string,'\0', IPMI_MAX_COMMUNITY_STRING_LENGTH+1);
-  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs,
-                          "community_string",
-                          (uint8_t *)community_string,
-                          IPMI_MAX_COMMUNITY_STRING_LENGTH+1);
+  if (fiid_obj_get_data(obj_cmd_rs,
+                        "community_string",
+                        (uint8_t *)community_string,
+                        IPMI_MAX_COMMUNITY_STRING_LENGTH+1) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'obj_cmd_rs': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (config_section_update_keyvalue_output(state_data->pstate, 
                                             kv,

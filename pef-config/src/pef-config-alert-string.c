@@ -270,12 +270,19 @@ alert_string_checkout (const char *section_name,
       
       /* XXX: Be lazy for now, assume no strings will overflow
        * whatever is passed in, so don't check for overflow errors
-       * from Fiid_obj_get_data.
+       * from fiid_obj_get_data.
        */
-      TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs,
-                              "string_data",
-                              alert_string + (i * 16),
-                              PEF_ALERT_STRING_MAX_LEN - (i * 16));
+      if (fiid_obj_get_data(obj_cmd_rs,
+                            "string_data",
+                            alert_string + (i * 16),
+                            PEF_ALERT_STRING_MAX_LEN - (i * 16)) < 0)
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "fiid_obj_get_data: 'string_data': %s\n",
+                          fiid_obj_errormsg(obj_cmd_rs));
+          goto cleanup;
+        }
 
       /* Check if we've found a nul character */
       for (j = 0; j < 16; j++)

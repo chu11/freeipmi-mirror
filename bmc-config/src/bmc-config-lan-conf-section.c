@@ -174,10 +174,17 @@ ip_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                          "ip_address", 
-                          ip_address_bytes,
-                          4);
+  if (fiid_obj_get_data(obj_cmd_rs, 
+                        "ip_address", 
+                        ip_address_bytes,
+                        4) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'ip_address': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
 
   memset(ip_address_str, '\0', BMC_MAXIPADDRLEN+1);
   snprintf(ip_address_str, 
@@ -283,10 +290,17 @@ mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                          "mac_address", 
-                          mac_address_bytes,
-                          6);
+  if (fiid_obj_get_data(obj_cmd_rs, 
+                        "mac_address", 
+                        mac_address_bytes,
+                        6) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'mac_address': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
   
   memset(mac_address_str, '\0', BMC_MAXMACADDRLEN+1);
   snprintf(mac_address_str, 
@@ -395,10 +409,17 @@ subnet_mask_checkout (const char *section_name,
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                          "subnet_mask", 
-                          subnet_mask_bytes,
-                          4);
+  if (fiid_obj_get_data(obj_cmd_rs, 
+                        "subnet_mask", 
+                        subnet_mask_bytes,
+                        4) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'subnet_mask': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
 
   memset(subnet_mask_str, '\0', BMC_MAXIPADDRLEN + 1);
   snprintf (subnet_mask_str, 
@@ -504,10 +525,17 @@ default_gateway_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                          "ip_address", 
-                          ip_address_bytes,
-                          4);
+  if (fiid_obj_get_data(obj_cmd_rs, 
+                        "ip_address", 
+                        ip_address_bytes,
+                        4) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'ip_address': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
   
   memset(ip_address_str, '\0', BMC_MAXIPADDRLEN + 1);
   snprintf (ip_address_str, 
@@ -614,10 +642,17 @@ default_gateway_mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                          "mac_address", 
-                          mac_address_bytes,
-                          6);
+  if (fiid_obj_get_data(obj_cmd_rs, 
+                        "mac_address", 
+                        mac_address_bytes,
+                        6) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'mac_address': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
   
   memset(mac_address_str, '\0', BMC_MAXMACADDRLEN + 1);
   snprintf (mac_address_str, 
@@ -726,10 +761,17 @@ backup_gateway_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                          "ip_address", 
-                          ip_address_bytes,
-                          4);
+  if (fiid_obj_get_data(obj_cmd_rs, 
+                        "ip_address", 
+                        ip_address_bytes,
+                        4) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'ip_address': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
   
   memset(ip_address_str, '\0', BMC_MAXIPADDRLEN+1);
   snprintf (ip_address_str, 
@@ -835,10 +877,17 @@ backup_gateway_mac_address_checkout (const char *section_name,
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs, 
-                          "mac_address", 
-                          mac_address_bytes,
-                          6);
+  if (fiid_obj_get_data(obj_cmd_rs, 
+                        "mac_address", 
+                        mac_address_bytes,
+                        6) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'mac_address': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
   
   memset(mac_address_str, '\0', BMC_MAXMACADDRLEN+1);
   snprintf (mac_address_str, 

@@ -69,7 +69,17 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_GET_DATA (cmd_rs, "guid", guidbuf, 1024);
+  if (fiid_obj_get_data(cmd_rs,
+                        "guid",
+                        guidbuf,
+                        1024) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'guid': %s\n",
+                      fiid_obj_errormsg(cmd_rs));
+      goto cleanup;
+    }
 
   /* IPMI transfers the guid in least significant bit order and the
    * fields are reverse from the "Wired for Management
@@ -281,10 +291,17 @@ display_get_device_id (bmc_info_state_data_t *state_data)
                    (unsigned int) product_id);
     
     /* auxiliary firmware info is optional */
-    TOOL_FIID_OBJ_GET_WITH_RV (flag,
-                               cmd_rs,
-                               "auxiliary_firmware_revision_info",
-                               &val);
+    if ((flag = fiid_obj_get(cmd_rs,
+                             "auxiliary_firmware_revision_info",
+                             &val)) < 0)
+      {
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "fiid_obj_get: 'cmd_rs': %s\n",
+                        fiid_obj_errormsg(cmd_rs));
+        goto cleanup;
+      }
+
     if (flag)
       {
         switch (manufacturer_id)

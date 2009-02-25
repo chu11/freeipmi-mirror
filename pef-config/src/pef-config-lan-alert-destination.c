@@ -393,11 +393,18 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
   TOOL_FIID_OBJ_GET (obj_cmd_rs, "gateway_selector", &val);
   da->alert_gateway = val;
 
-  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs,
-                          "alerting_ip_address",
-                          alert_ip_address_bytes,
-                          4);
-  
+  if (fiid_obj_get_data(obj_cmd_rs,
+                        "alerting_ip_address",
+                        alert_ip_address_bytes,
+                        4) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'alerting_ip_address': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
+
   memset(da->alert_ip, '\0', PEF_CONFIG_MAXIPADDRLEN+1);
   snprintf (da->alert_ip,
             PEF_CONFIG_MAXIPADDRLEN,
@@ -407,10 +414,17 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
             alert_ip_address_bytes[2],
             alert_ip_address_bytes[3]);
 
-  TOOL_FIID_OBJ_GET_DATA (obj_cmd_rs,
-                          "alerting_mac_address",
-                          alert_mac_address_bytes,
-                          6);
+  if (fiid_obj_get_data(obj_cmd_rs,
+                        "alerting_mac_address",
+                        alert_mac_address_bytes,
+                        6) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_get_data: 'alerting_mac_address': %s\n",
+                      fiid_obj_errormsg(obj_cmd_rs));
+      goto cleanup;
+    }
   
   memset(da->alert_mac, '\0', PEF_CONFIG_MAXMACADDRLEN+1);
   snprintf (da->alert_mac,
