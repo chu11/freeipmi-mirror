@@ -1,5 +1,11 @@
 2009-02-24  Albert Chu <chu11@llnl.gov>
 
+	*
+	ipmi-sensors-config/src/ipmi-sensors-config-sensor-event-enable-common.c
+ 	(_set_sensor_event_enable): Fix bit setting bug.
+	
+2009-02-24  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/ipmi-sel.8.pre.in: Note 1-Jan-1970 information.
 	
 2009-02-23  Albert Chu <chu11@llnl.gov>
