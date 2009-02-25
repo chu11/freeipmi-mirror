@@ -1,4 +1,4 @@
-0.7.6 - XX/XX/09
+0.7.6 - 02/25/09
 ----------------
 o In ipmimonitoring, output sensor group names consistently to other
   tools:
