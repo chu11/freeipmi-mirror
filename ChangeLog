@@ -1,5 +1,11 @@
 2009-02-24  Albert Chu <chu11@llnl.gov>
 
+	*
+	ipmi-sensors-config/src/ipmi-sensors-config-sensor-event-enable-common.c
+	(_set_sensor_event_enable): Fix bit setting bug.
+	
+2009-02-24  Albert Chu <chu11@llnl.gov>
+
 	* common/src/toolcommon/tool-fiid-util.h: Remove some macros.
 
 	* Adjust tools to use fiid library directly.

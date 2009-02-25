@@ -597,7 +597,7 @@ _set_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
                                         data->scanning_on_this_sensor,
                                         data->all_event_messages,
                                         data->assertion_bits,
-                                        data->assertion_bits,
+                                        data->deassertion_bits,
                                         obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
