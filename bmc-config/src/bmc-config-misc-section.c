@@ -44,7 +44,14 @@ power_restore_policy_checkout (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   uint64_t val;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
@@ -80,7 +87,14 @@ power_restore_policy_commit (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_power_restore_policy_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_power_restore_policy_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
   if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
                                          power_restore_policy_number (kv->value_input),

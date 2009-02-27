@@ -101,7 +101,14 @@ _get_user_access(bmc_config_state_data_t *state_data,
                            &channel_number)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_user_access_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_access_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_user_access (state_data->ipmi_ctx,
                                 channel_number,
@@ -184,7 +191,14 @@ _set_user_access (bmc_config_state_data_t *state_data,
                            &channel_number)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_access_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_access_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   /* achu: special case, because the session limit cannot be
    * retrieved.  So if we're committing, we have to get the pre-loaded
@@ -241,7 +255,14 @@ username_checkout (const char *section_name,
 
   userid = atoi (section_name + strlen ("User"));
 		    
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_user_name_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_name_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   /* achu: *2 b/c of CONFIG_USERNAME_NOT_SET_YET_STR */
   memset(username, '\0', IPMI_MAX_USER_NAME_LENGTH*2+1);
@@ -344,7 +365,14 @@ username_commit (const char *section_name,
         return CONFIG_ERR_NON_FATAL_ERROR;
     }
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_name_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_name_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_user_name (state_data->ipmi_ctx,
                               userid,
@@ -455,7 +483,14 @@ enable_user_commit (const char *section_name,
   uint8_t user_status;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (same (kv->value_input, "yes"))
     user_status = IPMI_PASSWORD_OPERATION_ENABLE_USER;
@@ -497,7 +532,14 @@ enable_user_commit (const char *section_name,
                             stderr,
                             "ipmi_cmd_set_user_password: attempting workaround\n");
 
-          TOOL_FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_set_user_password_rq);
+          if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_password_rq)))
+            {
+              pstdout_fprintf(state_data->pstate,
+                              stderr,
+                              "fiid_obj_create: %s\n",
+                              strerror(errno));
+              goto cleanup;
+            }
 
           if (fill_cmd_set_user_password(userid,
                                          user_status,
@@ -570,7 +612,14 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
   assert(password);
   assert(is_same);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
                                   userid,
@@ -667,7 +716,14 @@ password_commit (const char *section_name,
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
                                   userid,
@@ -717,7 +773,14 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
   assert(password);
   assert(is_same);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_user_password_v20 (state_data->ipmi_ctx,
                                       userid,
@@ -829,7 +892,14 @@ password20_commit (const char *section_name,
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_password_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_user_password_v20 (state_data->ipmi_ctx,
                                       userid,
@@ -1180,7 +1250,14 @@ sol_payload_access_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_user_payload_access_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_payload_access_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -1256,7 +1333,14 @@ sol_payload_access_commit (const char *section_name,
   uint8_t channel_number;
   uint8_t operation;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_user_payload_access_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_payload_access_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {

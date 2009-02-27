@@ -63,7 +63,14 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 
   if (!state_data->cipher_suite_entry_count)
     {
-      TOOL_FIID_OBJ_CREATE(obj_cmd_count_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs);
+      if (!(obj_cmd_count_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs)))
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "fiid_obj_create: %s\n",
+                          strerror(errno));
+          goto cleanup;
+        }
 
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (state_data->ipmi_ctx, 
 												   channel_number, 
@@ -92,7 +99,14 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 
   if (!state_data->cipher_suite_id_supported_set)
     {
-      TOOL_FIID_OBJ_CREATE(obj_cmd_id_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs);
+      if (!(obj_cmd_id_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs)))
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "fiid_obj_create: %s\n",
+                          strerror(errno));
+          goto cleanup;
+        }
 
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (state_data->ipmi_ctx, 
 											     channel_number, 
@@ -158,7 +172,14 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
   
   if (!state_data->cipher_suite_priv_set)
     {
-      TOOL_FIID_OBJ_CREATE(obj_cmd_priv_rs, tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs);
+      if (!(obj_cmd_priv_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs)))
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "fiid_obj_create: %s\n",
+                          strerror(errno));
+          goto cleanup;
+        }
 
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (state_data->ipmi_ctx, 
 												      channel_number, 
@@ -282,7 +303,14 @@ id_commit (const char *section_name,
   if ((ret = _rmcpplus_cipher_suite_id_privilege_setup(state_data)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {

@@ -97,7 +97,14 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
       return CONFIG_ERR_SUCCESS;
     }
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((rc = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -156,7 +163,14 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
       return CONFIG_ERR_SUCCESS;
     }
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_user_access_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_access_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((rc = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {

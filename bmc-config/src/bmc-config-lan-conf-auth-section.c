@@ -75,7 +75,14 @@ _get_authentication_type_support (bmc_config_state_data_t *state_data)
   
   assert(state_data);
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -135,7 +142,14 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(al);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -253,7 +267,14 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(al);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {

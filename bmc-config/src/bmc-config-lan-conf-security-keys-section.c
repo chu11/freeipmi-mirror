@@ -53,7 +53,14 @@ _get_key(bmc_config_state_data_t *state_data,
   assert(key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
          || key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_channel_security_keys_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -120,7 +127,14 @@ _set_key(bmc_config_state_data_t *state_data,
   assert(key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
          || key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_channel_security_keys_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {

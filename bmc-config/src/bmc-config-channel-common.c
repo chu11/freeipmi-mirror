@@ -159,7 +159,14 @@ _get_channel_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_channel_access_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_channel_access_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_channel_access (state_data->ipmi_ctx,
                                    channel_number,
@@ -227,7 +234,14 @@ _set_channel_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_channel_access_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_access_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   /* yes/no is backwards several places, see ipmi spec */
 

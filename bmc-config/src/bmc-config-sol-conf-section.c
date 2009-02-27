@@ -67,7 +67,14 @@ enable_sol_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -116,8 +123,15 @@ enable_sol_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
-  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
+
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
@@ -158,7 +172,14 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(sa);
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -210,7 +231,14 @@ _set_sol_sol_authentication(bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(sa);
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -365,7 +393,14 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
   assert(state_data);
   assert(it);
  
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -414,7 +449,14 @@ _set_sol_character_accumulate_interval_and_send_threshold(bmc_config_state_data_
   assert(state_data);
   assert(it);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -531,7 +573,14 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
   assert(state_data);
   assert(sr);
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -577,8 +626,15 @@ _set_sol_sol_retry(bmc_config_state_data_t *state_data,
   config_err_t ret;
   uint8_t channel_number;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
-  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
+
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
@@ -694,7 +750,14 @@ non_volatile_bit_rate_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -743,7 +806,14 @@ non_volatile_bit_rate_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -784,7 +854,14 @@ volatile_bit_rate_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -833,7 +910,14 @@ volatile_bit_rate_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -874,7 +958,14 @@ sol_payload_port_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -923,7 +1014,14 @@ sol_payload_port_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sol_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
   if ((ret = get_sol_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {

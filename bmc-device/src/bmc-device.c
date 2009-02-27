@@ -53,14 +53,21 @@
 static int
 cold_reset (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_cold_reset_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_cold_reset_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if (ipmi_cmd_cold_reset (state_data->ipmi_ctx, cmd_rs) < 0)
+  if (ipmi_cmd_cold_reset (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -71,21 +78,28 @@ cold_reset (bmc_device_state_data_t *state_data)
   
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 
 static int
 warm_reset (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_warm_reset_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_warm_reset_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if (ipmi_cmd_warm_reset (state_data->ipmi_ctx, cmd_rs) < 0)
+  if (ipmi_cmd_warm_reset (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -96,22 +110,29 @@ warm_reset (bmc_device_state_data_t *state_data)
   
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 
 static int
 get_self_test_results (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int rv = -1;
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_self_test_results_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_self_test_results_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if (ipmi_cmd_get_self_test_results (state_data->ipmi_ctx, cmd_rs) < 0)
+  if (ipmi_cmd_get_self_test_results (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -120,7 +141,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_GET (cmd_rs,
+  TOOL_FIID_OBJ_GET (obj_cmd_rs,
                      "self_test_result",
                      &val);
   
@@ -145,56 +166,56 @@ get_self_test_results (bmc_device_state_data_t *state_data)
 
   if (val == IPMI_SELF_TEST_RESULT_CORRUPTED_OR_INACCESSIBLE_DATA_OR_DEVICES)
     {
-      TOOL_FIID_OBJ_GET (cmd_rs, 
+      TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                          "controller_operation_firmware_corrupted",
                          &val);
       if (val)
         pstdout_printf(state_data->pstate,
                        "                  [Controller operation firmware corrupted]\n");
                       
-      TOOL_FIID_OBJ_GET (cmd_rs, 
+      TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                          "controller_update_boot_block_firmware_corrupted",
                          &val);
       if (val)
         pstdout_printf(state_data->pstate,
                        "                  [Controller update 'boot block' firmware corrupted]\n");
 
-      TOOL_FIID_OBJ_GET (cmd_rs, 
+      TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                          "internal_use_area_of_bmc_fru_corrupted",
                          &val);
       if (val)
         pstdout_printf(state_data->pstate,
                        "                  [Internal Use Area of BMC FRU corrupted]\n");
 
-      TOOL_FIID_OBJ_GET (cmd_rs, 
+      TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                          "sdr_repository_empty",
                          &val);
       if (val)
         pstdout_printf(state_data->pstate,
                        "                  [SDR Repository empty]\n");
 
-      TOOL_FIID_OBJ_GET (cmd_rs, 
+      TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                          "ipmb_signal_lines_do_not_respond",
                          &val);
       if (val)
         pstdout_printf(state_data->pstate,
                        "                  [IPMB signal lines do not respond]\n");
 
-      TOOL_FIID_OBJ_GET (cmd_rs, 
+      TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                          "cannot_access_bmc_fru_device",
                          &val);
       if (val)
         pstdout_printf(state_data->pstate,
                        "                  [Cannot access BMC FRU device]\n");
 
-      TOOL_FIID_OBJ_GET (cmd_rs, 
+      TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                          "cannot_access_sdr_repository",
                          &val);
       if (val)
         pstdout_printf(state_data->pstate,
                        "                  [Cannot access SDR Repository]\n");
 
-      TOOL_FIID_OBJ_GET (cmd_rs, 
+      TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                          "cannot_access_sel_device",
                          &val);
       if (val)
@@ -205,14 +226,14 @@ get_self_test_results (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 
 static int
 get_acpi_power_state (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   char *statestr = NULL;
   char statestrbuf[1024];
@@ -222,9 +243,16 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_acpi_power_state_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_acpi_power_state_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if (ipmi_cmd_get_acpi_power_state (state_data->ipmi_ctx, cmd_rs) < 0)
+  if (ipmi_cmd_get_acpi_power_state (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -233,7 +261,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_GET (cmd_rs,
+  TOOL_FIID_OBJ_GET (obj_cmd_rs,
                      "system_power_state_enumeration",
                      &val);
 
@@ -317,7 +345,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
   statestr = NULL;
   verbosestr = NULL;
 
-  TOOL_FIID_OBJ_GET (cmd_rs,
+  TOOL_FIID_OBJ_GET (obj_cmd_rs,
                      "device_power_state_enumeration",
                      &val);
   switch (val) 
@@ -358,21 +386,28 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
   
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 
 static int
 set_acpi_power_state (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint8_t system_power_state;
   uint8_t device_power_state;
   int rv = -1;
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_acpi_power_state_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_acpi_power_state_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   system_power_state = state_data->prog_data->args->set_acpi_power_state_args.system_power_state;
   device_power_state = state_data->prog_data->args->set_acpi_power_state_args.device_power_state;
@@ -382,7 +417,7 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
                                      (system_power_state == IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE) ? IPMI_ACPI_SET_SYSTEM_POWER_STATE_DONT_SET_SYSTEM_POWER_STATE : IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE,
                                      device_power_state,
                                      (device_power_state == IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE) ? IPMI_ACPI_SET_DEVICE_POWER_STATE_DONT_SET_DEVICE_POWER_STATE : IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE,
-                                     cmd_rs) < 0)
+                                     obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -393,21 +428,28 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 
 static int
 get_lan_statistics (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   int8_t lan_channel_number;
   uint64_t val;
   int rv = -1;
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_ip_udp_rmcp_statistics_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_ip_udp_rmcp_statistics_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
                                                      IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
@@ -422,7 +464,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
   if (ipmi_cmd_get_ip_udp_rmcp_statistics (state_data->ipmi_ctx,
                                            lan_channel_number,
                                            IPMI_DONT_CLEAR_ALL_STATISTICS,
-                                           cmd_rs) < 0)
+                                           obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -431,63 +473,63 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (cmd_rs, 
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                      "ip_packets_received",
                      &val);
   pstdout_printf (state_data->pstate,
                   "IP Packets Received: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (cmd_rs, 
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                      "received_ip_header_errors",
                      &val);
   pstdout_printf (state_data->pstate,
                   "Received IP Header Errors: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (cmd_rs, 
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                      "received_ip_address_errors",
                      &val);
   pstdout_printf (state_data->pstate,
                   "Received IP Address Errors: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (cmd_rs, 
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                      "fragmented_ip_packets_received",
                      &val);
   pstdout_printf (state_data->pstate,
                   "Fragmented IP Packets Received: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (cmd_rs, 
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                      "ip_packets_transmitted",
                      &val);
   pstdout_printf (state_data->pstate,
                   "IP Packets Transmitted: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (cmd_rs, 
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                      "udp_packets_received",
                      &val);
   pstdout_printf (state_data->pstate,
                   "UDP Packets Received: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (cmd_rs, 
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                      "valid_rmcp_packets_received",
                      &val);
   pstdout_printf (state_data->pstate,
                   "Valid RMCP Packets Received: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (cmd_rs, 
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                      "udp_proxy_packets_received",
                      &val);
   pstdout_printf (state_data->pstate,
                   "UDP Proxy Packets Received: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (cmd_rs, 
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, 
                      "udp_proxy_packets_dropped",
                      &val);
   pstdout_printf (state_data->pstate,
@@ -496,20 +538,27 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
   
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 
 static int
 clear_lan_statistics (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   int8_t lan_channel_number;
   int rv = -1;
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_ip_udp_rmcp_statistics_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_ip_udp_rmcp_statistics_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
                                                      IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
@@ -524,7 +573,7 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
   if (ipmi_cmd_get_ip_udp_rmcp_statistics (state_data->ipmi_ctx,
                                            lan_channel_number,
                                            IPMI_CLEAR_ALL_STATISTICS,
-                                           cmd_rs) < 0)
+                                           obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -535,14 +584,14 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
   
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return rv;
 }
 
 static int
 get_sdr_repository_time (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   char str[512];
   int rv = -1;
@@ -551,9 +600,16 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_get_sdr_repository_time_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sdr_repository_time_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if (ipmi_cmd_get_sdr_repository_time (state_data->ipmi_ctx, cmd_rs) < 0)
+  if (ipmi_cmd_get_sdr_repository_time (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -562,7 +618,7 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (cmd_rs, "time", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "time", &val);
 
   t = val;
   localtime_r (&t, &tm);
@@ -572,7 +628,7 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
                   str);
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -580,7 +636,7 @@ static int
 set_sdr_repository_time (bmc_device_state_data_t *state_data)
 {
   struct bmc_device_arguments *args;
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
   time_t t;
   struct tm tm;
@@ -611,9 +667,16 @@ set_sdr_repository_time (bmc_device_state_data_t *state_data)
         }
     }
 
-  TOOL_FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_set_sdr_repository_time_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sdr_repository_time_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if (ipmi_cmd_set_sdr_repository_time (state_data->ipmi_ctx, t, cmd_rs) < 0)
+  if (ipmi_cmd_set_sdr_repository_time (state_data->ipmi_ctx, t, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -624,14 +687,14 @@ set_sdr_repository_time (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
 static int
 get_sel_time (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   char str[512];
   int rv = -1;
@@ -640,9 +703,16 @@ get_sel_time (bmc_device_state_data_t *state_data)
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_get_sel_time_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sel_time_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if (ipmi_cmd_get_sel_time (state_data->ipmi_ctx, cmd_rs) < 0)
+  if (ipmi_cmd_get_sel_time (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -651,7 +721,7 @@ get_sel_time (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (cmd_rs, "time", &val);
+  TOOL_FIID_OBJ_GET (obj_cmd_rs, "time", &val);
 
   t = val;
   localtime_r (&t, &tm);
@@ -661,7 +731,7 @@ get_sel_time (bmc_device_state_data_t *state_data)
                   str);
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
@@ -669,7 +739,7 @@ static int
 set_sel_time (bmc_device_state_data_t *state_data)
 {
   struct bmc_device_arguments *args;
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
   time_t t;
   struct tm tm;
@@ -700,9 +770,16 @@ set_sel_time (bmc_device_state_data_t *state_data)
         }
     }
 
-  TOOL_FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_set_sel_time_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sel_time_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if (ipmi_cmd_set_sel_time (state_data->ipmi_ctx, t, cmd_rs) < 0)
+  if (ipmi_cmd_set_sel_time (state_data->ipmi_ctx, t, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -713,15 +790,15 @@ set_sel_time (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
 static int
 get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
-  fiid_obj_t mca_cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
+  fiid_obj_t mca_obj_cmd_rs = NULL;
   uint64_t val;
   char str[512];
   int rv = -1;
@@ -730,11 +807,18 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_get_auxiliary_log_status_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_auxiliary_log_status_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_auxiliary_log_status (state_data->ipmi_ctx, 
                                          IPMI_AUXILIARY_LOG_TYPE_MCA,
-                                         cmd_rs) < 0)
+                                         obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -743,7 +827,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_GET (cmd_rs,
+  TOOL_FIID_OBJ_GET (obj_cmd_rs,
                      "log_type",
                      &val);
   
@@ -756,16 +840,16 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (!(mca_cmd_rs = fiid_obj_copy(cmd_rs, tmpl_cmd_get_auxiliary_log_status_mca_rs)))
+  if (!(mca_obj_cmd_rs = fiid_obj_copy(obj_cmd_rs, tmpl_cmd_get_auxiliary_log_status_mca_rs)))
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
                       "fiid_obj_copy: %s\n",
-                      fiid_obj_errormsg(cmd_rs));
+                      fiid_obj_errormsg(obj_cmd_rs));
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (mca_cmd_rs,
+  TOOL_FIID_OBJ_GET (mca_obj_cmd_rs,
                      "timestamp",
                      &val);
 
@@ -776,7 +860,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
                   "Last Entry Added to MCA Log: %s\n",
                   str);
   
-  TOOL_FIID_OBJ_GET (mca_cmd_rs,
+  TOOL_FIID_OBJ_GET (mca_obj_cmd_rs,
                      "mca_log_entry_count",
                      &val);
   
@@ -786,24 +870,31 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
-  TOOL_FIID_OBJ_DESTROY(mca_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(mca_obj_cmd_rs);
   return rv;
 }
 
 static int
 get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int rv = -1;
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_get_system_interface_capabilities_ssif_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_system_interface_capabilities_ssif_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_system_interface_capabilities_ssif (state_data->ipmi_ctx, 
-                                                       cmd_rs) < 0)
+                                                       obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -812,7 +903,7 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET(cmd_rs, "ssif_version", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "ssif_version", &val);
 
   /* achu: for some stupid reason 000b == "version 1" */
   if (val == IPMI_SSIF_SYSTEM_INTERFACE_VERSION_1)
@@ -822,7 +913,7 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
     pstdout_printf(state_data->pstate,
                    "SSIF Version:                     %X\n", (unsigned int) val);
   
-  TOOL_FIID_OBJ_GET(cmd_rs, "pec_support", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "pec_support", &val);
   
   pstdout_printf(state_data->pstate,
                  "SSIF PEC Support:                 ");
@@ -839,7 +930,7 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
       break;
     }
 
-  TOOL_FIID_OBJ_GET(cmd_rs, "transaction_support", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "transaction_support", &val);
 
   pstdout_printf(state_data->pstate,
                  "SSIF Transaction Support:         ");
@@ -859,13 +950,13 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
       break;
     }
 
-  TOOL_FIID_OBJ_GET(cmd_rs, "input_message_size", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "input_message_size", &val);
 
   pstdout_printf (state_data->pstate,
                   "SSIF Maximum Input Message Size:  %u bytes\n",
                   val);
 
-  TOOL_FIID_OBJ_GET(cmd_rs, "output_message_size", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "output_message_size", &val);
 
   pstdout_printf (state_data->pstate,
                   "SSIF Maximum Output Message Size: %u bytes\n",
@@ -873,23 +964,30 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
 static int
 get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int rv = -1;
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_get_system_interface_capabilities_kcs_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_system_interface_capabilities_kcs_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_system_interface_capabilities_kcs (state_data->ipmi_ctx, 
-                                                      cmd_rs) < 0)
+                                                      obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -898,7 +996,7 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET(cmd_rs, "system_interface_version", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "system_interface_version", &val);
 
   /* achu: for some stupid reason 000b == "version 1" */
   if (val == IPMI_KCS_SYSTEM_INTERFACE_VERSION_1)
@@ -908,7 +1006,7 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
     pstdout_printf(state_data->pstate,
                    "KCS Version:                    %X\n", (unsigned int) val);
   
-  TOOL_FIID_OBJ_GET(cmd_rs, "input_maximum_message_size", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "input_maximum_message_size", &val);
 
   pstdout_printf (state_data->pstate,
                   "KCS Maximum Input Message Size: %u bytes\n",
@@ -916,23 +1014,30 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
 static int
 get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
 {
-  fiid_obj_t cmd_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int rv = -1;
 
   assert(state_data);
 
-  TOOL_FIID_OBJ_CREATE (cmd_rs, tmpl_cmd_get_bt_interface_capabilities_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_bt_interface_capabilities_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_bt_interface_capabilities (state_data->ipmi_ctx, 
-                                              cmd_rs) < 0)
+                                              obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -941,31 +1046,31 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET(cmd_rs, "number_of_outstanding_requests_supported", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "number_of_outstanding_requests_supported", &val);
 
   pstdout_printf (state_data->pstate,
                   "BT Number of Outstanding Requests Supported: %u\n",
                   val);
 
-  TOOL_FIID_OBJ_GET(cmd_rs, "input_buffer_size", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "input_buffer_size", &val);
 
   pstdout_printf (state_data->pstate,
                   "BT Input Buffer Size:                        %u bytes\n",
                   val);
 
-  TOOL_FIID_OBJ_GET(cmd_rs, "output_buffer_size", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "output_buffer_size", &val);
 
   pstdout_printf (state_data->pstate,
                   "BT Output Buffer Size:                       %u bytes\n",
                   val);
 
-  TOOL_FIID_OBJ_GET(cmd_rs, "bmc_request_to_response_time", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "bmc_request_to_response_time", &val);
 
   pstdout_printf (state_data->pstate,
                   "BT Request to Response Time:                 %u seconds\n",
                   val);
 
-  TOOL_FIID_OBJ_GET(cmd_rs, "recommended_retries", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "recommended_retries", &val);
 
   pstdout_printf (state_data->pstate,
                   "BT Recommended Retries:                      %u\n",
@@ -973,7 +1078,7 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(cmd_rs);
+  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }
 
