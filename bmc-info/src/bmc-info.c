@@ -50,7 +50,7 @@ typedef struct channel_info
 #define NUM_CHANNELS 8
 
 static int 
-display_get_device_guid (bmc_info_state_data_t *state_data)
+display_get_device_guid(bmc_info_state_data_t *state_data)
 {
   uint8_t guidbuf[1024];
   fiid_obj_t obj_cmd_rs = NULL;
@@ -121,7 +121,7 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
 }
 
 static int
-display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
+display_intel(bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 {
   uint64_t bc_maj, bc_min, pia_maj, pia_min;
   fiid_obj_t intel_rs = NULL;
@@ -164,7 +164,7 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 }
 
 static int 
-display_get_device_id (bmc_info_state_data_t *state_data)
+display_get_device_id(bmc_info_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
@@ -347,7 +347,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 }
 
 static int
-get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channel_info_list)
+get_channel_info_list(bmc_info_state_data_t *state_data, channel_info_t *channel_info_list)
 {
   fiid_obj_t obj_cmd_rs = NULL; 
   uint8_t i;
@@ -399,7 +399,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
 }
 
 static int 
-display_channel_info (bmc_info_state_data_t *state_data)
+display_channel_info(bmc_info_state_data_t *state_data)
 {
   channel_info_t channel_info_list[NUM_CHANNELS];
   uint8_t i;
@@ -410,7 +410,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
   if (get_channel_info_list (state_data, channel_info_list) < 0)
     return (-1);
 
-  pstdout_printf (state_data->pstate, "Channel Information:\n");
+  pstdout_printf(state_data->pstate, "Channel Information:\n");
   for (i = 0; i < NUM_CHANNELS; i++)
     {
       char *medium_type = NULL;
@@ -419,9 +419,9 @@ display_channel_info (bmc_info_state_data_t *state_data)
       if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED(channel_info_list[i].medium_type))
         continue;
       
-      pstdout_printf (state_data->pstate, 
-                      "       Channel No: %d\n", 
-                      channel_info_list[i].channel_number);
+      pstdout_printf(state_data->pstate, 
+                     "       Channel No: %d\n", 
+                     channel_info_list[i].channel_number);
       
       if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED(channel_info_list[i].medium_type))
         medium_type = "Reserved";
@@ -474,21 +474,21 @@ display_channel_info (bmc_info_state_data_t *state_data)
         protocol_type = "OEM";
 
       if (medium_type)
-        pstdout_printf (state_data->pstate, 
-                        "      Medium Type: %s\n", 
-                        medium_type);
+        pstdout_printf(state_data->pstate, 
+                       "      Medium Type: %s\n", 
+                       medium_type);
 
       if (protocol_type)
-        pstdout_printf (state_data->pstate, 
-                        "    Protocol Type: %s\n", 
-                        protocol_type);
+        pstdout_printf(state_data->pstate, 
+                       "    Protocol Type: %s\n", 
+                       protocol_type);
     }
   
   return 0;
 }
 
 static int
-run_cmd_args (bmc_info_state_data_t *state_data)
+run_cmd_args(bmc_info_state_data_t *state_data)
 {
   struct bmc_info_arguments *args;
   int rv = -1;
@@ -498,12 +498,12 @@ run_cmd_args (bmc_info_state_data_t *state_data)
   args = state_data->prog_data->args;
 
   if (args->guid)
-    return display_get_device_guid (state_data);
+    return display_get_device_guid(state_data);
 
-  if (display_get_device_id (state_data) < 0)
+  if (display_get_device_id(state_data) < 0)
     goto cleanup;
  
-  if (display_channel_info (state_data) < 0)
+  if (display_channel_info(state_data) < 0)
     goto cleanup;
 
   rv = 0;

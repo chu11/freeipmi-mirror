@@ -51,7 +51,7 @@
 #include "tool-hostrange-common.h"
 
 static int
-cold_reset (bmc_device_state_data_t *state_data)
+cold_reset(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
@@ -67,7 +67,7 @@ cold_reset (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_cold_reset (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+  if (ipmi_cmd_cold_reset(state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -83,7 +83,7 @@ cold_reset (bmc_device_state_data_t *state_data)
 }
 
 static int
-warm_reset (bmc_device_state_data_t *state_data)
+warm_reset(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
@@ -99,7 +99,7 @@ warm_reset (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_warm_reset (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+  if (ipmi_cmd_warm_reset(state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -115,7 +115,7 @@ warm_reset (bmc_device_state_data_t *state_data)
 }
 
 static int
-get_self_test_results (bmc_device_state_data_t *state_data)
+get_self_test_results(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -132,7 +132,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_self_test_results (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_self_test_results(state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -231,7 +231,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
 }
 
 static int
-get_acpi_power_state (bmc_device_state_data_t *state_data)
+get_acpi_power_state(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -252,7 +252,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_acpi_power_state (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_acpi_power_state(state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -391,7 +391,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
 }
 
 static int
-set_acpi_power_state (bmc_device_state_data_t *state_data)
+set_acpi_power_state(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t system_power_state;
@@ -412,12 +412,12 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
   system_power_state = state_data->prog_data->args->set_acpi_power_state_args.system_power_state;
   device_power_state = state_data->prog_data->args->set_acpi_power_state_args.device_power_state;
 
-  if (ipmi_cmd_set_acpi_power_state (state_data->ipmi_ctx, 
-                                     system_power_state,
-                                     (system_power_state == IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE) ? IPMI_ACPI_SET_SYSTEM_POWER_STATE_DONT_SET_SYSTEM_POWER_STATE : IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE,
-                                     device_power_state,
-                                     (device_power_state == IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE) ? IPMI_ACPI_SET_DEVICE_POWER_STATE_DONT_SET_DEVICE_POWER_STATE : IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE,
-                                     obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_acpi_power_state(state_data->ipmi_ctx, 
+                                    system_power_state,
+                                    (system_power_state == IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE) ? IPMI_ACPI_SET_SYSTEM_POWER_STATE_DONT_SET_SYSTEM_POWER_STATE : IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE,
+                                    device_power_state,
+                                    (device_power_state == IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE) ? IPMI_ACPI_SET_DEVICE_POWER_STATE_DONT_SET_DEVICE_POWER_STATE : IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE,
+                                    obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -433,7 +433,7 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
 }
 
 static int
-get_lan_statistics (bmc_device_state_data_t *state_data)
+get_lan_statistics(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t lan_channel_number;
@@ -461,10 +461,10 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_ip_udp_rmcp_statistics (state_data->ipmi_ctx,
-                                           lan_channel_number,
-                                           IPMI_DONT_CLEAR_ALL_STATISTICS,
-                                           obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_ip_udp_rmcp_statistics(state_data->ipmi_ctx,
+                                          lan_channel_number,
+                                          IPMI_DONT_CLEAR_ALL_STATISTICS,
+                                          obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -543,7 +543,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
 }
 
 static int
-clear_lan_statistics (bmc_device_state_data_t *state_data)
+clear_lan_statistics(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t lan_channel_number;
@@ -570,10 +570,10 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_ip_udp_rmcp_statistics (state_data->ipmi_ctx,
-                                           lan_channel_number,
-                                           IPMI_CLEAR_ALL_STATISTICS,
-                                           obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_ip_udp_rmcp_statistics(state_data->ipmi_ctx,
+                                          lan_channel_number,
+                                          IPMI_CLEAR_ALL_STATISTICS,
+                                          obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -589,7 +589,7 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
 }
 
 static int
-get_sdr_repository_time (bmc_device_state_data_t *state_data)
+get_sdr_repository_time(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -609,7 +609,7 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sdr_repository_time (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_sdr_repository_time(state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -633,7 +633,7 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
 }
 
 static int
-set_sdr_repository_time (bmc_device_state_data_t *state_data)
+set_sdr_repository_time(bmc_device_state_data_t *state_data)
 {
   struct bmc_device_arguments *args;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -676,7 +676,7 @@ set_sdr_repository_time (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_sdr_repository_time (state_data->ipmi_ctx, t, obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_sdr_repository_time(state_data->ipmi_ctx, t, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -692,7 +692,7 @@ set_sdr_repository_time (bmc_device_state_data_t *state_data)
 }
 
 static int
-get_sel_time (bmc_device_state_data_t *state_data)
+get_sel_time(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -712,7 +712,7 @@ get_sel_time (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sel_time (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_sel_time(state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -736,7 +736,7 @@ get_sel_time (bmc_device_state_data_t *state_data)
 }
 
 static int
-set_sel_time (bmc_device_state_data_t *state_data)
+set_sel_time(bmc_device_state_data_t *state_data)
 {
   struct bmc_device_arguments *args;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -779,7 +779,7 @@ set_sel_time (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_sel_time (state_data->ipmi_ctx, t, obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_sel_time(state_data->ipmi_ctx, t, obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -795,7 +795,7 @@ set_sel_time (bmc_device_state_data_t *state_data)
 }
 
 static int
-get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
+get_mca_auxiliary_log_status(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   fiid_obj_t mca_obj_cmd_rs = NULL;
@@ -816,9 +816,9 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_auxiliary_log_status (state_data->ipmi_ctx, 
-                                         IPMI_AUXILIARY_LOG_TYPE_MCA,
-                                         obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_auxiliary_log_status(state_data->ipmi_ctx, 
+                                        IPMI_AUXILIARY_LOG_TYPE_MCA,
+                                        obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -876,7 +876,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
 }
 
 static int
-get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
+get_ssif_interface_capabilities(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -893,8 +893,8 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_system_interface_capabilities_ssif (state_data->ipmi_ctx, 
-                                                       obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_system_interface_capabilities_ssif(state_data->ipmi_ctx, 
+                                                      obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -969,7 +969,7 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
 }
 
 static int
-get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
+get_kcs_interface_capabilities(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -986,8 +986,8 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_system_interface_capabilities_kcs (state_data->ipmi_ctx, 
-                                                      obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_system_interface_capabilities_kcs(state_data->ipmi_ctx, 
+                                                     obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -1019,7 +1019,7 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
 }
 
 static int
-get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
+get_bt_interface_capabilities(bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -1036,8 +1036,8 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_bt_interface_capabilities (state_data->ipmi_ctx, 
-                                              obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_bt_interface_capabilities(state_data->ipmi_ctx, 
+                                             obj_cmd_rs) < 0)
     {
       pstdout_fprintf(state_data->pstate,
                       stderr,
@@ -1083,7 +1083,7 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
 }
 
 static int
-run_cmd_args (bmc_device_state_data_t *state_data)
+run_cmd_args(bmc_device_state_data_t *state_data)
 {
   struct bmc_device_arguments *args;
   int rv = -1;
@@ -1093,49 +1093,49 @@ run_cmd_args (bmc_device_state_data_t *state_data)
   args = state_data->prog_data->args;
 
   if (args->cold_reset)
-    return cold_reset (state_data);
+    return cold_reset(state_data);
 
   if (args->warm_reset)
-    return warm_reset (state_data);
+    return warm_reset(state_data);
 
   if (args->get_self_test_results)
-    return get_self_test_results (state_data);
+    return get_self_test_results(state_data);
 
   if (args->get_acpi_power_state)
-    return get_acpi_power_state (state_data);
+    return get_acpi_power_state(state_data);
 
   if (args->set_acpi_power_state)
-    return set_acpi_power_state (state_data);
+    return set_acpi_power_state(state_data);
 
   if (args->get_lan_statistics)
-    return get_lan_statistics (state_data);
+    return get_lan_statistics(state_data);
 
   if (args->clear_lan_statistics)
-    return clear_lan_statistics (state_data);
+    return clear_lan_statistics(state_data);
 
   if (args->get_sdr_repository_time)
-    return get_sdr_repository_time (state_data);
+    return get_sdr_repository_time(state_data);
 
   if (args->set_sdr_repository_time)
-    return set_sdr_repository_time (state_data);
+    return set_sdr_repository_time(state_data);
 
   if (args->get_sel_time)
-    return get_sel_time (state_data);
+    return get_sel_time(state_data);
 
   if (args->set_sel_time)
-    return set_sel_time (state_data);
+    return set_sel_time(state_data);
 
   if (args->get_mca_auxiliary_log_status)
-    return get_mca_auxiliary_log_status (state_data);
+    return get_mca_auxiliary_log_status(state_data);
 
   if (args->get_ssif_interface_capabilities)
-    return get_ssif_interface_capabilities (state_data);
+    return get_ssif_interface_capabilities(state_data);
 
   if (args->get_kcs_interface_capabilities)
-    return get_kcs_interface_capabilities (state_data);
+    return get_kcs_interface_capabilities(state_data);
 
   if (args->get_bt_interface_capabilities)
-    return get_bt_interface_capabilities (state_data);
+    return get_bt_interface_capabilities(state_data);
 
   rv = 0;
   return (rv);
@@ -1143,8 +1143,8 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
 static int
 _bmc_device(pstdout_state_t pstate,
-          const char *hostname,
-          void *arg)
+            const char *hostname,
+            void *arg)
 {
   bmc_device_state_data_t state_data;
   bmc_device_prog_data_t *prog_data;
