@@ -53,7 +53,7 @@ power_restore_policy_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_chassis_status(state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -96,9 +96,9 @@ power_restore_policy_commit (const char *section_name,
       goto cleanup;
     }
   
-  if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
-                                         power_restore_policy_number (kv->value_input),
-                                         obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_power_restore_policy(state_data->ipmi_ctx,
+                                        power_restore_policy_number (kv->value_input),
+                                        obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -131,23 +131,23 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
     "machine (\"Off_State_AC_Apply\"), or return the power to the state that "
     "existed before the power loss (\"Restore_State_AC_Apply\").";
 
-  if (!(misc_section = config_section_create (state_data->pstate,
-                                              "Misc",
-                                              "Misc",
-                                              section_comment,
-                                              CONFIG_DO_NOT_CHECKOUT,
-                                              NULL,
-                                              NULL)))
+  if (!(misc_section = config_section_create(state_data->pstate,
+                                             "Misc",
+                                             "Misc",
+                                             section_comment,
+                                             CONFIG_DO_NOT_CHECKOUT,
+                                             NULL,
+                                             NULL)))
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              misc_section,
-                              "Power_Restore_Policy",
-                              "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
-                              CONFIG_DO_NOT_CHECKOUT | CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                              power_restore_policy_checkout,
-                              power_restore_policy_commit,
-                              power_restore_policy_number_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             misc_section,
+                             "Power_Restore_Policy",
+                             "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
+                             CONFIG_DO_NOT_CHECKOUT | CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                             power_restore_policy_checkout,
+                             power_restore_policy_commit,
+                             power_restore_policy_number_validate) < 0)
     goto cleanup;
 
   return misc_section;

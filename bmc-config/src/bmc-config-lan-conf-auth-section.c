@@ -65,7 +65,7 @@ struct bmc_authentication_level {
 };
 
 static config_err_t 
-_get_authentication_type_support (bmc_config_state_data_t *state_data)
+_get_authentication_type_support(bmc_config_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -130,8 +130,8 @@ _get_authentication_type_support (bmc_config_state_data_t *state_data)
 }
 
 static config_err_t 
-_get_authentication_type_enables (bmc_config_state_data_t *state_data,
-                                  struct bmc_authentication_level *al)
+_get_authentication_type_enables(bmc_config_state_data_t *state_data,
+                                 struct bmc_authentication_level *al)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -256,8 +256,8 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t 
-_set_authentication_type_enables (bmc_config_state_data_t *state_data,
-                                  struct bmc_authentication_level *al)
+_set_authentication_type_enables(bmc_config_state_data_t *state_data,
+                                 struct bmc_authentication_level *al)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -328,10 +328,10 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
 }
 
 static uint8_t *
-_authentication_level_ptr (bmc_config_state_data_t *state_data,
-                           const char *section_name,
-                           const char *key_name,
-                           struct bmc_authentication_level *al)
+_authentication_level_ptr(bmc_config_state_data_t *state_data,
+                          const char *section_name,
+                          const char *key_name,
+                          struct bmc_authentication_level *al)
 {
   assert(state_data);
   assert(key_name);
@@ -400,10 +400,10 @@ _authentication_level_ptr (bmc_config_state_data_t *state_data,
  * - if we cannot determine support, we always checkout
  */
 static config_err_t
-_authentication_type_enable_available (bmc_config_state_data_t *state_data,
-                                       const char *section_name,
-                                       const char *key_name,
-                                       unsigned int *available)
+_authentication_type_enable_available(bmc_config_state_data_t *state_data,
+                                      const char *section_name,
+                                      const char *key_name,
+                                      unsigned int *available)
 {
   config_err_t ret;
 
@@ -447,9 +447,9 @@ _authentication_type_enable_available (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-_authentication_level_checkout (const char *section_name,
-                                struct config_keyvalue *kv,
-                                void *arg)
+_authentication_level_checkout(const char *section_name,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct bmc_authentication_level al;
@@ -457,15 +457,15 @@ _authentication_level_checkout (const char *section_name,
   unsigned int available_flag = 1; /* default is to always allow checkout */
   uint8_t *al_ptr;
 
-  if ((ret = _get_authentication_type_enables (state_data, 
-                                               &al)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_authentication_type_enables(state_data, 
+                                              &al)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   /* non-fatal error is ok here */
-  ret = _authentication_type_enable_available (state_data,
-                                               section_name,
-                                               kv->key->key_name,
-                                               &available_flag);
+  ret = _authentication_type_enable_available(state_data,
+                                              section_name,
+                                              kv->key->key_name,
+                                              &available_flag);
   if (ret == CONFIG_ERR_FATAL_ERROR)
     return ret;
       
@@ -489,17 +489,17 @@ _authentication_level_checkout (const char *section_name,
 }
 
 static config_err_t
-_authentication_level_commit (const char *section_name,
-                              const struct config_keyvalue *kv,
-                              void *arg)
+_authentication_level_commit(const char *section_name,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct bmc_authentication_level al;
   config_err_t ret;
   uint8_t *flag;
 
-  if ((ret = _get_authentication_type_enables (state_data, 
-                                               &al)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_authentication_type_enables(state_data, 
+                                              &al)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (!(flag = _authentication_level_ptr(state_data,
@@ -510,8 +510,8 @@ _authentication_level_commit (const char *section_name,
   
   *flag = same (kv->value_input, "yes");
 
-  if ((ret = _set_authentication_type_enables (state_data, 
-                                               &al)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _set_authentication_type_enables(state_data, 
+                                              &al)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   return CONFIG_ERR_SUCCESS;
@@ -538,254 +538,254 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                                       NULL)))
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Callback_Enable_Auth_Type_None",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Callback_Enable_Auth_Type_None",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Callback_Enable_Auth_Type_MD2",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Callback_Enable_Auth_Type_MD2",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Callback_Enable_Auth_Type_MD5",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Callback_Enable_Auth_Type_MD5",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Callback_Enable_Auth_Type_Straight_Password",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Callback_Enable_Auth_Type_Straight_Password",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Callback_Enable_Auth_Type_OEM_Proprietary",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Callback_Enable_Auth_Type_OEM_Proprietary",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "User_Enable_Auth_Type_None",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "User_Enable_Auth_Type_None",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "User_Enable_Auth_Type_MD2",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "User_Enable_Auth_Type_MD2",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "User_Enable_Auth_Type_MD5",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "User_Enable_Auth_Type_MD5",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "User_Enable_Auth_Type_Straight_Password",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "User_Enable_Auth_Type_Straight_Password",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "User_Enable_Auth_Type_OEM_Proprietary",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "User_Enable_Auth_Type_OEM_Proprietary",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Operator_Enable_Auth_Type_None",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Operator_Enable_Auth_Type_None",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Operator_Enable_Auth_Type_MD2",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Operator_Enable_Auth_Type_MD2",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Operator_Enable_Auth_Type_MD5",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Operator_Enable_Auth_Type_MD5",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Operator_Enable_Auth_Type_Straight_Password",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Operator_Enable_Auth_Type_Straight_Password",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Operator_Enable_Auth_Type_OEM_Proprietary",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Operator_Enable_Auth_Type_OEM_Proprietary",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Admin_Enable_Auth_Type_None",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Admin_Enable_Auth_Type_None",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Admin_Enable_Auth_Type_MD2",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Admin_Enable_Auth_Type_MD2",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Admin_Enable_Auth_Type_MD5",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Admin_Enable_Auth_Type_MD5",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Admin_Enable_Auth_Type_Straight_Password",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Admin_Enable_Auth_Type_Straight_Password",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "Admin_Enable_Auth_Type_OEM_Proprietary",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "Admin_Enable_Auth_Type_OEM_Proprietary",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "OEM_Enable_Auth_Type_None",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "OEM_Enable_Auth_Type_None",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "OEM_Enable_Auth_Type_MD2",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "OEM_Enable_Auth_Type_MD2",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "OEM_Enable_Auth_Type_MD5",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "OEM_Enable_Auth_Type_MD5",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "OEM_Enable_Auth_Type_Straight_Password",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "OEM_Enable_Auth_Type_Straight_Password",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_auth_section,
-                              "OEM_Enable_Auth_Type_OEM_Proprietary",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              config_yes_no_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_auth_section,
+                             "OEM_Enable_Auth_Type_OEM_Proprietary",
+                             "Possible values: Yes/No",
+                             0,
+                             _authentication_level_checkout,
+                             _authentication_level_commit,
+                             config_yes_no_validate) < 0)
     goto cleanup;
 
   return lan_conf_auth_section;

@@ -62,19 +62,19 @@ _get_key(bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
   
-  if (ipmi_cmd_set_channel_security_keys (state_data->ipmi_ctx,
-                                          channel_number,
-                                          IPMI_CHANNEL_SECURITY_KEYS_OPERATION_READ_KEY,
-                                          key_type,
-                                          NULL,
-                                          0,
-                                          obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_channel_security_keys(state_data->ipmi_ctx,
+                                         channel_number,
+                                         IPMI_CHANNEL_SECURITY_KEYS_OPERATION_READ_KEY,
+                                         key_type,
+                                         NULL,
+                                         0,
+                                         obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -136,19 +136,19 @@ _set_key(bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_channel_security_keys (state_data->ipmi_ctx,
-                                          channel_number,
-                                          IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY,
-                                          key_type,
-                                          key,
-                                          key_len,
-                                          obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_channel_security_keys(state_data->ipmi_ctx,
+                                         channel_number,
+                                         IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY,
+                                         key_type,
+                                         key,
+                                         key_len,
+                                         obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -200,10 +200,10 @@ k_r_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
 
-  return _set_key (state_data,
-                   IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
-                   (uint8_t *)kv->value_input, 
-                   strlen(kv->value_input));
+  return _set_key(state_data,
+                  IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
+                  (uint8_t *)kv->value_input, 
+                  strlen(kv->value_input));
 }
 
 static config_validate_t
@@ -229,10 +229,10 @@ k_g_checkout (const char *section_name,
 
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH);
   
-  if ((ret = _get_key (state_data, 
-                       IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
-                       k_g, 
-                       IPMI_MAX_K_G_LENGTH)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_key(state_data, 
+                      IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
+                      k_g, 
+                      IPMI_MAX_K_G_LENGTH)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   /* a printable k_g key can have two representations, so compare the
@@ -248,7 +248,7 @@ k_g_checkout (const char *section_name,
       if (parse_kg(kv_k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value_input) < 0)
         return CONFIG_ERR_FATAL_ERROR;
 
-      if (!memcmp (kv_k_g, k_g, IPMI_MAX_K_G_LENGTH)) 
+      if (!memcmp(kv_k_g, k_g, IPMI_MAX_K_G_LENGTH)) 
         {
           if (config_section_update_keyvalue_output(state_data->pstate,
                                                     kv, 
@@ -286,10 +286,10 @@ k_g_commit (const char *section_name,
   if ((k_g_len = parse_kg(k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value_input)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
-  return _set_key (state_data, 
-                   IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
-                   k_g,
-                   k_g_len);
+  return _set_key(state_data, 
+                  IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
+                  k_g,
+                  k_g_len);
 }
 
 static config_validate_t
@@ -315,33 +315,33 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
     "can be set for two key authentication in IPMI 2.0.  It is optionally "
     "configured.  Most users will want to set this to zero (or blank).";
 
-  if (!(lan_conf_security_keys_section = config_section_create (state_data->pstate,
-                                                                "Lan_Conf_Security_Keys",
-                                                                "Lan_Conf_Security_Keys",
-                                                                section_comment,
-                                                                0,
-                                                                NULL,
-                                                                NULL)))
+  if (!(lan_conf_security_keys_section = config_section_create(state_data->pstate,
+                                                               "Lan_Conf_Security_Keys",
+                                                               "Lan_Conf_Security_Keys",
+                                                               section_comment,
+                                                               0,
+                                                               NULL,
+                                                               NULL)))
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_security_keys_section,
-                              "K_R",
-                              "Give string or blank to clear. Max 20 chars",
-                              0,
-                              k_r_checkout,
-                              k_r_commit,
-                              k_r_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_security_keys_section,
+                             "K_R",
+                             "Give string or blank to clear. Max 20 chars",
+                             0,
+                             k_r_checkout,
+                             k_r_commit,
+                             k_r_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_security_keys_section,
-                              "K_G",
-                              "Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",
-                              0,
-                              k_g_checkout,
-                              k_g_commit,
-                              k_g_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_security_keys_section,
+                             "K_G",
+                             "Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",
+                             0,
+                             k_g_checkout,
+                             k_g_commit,
+                             k_g_validate) < 0)
     goto cleanup;
 
   return lan_conf_security_keys_section;
