@@ -47,9 +47,9 @@ struct vlan_id
 };
 
 static config_err_t
-ip_address_source_checkout (const char *section_name,
-			    struct config_keyvalue *kv,
-                            void *arg)
+ip_address_source_checkout(const char *section_name,
+                           struct config_keyvalue *kv,
+                           void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -67,18 +67,18 @@ ip_address_source_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_ip_address_source (state_data->ipmi_ctx, 
-								   channel_number, 
-								   IPMI_GET_LAN_PARAMETER, 
-								   SET_SELECTOR, 
-								   BLOCK_SELECTOR, 
-								   obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_ip_address_source(state_data->ipmi_ctx, 
+                                                                  channel_number, 
+                                                                  IPMI_GET_LAN_PARAMETER, 
+                                                                  SET_SELECTOR, 
+                                                                  BLOCK_SELECTOR, 
+                                                                  obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -90,7 +90,7 @@ ip_address_source_checkout (const char *section_name,
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "ip_address_source", &val);
+  TOOL_FIID_OBJ_GET(obj_cmd_rs, "ip_address_source", &val);
 
   if (config_section_update_keyvalue_output(state_data->pstate,
                                             kv,
@@ -104,9 +104,9 @@ ip_address_source_checkout (const char *section_name,
 }
 
 static config_err_t
-ip_address_source_commit (const char *section_name,
-			  const struct config_keyvalue *kv,
-                          void *arg)
+ip_address_source_commit(const char *section_name,
+                         const struct config_keyvalue *kv,
+                         void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -123,16 +123,16 @@ ip_address_source_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_ip_address_source (state_data->ipmi_ctx,
-                                                                   channel_number,
-                                                                   ip_address_source_number (kv->value_input),
-                                                                   obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_ip_address_source(state_data->ipmi_ctx,
+                                                                  channel_number,
+                                                                  ip_address_source_number (kv->value_input),
+                                                                  obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -151,9 +151,9 @@ ip_address_source_commit (const char *section_name,
 }
 
 static config_err_t
-ip_address_checkout (const char *section_name,
-		     struct config_keyvalue *kv,
-                     void *arg)
+ip_address_checkout(const char *section_name,
+                    struct config_keyvalue *kv,
+                    void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -172,18 +172,18 @@ ip_address_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_ip_address (state_data->ipmi_ctx, 
-							    channel_number, 
-							    IPMI_GET_LAN_PARAMETER, 
-							    SET_SELECTOR, 
-							    BLOCK_SELECTOR, 
-							    obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_ip_address(state_data->ipmi_ctx, 
+                                                           channel_number, 
+                                                           IPMI_GET_LAN_PARAMETER, 
+                                                           SET_SELECTOR, 
+                                                           BLOCK_SELECTOR, 
+                                                           obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -228,9 +228,9 @@ ip_address_checkout (const char *section_name,
 }
 
 static config_err_t
-ip_address_commit (const char *section_name,
-		   const struct config_keyvalue *kv,
-                   void *arg)
+ip_address_commit(const char *section_name,
+                  const struct config_keyvalue *kv,
+                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -253,16 +253,16 @@ ip_address_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_ip_address (state_data->ipmi_ctx,
-                                                            channel_number,
-                                                            ip_address_val,
-                                                            obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_ip_address(state_data->ipmi_ctx,
+                                                           channel_number,
+                                                           ip_address_val,
+                                                           obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -281,9 +281,9 @@ ip_address_commit (const char *section_name,
 }
 
 static config_err_t
-mac_address_checkout (const char *section_name,
-		      struct config_keyvalue *kv,
-                      void *arg)
+mac_address_checkout(const char *section_name,
+                     struct config_keyvalue *kv,
+                     void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -302,18 +302,18 @@ mac_address_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_mac_address (state_data->ipmi_ctx, 
-							     channel_number, 
-							     IPMI_GET_LAN_PARAMETER, 
-							     SET_SELECTOR, 
-							     BLOCK_SELECTOR, 
-							     obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_mac_address(state_data->ipmi_ctx, 
+                                                            channel_number, 
+                                                            IPMI_GET_LAN_PARAMETER, 
+                                                            SET_SELECTOR, 
+                                                            BLOCK_SELECTOR, 
+                                                            obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -361,9 +361,9 @@ mac_address_checkout (const char *section_name,
 }
 
 static config_err_t
-mac_address_commit (const char *section_name,
-		    const struct config_keyvalue *kv,
-                    void *arg)
+mac_address_commit(const char *section_name,
+                   const struct config_keyvalue *kv,
+                   void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -386,16 +386,16 @@ mac_address_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_mac_address (state_data->ipmi_ctx,
-                                                             channel_number,
-                                                             mac_address_val,
-                                                             obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_mac_address(state_data->ipmi_ctx,
+                                                            channel_number,
+                                                            mac_address_val,
+                                                            obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -414,9 +414,9 @@ mac_address_commit (const char *section_name,
 }
 
 static config_err_t
-subnet_mask_checkout (const char *section_name,
-		      struct config_keyvalue *kv,
-                      void *arg)
+subnet_mask_checkout(const char *section_name,
+                     struct config_keyvalue *kv,
+                     void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -435,18 +435,18 @@ subnet_mask_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_subnet_mask (state_data->ipmi_ctx, 
-							     channel_number, 
-							     IPMI_GET_LAN_PARAMETER, 
-							     SET_SELECTOR, 
-							     BLOCK_SELECTOR, 
-							     obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_subnet_mask(state_data->ipmi_ctx, 
+                                                            channel_number, 
+                                                            IPMI_GET_LAN_PARAMETER, 
+                                                            SET_SELECTOR, 
+                                                            BLOCK_SELECTOR, 
+                                                            obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -491,9 +491,9 @@ subnet_mask_checkout (const char *section_name,
 }
 
 static config_err_t
-subnet_mask_commit (const char *section_name,
-		    const struct config_keyvalue *kv,
-                    void *arg)
+subnet_mask_commit(const char *section_name,
+                   const struct config_keyvalue *kv,
+                   void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -516,16 +516,16 @@ subnet_mask_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_subnet_mask (state_data->ipmi_ctx,
-                                                             channel_number,
-                                                             subnet_mask_val,
-                                                             obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_subnet_mask(state_data->ipmi_ctx,
+                                                            channel_number,
+                                                            subnet_mask_val,
+                                                            obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -544,9 +544,9 @@ subnet_mask_commit (const char *section_name,
 }
 
 static config_err_t
-default_gateway_address_checkout (const char *section_name,
-				  struct config_keyvalue *kv,
-                                  void *arg)
+default_gateway_address_checkout(const char *section_name,
+                                 struct config_keyvalue *kv,
+                                 void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -565,18 +565,18 @@ default_gateway_address_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (state_data->ipmi_ctx, 
-									 channel_number, 
-									 IPMI_GET_LAN_PARAMETER, 
-									 SET_SELECTOR, 
-									 BLOCK_SELECTOR, 
-									 obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_address(state_data->ipmi_ctx, 
+                                                                        channel_number, 
+                                                                        IPMI_GET_LAN_PARAMETER, 
+                                                                        SET_SELECTOR, 
+                                                                        BLOCK_SELECTOR, 
+                                                                        obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -622,9 +622,9 @@ default_gateway_address_checkout (const char *section_name,
 }
 
 static config_err_t
-default_gateway_address_commit (const char *section_name,
-				const struct config_keyvalue *kv,
-                                void *arg)
+default_gateway_address_commit(const char *section_name,
+                               const struct config_keyvalue *kv,
+                               void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -647,16 +647,16 @@ default_gateway_address_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (state_data->ipmi_ctx,
-                                                                         channel_number,
-                                                                         ip_address_val,
-                                                                         obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_address(state_data->ipmi_ctx,
+                                                                        channel_number,
+                                                                        ip_address_val,
+                                                                        obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -675,9 +675,9 @@ default_gateway_address_commit (const char *section_name,
 }
 
 static config_err_t
-default_gateway_mac_address_checkout (const char *section_name,
-				      struct config_keyvalue *kv,
-                                      void *arg)
+default_gateway_mac_address_checkout(const char *section_name,
+                                     struct config_keyvalue *kv,
+                                     void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -696,18 +696,18 @@ default_gateway_mac_address_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
   
-  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (state_data->ipmi_ctx, 
-									     channel_number, 
-									     IPMI_GET_LAN_PARAMETER, 
-									     SET_SELECTOR, 
-									     BLOCK_SELECTOR, 
-									     obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address(state_data->ipmi_ctx, 
+                                                                            channel_number, 
+                                                                            IPMI_GET_LAN_PARAMETER, 
+                                                                            SET_SELECTOR, 
+                                                                            BLOCK_SELECTOR, 
+                                                                            obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -755,9 +755,9 @@ default_gateway_mac_address_checkout (const char *section_name,
 }
 
 static config_err_t
-default_gateway_mac_address_commit (const char *section_name,
-				    const struct config_keyvalue *kv,
-                                    void *arg)
+default_gateway_mac_address_commit(const char *section_name,
+                                   const struct config_keyvalue *kv,
+                                   void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -780,16 +780,16 @@ default_gateway_mac_address_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (state_data->ipmi_ctx,
-                                                                             channel_number,
-                                                                             mac_address_val,
-                                                                             obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address(state_data->ipmi_ctx,
+                                                                            channel_number,
+                                                                            mac_address_val,
+                                                                            obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -808,9 +808,9 @@ default_gateway_mac_address_commit (const char *section_name,
 }
 
 static config_err_t
-backup_gateway_address_checkout (const char *section_name,
-				 struct config_keyvalue *kv,
-                                 void *arg)
+backup_gateway_address_checkout(const char *section_name,
+                                struct config_keyvalue *kv,
+                                void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -829,18 +829,18 @@ backup_gateway_address_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (state_data->ipmi_ctx, 
-									channel_number, 
-									IPMI_GET_LAN_PARAMETER, 
-									SET_SELECTOR, 
-									BLOCK_SELECTOR, 
-									obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address(state_data->ipmi_ctx, 
+                                                                       channel_number, 
+                                                                       IPMI_GET_LAN_PARAMETER, 
+                                                                       SET_SELECTOR, 
+                                                                       BLOCK_SELECTOR, 
+                                                                       obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -885,9 +885,9 @@ backup_gateway_address_checkout (const char *section_name,
 }
 
 static config_err_t
-backup_gateway_address_commit (const char *section_name,
-			       const struct config_keyvalue *kv,
-                               void *arg)
+backup_gateway_address_commit(const char *section_name,
+                              const struct config_keyvalue *kv,
+                              void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -910,16 +910,16 @@ backup_gateway_address_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (state_data->ipmi_ctx,
-                                                                        channel_number,
-                                                                        ip_address_val,
-                                                                        obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address(state_data->ipmi_ctx,
+                                                                       channel_number,
+                                                                       ip_address_val,
+                                                                       obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -938,9 +938,9 @@ backup_gateway_address_commit (const char *section_name,
 }
 
 static config_err_t
-backup_gateway_mac_address_checkout (const char *section_name,
-				     struct config_keyvalue *kv,
-                                     void *arg)
+backup_gateway_mac_address_checkout(const char *section_name,
+                                    struct config_keyvalue *kv,
+                                    void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -959,18 +959,18 @@ backup_gateway_mac_address_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (state_data->ipmi_ctx, 
-									    channel_number, 
-									    IPMI_GET_LAN_PARAMETER, 
-									    SET_SELECTOR, 
-									    BLOCK_SELECTOR, 
-									    obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address(state_data->ipmi_ctx, 
+                                                                           channel_number, 
+                                                                           IPMI_GET_LAN_PARAMETER, 
+                                                                           SET_SELECTOR, 
+                                                                           BLOCK_SELECTOR, 
+                                                                           obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -1017,9 +1017,9 @@ backup_gateway_mac_address_checkout (const char *section_name,
 }
 
 static config_err_t
-backup_gateway_mac_address_commit (const char *section_name,
-                                   const struct config_keyvalue *kv,
-                                   void *arg)
+backup_gateway_mac_address_commit(const char *section_name,
+                                  const struct config_keyvalue *kv,
+                                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1042,16 +1042,16 @@ backup_gateway_mac_address_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (state_data->ipmi_ctx,
-                                                                            channel_number,
-                                                                            mac_address_val,
-                                                                            obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address(state_data->ipmi_ctx,
+                                                                           channel_number,
+                                                                           mac_address_val,
+                                                                           obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -1070,8 +1070,8 @@ backup_gateway_mac_address_commit (const char *section_name,
 }
 
 static config_err_t
-_get_vlan_id (bmc_config_state_data_t *state_data,
-              struct vlan_id *vi)
+_get_vlan_id(bmc_config_state_data_t *state_data,
+             struct vlan_id *vi)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -1091,18 +1091,18 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_vlan_id (state_data->ipmi_ctx,
-                                                         channel_number,
-                                                         IPMI_GET_LAN_PARAMETER,
-                                                         SET_SELECTOR,
-                                                         BLOCK_SELECTOR,
-                                                         obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_vlan_id(state_data->ipmi_ctx,
+                                                        channel_number,
+                                                        IPMI_GET_LAN_PARAMETER,
+                                                        SET_SELECTOR,
+                                                        BLOCK_SELECTOR,
+                                                        obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -1127,8 +1127,8 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-_set_vlan_id (bmc_config_state_data_t *state_data,
-              struct vlan_id *vi)
+_set_vlan_id(bmc_config_state_data_t *state_data,
+             struct vlan_id *vi)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -1147,17 +1147,17 @@ _set_vlan_id (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_vlan_id (state_data->ipmi_ctx,
-                                                         channel_number,
-                                                         vi->vlan_id,
-                                                         vi->vlan_id_enable,
-                                                         obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_vlan_id(state_data->ipmi_ctx,
+                                                        channel_number,
+                                                        vi->vlan_id,
+                                                        vi->vlan_id_enable,
+                                                        obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -1176,9 +1176,9 @@ _set_vlan_id (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-vlan_id_checkout (const char *section_name,
-		  struct config_keyvalue *kv,
-                  void *arg)
+vlan_id_checkout(const char *section_name,
+                 struct config_keyvalue *kv,
+                 void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct vlan_id vi;
@@ -1196,9 +1196,9 @@ vlan_id_checkout (const char *section_name,
 }
 
 static config_err_t
-vlan_id_commit (const char *section_name,
-		const struct config_keyvalue *kv,
-                void *arg)
+vlan_id_commit(const char *section_name,
+               const struct config_keyvalue *kv,
+               void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct vlan_id vi;
@@ -1213,18 +1213,18 @@ vlan_id_commit (const char *section_name,
 }
 
 static config_validate_t
-vlan_id_validate (const char *section_name,
-                  const char *key_name,
-		  const char *value,
-                  void *arg)
+vlan_id_validate(const char *section_name,
+                 const char *key_name,
+                 const char *value,
+                 void *arg)
 {
   return config_check_number_range(value, 0, 4095);
 }
 
 static config_err_t
-vlan_id_enable_checkout (const char *section_name,
-			 struct config_keyvalue *kv,
-                         void *arg)
+vlan_id_enable_checkout(const char *section_name,
+                        struct config_keyvalue *kv,
+                        void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct vlan_id vi;
@@ -1242,9 +1242,9 @@ vlan_id_enable_checkout (const char *section_name,
 }
 
 static config_err_t
-vlan_id_enable_commit (const char *section_name,
-		       const struct config_keyvalue *kv,
-                       void *arg)
+vlan_id_enable_commit(const char *section_name,
+                      const struct config_keyvalue *kv,
+                      void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct vlan_id vi;
@@ -1259,9 +1259,9 @@ vlan_id_enable_commit (const char *section_name,
 }
 
 static config_err_t
-vlan_priority_checkout (const char *section_name,
-			struct config_keyvalue *kv,
-                        void *arg)
+vlan_priority_checkout(const char *section_name,
+                       struct config_keyvalue *kv,
+                       void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1279,18 +1279,18 @@ vlan_priority_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_vlan_priority (state_data->ipmi_ctx,
-                                                               channel_number,
-                                                               IPMI_GET_LAN_PARAMETER,
-                                                               SET_SELECTOR,
-                                                               BLOCK_SELECTOR,
-                                                               obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_vlan_priority(state_data->ipmi_ctx,
+                                                              channel_number,
+                                                              IPMI_GET_LAN_PARAMETER,
+                                                              SET_SELECTOR,
+                                                              BLOCK_SELECTOR,
+                                                              obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -1316,9 +1316,9 @@ vlan_priority_checkout (const char *section_name,
 }
 
 static config_err_t
-vlan_priority_commit (const char *section_name,
-		      const struct config_keyvalue *kv,
-                      void *arg)
+vlan_priority_commit(const char *section_name,
+                     const struct config_keyvalue *kv,
+                     void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1335,16 +1335,16 @@ vlan_priority_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_vlan_priority (state_data->ipmi_ctx,
-                                                               channel_number,
-                                                               atoi (kv->value_input),
-                                                               obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_vlan_priority(state_data->ipmi_ctx,
+                                                              channel_number,
+                                                              atoi (kv->value_input),
+                                                              obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -1372,124 +1372,124 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     "and set the appropriate \"IP_Address\", \"MAC_Address\", "
     "\"Subnet_Mask\", etc. for the machine.";
 
-  if (!(lan_conf_section = config_section_create (state_data->pstate,
-                                                  "Lan_Conf",
-                                                  "Lan_Conf",
-                                                  section_comment,
-                                                  0,
-                                                  NULL,
-                                                  NULL)))
+  if (!(lan_conf_section = config_section_create(state_data->pstate,
+                                                 "Lan_Conf",
+                                                 "Lan_Conf",
+                                                 section_comment,
+                                                 0,
+                                                 NULL,
+                                                 NULL)))
     goto cleanup;
   
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
-                              "IP_Address_Source",
-                              "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
-                              0,
-                              ip_address_source_checkout,
-                              ip_address_source_commit,
-                              ip_address_source_number_validate) < 0) 
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_section,
+                             "IP_Address_Source",
+                             "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
+                             0,
+                             ip_address_source_checkout,
+                             ip_address_source_commit,
+                             ip_address_source_number_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
-                              "IP_Address",
-                              "Give valid IP address",
-                              0,
-                              ip_address_checkout,
-                              ip_address_commit,
-                              config_ip_address_validate) < 0) 
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_section,
+                             "IP_Address",
+                             "Give valid IP address",
+                             0,
+                             ip_address_checkout,
+                             ip_address_commit,
+                             config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
-                              "MAC_Address",
-                              "Give valid MAC address",
-                              0,
-                              mac_address_checkout,
-                              mac_address_commit,
-                              config_mac_address_validate) < 0) 
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_section,
+                             "MAC_Address",
+                             "Give valid MAC address",
+                             0,
+                             mac_address_checkout,
+                             mac_address_commit,
+                             config_mac_address_validate) < 0) 
     goto cleanup;
 
   /* TODO: checking valid netmask is not same as checking valid IP */
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
-                              "Subnet_Mask",
-                              "Give valid Subnet Mask",
-                              0,
-                              subnet_mask_checkout,
-                              subnet_mask_commit,
-                              config_ip_address_validate) < 0) 
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_section,
+                             "Subnet_Mask",
+                             "Give valid Subnet Mask",
+                             0,
+                             subnet_mask_checkout,
+                             subnet_mask_commit,
+                             config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
-                              "Default_Gateway_IP_Address",
-                              "Give valid IP address",
-                              0,
-                              default_gateway_address_checkout,
-                              default_gateway_address_commit,
-                              config_ip_address_validate) < 0) 
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_section,
+                             "Default_Gateway_IP_Address",
+                             "Give valid IP address",
+                             0,
+                             default_gateway_address_checkout,
+                             default_gateway_address_commit,
+                             config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
-                              "Default_Gateway_MAC_Address",
-                              "Give valid MAC address",
-                              0,
-                              default_gateway_mac_address_checkout,
-                              default_gateway_mac_address_commit,
-                              config_mac_address_validate) < 0) 
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_section,
+                             "Default_Gateway_MAC_Address",
+                             "Give valid MAC address",
+                             0,
+                             default_gateway_mac_address_checkout,
+                             default_gateway_mac_address_commit,
+                             config_mac_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
-                              "Backup_Gateway_IP_Address",
-                              "Give valid IP address",
-                              0,
-                              backup_gateway_address_checkout,
-                              backup_gateway_address_commit,
-                              config_ip_address_validate) < 0) 
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_section,
+                             "Backup_Gateway_IP_Address",
+                             "Give valid IP address",
+                             0,
+                             backup_gateway_address_checkout,
+                             backup_gateway_address_commit,
+                             config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
-                              "Backup_Gateway_MAC_Address",
-                              "Give valid MAC address",
-                              0,
-                              backup_gateway_mac_address_checkout,
-                              backup_gateway_mac_address_commit,
-                              config_mac_address_validate) < 0) 
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_section,
+                             "Backup_Gateway_MAC_Address",
+                             "Give valid MAC address",
+                             0,
+                             backup_gateway_mac_address_checkout,
+                             backup_gateway_mac_address_commit,
+                             config_mac_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
-                              "Vlan_id",
-                              "Give valid unsigned number",
-                              0,
-                              vlan_id_checkout,
-                              vlan_id_commit,
-                              vlan_id_validate) < 0) 
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_section,
+                             "Vlan_id",
+                             "Give valid unsigned number",
+                             0,
+                             vlan_id_checkout,
+                             vlan_id_commit,
+                             vlan_id_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
-                              "Vlan_Id_Enable",
-                              "Possible values: Yes/No",
-                              0,
-                              vlan_id_enable_checkout,
-                              vlan_id_enable_commit,
-                              config_yes_no_validate) < 0) 
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_section,
+                             "Vlan_Id_Enable",
+                             "Possible values: Yes/No",
+                             0,
+                             vlan_id_enable_checkout,
+                             vlan_id_enable_commit,
+                             config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
-                              "Vlan_Priority",
-                              "Give valid unsigned number",
-                              0,
-                              vlan_priority_checkout,
-                              vlan_priority_commit,
-                              config_number_range_one_byte) < 0) 
+  if (config_section_add_key(state_data->pstate,
+                             lan_conf_section,
+                             "Vlan_Priority",
+                             "Give valid unsigned number",
+                             0,
+                             vlan_priority_checkout,
+                             vlan_priority_commit,
+                             config_number_range_one_byte) < 0) 
     goto cleanup;
 
   return lan_conf_section;

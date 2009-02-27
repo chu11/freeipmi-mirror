@@ -110,10 +110,10 @@ _get_user_access(bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_user_access (state_data->ipmi_ctx,
-                                channel_number,
-                                userid,
-                                obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_user_access(state_data->ipmi_ctx,
+                               channel_number,
+                               userid,
+                               obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -215,15 +215,15 @@ _set_user_access (bmc_config_state_data_t *state_data,
         ua->session_limit = state_data->lan_user_session_limit[userid];
     }
   
-  if (ipmi_cmd_set_user_access (state_data->ipmi_ctx,
-                                channel_number,
-                                ua->user_ipmi_messaging,
-                                ua->user_link_authentication,
-                                ua->user_restricted_to_callback,
-                                userid,
-                                ua->privilege_limit,
-                                ua->session_limit,
-                                obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_user_access(state_data->ipmi_ctx,
+                               channel_number,
+                               ua->user_ipmi_messaging,
+                               ua->user_link_authentication,
+                               ua->user_restricted_to_callback,
+                               userid,
+                               ua->privilege_limit,
+                               ua->session_limit,
+                               obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -242,9 +242,9 @@ _set_user_access (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-username_checkout (const char *section_name,
-		   struct config_keyvalue *kv,
-                   void *arg)
+username_checkout(const char *section_name,
+                  struct config_keyvalue *kv,
+                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -267,9 +267,9 @@ username_checkout (const char *section_name,
   /* achu: *2 b/c of CONFIG_USERNAME_NOT_SET_YET_STR */
   memset(username, '\0', IPMI_MAX_USER_NAME_LENGTH*2+1);
 
-  if (ipmi_cmd_get_user_name (state_data->ipmi_ctx,
-                              userid,
-                              obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_user_name(state_data->ipmi_ctx,
+                             userid,
+                             obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -345,9 +345,9 @@ username_checkout (const char *section_name,
 }
 
 static config_err_t
-username_commit (const char *section_name,
-		 const struct config_keyvalue *kv,
-                 void *arg)
+username_commit(const char *section_name,
+                const struct config_keyvalue *kv,
+                void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section_name + strlen ("User"));
@@ -374,11 +374,11 @@ username_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_user_name (state_data->ipmi_ctx,
-                              userid,
-                              kv->value_input,
-                              strlen(kv->value_input),
-                              obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_user_name(state_data->ipmi_ctx,
+                             userid,
+                             kv->value_input,
+                             strlen(kv->value_input),
+                             obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -397,10 +397,10 @@ username_commit (const char *section_name,
 }
 
 static config_validate_t
-username_validate (const char *section_name,
-                   const char *key_name,
-		   const char *value,
-                   void *arg)
+username_validate(const char *section_name,
+                  const char *key_name,
+		  const char *value,
+                  void *arg)
 {
   uint8_t userid;
   userid = atoi (section_name + strlen ("User"));
@@ -419,9 +419,9 @@ username_validate (const char *section_name,
 }
 
 static config_err_t
-enable_user_checkout (const char *section_name,
-		      struct config_keyvalue *kv,
-                      void *arg)
+enable_user_checkout(const char *section_name,
+                     struct config_keyvalue *kv,
+                     void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -471,9 +471,9 @@ enable_user_checkout (const char *section_name,
 }
 
 static config_err_t
-enable_user_commit (const char *section_name,
-		    const struct config_keyvalue *kv,
-                    void *arg)
+enable_user_commit(const char *section_name,
+                   const struct config_keyvalue *kv,
+                   void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   int userid = atoi (section_name + strlen ("User"));
@@ -498,12 +498,12 @@ enable_user_commit (const char *section_name,
     user_status = IPMI_PASSWORD_OPERATION_DISABLE_USER;
 
   memset (password, 0, IPMI_1_5_MAX_PASSWORD_LENGTH);
-  if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
-                                  userid,
-                                  user_status,
-                                  password,
-                                  0,
-                                  obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_user_password(state_data->ipmi_ctx,
+                                 userid,
+                                 user_status,
+                                 password,
+                                 0,
+                                 obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -561,11 +561,11 @@ enable_user_commit (const char *section_name,
               goto cleanup;
             }
           
-          if (ipmi_cmd (state_data->ipmi_ctx,
-                        IPMI_BMC_IPMB_LUN_BMC,
-                        IPMI_NET_FN_APP_RQ,
-                        obj_cmd_rq,
-                        obj_cmd_rs) < 0)
+          if (ipmi_cmd(state_data->ipmi_ctx,
+                       IPMI_BMC_IPMB_LUN_BMC,
+                       IPMI_NET_FN_APP_RQ,
+                       obj_cmd_rq,
+                       obj_cmd_rs) < 0)
             {
               if (state_data->prog_data->args->config_args.common.debug)
                 pstdout_fprintf(state_data->pstate,
@@ -600,10 +600,10 @@ enable_user_commit (const char *section_name,
 }
 
 static config_err_t
-_check_bmc_user_password (bmc_config_state_data_t *state_data,
-                          uint8_t userid,
-                          char *password,
-                          int *is_same)
+_check_bmc_user_password(bmc_config_state_data_t *state_data,
+                         uint8_t userid,
+                         char *password,
+                         int *is_same)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -621,12 +621,12 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
-                                  userid,
-                                  IPMI_PASSWORD_OPERATION_TEST_PASSWORD,
-                                  password,
-                                  strlen(password),
-                                  obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_user_password(state_data->ipmi_ctx,
+                                 userid,
+                                 IPMI_PASSWORD_OPERATION_TEST_PASSWORD,
+                                 password,
+                                 strlen(password),
+                                 obj_cmd_rs) < 0)
     {
       uint64_t comp_code;
 
@@ -668,9 +668,9 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-password_checkout (const char *section_name,
-		   struct config_keyvalue *kv,
-                   void *arg)
+password_checkout(const char *section_name,
+                  struct config_keyvalue *kv,
+                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   char *str = "";
@@ -707,9 +707,9 @@ password_checkout (const char *section_name,
 }
 
 static config_err_t
-password_commit (const char *section_name,
-		 const struct config_keyvalue *kv,
-                 void *arg)
+password_commit(const char *section_name,
+                const struct config_keyvalue *kv,
+                void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section_name + strlen ("User"));
@@ -725,12 +725,12 @@ password_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
-                                  userid,
-                                  IPMI_PASSWORD_OPERATION_SET_PASSWORD,
-                                  kv->value_input,
-                                  strlen(kv->value_input),
-                                  obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_user_password(state_data->ipmi_ctx,
+                                 userid,
+                                 IPMI_PASSWORD_OPERATION_SET_PASSWORD,
+                                 kv->value_input,
+                                 strlen(kv->value_input),
+                                 obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -749,10 +749,10 @@ password_commit (const char *section_name,
 }
 
 static config_validate_t
-password_validate (const char *section_name,
-                   const char *key_name,
-		   const char *value,
-                   void *arg)
+password_validate(const char *section_name,
+                  const char *key_name,
+                  const char *value,
+                  void *arg)
 {
   if (strlen (value) <= IPMI_1_5_MAX_PASSWORD_LENGTH)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -760,10 +760,10 @@ password_validate (const char *section_name,
 }
 
 static config_err_t
-_check_bmc_user_password20 (bmc_config_state_data_t *state_data,
-                            uint8_t userid,
-                            char *password,
-                            int *is_same)
+_check_bmc_user_password20(bmc_config_state_data_t *state_data,
+                           uint8_t userid,
+                           char *password,
+                           int *is_same)
 
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -782,13 +782,13 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_user_password_v20 (state_data->ipmi_ctx,
-                                      userid,
-                                      IPMI_PASSWORD_SIZE_20_BYTES,
-                                      IPMI_PASSWORD_OPERATION_TEST_PASSWORD,
-                                      password,
-                                      strlen(password),
-                                      obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_user_password_v20(state_data->ipmi_ctx,
+                                     userid,
+                                     IPMI_PASSWORD_SIZE_20_BYTES,
+                                     IPMI_PASSWORD_OPERATION_TEST_PASSWORD,
+                                     password,
+                                     strlen(password),
+                                     obj_cmd_rs) < 0)
     {
       uint64_t comp_code;
 
@@ -831,9 +831,9 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-password20_checkout (const char *section_name,
-		     struct config_keyvalue *kv,
-                     void *arg)
+password20_checkout(const char *section_name,
+                    struct config_keyvalue *kv,
+                    void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section_name + strlen ("User"));
@@ -883,9 +883,9 @@ password20_checkout (const char *section_name,
 }
 
 static config_err_t
-password20_commit (const char *section_name,
-		   const struct config_keyvalue *kv,
-                   void *arg)
+password20_commit(const char *section_name,
+		  const struct config_keyvalue *kv,
+                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section_name + strlen ("User"));
@@ -901,13 +901,13 @@ password20_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_user_password_v20 (state_data->ipmi_ctx,
-                                      userid,
-                                      IPMI_PASSWORD_SIZE_20_BYTES,
-                                      IPMI_PASSWORD_OPERATION_SET_PASSWORD,
-                                      kv->value_input,
-                                      strlen(kv->value_input),
-                                      obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_user_password_v20(state_data->ipmi_ctx,
+                                     userid,
+                                     IPMI_PASSWORD_SIZE_20_BYTES,
+                                     IPMI_PASSWORD_OPERATION_SET_PASSWORD,
+                                     kv->value_input,
+                                     strlen(kv->value_input),
+                                     obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -927,10 +927,10 @@ password20_commit (const char *section_name,
 }
 
 static config_validate_t
-password20_validate (const char *section_name,
-                     const char *key_name,
-		     const char *value,
-                     void *arg)
+password20_validate(const char *section_name,
+                    const char *key_name,
+                    const char *value,
+                    void *arg)
 {
   if (strlen (value) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
     return CONFIG_VALIDATE_VALID_VALUE;
@@ -938,9 +938,9 @@ password20_validate (const char *section_name,
 }
 
 static config_err_t
-lan_enable_ipmi_messaging_checkout (const char *section_name,
-                                    struct config_keyvalue *kv,
-                                    void *arg)
+lan_enable_ipmi_messaging_checkout(const char *section_name,
+                                   struct config_keyvalue *kv,
+                                   void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -974,9 +974,9 @@ lan_enable_ipmi_messaging_checkout (const char *section_name,
 }
 
 static config_err_t
-lan_enable_ipmi_messaging_commit (const char *section_name,
-                                  const struct config_keyvalue *kv,
-                                  void *arg)
+lan_enable_ipmi_messaging_commit(const char *section_name,
+                                 const struct config_keyvalue *kv,
+                                 void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -999,9 +999,9 @@ lan_enable_ipmi_messaging_commit (const char *section_name,
 }
   
 static config_err_t
-lan_enable_link_auth_checkout (const char *section_name,
-			       struct config_keyvalue *kv,
-                               void *arg)
+lan_enable_link_auth_checkout(const char *section_name,
+                              struct config_keyvalue *kv,
+                              void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1035,9 +1035,9 @@ lan_enable_link_auth_checkout (const char *section_name,
 }
 
 static config_err_t
-lan_enable_link_auth_commit (const char *section_name,
-                             const struct config_keyvalue *kv,
-                             void *arg)
+lan_enable_link_auth_commit(const char *section_name,
+                            const struct config_keyvalue *kv,
+                            void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1064,9 +1064,9 @@ lan_enable_link_auth_commit (const char *section_name,
 }
 
 static config_err_t
-lan_enable_restricted_to_callback_checkout (const char *section_name,
-                                            struct config_keyvalue *kv,
-                                            void *arg)
+lan_enable_restricted_to_callback_checkout(const char *section_name,
+                                           struct config_keyvalue *kv,
+                                           void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1100,9 +1100,9 @@ lan_enable_restricted_to_callback_checkout (const char *section_name,
 }
 
 static config_err_t
-lan_enable_restricted_to_callback_commit (const char *section_name,
-                                          const struct config_keyvalue *kv,
-                                          void *arg)
+lan_enable_restricted_to_callback_commit(const char *section_name,
+                                         const struct config_keyvalue *kv,
+                                         void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1129,9 +1129,9 @@ lan_enable_restricted_to_callback_commit (const char *section_name,
 }
 
 static config_err_t
-lan_privilege_limit_checkout (const char *section_name,
-                              struct config_keyvalue *kv,
-                              void *arg)
+lan_privilege_limit_checkout(const char *section_name,
+                             struct config_keyvalue *kv,
+                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1165,9 +1165,9 @@ lan_privilege_limit_checkout (const char *section_name,
 }
 
 static config_err_t
-lan_privilege_limit_commit (const char *section_name,
-                            const struct config_keyvalue *kv,
-                            void *arg)
+lan_privilege_limit_commit(const char *section_name,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1194,9 +1194,9 @@ lan_privilege_limit_commit (const char *section_name,
 }
   
 static config_err_t
-lan_session_limit_checkout (const char *section_name,
-                            struct config_keyvalue *kv,
-                            void *arg)
+lan_session_limit_checkout(const char *section_name,
+                           struct config_keyvalue *kv,
+                           void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
 
@@ -1210,9 +1210,9 @@ lan_session_limit_checkout (const char *section_name,
 }
 
 static config_err_t
-lan_session_limit_commit (const char *section_name,
-                          const struct config_keyvalue *kv,
-                          void *arg)
+lan_session_limit_commit(const char *section_name,
+                         const struct config_keyvalue *kv,
+                         void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1238,9 +1238,9 @@ lan_session_limit_commit (const char *section_name,
 }
 
 static config_err_t
-sol_payload_access_checkout (const char *section_name,
-                             struct config_keyvalue *kv,
-                             void *arg)
+sol_payload_access_checkout(const char *section_name,
+                            struct config_keyvalue *kv,
+                            void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   int userid = atoi (section_name + strlen ("User"));
@@ -1265,10 +1265,10 @@ sol_payload_access_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_user_payload_access (state_data->ipmi_ctx,
-                                        channel_number,
-                                        userid,
-                                        obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_user_payload_access(state_data->ipmi_ctx,
+                                       channel_number,
+                                       userid,
+                                       obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -1321,9 +1321,9 @@ sol_payload_access_checkout (const char *section_name,
 }
 
 static config_err_t
-sol_payload_access_commit (const char *section_name,
-                           const struct config_keyvalue *kv,
-                           void *arg)
+sol_payload_access_commit(const char *section_name,
+                          const struct config_keyvalue *kv,
+                          void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   int userid = atoi (section_name + strlen ("User"));
@@ -1353,26 +1353,26 @@ sol_payload_access_commit (const char *section_name,
   else
     operation = IPMI_SET_USER_PAYLOAD_OPERATION_DISABLE;
 
-  if (ipmi_cmd_set_user_payload_access (state_data->ipmi_ctx,
-                                        channel_number,
-                                        userid,
-                                        operation,
-                                        1, /* the sol payload */
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_user_payload_access(state_data->ipmi_ctx,
+                                       channel_number,
+                                       userid,
+                                       operation,
+                                       1, /* the sol payload */
+                                       0,
+                                       0,
+                                       0,
+                                       0,
+                                       0,
+                                       0,
+                                       0,
+                                       0,
+                                       0,
+                                       0,
+                                       0,
+                                       0,
+                                       0,
+                                       0,
+                                       obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -1391,9 +1391,9 @@ sol_payload_access_commit (const char *section_name,
 }
 
 static config_err_t
-serial_enable_ipmi_messaging_checkout (const char *section_name,
-                                       struct config_keyvalue *kv,
-                                       void *arg)
+serial_enable_ipmi_messaging_checkout(const char *section_name,
+                                      struct config_keyvalue *kv,
+                                      void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1427,9 +1427,9 @@ serial_enable_ipmi_messaging_checkout (const char *section_name,
 }
 
 static config_err_t
-serial_enable_ipmi_messaging_commit (const char *section_name,
-                                     const struct config_keyvalue *kv,
-                                     void *arg)
+serial_enable_ipmi_messaging_commit(const char *section_name,
+                                    const struct config_keyvalue *kv,
+                                    void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1456,9 +1456,9 @@ serial_enable_ipmi_messaging_commit (const char *section_name,
 }
   
 static config_err_t
-serial_enable_link_auth_checkout (const char *section_name,
-                                  struct config_keyvalue *kv,
-                                  void *arg)
+serial_enable_link_auth_checkout(const char *section_name,
+                                 struct config_keyvalue *kv,
+                                 void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1492,9 +1492,9 @@ serial_enable_link_auth_checkout (const char *section_name,
 }
 
 static config_err_t
-serial_enable_link_auth_commit (const char *section_name,
-                                const struct config_keyvalue *kv,
-                                void *arg)
+serial_enable_link_auth_commit(const char *section_name,
+                               const struct config_keyvalue *kv,
+                               void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1521,9 +1521,9 @@ serial_enable_link_auth_commit (const char *section_name,
 }
 
 static config_err_t
-serial_enable_restricted_to_callback_checkout (const char *section_name,
-                                               struct config_keyvalue *kv,
-                                               void *arg)
+serial_enable_restricted_to_callback_checkout(const char *section_name,
+                                              struct config_keyvalue *kv,
+                                              void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1557,9 +1557,9 @@ serial_enable_restricted_to_callback_checkout (const char *section_name,
 }
 
 static config_err_t
-serial_enable_restricted_to_callback_commit (const char *section_name,
-                                             const struct config_keyvalue *kv,
-                                             void *arg)
+serial_enable_restricted_to_callback_commit(const char *section_name,
+                                            const struct config_keyvalue *kv,
+                                            void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1586,9 +1586,9 @@ serial_enable_restricted_to_callback_commit (const char *section_name,
 }
 
 static config_err_t
-serial_privilege_limit_checkout (const char *section_name,
-                                 struct config_keyvalue *kv,
-                                 void *arg)
+serial_privilege_limit_checkout(const char *section_name,
+                                struct config_keyvalue *kv,
+                                void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1622,9 +1622,9 @@ serial_privilege_limit_checkout (const char *section_name,
 }
 
 static config_err_t
-serial_privilege_limit_commit (const char *section_name,
-                               const struct config_keyvalue *kv,
-                               void *arg)
+serial_privilege_limit_commit(const char *section_name,
+                              const struct config_keyvalue *kv,
+                              void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
@@ -1651,9 +1651,9 @@ serial_privilege_limit_commit (const char *section_name,
 }
 
 static config_err_t
-serial_session_limit_checkout (const char *section_name,
-                               struct config_keyvalue *kv,
-                               void *arg)
+serial_session_limit_checkout(const char *section_name,
+                              struct config_keyvalue *kv,
+                              void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
 
@@ -1667,9 +1667,9 @@ serial_session_limit_checkout (const char *section_name,
 }
 
 static config_err_t
-serial_session_limit_commit (const char *section_name,
-                             const struct config_keyvalue *kv,
-                             void *arg)
+serial_session_limit_commit(const char *section_name,
+                            const struct config_keyvalue *kv,
+                            void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct user_access ua;
