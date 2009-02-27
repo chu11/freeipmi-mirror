@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.42 2009-02-24 22:18:19 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.43 2009-02-27 01:18:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -100,7 +100,14 @@ _output_fru(ipmi_fru_state_data_t *state_data,
                  device_id_str,
                  device_id);
 
-  TOOL_FIID_OBJ_CREATE(fru_get_inventory_rs, tmpl_cmd_get_fru_inventory_area_info_rs);
+  if (!(fru_get_inventory_rs = fiid_obj_create(tmpl_cmd_get_fru_inventory_area_info_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_fru_inventory_area_info (state_data->ipmi_ctx,
                                             device_id,
@@ -178,7 +185,14 @@ _output_fru(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_CREATE(fru_common_header, tmpl_fru_common_header);
+  if (!(fru_common_header = fiid_obj_create(tmpl_fru_common_header)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all(fru_common_header,
                        frubuf,

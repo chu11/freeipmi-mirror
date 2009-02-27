@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.22 2009-02-25 01:08:48 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.23 2009-02-27 01:18:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -124,7 +124,14 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_power_supply_information);
+  if (!(obj_record = fiid_obj_create(tmpl_fru_power_supply_information)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all(obj_record,
                        frubuf,
@@ -345,7 +352,14 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_dc_output);
+  if (!(obj_record = fiid_obj_create(tmpl_fru_dc_output)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all(obj_record,
                        frubuf,
@@ -465,7 +479,14 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_dc_load);
+  if (!(obj_record = fiid_obj_create(tmpl_fru_dc_load)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all(obj_record,
                        frubuf,
@@ -580,7 +601,14 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
  
-  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_management_access_record);
+  if (!(obj_record = fiid_obj_create(tmpl_fru_management_access_record)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all(obj_record,
                        frubuf,
@@ -734,7 +762,14 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_base_compatibility_record);
+  if (!(obj_record = fiid_obj_create(tmpl_fru_base_compatibility_record)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all(obj_record,
                        frubuf,
@@ -875,7 +910,14 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_extended_compatibility_record);
+  if (!(obj_record = fiid_obj_create(tmpl_fru_extended_compatibility_record)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all(obj_record,
                        frubuf,
@@ -1006,7 +1048,14 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_CREATE(obj_record, tmpl_fru_oem_record);
+  if (!(obj_record = fiid_obj_create(tmpl_fru_oem_record)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (fiid_obj_set_all(obj_record,
                        frubuf,
@@ -1114,7 +1163,14 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
   
-  TOOL_FIID_OBJ_CREATE(fru_multirecord_header, tmpl_fru_multirecord_area_header);
+  if (!(fru_multirecord_header = fiid_obj_create(tmpl_fru_multirecord_area_header)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   multirecord_offset = offset*8;
   while (multirecord_offset < state_data->fru_inventory_area_size)

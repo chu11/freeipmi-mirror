@@ -583,7 +583,14 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_hysteresis_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sensor_hysteresis_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_sensor_hysteresis (state_data->ipmi_ctx,
                                       sensor_number,
@@ -842,7 +849,14 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
         }
     }
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_event_enable_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sensor_event_enable_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
   if (ipmi_cmd_get_sensor_event_enable (state_data->ipmi_ctx,
                                         sensor_number,
