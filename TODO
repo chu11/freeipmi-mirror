@@ -137,27 +137,28 @@ Upload to ftp.gnu.org
 
 info-gnu@gnu.org template e-mail 
 
-FreeIPMI X.X.X has been released.
-
-The release can be downloaded at:
+FreeIPMI X.X.X has been released. It can be downloaded at:
 
 http://www.gnu.org/software/freeipmi/download.html
 
-or 
+What is IPMI?
 
-http://ftp.zresearch.com/pub/freeipmi/
+The Intelligent Platform Management Interface (IPMI) specification
+defines a set of interfaces for platform management.  It is
+implemented by a large number of hardware manufacturers to support
+system management on motherboards. The features of IPMI that most
+users will be interested in are sensor monitoring (i.e. CPU
+temperatures, fan speeds), remote power control, and serial-over-LAN
+(SOL).
+
+What is FreeIPMI?
 
 FreeIPMI provides in-band and out-of-band IPMI software based on the
-IPMI v1.5/2.0 specification.  The IPMI specification defines a set of
-interfaces for platform management and is implemented by a number
-vendors for system management.  The features of IPMI that most users
-will be interested in are sensor monitoring, system event monitoring,
-power control, and serial-over-LAN (SOL).  The FreeIPMI tools and
-libraries listed provide users with the ability to access
-and utilize these and many other features of IPMI.
-
-More information about FreeIPMI can be found at the FreeIPMI webpage
-at:
+IPMI v1.5/2.0 specification.  FreeIPMI provides tools and libraries
+for users to access and read IPMI sensor readings, system event log
+(SEL) entries, serial-over-LAN (SOL), remote power control functions,
+field replaceable unit (FRU) device information, and more.  More
+information about FreeIPMI can be found at the FreeIPMI webpage at:
 
 http://www.gnu.org/software/freeipmi/index.html
 
