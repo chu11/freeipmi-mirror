@@ -63,7 +63,14 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (state_data->ipmi_ctx,
                                                                    IPMI_GET_PEF_PARAMETER,
@@ -108,7 +115,14 @@ _set_alert_string_keys (pef_config_state_data_t *state_data,
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (state_data->ipmi_ctx,
                                                                    string_selector,
@@ -235,7 +249,14 @@ alert_string_checkout (const char *section_name,
 
   memset(alert_string, '\0', PEF_ALERT_STRING_MAX_LEN+1);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (!((PEF_ALERT_STRING_MAX_LEN) % 16))
     blocks = (PEF_ALERT_STRING_MAX_LEN)/16;
@@ -322,7 +343,14 @@ alert_string_commit (const char *section_name,
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
   alert_string_len = strlen((char *)kv->value_input);
 

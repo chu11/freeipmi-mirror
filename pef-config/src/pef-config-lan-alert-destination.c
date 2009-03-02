@@ -69,22 +69,29 @@ _get_destination_type(pef_config_state_data_t *state_data,
   assert(section_name);
   assert(dt);
 
-  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi(section_name + strlen ("Lan_Alert_Destination_"));
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_destination_type_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_type_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_destination_type (state_data->ipmi_ctx,
-                                                                  channel_number,
-                                                                  IPMI_GET_LAN_PARAMETER,
-                                                                  destination_selector,
-                                                                  BLOCK_SELECTOR,
-                                                                  obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_destination_type(state_data->ipmi_ctx,
+                                                                 channel_number,
+                                                                 IPMI_GET_LAN_PARAMETER,
+                                                                 destination_selector,
+                                                                 BLOCK_SELECTOR,
+                                                                 obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -129,11 +136,18 @@ _set_destination_type(pef_config_state_data_t *state_data,
   assert(section_name);
   assert(dt);
 
-  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi(section_name + strlen ("Lan_Alert_Destination_"));
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -286,7 +300,7 @@ alert_acknowledge_timeout_commit (const char *section_name,
                                    &dt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  dt.alert_acknowledge_timeout = atoi (kv->value_input);
+  dt.alert_acknowledge_timeout = atoi(kv->value_input);
 
   return _set_destination_type(state_data,
                                section_name,
@@ -329,7 +343,7 @@ alert_retries_commit (const char *section_name,
                                    &dt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  dt.alert_retries = atoi (kv->value_input);
+  dt.alert_retries = atoi(kv->value_input);
 
   return _set_destination_type(state_data,
                                section_name,
@@ -363,11 +377,18 @@ _get_destination_addresses(pef_config_state_data_t *state_data,
   assert(section_name);
   assert(da);
 
-  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi(section_name + strlen ("Lan_Alert_Destination_"));
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -460,9 +481,16 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
   assert(section_name);
   assert(da);
 
-  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi(section_name + strlen ("Lan_Alert_Destination_"));
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -480,13 +508,13 @@ _set_destination_addresses(pef_config_state_data_t *state_data,
                                     &alert_mac_address_val) < 0)
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (state_data->ipmi_ctx,
-                                                                       channel_number,
-                                                                       destination_selector,
-                                                                       da->alert_gateway,
-                                                                       alert_ip_address_val,
-                                                                       alert_mac_address_val,
-                                                                       obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses(state_data->ipmi_ctx,
+                                                                      channel_number,
+                                                                      destination_selector,
+                                                                      da->alert_gateway,
+                                                                      alert_ip_address_val,
+                                                                      alert_mac_address_val,
+                                                                      obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -661,74 +689,74 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                          NULL)))
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate, 
-                              section,
-                              "Alert_Destination_Type",
-                              "Possible values: PET_Trap/OEM1/OEM2",
-                              0,
-                              alert_destination_type_checkout,
-                              alert_destination_type_commit,
-                              alert_destination_type_validate) < 0) 
+  if (config_section_add_key(state_data->pstate, 
+                             section,
+                             "Alert_Destination_Type",
+                             "Possible values: PET_Trap/OEM1/OEM2",
+                             0,
+                             alert_destination_type_checkout,
+                             alert_destination_type_commit,
+                             alert_destination_type_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate, 
-                              section,
-                              "Alert_Acknowledge",
-                              "Possible values: Yes/No",
-                              0,
-                              alert_acknowledge_checkout,
-                              alert_acknowledge_commit,
-                              config_yes_no_validate) < 0) 
+  if (config_section_add_key(state_data->pstate, 
+                             section,
+                             "Alert_Acknowledge",
+                             "Possible values: Yes/No",
+                             0,
+                             alert_acknowledge_checkout,
+                             alert_acknowledge_commit,
+                             config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate, 
-                              section,
-                              "Alert_Acknowledge_Timeout",
-                              "Give valid unsigned number in seconds",
-                              0,
-                              alert_acknowledge_timeout_checkout,
-                              alert_acknowledge_timeout_commit,
-                              config_number_range_one_byte) < 0) 
+  if (config_section_add_key(state_data->pstate, 
+                             section,
+                             "Alert_Acknowledge_Timeout",
+                             "Give valid unsigned number in seconds",
+                             0,
+                             alert_acknowledge_timeout_checkout,
+                             alert_acknowledge_timeout_commit,
+                             config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate, 
-                              section,
-                              "Alert_Retries",
-                              "Give valid unsigned number",
-                              0,
-                              alert_retries_checkout,
-                              alert_retries_commit,
-                              alert_retries_validate) < 0) 
+  if (config_section_add_key(state_data->pstate, 
+                             section,
+                             "Alert_Retries",
+                             "Give valid unsigned number",
+                             0,
+                             alert_retries_checkout,
+                             alert_retries_commit,
+                             alert_retries_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate, 
-                              section,
-                              "Alert_Gateway",
-                              "Possible values: Default/Backup",
-                              0,
-                              alert_gateway_checkout,
-                              alert_gateway_commit,
-                              alert_gateway_validate) < 0) 
+  if (config_section_add_key(state_data->pstate, 
+                             section,
+                             "Alert_Gateway",
+                             "Possible values: Default/Backup",
+                             0,
+                             alert_gateway_checkout,
+                             alert_gateway_commit,
+                             alert_gateway_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate, 
-                              section,
-                              "Alert_IP_Address",
-                              "Give valid IP address",
-                              0,
-                              alert_ip_address_checkout,
-                              alert_ip_address_commit,
-                              config_ip_address_validate) < 0) 
+  if (config_section_add_key(state_data->pstate, 
+                             section,
+                             "Alert_IP_Address",
+                             "Give valid IP address",
+                             0,
+                             alert_ip_address_checkout,
+                             alert_ip_address_commit,
+                             config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate, 
-                              section,
-                              "Alert_MAC_Address",
-                              "Give valid MAC address",
-                              0,
-                              alert_mac_address_checkout,
-                              alert_mac_address_commit,
-                              config_mac_address_validate) < 0) 
+  if (config_section_add_key(state_data->pstate, 
+                             section,
+                             "Alert_MAC_Address",
+                             "Give valid MAC address",
+                             0,
+                             alert_mac_address_checkout,
+                             alert_mac_address_commit,
+                             config_mac_address_validate) < 0) 
     goto cleanup;
 
   return section;

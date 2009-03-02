@@ -46,20 +46,27 @@ community_string_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_lan_configuration_parameters_community_string_rs);
-  
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
+
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
   
-  if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->ipmi_ctx,
-                                                                  channel_number,
-                                                                  IPMI_GET_LAN_PARAMETER,
-                                                                  SET_SELECTOR,
-                                                                  BLOCK_SELECTOR,
-                                                                  obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_community_string(state_data->ipmi_ctx,
+                                                                 channel_number,
+                                                                 IPMI_GET_LAN_PARAMETER,
+                                                                 SET_SELECTOR,
+                                                                 BLOCK_SELECTOR,
+                                                                 obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -106,19 +113,26 @@ community_string_commit (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
   
-  if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->ipmi_ctx,
-                                                                  channel_number,
-                                                                  kv->value_input,
-                                                                  strlen(kv->value_input),
-                                                                  obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_community_string(state_data->ipmi_ctx,
+                                                                 channel_number,
+                                                                 kv->value_input,
+                                                                 strlen(kv->value_input),
+                                                                 obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,

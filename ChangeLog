@@ -1,3 +1,9 @@
+2009-03-01  Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolcommon/tool-fiid-util.h: Remove some macros.
+
+	* Adjust tools to use fiid library directly.
+
 2009-02-26  Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolcommon/tool-fiid-util.h: Remove some macros.

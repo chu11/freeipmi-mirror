@@ -63,7 +63,14 @@ _get_alert_policy_table (struct pef_config_state_data *state_data,
   
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (state_data->ipmi_ctx, 
 								    IPMI_GET_PEF_PARAMETER,
@@ -126,7 +133,14 @@ _set_alert_policy_table (struct pef_config_state_data *state_data,
 
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (state_data->ipmi_ctx, 
 								    alert_policy_entry_number, 

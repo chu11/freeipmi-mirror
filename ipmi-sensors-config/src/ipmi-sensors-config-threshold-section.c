@@ -273,11 +273,18 @@ threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_thresholds_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sensor_thresholds_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if (ipmi_cmd_get_sensor_thresholds (state_data->ipmi_ctx,
-                                      sensor_number,
-                                      obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_sensor_thresholds(state_data->ipmi_ctx,
+                                     sensor_number,
+                                     obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -446,17 +453,24 @@ threshold_commit (const char *section_name,
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sensor_thresholds_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sensor_thresholds_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if (ipmi_cmd_set_sensor_thresholds (state_data->ipmi_ctx,
-                                      sensor_number,
-                                      lower_non_critical_threshold_ptr,
-                                      lower_critical_threshold_ptr,
-                                      lower_non_recoverable_threshold_ptr,
-                                      upper_non_critical_threshold_ptr,
-                                      upper_critical_threshold_ptr,
-                                      upper_non_recoverable_threshold_ptr,
-                                      obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_sensor_thresholds(state_data->ipmi_ctx,
+                                     sensor_number,
+                                     lower_non_critical_threshold_ptr,
+                                     lower_critical_threshold_ptr,
+                                     lower_non_recoverable_threshold_ptr,
+                                     upper_non_critical_threshold_ptr,
+                                     upper_critical_threshold_ptr,
+                                     upper_non_recoverable_threshold_ptr,
+                                     obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -488,12 +502,19 @@ _get_hysteresis (ipmi_sensors_config_state_data_t *state_data,
   assert(positive_going_threshold_hysteresis_value);
   assert(negative_going_threshold_hysteresis_value);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sensor_hysteresis_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sensor_hysteresis_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if (ipmi_cmd_get_sensor_hysteresis (state_data->ipmi_ctx,
-                                      sensor_number,
-                                      IPMI_SENSOR_HYSTERESIS_MASK,
-                                      obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_sensor_hysteresis(state_data->ipmi_ctx,
+                                     sensor_number,
+                                     IPMI_SENSOR_HYSTERESIS_MASK,
+                                     obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -725,14 +746,21 @@ hysteresis_threshold_commit (const char *section_name,
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_sensor_hysteresis_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sensor_hysteresis_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
-  if (ipmi_cmd_set_sensor_hysteresis (state_data->ipmi_ctx,
-                                      sensor_number,
-                                      IPMI_SENSOR_HYSTERESIS_MASK,
-                                      positive_going_threshold_hysteresis_value,
-                                      negative_going_threshold_hysteresis_value,
-                                      obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_sensor_hysteresis(state_data->ipmi_ctx,
+                                     sensor_number,
+                                     IPMI_SENSOR_HYSTERESIS_MASK,
+                                     positive_going_threshold_hysteresis_value,
+                                     negative_going_threshold_hysteresis_value,
+                                     obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
