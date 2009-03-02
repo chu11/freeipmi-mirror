@@ -120,7 +120,14 @@ pef_info (pef_config_state_data_t *state_data)
     {
       TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
 
-      TOOL_FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs);
+      if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "fiid_obj_create: %s\n",
+                          strerror(errno));
+          goto cleanup;
+        }
 
       if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->ipmi_ctx,
                                                                              IPMI_GET_PEF_PARAMETER,
@@ -148,7 +155,14 @@ pef_info (pef_config_state_data_t *state_data)
 
       TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
 
-      TOOL_FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs);
+      if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "fiid_obj_create: %s\n",
+                          strerror(errno));
+          goto cleanup;
+        }
 
       if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->ipmi_ctx,
                                                                                     IPMI_GET_PEF_PARAMETER,
@@ -176,7 +190,14 @@ pef_info (pef_config_state_data_t *state_data)
       
       TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
 
-      TOOL_FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs);
+      if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
+        {
+          pstdout_fprintf(state_data->pstate,
+                          stderr,
+                          "fiid_obj_create: %s\n",
+                          strerror(errno));
+          goto cleanup;
+        }
 
       if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->ipmi_ctx,
                                                                              IPMI_GET_PEF_PARAMETER,

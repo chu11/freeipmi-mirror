@@ -21,18 +21,6 @@
 
 #include "freeipmi/fiid/fiid.h"
 
-#define TOOL_FIID_OBJ_CREATE(__obj, __tmpl)                                             \
-do {                                                                                    \
-  if (!((__obj) = fiid_obj_create((__tmpl))))                                           \
-    {                                                                                   \
-      pstdout_fprintf(state_data->pstate,                                               \
-                      stderr,                                                           \
-                      "fiid_obj_create: %s\n",                                          \
-                      strerror(errno));                                                 \
-      goto cleanup;                                                                     \
-    }                                                                                   \
-} while (0)
-
 #define TOOL_FIID_OBJ_GET(__obj, __field, __val)                                        \
 do {                                                                                    \
     uint64_t __localval = 0, *__localval_ptr;                                           \

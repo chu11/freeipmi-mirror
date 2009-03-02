@@ -66,7 +66,14 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
   assert(state_data);
   assert(data);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_system_boot_options_boot_flags_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_system_boot_options_boot_flags_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_system_boot_options_boot_flags (state_data->ipmi_ctx, 
                                                    IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR,
@@ -144,7 +151,14 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
   assert(state_data);
   assert(data);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_system_boot_options_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   /* achu (workaround)
    *
@@ -561,7 +575,14 @@ chassis_boot_flags_post (const char *section_name,
    * that a boot configuration change has taken place.
    */
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_system_boot_options_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_system_boot_options_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_set_system_boot_options_boot_info_acknowledge (state_data->ipmi_ctx,
                                                               &boot_info_acknowledge,

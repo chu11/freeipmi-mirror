@@ -45,9 +45,16 @@ power_restore_policy_checkout (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   uint64_t val;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
-  if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_chassis_status(state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -81,11 +88,18 @@ power_restore_policy_commit (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_power_restore_policy_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_power_restore_policy_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
-  if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
-                                         power_restore_policy_number (kv->value_input),
-                                         obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_power_restore_policy(state_data->ipmi_ctx,
+                                        power_restore_policy_number (kv->value_input),
+                                        obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -128,11 +142,18 @@ power_cycle_interval_commit (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
   
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_power_cycle_interval_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_power_cycle_interval_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
-  if (ipmi_cmd_set_power_cycle_interval (state_data->ipmi_ctx,
-                                         atoi (kv->value_input),
-                                         obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_power_cycle_interval(state_data->ipmi_ctx,
+                                        atoi (kv->value_input),
+                                        obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
@@ -167,33 +188,33 @@ ipmi_chassis_config_power_conf_get (ipmi_chassis_config_state_data_t *state_data
     "The \"Power_Cycle_Interval\" determines the time the system will be "
     "powered down following a power cycle command.";
 
-  if (!(section = config_section_create (state_data->pstate,
-                                         "Chassis_Power_Conf",
-                                         "Chassis_Power_Conf",
-                                         section_comment,
-                                         0,
-                                         NULL,
-                                         NULL)))
+  if (!(section = config_section_create(state_data->pstate,
+                                        "Chassis_Power_Conf",
+                                        "Chassis_Power_Conf",
+                                        section_comment,
+                                        0,
+                                        NULL,
+                                        NULL)))
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              section,
-                              "Power_Restore_Policy",
-                              "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                              power_restore_policy_checkout,
-                              power_restore_policy_commit,
-                              power_restore_policy_number_validate) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             section,
+                             "Power_Restore_Policy",
+                             "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
+                             CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                             power_restore_policy_checkout,
+                             power_restore_policy_commit,
+                             power_restore_policy_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              section,
-                              "Power_Cycle_Interval",
-                              "Give value in seconds",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                              power_cycle_interval_checkout,
-                              power_cycle_interval_commit,
-                              config_number_range_one_byte_non_zero) < 0)
+  if (config_section_add_key(state_data->pstate,
+                             section,
+                             "Power_Cycle_Interval",
+                             "Give value in seconds",
+                             CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                             power_cycle_interval_checkout,
+                             power_cycle_interval_commit,
+                             config_number_range_one_byte_non_zero) < 0)
     goto cleanup;
 
   return section;

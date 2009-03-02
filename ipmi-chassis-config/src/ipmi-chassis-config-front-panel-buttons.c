@@ -66,7 +66,14 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   assert(state_data);
   assert(data);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
 
   if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
@@ -224,7 +231,14 @@ _set_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   assert(state_data);
   assert(data);
 
-  TOOL_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_set_front_panel_enables_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_front_panel_enables_rs)))
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "fiid_obj_create: %s\n",
+                      strerror(errno));
+      goto cleanup;
+    }
   
   if (ipmi_cmd_set_front_panel_enables (state_data->ipmi_ctx,
                                         data->power_off,
