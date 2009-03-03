@@ -1,29 +1,29 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-information-record-format.h,v 1.5.12.3 2009-03-03 23:09:48 chu11 Exp $
- *****************************************************************************
- *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
- *  Copyright (C) 2007 The Regents of the University of California.
- *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
- *  Written by Albert Chu <chu11@llnl.gov>
- *  UCRL-CODE-232183
- *
- *  This file is part of Ipmi-fru, a tool used for retrieving
- *  motherboard field replaceable unit (FRU) information. For details,
- *  see http://www.llnl.gov/linux/.
- *
- *  Ipmi-fru is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by the
- *  Free Software Foundation; either version 2 of the License, or (at your
- *  option) any later version.
- *
- *  Ipmi-fru is distributed in the hope that it will be useful, but
- *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- *  for more details.
- *
- *  You should have received a copy of the GNU General Public License along
- *  with Ipmi-fru; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+*  $Id: ipmi-fru-information-record-format.h,v 1.5.12.4 2009-03-03 23:52:06 chu11 Exp $
+*****************************************************************************
+*  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+*  Copyright (C) 2007 The Regents of the University of California.
+*  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+*  Written by Albert Chu <chu11@llnl.gov>
+*  UCRL-CODE-232183
+*
+*  This file is part of Ipmi-fru, a tool used for retrieving
+*  motherboard field replaceable unit (FRU) information. For details,
+*  see http://www.llnl.gov/linux/.
+*
+*  Ipmi-fru is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by the
+*  Free Software Foundation; either version 2 of the License, or (at your
+*  option) any later version.
+*
+*  Ipmi-fru is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+*  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+*  for more details.
+*
+*  You should have received a copy of the GNU General Public License along
+*  with Ipmi-fru; if not, write to the Free Software Foundation, Inc.,
+*  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
 #ifndef _IPMI_FRU_INFORMATION_RECORD_FORMAT_H
@@ -35,12 +35,12 @@ extern "C" {
 
 #include <freeipmi/fiid/fiid.h>
 
-  /*
-   * achu:
-   *
-   * Not in IPMI spec.  In "Platform Management FRU Information Storage
-   * Definition" document.
-   */
+/*
+ * achu:
+ *
+ * Not in IPMI spec.  In "Platform Management FRU Information Storage
+ * Definition" document.
+ */
 
 #define IPMI_FRU_COMMON_HEADER_FORMAT_VERSION         0x01
 #define IPMI_FRU_CHASSIS_INFO_AREA_FORMAT_VERSION     0x01
@@ -102,16 +102,16 @@ extern "C" {
 
 #define IPMI_FRU_SENTINEL_VALUE                        0xC1
 
-  extern fiid_template_t tmpl_fru_common_header;
-  extern fiid_template_t tmpl_fru_info_area_header;
-  extern fiid_template_t tmpl_fru_multirecord_area_header;
-  extern fiid_template_t tmpl_fru_power_supply_information;
-  extern fiid_template_t tmpl_fru_dc_output;
-  extern fiid_template_t tmpl_fru_dc_load;
-  extern fiid_template_t tmpl_fru_management_access_record;
-  extern fiid_template_t tmpl_fru_base_compatibility_record;
-  extern fiid_template_t tmpl_fru_extended_compatibility_record;
-  extern fiid_template_t tmpl_fru_oem_record;
+extern fiid_template_t tmpl_fru_common_header;
+extern fiid_template_t tmpl_fru_info_area_header;
+extern fiid_template_t tmpl_fru_multirecord_area_header;
+extern fiid_template_t tmpl_fru_power_supply_information;
+extern fiid_template_t tmpl_fru_dc_output;
+extern fiid_template_t tmpl_fru_dc_load;
+extern fiid_template_t tmpl_fru_management_access_record;
+extern fiid_template_t tmpl_fru_base_compatibility_record;
+extern fiid_template_t tmpl_fru_extended_compatibility_record;
+extern fiid_template_t tmpl_fru_oem_record;
 
 #ifdef __cplusplus
 }

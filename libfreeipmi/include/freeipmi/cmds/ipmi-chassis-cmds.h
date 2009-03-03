@@ -1,20 +1,20 @@
 /*
-  Copyright (C) 2003-2009 FreeIPMI Core Team
+   Copyright (C) 2003-2009 FreeIPMI Core Team
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2, or (at your option)
-  any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software Foundation,
-  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-*/
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ */
 
 #ifndef _IPMI_CHASSIS_CMDS_H
 #define _IPMI_CHASSIS_CMDS_H
@@ -56,20 +56,20 @@ extern "C" {
 #define IPMI_CHASSIS_FORCE_IDENTIFY_OFF                                     0x00
 #define IPMI_CHASSIS_FORCE_IDENTIFY_ON                                      0x01
 
-#define IPMI_CHASSIS_FORCE_IDENTIFY_VALID(__force_identify)      \
-  (((__force_identify) == IPMI_CHASSIS_FORCE_IDENTIFY_OFF        \
+#define IPMI_CHASSIS_FORCE_IDENTIFY_VALID(__force_identify) \
+  (((__force_identify) == IPMI_CHASSIS_FORCE_IDENTIFY_OFF   \
     || (__force_identify) == IPMI_CHASSIS_FORCE_IDENTIFY_ON) ? 1 : 0)
 
 #define IPMI_CHASSIS_IDENTIFY_STATE_OFF                                     0x00
 #define IPMI_CHASSIS_IDENTIFY_STATE_TEMPORARY_ON                            0x01
 #define IPMI_CHASSIS_IDENTIFY_STATE_INDEFINITE_ON                           0x02
 
-  /* achu: it's backwards on buttons, I don't know why */
+/* achu: it's backwards on buttons, I don't know why */
 #define IPMI_CHASSIS_BUTTON_ENABLE                                          0x00
 #define IPMI_CHASSIS_BUTTON_DISABLE                                         0x01
 
-#define IPMI_CHASSIS_BUTTON_VALID(__button)            \
-  (((__button) == IPMI_CHASSIS_BUTTON_ENABLE           \
+#define IPMI_CHASSIS_BUTTON_VALID(__button)  \
+  (((__button) == IPMI_CHASSIS_BUTTON_ENABLE \
     || (__button) == IPMI_CHASSIS_BUTTON_DISABLE) ? 1 : 0)
 
 #define IPMI_CHASSIS_BUTTON_DISABLE_ALLOWED                                 0x1
@@ -129,8 +129,8 @@ extern "C" {
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPPRESS     0x01
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE       0x02
 
-#define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_VALID(__console_redirection) \
-  (((__console_redirection) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT \
+#define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_VALID(__console_redirection)       \
+  (((__console_redirection) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT     \
     || (__console_redirection) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPPRESS \
     || (__console_redirection) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE) ? 1 : 0)
 
@@ -140,8 +140,8 @@ extern "C" {
 #define IPMI_CHASSIS_BOOT_OPTIONS_DISABLE                                   0x00
 #define IPMI_CHASSIS_BOOT_OPTIONS_ENABLE                                    0x01
 
-#define IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID(__value)        \
-  (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_ENABLE              \
+#define IPMI_CHASSIS_BOOT_OPTIONS_ENABLE_VALID(__value) \
+  (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_ENABLE       \
     || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_DISABLE) ? 1 : 0)
 
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_PC_COMPATIBLE         0x00
@@ -164,9 +164,9 @@ extern "C" {
 #define IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS                           0x01
 #define IPMI_CHASSIS_BOOT_OPTIONS_SET_COMMIT_WRITE                          0x03
 
-#define IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS_VALID(__value)     \
-  (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_SET_COMPLETE              \
-    || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS        \
+#define IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS_VALID(__value) \
+  (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_SET_COMPLETE          \
+    || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_SET_IN_PROGRESS    \
     || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_SET_COMMIT_WRITE) ? 1 : 0 )
 
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_INFO_ACKNOWLEDGE                     0x00
@@ -175,8 +175,8 @@ extern "C" {
 #define IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT                      0x01
 #define IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT                           0x00
 
-#define IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID(__value)        \
-  (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT         \
+#define IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT_VALID(__value) \
+  (((__value) == IPMI_CHASSIS_BOOT_OPTIONS_DONT_CLEAR_VALID_BIT  \
     || (__value) == IPMI_CHASSIS_BOOT_OPTIONS_CLEAR_VALID_BIT) ? 1 : 0 )
 
 #define IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_SET_MUX_TO_RECOMENDED_AT_END_OF_POST  0x00
@@ -188,110 +188,110 @@ extern "C" {
     || (__bios_mux_control) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_SET_MUX_TO_BMC                    \
     || (__bios_mux_control) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_SET_MUX_TO_SYSTEM) ? 1 : 0)
 
-  extern fiid_template_t tmpl_cmd_get_chassis_capabilities_rq;
-  extern fiid_template_t tmpl_cmd_get_chassis_capabilities_rs;
-  extern fiid_template_t tmpl_cmd_get_chassis_status_rq;
-  extern fiid_template_t tmpl_cmd_get_chassis_status_rs;
-  extern fiid_template_t tmpl_cmd_chassis_control_rq;
-  extern fiid_template_t tmpl_cmd_chassis_control_rs;
-  extern fiid_template_t tmpl_cmd_chassis_identify_rq;
-  extern fiid_template_t tmpl_cmd_chassis_identify_rs;
-  extern fiid_template_t tmpl_cmd_set_front_panel_enables_rq;
-  extern fiid_template_t tmpl_cmd_set_front_panel_enables_rs;
-  extern fiid_template_t tmpl_cmd_set_power_restore_policy_rq;
-  extern fiid_template_t tmpl_cmd_set_power_restore_policy_rs;
-  extern fiid_template_t tmpl_cmd_set_power_cycle_interval_rq;
-  extern fiid_template_t tmpl_cmd_set_power_cycle_interval_rs;
-  extern fiid_template_t tmpl_cmd_get_system_restart_cause_rq;
-  extern fiid_template_t tmpl_cmd_get_system_restart_cause_rs;
+extern fiid_template_t tmpl_cmd_get_chassis_capabilities_rq;
+extern fiid_template_t tmpl_cmd_get_chassis_capabilities_rs;
+extern fiid_template_t tmpl_cmd_get_chassis_status_rq;
+extern fiid_template_t tmpl_cmd_get_chassis_status_rs;
+extern fiid_template_t tmpl_cmd_chassis_control_rq;
+extern fiid_template_t tmpl_cmd_chassis_control_rs;
+extern fiid_template_t tmpl_cmd_chassis_identify_rq;
+extern fiid_template_t tmpl_cmd_chassis_identify_rs;
+extern fiid_template_t tmpl_cmd_set_front_panel_enables_rq;
+extern fiid_template_t tmpl_cmd_set_front_panel_enables_rs;
+extern fiid_template_t tmpl_cmd_set_power_restore_policy_rq;
+extern fiid_template_t tmpl_cmd_set_power_restore_policy_rs;
+extern fiid_template_t tmpl_cmd_set_power_cycle_interval_rq;
+extern fiid_template_t tmpl_cmd_set_power_cycle_interval_rs;
+extern fiid_template_t tmpl_cmd_get_system_restart_cause_rq;
+extern fiid_template_t tmpl_cmd_get_system_restart_cause_rs;
 
-  extern fiid_template_t tmpl_cmd_set_system_boot_options_rq;
-  extern fiid_template_t tmpl_cmd_set_system_boot_options_rs;
-  extern fiid_template_t tmpl_cmd_set_system_boot_options_set_in_progress_rq;
-  extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq;
-  extern fiid_template_t tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq;
-  extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_flags_rq;
+extern fiid_template_t tmpl_cmd_set_system_boot_options_rq;
+extern fiid_template_t tmpl_cmd_set_system_boot_options_rs;
+extern fiid_template_t tmpl_cmd_set_system_boot_options_set_in_progress_rq;
+extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_info_acknowledge_rq;
+extern fiid_template_t tmpl_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing_rq;
+extern fiid_template_t tmpl_cmd_set_system_boot_options_boot_flags_rq;
 
-  extern fiid_template_t tmpl_cmd_get_system_boot_options_rq;
-  extern fiid_template_t tmpl_cmd_get_system_boot_options_rs;
-  extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs;
-  extern fiid_template_t tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs;
-  extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_rq;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_rs;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs;
+extern fiid_template_t tmpl_cmd_get_system_boot_options_boot_flags_rs;
 
-  extern fiid_template_t tmpl_cmd_get_power_on_hours_counter_rq;
-  extern fiid_template_t tmpl_cmd_get_power_on_hours_counter_rs;
+extern fiid_template_t tmpl_cmd_get_power_on_hours_counter_rq;
+extern fiid_template_t tmpl_cmd_get_power_on_hours_counter_rs;
 
-  int8_t fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq);
 
-  int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq);
 
-  int8_t fill_cmd_chassis_control (uint8_t chassis_control,
-                   fiid_obj_t obj_cmd_rq);
-
-  int8_t fill_cmd_chassis_identify (uint8_t *identify_interval,
-                    uint8_t *force_identify,
-                    fiid_obj_t obj_cmd_rq);
-
-  int8_t fill_cmd_set_front_panel_enables (uint8_t disable_power_off_button_for_power_off_only,
-                       uint8_t disable_reset_button,
-                       uint8_t disable_diagnostic_interrupt_button,
-                       uint8_t disable_standby_button_for_entering_standby,
-                       fiid_obj_t obj_cmd_rq);
-
-  int8_t fill_cmd_set_power_restore_policy (uint8_t power_restore_policy,
-                        fiid_obj_t obj_cmd_rq);
-
-  int8_t fill_cmd_set_power_cycle_interval (uint8_t interval,
-                        fiid_obj_t obj_cmd_rq);
-
-  int8_t fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq);
-
-  int8_t fill_cmd_set_system_boot_options (uint8_t parameter_selector,
-                       uint8_t *configuration_parameter_data,
-                       uint8_t data_len,
-                       fiid_obj_t obj_cmd_rq);
-
-  int8_t fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
-                               fiid_obj_t obj_cmd_rq);
-
-  int8_t fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_handled_boot_info,
-                                 uint8_t *os_loader_handled_boot_info,
-                                 uint8_t *os_or_service_partition_handled_boot_info,
-                                 uint8_t *sms_handled_boot_info,
-                                 uint8_t *oem_handled_boot_info,
+int8_t fill_cmd_chassis_control (uint8_t chassis_control,
                                  fiid_obj_t obj_cmd_rq);
 
-  int8_t fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
-                                        uint8_t dont_clear_on_pushbutton_or_soft_reset,
-                                        uint8_t dont_clear_on_watchdog_timeout,
-                                        uint8_t dont_clear_on_chassis_control,
-                                        uint8_t dont_clear_on_PEF,
-                                        fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_chassis_identify (uint8_t *identify_interval,
+                                  uint8_t *force_identify,
+                                  fiid_obj_t obj_cmd_rq);
 
-  int8_t fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
-                              uint8_t boot_flags_persistent,
-                              uint8_t boot_flags_valid,
-                              uint8_t lock_out_reset_button,
-                              uint8_t screen_blank,
-                              uint8_t boot_device,
-                              uint8_t lock_keyboard,
-                              uint8_t clear_cmos,
-                              uint8_t console_redirection,
-                              uint8_t lock_out_sleep_button,
-                              uint8_t user_password_bypass,
-                              uint8_t force_progress_event_traps,
-                              uint8_t firmware_bios_verbosity,
-                              uint8_t lock_out_via_power_button,
-                              uint8_t bios_mux_control_override,
-                              uint8_t bios_shared_mode_override,
-                              fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_set_front_panel_enables (uint8_t disable_power_off_button_for_power_off_only,
+                                         uint8_t disable_reset_button,
+                                         uint8_t disable_diagnostic_interrupt_button,
+                                         uint8_t disable_standby_button_for_entering_standby,
+                                         fiid_obj_t obj_cmd_rq);
 
-  int8_t fill_cmd_get_system_boot_options (uint8_t parameter_selector,
-                       uint8_t set_selector,
-                       uint8_t block_selector,
-                       fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_set_power_restore_policy (uint8_t power_restore_policy,
+                                          fiid_obj_t obj_cmd_rq);
 
-  int8_t fill_cmd_get_power_on_hours_counter (fiid_obj_t obj_cmd_rq);
+int8_t fill_cmd_set_power_cycle_interval (uint8_t interval,
+                                          fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_system_boot_options (uint8_t parameter_selector,
+                                         uint8_t *configuration_parameter_data,
+                                         uint8_t data_len,
+                                         fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
+                                                         fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_handled_boot_info,
+                                                               uint8_t *os_loader_handled_boot_info,
+                                                               uint8_t *os_or_service_partition_handled_boot_info,
+                                                               uint8_t *sms_handled_boot_info,
+                                                               uint8_t *oem_handled_boot_info,
+                                                               fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
+                                                                          uint8_t dont_clear_on_pushbutton_or_soft_reset,
+                                                                          uint8_t dont_clear_on_watchdog_timeout,
+                                                                          uint8_t dont_clear_on_chassis_control,
+                                                                          uint8_t dont_clear_on_PEF,
+                                                                          fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
+                                                    uint8_t boot_flags_persistent,
+                                                    uint8_t boot_flags_valid,
+                                                    uint8_t lock_out_reset_button,
+                                                    uint8_t screen_blank,
+                                                    uint8_t boot_device,
+                                                    uint8_t lock_keyboard,
+                                                    uint8_t clear_cmos,
+                                                    uint8_t console_redirection,
+                                                    uint8_t lock_out_sleep_button,
+                                                    uint8_t user_password_bypass,
+                                                    uint8_t force_progress_event_traps,
+                                                    uint8_t firmware_bios_verbosity,
+                                                    uint8_t lock_out_via_power_button,
+                                                    uint8_t bios_mux_control_override,
+                                                    uint8_t bios_shared_mode_override,
+                                                    fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_system_boot_options (uint8_t parameter_selector,
+                                         uint8_t set_selector,
+                                         uint8_t block_selector,
+                                         fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_power_on_hours_counter (fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

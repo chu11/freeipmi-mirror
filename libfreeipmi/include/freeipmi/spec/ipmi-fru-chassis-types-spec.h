@@ -1,29 +1,29 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-chassis-types-spec.h,v 1.4.12.2 2009-03-03 22:39:50 chu11 Exp $
- *****************************************************************************
- *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
- *  Copyright (C) 2007 The Regents of the University of California.
- *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
- *  Written by Albert Chu <chu11@llnl.gov>
- *  UCRL-CODE-232183
- *
- *  This file is part of Ipmi-fru, a tool used for retrieving
- *  motherboard field replaceable unit (FRU) information. For details,
- *  see http://www.llnl.gov/linux/.
- *
- *  Ipmi-fru is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by the
- *  Free Software Foundation; either version 2 of the License, or (at your
- *  option) any later version.
- *
- *  Ipmi-fru is distributed in the hope that it will be useful, but
- *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- *  for more details.
- *
- *  You should have received a copy of the GNU General Public License along
- *  with Ipmi-fru; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+*  $Id: ipmi-fru-chassis-types-spec.h,v 1.4.12.3 2009-03-03 23:52:07 chu11 Exp $
+*****************************************************************************
+*  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+*  Copyright (C) 2007 The Regents of the University of California.
+*  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+*  Written by Albert Chu <chu11@llnl.gov>
+*  UCRL-CODE-232183
+*
+*  This file is part of Ipmi-fru, a tool used for retrieving
+*  motherboard field replaceable unit (FRU) information. For details,
+*  see http://www.llnl.gov/linux/.
+*
+*  Ipmi-fru is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by the
+*  Free Software Foundation; either version 2 of the License, or (at your
+*  option) any later version.
+*
+*  Ipmi-fru is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+*  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+*  for more details.
+*
+*  You should have received a copy of the GNU General Public License along
+*  with Ipmi-fru; if not, write to the Free Software Foundation, Inc.,
+*  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
 #ifndef _IPMI_FRU_CHASSIS_TYPES_SPEC_H
@@ -35,12 +35,12 @@ extern "C" {
 
 #include <freeipmi/fiid/fiid.h>
 
-  /*
-   * achu:
-   *
-   * Not in IPMI spec.  In "Platform Management FRU Information Storage
-   * Definition" document.
-   */
+/*
+ * achu:
+ *
+ * Not in IPMI spec.  In "Platform Management FRU Information Storage
+ * Definition" document.
+ */
 
 #define IPMI_FRU_CHASSIS_TYPE_OTHER                 0x01
 #define IPMI_FRU_CHASSIS_TYPE_UNKNOWN               0x02
@@ -66,11 +66,11 @@ extern "C" {
 #define IPMI_FRU_CHASSIS_TYPE_RAID_CHASSIS          0x16
 #define IPMI_FRU_CHASSIS_TYPE_RACK_MOUNT_CHASSIS    0x17
 
-#define IPMI_FRU_CHASSIS_TYPE_VALID(__chassis_type)            \
-  (((__chassis_type) >= IPMI_FRU_CHASSIS_TYPE_OTHER            \
+#define IPMI_FRU_CHASSIS_TYPE_VALID(__chassis_type) \
+  (((__chassis_type) >= IPMI_FRU_CHASSIS_TYPE_OTHER \
     && (__chassis_type) <= IPMI_FRU_CHASSIS_TYPE_RACK_MOUNT_CHASSIS) ? 1 : 0)
 
-  extern const char *const ipmi_fru_chassis_types[];
+extern const char *const ipmi_fru_chassis_types[];
 
 #ifdef __cplusplus
 }
