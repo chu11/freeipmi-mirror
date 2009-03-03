@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: debug.c,v 1.7.20.1 2009-03-03 01:41:07 chu11 Exp $
+ *  $Id: debug.c,v 1.7.20.2 2009-03-03 20:16:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -40,7 +40,7 @@
 #include "freeipmi-portability.h"
 
 char *
-_debug_msg_create (const char *fmt, ...)
+_debug_msg_create(const char *fmt, ...)
 {
   char *buffer;
   va_list ap;
@@ -48,12 +48,12 @@ _debug_msg_create (const char *fmt, ...)
   if (!fmt)
     return NULL;
 
-  if (!(buffer = malloc (DEBUG_BUFFER_LEN)))
+  if (!(buffer = malloc(DEBUG_BUFFER_LEN)))
     return NULL;
 
-  va_start (ap, fmt);
-  vsnprintf (buffer, DEBUG_BUFFER_LEN, fmt, ap);
-  va_end (ap);
+  va_start(ap, fmt);
+  vsnprintf(buffer, DEBUG_BUFFER_LEN, fmt, ap);
+  va_end(ap);
 
   return buffer;
 }
