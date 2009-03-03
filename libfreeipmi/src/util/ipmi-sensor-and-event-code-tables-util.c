@@ -1875,11 +1875,11 @@ get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (offset == 0x07)
     {
       fiid_template_t tmpl_event_data2 =
-	{
-	  { 4, "restart_cause", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 0, "", 0}
-	};
+        {
+          { 4, "restart_cause", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 0, "", 0}
+        };
       uint64_t val;
       fiid_obj_t obj = NULL;
       int rv = -1;
@@ -2029,13 +2029,13 @@ get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   else if (offset == 0x05)
     {
       fiid_template_t tmpl_event_data2 =
-	{
-	  { 3, "private_bus_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 1, "fru_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 0, "", 0}
-	};
+        {
+          { 3, "private_bus_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 1, "fru_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 0, "", 0}
+        };
       uint64_t val;
       uint8_t private_bus_id, lun, fru_device;
       fiid_obj_t obj = NULL;
@@ -2100,11 +2100,11 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
   if (offset == 0x01)
     {
       fiid_template_t tmpl_event_data2 =
-	{
-	  { 6, "user_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 0, "", 0}
-	};
+        {
+          { 6, "user_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 0, "", 0}
+        };
       uint64_t val;
       fiid_obj_t obj = NULL;
       int rv = -1;
@@ -2215,11 +2215,11 @@ get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
   if (offset == 0x06)
     {
       fiid_template_t tmpl_event_data3 =
-	{
-	  { 4, "event_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 0, "", 0}
-	};
+        {
+          { 4, "event_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 0, "", 0}
+        };
       uint64_t val;
       fiid_obj_t obj = NULL;
       int rv = -1;
@@ -2275,68 +2275,68 @@ get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
     {
     case 0x01:
       {
-	fiid_template_t tmpl_event_data3 =
-	  {
-	    { 4, "event_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	    { 1, "assertion_deassertion_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	    { 1, "logging_disabled_all_events", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	    { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	    { 0, "", 0}
-	  };
-	uint64_t val;
-	uint8_t event_offset;
-	uint8_t assertion_deassertion_event;
-	uint8_t logging_disabled_all_events;
-	fiid_obj_t obj = NULL;
-	char *str1 = NULL;
-	char *str2 = NULL;
-	int rv = -1;
+        fiid_template_t tmpl_event_data3 =
+          {
+            { 4, "event_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+            { 1, "assertion_deassertion_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+            { 1, "logging_disabled_all_events", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+            { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+            { 0, "", 0}
+          };
+        uint64_t val;
+        uint8_t event_offset;
+        uint8_t assertion_deassertion_event;
+        uint8_t logging_disabled_all_events;
+        fiid_obj_t obj = NULL;
+        char *str1 = NULL;
+        char *str2 = NULL;
+        int rv = -1;
 
-	if (!(obj = fiid_obj_create (tmpl_event_data3)))
-	  {
-	    ERRNO_TRACE (errno);
-	    goto cleanup;
-	  }
+        if (!(obj = fiid_obj_create (tmpl_event_data3)))
+          {
+            ERRNO_TRACE (errno);
+            goto cleanup;
+          }
 
-	if (fiid_obj_set_all (obj, &event_data3, sizeof(uint8_t)) < 0)
-	  {
-	    FIID_OBJECT_ERROR_TO_ERRNO (obj);
-	    goto cleanup;
-	  }
+        if (fiid_obj_set_all (obj, &event_data3, sizeof(uint8_t)) < 0)
+          {
+            FIID_OBJECT_ERROR_TO_ERRNO (obj);
+            goto cleanup;
+          }
 
-	if (fiid_obj_get (obj, "event_offset", &val) < 0)
-	  {
-	    ERRNO_TRACE (errno);
-	    goto cleanup;
-	  }
-	event_offset = val;
+        if (fiid_obj_get (obj, "event_offset", &val) < 0)
+          {
+            ERRNO_TRACE (errno);
+            goto cleanup;
+          }
+        event_offset = val;
 
-	if (fiid_obj_get (obj, "assertion_deassertion_e", &val) < 0)
-	  {
-	    ERRNO_TRACE (errno);
-	    goto cleanup;
-	  }
-	assertion_deassertion_event = val;
+        if (fiid_obj_get (obj, "assertion_deassertion_e", &val) < 0)
+          {
+            ERRNO_TRACE (errno);
+            goto cleanup;
+          }
+        assertion_deassertion_event = val;
 
-	if (fiid_obj_get (obj, "logging_disabled_all_ev", &val) < 0)
-	  {
-	    ERRNO_TRACE (errno);
-	    goto cleanup;
-	  }
-	logging_disabled_all_events = val;
+        if (fiid_obj_get (obj, "logging_disabled_all_ev", &val) < 0)
+          {
+            ERRNO_TRACE (errno);
+            goto cleanup;
+          }
+        logging_disabled_all_events = val;
 
-	if (assertion_deassertion_event <= ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc_max)
-	  str1 = ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc[assertion_deassertion_event];
+        if (assertion_deassertion_event <= ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc_max)
+          str1 = ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc[assertion_deassertion_event];
 
-	if (logging_disabled_all_events <= ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc_max)
-	  str2 = ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc[logging_disabled_all_events];
+        if (logging_disabled_all_events <= ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc_max)
+          str2 = ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc[logging_disabled_all_events];
 
-	rv = _snprintf (buf, buflen, "Event Offset #%d; %s%s%s",
-			event_offset, (str1 ? str1 : ""), ((str1 && str2 && strlen (str2)) ? "; " : ""), (str2 ? str2 : ""));
+        rv = _snprintf (buf, buflen, "Event Offset #%d; %s%s%s",
+                        event_offset, (str1 ? str1 : ""), ((str1 && str2 && strlen (str2)) ? "; " : ""), (str2 ? str2 : ""));
 
       cleanup:
-	FIID_OBJ_DESTROY (obj);
-	return rv;
+        FIID_OBJ_DESTROY (obj);
+        return rv;
       }
     case 0x05:
       return _snprintf (buf, buflen, "%d% full", event_data3);
@@ -2398,12 +2398,12 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
   if (offset == 0x01 || offset == 0x02)
     {
       fiid_template_t tmpl_event_data3 =
-	{
-	  { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 2, "deactivation_cause", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  { 0, "", 0}
-	};
+        {
+          { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 2, "deactivation_cause", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          { 0, "", 0}
+        };
       uint64_t val;
       uint8_t channel_number;
       uint8_t deactivation_cause;
