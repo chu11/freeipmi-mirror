@@ -19,10 +19,6 @@
 #ifndef _IPMI_DEBUG_COMMON_H
 #define _IPMI_DEBUG_COMMON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdint.h>
 
 #include "libcommon/ipmi-trace.h"
@@ -31,18 +27,14 @@ extern "C" {
 #define IPMI_DEBUG_MAX_HDR_LEN 1024
 #define IPMI_DEBUG_MAX_PKT_LEN 65536
 
-  /* Portable version of the extremely unportable Linux dprintf() */
-  int ipmi_debug_dprintf (int fd, char *fmt, ...);
+/* Portable version of the extremely unportable Linux dprintf() */
+int ipmi_debug_dprintf (int fd, char *fmt, ...);
 
-  int8_t ipmi_debug_set_prefix (char *buf, unsigned int buflen, const char *prefix);
+int8_t ipmi_debug_set_prefix (char *buf, unsigned int buflen, const char *prefix);
 
-  int8_t ipmi_debug_output_str (int fd, const char *prefix, const char *str);
+int8_t ipmi_debug_output_str (int fd, const char *prefix, const char *str);
 
-  int8_t ipmi_debug_output_byte_array (int fd, const char *prefix, uint8_t *buf, uint32_t buf_len);
-
-#ifdef __cplusplus
-}
-#endif
+int8_t ipmi_debug_output_byte_array (int fd, const char *prefix, uint8_t *buf, uint32_t buf_len);
 
 #endif /* ipmi-debug-common.h */
 

@@ -19,32 +19,23 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software Foundation,
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-
 */
 
 #ifndef IPMI_SSIF_DRIVER_API_H
 #define IPMI_SSIF_DRIVER_API_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-  int ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
-             fiid_obj_t obj_cmd_rq,
-             fiid_obj_t obj_cmd_rs);
+int ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
+                       fiid_obj_t obj_cmd_rq,
+                       fiid_obj_t obj_cmd_rs);
 
-  int32_t ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
-                 uint8_t *buf_rq,
-                 size_t buf_rq_len,
-                 uint8_t *buf_rs,
-                 size_t buf_rs_len);
-
-#ifdef __cplusplus
-}
-#endif
+int32_t ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
+                               uint8_t *buf_rq,
+                               size_t buf_rq_len,
+                               uint8_t *buf_rs,
+                               size_t buf_rs_len);
 
 #endif /* IPMI_SSIF_DRIVER_API_H */

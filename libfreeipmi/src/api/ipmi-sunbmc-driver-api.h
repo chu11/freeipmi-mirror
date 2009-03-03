@@ -19,27 +19,19 @@
 #ifndef _IPMI_SUNBMC_DRIVER_API_H
 #define _IPMI_SUNBMC_DRIVER_API_H 1
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-  int8_t ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
-                  fiid_obj_t obj_cmd_rq,
-                  fiid_obj_t obj_cmd_rs);
+int8_t ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
+                            fiid_obj_t obj_cmd_rq,
+                            fiid_obj_t obj_cmd_rs);
 
-  int32_t ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
-                   uint8_t *buf_rq,
-                   size_t buf_rq_len,
-                   uint8_t *buf_rs,
-                   size_t buf_rs_len);
-
-#ifdef __cplusplus
-}
-#endif
+int32_t ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
+                                 uint8_t *buf_rq,
+                                 size_t buf_rq_len,
+                                 uint8_t *buf_rs,
+                                 size_t buf_rs_len);
 
 #endif /* ipmi-sunbmc-driver-api.h */
 

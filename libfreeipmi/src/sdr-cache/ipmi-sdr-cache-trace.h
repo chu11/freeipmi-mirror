@@ -20,10 +20,6 @@
 #ifndef _IPMI_SDR_CACHE_TRACE_H
 #define _IPMI_SDR_CACHE_TRACE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
@@ -57,10 +53,6 @@ extern "C" {
     sdr_cache_set_sdr_cache_errnum_by_fiid_object ((__ctx), (__obj));     \
     __MSG_TRACE (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* ipmi-sdr-cache-trace.h */
 

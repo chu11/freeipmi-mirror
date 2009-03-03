@@ -20,10 +20,6 @@
 #ifndef _IPMI_SDR_CACHE_UTIL_H
 #define _IPMI_SDR_CACHE_UTIL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
@@ -40,15 +36,11 @@ extern "C" {
 
 #include "ipmi-sdr-cache-defs.h"
 
-  void sdr_cache_set_sdr_cache_errnum_by_errno (ipmi_sdr_cache_ctx_t ctx, int __errno);
+void sdr_cache_set_sdr_cache_errnum_by_errno (ipmi_sdr_cache_ctx_t ctx, int __errno);
 
-  void sdr_cache_set_sdr_cache_errnum_by_fiid_object (ipmi_sdr_cache_ctx_t ctx, fiid_obj_t obj);
+void sdr_cache_set_sdr_cache_errnum_by_fiid_object (ipmi_sdr_cache_ctx_t ctx, fiid_obj_t obj);
 
-  int sdr_cache_fiid_obj_get (ipmi_sdr_cache_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
-#ifdef __cplusplus
-}
-#endif
+int sdr_cache_fiid_obj_get (ipmi_sdr_cache_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
 
 #endif /* ipmi-sdr-cache-util.h */
 

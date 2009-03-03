@@ -20,10 +20,6 @@
 #ifndef _IPMI_SDR_PARSE_UTIL_H
 #define _IPMI_SDR_PARSE_UTIL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
@@ -41,15 +37,11 @@ extern "C" {
 
 #include "ipmi-sdr-parse-defs.h"
 
-  void sdr_parse_set_sdr_parse_errnum_by_errno (ipmi_sdr_parse_ctx_t ctx, int __errno);
+void sdr_parse_set_sdr_parse_errnum_by_errno (ipmi_sdr_parse_ctx_t ctx, int __errno);
 
-  void sdr_parse_set_sdr_parse_errnum_by_fiid_object (ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj);
+void sdr_parse_set_sdr_parse_errnum_by_fiid_object (ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj);
 
-  int sdr_parse_fiid_obj_get (ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
-#ifdef __cplusplus
-}
-#endif
+int sdr_parse_fiid_obj_get (ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
 
 #endif /* ipmi-sdr-parse-util.h */
 

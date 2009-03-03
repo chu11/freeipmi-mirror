@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.h,v 1.3.12.2 2009-03-03 22:39:40 chu11 Exp $
+ *  $Id: ping-tool-common.h,v 1.3.12.3 2009-03-03 23:29:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -27,76 +27,68 @@
 #ifndef _PING_TOOL_COMMON_H
 #define _PING_TOOL_COMMON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define IPMI_PING_VERSION_1_5    0
 #define IPMI_PING_VERSION_2_0    1
 
-  /* Ipmi_Ping_CreatePacket
-   * - Create a ping request packet and store it in the buffer
-   * - Return length of packet created, or -1 on error.
-   */
-  typedef int (*Ipmi_Ping_CreatePacket)(char *destination,
-                    char *buffer,
-                    int buflen,
-                    unsigned int sequence_number,
-                    int version,
-                    int debug);
+/* Ipmi_Ping_CreatePacket
+ * - Create a ping request packet and store it in the buffer
+ * - Return length of packet created, or -1 on error.
+ */
+typedef int (*Ipmi_Ping_CreatePacket)(char *destination,
+                                      char *buffer,
+                                      int buflen,
+                                      unsigned int sequence_number,
+                                      int version,
+                                      int debug);
 
-  /* Ipmi_Ping_ParsePacket
-   * - Parse packet stored in buffer and output info about received
-   *   packet to stdout.
-   * - Return 1 if packet matches sequence number, 0 if packet does not,
-   *   -1 on error.
-   */
-  typedef int (*Ipmi_Ping_ParsePacket)(char *destination,
-                       char *buffer,
-                       int buflen,
-                       const char *from,
-                       unsigned int sequence_number,
-                       int verbose,
-                       int version,
-                       int debug);
+/* Ipmi_Ping_ParsePacket
+ * - Parse packet stored in buffer and output info about received
+ *   packet to stdout.
+ * - Return 1 if packet matches sequence number, 0 if packet does not,
+ *   -1 on error.
+ */
+typedef int (*Ipmi_Ping_ParsePacket)(char *destination,
+                                     char *buffer,
+                                     int buflen,
+                                     const char *from,
+                                     unsigned int sequence_number,
+                                     int verbose,
+                                     int version,
+                                     int debug);
 
-  /* Ipmi_Ping_LatePacket
-   * - Output info about timed out packet to stdout
-   */
-  typedef void (*Ipmi_Ping_LatePacket)(unsigned int sequence_number);
+/* Ipmi_Ping_LatePacket
+ * - Output info about timed out packet to stdout
+ */
+typedef void (*Ipmi_Ping_LatePacket)(unsigned int sequence_number);
 
-  /* Ipmi_Ping_EndResult
-   * - Output final results to stdout and return exit code
-   */
-  typedef int (*Ipmi_Ping_EndResult)(const char *progname,
-                     const char *dest,
-                     unsigned int sent_count,
-                     unsigned int recv_count);
+/* Ipmi_Ping_EndResult
+ * - Output final results to stdout and return exit code
+ */
+typedef int (*Ipmi_Ping_EndResult)(const char *progname,
+                                   const char *dest,
+                                   unsigned int sent_count,
+                                   unsigned int recv_count);
 
-  /* ipmi_ping_err_exit
-   * - exit with GNU style exit output
-   */
-  void ipmi_ping_err_exit (char *fmt, ...);
+/* ipmi_ping_err_exit
+ * - exit with GNU style exit output
+ */
+void ipmi_ping_err_exit (char *fmt, ...);
 
-  /* ipmi_ping_setup
-   * - setup ipmi ping code by parsing command line arguments
-   */
-  void ipmi_ping_setup (int argc,
-            char **argv,
-            unsigned int min_sequence_number,
-            unsigned int max_sequence_number,
-            char *options);
+/* ipmi_ping_setup
+ * - setup ipmi ping code by parsing command line arguments
+ */
+void ipmi_ping_setup (int argc,
+                      char **argv,
+                      unsigned int min_sequence_number,
+                      unsigned int max_sequence_number,
+                      char *options);
 
-  /* ipmi_ping_loop
-   * - handle looping ping code
-   */
-  void ipmi_ping_loop (Ipmi_Ping_CreatePacket _create,
-               Ipmi_Ping_ParsePacket _parse,
-               Ipmi_Ping_LatePacket _late,
-               Ipmi_Ping_EndResult _end);
-
-#ifdef __cplusplus
-}
-#endif
+/* ipmi_ping_loop
+ * - handle looping ping code
+ */
+void ipmi_ping_loop (Ipmi_Ping_CreatePacket _create,
+                     Ipmi_Ping_ParsePacket _parse,
+                     Ipmi_Ping_LatePacket _late,
+                     Ipmi_Ping_EndResult _end);
 
 #endif /* _PING_TOOL_COMMON_H */

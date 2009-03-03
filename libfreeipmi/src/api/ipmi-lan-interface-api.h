@@ -19,37 +19,29 @@
 #ifndef _IPMI_LAN_INTERFACE_API_H
 #define _IPMI_LAN_INTERFACE_API_H       1
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-  int8_t ipmi_lan_cmd (ipmi_ctx_t ctx,
-               fiid_obj_t obj_cmd_rq,
-               fiid_obj_t obj_cmd_rs);
+int8_t ipmi_lan_cmd (ipmi_ctx_t ctx,
+                     fiid_obj_t obj_cmd_rq,
+                     fiid_obj_t obj_cmd_rs);
 
-  int32_t ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
-                uint8_t *buf_rq,
-                size_t buf_rq_len,
-                uint8_t *buf_rs,
-                size_t buf_rs_len);
+int32_t ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
+                          uint8_t *buf_rq,
+                          size_t buf_rq_len,
+                          uint8_t *buf_rs,
+                          size_t buf_rs_len);
 
-  int8_t ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
-               fiid_obj_t obj_cmd_rq,
-               fiid_obj_t obj_cmd_rs);
+int8_t ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
+                         fiid_obj_t obj_cmd_rq,
+                         fiid_obj_t obj_cmd_rs);
 
-  int32_t ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
-                uint8_t *buf_rq,
-                size_t buf_rq_len,
-                uint8_t *buf_rs,
-                size_t buf_rs_len);
-
-#ifdef __cplusplus
-}
-#endif
+int32_t ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
+                              uint8_t *buf_rq,
+                              size_t buf_rq_len,
+                              uint8_t *buf_rs,
+                              size_t buf_rs_len);
 
 #endif /* ipmi-lan-interface.h */
 

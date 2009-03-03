@@ -26,37 +26,29 @@
 #ifndef _IPMI_SEMAPHORES_H
 #define _IPMI_SEMAPHORES_H      1
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
 
 #if defined(__FreeBSD__)
-  /* union semun is defined by including <sys/sem.h> */
+/* union semun is defined by including <sys/sem.h> */
 #else
-  /* according to X/OPEN we have to define it ourselves */
-  union semun {
-    int val;                          /* value for SETVAL */
-    struct semid_ds *buf;             /* buffer for IPC_STAT & IPC_SET */
-    unsigned short *array;            /* array for GETALL & SETALL */
-    struct seminfo *__buf;            /* buffer for IPC_INFO */
-    void *__pad;
-  };
+/* according to X/OPEN we have to define it ourselves */
+union semun {
+  int val;                          /* value for SETVAL */
+  struct semid_ds *buf;             /* buffer for IPC_STAT & IPC_SET */
+  unsigned short *array;            /* array for GETALL & SETALL */
+  struct seminfo *__buf;            /* buffer for IPC_INFO */
+  void *__pad;
+};
 #endif
 
-  int ipmi_mutex_init (void);
+int ipmi_mutex_init (void);
 
-  int ipmi_mutex_lock (int semid);
+int ipmi_mutex_lock (int semid);
 
-  int ipmi_mutex_lock_interruptible (int semid);
+int ipmi_mutex_lock_interruptible (int semid);
 
-  int ipmi_mutex_unlock (int semid);
-
-#ifdef __cplusplus
-}
-#endif
+int ipmi_mutex_unlock (int semid);
 
 #endif /* ipmi-semaphores.h */

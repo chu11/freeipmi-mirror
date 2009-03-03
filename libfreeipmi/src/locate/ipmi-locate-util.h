@@ -20,10 +20,6 @@
 #ifndef _IPMI_LOCATE_UTIL_H
 #define _IPMI_LOCATE_UTIL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
@@ -40,15 +36,11 @@ extern "C" {
 
 #include "ipmi-locate-defs.h"
 
-  void locate_set_locate_errnum_by_errno (ipmi_locate_ctx_t ctx, int __errno);
+void locate_set_locate_errnum_by_errno (ipmi_locate_ctx_t ctx, int __errno);
 
-  void locate_set_locate_errnum_by_fiid_object (ipmi_locate_ctx_t ctx, fiid_obj_t obj);
+void locate_set_locate_errnum_by_fiid_object (ipmi_locate_ctx_t ctx, fiid_obj_t obj);
 
-  int locate_fiid_obj_get (ipmi_locate_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
-#ifdef __cplusplus
-}
-#endif
+int locate_fiid_obj_get (ipmi_locate_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
 
 #endif /* ipmi-locate-util.h */
 
