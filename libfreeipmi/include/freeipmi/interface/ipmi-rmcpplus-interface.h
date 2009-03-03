@@ -42,23 +42,23 @@ extern "C" {
   /* 20h - 27h - OEM */
   /* all other reserved */
 
-#define IPMI_PAYLOAD_TYPE_VALID(__payload_type)                \
-  (((__payload_type) == IPMI_PAYLOAD_TYPE_IPMI                \
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_SOL            \
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT        \
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST \
+#define IPMI_PAYLOAD_TYPE_VALID(__payload_type)                             \
+  (((__payload_type) == IPMI_PAYLOAD_TYPE_IPMI                              \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_SOL                            \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT                   \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST  \
     || (__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE \
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1        \
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2        \
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3        \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1                 \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2                 \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3                 \
     || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4) ? 1 : 0)
 
-#define IPMI_PAYLOAD_TYPE_SESSION_SETUP(__payload_type)            \
-  (((__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST \
+#define IPMI_PAYLOAD_TYPE_SESSION_SETUP(__payload_type)                     \
+  (((__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST     \
     || (__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE \
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1        \
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2        \
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3        \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1                 \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2                 \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3                 \
     || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4) ? 1 : 0)
 
   /**************************
@@ -73,7 +73,7 @@ extern "C" {
   (((__payload_flag) == IPMI_PAYLOAD_FLAG_UNENCRYPTED            \
     || (__payload_flag) == IPMI_PAYLOAD_FLAG_ENCRYPTED) ? 1 : 0)
 
-#define IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID(__payload_flag)        \
+#define IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID(__payload_flag)    \
   (((__payload_flag) == IPMI_PAYLOAD_FLAG_UNENCRYPTED            \
     || (__payload_flag) == IPMI_PAYLOAD_FLAG_ENCRYPTED) ? 1 : 0)
 
@@ -87,9 +87,9 @@ extern "C" {
   /* C0h - FFh - OEM */
   /* all other reserved */
 
-#define IPMI_AUTHENTICATION_ALGORITHM_VALID(__algorithm)        \
-  (((__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE        \
-    || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1    \
+#define IPMI_AUTHENTICATION_ALGORITHM_VALID(__algorithm)             \
+  (((__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE         \
+    || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1 \
     || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5) ? 1 : 0)
 
   /****************************************
@@ -102,8 +102,8 @@ extern "C" {
 #define IPMI_INTEGRITY_ALGORITHM_MD5_128                  0x03
   /* C0h - FFh - OEM */
   /* all other reserved */
-#define IPMI_INTEGRITY_ALGORITHM_VALID(__algorithm)            \
-  (((__algorithm) == IPMI_INTEGRITY_ALGORITHM_NONE            \
+#define IPMI_INTEGRITY_ALGORITHM_VALID(__algorithm)                  \
+  (((__algorithm) == IPMI_INTEGRITY_ALGORITHM_NONE                   \
     || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96        \
     || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128        \
     || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_MD5_128) ? 1 : 0)
@@ -119,10 +119,10 @@ extern "C" {
   /* 30h - 3Fh - OEM */
   /* all other reserved */
 
-#define IPMI_CONFIDENTIALITY_ALGORITHM_VALID(__algorithm)        \
-  (((__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_NONE        \
-    || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128    \
-    || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128    \
+#define IPMI_CONFIDENTIALITY_ALGORITHM_VALID(__algorithm)            \
+  (((__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_NONE            \
+    || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128  \
+    || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128     \
     || (__algorithm) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40) ? 1 : 0)
 
   /***************************************
@@ -140,7 +140,7 @@ extern "C" {
 #define IPMI_NAME_ONLY_LOOKUP                             0x1
 
 #define IPMI_USER_NAME_LOOKUP_VALID(__username_lookup_flag)        \
-  (((__username_lookup_flag) == IPMI_USER_NAME_PRIVILEGE_LOOKUP        \
+  (((__username_lookup_flag) == IPMI_USER_NAME_PRIVILEGE_LOOKUP    \
     || (__username_lookup_flag) == IPMI_NAME_ONLY_LOOKUP) ? 1 : 0)
 
 #define IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH          16

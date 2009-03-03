@@ -29,7 +29,7 @@ extern "C" {
 #define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_ASSERTED   0x0
 #define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_DEASSERTED 0x1
 
-#define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_VALID(__val)        \
+#define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_VALID(__val)      \
   (((__val) == IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_ASSERTED    \
     || (__val) == IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_DEASSERTED) ? 1 : 0)
 
@@ -38,22 +38,22 @@ extern "C" {
 #define IPMI_SERIAL_MODEM_ALERTS_SUCCEED_WHILE_SOL_ACTIVE  0x2
 #define IPMI_SERIAL_MODEM_ALERTS_RESERVED                  0x3
 
-#define IPMI_SERIAL_MODEM_ALERTS_VALID(__val)                \
+#define IPMI_SERIAL_MODEM_ALERTS_VALID(__val)                        \
   (((__val) == IPMI_SERIAL_MODEM_ALERTS_FAIL_WHILE_SOL_ACTIVE        \
-    || (__val) == IPMI_SERIAL_MODEM_ALERTS_DEFERRED_WHILE_SOL_ACTIVE    \
+    || (__val) == IPMI_SERIAL_MODEM_ALERTS_DEFERRED_WHILE_SOL_ACTIVE \
     || (__val) == IPMI_SERIAL_MODEM_ALERTS_SUCCEED_WHILE_SOL_ACTIVE) ? 1 : 0)
 
 #define IPMI_TEST_MODE_ACTIVATED   0x1
 #define IPMI_TEST_MODE_DEACTIVATED 0x0
 
-#define IPMI_TEST_MODE_VALID(__val)            \
+#define IPMI_TEST_MODE_VALID(__val)                \
   (((__val) == IPMI_TEST_MODE_ACTIVATED            \
     || (__val) == IPMI_TEST_MODE_DEACTIVATED) ? 1 : 0)
 
 #define IPMI_ACTIVATE_PAYLOAD_WITH_AUTHENTICATION   0x1
 #define IPMI_ACTIVATE_PAYLOAD_WITHOUT_AUTHENTICATION 0x0
 
-#define IPMI_AUTHENTICATION_ACTIVATION_VALID(__val)            \
+#define IPMI_AUTHENTICATION_ACTIVATION_VALID(__val)             \
   (((__val) == IPMI_ACTIVATE_PAYLOAD_WITH_AUTHENTICATION        \
     || (__val) == IPMI_ACTIVATE_PAYLOAD_WITHOUT_AUTHENTICATION) ? 1 : 0)
 
@@ -61,7 +61,7 @@ extern "C" {
 #define IPMI_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION 0x0
 
 #define IPMI_ENCRYPTION_ACTIVATION_VALID(__val)                \
-  (((__val) == IPMI_ACTIVATE_PAYLOAD_WITH_ENCRYPTION            \
+  (((__val) == IPMI_ACTIVATE_PAYLOAD_WITH_ENCRYPTION           \
     || (__val) == IPMI_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION) ? 1 : 0)
 
 #define IPMI_TEST_MODE_NOT_SUPPORTED 0x0
@@ -72,22 +72,22 @@ extern "C" {
 #define IPMI_REGENERATE_INITIALIZATION_VECTOR  0x2
 
 #define IPMI_SUSPEND_RESUME_PAYLOAD_ENCRYPTION_OPERATION_VALID(__val)    \
-  (((__val) == IPMI_SUSPEND_ENCRYPTION                    \
-    || (__val) == IPMI_RESUME_ENCRYPTION                \
+  (((__val) == IPMI_SUSPEND_ENCRYPTION                                   \
+    || (__val) == IPMI_RESUME_ENCRYPTION                                 \
     || (__val) == IPMI_REGENERATE_INITIALIZATION_VECTOR) ? 1 : 0)
 
 #define IPMI_SET_USER_PAYLOAD_OPERATION_ENABLE  0x00
 #define IPMI_SET_USER_PAYLOAD_OPERATION_DISABLE 0x01
 
-#define IPMI_SET_USER_PAYLOAD_OPERATION_VALID(__val)            \
+#define IPMI_SET_USER_PAYLOAD_OPERATION_VALID(__val)             \
   (((__val) == IPMI_SET_USER_PAYLOAD_OPERATION_ENABLE            \
     || (__val) == IPMI_SET_USER_PAYLOAD_OPERATION_DISABLE) ? 1 : 0)
 
   /* achu: See IPMI Spec Set User Payload Access command.  Enable may be
    * 0 or 1, and Disable may be 0 or 1 as well.
    */
-#define IPMI_PAYLOAD_ACCESS_VALID(__val)    \
-  (((__val) == 0                \
+#define IPMI_PAYLOAD_ACCESS_VALID(__val) \
+  (((__val) == 0                         \
     || (__val) == 1) ? 1 : 0)
 
   extern fiid_template_t tmpl_cmd_activate_payload_rq;

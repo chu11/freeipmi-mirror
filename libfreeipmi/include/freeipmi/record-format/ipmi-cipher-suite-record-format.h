@@ -39,13 +39,13 @@ extern "C" {
 #define IPMI_CIPHER_SUITE_RECORD_FORMAT_OEM                   0x01
 
 #define IPMI_CIPHER_SUITE_RECORD_FORMAT_VALID(__val)        \
-  (((__val) == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD        \
+  (((__val) == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD     \
     || (__val) == IPMI_CIPHER_SUITE_RECORD_FORMAT_OEM) ? 1 : 0)
 
-#define IPMI_CIPHER_SUITE_TAG_BITS_VALID(__val)                \
-  (((__val) == IPMI_CIPHER_SUITE_TAG_BITS_AUTHENTICATION_ALGORITHM    \
-    || (__val) == IPMI_CIPHER_SUITE_TAG_BITS_INTEGRITY_ALGORITHM    \
-    || (__val) == IPMI_CIPHER_SUITE_TAG_BITS_CONFIDENTIALITY_ALGORITHM    \
+#define IPMI_CIPHER_SUITE_TAG_BITS_VALID(__val)                         \
+  (((__val) == IPMI_CIPHER_SUITE_TAG_BITS_AUTHENTICATION_ALGORITHM      \
+    || (__val) == IPMI_CIPHER_SUITE_TAG_BITS_INTEGRITY_ALGORITHM        \
+    || (__val) == IPMI_CIPHER_SUITE_TAG_BITS_CONFIDENTIALITY_ALGORITHM  \
     || (__val) == IPMI_CIPHER_SUITE_TAG_BITS_RECORD) ? 1 : 0)
 
   extern fiid_template_t tmpl_cipher_suite_record_header;

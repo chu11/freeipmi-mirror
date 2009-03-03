@@ -33,7 +33,7 @@ extern "C" {
 #define IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS    0x0
 
 #define IPMI_SEL_CLEAR_OPERATION_VALID(__val)                \
-  (((__val) == IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE            \
+  (((__val) == IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE       \
     || (__val) == IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS) ? 1 : 0)
 
 #define IPMI_SEL_CLEAR_ERASURE_IN_PROGRESS    0x0
@@ -45,8 +45,8 @@ extern "C" {
 #define IPMI_AUXILIARY_LOG_TYPE_OEM1 0x01
 #define IPMI_AUXILIARY_LOG_TYPE_OEM2 0x02
 
-#define IPMI_AUXILIARY_LOG_TYPE_VALID(__val)            \
-  (((__val) == IPMI_AUXILIARY_LOG_TYPE_MCA            \
+#define IPMI_AUXILIARY_LOG_TYPE_VALID(__val)              \
+  (((__val) == IPMI_AUXILIARY_LOG_TYPE_MCA                \
     || (__val) == IPMI_AUXILIARY_LOG_TYPE_OEM1            \
     || (__val) == IPMI_AUXILIARY_LOG_TYPE_OEM2) ? 1 : 0)
 

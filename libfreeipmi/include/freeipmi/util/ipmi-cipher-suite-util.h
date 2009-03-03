@@ -26,56 +26,56 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/interface/ipmi-rmcpplus-interface.h>
 
-#define IPMI_CIPHER_SUITE_COMBINATION_VALID(__a, __i, __c)        \
-  ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE            \
-     && (__i) == IPMI_INTEGRITY_ALGORITHM_NONE                \
-     && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)            \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1        \
-        && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE            \
-            && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))        \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1        \
-        && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96        \
-            && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE        \
-                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128    \
-                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128    \
-                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40)))    \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5        \
-        && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE            \
-            && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))        \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5        \
-        && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128        \
-            && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE        \
-                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128    \
-                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128    \
-                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40)))    \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5        \
-        && ((__i) == IPMI_INTEGRITY_ALGORITHM_MD5_128            \
-            && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE        \
-                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128    \
-                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128    \
+#define IPMI_CIPHER_SUITE_COMBINATION_VALID(__a, __i, __c)                          \
+  ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE                               \
+     && (__i) == IPMI_INTEGRITY_ALGORITHM_NONE                                      \
+     && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)                               \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1                       \
+        && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE                                  \
+            && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))                       \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1                       \
+        && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96                          \
+            && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE                        \
+                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128              \
+                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128                 \
+                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40)))               \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5                        \
+        && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE                                  \
+            && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))                       \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5                        \
+        && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128                          \
+            && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE                        \
+                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128              \
+                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128                 \
+                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40)))               \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5                        \
+        && ((__i) == IPMI_INTEGRITY_ALGORITHM_MD5_128                               \
+            && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE                        \
+                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128              \
+                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128                 \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40)))) ? 1 : 0)
 
-#define IPMI_CIPHER_SUITE_COMBINATION_SUPPORTED(__a, __i, __c)        \
-  ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE            \
-     && (__i) == IPMI_INTEGRITY_ALGORITHM_NONE                \
-     && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)            \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1        \
-        && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE            \
-            && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))        \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1        \
-        && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96        \
-            && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE        \
-                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5        \
-        && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE            \
-            && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))        \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5        \
-        && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128        \
-            && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE        \
-                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) \
-    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5        \
-        && ((__i) == IPMI_INTEGRITY_ALGORITHM_MD5_128            \
-            && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE        \
+#define IPMI_CIPHER_SUITE_COMBINATION_SUPPORTED(__a, __i, __c)                      \
+  ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE                               \
+     && (__i) == IPMI_INTEGRITY_ALGORITHM_NONE                                      \
+     && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)                               \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1                       \
+        && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE                                  \
+            && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))                       \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1                       \
+        && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96                          \
+            && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE                        \
+                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)))           \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5                        \
+        && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE                                  \
+            && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE))                       \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5                        \
+        && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128                          \
+            && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE                        \
+                || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)))           \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5                        \
+        && ((__i) == IPMI_INTEGRITY_ALGORITHM_MD5_128                               \
+            && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE                        \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)))) ? 1 : 0)
 
   /* To avoid gcc warnings, added +1 in comparison */

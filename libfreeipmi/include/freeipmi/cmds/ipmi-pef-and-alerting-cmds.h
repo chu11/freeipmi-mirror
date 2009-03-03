@@ -16,7 +16,7 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.8.12.2 2009-03-03 22:39:47 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.8.12.3 2009-03-03 23:09:47 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H
@@ -36,119 +36,119 @@ extern "C" {
 #define IPMI_PEF_ENABLE  0x1
 #define IPMI_PEF_DISABLE 0x0
 
-#define IPMI_PEF_VALID(__val)            \
+#define IPMI_PEF_VALID(__val)             \
   (((__val) == IPMI_PEF_ENABLE            \
     || (__val) == IPMI_PEF_DISABLE) ? 1 : 0)
 
 #define IPMI_PEF_ENABLE  0x1
 #define IPMI_PEF_DISABLE 0x0
 
-#define IPMI_PEF_VALID(__val)            \
+#define IPMI_PEF_VALID(__val)             \
   (((__val) == IPMI_PEF_ENABLE            \
     || (__val) == IPMI_PEF_DISABLE) ? 1 : 0)
 
 #define IPMI_PEF_EVENT_MESSAGES_ENABLE  0x1
 #define IPMI_PEF_EVENT_MESSAGES_DISABLE 0x0
 
-#define IPMI_PEF_EVENT_MESSAGES_VALID(__val)            \
+#define IPMI_PEF_EVENT_MESSAGES_VALID(__val)             \
   (((__val) == IPMI_PEF_EVENT_MESSAGES_ENABLE            \
     || (__val) == IPMI_PEF_EVENT_MESSAGES_DISABLE) ? 1 : 0)
 
 #define IPMI_PEF_STARTUP_DELAY_ENABLE  0x1
 #define IPMI_PEF_STARTUP_DELAY_DISABLE 0x0
 
-#define IPMI_PEF_STARTUP_DELAY_VALID(__val)            \
+#define IPMI_PEF_STARTUP_DELAY_VALID(__val)             \
   (((__val) == IPMI_PEF_STARTUP_DELAY_ENABLE            \
     || (__val) == IPMI_PEF_STARTUP_DELAY_DISABLE) ? 1 : 0)
 
 #define IPMI_PEF_ALERT_STARTUP_DELAY_ENABLE  0x1
 #define IPMI_PEF_ALERT_STARTUP_DELAY_DISABLE 0x0
 
-#define IPMI_PEF_ALERT_STARTUP_DELAY_VALID(__val)            \
+#define IPMI_PEF_ALERT_STARTUP_DELAY_VALID(__val)             \
   (((__val) == IPMI_PEF_ALERT_STARTUP_DELAY_ENABLE            \
     || (__val) == IPMI_PEF_ALERT_STARTUP_DELAY_DISABLE) ? 1 : 0)
 
 #define IPMI_PEF_ALERT_ACTION_ENABLE  0x1
 #define IPMI_PEF_ALERT_ACTION_DISABLE 0x0
 
-#define IPMI_PEF_ALERT_ACTION_VALID(__val)            \
+#define IPMI_PEF_ALERT_ACTION_VALID(__val)             \
   (((__val) == IPMI_PEF_ALERT_ACTION_ENABLE            \
     || (__val) == IPMI_PEF_ALERT_ACTION_DISABLE) ? 1 : 0)
 
 #define IPMI_PEF_POWER_DOWN_ACTION_ENABLE  0x1
 #define IPMI_PEF_POWER_DOWN_ACTION_DISABLE 0x0
 
-#define IPMI_PEF_POWER_DOWN_ACTION_VALID(__val)            \
+#define IPMI_PEF_POWER_DOWN_ACTION_VALID(__val)         \
   (((__val) == IPMI_PEF_POWER_DOWN_ACTION_ENABLE        \
     || (__val) == IPMI_PEF_POWER_DOWN_ACTION_DISABLE) ? 1 : 0)
 
 #define IPMI_PEF_RESET_ACTION_ENABLE  0x1
 #define IPMI_PEF_RESET_ACTION_DISABLE 0x0
 
-#define IPMI_PEF_RESET_ACTION_VALID(__val)            \
+#define IPMI_PEF_RESET_ACTION_VALID(__val)             \
   (((__val) == IPMI_PEF_RESET_ACTION_ENABLE            \
     || (__val) == IPMI_PEF_RESET_ACTION_DISABLE) ? 1 : 0)
 
 #define IPMI_PEF_POWER_CYCLE_ACTION_ENABLE  0x1
 #define IPMI_PEF_POWER_CYCLE_ACTION_DISABLE 0x0
 
-#define IPMI_PEF_POWER_CYCLE_ACTION_VALID(__val)        \
+#define IPMI_PEF_POWER_CYCLE_ACTION_VALID(__val)         \
   (((__val) == IPMI_PEF_POWER_CYCLE_ACTION_ENABLE        \
     || (__val) == IPMI_PEF_POWER_CYCLE_ACTION_DISABLE) ? 1 : 0)
 
 #define IPMI_PEF_OEM_ACTION_ENABLE  0x1
 #define IPMI_PEF_OEM_ACTION_DISABLE 0x0
 
-#define IPMI_PEF_OEM_ACTION_VALID(__val)        \
+#define IPMI_PEF_OEM_ACTION_VALID(__val)         \
   (((__val) == IPMI_PEF_OEM_ACTION_ENABLE        \
     || (__val) == IPMI_PEF_OEM_ACTION_DISABLE) ? 1 : 0)
 
 #define IPMI_PEF_DIAGNOSTIC_INTERRUPT_ENABLE  0x1
 #define IPMI_PEF_DIAGNOSTIC_INTERRUPT_DISABLE 0x0
 
-#define IPMI_PEF_DIAGNOSTIC_INTERRUPT_VALID(__val)            \
+#define IPMI_PEF_DIAGNOSTIC_INTERRUPT_VALID(__val)             \
   (((__val) == IPMI_PEF_DIAGNOSTIC_INTERRUPT_ENABLE            \
     || (__val) == IPMI_PEF_DIAGNOSTIC_INTERRUPT_DISABLE) ? 1 : 0)
 
 #define IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER  0x2
 #define IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER        0x0
 
-#define IPMI_FILTER_CONFIGURATION_FILTER_TYPE_VALID(__val)        \
+#define IPMI_FILTER_CONFIGURATION_FILTER_TYPE_VALID(__val)                  \
   (((__val) == IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER \
     || (__val) == IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER) ? 1 : 0)
 
 #define IPMI_FILTER_CONFIGURATION_FILTER_ENABLE  0x1
 #define IPMI_FILTER_CONFIGURATION_FILTER_DISABLE 0x0
 
-#define IPMI_FILTER_CONFIGURATION_FILTER_VALID(__val)            \
+#define IPMI_FILTER_CONFIGURATION_FILTER_VALID(__val)             \
   (((__val) == IPMI_FILTER_CONFIGURATION_FILTER_ENABLE            \
     || (__val) == IPMI_FILTER_CONFIGURATION_FILTER_DISABLE) ? 1 : 0)
 
 #define IPMI_EVENT_FILTER_ACTION_ALERT    0x1
 #define IPMI_EVENT_FILTER_ACTION_NO_ALERT 0x0
 
-#define IPMI_EVENT_FILTER_ACTION_ALERT_VALID(__val)        \
+#define IPMI_EVENT_FILTER_ACTION_ALERT_VALID(__val)      \
   (((__val) == IPMI_EVENT_FILTER_ACTION_ALERT            \
     || (__val) == IPMI_EVENT_FILTER_ACTION_NO_ALERT) ? 1 : 0)
 
 #define IPMI_EVENT_FILTER_ACTION_POWER_OFF         0x1
 #define IPMI_EVENT_FILTER_ACTION_NO_POWER_OFF      0x0
 
-#define IPMI_EVENT_FILTER_ACTION_POWER_OFF_VALID(__val)            \
+#define IPMI_EVENT_FILTER_ACTION_POWER_OFF_VALID(__val)      \
   (((__val) == IPMI_EVENT_FILTER_ACTION_POWER_OFF            \
     || (__val) == IPMI_EVENT_FILTER_ACTION_NO_POWER_OFF) ? 1 : 0)
 
 #define IPMI_EVENT_FILTER_ACTION_RESET    0x1
 #define IPMI_EVENT_FILTER_ACTION_NO_RESET 0x0
 
-#define IPMI_EVENT_FILTER_ACTION_RESET_VALID(__val)        \
+#define IPMI_EVENT_FILTER_ACTION_RESET_VALID(__val)      \
   (((__val) == IPMI_EVENT_FILTER_ACTION_RESET            \
     || (__val) == IPMI_EVENT_FILTER_ACTION_NO_RESET) ? 1 : 0)
 
 #define IPMI_EVENT_FILTER_ACTION_POWER_CYCLE    0x1
 #define IPMI_EVENT_FILTER_ACTION_NO_POWER_CYCLE 0x0
 
-#define IPMI_EVENT_FILTER_ACTION_POWER_CYCLE_VALID(__val)        \
+#define IPMI_EVENT_FILTER_ACTION_POWER_CYCLE_VALID(__val)      \
   (((__val) == IPMI_EVENT_FILTER_ACTION_POWER_CYCLE            \
     || (__val) == IPMI_EVENT_FILTER_ACTION_NO_POWER_CYCLE) ? 1 : 0)
 
@@ -156,20 +156,20 @@ extern "C" {
 #define IPMI_EVENT_FILTER_ACTION_NO_OEM      0x0
 
 #define IPMI_EVENT_FILTER_ACTION_OEM_VALID(__val)        \
-  (((__val) == IPMI_EVENT_FILTER_ACTION_OEM_ACTION        \
+  (((__val) == IPMI_EVENT_FILTER_ACTION_OEM_ACTION       \
     || (__val) == IPMI_EVENT_FILTER_ACTION_NO_OEM) ? 1 : 0)
 
 #define IPMI_EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT    0x1
 #define IPMI_EVENT_FILTER_ACTION_NO_DIAGNOSTIC_INTERRUPT 0x0
 
-#define IPMI_EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_VALID(__val)    \
+#define IPMI_EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_VALID(__val)  \
   (((__val) == IPMI_EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT        \
     || (__val) == IPMI_EVENT_FILTER_ACTION_NO_DIAGNOSTIC_INTERRUPT) ? 1 : 0)
 
 #define IPMI_EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION    0x1
 #define IPMI_EVENT_FILTER_ACTION_NO_GROUP_CONTROL_OPERATION 0x0
 
-#define IPMI_EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_VALID(__val)    \
+#define IPMI_EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_VALID(__val)  \
   (((__val) == IPMI_EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION        \
     || (__val) == IPMI_EVENT_FILTER_ACTION_NO_GROUP_CONTROL_OPERATION) ? 1 : 0)
 
@@ -181,13 +181,13 @@ extern "C" {
 #define IPMI_EVENT_SEVERITY_CRITICAL_CONDITION         0x10
 #define IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION  0x20
 
-#define IPMI_EVENT_SEVERITY_VALID(__val)                \
-  (((__val) == IPMI_EVENT_SEVERITY_UNSPECIFIED                \
-    || (__val) == IPMI_EVENT_SEVERITY_MONITOR                \
-    || (__val) == IPMI_EVENT_SEVERITY_INFORMATION            \
-    || (__val) == IPMI_EVENT_SEVERITY_OK                \
+#define IPMI_EVENT_SEVERITY_VALID(__val)                            \
+  (((__val) == IPMI_EVENT_SEVERITY_UNSPECIFIED                      \
+    || (__val) == IPMI_EVENT_SEVERITY_MONITOR                       \
+    || (__val) == IPMI_EVENT_SEVERITY_INFORMATION                   \
+    || (__val) == IPMI_EVENT_SEVERITY_OK                            \
     || (__val) == IPMI_EVENT_SEVERITY_NON_CRITICAL_CONDITION        \
-    || (__val) == IPMI_EVENT_SEVERITY_CRITICAL_CONDITION        \
+    || (__val) == IPMI_EVENT_SEVERITY_CRITICAL_CONDITION            \
     || (__val) == IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION) ? 1 : 0)
 
 
@@ -242,14 +242,14 @@ extern "C" {
 #define IPMI_STRING_SELECTOR_MAX 0x7F
 #define IPMI_STRING_SELECTOR_VOLATILE    0x0
   /* To avoid gcc warnings, added +1 in comparison */
-#define IPMI_STRING_SELECTOR_VALID(__val)            \
+#define IPMI_STRING_SELECTOR_VALID(__val)                  \
   (((__val+1) >= (IPMI_STRING_SELECTOR_MIN + 1)            \
     && (__val-1) <= IPMI_STRING_SELECTOR_MAX - 1) ? 1 : 0)
 
 #define IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_BY_SOFTWARE 0x0
 #define IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_BY_BMC      0x1
 
-#define IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_VALID(__val)    \
+#define IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_VALID(__val)       \
   (((__val) == IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_BY_SOFTWARE \
     || (__val) == IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_BY_BMC) ? 1 : 0)
 
@@ -258,27 +258,27 @@ extern "C" {
 #define IPMI_ALERT_IMMEDIATE_OPERATION_CLEAR_ALERT_IMMEDIATE_STATUS 0x2
 #define IPMI_ALERT_IMMEDIATE_OPERATION_RESERVED                     0x3
 
-#define IPMI_ALERT_IMMEDIATE_OPERATION_VALID(__val)            \
-  (((__val) == IPMI_ALERT_IMMEDIATE_OPERATION_INITIATE_ALERT        \
+#define IPMI_ALERT_IMMEDIATE_OPERATION_VALID(__val)                         \
+  (((__val) == IPMI_ALERT_IMMEDIATE_OPERATION_INITIATE_ALERT                \
     || (__val) == IPMI_ALERT_IMMEDIATE_OPERATION_GET_ALERT_IMMEDIATE_STATUS \
     || (__val) == IPMI_ALERT_IMMEDIATE_OPERATION_CLEAR_ALERT_IMMEDIATE_STATUS) ? 1 : 0)
 
 #define IPMI_SEND_ALERT_STRING_IDENTIFIED_BY_STRING_SELECTOR 0x1
 #define IPMI_DO_NOT_SEND_AN_ALERT_STRING                     0x0
 
-#define IPMI_SEND_ALERT_STRING_VALID(__val)                \
+#define IPMI_SEND_ALERT_STRING_VALID(__val)                            \
   (((__val) == IPMI_SEND_ALERT_STRING_IDENTIFIED_BY_STRING_SELECTOR    \
     || (__val) == IPMI_DO_NOT_SEND_AN_ALERT_STRING) ? 1 : 0)
 
 #define IPMI_GET_PEF_PARAMETER                          0x0
 #define IPMI_GET_PEF_PARAMETER_REVISION_ONLY            0x1
 
-#define IPMI_GET_PEF_PARAMETER_VALID(__val)                \
+#define IPMI_GET_PEF_PARAMETER_VALID(__val)              \
   (((__val) == IPMI_GET_PEF_PARAMETER                    \
     || (__val) == IPMI_GET_PEF_PARAMETER_REVISION_ONLY) ? 1 : 0)
 
 #define IPMI_PEF_ALERT_STRINGS_BLOCK_SIZE    16
-#define IPMI_PEF_ALERT_STRINGS_BLOCK_SIZE_VALID(__val)          \
+#define IPMI_PEF_ALERT_STRINGS_BLOCK_SIZE_VALID(__val) \
   (((__val) <= IPMI_PEF_ALERT_STRINGS_BLOCK_SIZE) ? 1 : 0)
 
 #define IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION                     0x0
@@ -286,24 +286,25 @@ extern "C" {
 #define IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES                     0x2
 #define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL             0x3
 #define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE    0x4
-#define IPMI_ALERT_POLICY_TABLE_POLICY_TYPE_VALID(__val)        \
-  (((__val) == IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION ||     \
-    (__val) == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY ||               \
-    (__val) == IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES ||     \
-    (__val) == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL || \
-    (__val) == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE) ? 1 : 0)
+
+#define IPMI_ALERT_POLICY_TABLE_POLICY_TYPE_VALID(__val)                    \
+  (((__val) == IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION            \
+    || (__val) == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY                   \
+    || (__val) == IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES         \
+    || (__val) == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL \
+    || (__val) == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE) ? 1 : 0)
 
 #define IPMI_ALERT_POLICY_DISABLED    0x0
 #define IPMI_ALERT_POLICY_ENABLED     0x1
 #define IPMI_ALERT_POLICY_ENABLED_DISABLED_VALID(__val) \
-  (((__val) == IPMI_ALERT_POLICY_DISABLED ||            \
-    (__val) == IPMI_ALERT_POLICY_ENABLED) ? 1 : 0)
+  (((__val) == IPMI_ALERT_POLICY_DISABLED               \
+    || (__val) == IPMI_ALERT_POLICY_ENABLED) ? 1 : 0)
 
 #define IPMI_EVENT_SPECIFIC_ALERT_STRING_NO     0x0
 #define IPMI_EVENT_SPECIFIC_ALERT_STRING_YES    0x1
 #define IPMI_EVENT_SPECIFIC_ALERT_STRING_VALID(__val)           \
-  (((__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_NO ||           \
-    (__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_YES) ? 1 : 0)
+  (((__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_NO              \
+    || (__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_YES) ? 1 : 0)
 
 
   extern fiid_template_t tmpl_cmd_get_pef_capabilities_rq;

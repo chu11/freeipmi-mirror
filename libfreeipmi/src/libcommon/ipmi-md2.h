@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.h,v 1.4.12.1 2009-03-03 01:41:35 chu11 Exp $
+ *  $Id: ipmi-md2.h,v 1.4.12.2 2009-03-03 23:09:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -27,10 +27,6 @@
 #ifndef _IPMI_MD2_H
 #define _IPMI_MD2_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdint.h>
 
 #define MD2_BLOCK_LENGTH   16
@@ -40,23 +36,19 @@ extern "C" {
 #define MD2_PADDING_LENGTH 16
 #define MD2_ROUNDS_LENGTH  18
 
-  typedef struct __md2 {
-    uint32_t magic;
-    uint8_t l;
-    unsigned int mlen;
-    uint8_t x[MD2_BUFFER_LENGTH];
-    uint8_t c[MD2_CHKSUM_LENGTH];
-    uint8_t m[MD2_BLOCK_LENGTH];
-  } md2_t;
+typedef struct __md2 {
+  uint32_t magic;
+  uint8_t l;
+  unsigned int mlen;
+  uint8_t x[MD2_BUFFER_LENGTH];
+  uint8_t c[MD2_CHKSUM_LENGTH];
+  uint8_t m[MD2_BLOCK_LENGTH];
+} md2_t;
 
-  int md2_init (md2_t *ctx);
+int md2_init (md2_t *ctx);
 
-  int md2_update_data (md2_t *ctx, uint8_t *buf, unsigned int buflen);
+int md2_update_data (md2_t *ctx, uint8_t *buf, unsigned int buflen);
 
-  int md2_finish (md2_t *ctx, uint8_t *digest, unsigned int digestlen);
-
-#ifdef __cplusplus
-}
-#endif
+int md2_finish (md2_t *ctx, uint8_t *digest, unsigned int digestlen);
 
 #endif /* _IPMI_MD2_H */

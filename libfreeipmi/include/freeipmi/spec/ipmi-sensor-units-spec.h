@@ -118,7 +118,7 @@ extern "C" {
 #define IPMI_SENSOR_UNIT_GRAMS                  92
 
   /* To avoid gcc warnings, added +1 and -1 in comparison */
-#define IPMI_SENSOR_UNIT_VALID(__sensor_unit)            \
+#define IPMI_SENSOR_UNIT_VALID(__sensor_unit)               \
   (((__sensor_unit+1) > (IPMI_SENSOR_UNIT_UNSPECIFIED+1)    \
     && (__sensor_unit-1) < (IPMI_SENSOR_UNIT_GRAMS-1)) ? 1 : 0)
 

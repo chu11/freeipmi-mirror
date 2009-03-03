@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.c,v 1.8.12.2 2009-03-03 22:39:53 chu11 Exp $
+ *  $Id: ipmi-md5.c,v 1.8.12.3 2009-03-03 23:09:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -100,30 +100,29 @@ static uint32_t T[64] =
  * but we index from 0 to 63.  So we need to subtract 1 from the T
  * array index.
  */
-#define R1(a, b, c, d, k, s, i)                        \
-  do {                                    \
+#define R1(a, b, c, d, k, s, i)                                              \
+  do {                                                                       \
     (a) = ((b) + CSHIFTL (((a) + F ((b),(c),(d)) + X[(k)] + T[(i-1)]),(s))); \
   } while (0)
 
-#define R2(a, b, c, d, k, s, i)                        \
-  do {                                    \
+#define R2(a, b, c, d, k, s, i)                                              \
+  do {                                                                       \
     (a) = ((b) + CSHIFTL (((a) + G ((b),(c),(d)) + X[(k)] + T[(i-1)]),(s))); \
   } while (0)
 
-#define R3(a, b, c, d, k, s, i)                        \
-  do {                                    \
+#define R3(a, b, c, d, k, s, i)                                              \
+  do {                                                                       \
     (a) = ((b) + CSHIFTL (((a) + H ((b),(c),(d)) + X[(k)] + T[(i-1)]),(s))); \
   } while (0)
 
-#define R4(a, b, c, d, k, s, i)                        \
-  do {                                    \
+#define R4(a, b, c, d, k, s, i)                                              \
+  do {                                                                       \
     (a) = ((b) + CSHIFTL (((a) + I ((b),(c),(d)) + X[(k)] + T[(i-1)]),(s))); \
   } while (0)
 
 int
 md5_init (md5_t *ctx)
 {
-
   if (ctx == NULL)
     {
       errno = EINVAL;

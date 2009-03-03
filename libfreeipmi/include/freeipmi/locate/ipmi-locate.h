@@ -55,11 +55,11 @@ extern "C" {
   typedef enum ipmi_locate_driver_type ipmi_locate_driver_type_t;
 
 #define IPMI_LOCATE_DRIVER_VALID(__val)                \
-  (((__val) == IPMI_LOCATE_DRIVER_NONE                \
-    || (__val) == IPMI_LOCATE_DRIVER_DEFAULTS            \
+  (((__val) == IPMI_LOCATE_DRIVER_NONE                 \
+    || (__val) == IPMI_LOCATE_DRIVER_DEFAULTS          \
     || (__val) == IPMI_LOCATE_DRIVER_SMBIOS            \
-    || (__val) == IPMI_LOCATE_DRIVER_ACPI            \
-    || (__val) == IPMI_LOCATE_DRIVER_PCI            \
+    || (__val) == IPMI_LOCATE_DRIVER_ACPI              \
+    || (__val) == IPMI_LOCATE_DRIVER_PCI               \
     || (__val) == IPMI_LOCATE_DRIVER_DMIDECODE) ? 1 : 0)
 
   enum ipmi_interface_type
@@ -73,9 +73,9 @@ extern "C" {
   typedef enum ipmi_interface_type ipmi_interface_type_t;
 
 #define IPMI_INTERFACE_TYPE_VALID(__val)    \
-  (((__val) == IPMI_INTERFACE_KCS        \
-    || (__val) == IPMI_INTERFACE_SMIC        \
-    || (__val) == IPMI_INTERFACE_BT        \
+  (((__val) == IPMI_INTERFACE_KCS           \
+    || (__val) == IPMI_INTERFACE_SMIC       \
+    || (__val) == IPMI_INTERFACE_BT         \
     || (__val) == IPMI_INTERFACE_SSIF) ? 1 : 0)
 
   struct ipmi_locate_info

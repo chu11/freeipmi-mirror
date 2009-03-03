@@ -58,9 +58,9 @@ extern "C" {
 #define IPMI_ACPI_SYSTEM_POWER_STATE_UNKNOWN        0x2A
 #define IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE      0x7F
 
-#define IPMI_ACPI_SYSTEM_POWER_STATE_VALID(__acpi_system_power_state)    \
-  (((__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S0_G0    \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S1    \
+#define IPMI_ACPI_SYSTEM_POWER_STATE_VALID(__acpi_system_power_state)          \
+  (((__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S0_G0          \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S1          \
     || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S2          \
     || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S3          \
     || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S4          \
@@ -89,18 +89,18 @@ extern "C" {
 #define IPMI_ACPI_DEVICE_POWER_STATE_UNKNOWN        0x2A
 #define IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE      0x7F
 
-#define IPMI_ACPI_DEVICE_POWER_STATE_VALID(__acpi_device_power_state)    \
-  (((__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D0    \
-    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D1    \
-    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D2    \
-    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D3    \
+#define IPMI_ACPI_DEVICE_POWER_STATE_VALID(__acpi_device_power_state)      \
+  (((__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D0         \
+    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D1      \
+    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D2      \
+    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D3      \
     || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_UNKNOWN \
     || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE) ? 1 : 0)
 
 #define IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE       0x1
 #define IPMI_ACPI_SET_DEVICE_POWER_STATE_DONT_SET_DEVICE_POWER_STATE  0x0
 
-#define IPMI_ACPI_SET_DEVICE_POWER_STATE_VALID(__set_device_power_state) \
+#define IPMI_ACPI_SET_DEVICE_POWER_STATE_VALID(__set_device_power_state)                  \
   (((__set_device_power_state) == IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE \
     || (__set_device_power_state) == IPMI_ACPI_SET_DEVICE_POWER_STATE_DONT_SET_DEVICE_POWER_STATE) ? 1 : 0)
 

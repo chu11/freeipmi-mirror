@@ -29,35 +29,35 @@ extern "C" {
 #define IPMI_BASIC_MODE_ENABLE                             0x1
 #define IPMI_BASIC_MODE_DISABLE                            0x0
 
-#define IPMI_BASIC_MODE_VALID(__val)            \
+#define IPMI_BASIC_MODE_VALID(__val)             \
   (((__val) == IPMI_BASIC_MODE_ENABLE            \
     || (__val) == IPMI_BASIC_MODE_DISABLE) ? 1 : 0)
 
 #define IPMI_PPP_MODE_ENABLE                               0x1
 #define IPMI_PPP_MODE_DISABLE                              0x0
 
-#define IPMI_PPP_MODE_VALID(__val)            \
+#define IPMI_PPP_MODE_VALID(__val)             \
   (((__val) == IPMI_PPP_MODE_ENABLE            \
     || (__val) == IPMI_PPP_MODE_DISABLE) ? 1 : 0)
 
 #define IPMI_TERMINAL_MODE_ENABLE                          0x1
 #define IPMI_TERMINAL_MODE_DISABLE                         0x0
 
-#define IPMI_TERMINAL_MODE_VALID(__val)            \
+#define IPMI_TERMINAL_MODE_VALID(__val)         \
   (((__val) == IPMI_TERMINAL_MODE_ENABLE        \
     || (__val) == IPMI_TERMINAL_MODE_DISABLE) ? 1 : 0)
 
 #define IPMI_CONNECT_MODE_DIRECT                           0x1
 #define IPMI_CONNECT_MODE_MODEM                            0x0
 
-#define IPMI_CONNECT_MODE_VALID(__val)            \
+#define IPMI_CONNECT_MODE_VALID(__val)             \
   (((__val) == IPMI_CONNECT_MODE_DIRECT            \
     || (__val) == IPMI_CONNECT_MODE_MODEM) ? 1 : 0)
 
 #define IPMI_DTR_HANGUP_ENABLE                             0x1
 #define IPMI_DTR_HANGUP_DISABLE                            0x0
 
-#define IPMI_DTR_HANGUP_VALID(__val)            \
+#define IPMI_DTR_HANGUP_VALID(__val)             \
   (((__val) == IPMI_DTR_HANGUP_ENABLE            \
     || (__val) == IPMI_DTR_HANGUP_DISABLE) ? 1 : 0)
 
@@ -66,8 +66,8 @@ extern "C" {
 #define IPMI_FLOW_CONTROL_XON_XOFF_FLOW_CONTROL            0x2
 #define IPMI_FLOW_CONTROL_RESERVED                         0x3
 
-#define IPMI_FLOW_CONTROL_VALID(__val)                    \
-  (((__val) == IPMI_FLOW_CONTROL_NO_FLOW_CONTROL            \
+#define IPMI_FLOW_CONTROL_VALID(__val)                          \
+  (((__val) == IPMI_FLOW_CONTROL_NO_FLOW_CONTROL                \
     || (__val) == IPMI_FLOW_CONTROL_RTS_CTS_FLOW_CONTROL        \
     || (__val) == IPMI_FLOW_CONTROL_XON_XOFF_FLOW_CONTROL) ? 1 : 0)
 
@@ -77,7 +77,7 @@ extern "C" {
 #define IPMI_BIT_RATE_57600_BPS   0x9
 #define IPMI_BIT_RATE_115200_BPS  0xA
 
-#define IPMI_BIT_RATE_VALID(__val)            \
+#define IPMI_BIT_RATE_VALID(__val)               \
   (((__val) == IPMI_BIT_RATE_9600_BPS            \
     || (__val) == IPMI_BIT_RATE_19200_BPS        \
     || (__val) == IPMI_BIT_RATE_38400_BPS        \
@@ -87,7 +87,7 @@ extern "C" {
 #define IPMI_GET_SERIAL_MODEM_PARAMETER                          0x0
 #define IPMI_GET_SERIAL_MODEM_PARAMETER_REVISION_ONLY            0x1
 
-#define IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(__flag)            \
+#define IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(__flag)          \
   (((__flag) == IPMI_GET_SERIAL_MODEM_PARAMETER                \
     || (__flag) == IPMI_GET_SERIAL_MODEM_PARAMETER_REVISION_ONLY) ? 1 : 0)
 
