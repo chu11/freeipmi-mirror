@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,13 +13,13 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
-*/
+ */
 
 
 #ifndef _RMCP_UTIL_H
-#define	_RMCP_UTIL_H	1
+#define _RMCP_UTIL_H    1
 
 #ifdef __cplusplus
 extern "C" {

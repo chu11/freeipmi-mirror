@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #ifdef HAVE_CONFIG_H
@@ -35,7 +35,7 @@
 #else /* !HAVE_SYS_TIME_H */
 #include <time.h>
 #endif /* !HAVE_SYS_TIME_H */
-#endif	/* !TIME_WITH_SYS_TIME */
+#endif  /* !TIME_WITH_SYS_TIME */
 
 #include "freeipmi/api/ipmi-rmcpplus-support-and-payload-cmds-api.h"
 #include "freeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.h"
@@ -51,8 +51,8 @@
 
 #include "freeipmi-portability.h"
 
-int8_t 
-ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx, 
+int8_t
+ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
                                   uint8_t channel_number,
                                   uint8_t user_id,
                                   uint8_t operation,
@@ -78,46 +78,46 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_SET_USER_PAYLOAD_OPERATION_VALID(operation)
-      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_1)
-      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_2)
-      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_3)
-      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_4)
-      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_5)
-      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_6)
-      || !IPMI_PAYLOAD_ACCESS_VALID(standard_payload_7)
-      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_0)
-      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_1)
-      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_2)
-      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_3)
-      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_4)
-      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_5)
-      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_6)
-      || !IPMI_PAYLOAD_ACCESS_VALID(oem_payload_7)
-      || !fiid_obj_valid(obj_cmd_rs))
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !IPMI_SET_USER_PAYLOAD_OPERATION_VALID (operation)
+      || !IPMI_PAYLOAD_ACCESS_VALID (standard_payload_1)
+      || !IPMI_PAYLOAD_ACCESS_VALID (standard_payload_2)
+      || !IPMI_PAYLOAD_ACCESS_VALID (standard_payload_3)
+      || !IPMI_PAYLOAD_ACCESS_VALID (standard_payload_4)
+      || !IPMI_PAYLOAD_ACCESS_VALID (standard_payload_5)
+      || !IPMI_PAYLOAD_ACCESS_VALID (standard_payload_6)
+      || !IPMI_PAYLOAD_ACCESS_VALID (standard_payload_7)
+      || !IPMI_PAYLOAD_ACCESS_VALID (oem_payload_0)
+      || !IPMI_PAYLOAD_ACCESS_VALID (oem_payload_1)
+      || !IPMI_PAYLOAD_ACCESS_VALID (oem_payload_2)
+      || !IPMI_PAYLOAD_ACCESS_VALID (oem_payload_3)
+      || !IPMI_PAYLOAD_ACCESS_VALID (oem_payload_4)
+      || !IPMI_PAYLOAD_ACCESS_VALID (oem_payload_5)
+      || !IPMI_PAYLOAD_ACCESS_VALID (oem_payload_6)
+      || !IPMI_PAYLOAD_ACCESS_VALID (oem_payload_7)
+      || !fiid_obj_valid (obj_cmd_rs))
     {
-      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare(ctx, 
-                                    obj_cmd_rs, 
-                                    tmpl_cmd_set_user_payload_access_rs) < 0)
+  if (api_fiid_obj_template_compare (ctx,
+                                     obj_cmd_rs,
+                                     tmpl_cmd_set_user_payload_access_rs) < 0)
     {
-      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_payload_access_rq)))
-      {
-        API_ERRNO_TO_API_ERRNUM(ctx, errno);
-        goto cleanup;
-      }
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_user_payload_access_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
 
   if (fill_cmd_set_user_payload_access (channel_number,
                                         user_id,
@@ -139,7 +139,7 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
                                         oem_payload_7,
                                         obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
@@ -149,13 +149,13 @@ ipmi_cmd_set_user_payload_access (ipmi_ctx_t ctx,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
-      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       goto cleanup;
     }
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY (obj_cmd_rq);
   return (rv);
 }
 
@@ -170,36 +170,36 @@ ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !fiid_obj_valid(obj_cmd_rs))
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !fiid_obj_valid (obj_cmd_rs))
     {
-      API_SET_ERRNUM(ctx, IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare(ctx, 
-                                    obj_cmd_rs, 
-                                    tmpl_cmd_get_user_payload_access_rs) < 0)
+  if (api_fiid_obj_template_compare (ctx,
+                                     obj_cmd_rs,
+                                     tmpl_cmd_get_user_payload_access_rs) < 0)
     {
-      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_user_payload_access_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_user_payload_access_rq)))
     {
-      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_get_user_payload_access (channel_number,
                                         user_id,
                                         obj_cmd_rq) < 0)
     {
-      API_ERRNO_TO_API_ERRNUM(ctx, errno);
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
@@ -209,12 +209,12 @@ ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
-      ERR_TRACE(ipmi_ctx_errormsg(ctx), ipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       goto cleanup;
     }
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY(obj_cmd_rq);
+  FIID_OBJ_DESTROY (obj_cmd_rq);
   return (rv);
 }

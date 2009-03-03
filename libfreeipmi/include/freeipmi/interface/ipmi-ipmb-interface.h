@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,11 +13,11 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-*/
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ */
 
 #ifndef _IPMI_IPMB_INTERFACE_H
-#define	_IPMI_IPMB_INTERFACE_H	1
+#define _IPMI_IPMB_INTERFACE_H  1
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,15 +34,15 @@ extern fiid_template_t tmpl_ipmb_msg_trlr;
 extern fiid_template_t tmpl_ipmb_msg;
 
 int8_t fill_ipmb_msg_hdr (uint8_t rs_addr,
-                          uint8_t net_fn, 
+                          uint8_t net_fn,
                           uint8_t rs_lun,
                           uint8_t rq_addr,
                           uint8_t rq_lun,
-                          uint8_t rq_seq, 
+                          uint8_t rq_seq,
                           fiid_obj_t obj_ipmb_msg_hdr);
 
-int32_t assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr, 
-                                fiid_obj_t obj_cmd, 
+int32_t assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
+                                fiid_obj_t obj_cmd,
                                 fiid_obj_t obj_ipmb_msg);
 
 int8_t unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,

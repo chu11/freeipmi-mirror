@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
 */
 
@@ -45,7 +45,7 @@
 #define IPMI_SENSOR_READ_ERR_NODE_BUSY                              13
 #define IPMI_SENSOR_READ_ERR_INVALID_SDR_RECORD_TYPE                14
 #define IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR                        15
-#define IPMI_SENSOR_READ_ERR_IPMI_ERROR                             16 
+#define IPMI_SENSOR_READ_ERR_IPMI_ERROR                             16
 #define IPMI_SENSOR_READ_ERR_SYSTEM_ERROR                           17
 #define IPMI_SENSOR_READ_ERR_OVERFLOW                               18
 #define IPMI_SENSOR_READ_ERR_INTERNAL_ERROR                         19
@@ -56,20 +56,20 @@
 
 typedef struct ipmi_sensor_read_ctx *ipmi_sensor_read_ctx_t;
 
-/* Sensor Read Context Functions 
+/* Sensor Read Context Functions
  * - ipmi_ctx assumes ipmi opened and ready to go
  */
-ipmi_sensor_read_ctx_t ipmi_sensor_read_ctx_create(ipmi_ctx_t ipmi_ctx);
-void ipmi_sensor_read_ctx_destroy(ipmi_sensor_read_ctx_t ctx);
-int ipmi_sensor_read_ctx_errnum(ipmi_sensor_read_ctx_t ctx);
-char * ipmi_sensor_read_ctx_strerror(int errnum);
-char * ipmi_sensor_read_ctx_errormsg(ipmi_sensor_read_ctx_t ctx);
+ipmi_sensor_read_ctx_t ipmi_sensor_read_ctx_create (ipmi_ctx_t ipmi_ctx);
+void ipmi_sensor_read_ctx_destroy (ipmi_sensor_read_ctx_t ctx);
+int ipmi_sensor_read_ctx_errnum (ipmi_sensor_read_ctx_t ctx);
+char * ipmi_sensor_read_ctx_strerror (int errnum);
+char * ipmi_sensor_read_ctx_errormsg (ipmi_sensor_read_ctx_t ctx);
 
 /* Sensor read flag functions */
-int ipmi_sensor_read_ctx_get_flags(ipmi_sensor_read_ctx_t ctx, unsigned int *flags);
-int ipmi_sensor_read_ctx_set_flags(ipmi_sensor_read_ctx_t ctx, unsigned int flags);
+int ipmi_sensor_read_ctx_get_flags (ipmi_sensor_read_ctx_t ctx, unsigned int *flags);
+int ipmi_sensor_read_ctx_set_flags (ipmi_sensor_read_ctx_t ctx, unsigned int flags);
 
-/* 
+/*
  * return 1 - reading a success (although for some sensor types, a
  * reading may not be returned. For example with discrete sensors, a
  * reading is not returned but a sensor_event_bitmask is.)
@@ -84,10 +84,10 @@ int ipmi_sensor_read_ctx_set_flags(ipmi_sensor_read_ctx_t ctx, unsigned int flag
  *
  * if reading returned, must be free'd by caller
  */
-int ipmi_sensor_read(ipmi_sensor_read_ctx_t ctx,
-                     uint8_t *sdr_record,
-                     unsigned int sdr_record_len,
-                     double **sensor_reading,
-                     uint16_t *sensor_event_bitmask);
+int ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
+                      uint8_t *sdr_record,
+                      unsigned int sdr_record_len,
+                      double **sensor_reading,
+                      uint16_t *sensor_event_bitmask);
 
 #endif /* _IPMI_SENSOR_READ_H */

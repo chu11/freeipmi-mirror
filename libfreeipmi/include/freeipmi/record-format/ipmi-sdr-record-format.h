@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,9 +13,9 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
-*/
+ */
 
 #ifndef _IPMI_SDR_RECORD_FORMAT_H
 #define _IPMI_SDR_RECORD_FORMAT_H
@@ -61,18 +61,18 @@ extern "C" {
 #define IPMI_SDR_FORMAT_OEM_RECORD_NAME \
   "OEM Record"
 
-#define IPMI_SDR_FORMAT_TYPE_VALID(__val) \
-   (((__val) == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD \
-     || (__val) == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD \
-     || (__val) == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD \
-     || (__val) == IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD \
-     || (__val) == IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD \
-     || (__val) == IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD \
-     || (__val) == IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD \
-     || (__val) == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD \
-     || (__val) == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD \
-     || (__val) == IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD \
-     || (__val) == IPMI_SDR_FORMAT_OEM_RECORD) ? 1 : 0)
+#define IPMI_SDR_FORMAT_TYPE_VALID(__val)                                     \
+  (((__val) == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD                             \
+    || (__val) == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD                       \
+    || (__val) == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD                           \
+    || (__val) == IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD                   \
+    || (__val) == IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD   \
+    || (__val) == IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD               \
+    || (__val) == IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD                   \
+    || (__val) == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD \
+    || (__val) == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD   \
+    || (__val) == IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD             \
+    || (__val) == IPMI_SDR_FORMAT_OEM_RECORD) ? 1 : 0)
 
 #define IPMI_SDR_SENSOR_OWNER_ID_TYPE_IPMB_SLAVE_ADDRESS   0x0
 #define IPMI_SDR_SENSOR_OWNER_ID_TYPE_SYSTEM_SOFTWARE_ID   0x1
@@ -87,26 +87,26 @@ extern "C" {
 #define IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT_STRING     "2's complement (signed)"
 #define IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG_STRING        "Does not return analog (numeric) reading"
 
-#define IPMI_SDR_ANALOG_DATA_FORMAT_VALID(__val) \
-   (((__val) == IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED \
-     || (__val) == IPMI_SDR_ANALOG_DATA_FORMAT_1S_COMPLEMENT \
-     || (__val) == IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT) ? 1 : 0)
+#define IPMI_SDR_ANALOG_DATA_FORMAT_VALID(__val)            \
+  (((__val) == IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED         \
+    || (__val) == IPMI_SDR_ANALOG_DATA_FORMAT_1S_COMPLEMENT \
+    || (__val) == IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT) ? 1 : 0)
 
 #define IPMI_SDR_MODIFIER_UNIT_NONE           0
 #define IPMI_SDR_MODIFIER_UNIT_DIVIDE         1
 #define IPMI_SDR_MODIFIER_UNIT_MULTIPLY       2
 
-#define IPMI_SDR_MODIFIER_UNIT_VALID(__sensor_modifier_unit) \
-   (((__sensor_modifier_unit) == IPMI_SDR_MODIFIER_UNIT_NONE \
-     || (__sensor_modifier_unit) == IPMI_SDR_MODIFIER_UNIT_DIVIDE \
-     || (__sensor_modifier_unit) == IPMI_SDR_MODIFIER_UNIT_MULTIPLY) ? 1 : 0)
+#define IPMI_SDR_MODIFIER_UNIT_VALID(__sensor_modifier_unit)     \
+  (((__sensor_modifier_unit) == IPMI_SDR_MODIFIER_UNIT_NONE      \
+    || (__sensor_modifier_unit) == IPMI_SDR_MODIFIER_UNIT_DIVIDE \
+    || (__sensor_modifier_unit) == IPMI_SDR_MODIFIER_UNIT_MULTIPLY) ? 1 : 0)
 
 #define IPMI_SDR_LINEARIZATION_LINEAR   0
 #define IPMI_SDR_LINEARIZATION_LN       1
 #define IPMI_SDR_LINEARIZATION_LOG10    2
 #define IPMI_SDR_LINEARIZATION_LOG2     3
 #define IPMI_SDR_LINEARIZATION_E        4
-#define IPMI_SDR_LINEARIZATION_EXP10    5 
+#define IPMI_SDR_LINEARIZATION_EXP10    5
 #define IPMI_SDR_LINEARIZATION_EXP2     6
 #define IPMI_SDR_LINEARIZATION_INVERSE  7
 #define IPMI_SDR_LINEARIZATION_SQR      8
@@ -130,19 +130,19 @@ extern "C" {
 
 /* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_SDR_LINEARIZATION_IS_LINEAR(__sensor_linearization) \
-   ((((__sensor_linearization) + 1) >= IPMI_SDR_LINEARIZATION_LN \
-     && ((__sensor_linearization) - 1) <= IPMI_SDR_LINEARIZATION_SQRT) ? 1 : 0)
+  ((((__sensor_linearization) + 1) >= IPMI_SDR_LINEARIZATION_LN  \
+    && ((__sensor_linearization) - 1) <= IPMI_SDR_LINEARIZATION_SQRT) ? 1 : 0)
 
 #define IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(__sensor_linearization) \
-   (((__sensor_linearization) >= 0x70 \
-     && (__sensor_linearization) <= 0x7F) ? 1 : 0)
+  (((__sensor_linearization) >= 0x70                                 \
+    && (__sensor_linearization) <= 0x7F) ? 1 : 0)
 
 #define IPMI_SDR_PERCENTAGE_NO  0
 #define IPMI_SDR_PERCENTAGE_YES 1
 
 #define IPMI_SDR_SDR_PERCENTAGE_VALID(__val) \
-   (((__val) == IPMI_SDR_SDR_PERCENTAGE_NO \
-     || (__val) == IPMI_SDR_SDR_PERCENTAGE_YES) ? 1 : 0)
+  (((__val) == IPMI_SDR_SDR_PERCENTAGE_NO    \
+    || (__val) == IPMI_SDR_SDR_PERCENTAGE_YES) ? 1 : 0)
 
 #define IPMI_SDR_PHYSICAL_ENTITY          0x0
 #define IPMI_SDR_LOGICAL_CONTAINER_ENTITY 0x1

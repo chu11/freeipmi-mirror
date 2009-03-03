@@ -1,25 +1,25 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.127 2009-01-13 01:02:22 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.128 2009-03-03 23:56:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  UCRL-CODE-155698
- *  
+ *
  *  This file is part of Ipmipower, a remote power control utility.
  *  For details, see http://www.llnl.gov/linux/.
- *  
- *  Ipmipower is free software; you can redistribute it and/or modify 
- *  it under the terms of the GNU General Public License as published by the 
- *  Free Software Foundation; either version 2 of the License, or (at your 
+ *
+ *  Ipmipower is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at your
  *  option) any later version.
- *  
- *  Ipmipower is distributed in the hope that it will be useful, but 
- *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+ *
+ *  Ipmipower is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
  *  for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License along
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
@@ -76,46 +76,46 @@
 
 #define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH 64
 
-/* power_cmd_t 
- * - power control commands 
+/* power_cmd_t
+ * - power control commands
  */
-typedef enum 
-  { 
+typedef enum
+  {
     POWER_CMD_NONE             = 0x00,
     POWER_CMD_POWER_OFF        = 0x01,
     POWER_CMD_POWER_ON         = 0x02,
     POWER_CMD_POWER_CYCLE      = 0x03,
     POWER_CMD_POWER_RESET      = 0x04,
     POWER_CMD_POWER_STATUS     = 0x05,
-    POWER_CMD_PULSE_DIAG_INTR  = 0x06, 
+    POWER_CMD_PULSE_DIAG_INTR  = 0x06,
     POWER_CMD_SOFT_SHUTDOWN_OS = 0x07,
   } power_cmd_t;
 
-#define POWER_CMD_VALID(__c) \
-  ((__c) > POWER_CMD_POWER_OFF && \
+#define POWER_CMD_VALID(__c)             \
+  ((__c) > POWER_CMD_POWER_OFF &&        \
    (__c) <= POWER_CMD_SOFT_SHUTDOWN_OS)
 
-#define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(__c) \
-  ((__c) == POWER_CMD_POWER_OFF \
-   || (__c) == POWER_CMD_POWER_ON \
-   || (__c) == POWER_CMD_POWER_CYCLE \
-   || (__c) == POWER_CMD_POWER_RESET \
-   || (__c) == POWER_CMD_PULSE_DIAG_INTR \
+#define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(__c)    \
+  ((__c) == POWER_CMD_POWER_OFF                             \
+   || (__c) == POWER_CMD_POWER_ON                           \
+   || (__c) == POWER_CMD_POWER_CYCLE                        \
+   || (__c) == POWER_CMD_POWER_RESET                        \
+   || (__c) == POWER_CMD_PULSE_DIAG_INTR                    \
    || (__c) == POWER_CMD_SOFT_SHUTDOWN_OS)
 
 /* packet_type_t
  * - packet types stored internally in an ipmipower_powercmd structure.
  * - Request types are *_REQ, Response types are *_RES
  */
-typedef enum 
-  { 
-    AUTHENTICATION_CAPABILITIES_V20_REQ = 0x101, 
+typedef enum
+  {
+    AUTHENTICATION_CAPABILITIES_V20_REQ = 0x101,
     AUTHENTICATION_CAPABILITIES_V20_RES = 0x201,
-    AUTHENTICATION_CAPABILITIES_REQ     = 0x102, 
+    AUTHENTICATION_CAPABILITIES_REQ     = 0x102,
     AUTHENTICATION_CAPABILITIES_RES     = 0x202,
-    GET_SESSION_CHALLENGE_REQ           = 0x103, 
+    GET_SESSION_CHALLENGE_REQ           = 0x103,
     GET_SESSION_CHALLENGE_RES           = 0x203,
-    ACTIVATE_SESSION_REQ                = 0x104, 
+    ACTIVATE_SESSION_REQ                = 0x104,
     ACTIVATE_SESSION_RES                = 0x204,
     OPEN_SESSION_REQ                    = 0x105,
     OPEN_SESSION_RES                    = 0x205,
@@ -123,13 +123,13 @@ typedef enum
     RAKP_MESSAGE_2_RES                  = 0x206,
     RAKP_MESSAGE_3_REQ                  = 0x107,
     RAKP_MESSAGE_4_RES                  = 0x207,
-    SET_SESSION_PRIVILEGE_LEVEL_REQ     = 0x108, 
-    SET_SESSION_PRIVILEGE_LEVEL_RES     = 0x208, 
-    GET_CHASSIS_STATUS_REQ              = 0x109, 
+    SET_SESSION_PRIVILEGE_LEVEL_REQ     = 0x108,
+    SET_SESSION_PRIVILEGE_LEVEL_RES     = 0x208,
+    GET_CHASSIS_STATUS_REQ              = 0x109,
     GET_CHASSIS_STATUS_RES              = 0x209,
-    CHASSIS_CONTROL_REQ                 = 0x10A, 
-    CHASSIS_CONTROL_RES                 = 0x20A, 
-    CLOSE_SESSION_REQ                   = 0x10B, 
+    CHASSIS_CONTROL_REQ                 = 0x10A,
+    CHASSIS_CONTROL_RES                 = 0x20A,
+    CLOSE_SESSION_REQ                   = 0x10B,
     CLOSE_SESSION_RES                   = 0x20B,
   } packet_type_t;
 
@@ -137,21 +137,21 @@ typedef enum
 #define PACKET_TYPE_RES_MASK           0x200
 #define PACKET_TYPE_PKT_MASK           0x0FF
 
-#define PACKET_TYPE_VALID_REQ(__p) \
-  (((__p) & PACKET_TYPE_REQ_MASK) && \
+#define PACKET_TYPE_VALID_REQ(__p)          \
+  (((__p) & PACKET_TYPE_REQ_MASK) &&        \
    ((__p) & PACKET_TYPE_PKT_MASK))
 
-#define PACKET_TYPE_VALID_RES(__p) \
-  (((__p) & PACKET_TYPE_RES_MASK) && \
+#define PACKET_TYPE_VALID_RES(__p)          \
+  (((__p) & PACKET_TYPE_RES_MASK) &&        \
    ((__p) & PACKET_TYPE_PKT_MASK))
 
-#define PACKET_TYPE_VALID_PKT(__p) \
-  (PACKET_TYPE_VALID_REQ(__p) || \
-   PACKET_TYPE_VALID_RES(__p))
+#define PACKET_TYPE_VALID_PKT(__p)          \
+  (PACKET_TYPE_VALID_REQ (__p) ||           \
+   PACKET_TYPE_VALID_RES (__p))
 
 /* Protocol States */
-typedef enum 
-  { 
+typedef enum
+  {
     PROTOCOL_STATE_START                                = 0x00,
     PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT = 0x01,
     PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT     = 0x02,
@@ -167,36 +167,36 @@ typedef enum
     PROTOCOL_STATE_END                                  = 0x0C,
   } protocol_state_t;
 
-#define PROTOCOL_STATE_VALID(__s) \
-  ((__s) >= PROTOCOL_STATE_START && \
+#define PROTOCOL_STATE_VALID(__s)    \
+  ((__s) >= PROTOCOL_STATE_START &&  \
    (__s) <= PROTOCOL_STATE_END)
 
 /* Discovery States */
-typedef enum 
-  { 
+typedef enum
+  {
     STATE_DISCOVERED     = 0x01,
     STATE_UNDISCOVERED   = 0x02,
     STATE_BADCONNECTION  = 0x03,
   } discover_state_t;
 
-#define DISCOVER_STATE_VALID(__s) \
-  ((__s) >= STATE_DISCOVERED && \
+#define DISCOVER_STATE_VALID(__s)    \
+  ((__s) >= STATE_DISCOVERED &&      \
    (__s) <= STATE_BADCONNECTION)
 
 /* Link States */
-typedef enum 
+typedef enum
   {
     LINK_GOOD = 0x01,
     LINK_BAD  = 0x02,
   } link_state_t;
 
-#define LINK_STATE_VALID(__s) \
-  ((__s) >= LINK_GOOD && \
+#define LINK_STATE_VALID(__s)        \
+  ((__s) >= LINK_GOOD &&             \
    (__s) <= LINK_BAD)
 
 /* Msg Types */
-typedef enum 
-  { 
+typedef enum
+  {
     MSG_TYPE_ON                                 =  0,
     MSG_TYPE_OFF                                =  1,
     MSG_TYPE_OK                                 =  2,
@@ -221,8 +221,8 @@ typedef enum
     MSG_TYPE_BMC_ERROR                          = 21,
   } msg_type_t;
 
-#define MSG_TYPE_VALID(__m) \
-  ((__m) >= MSG_TYPE_ON && \
+#define MSG_TYPE_VALID(__m)          \
+  ((__m) >= MSG_TYPE_ON &&           \
    (__m) <= MSG_TYPE_BMC_ERROR)
 
 #define MSG_TYPE_NUM_ENTRIES (MSG_TYPE_BMC_ERROR+1)
@@ -232,17 +232,17 @@ typedef enum
  */
 struct ipmipower_powercmd {
   power_cmd_t cmd;
-  protocol_state_t protocol_state; 
+  protocol_state_t protocol_state;
 
-  /* 
-   * Protocol State Machine Variables 
+  /*
+   * Protocol State Machine Variables
    */
   struct timeval time_begin;
   unsigned int retransmission_count;
   uint8_t close_timeout;
 
   /*
-   * Protocol Maintenance Variables 
+   * Protocol Maintenance Variables
    */
   unsigned int session_inbound_count;
   uint32_t highest_received_sequence_number;
@@ -269,7 +269,7 @@ struct ipmipower_powercmd {
   uint8_t message_tag_count;
   uint32_t session_sequence_number;
   uint8_t name_only_lookup;
-  uint32_t remote_console_session_id;  
+  uint32_t remote_console_session_id;
   uint8_t remote_console_random_number[IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH];
 
   /* Ipmipower variables */
@@ -277,7 +277,7 @@ struct ipmipower_powercmd {
   int wait_until_off_state;
 
   struct ipmipower_connection *ic;
-  
+
   fiid_obj_t obj_rmcp_hdr_req;
   fiid_obj_t obj_rmcp_hdr_res;
   fiid_obj_t obj_lan_session_hdr_req;
@@ -320,8 +320,8 @@ struct ipmipower_powercmd {
 /* ipmipower_connection
  * - Stores various information and data for each remote node ipmi
  * "connection" we have.
- */ 
-struct ipmipower_connection 
+ */
+struct ipmipower_connection
 {
   int ipmi_fd;
   int ping_fd;
@@ -335,13 +335,13 @@ struct ipmipower_connection
   struct timeval last_ping_send;
   struct timeval last_ipmi_recv;
   struct timeval last_ping_recv;
-  
+
   link_state_t link_state;
   unsigned int ping_last_packet_recv_flag;
   unsigned int ping_packet_count_send;
   unsigned int ping_packet_count_recv;
   unsigned int ping_consec_count;
-  
+
   discover_state_t discover_state;
   char hostname[MAXHOSTNAMELEN+1];
   struct sockaddr_in destaddr;
@@ -355,7 +355,7 @@ typedef struct ipmipower_connection *ipmipower_connection_t;
 
 enum ipmi_sensors_argp_option_keys
   {
-    IPMI_VERSION_KEY = 'R',     /* legacy option */
+    IPMI_VERSION_KEY = 'R',       /* legacy option */
     RMCPDUMP_KEY = 160,
 
     ON_KEY = 'n',
@@ -369,8 +369,8 @@ enum ipmi_sensors_argp_option_keys
     WAIT_UNTIL_OFF_KEY = 'A',
     WAIT_UNTIL_ON_KEY = 'G',
 
-    SESSION_TIMEOUT_KEY = 't',  /* legacy short option */
-    RETRANSMISSION_TIMEOUT_KEY = 'y', /* legacy short option */
+    SESSION_TIMEOUT_KEY = 't',    /* legacy short option */
+    RETRANSMISSION_TIMEOUT_KEY = 'y',   /* legacy short option */
 
     RETRY_WAIT_TIMEOUT_KEY = 161,
     RETRANSMISSION_WAIT_TIMEOUT_KEY = 'q',

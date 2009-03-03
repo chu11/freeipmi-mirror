@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.64 2009-02-23 22:29:13 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.65 2009-03-03 23:56:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -47,42 +47,42 @@
 #include "freeipmi-portability.h"
 
 static void
-_sensor_reading_cleanup(ipmi_monitoring_ctx_t c)
+_sensor_reading_cleanup (ipmi_monitoring_ctx_t c)
 {
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
 
   if (c->sensor_read_ctx)
     {
-      ipmi_sensor_read_ctx_destroy(c->sensor_read_ctx);
+      ipmi_sensor_read_ctx_destroy (c->sensor_read_ctx);
       c->sensor_read_ctx = NULL;
     }
   if (c->sdr_parse_ctx)
     {
-      ipmi_sdr_parse_ctx_destroy(c->sdr_parse_ctx);
+      ipmi_sdr_parse_ctx_destroy (c->sdr_parse_ctx);
       c->sdr_parse_ctx = NULL;
     }
 }
 
 int
-ipmi_monitoring_sensor_reading_init(ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_reading_init (ipmi_monitoring_ctx_t c)
 {
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->ipmi_ctx);
-  assert(!c->sensor_read_ctx);
-  assert(!c->sdr_parse_ctx);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (c->ipmi_ctx);
+  assert (!c->sensor_read_ctx);
+  assert (!c->sdr_parse_ctx);
 
-  if (!(c->sensor_read_ctx = ipmi_sensor_read_ctx_create(c->ipmi_ctx)))
+  if (!(c->sensor_read_ctx = ipmi_sensor_read_ctx_create (c->ipmi_ctx)))
     {
-      IPMI_MONITORING_DEBUG(("ipmi_sensor_read_ctx_create: %s", strerror(errno)));
+      IPMI_MONITORING_DEBUG (("ipmi_sensor_read_ctx_create: %s", strerror (errno)));
       c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 
-  if (!(c->sdr_parse_ctx = ipmi_sdr_parse_ctx_create()))
+  if (!(c->sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
     {
-      IPMI_MONITORING_DEBUG(("ipmi_sdr_parse_ctx_create: %s", strerror(errno)));
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_ctx_create: %s", strerror (errno)));
       c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
@@ -90,78 +90,78 @@ ipmi_monitoring_sensor_reading_init(ipmi_monitoring_ctx_t c)
   return 0;
 
  cleanup:
-  _sensor_reading_cleanup(c);
+  _sensor_reading_cleanup (c);
   return -1;
 }
 
 int
-ipmi_monitoring_sensor_reading_cleanup(ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sensor_reading_cleanup (ipmi_monitoring_ctx_t c)
 {
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  _sensor_reading_cleanup(c);
+  _sensor_reading_cleanup (c);
   return 0;
 }
 
 static struct ipmi_monitoring_sensor_reading *
-_allocate_sensor_reading(ipmi_monitoring_ctx_t c)
+_allocate_sensor_reading (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *s = NULL;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  if (!(s = (struct ipmi_monitoring_sensor_reading *)malloc(sizeof(struct ipmi_monitoring_sensor_reading))))
+  if (!(s = (struct ipmi_monitoring_sensor_reading *)malloc (sizeof(struct ipmi_monitoring_sensor_reading))))
     {
       c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
-  memset(s, '\0', sizeof(struct ipmi_monitoring_sensor_reading));
+  memset (s, '\0', sizeof(struct ipmi_monitoring_sensor_reading));
 
   return s;
 
  cleanup:
   if (s)
-    free(s);
+    free (s);
   return NULL;
 }
 
 static int
-_store_sensor_reading(ipmi_monitoring_ctx_t c,
-                      unsigned int sensor_reading_flags,
-                      int record_id,
-                      int sensor_group,
-                      char *sensor_name,
-                      int sensor_state,
-                      int sensor_units,
-                      int sensor_reading_type,
-                      int sensor_bitmask_type,
-                      uint16_t sensor_bitmask,
-                      void *sensor_reading)
+_store_sensor_reading (ipmi_monitoring_ctx_t c,
+                       unsigned int sensor_reading_flags,
+                       int record_id,
+                       int sensor_group,
+                       char *sensor_name,
+                       int sensor_state,
+                       int sensor_units,
+                       int sensor_reading_type,
+                       int sensor_bitmask_type,
+                       uint16_t sensor_bitmask,
+                       void *sensor_reading)
 {
   struct ipmi_monitoring_sensor_reading *s = NULL;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->sensor_readings);
-  assert(IPMI_MONITORING_SENSOR_GROUP_VALID(sensor_group));
-  assert(sensor_name);
-  assert(IPMI_MONITORING_SENSOR_STATE_VALID(sensor_state));
-  assert(IPMI_MONITORING_SENSOR_UNITS_VALID(sensor_units));
-  assert(IPMI_MONITORING_SENSOR_READING_TYPE_VALID(sensor_reading_type));
-  assert(IPMI_MONITORING_SENSOR_BITMASK_TYPE_VALID(sensor_bitmask_type));
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (c->sensor_readings);
+  assert (IPMI_MONITORING_SENSOR_GROUP_VALID (sensor_group));
+  assert (sensor_name);
+  assert (IPMI_MONITORING_SENSOR_STATE_VALID (sensor_state));
+  assert (IPMI_MONITORING_SENSOR_UNITS_VALID (sensor_units));
+  assert (IPMI_MONITORING_SENSOR_READING_TYPE_VALID (sensor_reading_type));
+  assert (IPMI_MONITORING_SENSOR_BITMASK_TYPE_VALID (sensor_bitmask_type));
 
   if ((sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS)
       && sensor_state == IPMI_MONITORING_SENSOR_STATE_UNKNOWN)
     return 0;
 
-  if (!(s = _allocate_sensor_reading(c)))
+  if (!(s = _allocate_sensor_reading (c)))
     goto cleanup;
-  
+
   s->record_id = record_id;
   s->sensor_group = sensor_group;
-  strncpy(s->sensor_name, sensor_name, IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH);
+  strncpy (s->sensor_name, sensor_name, IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH);
   s->sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH - 1] = '\0';
   s->sensor_state = sensor_state;
   s->sensor_units = sensor_units;
@@ -175,22 +175,22 @@ _store_sensor_reading(ipmi_monitoring_ctx_t c,
     s->sensor_reading.integer_val = *((uint32_t *)sensor_reading);
   else if (s->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE)
     s->sensor_reading.double_val = *((double *)sensor_reading);
-  
+
   /* achu: should come before list_append to avoid having a freed entry on the list */
   if (c->callback)
     {
       c->callback_sensor_reading = s;
       if ((*c->callback)(c, c->callback_data) < 0)
         {
-          IPMI_MONITORING_DEBUG(("callback error"));
+          IPMI_MONITORING_DEBUG (("callback error"));
           c->errnum = IPMI_MONITORING_ERR_CALLBACK_ERROR;
           goto cleanup;
         }
     }
 
-  if (!list_append(c->sensor_readings, s))
+  if (!list_append (c->sensor_readings, s))
     {
-      IPMI_MONITORING_DEBUG(("list_append: %s", strerror(errno)));
+      IPMI_MONITORING_DEBUG (("list_append: %s", strerror (errno)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
@@ -199,37 +199,37 @@ _store_sensor_reading(ipmi_monitoring_ctx_t c,
 
  cleanup:
   if (s)
-    free(s);
+    free (s);
   return -1;
 }
 
 static int
-_store_unreadable_sensor_reading(ipmi_monitoring_ctx_t c,
-                                 unsigned int sensor_reading_flags,
-                                 int record_id,
-                                 int sensor_group,
-                                 char *sensor_name,
-                                 int sensor_units)
+_store_unreadable_sensor_reading (ipmi_monitoring_ctx_t c,
+                                  unsigned int sensor_reading_flags,
+                                  int record_id,
+                                  int sensor_group,
+                                  char *sensor_name,
+                                  int sensor_units)
 {
   struct ipmi_monitoring_sensor_reading *s = NULL;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->sensor_readings);
-  assert(IPMI_MONITORING_SENSOR_GROUP_VALID(sensor_group));
-  assert(IPMI_MONITORING_SENSOR_UNITS_VALID(sensor_units));
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (c->sensor_readings);
+  assert (IPMI_MONITORING_SENSOR_GROUP_VALID (sensor_group));
+  assert (IPMI_MONITORING_SENSOR_UNITS_VALID (sensor_units));
 
   if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS)
     return 0;
 
-  if (!(s = _allocate_sensor_reading(c)))
+  if (!(s = _allocate_sensor_reading (c)))
     goto cleanup;
-  
+
   s->record_id = record_id;
   s->sensor_group = sensor_group;
   if (sensor_name)
     {
-      strncpy(s->sensor_name, sensor_name, IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH);
+      strncpy (s->sensor_name, sensor_name, IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH);
       s->sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH - 1] = '\0';
     }
   s->sensor_state = IPMI_MONITORING_SENSOR_STATE_UNKNOWN;
@@ -244,15 +244,15 @@ _store_unreadable_sensor_reading(ipmi_monitoring_ctx_t c,
       c->callback_sensor_reading = s;
       if ((*c->callback)(c, c->callback_data) < 0)
         {
-          IPMI_MONITORING_DEBUG(("callback error"));
+          IPMI_MONITORING_DEBUG (("callback error"));
           c->errnum = IPMI_MONITORING_ERR_CALLBACK_ERROR;
           goto cleanup;
         }
     }
 
-  if (!list_append(c->sensor_readings, s))
+  if (!list_append (c->sensor_readings, s))
     {
-      IPMI_MONITORING_DEBUG(("list_append: %s", strerror(errno)));
+      IPMI_MONITORING_DEBUG (("list_append: %s", strerror (errno)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
@@ -261,21 +261,21 @@ _store_unreadable_sensor_reading(ipmi_monitoring_ctx_t c,
 
  cleanup:
   if (s)
-    free(s);
+    free (s);
   return -1;
 }
 
 static int
-_get_sensor_state(ipmi_monitoring_ctx_t c,
-                  uint16_t sensor_event_bitmask,
-                  struct ipmi_sensor_config *config)
+_get_sensor_state (ipmi_monitoring_ctx_t c,
+                   uint16_t sensor_event_bitmask,
+                   struct ipmi_sensor_config *config)
 {
   int sensor_state = IPMI_MONITORING_SENSOR_STATE_NOMINAL;
   int i = 0;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(config);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (config);
 
   i = 0;
   while (config[i].option_str && i < 16)
@@ -292,103 +292,103 @@ _get_sensor_state(ipmi_monitoring_ctx_t c,
 }
 
 static int
-_get_threshold_sensor_state(ipmi_monitoring_ctx_t c,
-                            uint16_t sensor_event_bitmask)
+_get_threshold_sensor_state (ipmi_monitoring_ctx_t c,
+                             uint16_t sensor_event_bitmask)
 {
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  return _get_sensor_state(c, sensor_event_bitmask, ipmi_threshold_sensor_config);
+  return _get_sensor_state (c, sensor_event_bitmask, ipmi_threshold_sensor_config);
 }
 
 static int
-_get_digital_sensor_state(ipmi_monitoring_ctx_t c,
-                          uint8_t event_reading_type_code,
-                          uint8_t sensor_type,
-                          uint16_t sensor_event_bitmask)
+_get_digital_sensor_state (ipmi_monitoring_ctx_t c,
+                           uint8_t event_reading_type_code,
+                           uint8_t sensor_type,
+                           uint16_t sensor_event_bitmask)
 {
   struct ipmi_sensor_config *config;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code));
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code));
 
   /* achu: there are no "names" associated with
    * event_reading_type_codes in the spec (table 42-2), so there are
    * no macros.  We just gotta hard code numbers.
    */
 
-  if (event_reading_type_code == 0x03 
+  if (event_reading_type_code == 0x03
       && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
     config = ipmi_voltage_state_config;
-  else if (event_reading_type_code == 0x06 
+  else if (event_reading_type_code == 0x06
            && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
     config = ipmi_voltage_performance_config;
-  else if (event_reading_type_code == 0x08 
+  else if (event_reading_type_code == 0x08
            && sensor_type == IPMI_SENSOR_TYPE_FAN)
     config = ipmi_fan_device_install_config;
   else if (event_reading_type_code == 0x0A
            && sensor_type == IPMI_SENSOR_TYPE_FAN)
     config = ipmi_fan_transition_availability_config;
-  else if (event_reading_type_code == 0x0B 
+  else if (event_reading_type_code == 0x0B
            && sensor_type == IPMI_SENSOR_TYPE_FAN)
     config = ipmi_fan_redundancy_config;
-  else if (event_reading_type_code == 0x03 
+  else if (event_reading_type_code == 0x03
            && sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
     config = ipmi_processor_state_config;
-  else if (event_reading_type_code == 0x03 
+  else if (event_reading_type_code == 0x03
            && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
     config = ipmi_power_supply_state_config;
-  else if (event_reading_type_code == 0x0B 
+  else if (event_reading_type_code == 0x0B
            && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
     config = ipmi_power_supply_redundancy_config;
-  else if (event_reading_type_code == 0x08 
+  else if (event_reading_type_code == 0x08
            && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
     config = ipmi_power_unit_device_install_config;
-  else if (event_reading_type_code == 0x0B 
+  else if (event_reading_type_code == 0x0B
            && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
     config = ipmi_power_unit_redundancy_config;
-  else if (event_reading_type_code == 0x03 
+  else if (event_reading_type_code == 0x03
            && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
     config = ipmi_module_board_state_config;
-  else if (event_reading_type_code == 0x08 
+  else if (event_reading_type_code == 0x08
            && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
     config = ipmi_module_board_device_install_config;
-  else if (event_reading_type_code == 0x03 
+  else if (event_reading_type_code == 0x03
            && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     config = ipmi_drive_slot_state_config;
-  else if (event_reading_type_code == 0x04 
+  else if (event_reading_type_code == 0x04
            && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     config = ipmi_drive_slot_predictive_failure_config;
-  else if (event_reading_type_code == 0x08 
+  else if (event_reading_type_code == 0x08
            && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     config = ipmi_drive_slot_device_install_config;
-  else if (event_reading_type_code == 0x03 
+  else if (event_reading_type_code == 0x03
            && sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
     config = ipmi_button_switch_state_config;
-  else if (event_reading_type_code == 0x08 
+  else if (event_reading_type_code == 0x08
            && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
     config = ipmi_entity_presence_device_install_config;
   else
     {
-      IPMI_MONITORING_DEBUG(("event_reading_type_code '0x%X' and sensor_type '0x%X' not supported", 
-                             event_reading_type_code, 
-                             sensor_type));
+      IPMI_MONITORING_DEBUG (("event_reading_type_code '0x%X' and sensor_type '0x%X' not supported",
+                              event_reading_type_code,
+                              sensor_type));
       return IPMI_MONITORING_SENSOR_STATE_UNKNOWN;
     }
 
-  return _get_sensor_state(c, sensor_event_bitmask, config);
+  return _get_sensor_state (c, sensor_event_bitmask, config);
 }
 
 static int
-_get_specific_sensor_state(ipmi_monitoring_ctx_t c,
-                           uint8_t sensor_type,
-                           uint16_t sensor_event_bitmask)
+_get_specific_sensor_state (ipmi_monitoring_ctx_t c,
+                            uint8_t sensor_type,
+                            uint16_t sensor_event_bitmask)
 {
   struct ipmi_sensor_config *config;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
 
   if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
     config = ipmi_physical_security_config;
@@ -434,24 +434,24 @@ _get_specific_sensor_state(ipmi_monitoring_ctx_t c,
     config = ipmi_system_acpi_power_state_config;
   else
     {
-      IPMI_MONITORING_DEBUG(("sensor_type '0x%X' not supported", sensor_type));
+      IPMI_MONITORING_DEBUG (("sensor_type '0x%X' not supported", sensor_type));
       return IPMI_MONITORING_SENSOR_STATE_UNKNOWN;
     }
 
-  return _get_sensor_state(c, sensor_event_bitmask, config);
+  return _get_sensor_state (c, sensor_event_bitmask, config);
 }
 
 static void
-_sensor_read_ctx_error_convert(ipmi_monitoring_ctx_t c)
+_sensor_read_ctx_error_convert (ipmi_monitoring_ctx_t c)
 {
   int errnum;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->ipmi_ctx);
-  assert(c->sensor_read_ctx);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (c->ipmi_ctx);
+  assert (c->sensor_read_ctx);
 
-  errnum = ipmi_sensor_read_ctx_errnum(c->sensor_read_ctx);
+  errnum = ipmi_sensor_read_ctx_errnum (c->sensor_read_ctx);
 
   if (errnum == IPMI_SENSOR_READ_ERR_NODE_BUSY)
     c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
@@ -469,23 +469,23 @@ _sensor_read_ctx_error_convert(ipmi_monitoring_ctx_t c)
  * return value -1 = error, 0 = unreadable sensor reading, 1 = sensor reading success
  */
 static int
-_get_sensor_reading(ipmi_monitoring_ctx_t c,
-                    unsigned int sensor_reading_flags,
-                    uint8_t *sdr_record,
-                    unsigned int sdr_record_len,
-                    double *sensor_reading,
-                    uint16_t *sensor_event_bitmask)
+_get_sensor_reading (ipmi_monitoring_ctx_t c,
+                     unsigned int sensor_reading_flags,
+                     uint8_t *sdr_record,
+                     unsigned int sdr_record_len,
+                     double *sensor_reading,
+                     uint16_t *sensor_event_bitmask)
 {
   double *l_sensor_reading = NULL;
   int rv = -1;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->sensor_readings);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(sensor_reading);
-  assert(sensor_event_bitmask);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (c->sensor_readings);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (sensor_reading);
+  assert (sensor_event_bitmask);
 
   if (ipmi_sensor_read (c->sensor_read_ctx,
                         sdr_record,
@@ -493,9 +493,9 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
                         &l_sensor_reading,
                         sensor_event_bitmask) <= 0)
     {
-      int errnum = ipmi_sensor_read_ctx_errnum(c->sensor_read_ctx);
+      int errnum = ipmi_sensor_read_ctx_errnum (c->sensor_read_ctx);
 
-      IPMI_MONITORING_DEBUG(("ipmi_sensor_read: %s", ipmi_sensor_read_ctx_errormsg(c->sensor_read_ctx)));
+      IPMI_MONITORING_DEBUG (("ipmi_sensor_read: %s", ipmi_sensor_read_ctx_errormsg (c->sensor_read_ctx)));
       if (errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_ANALOG
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE
@@ -511,14 +511,14 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
           goto cleanup;
         }
 
-      _sensor_read_ctx_error_convert(c);
+      _sensor_read_ctx_error_convert (c);
       goto cleanup;
     }
 
   if (l_sensor_reading)
     {
       (*sensor_reading) = (*l_sensor_reading);
-      free(l_sensor_reading);
+      free (l_sensor_reading);
     }
 
   rv = 1;
@@ -527,30 +527,30 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
 }
 
 static int
-_get_sensor_units(ipmi_monitoring_ctx_t c,
-                  uint8_t sensor_units_modifier,
-                  uint8_t sensor_units_rate,
-                  uint8_t sensor_base_unit_type,
-                  uint8_t sensor_modifier_unit_type)
+_get_sensor_units (ipmi_monitoring_ctx_t c,
+                   uint8_t sensor_units_modifier,
+                   uint8_t sensor_units_rate,
+                   uint8_t sensor_base_unit_type,
+                   uint8_t sensor_modifier_unit_type)
 {
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
 
   if (sensor_units_modifier != IPMI_SDR_MODIFIER_UNIT_NONE)
     {
-      IPMI_MONITORING_DEBUG(("sensor_units_modifier '0x%X' not supported", sensor_units_modifier));
+      IPMI_MONITORING_DEBUG (("sensor_units_modifier '0x%X' not supported", sensor_units_modifier));
       return IPMI_MONITORING_SENSOR_UNITS_UNKNOWN;
     }
 
   if (sensor_units_rate != IPMI_SENSOR_RATE_UNIT_NONE)
     {
-      IPMI_MONITORING_DEBUG(("sensor_units_rate '0x%X' not supported", sensor_units_rate));
+      IPMI_MONITORING_DEBUG (("sensor_units_rate '0x%X' not supported", sensor_units_rate));
       return IPMI_MONITORING_SENSOR_UNITS_UNKNOWN;
     }
 
   if (sensor_modifier_unit_type != IPMI_SENSOR_UNIT_UNSPECIFIED)
     {
-      IPMI_MONITORING_DEBUG(("sensor_modifier_unit_type '0x%X' not supported", sensor_modifier_unit_type));
+      IPMI_MONITORING_DEBUG (("sensor_modifier_unit_type '0x%X' not supported", sensor_modifier_unit_type));
       return IPMI_MONITORING_SENSOR_UNITS_UNKNOWN;
     }
 
@@ -567,18 +567,18 @@ _get_sensor_units(ipmi_monitoring_ctx_t c,
   else if (sensor_base_unit_type == IPMI_SENSOR_UNIT_WATTS)
     return IPMI_MONITORING_SENSOR_UNITS_WATTS;
 
-  IPMI_MONITORING_DEBUG(("sensor_base_unit_type '0x%X' not supported", sensor_base_unit_type));
+  IPMI_MONITORING_DEBUG (("sensor_base_unit_type '0x%X' not supported", sensor_base_unit_type));
   return IPMI_MONITORING_SENSOR_UNITS_UNKNOWN;
 }
 
 static int
-_threshold_sensor_reading(ipmi_monitoring_ctx_t c,
-                          unsigned int sensor_reading_flags,
-                          uint16_t record_id,
-                          int sensor_group,
-                          char *sensor_name,
-                          uint8_t *sdr_record,
-                          unsigned int sdr_record_len)
+_threshold_sensor_reading (ipmi_monitoring_ctx_t c,
+                           unsigned int sensor_reading_flags,
+                           uint16_t record_id,
+                           int sensor_group,
+                           char *sensor_name,
+                           uint8_t *sdr_record,
+                           unsigned int sdr_record_len)
 {
   uint8_t sensor_units_modifier;
   uint8_t sensor_units_rate;
@@ -590,13 +590,13 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
   int sensor_state;
   int ret;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->sensor_readings);
-  assert(IPMI_MONITORING_SENSOR_GROUP_VALID(sensor_group));
-  assert(sensor_name);
-  assert(sdr_record);
-  assert(sdr_record_len);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (c->sensor_readings);
+  assert (IPMI_MONITORING_SENSOR_GROUP_VALID (sensor_group));
+  assert (sensor_name);
+  assert (sdr_record);
+  assert (sdr_record_len);
 
   if (ipmi_sdr_parse_sensor_units (c->sdr_parse_ctx,
                                    sdr_record,
@@ -606,69 +606,69 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
                                    &sensor_base_unit_type,
                                    &sensor_modifier_unit_type) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_sdr_parse_sensor_units: %s",
-                             ipmi_sdr_parse_ctx_errormsg(c->sdr_parse_ctx)));
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_units: %s",
+                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
-  if ((sensor_units = _get_sensor_units(c,
-                                        sensor_units_modifier,
-                                        sensor_units_rate,
-                                        sensor_base_unit_type,
-                                        sensor_modifier_unit_type)) < 0)
+  if ((sensor_units = _get_sensor_units (c,
+                                         sensor_units_modifier,
+                                         sensor_units_rate,
+                                         sensor_base_unit_type,
+                                         sensor_modifier_unit_type)) < 0)
     return -1;
 
-  if ((ret = _get_sensor_reading(c,
-                                 sensor_reading_flags,
-                                 sdr_record,
-                                 sdr_record_len,
-                                 &sensor_reading,
-                                 &sensor_event_bitmask)) < 0)
+  if ((ret = _get_sensor_reading (c,
+                                  sensor_reading_flags,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  &sensor_reading,
+                                  &sensor_event_bitmask)) < 0)
     return -1;
-  
+
   if (!ret)
     {
-      IPMI_MONITORING_DEBUG(("cannot read sensor for record id '%u'", record_id));
-      if (_store_unreadable_sensor_reading(c, 
-                                           sensor_reading_flags, 
-                                           record_id,
-                                           sensor_group,
-                                           sensor_name,
-                                           sensor_units) < 0)
+      IPMI_MONITORING_DEBUG (("cannot read sensor for record id '%u'", record_id));
+      if (_store_unreadable_sensor_reading (c,
+                                            sensor_reading_flags,
+                                            record_id,
+                                            sensor_group,
+                                            sensor_name,
+                                            sensor_units) < 0)
         return -1;
       return 0;
     }
 
-  if ((sensor_state = _get_threshold_sensor_state(c, sensor_event_bitmask)) < 0)
+  if ((sensor_state = _get_threshold_sensor_state (c, sensor_event_bitmask)) < 0)
     return -1;
 
-  if (_store_sensor_reading(c,
-                            sensor_reading_flags,
-                            record_id,
-                            sensor_group,
-                            sensor_name,
-                            sensor_state,
-                            sensor_units,
-                            IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE,
-                            IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD,
-                            sensor_event_bitmask,
-                            &sensor_reading) < 0)
+  if (_store_sensor_reading (c,
+                             sensor_reading_flags,
+                             record_id,
+                             sensor_group,
+                             sensor_name,
+                             sensor_state,
+                             sensor_units,
+                             IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE,
+                             IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD,
+                             sensor_event_bitmask,
+                             &sensor_reading) < 0)
     return -1;
 
   return 0;
 }
 
 static int
-_get_digital_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
-                                 uint8_t event_reading_type_code)
+_get_digital_sensor_bitmask_type (ipmi_monitoring_ctx_t c,
+                                  uint8_t event_reading_type_code)
 {
   int sensor_bitmask_type;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->sensor_readings);
-  assert(IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code));
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (c->sensor_readings);
+  assert (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code));
 
   /* achu: there are no "names" associated with
    * event_reading_type_codes in the spec (table 42-2), so there are
@@ -701,8 +701,8 @@ _get_digital_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_STATE;
   else
     {
-      IPMI_MONITORING_DEBUG(("event_reading_type_code '0x%X' bitmask not supported", 
-                             event_reading_type_code));
+      IPMI_MONITORING_DEBUG (("event_reading_type_code '0x%X' bitmask not supported",
+                              event_reading_type_code));
       sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN;
     }
 
@@ -710,15 +710,15 @@ _get_digital_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
 }
 
 static int
-_digital_sensor_reading(ipmi_monitoring_ctx_t c,
-                        unsigned int sensor_reading_flags,
-                        uint16_t record_id,
-                        uint8_t event_reading_type_code,
-                        uint8_t sensor_type,
-                        int sensor_group,
-                        char *sensor_name,
-                        uint8_t *sdr_record,
-                        unsigned int sdr_record_len)
+_digital_sensor_reading (ipmi_monitoring_ctx_t c,
+                         unsigned int sensor_reading_flags,
+                         uint16_t record_id,
+                         uint8_t event_reading_type_code,
+                         uint8_t sensor_type,
+                         int sensor_group,
+                         char *sensor_name,
+                         uint8_t *sdr_record,
+                         unsigned int sdr_record_len)
 {
   double sensor_reading;
   uint16_t sensor_event_bitmask;
@@ -726,71 +726,71 @@ _digital_sensor_reading(ipmi_monitoring_ctx_t c,
   int sensor_bitmask_type;
   int ret;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->sensor_readings);
-  assert(IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code));
-  assert(IPMI_MONITORING_SENSOR_GROUP_VALID(sensor_group));
-  assert(sensor_name);
-  assert(sdr_record);
-  assert(sdr_record_len);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (c->sensor_readings);
+  assert (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code));
+  assert (IPMI_MONITORING_SENSOR_GROUP_VALID (sensor_group));
+  assert (sensor_name);
+  assert (sdr_record);
+  assert (sdr_record_len);
 
-  if ((ret = _get_sensor_reading(c,
-                                 sensor_reading_flags,
-                                 sdr_record,
-                                 sdr_record_len,
-                                 &sensor_reading,
-                                 &sensor_event_bitmask)) < 0)
+  if ((ret = _get_sensor_reading (c,
+                                  sensor_reading_flags,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  &sensor_reading,
+                                  &sensor_event_bitmask)) < 0)
     return -1;
-  
+
   if (!ret)
     {
-      IPMI_MONITORING_DEBUG(("cannot read sensor for record id '%u'", record_id));
-      if (_store_unreadable_sensor_reading(c, 
-                                           sensor_reading_flags, 
-                                           record_id,
-                                           sensor_group,
-                                           sensor_name,
-                                           IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) < 0)
+      IPMI_MONITORING_DEBUG (("cannot read sensor for record id '%u'", record_id));
+      if (_store_unreadable_sensor_reading (c,
+                                            sensor_reading_flags,
+                                            record_id,
+                                            sensor_group,
+                                            sensor_name,
+                                            IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) < 0)
         return -1;
       return 0;
     }
 
-  if ((sensor_state = _get_digital_sensor_state(c, 
-                                                event_reading_type_code, 
-                                                sensor_type,
-                                                sensor_event_bitmask)) < 0)
+  if ((sensor_state = _get_digital_sensor_state (c,
+                                                 event_reading_type_code,
+                                                 sensor_type,
+                                                 sensor_event_bitmask)) < 0)
     return -1;
 
-  if ((sensor_bitmask_type = _get_digital_sensor_bitmask_type(c, 
-                                                              event_reading_type_code)) < 0)
+  if ((sensor_bitmask_type = _get_digital_sensor_bitmask_type (c,
+                                                               event_reading_type_code)) < 0)
     return -1;
-  
+
   /* No actual sensor reading, only a sensor event bitmask */
-  if (_store_sensor_reading(c,
-                            sensor_reading_flags,
-                            record_id,
-                            sensor_group,
-                            sensor_name,
-                            sensor_state,
-                            IPMI_MONITORING_SENSOR_UNITS_NONE,
-                            IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN,
-                            sensor_bitmask_type,
-                            sensor_event_bitmask,
-                            NULL) < 0)
+  if (_store_sensor_reading (c,
+                             sensor_reading_flags,
+                             record_id,
+                             sensor_group,
+                             sensor_name,
+                             sensor_state,
+                             IPMI_MONITORING_SENSOR_UNITS_NONE,
+                             IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN,
+                             sensor_bitmask_type,
+                             sensor_event_bitmask,
+                             NULL) < 0)
     return -1;
-  
+
   return 0;
 }
 
 static int
-_get_specific_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
-                                  uint8_t sensor_type)
+_get_specific_sensor_bitmask_type (ipmi_monitoring_ctx_t c,
+                                   uint8_t sensor_type)
 {
   int sensor_bitmask_type;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
 
   if (sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PHYSICAL_SECURITY;
@@ -838,22 +838,22 @@ _get_specific_sensor_bitmask_type(ipmi_monitoring_ctx_t c,
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_ACPI_POWER_STATE;
   else
     {
-      IPMI_MONITORING_DEBUG(("sensor_type '0x%X' bitmask not supported", sensor_type));
+      IPMI_MONITORING_DEBUG (("sensor_type '0x%X' bitmask not supported", sensor_type));
       sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN;
     }
-  
+
   return sensor_bitmask_type;
 }
 
 static int
-_specific_sensor_reading(ipmi_monitoring_ctx_t c,
-                         unsigned int sensor_reading_flags,
-                         uint16_t record_id,
-                         uint8_t sensor_type,
-                         int sensor_group,
-                         char *sensor_name,
-                         uint8_t *sdr_record,
-                         unsigned int sdr_record_len)
+_specific_sensor_reading (ipmi_monitoring_ctx_t c,
+                          unsigned int sensor_reading_flags,
+                          uint16_t record_id,
+                          uint8_t sensor_type,
+                          int sensor_group,
+                          char *sensor_name,
+                          uint8_t *sdr_record,
+                          unsigned int sdr_record_len)
 {
   double sensor_reading;
   uint16_t sensor_event_bitmask;
@@ -861,66 +861,66 @@ _specific_sensor_reading(ipmi_monitoring_ctx_t c,
   int sensor_bitmask_type;
   int ret;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->sensor_readings);
-  assert(sensor_name);
-  assert(sdr_record);
-  assert(sdr_record_len);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (c->sensor_readings);
+  assert (sensor_name);
+  assert (sdr_record);
+  assert (sdr_record_len);
 
-  if ((ret = _get_sensor_reading(c,
-                                 sensor_reading_flags,
-                                 sdr_record,
-                                 sdr_record_len,
-                                 &sensor_reading,
-                                 &sensor_event_bitmask)) < 0)
+  if ((ret = _get_sensor_reading (c,
+                                  sensor_reading_flags,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  &sensor_reading,
+                                  &sensor_event_bitmask)) < 0)
     return -1;
-  
+
   if (!ret)
     {
-      IPMI_MONITORING_DEBUG(("cannot read sensor for record id '%u'", record_id));
-      if (_store_unreadable_sensor_reading(c, 
-                                           sensor_reading_flags, 
-                                           record_id,
-                                           sensor_group,
-                                           sensor_name,
-                                           IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) < 0)
+      IPMI_MONITORING_DEBUG (("cannot read sensor for record id '%u'", record_id));
+      if (_store_unreadable_sensor_reading (c,
+                                            sensor_reading_flags,
+                                            record_id,
+                                            sensor_group,
+                                            sensor_name,
+                                            IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) < 0)
         return -1;
       return 0;
     }
-  
-  if ((sensor_state = _get_specific_sensor_state(c, 
-                                                 sensor_type, 
-                                                 sensor_event_bitmask)) < 0)
+
+  if ((sensor_state = _get_specific_sensor_state (c,
+                                                  sensor_type,
+                                                  sensor_event_bitmask)) < 0)
     return -1;
 
-  if ((sensor_bitmask_type = _get_specific_sensor_bitmask_type(c,
-                                                               sensor_type)) < 0)
+  if ((sensor_bitmask_type = _get_specific_sensor_bitmask_type (c,
+                                                                sensor_type)) < 0)
     return -1;
 
   /* No actual sensor reading, only a sensor event bitmask */
-  if (_store_sensor_reading(c,
-                            sensor_reading_flags,
-                            record_id,
-                            sensor_group,
-                            sensor_name,
-                            sensor_state,
-                            IPMI_MONITORING_SENSOR_UNITS_NONE,
-                            IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN,
-                            sensor_bitmask_type,
-                            sensor_event_bitmask,
-                            NULL) < 0)
+  if (_store_sensor_reading (c,
+                             sensor_reading_flags,
+                             record_id,
+                             sensor_group,
+                             sensor_name,
+                             sensor_state,
+                             IPMI_MONITORING_SENSOR_UNITS_NONE,
+                             IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN,
+                             sensor_bitmask_type,
+                             sensor_event_bitmask,
+                             NULL) < 0)
     return -1;
-  
+
   return 0;
 }
 
 static int
-_get_sensor_group(ipmi_monitoring_ctx_t c,
-                  uint8_t sensor_type)
+_get_sensor_group (ipmi_monitoring_ctx_t c,
+                   uint8_t sensor_type)
 {
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
 
   if (sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE)
     return IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE;
@@ -975,17 +975,17 @@ _get_sensor_group(ipmi_monitoring_ctx_t c,
   else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
     return IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE;
 
-  IPMI_MONITORING_DEBUG(("sensor_type '0x%X' not supported", sensor_type));
+  IPMI_MONITORING_DEBUG (("sensor_type '0x%X' not supported", sensor_type));
   return IPMI_MONITORING_SENSOR_GROUP_UNKNOWN;
 }
 
-int 
-ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c, 
-                                   unsigned int sensor_reading_flags,
-                                   uint8_t *sdr_record,
-                                   unsigned int sdr_record_len,
-                                   unsigned int *sensor_groups,
-                                   unsigned int sensor_groups_len)
+int
+ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
+                                    unsigned int sensor_reading_flags,
+                                    uint8_t *sdr_record,
+                                    unsigned int sdr_record_len,
+                                    unsigned int *sensor_groups,
+                                    unsigned int sensor_groups_len)
 {
   char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
   uint16_t record_id;
@@ -995,23 +995,23 @@ ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c,
   int sensor_group;
   int len;
 
-  assert(c);
-  assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->sensor_readings);
-  assert(c->ipmi_ctx);
-  assert(c->sensor_read_ctx);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(!sensor_groups || sensor_groups_len);
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (c->sensor_readings);
+  assert (c->ipmi_ctx);
+  assert (c->sensor_read_ctx);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (!sensor_groups || sensor_groups_len);
 
-  if (ipmi_sdr_parse_record_id_and_type(c->sdr_parse_ctx,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        &record_id,
-                                        &record_type) < 0)
+  if (ipmi_sdr_parse_record_id_and_type (c->sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &record_id,
+                                         &record_type) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_sdr_parse_record_id_and_type: %s",
-                             ipmi_sdr_parse_ctx_errormsg(c->sdr_parse_ctx)));
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_record_id_and_type: %s",
+                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
@@ -1019,29 +1019,29 @@ ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c,
   if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
       && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     {
-      IPMI_MONITORING_DEBUG(("record_type '0x%X' not supported", record_type));
-      if (_store_unreadable_sensor_reading(c, 
-                                           sensor_reading_flags, 
-                                           record_id,
-                                           IPMI_MONITORING_SENSOR_GROUP_UNKNOWN,
-                                           NULL,
-                                           IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) < 0)
+      IPMI_MONITORING_DEBUG (("record_type '0x%X' not supported", record_type));
+      if (_store_unreadable_sensor_reading (c,
+                                            sensor_reading_flags,
+                                            record_id,
+                                            IPMI_MONITORING_SENSOR_GROUP_UNKNOWN,
+                                            NULL,
+                                            IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) < 0)
         return -1;
       return 0;
     }
 
-  if (ipmi_sdr_parse_sensor_type(c->sdr_parse_ctx,
-                                 sdr_record,
-                                 sdr_record_len,
-                                 &sensor_type) < 0)
+  if (ipmi_sdr_parse_sensor_type (c->sdr_parse_ctx,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  &sensor_type) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_sdr_parse_sensor_type: %s",
-                             ipmi_sdr_parse_ctx_errormsg(c->sdr_parse_ctx)));
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_type: %s",
+                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
-  if ((sensor_group = _get_sensor_group(c, sensor_type)) < 0)
+  if ((sensor_group = _get_sensor_group (c, sensor_type)) < 0)
     return -1;
 
   if (sensor_groups)
@@ -1056,73 +1056,61 @@ ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c,
               break;
             }
         }
-      
+
       if (!found)
         return 0;
     }
-                                   
-  memset(sensor_name, '\0', IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH);
-  
-  if ((len = ipmi_sdr_parse_id_string(c->sdr_parse_ctx,
-                                      sdr_record,
-                                      sdr_record_len,
-                                      sensor_name,
-                                      IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH)) < 0)
+
+  memset (sensor_name, '\0', IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH);
+
+  if ((len = ipmi_sdr_parse_id_string (c->sdr_parse_ctx,
+                                       sdr_record,
+                                       sdr_record_len,
+                                       sensor_name,
+                                       IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH)) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_sdr_parse_id_string: %s",
-                             ipmi_sdr_parse_ctx_errormsg(c->sdr_parse_ctx)));
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_id_string: %s",
+                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
-  
+
   if (len >= IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH)
     {
-      IPMI_MONITORING_DEBUG(("sensor_name buffer short: len = %d", len));
+      IPMI_MONITORING_DEBUG (("sensor_name buffer short: len = %d", len));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
-  if (ipmi_sdr_parse_event_reading_type_code(c->sdr_parse_ctx,
-                                             sdr_record,
-                                             sdr_record_len,
-                                             &event_reading_type_code) < 0)
+  if (ipmi_sdr_parse_event_reading_type_code (c->sdr_parse_ctx,
+                                              sdr_record,
+                                              sdr_record_len,
+                                              &event_reading_type_code) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_sdr_parse_event_reading_type_code: %s",
-                             ipmi_sdr_parse_ctx_errormsg(c->sdr_parse_ctx)));
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_event_reading_type_code: %s",
+                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
 
-  if (IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(event_reading_type_code))
+  if (IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD (event_reading_type_code))
     {
-      if (_threshold_sensor_reading(c, 
-                                    sensor_reading_flags, 
-                                    record_id, 
-                                    sensor_group,
-                                    sensor_name,
-                                    sdr_record,
-                                    sdr_record_len) < 0)
+      if (_threshold_sensor_reading (c,
+                                     sensor_reading_flags,
+                                     record_id,
+                                     sensor_group,
+                                     sensor_name,
+                                     sdr_record,
+                                     sdr_record_len) < 0)
         return -1;
     }
-  else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(event_reading_type_code))
+  else if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code))
     {
-      if (_digital_sensor_reading(c, 
-                                  sensor_reading_flags, 
-                                  record_id, 
-                                  event_reading_type_code,
-                                  sensor_type,
-                                  sensor_group,
-                                  sensor_name,
-                                  sdr_record,
-                                  sdr_record_len) < 0)
-        return -1;
-    }
-  else if (IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(event_reading_type_code))
-    {
-      if (_specific_sensor_reading(c,
+      if (_digital_sensor_reading (c,
                                    sensor_reading_flags,
                                    record_id,
+                                   event_reading_type_code,
                                    sensor_type,
                                    sensor_group,
                                    sensor_name,
@@ -1130,19 +1118,31 @@ ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c,
                                    sdr_record_len) < 0)
         return -1;
     }
-  else
+  else if (IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC (event_reading_type_code))
     {
-      IPMI_MONITORING_DEBUG(("event_reading_type_code '0x%X' not supported", 
-                             event_reading_type_code));
-
-      if (_store_unreadable_sensor_reading(c, 
-                                           sensor_reading_flags, 
-                                           record_id,
-                                           sensor_group,
-                                           sensor_name,
-                                           IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) < 0)                                          
+      if (_specific_sensor_reading (c,
+                                    sensor_reading_flags,
+                                    record_id,
+                                    sensor_type,
+                                    sensor_group,
+                                    sensor_name,
+                                    sdr_record,
+                                    sdr_record_len) < 0)
         return -1;
     }
-  
+  else
+    {
+      IPMI_MONITORING_DEBUG (("event_reading_type_code '0x%X' not supported",
+                              event_reading_type_code));
+
+      if (_store_unreadable_sensor_reading (c,
+                                            sensor_reading_flags,
+                                            record_id,
+                                            sensor_group,
+                                            sensor_name,
+                                            IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) < 0)
+        return -1;
+    }
+
   return 0;
 }

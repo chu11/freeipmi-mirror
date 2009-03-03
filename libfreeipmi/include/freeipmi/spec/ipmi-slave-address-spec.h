@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,17 +13,17 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-*/
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ */
 
 #ifndef _IPMI_SLAVE_ADDRESS_SPEC_H
-#define	_IPMI_SLAVE_ADDRESS_SPEC_H
+#define _IPMI_SLAVE_ADDRESS_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* 
+/*
    Slave Addresses - 7 bits
 
    BIOS                                   0x00 to 0x0F
@@ -34,7 +34,7 @@ extern "C" {
    Terminal Mode Remote Console Software  0x47
  */
 
-/* 
+/*
    Software IDs - 8 bits, Least Significant Bit is 0x1
 
    BIOS                                   0x01 to 0x1F
@@ -44,7 +44,7 @@ extern "C" {
    Remote Console Software                0x81 to 0x8D
    Terminal Mode Remote Console Software  0x8F
  */
- 
+
 #define IPMI_SLAVE_ADDRESS_BMC                          0x20
 #define IPMI_LAN_SLAVE_ADDRESS_BMC                      IPMI_SLAVE_ADDRESS_BMC
 #define IPMI_SSIF_SMBUS_SLAVE_ADDRESS                   0x42

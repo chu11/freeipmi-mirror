@@ -1,3 +1,9 @@
+2009-03-03  Albert Chu <chu11@llnl.gov>
+
+	* Fix spacing, tabbing, and indentation throughout code for
+	consistency.  Add copyright to appropriate files.  Remove
+	unnecessary extern "C" declarations.  Variety of code cleanup.
+	
 2009-03-01  Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolcommon/tool-fiid-util.h: Remove some macros.

@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,8 +13,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-*/
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ */
 
 #ifndef _IPMI_SEL_RECORD_FORMAT_H
 #define _IPMI_SEL_RECORD_FORMAT_H
@@ -32,12 +32,12 @@ extern "C" {
   (((__record_type) == 0x02) ? 1 : 0)
 
 #define IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM(__record_type) \
-  (((__record_type) >= 0xC0 \
+  (((__record_type) >= 0xC0                                    \
     && (__record_type) <= 0xDF) ? 1 : 0)
 
 /* "== 0xFF" to remove warnings */
 #define IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM(__record_type) \
-  (((__record_type) >= 0xE0 \
+  (((__record_type) >= 0xE0                                        \
     && ((__record_type) <= 0xFE || (__record_type) == 0xFF)) ? 1 : 0)
 
 #define IPMI_SEL_RECORD_ASSERTION_EVENT   0x0

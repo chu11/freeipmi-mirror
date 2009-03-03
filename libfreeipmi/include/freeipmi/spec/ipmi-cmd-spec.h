@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,8 +13,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-*/
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ */
 
 #ifndef _IPMI_CMD_SPEC_H
 #define  _IPMI_CMD_SPEC_H
@@ -26,7 +26,7 @@ extern "C" {
 /* Notes:
    Refer to IPMIv1_5_rev1_1.pdf Table G-1, Command Number Assignments
    and Privilege Levels for complete description
-*/
+ */
 
 /* IPMI Device Global Commands */
 #define IPMI_CMD_RESERVED                                         0x00
@@ -105,8 +105,8 @@ extern "C" {
 /* Firmware Firewall Configuration                                0x60 to 0x64 */
 
 /* Chassis Device Commands */
-/* achu: Cmd is named "set front panel enables", but cmd in appendix G is 
- * named "set front panel button enables".  Go fig ... 
+/* achu: Cmd is named "set front panel enables", but cmd in appendix G is
+ * named "set front panel button enables".  Go fig ...
  */
 #define IPMI_CMD_GET_CHASSIS_CAPABILITIES                         0x00
 #define IPMI_CMD_GET_CHASSIS_STATUS                               0x01

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.h,v 1.8 2009-01-13 01:02:14 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.h,v 1.9 2009-03-03 23:56:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -30,16 +30,16 @@
 
 #include "ipmi-fru.h"
 
-fru_err_t ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
-                                            uint8_t device_id,
-                                            unsigned int offset);
+fru_err_t ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
+                                             uint8_t device_id,
+                                             unsigned int offset);
 
-fru_err_t ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
-                                          uint8_t device_id,
-                                          unsigned int offset);
+fru_err_t ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
+                                           uint8_t device_id,
+                                           unsigned int offset);
 
-fru_err_t ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
-                                            uint8_t device_id,
-                                            unsigned int offset);
-     
+fru_err_t ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
+                                             uint8_t device_id,
+                                             unsigned int offset);
+
 #endif

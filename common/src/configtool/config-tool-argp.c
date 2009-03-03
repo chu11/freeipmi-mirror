@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #if HAVE_CONFIG_H
@@ -40,10 +40,10 @@
 
 #include "freeipmi-portability.h"
 
-void 
+void
 init_config_args (struct config_arguments *config_args)
 {
-  assert(config_args);
+  assert (config_args);
 
   config_args->action = 0;
   config_args->verbose = 0;
@@ -52,7 +52,7 @@ init_config_args (struct config_arguments *config_args)
   config_args->section_strs = NULL;
 }
 
-error_t 
+error_t
 config_parse_opt (int key,
                   char *arg,
                   struct argp_state *state,
@@ -89,56 +89,56 @@ config_parse_opt (int key,
         free (config_args->filename);
       if (!(config_args->filename = strdup (arg)))
         {
-          perror("strdup");
-          exit(1);
+          perror ("strdup");
+          exit (1);
         }
       break;
     case CONFIG_ARGP_KEYPAIR_KEY:
-      if (config_keypair_parse_string(arg,
-                                      &section_name,
-                                      &key_name,
-                                      &value) < 0)
+      if (config_keypair_parse_string (arg,
+                                       &section_name,
+                                       &key_name,
+                                       &value) < 0)
         {
           /* error printed in function call */
-          exit(1);
+          exit (1);
         }
-      if (!(kp = config_keypair_create(section_name,
-                                       key_name,
-                                       value)))
+      if (!(kp = config_keypair_create (section_name,
+                                        key_name,
+                                        value)))
         {
-          fprintf(stderr,
-                  "config_keypair_create error\n");
-          exit(1);
+          fprintf (stderr,
+                   "config_keypair_create error\n");
+          exit (1);
         }
-      if (config_keypair_append(&(config_args->keypairs),
-                                kp) < 0)
+      if (config_keypair_append (&(config_args->keypairs),
+                                 kp) < 0)
         {
           /* error printed in function call */
-          exit(1);
+          exit (1);
         }
       if (section_name)
-        free(section_name);
+        free (section_name);
       section_name = NULL;
       if (key_name)
-        free(key_name);
+        free (key_name);
       key_name = NULL;
       if (value)
-        free(value);
+        free (value);
       value = NULL;
       kp = NULL;
       break;
     case CONFIG_ARGP_SECTIONS_KEY:
-      if (!(sstr = config_section_str_create(arg)))
+      if (!(sstr = config_section_str_create (arg)))
         {
-          fprintf(stderr,
-                  "config_section_str_create error\n");
-          exit(1);
+          fprintf (stderr,
+                   "config_section_str_create error\n");
+          exit (1);
         }
-      if (config_section_str_append(&(config_args->section_strs),
-                                    sstr) < 0)
+      if (config_section_str_append (&(config_args->section_strs),
+                                     sstr) < 0)
         {
           /* error printed in function call */
-          exit(1);
+          exit (1);
         }
       sstr = NULL;
       break;
@@ -154,22 +154,22 @@ config_parse_opt (int key,
     default:
       return ARGP_ERR_UNKNOWN;
     }
- 
+
   return 0;
 }
 
-void 
+void
 config_args_validate (struct config_arguments *config_args)
 {
-  assert(config_args);
-  
+  assert (config_args);
+
   /* filename and keypair both given for diff */
   if (config_args->filename && config_args->keypairs
       && config_args->action == CONFIG_ACTION_DIFF)
     {
       fprintf (stderr,
                "Both --filename or --keypair cannot be used\n");
-      exit(1);
+      exit (1);
     }
 
   /* only one of keypairs or section can be given for checkout */
@@ -178,7 +178,7 @@ config_args_validate (struct config_arguments *config_args)
     {
       fprintf (stderr,
                "Only one of --filename, --keypair, and --section can be used\n");
-      exit(1);
+      exit (1);
     }
 
   /* filename is readable if commit, writable/creatable if checkout */
@@ -190,11 +190,11 @@ config_args_validate (struct config_arguments *config_args)
         case CONFIG_ACTION_DIFF:
           if (access (config_args->filename, R_OK) != 0)
             {
-              fprintf(stderr,
-                      "Cannot read '%s': %s\n",
-                      config_args->filename,
-                      strerror(errno));
-              exit(1);
+              fprintf (stderr,
+                       "Cannot read '%s': %s\n",
+                       config_args->filename,
+                       strerror (errno));
+              exit (1);
             }
           break;
         case CONFIG_ACTION_CHECKOUT:
@@ -202,11 +202,11 @@ config_args_validate (struct config_arguments *config_args)
             {
               if (access (config_args->filename, W_OK) != 0)
                 {
-                  fprintf(stderr,
-                          "Cannot write to '%s': %s\n",
-                          config_args->filename,
-                          strerror(errno));
-                  exit(1);
+                  fprintf (stderr,
+                           "Cannot write to '%s': %s\n",
+                           config_args->filename,
+                           strerror (errno));
+                  exit (1);
                 }
             }
           else
@@ -215,11 +215,11 @@ config_args_validate (struct config_arguments *config_args)
               fd = open (config_args->filename, O_CREAT, 0644);
               if (fd == -1)
                 {
-                  fprintf(stderr,
-                          "Cannot open '%s': %s\n",
-                          config_args->filename,
-                          strerror(errno));
-                  exit(1);
+                  fprintf (stderr,
+                           "Cannot open '%s': %s\n",
+                           config_args->filename,
+                           strerror (errno));
+                  exit (1);
                 }
               else
                 {

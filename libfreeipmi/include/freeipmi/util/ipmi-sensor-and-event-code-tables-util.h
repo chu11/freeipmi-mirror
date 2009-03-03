@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,8 +13,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-*/
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ */
 
 #ifndef _IPMI_SENSOR_AND_EVENT_CODE_TABLES_H
 #define _IPMI_SENSOR_AND_EVENT_CODE_TABLES_H
@@ -31,17 +31,17 @@ extern "C" {
 #define IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM                      0x04
 #define IPMI_EVENT_READING_TYPE_CODE_CLASS_UNKNOWN                  0x05
 
-int ipmi_event_reading_type_code_class(uint8_t event_reading_type_code);
+int ipmi_event_reading_type_code_class (uint8_t event_reading_type_code);
 
 int ipmi_get_generic_event_message (uint8_t event_reading_type_code,
-				    uint16_t offset,
-				    char *buf,
-				    unsigned int buflen);
+                                    uint16_t offset,
+                                    char *buf,
+                                    unsigned int buflen);
 
 int ipmi_get_sensor_type_code_message (int sensor_type_code,
-				       int offset,
-				       char *buf,
-				       unsigned int buflen);
+                                       int offset,
+                                       char *buf,
+                                       unsigned int buflen);
 
 /* identical to above but returns "short" strings when appropriate */
 int ipmi_get_generic_event_message_short (uint8_t event_reading_type_code,
@@ -56,17 +56,17 @@ int ipmi_get_sensor_type_code_message_short (int sensor_type_code,
                                              unsigned int buflen);
 
 int ipmi_get_event_data2_message (int sensor_type_code,
-				  int offset,
-				  uint8_t event_data2,
-				  char *buf,
-				  unsigned int buflen);
+                                  int offset,
+                                  uint8_t event_data2,
+                                  char *buf,
+                                  unsigned int buflen);
 
 int ipmi_get_event_data3_message (int sensor_type_code,
-				  int offset,
-				  uint8_t event_data2,
-				  uint8_t event_data3,
-				  char *buf,
-				  unsigned int buflen);
+                                  int offset,
+                                  uint8_t event_data2,
+                                  uint8_t event_data3,
+                                  char *buf,
+                                  unsigned int buflen);
 
 #ifdef __cplusplus
 }

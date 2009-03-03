@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2008-2009 FreeIPMI Core Team
-   
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-   
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-   
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+/*
+  Copyright (C) 2008-2009 FreeIPMI Core Team
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #if HAVE_CONFIG_H
@@ -43,65 +43,65 @@
 #define UNRECOGNIZED_SENSOR_TYPE "Unrecognized"
 
 static config_err_t
-_get_sdr_decoding_data(ipmi_sensors_config_state_data_t *state_data,
-                       uint8_t *sdr_record,
-                       unsigned int sdr_record_len,
-                       int8_t *r_exponent,
-                       int8_t *b_exponent,
-                       int16_t *m,
-                       int16_t *b,
-                       uint8_t *linearization,
-                       uint8_t *analog_data_format)
+_get_sdr_decoding_data (ipmi_sensors_config_state_data_t *state_data,
+                        uint8_t *sdr_record,
+                        unsigned int sdr_record_len,
+                        int8_t *r_exponent,
+                        int8_t *b_exponent,
+                        int16_t *m,
+                        int16_t *b,
+                        uint8_t *linearization,
+                        uint8_t *analog_data_format)
 {
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(r_exponent);
-  assert(b_exponent);
-  assert(m);
-  assert(b);
-  assert(linearization);
-  assert(analog_data_format);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (r_exponent);
+  assert (b_exponent);
+  assert (m);
+  assert (b);
+  assert (linearization);
+  assert (analog_data_format);
 
-  if (ipmi_sdr_parse_sensor_decoding_data(state_data->sdr_parse_ctx,
-                                          sdr_record,
-                                          sdr_record_len,
-                                          r_exponent,
-                                          b_exponent,
-                                          m,
-                                          b,
-                                          linearization,
-                                          analog_data_format) < 0)
+  if (ipmi_sdr_parse_sensor_decoding_data (state_data->sdr_parse_ctx,
+                                           sdr_record,
+                                           sdr_record_len,
+                                           r_exponent,
+                                           b_exponent,
+                                           m,
+                                           b,
+                                           linearization,
+                                           analog_data_format) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_sensor_decoding_data: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_decoding_data: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
   /* if the sensor is not analog, this is most likely a bug in the
    * SDR, since we shouldn't be decoding a non-threshold sensor.
    */
-  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(*analog_data_format))
+  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID (*analog_data_format))
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "Attempting to decode non-analog threshold\n");
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "Attempting to decode non-analog threshold\n");
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   /* if the sensor is non-linear, I just don't know what to do */
-  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(*linearization))
+  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR (*linearization))
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "Cannot decode non-linear threshold\n");
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "Cannot decode non-linear threshold\n");
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -110,13 +110,13 @@ _get_sdr_decoding_data(ipmi_sensors_config_state_data_t *state_data,
  cleanup:
   return rv;
 }
-                       
+
 static config_err_t
-_decode_value(ipmi_sensors_config_state_data_t *state_data,
-              uint8_t *sdr_record,
-              unsigned int sdr_record_len,
-              uint64_t value_raw,
-              double *value_calc)
+_decode_value (ipmi_sensors_config_state_data_t *state_data,
+               uint8_t *sdr_record,
+               unsigned int sdr_record_len,
+               uint64_t value_raw,
+               double *value_calc)
 {
   int8_t r_exponent, b_exponent;
   int16_t m, b;
@@ -124,10 +124,10 @@ _decode_value(ipmi_sensors_config_state_data_t *state_data,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(value_calc);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (value_calc);
 
   if ((ret = _get_sdr_decoding_data (state_data,
                                      sdr_record,
@@ -141,7 +141,7 @@ _decode_value(ipmi_sensors_config_state_data_t *state_data,
     {
       rv = ret;
       goto cleanup;
-    }                                     
+    }
 
   if (ipmi_sensor_decode_value (r_exponent,
                                 b_exponent,
@@ -156,7 +156,7 @@ _decode_value(ipmi_sensors_config_state_data_t *state_data,
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_sensor_decode_value: %s\n",
-                         strerror(errno));
+                         strerror (errno));
       goto cleanup;
     }
 
@@ -166,11 +166,11 @@ _decode_value(ipmi_sensors_config_state_data_t *state_data,
 }
 
 static config_err_t
-_decode_value_raw(ipmi_sensors_config_state_data_t *state_data,
-                  uint8_t *sdr_record,
-                  unsigned int sdr_record_len,
-                  const char *threshold_input,
-                  uint8_t *threshold_raw)
+_decode_value_raw (ipmi_sensors_config_state_data_t *state_data,
+                   uint8_t *sdr_record,
+                   unsigned int sdr_record_len,
+                   const char *threshold_input,
+                   uint8_t *threshold_raw)
 {
   int8_t r_exponent, b_exponent;
   int16_t m, b;
@@ -179,12 +179,12 @@ _decode_value_raw(ipmi_sensors_config_state_data_t *state_data,
   config_err_t ret;
   double threshold_value;
   char *ptr;
-  
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(threshold_input);
-  assert(threshold_raw);
+
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (threshold_input);
+  assert (threshold_raw);
 
   if ((ret = _get_sdr_decoding_data (state_data,
                                      sdr_record,
@@ -198,9 +198,9 @@ _decode_value_raw(ipmi_sensors_config_state_data_t *state_data,
     {
       rv = ret;
       goto cleanup;
-    }                                     
+    }
 
-  threshold_value = strtod(threshold_input, &ptr);
+  threshold_value = strtod (threshold_input, &ptr);
   if (*ptr != '\0')
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -225,7 +225,7 @@ _decode_value_raw(ipmi_sensors_config_state_data_t *state_data,
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_sensor_decode_value: %s\n",
-                         strerror(errno));
+                         strerror (errno));
       goto cleanup;
     }
 
@@ -252,47 +252,47 @@ threshold_checkout (const char *section_name,
   double threshold_calc;
   uint8_t sensor_number;
 
-  if ((ret = get_sdr_record(state_data,
-                            section_name,
-                            sdr_record,
-                            &sdr_record_len)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sdr_record (state_data,
+                             section_name,
+                             sdr_record,
+                             &sdr_record_len)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_number(state_data->sdr_parse_ctx,
-                                   sdr_record,
-                                   sdr_record_len,
-                                   &sensor_number) < 0)
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &sensor_number) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_sensor_number: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_number: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sensor_thresholds_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sensor_thresholds_rs)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sensor_thresholds(state_data->ipmi_ctx,
-                                     sensor_number,
-                                     obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_sensor_thresholds (state_data->ipmi_ctx,
+                                      sensor_number,
+                                      obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_get_sensor_thresholds: %s\n",
-                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_sensor_thresholds: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
 
       /*
@@ -307,39 +307,39 @@ threshold_checkout (const char *section_name,
        * even if this command isn't supported.  The user just doesn't
        * get to configure these thresholds.
        */
-      if ((ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND)
-          && (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID) == 1))
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND)
+          && (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID) == 1))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
 
       goto cleanup;
     }
 
-  if (!strcasecmp(kv->key->key_name, "Lower_Non_Critical_Threshold"))
+  if (!strcasecmp (kv->key->key_name, "Lower_Non_Critical_Threshold"))
     {
       readable_str = "readable_thresholds.lower_non_critical_threshold";
       threshold_str = "lower_non_critical_threshold";
     }
-  else if (!strcasecmp(kv->key->key_name, "Lower_Critical_Threshold"))
+  else if (!strcasecmp (kv->key->key_name, "Lower_Critical_Threshold"))
     {
       readable_str = "readable_thresholds.lower_critical_threshold";
       threshold_str = "lower_critical_threshold";
     }
-  else if (!strcasecmp(kv->key->key_name, "Lower_Non_Recoverable_Threshold"))
+  else if (!strcasecmp (kv->key->key_name, "Lower_Non_Recoverable_Threshold"))
     {
       readable_str = "readable_thresholds.lower_non_recoverable_threshold";
       threshold_str = "lower_non_recoverable_threshold";
     }
-  else if (!strcasecmp(kv->key->key_name, "Upper_Non_Critical_Threshold"))
+  else if (!strcasecmp (kv->key->key_name, "Upper_Non_Critical_Threshold"))
     {
       readable_str = "readable_thresholds.upper_non_critical_threshold";
       threshold_str = "upper_non_critical_threshold";
     }
-  else if (!strcasecmp(kv->key->key_name, "Upper_Critical_Threshold"))
+  else if (!strcasecmp (kv->key->key_name, "Upper_Critical_Threshold"))
     {
       readable_str = "readable_thresholds.upper_critical_threshold";
       threshold_str = "upper_critical_threshold";
     }
-  else if (!strcasecmp(kv->key->key_name, "Upper_Non_Recoverable_Threshold"))
+  else if (!strcasecmp (kv->key->key_name, "Upper_Non_Recoverable_Threshold"))
     {
       readable_str = "readable_thresholds.upper_non_recoverable_threshold";
       threshold_str = "upper_non_recoverable_threshold";
@@ -354,35 +354,35 @@ threshold_checkout (const char *section_name,
     {
       /* Inconsistency w/ the SDR, should be readable */
       if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "%s:%s - threshold not readable\n",
-                        section_name,
-                        kv->key->key_name);
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "%s:%s - threshold not readable\n",
+                         section_name,
+                         kv->key->key_name);
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   TOOL_FIID_OBJ_GET (obj_cmd_rs, threshold_str, &threshold_raw);
 
-  if ((ret = _decode_value(state_data,
-                           sdr_record,
-                           sdr_record_len,
-                           threshold_raw,
-                           &threshold_calc)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _decode_value (state_data,
+                            sdr_record,
+                            sdr_record_len,
+                            threshold_raw,
+                            &threshold_calc)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (config_section_update_keyvalue_output_double(state_data->pstate,
-                                                   kv, 
-                                                   threshold_calc) < 0)
+  if (config_section_update_keyvalue_output_double (state_data->pstate,
+                                                    kv,
+                                                    threshold_calc) < 0)
     goto cleanup;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }
 
@@ -406,85 +406,85 @@ threshold_commit (const char *section_name,
   uint8_t threshold_raw;
   uint8_t sensor_number;
 
-  if ((ret = get_sdr_record(state_data,
-                            section_name,
-                            sdr_record,
-                            &sdr_record_len)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sdr_record (state_data,
+                             section_name,
+                             sdr_record,
+                             &sdr_record_len)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_number(state_data->sdr_parse_ctx,
-                                   sdr_record,
-                                   sdr_record_len,
-                                   &sensor_number) < 0)
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &sensor_number) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_sensor_number: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_number: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
-  if ((ret = _decode_value_raw(state_data,
-                               sdr_record,
-                               sdr_record_len,
-                               kv->value_input,
-                               &threshold_raw)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _decode_value_raw (state_data,
+                                sdr_record,
+                                sdr_record_len,
+                                kv->value_input,
+                                &threshold_raw)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (!strcasecmp(kv->key->key_name, "Lower_Non_Critical_Threshold"))
+  if (!strcasecmp (kv->key->key_name, "Lower_Non_Critical_Threshold"))
     lower_non_critical_threshold_ptr = &threshold_raw;
-  else if (!strcasecmp(kv->key->key_name, "Lower_Critical_Threshold"))
+  else if (!strcasecmp (kv->key->key_name, "Lower_Critical_Threshold"))
     lower_critical_threshold_ptr = &threshold_raw;
-  else if (!strcasecmp(kv->key->key_name, "Lower_Non_Recoverable_Threshold"))
+  else if (!strcasecmp (kv->key->key_name, "Lower_Non_Recoverable_Threshold"))
     lower_non_recoverable_threshold_ptr = &threshold_raw;
-  else if (!strcasecmp(kv->key->key_name, "Upper_Non_Critical_Threshold"))
+  else if (!strcasecmp (kv->key->key_name, "Upper_Non_Critical_Threshold"))
     upper_non_critical_threshold_ptr = &threshold_raw;
-  else if (!strcasecmp(kv->key->key_name, "Upper_Critical_Threshold"))
+  else if (!strcasecmp (kv->key->key_name, "Upper_Critical_Threshold"))
     upper_critical_threshold_ptr = &threshold_raw;
-  else if (!strcasecmp(kv->key->key_name, "Upper_Non_Recoverable_Threshold"))
+  else if (!strcasecmp (kv->key->key_name, "Upper_Non_Recoverable_Threshold"))
     upper_non_recoverable_threshold_ptr = &threshold_raw;
   else
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sensor_thresholds_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sensor_thresholds_rs)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_sensor_thresholds(state_data->ipmi_ctx,
-                                     sensor_number,
-                                     lower_non_critical_threshold_ptr,
-                                     lower_critical_threshold_ptr,
-                                     lower_non_recoverable_threshold_ptr,
-                                     upper_non_critical_threshold_ptr,
-                                     upper_critical_threshold_ptr,
-                                     upper_non_recoverable_threshold_ptr,
-                                     obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_sensor_thresholds (state_data->ipmi_ctx,
+                                      sensor_number,
+                                      lower_non_critical_threshold_ptr,
+                                      lower_critical_threshold_ptr,
+                                      lower_non_recoverable_threshold_ptr,
+                                      upper_non_critical_threshold_ptr,
+                                      upper_critical_threshold_ptr,
+                                      upper_non_recoverable_threshold_ptr,
+                                      obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_set_sensor_thresholds: %s\n",
-                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_sensor_thresholds: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }
 
@@ -498,43 +498,43 @@ _get_hysteresis (ipmi_sensors_config_state_data_t *state_data,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   uint64_t val;
 
-  assert(state_data);
-  assert(positive_going_threshold_hysteresis_value);
-  assert(negative_going_threshold_hysteresis_value);
+  assert (state_data);
+  assert (positive_going_threshold_hysteresis_value);
+  assert (negative_going_threshold_hysteresis_value);
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sensor_hysteresis_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sensor_hysteresis_rs)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sensor_hysteresis(state_data->ipmi_ctx,
-                                     sensor_number,
-                                     IPMI_SENSOR_HYSTERESIS_MASK,
-                                     obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_sensor_hysteresis (state_data->ipmi_ctx,
+                                      sensor_number,
+                                      IPMI_SENSOR_HYSTERESIS_MASK,
+                                      obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_get_sensor_hysteresis: %s\n",
-                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_sensor_hysteresis: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-  
+
   TOOL_FIID_OBJ_GET (obj_cmd_rs, "positive_going_threshold_hysteresis_value", &val);
   *positive_going_threshold_hysteresis_value = val;
-  
+
   TOOL_FIID_OBJ_GET (obj_cmd_rs, "negative_going_threshold_hysteresis_value", &val);
   *negative_going_threshold_hysteresis_value = val;
-  
+
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }
 
@@ -554,16 +554,16 @@ hysteresis_threshold_checkout (const char *section_name,
   double value_calc;
   uint8_t hysteresis_support;
   uint8_t sensor_number;
-  
-  if ((ret = get_sdr_record(state_data,
-                            section_name,
-                            sdr_record,
-                            &sdr_record_len)) != CONFIG_ERR_SUCCESS)
+
+  if ((ret = get_sdr_record (state_data,
+                             section_name,
+                             sdr_record,
+                             &sdr_record_len)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
- 
+
   if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_parse_ctx,
                                           sdr_record,
                                           sdr_record_len,
@@ -573,10 +573,10 @@ hysteresis_threshold_checkout (const char *section_name,
                                           NULL,
                                           NULL) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_sensor_capabilities: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_capabilities: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -590,15 +590,15 @@ hysteresis_threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_number(state_data->sdr_parse_ctx,
-                                   sdr_record,
-                                   sdr_record_len,
-                                   &sensor_number) < 0)
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &sensor_number) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_sensor_number: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_number: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -611,37 +611,37 @@ hysteresis_threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (!strcasecmp(kv->key->key_name, "Positive_Going_Threshold_Hysteresis"))
+  if (!strcasecmp (kv->key->key_name, "Positive_Going_Threshold_Hysteresis"))
     value_raw = positive_going_threshold_hysteresis_value;
-  else if (!strcasecmp(kv->key->key_name, "Negative_Going_Threshold_Hysteresis"))
+  else if (!strcasecmp (kv->key->key_name, "Negative_Going_Threshold_Hysteresis"))
     value_raw = negative_going_threshold_hysteresis_value;
   else
     /* unknown key_name - fatal error */
     goto cleanup;
-   
+
   /* 0 means hysteresis is not used, so don't decode */
   if (value_raw == 0)
     {
-      if (config_section_update_keyvalue_output(state_data->pstate,
-                                                kv, 
-                                                "None") < 0)
+      if (config_section_update_keyvalue_output (state_data->pstate,
+                                                 kv,
+                                                 "None") < 0)
         goto cleanup;
     }
   else
     {
-      if ((ret = _decode_value(state_data,
-                               sdr_record,
-                               sdr_record_len,
-                               value_raw,
-                               &value_calc)) != CONFIG_ERR_SUCCESS)
+      if ((ret = _decode_value (state_data,
+                                sdr_record,
+                                sdr_record_len,
+                                value_raw,
+                                &value_calc)) != CONFIG_ERR_SUCCESS)
         {
           rv = ret;
           goto cleanup;
         }
-  
-      if (config_section_update_keyvalue_output_double(state_data->pstate,
-                                                       kv, 
-                                                       value_calc) < 0)
+
+      if (config_section_update_keyvalue_output_double (state_data->pstate,
+                                                        kv,
+                                                        value_calc) < 0)
         goto cleanup;
     }
 
@@ -667,10 +667,10 @@ hysteresis_threshold_commit (const char *section_name,
   uint8_t hysteresis_support;
   uint8_t sensor_number;
 
-  if ((ret = get_sdr_record(state_data,
-                            section_name,
-                            sdr_record,
-                            &sdr_record_len)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sdr_record (state_data,
+                             section_name,
+                             sdr_record,
+                             &sdr_record_len)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -685,10 +685,10 @@ hysteresis_threshold_commit (const char *section_name,
                                           NULL,
                                           NULL) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_sensor_capabilities: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_capabilities: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -700,18 +700,18 @@ hysteresis_threshold_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_number(state_data->sdr_parse_ctx,
-                                   sdr_record,
-                                   sdr_record_len,
-                                   &sensor_number) < 0)
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &sensor_number) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_sensor_number: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_number: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
-  
+
   if ((ret = _get_hysteresis (state_data,
                               sensor_number,
                               &positive_going_threshold_hysteresis_value,
@@ -722,59 +722,59 @@ hysteresis_threshold_commit (const char *section_name,
     }
 
   /* "None" means hysteresis is not used, so don't decode */
-  
-  if (!strcasecmp(kv->value_input, "None"))
+
+  if (!strcasecmp (kv->value_input, "None"))
     value_raw = 0;
   else
     {
-      if ((ret = _decode_value_raw(state_data,
-                                   sdr_record,
-                                   sdr_record_len,
-                                   kv->value_input,
-                                   &value_raw)) != CONFIG_ERR_SUCCESS)
+      if ((ret = _decode_value_raw (state_data,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    kv->value_input,
+                                    &value_raw)) != CONFIG_ERR_SUCCESS)
         {
           rv = ret;
           goto cleanup;
         }
     }
 
-  if (!strcasecmp(kv->key->key_name, "Positive_Going_Threshold_Hysteresis"))
+  if (!strcasecmp (kv->key->key_name, "Positive_Going_Threshold_Hysteresis"))
     positive_going_threshold_hysteresis_value = value_raw;
-  else if (!strcasecmp(kv->key->key_name, "Negative_Going_Threshold_Hysteresis" ))
+  else if (!strcasecmp (kv->key->key_name, "Negative_Going_Threshold_Hysteresis" ))
     negative_going_threshold_hysteresis_value = value_raw;
   else
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sensor_hysteresis_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sensor_hysteresis_rs)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_sensor_hysteresis(state_data->ipmi_ctx,
-                                     sensor_number,
-                                     IPMI_SENSOR_HYSTERESIS_MASK,
-                                     positive_going_threshold_hysteresis_value,
-                                     negative_going_threshold_hysteresis_value,
-                                     obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_sensor_hysteresis (state_data->ipmi_ctx,
+                                      sensor_number,
+                                      IPMI_SENSOR_HYSTERESIS_MASK,
+                                      positive_going_threshold_hysteresis_value,
+                                      negative_going_threshold_hysteresis_value,
+                                      obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_set_sensor_hysteresis: %s\n",
-                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_sensor_hysteresis: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }
 
@@ -794,11 +794,11 @@ hysteresis_threshold_commit (const char *section_name,
  * consider the input from the user legit.
  */
 static config_validate_t
-_floating_point_in_range(const char *section_name, 
-                         const char *key_name,
-                         const char *value,
-                         double value_input,
-                         void *arg)
+_floating_point_in_range (const char *section_name,
+                          const char *key_name,
+                          const char *value,
+                          double value_input,
+                          void *arg)
 {
   ipmi_sensors_config_state_data_t *state_data = (ipmi_sensors_config_state_data_t *)arg;
   uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
@@ -809,51 +809,51 @@ _floating_point_in_range(const char *section_name,
   uint8_t sensor_number;
   double threshold_calc;
   double threshold_range_min, threshold_range_max;
-  
-  if ((ret = get_sdr_record(state_data,
-                            section_name,
+
+  if ((ret = get_sdr_record (state_data,
+                             section_name,
+                             sdr_record,
+                             &sdr_record_len)) != CONFIG_ERR_SUCCESS)
+    {
+      if (ret == CONFIG_ERR_NON_FATAL_ERROR)
+        rv = CONFIG_VALIDATE_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &sensor_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_number: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+
+  if ((ret = _decode_value_raw (state_data,
+                                sdr_record,
+                                sdr_record_len,
+                                value,
+                                &threshold_raw)) != CONFIG_ERR_SUCCESS)
+    {
+      if (ret == CONFIG_ERR_NON_FATAL_ERROR)
+        rv = CONFIG_VALIDATE_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if ((ret = _decode_value (state_data,
                             sdr_record,
-                            &sdr_record_len)) != CONFIG_ERR_SUCCESS)
+                            sdr_record_len,
+                            threshold_raw,
+                            &threshold_calc)) != CONFIG_ERR_SUCCESS)
     {
       if (ret == CONFIG_ERR_NON_FATAL_ERROR)
         rv = CONFIG_VALIDATE_NON_FATAL_ERROR;
       goto cleanup;
     }
-  
-  if (ipmi_sdr_parse_sensor_number(state_data->sdr_parse_ctx,
-                                   sdr_record,
-                                   sdr_record_len,
-                                   &sensor_number) < 0)
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_sensor_number: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
-      goto cleanup;
-    }
-  
-  if ((ret = _decode_value_raw(state_data,
-                               sdr_record,
-                               sdr_record_len,
-                               value,
-                               &threshold_raw)) != CONFIG_ERR_SUCCESS)
-    {
-      if (ret == CONFIG_ERR_NON_FATAL_ERROR)
-        rv = CONFIG_VALIDATE_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-  
-  if ((ret = _decode_value(state_data,
-                           sdr_record,
-                           sdr_record_len,
-                           threshold_raw,
-                           &threshold_calc)) != CONFIG_ERR_SUCCESS)
-    {
-      if (ret == CONFIG_ERR_NON_FATAL_ERROR)
-        rv = CONFIG_VALIDATE_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-  
+
   threshold_range_min = threshold_calc * THRESHOLD_RANGE_MIN_MULTIPLIER;
   threshold_range_max = threshold_calc * THRESHOLD_RANGE_MAX_MULTIPLIER;
 
@@ -869,46 +869,46 @@ _floating_point_in_range(const char *section_name,
     rv = CONFIG_VALIDATE_OUT_OF_RANGE_VALUE;
   else
     rv = CONFIG_VALIDATE_VALID_VALUE;
-  
+
  cleanup:
   return rv;
 }
 
-config_validate_t 
-threshold_validate(const char *section_name, 
-                   const char *key_name,
-                   const char *value,
-                   void *arg)
+config_validate_t
+threshold_validate (const char *section_name,
+                    const char *key_name,
+                    const char *value,
+                    void *arg)
 {
   double conv;
   char *endptr;
 
-  assert(value);
+  assert (value);
 
-  conv = strtod(value, &endptr);
+  conv = strtod (value, &endptr);
 
   if (*endptr)
     return CONFIG_VALIDATE_INVALID_VALUE;
 
-  return _floating_point_in_range(section_name,
-                                  key_name,
-                                  value,
-                                  conv,
-                                  arg);
+  return _floating_point_in_range (section_name,
+                                   key_name,
+                                   value,
+                                   conv,
+                                   arg);
 }
 
-config_validate_t 
-threshold_validate_positive(const char *section_name, 
-                            const char *key_name,
-                            const char *value,
-                            void *arg)
+config_validate_t
+threshold_validate_positive (const char *section_name,
+                             const char *key_name,
+                             const char *value,
+                             void *arg)
 {
   double conv;
   char *endptr;
 
-  assert(value);
+  assert (value);
 
-  conv = strtod(value, &endptr);
+  conv = strtod (value, &endptr);
 
   if (*endptr)
     return CONFIG_VALIDATE_INVALID_VALUE;
@@ -916,54 +916,54 @@ threshold_validate_positive(const char *section_name,
   if (conv < 0.0)
     return CONFIG_VALIDATE_OUT_OF_RANGE_VALUE;
 
-  return _floating_point_in_range(section_name,
-                                  key_name,
-                                  value,
-                                  conv,
-                                  arg);
+  return _floating_point_in_range (section_name,
+                                   key_name,
+                                   value,
+                                   conv,
+                                   arg);
 }
 
-config_validate_t 
-hysteresis_threshold_validate(const char *section_name, 
-                              const char *key_name,
-                              const char *value,
-                              void *arg)
+config_validate_t
+hysteresis_threshold_validate (const char *section_name,
+                               const char *key_name,
+                               const char *value,
+                               void *arg)
 {
   double conv;
   char *endptr;
 
-  assert(value);
+  assert (value);
 
-  if (!strcasecmp(value, "None"))
+  if (!strcasecmp (value, "None"))
     return CONFIG_VALIDATE_VALID_VALUE;
 
-  conv = strtod(value, &endptr);
+  conv = strtod (value, &endptr);
 
   if (*endptr)
     return CONFIG_VALIDATE_INVALID_VALUE;
 
-  return _floating_point_in_range(section_name,
-                                  key_name,
-                                  value,
-                                  conv,
-                                  arg);
+  return _floating_point_in_range (section_name,
+                                   key_name,
+                                   value,
+                                   conv,
+                                   arg);
 }
 
-config_validate_t 
-hysteresis_threshold_validate_positive(const char *section_name, 
-                                       const char *key_name,
-                                       const char *value,
-                                       void *arg)
+config_validate_t
+hysteresis_threshold_validate_positive (const char *section_name,
+                                        const char *key_name,
+                                        const char *value,
+                                        void *arg)
 {
   double conv;
   char *endptr;
 
-  assert(value);
+  assert (value);
 
-  if (!strcasecmp(value, "None"))
+  if (!strcasecmp (value, "None"))
     return CONFIG_VALIDATE_VALID_VALUE;
-  
-  conv = strtod(value, &endptr);
+
+  conv = strtod (value, &endptr);
 
   if (*endptr)
     return CONFIG_VALIDATE_INVALID_VALUE;
@@ -971,11 +971,11 @@ hysteresis_threshold_validate_positive(const char *section_name,
   if (conv < 0.0)
     return CONFIG_VALIDATE_OUT_OF_RANGE_VALUE;
 
-  return _floating_point_in_range(section_name,
-                                  key_name,
-                                  value,
-                                  conv,
-                                  arg);
+  return _floating_point_in_range (section_name,
+                                   key_name,
+                                   value,
+                                   conv,
+                                   arg);
 }
 
 static int
@@ -989,23 +989,23 @@ _setup_threshold_key (ipmi_sensors_config_state_data_t *state_data,
 {
   unsigned int flags = 0;
 
-  assert(state_data);
-  assert(description);
-  assert(key_name);
-  assert(threshold_validate_ptr);
+  assert (state_data);
+  assert (description);
+  assert (key_name);
+  assert (threshold_validate_ptr);
 
   if (threshold_readable
       || state_data->prog_data->args->config_args.verbose)
     {
       if (!threshold_readable)
         flags |= CONFIG_UNDEFINED;
-      
+
       if (!threshold_settable)
         {
           flags |= CONFIG_CHECKOUT_KEY_COMMENTED_OUT;
           flags |= CONFIG_READABLE_ONLY;
         }
-      
+
       if (config_section_add_key (state_data->pstate,
                                   section,
                                   key_name,
@@ -1016,7 +1016,7 @@ _setup_threshold_key (ipmi_sensors_config_state_data_t *state_data,
                                   threshold_validate_ptr) < 0)
         goto cleanup;
     }
-  
+
   return 0;
 
  cleanup:
@@ -1046,11 +1046,11 @@ _setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
   Key_Validate threshold_validate_ptr = NULL;
   int rv = -1;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(section);
-  assert(description);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (section);
+  assert (description);
 
   /* We will adjust this list as necessary later on.  Many
    * measurements could technically be negative (i.e. temperature)
@@ -1072,10 +1072,10 @@ _setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
                                          &upper_critical_threshold_readable,
                                          &upper_non_recoverable_threshold_readable) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_threshold_settable: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_threshold_settable: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -1089,10 +1089,10 @@ _setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
                                          &upper_critical_threshold_settable,
                                          &upper_non_recoverable_threshold_settable) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_threshold_settable: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_threshold_settable: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -1169,14 +1169,14 @@ _setup_threshold_hysteresis_fields (ipmi_sensors_config_state_data_t *state_data
   Key_Validate hysteresis_threshold_validate_ptr = NULL;
   int rv = -1;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(section);
-  assert(description);
-  assert(hysteresis_support == IPMI_SDR_READABLE_HYSTERESIS_SUPPORT
-         || hysteresis_support == IPMI_SDR_READABLE_SETTABLE_HYSTERESIS_SUPPORT
-         || state_data->prog_data->args->config_args.verbose);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (section);
+  assert (description);
+  assert (hysteresis_support == IPMI_SDR_READABLE_HYSTERESIS_SUPPORT
+          || hysteresis_support == IPMI_SDR_READABLE_SETTABLE_HYSTERESIS_SUPPORT
+          || state_data->prog_data->args->config_args.verbose);
 
   if (hysteresis_support == IPMI_SDR_READABLE_HYSTERESIS_SUPPORT)
     {
@@ -1187,12 +1187,12 @@ _setup_threshold_hysteresis_fields (ipmi_sensors_config_state_data_t *state_data
     flags = 0;                  /* no change, can read/write */
   else /* state_data->prog_data->args->config_args.verbose */
     flags = CONFIG_UNDEFINED;
-    
-  memset(description_hysteresis, '\0', CONFIG_MAX_DESCRIPTION_LEN);
-  snprintf(description_hysteresis, 
-           CONFIG_MAX_DESCRIPTION_LEN,
-           "%s; 'None' to not use hysteresis",
-           description);
+
+  memset (description_hysteresis, '\0', CONFIG_MAX_DESCRIPTION_LEN);
+  snprintf (description_hysteresis,
+            CONFIG_MAX_DESCRIPTION_LEN,
+            "%s; 'None' to not use hysteresis",
+            description);
 
   /* We will adjust this list as necessary later on.  Many
    * measurements could technically be negative (i.e. temperature)
@@ -1245,10 +1245,10 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   char description[CONFIG_MAX_DESCRIPTION_LEN];
   const char *sensor_type_str = NULL;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(section_ptr);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (section_ptr);
 
   if ((ret = create_section_name (state_data,
                                   sdr_record,
@@ -1257,10 +1257,10 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                   CONFIG_MAX_SECTION_NAME_LEN)) != CONFIG_ERR_SUCCESS)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "create_section_name: %s\n",
-                        strerror(errno));
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "create_section_name: %s\n",
+                         strerror (errno));
       rv = ret;
       goto cleanup;
     }
@@ -1283,10 +1283,10 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                           NULL,
                                           NULL) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_sensor_capabilities: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_capabilities: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -1295,10 +1295,10 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                   sdr_record_len,
                                   &sensor_type) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_sensor_type: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -1310,28 +1310,28 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
                                    &sensor_base_unit_type,
                                    NULL) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_sdr_parse_sensor_unit: %s\n",
-                      ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_unit: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
   sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
 
-  memset(description, '\0', CONFIG_MAX_DESCRIPTION_LEN);
-  if (IPMI_SENSOR_UNIT_VALID(sensor_base_unit_type)
+  memset (description, '\0', CONFIG_MAX_DESCRIPTION_LEN);
+  if (IPMI_SENSOR_UNIT_VALID (sensor_base_unit_type)
       && sensor_base_unit_type != IPMI_SENSOR_UNIT_UNSPECIFIED)
-    snprintf(description, 
-             CONFIG_MAX_DESCRIPTION_LEN,
-             "Give valid input for sensor type = %s; units = %s",
-             sensor_type_str ? sensor_type_str : UNRECOGNIZED_SENSOR_TYPE,
-             ipmi_sensor_units[sensor_base_unit_type]);
+    snprintf (description,
+              CONFIG_MAX_DESCRIPTION_LEN,
+              "Give valid input for sensor type = %s; units = %s",
+              sensor_type_str ? sensor_type_str : UNRECOGNIZED_SENSOR_TYPE,
+              ipmi_sensor_units[sensor_base_unit_type]);
   else
-    snprintf(description, 
-             CONFIG_MAX_DESCRIPTION_LEN,
-             "Give valid input for sensor type = %s",
-             sensor_type_str ? sensor_type_str : UNRECOGNIZED_SENSOR_TYPE);
+    snprintf (description,
+              CONFIG_MAX_DESCRIPTION_LEN,
+              "Give valid input for sensor type = %s",
+              sensor_type_str ? sensor_type_str : UNRECOGNIZED_SENSOR_TYPE);
 
   if (setup_sensor_event_enable_fields (state_data,
                                         sdr_record,
@@ -1371,6 +1371,6 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
 
  cleanup:
   if (section)
-    config_section_destroy(state_data->pstate, section);
+    config_section_destroy (state_data->pstate, section);
   return rv;
 }

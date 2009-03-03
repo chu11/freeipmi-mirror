@@ -14,10 +14,10 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-*/
+ */
 
 #ifndef _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_API_H
-#define	_IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_API_H
+#define _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,7 +52,7 @@ int8_t ipmi_cmd_get_user_payload_access (ipmi_ctx_t ctx,
                                          uint8_t channel_number,
                                          uint8_t user_id,
                                          fiid_obj_t obj_cmd_rs);
-  
+
 
 #ifdef __cplusplus
 }

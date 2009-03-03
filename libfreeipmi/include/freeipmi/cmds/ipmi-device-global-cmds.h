@@ -14,10 +14,10 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-*/
+ */
 
 #ifndef _IPMI_DEVICE_GLOBAL_CMDS_H
-#define	_IPMI_DEVICE_GLOBAL_CMDS_H
+#define _IPMI_DEVICE_GLOBAL_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -58,27 +58,27 @@ extern "C" {
 #define IPMI_ACPI_SYSTEM_POWER_STATE_UNKNOWN        0x2A
 #define IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE      0x7F
 
-#define IPMI_ACPI_SYSTEM_POWER_STATE_VALID(__acpi_system_power_state) \
-  (((__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S0_G0 \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S1 \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S2 \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S3 \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S4 \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S5_G2 \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S4_S5 \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_G3 \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_SLEEPING \
+#define IPMI_ACPI_SYSTEM_POWER_STATE_VALID(__acpi_system_power_state)          \
+  (((__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S0_G0          \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S1          \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S2          \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S3          \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S4          \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S5_G2       \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S4_S5       \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_G3          \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_SLEEPING    \
     || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_G1_SLEEPING \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_OVERRIDE \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_ON \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_OFF \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_UNKNOWN \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_OVERRIDE    \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_ON   \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_OFF  \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_UNKNOWN     \
     || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE) ? 1 : 0)
 
 #define IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE       0x1
 #define IPMI_ACPI_SET_SYSTEM_POWER_STATE_DONT_SET_SYSTEM_POWER_STATE  0x0
 
-#define IPMI_ACPI_SET_SYSTEM_POWER_STATE_VALID(__set_system_power_state) \
+#define IPMI_ACPI_SET_SYSTEM_POWER_STATE_VALID(__set_system_power_state)                  \
   (((__set_system_power_state) == IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE \
     || (__set_system_power_state) == IPMI_ACPI_SET_SYSTEM_POWER_STATE_DONT_SET_SYSTEM_POWER_STATE) ? 1 : 0)
 
@@ -89,18 +89,18 @@ extern "C" {
 #define IPMI_ACPI_DEVICE_POWER_STATE_UNKNOWN        0x2A
 #define IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE      0x7F
 
-#define IPMI_ACPI_DEVICE_POWER_STATE_VALID(__acpi_device_power_state) \
-  (((__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D0 \
-    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D1 \
-    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D2 \
-    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D3 \
+#define IPMI_ACPI_DEVICE_POWER_STATE_VALID(__acpi_device_power_state)      \
+  (((__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D0         \
+    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D1      \
+    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D2      \
+    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D3      \
     || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_UNKNOWN \
     || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE) ? 1 : 0)
 
 #define IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE       0x1
 #define IPMI_ACPI_SET_DEVICE_POWER_STATE_DONT_SET_DEVICE_POWER_STATE  0x0
 
-#define IPMI_ACPI_SET_DEVICE_POWER_STATE_VALID(__set_device_power_state) \
+#define IPMI_ACPI_SET_DEVICE_POWER_STATE_VALID(__set_device_power_state)                  \
   (((__set_device_power_state) == IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE \
     || (__set_device_power_state) == IPMI_ACPI_SET_DEVICE_POWER_STATE_DONT_SET_DEVICE_POWER_STATE) ? 1 : 0)
 

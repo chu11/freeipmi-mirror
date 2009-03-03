@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,8 +13,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-*/
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ */
 
 
 #ifndef _IPMI_SENSOR_UTIL_H
@@ -30,21 +30,21 @@ int ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen);
 
 const char *ipmi_get_sensor_type_string (uint8_t sensor_type);
 
-int ipmi_sensor_decode_value (int8_t r_exponent, 
-			      int8_t b_exponent, 
+int ipmi_sensor_decode_value (int8_t r_exponent,
+                              int8_t b_exponent,
                               int16_t m,
                               int16_t b,
                               uint8_t linearization,
-			      uint8_t analog_data_format, 
-			      uint8_t raw_data,
-			      double *value);
+                              uint8_t analog_data_format,
+                              uint8_t raw_data,
+                              double *value);
 
-int ipmi_sensor_decode_raw_value (int8_t r_exponent, 
-                                  int8_t b_exponent, 
-                                  int16_t m, 
-                                  int16_t b, 
-                                  uint8_t linearization, 
-                                  uint8_t analog_data_format, 
+int ipmi_sensor_decode_raw_value (int8_t r_exponent,
+                                  int8_t b_exponent,
+                                  int16_t m,
+                                  int16_t b,
+                                  uint8_t linearization,
+                                  uint8_t analog_data_format,
                                   double value,
                                   uint8_t *raw_data);
 

@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,9 +13,9 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
-*/
+ */
 
 #ifndef _IPMI_SENSOR_CMDS_H
 #define _IPMI_SENSOR_CMDS_H
@@ -40,31 +40,31 @@ extern "C" {
 #define IPMI_SENSOR_EVENT_MESSAGE_ACTION_ENABLE_SELECTED_EVENT_MESSAGES 0x1
 #define IPMI_SENSOR_EVENT_MESSAGE_ACTION_DISABLE_SELECTED_EVENT_MESSAGES 0x2
 
-#define IPMI_SENSOR_EVENT_MESSAGE_ACTION_VALID(__val) \
-        (((__val) == IPMI_SENSOR_EVENT_MESSAGE_ACTION_DO_NOT_CHANGE_INDIVIDUAL_ENABLES \
-          || (__val) == IPMI_SENSOR_EVENT_MESSAGE_ACTION_ENABLE_SELECTED_EVENT_MESSAGES \
-          || (__val) == IPMI_SENSOR_EVENT_MESSAGE_ACTION_DISABLE_SELECTED_EVENT_MESSAGES) ? 1 : 0)
+#define IPMI_SENSOR_EVENT_MESSAGE_ACTION_VALID(__val)                             \
+  (((__val) == IPMI_SENSOR_EVENT_MESSAGE_ACTION_DO_NOT_CHANGE_INDIVIDUAL_ENABLES  \
+    || (__val) == IPMI_SENSOR_EVENT_MESSAGE_ACTION_ENABLE_SELECTED_EVENT_MESSAGES \
+    || (__val) == IPMI_SENSOR_EVENT_MESSAGE_ACTION_DISABLE_SELECTED_EVENT_MESSAGES) ? 1 : 0)
 
 #define IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_ENABLE   0x1
 #define IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE  0x0
 
-#define IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_VALID(__val) \
-        (((__val) == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_ENABLE \
-          || (__val) == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE) ? 1 : 0)
+#define IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_VALID(__val)  \
+  (((__val) == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_ENABLE \
+    || (__val) == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE) ? 1 : 0)
 
 #define IPMI_SENSOR_ALL_EVENT_MESSAGES_ENABLE   0x1
 #define IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE  0x0
 
-#define IPMI_SENSOR_ALL_EVENT_MESSAGES_VALID(__val) \
-        (((__val) == IPMI_SENSOR_ALL_EVENT_MESSAGES_ENABLE \
-          || (__val) == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE) ? 1 : 0)
+#define IPMI_SENSOR_ALL_EVENT_MESSAGES_VALID(__val)  \
+  (((__val) == IPMI_SENSOR_ALL_EVENT_MESSAGES_ENABLE \
+    || (__val) == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE) ? 1 : 0)
 
 #define IPMI_SENSOR_EVENT_FLAG_ENABLE  0x1
 #define IPMI_SENSOR_EVENT_FLAG_DISABLE 0x0
 
-#define IPMI_SENSOR_EVENT_FLAG_VALID(__val) \
-        (((__val) == IPMI_SENSOR_EVENT_FLAG_ENABLE \
-          || (__val) == IPMI_SENSOR_EVENT_FLAG_DISABLE) ? 1 : 0)
+#define IPMI_SENSOR_EVENT_FLAG_VALID(__val)  \
+  (((__val) == IPMI_SENSOR_EVENT_FLAG_ENABLE \
+    || (__val) == IPMI_SENSOR_EVENT_FLAG_DISABLE) ? 1 : 0)
 
 /* achu: Yes, this one is backwards.  I don't know why */
 #define IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_ENABLED 0x0
@@ -79,7 +79,7 @@ extern "C" {
 
 extern fiid_template_t tmpl_cmd_get_device_sdr_info_rq;
 extern fiid_template_t tmpl_cmd_get_device_sdr_info_rs;
-  
+
 extern fiid_template_t tmpl_cmd_get_device_sdr_rq;
 extern fiid_template_t tmpl_cmd_get_device_sdr_rs;
 
@@ -139,7 +139,7 @@ int8_t fill_cmd_set_sensor_hysteresis (uint8_t sensor_number,
                                        fiid_obj_t obj_cmd_rq);
 
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
-int8_t fill_cmd_get_sensor_hysteresis (uint8_t sensor_number, 
+int8_t fill_cmd_get_sensor_hysteresis (uint8_t sensor_number,
                                        uint8_t hysteresis_mask,
                                        fiid_obj_t obj_cmd_rq);
 
@@ -166,66 +166,66 @@ int8_t fill_cmd_set_sensor_event_enable_threshold (uint8_t sensor_number,
                                                    uint8_t event_message_action,
                                                    uint8_t scanning_on_this_sensor,
                                                    uint8_t all_event_messages,
-                                                   uint8_t assertion_event_lower_non_critical_going_low, 
-                                                   uint8_t assertion_event_lower_non_critical_going_high, 
-                                                   uint8_t assertion_event_lower_critical_going_low, 
-                                                   uint8_t assertion_event_lower_critical_going_high, 
-                                                   uint8_t assertion_event_lower_non_recoverable_going_low, 
-                                                   uint8_t assertion_event_lower_non_recoverable_going_high, 
-                                                   uint8_t assertion_event_upper_non_critical_going_low, 
-                                                   uint8_t assertion_event_upper_non_critical_going_high, 
-                                                   uint8_t assertion_event_upper_critical_going_low, 
-                                                   uint8_t assertion_event_upper_critical_going_high, 
-                                                   uint8_t assertion_event_upper_non_recoverable_going_low, 
-                                                   uint8_t assertion_event_upper_non_recoverable_going_high, 
-                                                   uint8_t deassertion_event_lower_non_critical_going_low, 
-                                                   uint8_t deassertion_event_lower_non_critical_going_high, 
-                                                   uint8_t deassertion_event_lower_critical_going_low, 
-                                                   uint8_t deassertion_event_lower_critical_going_high, 
-                                                   uint8_t deassertion_event_lower_non_recoverable_going_low, 
-                                                   uint8_t deassertion_event_lower_non_recoverable_going_high, 
-                                                   uint8_t deassertion_event_upper_non_critical_going_low, 
-                                                   uint8_t deassertion_event_upper_non_critical_going_high, 
-                                                   uint8_t deassertion_event_upper_critical_going_low, 
-                                                   uint8_t deassertion_event_upper_critical_going_high, 
-                                                   uint8_t deassertion_event_upper_non_recoverable_going_low, 
-                                                   uint8_t deassertion_event_upper_non_recoverable_going_high, 
+                                                   uint8_t assertion_event_lower_non_critical_going_low,
+                                                   uint8_t assertion_event_lower_non_critical_going_high,
+                                                   uint8_t assertion_event_lower_critical_going_low,
+                                                   uint8_t assertion_event_lower_critical_going_high,
+                                                   uint8_t assertion_event_lower_non_recoverable_going_low,
+                                                   uint8_t assertion_event_lower_non_recoverable_going_high,
+                                                   uint8_t assertion_event_upper_non_critical_going_low,
+                                                   uint8_t assertion_event_upper_non_critical_going_high,
+                                                   uint8_t assertion_event_upper_critical_going_low,
+                                                   uint8_t assertion_event_upper_critical_going_high,
+                                                   uint8_t assertion_event_upper_non_recoverable_going_low,
+                                                   uint8_t assertion_event_upper_non_recoverable_going_high,
+                                                   uint8_t deassertion_event_lower_non_critical_going_low,
+                                                   uint8_t deassertion_event_lower_non_critical_going_high,
+                                                   uint8_t deassertion_event_lower_critical_going_low,
+                                                   uint8_t deassertion_event_lower_critical_going_high,
+                                                   uint8_t deassertion_event_lower_non_recoverable_going_low,
+                                                   uint8_t deassertion_event_lower_non_recoverable_going_high,
+                                                   uint8_t deassertion_event_upper_non_critical_going_low,
+                                                   uint8_t deassertion_event_upper_non_critical_going_high,
+                                                   uint8_t deassertion_event_upper_critical_going_low,
+                                                   uint8_t deassertion_event_upper_critical_going_high,
+                                                   uint8_t deassertion_event_upper_non_recoverable_going_low,
+                                                   uint8_t deassertion_event_upper_non_recoverable_going_high,
                                                    fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_sensor_event_enable_discrete (uint8_t sensor_number,
                                                   uint8_t event_message_action,
                                                   uint8_t scanning_on_this_sensor,
                                                   uint8_t all_event_messages,
-                                                  uint8_t assertion_event_state_bit_0, 
-                                                  uint8_t assertion_event_state_bit_1, 
-                                                  uint8_t assertion_event_state_bit_2, 
-                                                  uint8_t assertion_event_state_bit_3, 
-                                                  uint8_t assertion_event_state_bit_4, 
-                                                  uint8_t assertion_event_state_bit_5, 
-                                                  uint8_t assertion_event_state_bit_6, 
-                                                  uint8_t assertion_event_state_bit_7, 
-                                                  uint8_t assertion_event_state_bit_8, 
-                                                  uint8_t assertion_event_state_bit_9, 
-                                                  uint8_t assertion_event_state_bit_10, 
-                                                  uint8_t assertion_event_state_bit_11, 
-                                                  uint8_t assertion_event_state_bit_12, 
-                                                  uint8_t assertion_event_state_bit_13, 
-                                                  uint8_t assertion_event_state_bit_14, 
-                                                  uint8_t deassertion_event_state_bit_0, 
-                                                  uint8_t deassertion_event_state_bit_1, 
-                                                  uint8_t deassertion_event_state_bit_2, 
-                                                  uint8_t deassertion_event_state_bit_3, 
-                                                  uint8_t deassertion_event_state_bit_4, 
-                                                  uint8_t deassertion_event_state_bit_5, 
-                                                  uint8_t deassertion_event_state_bit_6, 
-                                                  uint8_t deassertion_event_state_bit_7, 
-                                                  uint8_t deassertion_event_state_bit_8, 
-                                                  uint8_t deassertion_event_state_bit_9, 
-                                                  uint8_t deassertion_event_state_bit_10, 
-                                                  uint8_t deassertion_event_state_bit_11, 
-                                                  uint8_t deassertion_event_state_bit_12, 
-                                                  uint8_t deassertion_event_state_bit_13, 
-                                                  uint8_t deassertion_event_state_bit_14, 
+                                                  uint8_t assertion_event_state_bit_0,
+                                                  uint8_t assertion_event_state_bit_1,
+                                                  uint8_t assertion_event_state_bit_2,
+                                                  uint8_t assertion_event_state_bit_3,
+                                                  uint8_t assertion_event_state_bit_4,
+                                                  uint8_t assertion_event_state_bit_5,
+                                                  uint8_t assertion_event_state_bit_6,
+                                                  uint8_t assertion_event_state_bit_7,
+                                                  uint8_t assertion_event_state_bit_8,
+                                                  uint8_t assertion_event_state_bit_9,
+                                                  uint8_t assertion_event_state_bit_10,
+                                                  uint8_t assertion_event_state_bit_11,
+                                                  uint8_t assertion_event_state_bit_12,
+                                                  uint8_t assertion_event_state_bit_13,
+                                                  uint8_t assertion_event_state_bit_14,
+                                                  uint8_t deassertion_event_state_bit_0,
+                                                  uint8_t deassertion_event_state_bit_1,
+                                                  uint8_t deassertion_event_state_bit_2,
+                                                  uint8_t deassertion_event_state_bit_3,
+                                                  uint8_t deassertion_event_state_bit_4,
+                                                  uint8_t deassertion_event_state_bit_5,
+                                                  uint8_t deassertion_event_state_bit_6,
+                                                  uint8_t deassertion_event_state_bit_7,
+                                                  uint8_t deassertion_event_state_bit_8,
+                                                  uint8_t deassertion_event_state_bit_9,
+                                                  uint8_t deassertion_event_state_bit_10,
+                                                  uint8_t deassertion_event_state_bit_11,
+                                                  uint8_t deassertion_event_state_bit_12,
+                                                  uint8_t deassertion_event_state_bit_13,
+                                                  uint8_t deassertion_event_state_bit_14,
                                                   fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_sensor_event_enable (uint8_t sensor_number, fiid_obj_t obj_cmd_rq);

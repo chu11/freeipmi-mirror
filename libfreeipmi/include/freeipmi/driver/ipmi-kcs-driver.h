@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
 */
 
@@ -47,39 +47,39 @@ extern "C" {
 #define IPMI_KCS_FLAGS_DEFAULT       0x00000000
 #define IPMI_KCS_FLAGS_NONBLOCKING   0x00000001
 
-typedef struct ipmi_kcs_ctx *ipmi_kcs_ctx_t;
+  typedef struct ipmi_kcs_ctx *ipmi_kcs_ctx_t;
 
-ipmi_kcs_ctx_t ipmi_kcs_ctx_create(void);
-void ipmi_kcs_ctx_destroy(ipmi_kcs_ctx_t ctx);
-int ipmi_kcs_ctx_errnum(ipmi_kcs_ctx_t ctx);
-char *ipmi_kcs_ctx_strerror(int errnum);
-char *ipmi_kcs_ctx_errormsg(ipmi_kcs_ctx_t ctx);
+  ipmi_kcs_ctx_t ipmi_kcs_ctx_create (void);
+  void ipmi_kcs_ctx_destroy (ipmi_kcs_ctx_t ctx);
+  int ipmi_kcs_ctx_errnum (ipmi_kcs_ctx_t ctx);
+  char *ipmi_kcs_ctx_strerror (int errnum);
+  char *ipmi_kcs_ctx_errormsg (ipmi_kcs_ctx_t ctx);
 
-int8_t ipmi_kcs_ctx_get_driver_address(ipmi_kcs_ctx_t ctx, uint16_t *bmc_iobase_address);
-int8_t ipmi_kcs_ctx_get_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t *register_spacing);
-int8_t ipmi_kcs_ctx_get_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t *poll_interval);
-int8_t ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, unsigned int *flags);
+  int8_t ipmi_kcs_ctx_get_driver_address (ipmi_kcs_ctx_t ctx, uint16_t *bmc_iobase_address);
+  int8_t ipmi_kcs_ctx_get_register_spacing (ipmi_kcs_ctx_t ctx, uint8_t *register_spacing);
+  int8_t ipmi_kcs_ctx_get_poll_interval (ipmi_kcs_ctx_t ctx, uint8_t *poll_interval);
+  int8_t ipmi_kcs_ctx_get_flags (ipmi_kcs_ctx_t ctx, unsigned int *flags);
 
-int8_t ipmi_kcs_ctx_set_driver_address(ipmi_kcs_ctx_t ctx, uint16_t bmc_iobase_address);
-int8_t ipmi_kcs_ctx_set_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t register_spacing);
-int8_t ipmi_kcs_ctx_set_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t poll_interval);
-int8_t ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, unsigned int flags);
+  int8_t ipmi_kcs_ctx_set_driver_address (ipmi_kcs_ctx_t ctx, uint16_t bmc_iobase_address);
+  int8_t ipmi_kcs_ctx_set_register_spacing (ipmi_kcs_ctx_t ctx, uint8_t register_spacing);
+  int8_t ipmi_kcs_ctx_set_poll_interval (ipmi_kcs_ctx_t ctx, uint8_t poll_interval);
+  int8_t ipmi_kcs_ctx_set_flags (ipmi_kcs_ctx_t ctx, unsigned int flags);
 
-int8_t ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx);
+  int8_t ipmi_kcs_ctx_io_init (ipmi_kcs_ctx_t ctx);
 
-int32_t ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
-                        uint8_t *bytes,
-                        unsigned int bytes_len);
-  
-int32_t ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
-                       uint8_t* bytes,
-                       unsigned int bytes_len);
+  int32_t ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
+              uint8_t *bytes,
+              unsigned int bytes_len);
 
-int8_t ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
-		     uint8_t lun,
-		     uint8_t net_fn,
-		     fiid_obj_t obj_cmd_rq,
-		     fiid_obj_t obj_cmd_rs);
+  int32_t ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
+             uint8_t* bytes,
+             unsigned int bytes_len);
+
+  int8_t ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
+               uint8_t lun,
+               uint8_t net_fn,
+               fiid_obj_t obj_cmd_rq,
+               fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

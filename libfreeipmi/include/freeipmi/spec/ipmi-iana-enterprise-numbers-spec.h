@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,8 +13,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-*/
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ */
 
 #ifndef _IPMI_IANA_ENTERPRISE_NUMBERS_SPEC_H
 #define _IPMI_IANA_ENTERPRISE_NUMBERS_SPEC_H
@@ -27,8 +27,8 @@ extern "C" {
 
 /* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_IANA_ENTERPRISE_ID_VALID(__iana_enterprise_id) \
-        (((__iana_enterprise_id + 1) >= (0 + 1) \
-          && (__iana_enterprise_id - 1) <= (32760 - 1)) ? 1 : 0)
+  (((__iana_enterprise_id + 1) >= (0 + 1)                   \
+    && (__iana_enterprise_id - 1) <= (32760 - 1)) ? 1 : 0)
 
 /* Some fields can be NULL if they were not assigned/removed by IANA */
 extern const char *const ipmi_iana_enterprise_numbers[];

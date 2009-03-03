@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,9 +13,9 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
-*/
+ */
 
 #ifndef _IPMI_SENSOR_CMDS_API_H
 #define _IPMI_SENSOR_CMDS_API_H
@@ -37,10 +37,10 @@ int8_t ipmi_cmd_set_sensor_hysteresis (ipmi_ctx_t ctx,
                                        fiid_obj_t obj_cmd_rs);
 
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
-int8_t ipmi_cmd_get_sensor_hysteresis (ipmi_ctx_t ctx, 
-				       uint8_t sensor_number, 
+int8_t ipmi_cmd_get_sensor_hysteresis (ipmi_ctx_t ctx,
+                                       uint8_t sensor_number,
                                        uint8_t hysteresis_mask,
-				       fiid_obj_t obj_cmd_rs);
+                                       fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_set_sensor_thresholds (ipmi_ctx_t ctx,
                                        uint8_t sensor_number,
@@ -52,9 +52,9 @@ int8_t ipmi_cmd_set_sensor_thresholds (ipmi_ctx_t ctx,
                                        uint8_t *upper_non_recoverable_threshold,
                                        fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sensor_thresholds (ipmi_ctx_t ctx, 
-				       uint8_t sensor_number, 
-				       fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sensor_thresholds (ipmi_ctx_t ctx,
+                                       uint8_t sensor_number,
+                                       fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_set_sensor_event_enable (ipmi_ctx_t ctx,
                                          uint8_t sensor_number,
@@ -86,16 +86,16 @@ int8_t ipmi_cmd_set_sensor_event_enable_threshold (ipmi_ctx_t ctx,
                                                    uint8_t deassertion_event_lower_non_critical_going_high,
                                                    uint8_t deassertion_event_lower_critical_going_low,
                                                    uint8_t deassertion_event_lower_critical_going_high,
-                                                   uint8_t deassertion_event_lower_non_recoverable_going_low, 
-                                                   uint8_t deassertion_event_lower_non_recoverable_going_high ,
+                                                   uint8_t deassertion_event_lower_non_recoverable_going_low,
+                                                   uint8_t deassertion_event_lower_non_recoverable_going_high,
                                                    uint8_t deassertion_event_upper_non_critical_going_low,
                                                    uint8_t deassertion_event_upper_non_critical_going_high,
                                                    uint8_t deassertion_event_upper_critical_going_low,
                                                    uint8_t deassertion_event_upper_critical_going_high,
-                                                   uint8_t deassertion_event_upper_non_recoverable_going_low, 
+                                                   uint8_t deassertion_event_upper_non_recoverable_going_low,
                                                    uint8_t deassertion_event_upper_non_recoverable_going_high,
                                                    fiid_obj_t obj_cmd_rs);
- 
+
 int8_t ipmi_cmd_set_sensor_event_enable_discrete (ipmi_ctx_t ctx,
                                                   uint8_t sensor_number,
                                                   uint8_t event_message_action,
@@ -133,35 +133,35 @@ int8_t ipmi_cmd_set_sensor_event_enable_discrete (ipmi_ctx_t ctx,
                                                   uint8_t deassertion_event_state_bit_14,
                                                   fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sensor_event_enable (ipmi_ctx_t ctx, 
-                                         uint8_t sensor_number, 
+int8_t ipmi_cmd_get_sensor_event_enable (ipmi_ctx_t ctx,
+                                         uint8_t sensor_number,
                                          fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sensor_event_enable_threshold (ipmi_ctx_t ctx, 
-                                                   uint8_t sensor_number, 
+int8_t ipmi_cmd_get_sensor_event_enable_threshold (ipmi_ctx_t ctx,
+                                                   uint8_t sensor_number,
                                                    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sensor_event_enable_discrete (ipmi_ctx_t ctx, 
-                                                  uint8_t sensor_number, 
+int8_t ipmi_cmd_get_sensor_event_enable_discrete (ipmi_ctx_t ctx,
+                                                  uint8_t sensor_number,
                                                   fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sensor_reading (ipmi_ctx_t ctx, 
-                                    uint8_t sensor_number, 
+int8_t ipmi_cmd_get_sensor_reading (ipmi_ctx_t ctx,
+                                    uint8_t sensor_number,
                                     fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sensor_reading_ipmb (ipmi_ctx_t ctx, 
+int8_t ipmi_cmd_get_sensor_reading_ipmb (ipmi_ctx_t ctx,
                                          uint8_t slave_address,
                                          uint8_t lun,
-                                         uint8_t sensor_number, 
+                                         uint8_t sensor_number,
                                          fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sensor_reading_threshold (ipmi_ctx_t ctx, 
-					      uint8_t sensor_number, 
-					      fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sensor_reading_threshold (ipmi_ctx_t ctx,
+                                              uint8_t sensor_number,
+                                              fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sensor_reading_discrete (ipmi_ctx_t ctx, 
-					     uint8_t sensor_number, 
-					     fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sensor_reading_discrete (ipmi_ctx_t ctx,
+                                             uint8_t sensor_number,
+                                             fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

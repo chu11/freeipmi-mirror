@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,9 +13,9 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
-*/
+ */
 
 #ifndef _IPMI_SOL_PARAMETER_SPEC_H
 #define _IPMI_SOL_PARAMETER_SPEC_H
@@ -30,7 +30,7 @@ extern "C" {
 #define IPMI_SOL_PARAMETER_CHARACTER_ACCUMULATE_INTERVAL_AND_SEND_THRESHOLD 3
 #define IPMI_SOL_PARAMETER_SOL_RETRY                                        4
 #define IPMI_SOL_PARAMETER_SOL_NON_VOLATILE_BIT_RATE                        5
-#define IPMI_SOL_PARAMETER_SOL_VOLATILE_BIT_RATE                            6 
+#define IPMI_SOL_PARAMETER_SOL_VOLATILE_BIT_RATE                            6
 #define IPMI_SOL_PARAMETER_SOL_PAYLOAD_CHANNEL                              7
 #define IPMI_SOL_PARAMETER_SOL_PAYLOAD_PORT_NUMBER                          8
 

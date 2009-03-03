@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: tool-hostrange-common.c,v 1.3 2008-09-24 17:28:32 chu11 Exp $
+ *  $Id: tool-hostrange-common.c,v 1.4 2009-03-03 23:56:44 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -24,7 +24,7 @@
 #define HOSTLIST_BUFLEN 1024
 
 static int
-eliminate_nodes(char **hosts)
+eliminate_nodes (char **hosts)
 {
   hostlist_t hl = NULL;
   hostlist_t hlnew = NULL;
@@ -33,155 +33,155 @@ eliminate_nodes(char **hosts)
   char *host = NULL;
   char hostbuf[HOSTLIST_BUFLEN];
   int rv = -1;
-  
-  assert(hosts);
-  assert(*hosts);
 
-  if (!(id = ipmidetect_handle_create()))
+  assert (hosts);
+  assert (*hosts);
+
+  if (!(id = ipmidetect_handle_create ()))
     {
-      fprintf(stderr,
-              "ipmidetect_handle_create\n");
+      fprintf (stderr,
+               "ipmidetect_handle_create\n");
       goto cleanup;
     }
 
-  if (ipmidetect_load_data(id,
-                           NULL,
-                           0,
-                           0) < 0)
+  if (ipmidetect_load_data (id,
+                            NULL,
+                            0,
+                            0) < 0)
     {
-      if (ipmidetect_errnum(id) == IPMIDETECT_ERR_CONNECT
-          || ipmidetect_errnum(id) == IPMIDETECT_ERR_CONNECT_TIMEOUT)
-        fprintf(stderr,
-                "Error connecting to ipmidetect daemon\n");
+      if (ipmidetect_errnum (id) == IPMIDETECT_ERR_CONNECT
+          || ipmidetect_errnum (id) == IPMIDETECT_ERR_CONNECT_TIMEOUT)
+        fprintf (stderr,
+                 "Error connecting to ipmidetect daemon\n");
       else
-        fprintf(stderr,
-                "ipmidetect_load_data: %s\n", ipmidetect_errormsg(id));
-      goto cleanup;
-    }
-                       
-  if (!(hl = hostlist_create(*hosts)))
-    {
-      fprintf(stderr,
-              "hostlist_create: %s\n", 
-              strerror(errno));
+        fprintf (stderr,
+                 "ipmidetect_load_data: %s\n", ipmidetect_errormsg (id));
       goto cleanup;
     }
 
-  if (!(hlnew = hostlist_create(*hosts)))
+  if (!(hl = hostlist_create (*hosts)))
     {
-      fprintf(stderr,
-              "hostlist_create: %s\n", 
-              strerror(errno));
+      fprintf (stderr,
+               "hostlist_create: %s\n",
+               strerror (errno));
       goto cleanup;
     }
 
-  if (!(hitr = hostlist_iterator_create(hl)))
+  if (!(hlnew = hostlist_create (*hosts)))
     {
-      fprintf(stderr,
-              "hostlist_iterator_create: %s\n", 
-              strerror(errno));
+      fprintf (stderr,
+               "hostlist_create: %s\n",
+               strerror (errno));
       goto cleanup;
     }
 
-  while ((host = hostlist_next(hitr)))
+  if (!(hitr = hostlist_iterator_create (hl)))
+    {
+      fprintf (stderr,
+               "hostlist_iterator_create: %s\n",
+               strerror (errno));
+      goto cleanup;
+    }
+
+  while ((host = hostlist_next (hitr)))
     {
       int ret;
 
-      if ((ret = ipmidetect_is_node_detected(id, host)) < 0)
+      if ((ret = ipmidetect_is_node_detected (id, host)) < 0)
         {
-          if (ipmidetect_errnum(id) == IPMIDETECT_ERR_NOTFOUND)
-            fprintf(stderr,
-                    "Node '%s' unrecognized by ipmidetect\n", host);
+          if (ipmidetect_errnum (id) == IPMIDETECT_ERR_NOTFOUND)
+            fprintf (stderr,
+                     "Node '%s' unrecognized by ipmidetect\n", host);
           else
-            fprintf(stderr,
-                    "ipmidetect_is_node_detected: %s\n", ipmidetect_errormsg(id));
+            fprintf (stderr,
+                     "ipmidetect_is_node_detected: %s\n", ipmidetect_errormsg (id));
           goto cleanup;
         }
 
       if (!ret)
-        hostlist_delete(hlnew, host);
+        hostlist_delete (hlnew, host);
 
-      free(host);
+      free (host);
     }
   host = NULL;
 
-  if (hostlist_ranged_string(hlnew, HOSTLIST_BUFLEN, hostbuf) <= 0)
+  if (hostlist_ranged_string (hlnew, HOSTLIST_BUFLEN, hostbuf) <= 0)
     {
-      fprintf(stderr,
-              "hostlist_ranged_string: truncation\n");
+      fprintf (stderr,
+               "hostlist_ranged_string: truncation\n");
       goto cleanup;
     }
 
-  free(*hosts);
-  if (!(*hosts = strdup(hostbuf)))
+  free (*hosts);
+  if (!(*hosts = strdup (hostbuf)))
     {
-      fprintf(stderr, "strdup: %s\n", strerror(errno));
+      fprintf (stderr, "strdup: %s\n", strerror (errno));
       goto cleanup;
     }
-  
+
   rv = 0;
  cleanup:
   if (id)
-    ipmidetect_handle_destroy(id);
+    ipmidetect_handle_destroy (id);
   if (hitr)
-    hostlist_iterator_destroy(hitr);
+    hostlist_iterator_destroy (hitr);
   if (hl)
-    hostlist_destroy(hl);
+    hostlist_destroy (hl);
   if (hlnew)
-    hostlist_destroy(hlnew);
+    hostlist_destroy (hlnew);
   if (host)
-    free(host);
+    free (host);
   return rv;
 }
 
-int 
-pstdout_setup(char **hosts,
-              int buffer_output,
-              int consolidate_output,
-              int fanout,
-              int eliminate,
-              int always_prefix)
+int
+pstdout_setup (char **hosts,
+               int buffer_output,
+               int consolidate_output,
+               int fanout,
+               int eliminate,
+               int always_prefix)
 {
   unsigned int output_flags = 0;
   int hosts_count = 0;
 
-  assert(hosts);
+  assert (hosts);
 
-  if (pstdout_init() < 0)
+  if (pstdout_init () < 0)
     {
-      fprintf(stderr,
-              "pstdout_init: %s\n",
-              pstdout_strerror(pstdout_errnum));
+      fprintf (stderr,
+               "pstdout_init: %s\n",
+               pstdout_strerror (pstdout_errnum));
       goto cleanup;
     }
 
   if (*hosts)
     {
-      if ((hosts_count = pstdout_hostnames_count(*hosts)) < 0)
+      if ((hosts_count = pstdout_hostnames_count (*hosts)) < 0)
         {
-          fprintf(stderr,
-                  "pstdout_hostnames_count: %s\n",
-                  pstdout_strerror(pstdout_errnum));
+          fprintf (stderr,
+                   "pstdout_hostnames_count: %s\n",
+                   pstdout_strerror (pstdout_errnum));
           goto cleanup;
         }
 
       if (!hosts_count)
         {
-          fprintf(stderr,
-                  "invalid number of hosts specified\n");
+          fprintf (stderr,
+                   "invalid number of hosts specified\n");
           goto cleanup;
         }
     }
   else /* inband communication, hosts_count = 1 */
     {
       hosts_count = 1;
-     
+
       /* if always prefix - turn hostname into "localhost" for prefixing */
       if (always_prefix)
         {
-          if (!(*hosts = strdup("localhost")))
+          if (!(*hosts = strdup ("localhost")))
             {
-              fprintf(stderr, "strdup: %s\n", strerror(errno));
+              fprintf (stderr, "strdup: %s\n", strerror (errno));
               goto cleanup;
             }
         }
@@ -199,11 +199,11 @@ pstdout_setup(char **hosts,
 
       if (fanout)
         {
-          if (pstdout_set_fanout(fanout) < 0)
+          if (pstdout_set_fanout (fanout) < 0)
             {
-              fprintf(stderr,
-                      "pstdout_set_fanout: %s\n",
-                      pstdout_strerror(pstdout_errnum));
+              fprintf (stderr,
+                       "pstdout_set_fanout: %s\n",
+                       pstdout_strerror (pstdout_errnum));
               goto cleanup;
             }
         }
@@ -213,18 +213,18 @@ pstdout_setup(char **hosts,
 
   if (output_flags)
     {
-      if (pstdout_set_output_flags(output_flags) < 0)
+      if (pstdout_set_output_flags (output_flags) < 0)
         {
-          fprintf(stderr,
-                  "pstdout_set_output_flags: %s\n",
-                  pstdout_strerror(pstdout_errnum));
+          fprintf (stderr,
+                   "pstdout_set_output_flags: %s\n",
+                   pstdout_strerror (pstdout_errnum));
           goto cleanup;
         }
     }
-  
+
   if (*hosts && eliminate)
     {
-      if (eliminate_nodes(hosts) < 0)
+      if (eliminate_nodes (hosts) < 0)
         goto cleanup;
     }
 

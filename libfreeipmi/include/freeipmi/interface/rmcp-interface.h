@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,13 +13,13 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
-*/
+ */
 
 
 #ifndef _RMCP_INTERFACE_H
-#define	_RMCP_INTERFACE_H	1
+#define _RMCP_INTERFACE_H       1
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,7 +34,7 @@ extern "C" {
 #define RMCP_PRIMARY_RMCP_PORT        RMCP_AUX_BUS_SHUNT
 
 #define RMCP_SECURE_AUX_BUS           0x298
-#define RMCP_SECONDARY_RMCP_PORT      RMCP_SECURE_AUX_BUS 
+#define RMCP_SECONDARY_RMCP_PORT      RMCP_SECURE_AUX_BUS
 
 #define RMCP_HDR_SEQ_NUM_NO_RMCP_ACK  0xFF
 
@@ -45,10 +45,10 @@ extern "C" {
 #define RMCP_HDR_MESSAGE_CLASS_IPMI  0x07
 #define RMCP_HDR_MESSAGE_CLASS_OEM   0x08
 
-#define RMCP_HDR_MESSAGE_CLASS_VALID(__message_class) \
-        (((__message_class) == RMCP_HDR_MESSAGE_CLASS_ASF \
-          || (__message_class) == RMCP_HDR_MESSAGE_CLASS_IPMI \
-          || (__message_class) == RMCP_HDR_MESSAGE_CLASS_OEM) ? 1 : 0)
+#define RMCP_HDR_MESSAGE_CLASS_VALID(__message_class)   \
+  (((__message_class) == RMCP_HDR_MESSAGE_CLASS_ASF     \
+    || (__message_class) == RMCP_HDR_MESSAGE_CLASS_IPMI \
+    || (__message_class) == RMCP_HDR_MESSAGE_CLASS_OEM) ? 1 : 0)
 
 #define RMCP_ASF_IANA_ENTERPRISE_NUM    0x11BE /* 4542 */
 

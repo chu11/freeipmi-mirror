@@ -5,12 +5,12 @@
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2, or (at your option)
   any later version.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
@@ -42,86 +42,86 @@
 #define IPMI_SENSORS_SPACE_BUFFER 1024
 
 int
-ipmi_sensors_output_event_message_list(ipmi_sensors_state_data_t *state_data,
-                                       char **event_message_list,
-                                       unsigned int event_message_list_len,
-                                       char *prefix,
-                                       unsigned int each_on_newline)
+ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
+                                        char **event_message_list,
+                                        unsigned int event_message_list_len,
+                                        char *prefix,
+                                        unsigned int each_on_newline)
 {
   char spcbuf[IPMI_SENSORS_SPACE_BUFFER + 1];
   int i;
 
-  assert(state_data);
-  
+  assert (state_data);
+
   if (prefix)
-    pstdout_printf(state_data->pstate, "%s", prefix);
-  
-  memset(spcbuf, '\0', IPMI_SENSORS_SPACE_BUFFER + 1);
+    pstdout_printf (state_data->pstate, "%s", prefix);
+
+  memset (spcbuf, '\0', IPMI_SENSORS_SPACE_BUFFER + 1);
   if (prefix && each_on_newline)
     {
       unsigned int len;
-      
-      len = strlen(prefix);
+
+      len = strlen (prefix);
       if (len > IPMI_SENSORS_SPACE_BUFFER)
         len = IPMI_SENSORS_SPACE_BUFFER;
-      
+
       for (i = 0; i < len; i++)
-        strcat(spcbuf, " ");
+        strcat (spcbuf, " ");
     }
-  
+
   if (event_message_list)
     {
       if (event_message_list_len >= 1)
         {
           if (state_data->prog_data->args->legacy_output)
-            pstdout_printf(state_data->pstate,
-                           "[%s]",
-                           event_message_list[0]);
+            pstdout_printf (state_data->pstate,
+                            "[%s]",
+                            event_message_list[0]);
           else
             {
-              if (!strcmp(event_message_list[0], IPMI_SENSORS_NA_STRING))
-                pstdout_printf(state_data->pstate,
-                               "%s",
-                               event_message_list[0]);
+              if (!strcmp (event_message_list[0], IPMI_SENSORS_NA_STRING))
+                pstdout_printf (state_data->pstate,
+                                "%s",
+                                event_message_list[0]);
               else
-                pstdout_printf(state_data->pstate,
-                               "'%s'",
-                               event_message_list[0]);
+                pstdout_printf (state_data->pstate,
+                                "'%s'",
+                                event_message_list[0]);
             }
         }
 
       for (i = 1; i < event_message_list_len; i++)
         {
           if (each_on_newline)
-            pstdout_printf(state_data->pstate,
-                           "\n");
+            pstdout_printf (state_data->pstate,
+                            "\n");
           if (state_data->prog_data->args->legacy_output)
-            pstdout_printf(state_data->pstate,
-                           "%s[%s]",
-                           spcbuf,
-                           event_message_list[i]);
+            pstdout_printf (state_data->pstate,
+                            "%s[%s]",
+                            spcbuf,
+                            event_message_list[i]);
           else
-            pstdout_printf(state_data->pstate,
-                           "%s'%s'",
-                           prefix,
-                           event_message_list[i]);
+            pstdout_printf (state_data->pstate,
+                            "%s'%s'",
+                            prefix,
+                            event_message_list[i]);
         }
 
-      pstdout_printf(state_data->pstate,
-                     "\n");
+      pstdout_printf (state_data->pstate,
+                      "\n");
     }
-  else 
+  else
     {
       if (state_data->prog_data->args->legacy_output)
-        pstdout_printf(state_data->pstate,
-                       "[%s]\n",
-                       "Unknown"); 
+        pstdout_printf (state_data->pstate,
+                        "[%s]\n",
+                        "Unknown");
       else
-        pstdout_printf(state_data->pstate,
-                       "%s\n",
-                       "Unknown"); 
+        pstdout_printf (state_data->pstate,
+                        "%s\n",
+                        "Unknown");
     }
-  
+
   return 0;
 }
 
@@ -129,10 +129,10 @@ ipmi_sensors_output_event_message_list(ipmi_sensors_state_data_t *state_data,
  * stuffing the response with data from the SDR
  */
 static int
-_get_sdr_sensor_thresholds(ipmi_sensors_state_data_t *state_data,
-                           uint8_t *sdr_record,
-                           unsigned int sdr_record_len,
-                           fiid_obj_t obj_get_sensor_thresholds_rs)
+_get_sdr_sensor_thresholds (ipmi_sensors_state_data_t *state_data,
+                            uint8_t *sdr_record,
+                            unsigned int sdr_record_len,
+                            fiid_obj_t obj_get_sensor_thresholds_rs)
 {
   uint8_t lower_non_critical_threshold_readable = 0;
   uint8_t lower_critical_threshold_readable = 0;
@@ -154,31 +154,31 @@ _get_sdr_sensor_thresholds(ipmi_sensors_state_data_t *state_data,
   uint8_t upper_non_recoverable_threshold = 0;
   int rv = -1;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(obj_get_sensor_thresholds_rs);
-  assert(fiid_obj_template_compare(obj_get_sensor_thresholds_rs, 
-                                   tmpl_cmd_get_sensor_thresholds_rs) > 0);
-  
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
-                   "cmd", 
-                   IPMI_CMD_GET_SENSOR_THRESHOLDS) < 0)
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (obj_get_sensor_thresholds_rs);
+  assert (fiid_obj_template_compare (obj_get_sensor_thresholds_rs,
+                                     tmpl_cmd_get_sensor_thresholds_rs) > 0);
+
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "cmd",
+                    IPMI_CMD_GET_SENSOR_THRESHOLDS) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'cmd': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'cmd': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
-                   "comp_code", 
-                   IPMI_COMP_CODE_COMMAND_SUCCESS) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "comp_code",
+                    IPMI_COMP_CODE_COMMAND_SUCCESS) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'comp_code': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'comp_code': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
 
@@ -195,81 +195,81 @@ _get_sdr_sensor_thresholds(ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_threshold_readable: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
-  
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
-                   "readable_thresholds.lower_non_critical_threshold", 
-                   lower_non_critical_threshold_readable) < 0)
+
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "readable_thresholds.lower_non_critical_threshold",
+                    lower_non_critical_threshold_readable) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'readable_thresholds.lower_non_critical_threshold': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'readable_thresholds.lower_non_critical_threshold': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
-                   "readable_thresholds.lower_critical_threshold", 
-                   lower_critical_threshold_readable) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "readable_thresholds.lower_critical_threshold",
+                    lower_critical_threshold_readable) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'readable_thresholds.lower_critical_threshold': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'readable_thresholds.lower_critical_threshold': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
-                   "readable_thresholds.lower_non_recoverable_threshold", 
-                   lower_non_recoverable_threshold_readable) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "readable_thresholds.lower_non_recoverable_threshold",
+                    lower_non_recoverable_threshold_readable) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'readable_thresholds.lower_non_recoverable_threshold': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'readable_thresholds.lower_non_recoverable_threshold': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
-                   "readable_thresholds.upper_non_critical_threshold", 
-                   upper_non_critical_threshold_readable) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "readable_thresholds.upper_non_critical_threshold",
+                    upper_non_critical_threshold_readable) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'readable_thresholds.upper_non_critical_threshold': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'readable_thresholds.upper_non_critical_threshold': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
-                   "readable_thresholds.upper_critical_threshold", 
-                   upper_critical_threshold_readable) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "readable_thresholds.upper_critical_threshold",
+                    upper_critical_threshold_readable) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'readable_thresholds.upper_critical_threshold': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'readable_thresholds.upper_critical_threshold': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
-                   "readable_thresholds.upper_non_recoverable_threshold", 
-                   upper_non_recoverable_threshold_readable) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "readable_thresholds.upper_non_recoverable_threshold",
+                    upper_non_recoverable_threshold_readable) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'readable_thresholds.upper_non_recoverable_threshold': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'readable_thresholds.upper_non_recoverable_threshold': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs, 
-                   "reserved", 
-                   0) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "reserved",
+                    0) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'reserved': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'reserved': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  
+
   if (ipmi_sdr_parse_thresholds_raw (state_data->sdr_parse_ctx,
                                      sdr_record,
                                      sdr_record_len,
@@ -283,7 +283,7 @@ _get_sdr_sensor_thresholds(ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_thresholds_raw: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -300,82 +300,82 @@ _get_sdr_sensor_thresholds(ipmi_sensors_state_data_t *state_data,
   if (upper_non_recoverable_threshold_readable)
     upper_non_recoverable_threshold = upper_non_recoverable_threshold_temp;
 
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs,
-                   "lower_non_critical_threshold",
-                   lower_non_critical_threshold) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "lower_non_critical_threshold",
+                    lower_non_critical_threshold) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'lower_non_critical_threshold': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'lower_non_critical_threshold': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs,
-                   "lower_critical_threshold",
-                   lower_critical_threshold) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "lower_critical_threshold",
+                    lower_critical_threshold) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'lower_critical_threshold': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'lower_critical_threshold': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs,
-                   "lower_non_recoverable_threshold",
-                   lower_non_recoverable_threshold) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "lower_non_recoverable_threshold",
+                    lower_non_recoverable_threshold) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'lower_non_recoverable_threshold': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'lower_non_recoverable_threshold': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs,
-                   "upper_non_critical_threshold",
-                   upper_non_critical_threshold) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "upper_non_critical_threshold",
+                    upper_non_critical_threshold) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'upper_non_critical_threshold': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'upper_non_critical_threshold': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs,
-                   "upper_critical_threshold",
-                   upper_critical_threshold) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "upper_critical_threshold",
+                    upper_critical_threshold) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'upper_critical_threshold': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'upper_critical_threshold': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  if (fiid_obj_set(obj_get_sensor_thresholds_rs,
-                   "upper_non_recoverable_threshold",
-                   upper_non_recoverable_threshold) < 0)
+  if (fiid_obj_set (obj_get_sensor_thresholds_rs,
+                    "upper_non_recoverable_threshold",
+                    upper_non_recoverable_threshold) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set: 'upper_non_recoverable_threshold': %s\n",
-                      fiid_obj_errormsg(obj_get_sensor_thresholds_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set: 'upper_non_recoverable_threshold': %s\n",
+                       fiid_obj_errormsg (obj_get_sensor_thresholds_rs));
       goto cleanup;
     }
-  
+
   rv = 0;
  cleanup:
   return (rv);
 }
 
 int
-ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
-                            uint8_t *sdr_record,
-                            unsigned int sdr_record_len,
-                            double **lower_non_critical_threshold,
-                            double **lower_critical_threshold,
-                            double **lower_non_recoverable_threshold,
-                            double **upper_non_critical_threshold,
-                            double **upper_critical_threshold,
-                            double **upper_non_recoverable_threshold)
+ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
+                             uint8_t *sdr_record,
+                             unsigned int sdr_record_len,
+                             double **lower_non_critical_threshold,
+                             double **lower_critical_threshold,
+                             double **lower_non_recoverable_threshold,
+                             double **upper_non_critical_threshold,
+                             double **upper_critical_threshold,
+                             double **upper_non_recoverable_threshold)
 {
   int8_t r_exponent, b_exponent;
   int16_t m, b;
@@ -393,9 +393,9 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
   uint64_t val;
   int rv = -1;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
 
   if (lower_non_critical_threshold)
     *lower_non_critical_threshold = NULL;
@@ -411,19 +411,19 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
     *upper_non_recoverable_threshold = NULL;
 
   /* achu: first lets check if we have anything to output */
-  if (ipmi_sdr_parse_sensor_capabilities(state_data->sdr_parse_ctx,
-                                         sdr_record,
-                                         sdr_record_len,
-                                         NULL,
-                                         &threshold_access_support,
-                                         NULL,
-                                         NULL,
-                                         NULL) < 0)
+  if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_parse_ctx,
+                                          sdr_record,
+                                          sdr_record_len,
+                                          NULL,
+                                          &threshold_access_support,
+                                          NULL,
+                                          NULL,
+                                          NULL) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_capabilities: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -449,7 +449,7 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
    * Also, because the results from the get_sensor_thresholds include
    * readability flags, we can ignore the readability flags in the
    * SDR.
-   * 
+   *
    */
 
   if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
@@ -460,24 +460,24 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
-  if (ipmi_sdr_parse_sensor_decoding_data(state_data->sdr_parse_ctx,
-                                          sdr_record,
-                                          sdr_record_len,
-                                          &r_exponent,
-                                          &b_exponent,
-                                          &m,
-                                          &b,
-                                          &linearization,
-                                          &analog_data_format) < 0)
+  if (ipmi_sdr_parse_sensor_decoding_data (state_data->sdr_parse_ctx,
+                                           sdr_record,
+                                           sdr_record_len,
+                                           &r_exponent,
+                                           &b_exponent,
+                                           &m,
+                                           &b,
+                                           &linearization,
+                                           &analog_data_format) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_decoding_data: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -486,36 +486,36 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
    *
    * Don't return an error.  Allow code to output "NA" or something.
    */
-  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
+  if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID (analog_data_format))
     {
       if (state_data->prog_data->args->common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "Attempting to decode non-analog sensor\n");
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "Attempting to decode non-analog sensor\n");
       rv = 0;
       goto cleanup;
     }
 
-  /* if the sensor is non-linear, I just don't know what to do 
+  /* if the sensor is non-linear, I just don't know what to do
    *
    * Don't return an error.  Allow code to output "NA" or something.
    */
-  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
+  if (!IPMI_SDR_LINEARIZATION_IS_LINEAR (linearization))
     {
       if (state_data->prog_data->args->common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "Cannot decode non-linear sensor\n");
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "Cannot decode non-linear sensor\n");
       rv = 0;
       goto cleanup;
     }
-  
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sensor_thresholds_rs)))
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sensor_thresholds_rs)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
@@ -524,15 +524,15 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
                                       obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_get_sensor_thresholds: %s\n",
-                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if ((ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID)
-          && (ipmi_check_completion_code(obj_cmd_rs, 
-                                         IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
-              || ipmi_check_completion_code(obj_cmd_rs,
-                                            IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_sensor_thresholds: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID)
+          && (ipmi_check_completion_code (obj_cmd_rs,
+                                          IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
+              || ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
         {
           /* The thresholds cannot be gathered for one reason or
            * another, maybe b/c its a OEM sensor or something.  We can
@@ -542,7 +542,7 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
           goto cleanup;
         }
 
-      /* 
+      /*
        * IPMI Workaround (achu)
        *
        * Discovered on HP DL585
@@ -552,13 +552,13 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
        * information in the SDR is legit and up to date.  Go get it
        * and fill in the object respectively.
        */
-      if ((ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND)
-          && (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID) == 1))
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND)
+          && (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID) == 1))
         {
           if (state_data->prog_data->args->common.debug)
-            pstdout_fprintf(state_data->pstate,
-                            stderr,
-                            "Get Sensor Thresholds failed, using SDR information\n");
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "Get Sensor Thresholds failed, using SDR information\n");
 
           if (_get_sdr_sensor_thresholds (state_data,
                                           sdr_record,
@@ -570,40 +570,40 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
         }
 
       goto cleanup;
-    } 
+    }
 
  continue_get_sensor_thresholds:
 
   if (lower_non_critical_threshold)
     {
-      TOOL_FIID_OBJ_GET(obj_cmd_rs,
-                        "readable_thresholds.lower_non_critical_threshold",
-                        &val);
+      TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                         "readable_thresholds.lower_non_critical_threshold",
+                         &val);
       if (val)
         {
-          TOOL_FIID_OBJ_GET(obj_cmd_rs,
-                            "lower_non_critical_threshold",
-                            &val);
+          TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                             "lower_non_critical_threshold",
+                             &val);
 
-          if (ipmi_sensor_decode_value(r_exponent,
-                                       b_exponent,
-                                       m,
-                                       b,
-                                       linearization,
-                                       analog_data_format,
-                                       val,
-                                       &threshold) < 0)
+          if (ipmi_sensor_decode_value (r_exponent,
+                                        b_exponent,
+                                        m,
+                                        b,
+                                        linearization,
+                                        analog_data_format,
+                                        val,
+                                        &threshold) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sensor_decode_value: %s\n",
-                               strerror(errno));
+                               strerror (errno));
               goto cleanup;
             }
 
-          if (!(tmp_lower_non_critical_threshold = (double *)malloc(sizeof(double))))
+          if (!(tmp_lower_non_critical_threshold = (double *)malloc (sizeof(double))))
             {
-              pstdout_perror(state_data->pstate, "malloc");
+              pstdout_perror (state_data->pstate, "malloc");
               goto cleanup;
             }
           *tmp_lower_non_critical_threshold = threshold;
@@ -611,34 +611,34 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
     }
   if (lower_critical_threshold)
     {
-      TOOL_FIID_OBJ_GET(obj_cmd_rs,
-                        "readable_thresholds.lower_critical_threshold",
-                        &val);
+      TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                         "readable_thresholds.lower_critical_threshold",
+                         &val);
       if (val)
         {
-          TOOL_FIID_OBJ_GET(obj_cmd_rs,
-                            "lower_critical_threshold",
-                            &val);
+          TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                             "lower_critical_threshold",
+                             &val);
 
-          if (ipmi_sensor_decode_value(r_exponent,
-                                       b_exponent,
-                                       m,
-                                       b,
-                                       linearization,
-                                       analog_data_format,
-                                       val,
-                                       &threshold) < 0)
+          if (ipmi_sensor_decode_value (r_exponent,
+                                        b_exponent,
+                                        m,
+                                        b,
+                                        linearization,
+                                        analog_data_format,
+                                        val,
+                                        &threshold) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sensor_decode_value: %s\n",
-                               strerror(errno));
+                               strerror (errno));
               goto cleanup;
             }
 
-          if (!(tmp_lower_critical_threshold = (double *)malloc(sizeof(double))))
+          if (!(tmp_lower_critical_threshold = (double *)malloc (sizeof(double))))
             {
-              pstdout_perror(state_data->pstate, "malloc");
+              pstdout_perror (state_data->pstate, "malloc");
               goto cleanup;
             }
           *tmp_lower_critical_threshold = threshold;
@@ -646,34 +646,34 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
     }
   if (lower_non_recoverable_threshold)
     {
-      TOOL_FIID_OBJ_GET(obj_cmd_rs,
-                        "readable_thresholds.lower_non_recoverable_threshold",
-                        &val);
+      TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                         "readable_thresholds.lower_non_recoverable_threshold",
+                         &val);
       if (val)
         {
-          TOOL_FIID_OBJ_GET(obj_cmd_rs,
-                            "lower_non_recoverable_threshold",
-                            &val);
+          TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                             "lower_non_recoverable_threshold",
+                             &val);
 
-          if (ipmi_sensor_decode_value(r_exponent,
-                                       b_exponent,
-                                       m,
-                                       b,
-                                       linearization,
-                                       analog_data_format,
-                                       val,
-                                       &threshold) < 0)
+          if (ipmi_sensor_decode_value (r_exponent,
+                                        b_exponent,
+                                        m,
+                                        b,
+                                        linearization,
+                                        analog_data_format,
+                                        val,
+                                        &threshold) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sensor_decode_value: %s\n",
-                               strerror(errno));
+                               strerror (errno));
               goto cleanup;
             }
 
-          if (!(tmp_lower_non_recoverable_threshold = (double *)malloc(sizeof(double))))
+          if (!(tmp_lower_non_recoverable_threshold = (double *)malloc (sizeof(double))))
             {
-              pstdout_perror(state_data->pstate, "malloc");
+              pstdout_perror (state_data->pstate, "malloc");
               goto cleanup;
             }
           *tmp_lower_non_recoverable_threshold = threshold;
@@ -681,34 +681,34 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
     }
   if (upper_non_critical_threshold)
     {
-      TOOL_FIID_OBJ_GET(obj_cmd_rs,
-                        "readable_thresholds.upper_non_critical_threshold",
-                        &val);
+      TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                         "readable_thresholds.upper_non_critical_threshold",
+                         &val);
       if (val)
         {
-          TOOL_FIID_OBJ_GET(obj_cmd_rs,
-                            "upper_non_critical_threshold",
-                            &val);
+          TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                             "upper_non_critical_threshold",
+                             &val);
 
-          if (ipmi_sensor_decode_value(r_exponent,
-                                       b_exponent,
-                                       m,
-                                       b,
-                                       linearization,
-                                       analog_data_format,
-                                       val,
-                                       &threshold) < 0)
+          if (ipmi_sensor_decode_value (r_exponent,
+                                        b_exponent,
+                                        m,
+                                        b,
+                                        linearization,
+                                        analog_data_format,
+                                        val,
+                                        &threshold) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sensor_decode_value: %s\n",
-                               strerror(errno));
+                               strerror (errno));
               goto cleanup;
             }
 
-          if (!(tmp_upper_non_critical_threshold = (double *)malloc(sizeof(double))))
+          if (!(tmp_upper_non_critical_threshold = (double *)malloc (sizeof(double))))
             {
-              pstdout_perror(state_data->pstate, "malloc");
+              pstdout_perror (state_data->pstate, "malloc");
               goto cleanup;
             }
           *tmp_upper_non_critical_threshold = threshold;
@@ -716,34 +716,34 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
     }
   if (upper_critical_threshold)
     {
-      TOOL_FIID_OBJ_GET(obj_cmd_rs,
-                        "readable_thresholds.upper_critical_threshold",
-                        &val);
+      TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                         "readable_thresholds.upper_critical_threshold",
+                         &val);
       if (val)
         {
-          TOOL_FIID_OBJ_GET(obj_cmd_rs,
-                            "upper_critical_threshold",
-                            &val);
+          TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                             "upper_critical_threshold",
+                             &val);
 
-          if (ipmi_sensor_decode_value(r_exponent,
-                                       b_exponent,
-                                       m,
-                                       b,
-                                       linearization,
-                                       analog_data_format,
-                                       val,
-                                       &threshold) < 0)
+          if (ipmi_sensor_decode_value (r_exponent,
+                                        b_exponent,
+                                        m,
+                                        b,
+                                        linearization,
+                                        analog_data_format,
+                                        val,
+                                        &threshold) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sensor_decode_value: %s\n",
-                               strerror(errno));
+                               strerror (errno));
               goto cleanup;
             }
 
-          if (!(tmp_upper_critical_threshold = (double *)malloc(sizeof(double))))
+          if (!(tmp_upper_critical_threshold = (double *)malloc (sizeof(double))))
             {
-              pstdout_perror(state_data->pstate, "malloc");
+              pstdout_perror (state_data->pstate, "malloc");
               goto cleanup;
             }
           *tmp_upper_critical_threshold = threshold;
@@ -751,34 +751,34 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
     }
   if (upper_non_recoverable_threshold)
     {
-      TOOL_FIID_OBJ_GET(obj_cmd_rs,
-                        "readable_thresholds.upper_non_recoverable_threshold",
-                        &val);
+      TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                         "readable_thresholds.upper_non_recoverable_threshold",
+                         &val);
       if (val)
         {
-          TOOL_FIID_OBJ_GET(obj_cmd_rs,
-                            "upper_non_recoverable_threshold",
-                            &val);
+          TOOL_FIID_OBJ_GET (obj_cmd_rs,
+                             "upper_non_recoverable_threshold",
+                             &val);
 
-          if (ipmi_sensor_decode_value(r_exponent,
-                                       b_exponent,
-                                       m,
-                                       b,
-                                       linearization,
-                                       analog_data_format,
-                                       val,
-                                       &threshold) < 0)
+          if (ipmi_sensor_decode_value (r_exponent,
+                                        b_exponent,
+                                        m,
+                                        b,
+                                        linearization,
+                                        analog_data_format,
+                                        val,
+                                        &threshold) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sensor_decode_value: %s\n",
-                               strerror(errno));
+                               strerror (errno));
               goto cleanup;
             }
 
-          if (!(tmp_upper_non_recoverable_threshold = (double *)malloc(sizeof(double))))
+          if (!(tmp_upper_non_recoverable_threshold = (double *)malloc (sizeof(double))))
             {
-              pstdout_perror(state_data->pstate, "malloc");
+              pstdout_perror (state_data->pstate, "malloc");
               goto cleanup;
             }
           *tmp_upper_non_recoverable_threshold = threshold;
@@ -800,21 +800,21 @@ ipmi_sensors_get_thresholds(ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
   if (rv < 0)
     {
       if (tmp_lower_non_critical_threshold)
-        free(tmp_lower_non_critical_threshold);
+        free (tmp_lower_non_critical_threshold);
       if (tmp_lower_critical_threshold)
-        free(tmp_lower_critical_threshold);
+        free (tmp_lower_critical_threshold);
       if (tmp_lower_non_recoverable_threshold)
-        free(tmp_lower_non_recoverable_threshold);
+        free (tmp_lower_non_recoverable_threshold);
       if (tmp_upper_non_critical_threshold)
-        free(tmp_upper_non_critical_threshold);
+        free (tmp_upper_non_critical_threshold);
       if (tmp_upper_critical_threshold)
-        free(tmp_upper_critical_threshold);
+        free (tmp_upper_critical_threshold);
       if (tmp_upper_non_recoverable_threshold)
-        free(tmp_upper_non_recoverable_threshold);
+        free (tmp_upper_non_recoverable_threshold);
     }
   return rv;
 }

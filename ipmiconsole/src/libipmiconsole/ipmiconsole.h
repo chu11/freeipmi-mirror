@@ -1,25 +1,25 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.77 2009-02-24 01:18:09 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.78 2009-03-03 23:56:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  UCRL-CODE-221226
- *  
+ *
  *  This file is part of Ipmiconsole, a set of IPMI 2.0 SOL libraries
  *  and utilities.  For details, see http://www.llnl.gov/linux/.
- *  
- *  Ipmiconsole is free software; you can redistribute it and/or modify 
- *  it under the terms of the GNU General Public License as published by the 
- *  Free Software Foundation; either version 2 of the License, or (at your 
+ *
+ *  Ipmiconsole is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at your
  *  option) any later version.
- *  
- *  Ipmiconsole is distributed in the hope that it will be useful, but 
- *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+ *
+ *  Ipmiconsole is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
  *  for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License along
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
@@ -34,7 +34,7 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
 
-/* 
+/*
  * IPMI Console Error Codes
  */
 #define IPMICONSOLE_ERR_SUCCESS                               0
@@ -45,7 +45,7 @@ extern "C" {
 #define IPMICONSOLE_ERR_CTX_NOT_SUBMITTED                     5
 #define IPMICONSOLE_ERR_CTX_IS_SUBMITTED                      6
 #define IPMICONSOLE_ERR_PARAMETERS                            7
-#define IPMICONSOLE_ERR_HOSTNAME_INVALID                      8 
+#define IPMICONSOLE_ERR_HOSTNAME_INVALID                      8
 #define IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE                  9
 #define IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE          10
 #define IPMICONSOLE_ERR_USERNAME_INVALID                     11
@@ -71,7 +71,7 @@ extern "C" {
 #define IPMICONSOLE_ERR_INTERNAL_ERROR                       31
 #define IPMICONSOLE_ERR_ERRNUMRANGE                          32
 
-/* 
+/*
  * Debug Flags
  *
  * Utilized with ipmiconsole_engine_init() or with struct
@@ -84,7 +84,7 @@ extern "C" {
  * When used with struct ipmiconsole_engine_config and a context,
  * enables debugging specific to an IPMI connection with a specific
  * host.
- * 
+ *
  * STDOUT       - Output debugging to stdout
  * STDERR       - Output debugging to stderr
  * SYSLOG       - Output debugging to the Syslog
@@ -97,7 +97,7 @@ extern "C" {
 #define IPMICONSOLE_DEBUG_FILE             0x00000008
 #define IPMICONSOLE_DEBUG_IPMI_PACKETS     0x00000010
 
-/* 
+/*
  * IPMI Privilege Constants
  *
  * Utilized with struct ipmiconsole_ipmi_config below to specify a
@@ -105,14 +105,14 @@ extern "C" {
  */
 #define IPMICONSOLE_PRIVILEGE_USER                0
 #define IPMICONSOLE_PRIVILEGE_OPERATOR            1
-#define IPMICONSOLE_PRIVILEGE_ADMIN               2 
+#define IPMICONSOLE_PRIVILEGE_ADMIN               2
 
-/* 
+/*
  * Workaround Flags
  *
  * Utilized with struct ipmiconsole_ipmi_config below to specify
  * workarounds for specific motherboard manufacturers.
- * 
+ *
  * AUTHENTICATION_CAPABILITIES
  *
  * Discoverd on an ASUS P5M2 motherboard, the motherboard does not
@@ -171,13 +171,13 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION           0x01000000
 #define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION      0x02000000
 #define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION             0x04000000
-       
-/* 
+
+/*
  * Engine Flags
  *
  * Utilized with struct ipmiconsole_engine_config below to alter
  * libipmiconsole engine behavior.
- * 
+ *
  * CLOSE_FD
  *
  * By default, the ipmiconsole engine will not close the file
@@ -219,12 +219,12 @@ extern "C" {
 #define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED 0x00000002
 #define IPMICONSOLE_ENGINE_LOCK_MEMORY               0x00000004
 
-/* 
+/*
  * Behavior Flags
  *
  * Utilized with struct ipmiconsole_protocol_config below to atler
  * SOL connection behavior.
- * 
+ *
  * ERROR_ON_SOL_INUSE
  *
  * Under most circumstances, if SOL is detected as being in use,
@@ -236,7 +236,7 @@ extern "C" {
  * SOL is already detected as being in use.  If it is detected as in
  * use, the errnum returned from ipmiconsole_ctx_errnum() would be
  * IPMICONSOLE_ERR_SOL_INUSE.
- *   
+ *
  * DEACTIVATE_ONLY
  *
  * Only attempt to deactivate the SOL session.  If an SOL session is
@@ -253,7 +253,7 @@ extern "C" {
  * ERROR
  *
  * An error has occurred retrieving the status.
- * 
+ *
  * NOT_SUBMITTED
  *
  * The context has not been submitted to the engine.
@@ -273,21 +273,21 @@ extern "C" {
  *
  */
 enum ipmiconsole_ctx_status
-  {
-    IPMICONSOLE_CTX_STATUS_ERROR = -1,
-    IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED = 0,
-    IPMICONSOLE_CTX_STATUS_SUBMITTED = 1,
-    IPMICONSOLE_CTX_STATUS_SOL_ERROR = 2,
-    IPMICONSOLE_CTX_STATUS_SOL_ESTABLISHED = 3,
-  };
+{
+  IPMICONSOLE_CTX_STATUS_ERROR = -1,
+  IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED = 0,
+  IPMICONSOLE_CTX_STATUS_SUBMITTED = 1,
+  IPMICONSOLE_CTX_STATUS_SOL_ERROR = 2,
+  IPMICONSOLE_CTX_STATUS_SOL_ESTABLISHED = 3,
+};
 typedef enum ipmiconsole_ctx_status ipmiconsole_ctx_status_t;
 
-/* 
+/*
  * ipmiconsole_ipmi_config
  *
  * IPMI configuration for a connection to a remote IPMI machine.
  *
- * username 
+ * username
  *
  *   BMC username. Pass NULL ptr for NULL username.  Maximum length of
  *   16 bytes.
@@ -309,7 +309,7 @@ typedef enum ipmiconsole_ctx_status ipmiconsole_ctx_status_t;
  *
  * privilege_level
  *
- *   privilege level to authenticate with.  
+ *   privilege level to authenticate with.
  *
  *   Supported privilege levels:
  *
@@ -348,7 +348,7 @@ typedef enum ipmiconsole_ctx_status ipmiconsole_ctx_status_t;
  *   for correct operation. Pass 0 for default of no modifications to
  *   the IPMI protocol.
  */
-struct ipmiconsole_ipmi_config 
+struct ipmiconsole_ipmi_config
 {
   char *username;
   char *password;
@@ -359,10 +359,10 @@ struct ipmiconsole_ipmi_config
   unsigned int workaround_flags;
 };
 
-/* 
+/*
  * ipmiconsole_protocol_config
  *
- * Configuration information for the IPMI protocol management. 
+ * Configuration information for the IPMI protocol management.
  *
  * session_timeout_len
  *
@@ -395,7 +395,7 @@ struct ipmiconsole_ipmi_config
  *   Specifies the maximum number of consecutive packet errors that
  *   can be received from a remote BMC before an error is returned and
  *   the session ended.  Pass <= 0 to use the default of 16.
- * 
+ *
  *   Note: This has been added to the behavior of the IPMI engine due
  *   to issues where remote BMCs can become "un-synced" with sequence
  *   numbers due to a network kernel boot.  It is possible a stream of
@@ -427,7 +427,7 @@ struct ipmiconsole_protocol_config
   int maximum_retransmission_count;
 };
 
-/* 
+/*
  * ipmiconsole_engine_config
  *
  * Configuration information for how the engine should interact with
@@ -453,7 +453,7 @@ struct ipmiconsole_protocol_config
 struct ipmiconsole_engine_config
 {
   unsigned int engine_flags;
-  unsigned int behavior_flags; 
+  unsigned int behavior_flags;
   unsigned int debug_flags;
 };
 
@@ -461,7 +461,7 @@ struct ipmiconsole_engine_config
 
 typedef struct ipmiconsole_ctx *ipmiconsole_ctx_t;
 
-/* 
+/*
  * Ipmiconsole_callback
  *
  * Function prototype for a callback function.
@@ -469,7 +469,7 @@ typedef struct ipmiconsole_ctx *ipmiconsole_ctx_t;
  */
 typedef void (*Ipmiconsole_callback)(void *);
 
-/* 
+/*
  * ipmiconsole_engine_init
  *
  * Initialize the ipmiconsole engine.  Engine threads will be created
@@ -480,10 +480,10 @@ typedef void (*Ipmiconsole_callback)(void *);
  * Parameters:
  *
  * thread_count
- * 
+ *
  *   Number of threads the engine will support.
  *
- * debug_flags 
+ * debug_flags
  *
  *   Bitwise OR of flags indicating how debug output should (or should
  *   not) be output. Pass 0 for default of no debugging.
@@ -491,10 +491,10 @@ typedef void (*Ipmiconsole_callback)(void *);
  * Returns 0 on success, -1 on error.  On error errno will be set to
  * indicate error.
  */
-int ipmiconsole_engine_init(unsigned int thread_count, 
-			    unsigned int debug_flags);
+int ipmiconsole_engine_init (unsigned int thread_count,
+                             unsigned int debug_flags);
 
-/* 
+/*
  * ipmiconsole_engine_submit
  *
  * Submit a context to the ipmiconsole engine non-blocking.  This
@@ -540,7 +540,7 @@ int ipmiconsole_engine_init(unsigned int thread_count,
  * Parameters:
  *
  * callback
- *  
+ *
  *   If specified, a callback function will be called from the engine
  *   when a SOL session has been established or a SOL establishment
  *   error has occurred.  Will only be called under a non-blocking
@@ -563,11 +563,11 @@ int ipmiconsole_engine_init(unsigned int thread_count,
  * Returns 0 on success, -1 on error.  ipmiconsole_ctx_errnum() can be
  * called to determine the cause of the error.
  */
-int ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
-                              Ipmiconsole_callback callback,
-                              void *callback_arg);
+int ipmiconsole_engine_submit (ipmiconsole_ctx_t c,
+                               Ipmiconsole_callback callback,
+                               void *callback_arg);
 
-/* 
+/*
  * ipmiconsole_engine_submit_block
  *
  * Submit a context to the ipmiconsole engine and block until a SOL
@@ -579,9 +579,9 @@ int ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
  * Returns 0 on success, -1 on error.  ipmiconsole_ctx_errnum() can be
  * called to determine the cause of the error.
  */
-int ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c);
+int ipmiconsole_engine_submit_block (ipmiconsole_ctx_t c);
 
-/* 
+/*
  * ipmiconsole_engine_teardown
  *
  * Teardown the ipmiconsole engine.  This function will destroy
@@ -595,9 +595,9 @@ int ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c);
  *   ipmiconsole_engine_teardown() will block until all active ipmi
  *   sessions have been closed cleanly or timed out.
  */
-void ipmiconsole_engine_teardown(int cleanup_sol_sessions);
+void ipmiconsole_engine_teardown (int cleanup_sol_sessions);
 
-/* 
+/*
  * ipmiconsole_ctx_create
  *
  * Create a ipmiconsole context.  The context can then be submitted
@@ -631,46 +631,46 @@ void ipmiconsole_engine_teardown(int cleanup_sol_sessions);
  * Returns ctx on success, NULL on error.  On error errno will be set to
  * indicate error.
  */
-ipmiconsole_ctx_t ipmiconsole_ctx_create(char *hostname,
-					 struct ipmiconsole_ipmi_config *ipmi_config,
-					 struct ipmiconsole_protocol_config *protocol_config,
-					 struct ipmiconsole_engine_config *engine_config);
+ipmiconsole_ctx_t ipmiconsole_ctx_create (char *hostname,
+                                          struct ipmiconsole_ipmi_config *ipmi_config,
+                                          struct ipmiconsole_protocol_config *protocol_config,
+                                          struct ipmiconsole_engine_config *engine_config);
 
-/* 
+/*
  * ipmiconsole_ctx_errnum
  *
  * Returns the errnum of the most recently recorded error for the
  * context that has not yet been read by the user.
  */
-int ipmiconsole_ctx_errnum(ipmiconsole_ctx_t c);
+int ipmiconsole_ctx_errnum (ipmiconsole_ctx_t c);
 
-/* 
+/*
  * ipmiconsole_ctx_strerror
  *
  * Returns a pointer to statically allocated string describing the
  * error code in errnum.
  */
-char *ipmiconsole_ctx_strerror(int errnum);
+char *ipmiconsole_ctx_strerror (int errnum);
 
-/* 
+/*
  * ipmiconsole_ctx_errormsg
  *
  * Returns a pointer to statically allocated string describing the
  * most recent error for the context.
  */
-char *ipmiconsole_ctx_errormsg(ipmiconsole_ctx_t c);
+char *ipmiconsole_ctx_errormsg (ipmiconsole_ctx_t c);
 
-/* 
+/*
  * ipmiconsole_ctx_status
  *
  * Returns the current context status.  Primarily used to determine if
  * a context submission (submitted non-blocking via
  * ipmiconsole_engine_submit()) has been established or not.  Returns
- * IPMICONSOLE_CTX_STATUS_ERROR (-1) on error.  
+ * IPMICONSOLE_CTX_STATUS_ERROR (-1) on error.
  */
-ipmiconsole_ctx_status_t ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
+ipmiconsole_ctx_status_t ipmiconsole_ctx_status (ipmiconsole_ctx_t c);
 
-/* 
+/*
  * ipmiconsole_ctx_fd
  *
  * Returns a file descriptor for console reading and writing after it
@@ -690,9 +690,9 @@ ipmiconsole_ctx_status_t ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
  * write().  For alternate file descriptor behavior, see ENGINE flags
  * above.
  */
-int ipmiconsole_ctx_fd(ipmiconsole_ctx_t c);
+int ipmiconsole_ctx_fd (ipmiconsole_ctx_t c);
 
-/* 
+/*
  * ipmiconsole_ctx_generate_break
  *
  * Generate a break on an active serial over LAN session.
@@ -700,15 +700,15 @@ int ipmiconsole_ctx_fd(ipmiconsole_ctx_t c);
  * Returns 0 on success, -1 on error.  ipmiconsole_ctx_errnum() can be
  * called to determine the cause of the error.
  */
-int ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c);
+int ipmiconsole_ctx_generate_break (ipmiconsole_ctx_t c);
 
-/* 
+/*
  * ipmiconsole_ctx_destroy
  *
  * Destroy a context.  Will close file descriptor retrieved from
  * ipmiconsole_ctx_fd().
  */
-void ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c);
+void ipmiconsole_ctx_destroy (ipmiconsole_ctx_t c);
 
 #ifdef __cplusplus
 }

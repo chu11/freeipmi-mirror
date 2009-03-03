@@ -1,25 +1,25 @@
 /*****************************************************************************\
- *  $Id: timeval.c,v 1.3 2009-01-13 01:02:11 chu11 Exp $
+ *  $Id: timeval.c,v 1.4 2009-03-03 23:56:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  UCRL-CODE-221226
- *  
+ *
  *  This file is part of Ipmiconsole, a set of IPMI 2.0 SOL libraries
  *  and utilities.  For details, see http://www.llnl.gov/linux/.
- *  
- *  Ipmiconsole is free software; you can redistribute it and/or modify 
- *  it under the terms of the GNU General Public License as published by the 
- *  Free Software Foundation; either version 2 of the License, or (at your 
+ *
+ *  Ipmiconsole is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at your
  *  option) any later version.
- *  
- *  Ipmiconsole is distributed in the hope that it will be useful, but 
- *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+ *
+ *  Ipmiconsole is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
  *  for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License along
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
@@ -41,7 +41,7 @@
 #include <sys/time.h>
 #else /* !HAVE_SYS_TIME_H */
 #include <time.h>
-#endif	/* !HAVE_SYS_TIME_H */
+#endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 #include <assert.h>
 #include <errno.h>
@@ -52,8 +52,8 @@
 #define TIMEVAL_MILLISECONDS_IN_SECOND      1000
 #define TIMEVAL_MICROSECONDS_IN_MILLISECOND 1000
 
-/* 
- * Note: 
+/*
+ * Note:
  *
  * These are primarily portable versions of
  *
@@ -67,41 +67,41 @@
  */
 
 void
-timeval_clear(struct timeval *a)
+timeval_clear (struct timeval *a)
 {
-  assert(a);
+  assert (a);
 
   a->tv_sec = a->tv_usec = 0;
 }
 
 int
-timeval_gt(struct timeval *a, struct timeval *b)
+timeval_gt (struct timeval *a, struct timeval *b)
 {
-  assert(a);
-  assert(b);
-  
+  assert (a);
+  assert (b);
+
   if (a->tv_sec == b->tv_sec)
     return (a->tv_usec > b->tv_usec);
   return (a->tv_sec > b->tv_sec);
 }
 
 int
-timeval_lt(struct timeval *a, struct timeval *b)
+timeval_lt (struct timeval *a, struct timeval *b)
 {
-  assert(a);
-  assert(b);
-  
+  assert (a);
+  assert (b);
+
   if (a->tv_sec == b->tv_sec)
     return (a->tv_usec < b->tv_usec);
   return (a->tv_sec < b->tv_sec);
 }
 
 void
-timeval_add(struct timeval *a, struct timeval *b, struct timeval *result)
+timeval_add (struct timeval *a, struct timeval *b, struct timeval *result)
 {
-  assert(a);
-  assert(b);
-  assert(result);
+  assert (a);
+  assert (b);
+  assert (result);
 
   result->tv_sec = a->tv_sec + b->tv_sec;
   result->tv_usec = a->tv_usec + b->tv_usec;
@@ -113,14 +113,14 @@ timeval_add(struct timeval *a, struct timeval *b, struct timeval *result)
 }
 
 void
-timeval_sub(struct timeval *a, struct timeval *b, struct timeval *result)
+timeval_sub (struct timeval *a, struct timeval *b, struct timeval *result)
 {
-  assert(a);
-  assert(b);
-  assert(result);
+  assert (a);
+  assert (b);
+  assert (result);
 
 
-  if (timeval_gt(a, b))
+  if (timeval_gt (a, b))
     {
       result->tv_sec = a->tv_sec - b->tv_sec;
       result->tv_usec = a->tv_usec - b->tv_usec;
@@ -138,47 +138,47 @@ timeval_sub(struct timeval *a, struct timeval *b, struct timeval *result)
 }
 
 void
-timeval_millisecond_init(struct timeval *a, unsigned int ms)
+timeval_millisecond_init (struct timeval *a, unsigned int ms)
 {
-  assert(a);
+  assert (a);
 
-  timeval_clear(a);
+  timeval_clear (a);
   a->tv_sec = ms/TIMEVAL_MILLISECONDS_IN_SECOND;
   ms -= (a->tv_sec * TIMEVAL_MILLISECONDS_IN_SECOND);
   a->tv_usec = ms * TIMEVAL_MICROSECONDS_IN_MILLISECOND;
 }
 
 void
-timeval_add_ms(struct timeval *a, unsigned int ms, struct timeval *result)
+timeval_add_ms (struct timeval *a, unsigned int ms, struct timeval *result)
 {
   struct timeval b;
 
-  assert(a);
-  assert(result);
+  assert (a);
+  assert (result);
 
-  timeval_millisecond_init(&b, ms);
-  timeval_add(a, &b, result);
+  timeval_millisecond_init (&b, ms);
+  timeval_add (a, &b, result);
 }
 
 void
-timeval_sub_ms(struct timeval *a, unsigned int ms, struct timeval *result)
+timeval_sub_ms (struct timeval *a, unsigned int ms, struct timeval *result)
 {
   struct timeval b;
 
-  assert(a);
-  assert(result);
+  assert (a);
+  assert (result);
 
-  timeval_millisecond_init(&b, ms);
-  timeval_sub(a, &b, result);
+  timeval_millisecond_init (&b, ms);
+  timeval_sub (a, &b, result);
 }
 
 void
-timeval_millisecond_calc(struct timeval *a, unsigned int *ms)
+timeval_millisecond_calc (struct timeval *a, unsigned int *ms)
 {
   unsigned int t;
 
-  assert(a);
-  assert(ms);
+  assert (a);
+  assert (ms);
 
   t = 0;
   t += a->tv_sec * TIMEVAL_MILLISECONDS_IN_SECOND;

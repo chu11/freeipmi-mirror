@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.h,v 1.8 2009-01-13 01:02:20 chu11 Exp $
+ *  $Id: ipmidetectd_loop.h,v 1.9 2009-03-03 23:56:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -27,6 +27,6 @@
 #ifndef _IPMIDETECTD_LOOP_H
 #define _IPMIDETECTD_LOOP_H 1
 
-void ipmidetectd_loop(void);
+void ipmidetectd_loop (void);
 
 #endif /* _IPMIDETECTD_LOOP_H */

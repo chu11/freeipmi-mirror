@@ -1,28 +1,24 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
 */
 
 #ifndef _IPMI_SDR_PARSE_UTIL_H
-#define	_IPMI_SDR_PARSE_UTIL_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define _IPMI_SDR_PARSE_UTIL_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -41,15 +37,11 @@ extern "C" {
 
 #include "ipmi-sdr-parse-defs.h"
 
-void sdr_parse_set_sdr_parse_errnum_by_errno(ipmi_sdr_parse_ctx_t ctx, int __errno);
+void sdr_parse_set_sdr_parse_errnum_by_errno (ipmi_sdr_parse_ctx_t ctx, int __errno);
 
-void sdr_parse_set_sdr_parse_errnum_by_fiid_object(ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj);
+void sdr_parse_set_sdr_parse_errnum_by_fiid_object (ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj);
 
-int sdr_parse_fiid_obj_get(ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
-#ifdef __cplusplus
-}
-#endif
+int sdr_parse_fiid_obj_get (ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
 
 #endif /* ipmi-sdr-parse-util.h */
 

@@ -14,10 +14,10 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-*/
+ */
 
 #ifndef _IPMI_CHANNEL_SPEC_H
-#define	_IPMI_CHANNEL_SPEC_H
+#define _IPMI_CHANNEL_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,10 +31,10 @@ extern "C" {
 #define IPMI_CHANNEL_NUMBER_SYSTEM_INTERFACE  0xF
 
 /* To avoid gcc warnings, added +1 in comparison */
-#define IPMI_CHANNEL_NUMBER_VALID(__channel_number) \
+#define IPMI_CHANNEL_NUMBER_VALID(__channel_number)                   \
   ((((__channel_number + 1) >= (IPMI_CHANNEL_NUMBER_PRIMARY_IPMB + 1) \
-     && (__channel_number) < IPMI_CHANNEL_NUMBER_RESERVED_MIN) \
-    || ((__channel_number) > IPMI_CHANNEL_NUMBER_RESERVED_MAX \
+     && (__channel_number) < IPMI_CHANNEL_NUMBER_RESERVED_MIN)        \
+    || ((__channel_number) > IPMI_CHANNEL_NUMBER_RESERVED_MAX         \
         && (__channel_number) <= IPMI_CHANNEL_NUMBER_SYSTEM_INTERFACE)) ? 1 : 0)
 
 #define IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED       0x0 /* 0x03, 0x0A to 0x1B */
@@ -53,15 +53,15 @@ extern "C" {
 #define IPMI_CHANNEL_PROTOCOL_TYPE_OEM_MIN        0x1C /* 0x1C to 0x1F */
 #define IPMI_CHANNEL_PROTOCOL_TYPE_OEM_MAX        0x1F /* 0x1C to 0x1F */
 
-#define IPMI_CHANNEL_PROTOCOL_TYPE_IS_RESERVED(__val) \
-        (((__val) == IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED_1 \
-          || (__val) == IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED_2 \
-          || ((__val) >= IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED_MIN \
-              && (__val) <= IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED_MAX)) ? 1 : 0)
+#define IPMI_CHANNEL_PROTOCOL_TYPE_IS_RESERVED(__val)      \
+  (((__val) == IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED_1       \
+    || (__val) == IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED_2    \
+    || ((__val) >= IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED_MIN \
+        && (__val) <= IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED_MAX)) ? 1 : 0)
 
-#define IPMI_CHANNEL_PROTOCOL_TYPE_IS_OEM(__val) \
-        (((__val) >= IPMI_CHANNEL_PROTOCOL_TYPE_OEM_MIN  \
-          && (__val) <= IPMI_CHANNEL_PROTOCOL_TYPE_OEM_MAX) ? 1 : 0)
+#define IPMI_CHANNEL_PROTOCOL_TYPE_IS_OEM(__val)  \
+  (((__val) >= IPMI_CHANNEL_PROTOCOL_TYPE_OEM_MIN \
+    && (__val) <= IPMI_CHANNEL_PROTOCOL_TYPE_OEM_MAX) ? 1 : 0)
 
 #define IPMI_CHANNEL_MEDIUM_TYPE_RESERVED       0x0 /* 0x0D to 0x5F */
 #define IPMI_CHANNEL_MEDIUM_TYPE_IPMB           0x1
@@ -81,14 +81,14 @@ extern "C" {
 #define IPMI_CHANNEL_MEDIUM_TYPE_OEM_MIN        0x60 /* 0x60 to 0x7F */
 #define IPMI_CHANNEL_MEDIUM_TYPE_OEM_MAX        0x7F /* 0x60 to 0x7F */
 
-#define IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED(__val) \
-        (((__val) == IPMI_CHANNEL_MEDIUM_TYPE_RESERVED \
-          || ((__val) >= IPMI_CHANNEL_MEDIUM_TYPE_RESERVED_MIN \
-              && (__val) <= IPMI_CHANNEL_MEDIUM_TYPE_RESERVED_MAX)) ? 1 : 0)
+#define IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED(__val)      \
+  (((__val) == IPMI_CHANNEL_MEDIUM_TYPE_RESERVED         \
+    || ((__val) >= IPMI_CHANNEL_MEDIUM_TYPE_RESERVED_MIN \
+        && (__val) <= IPMI_CHANNEL_MEDIUM_TYPE_RESERVED_MAX)) ? 1 : 0)
 
-#define IPMI_CHANNEL_MEDIUM_TYPE_IS_OEM(__val) \
-        (((__val) >= IPMI_CHANNEL_MEDIUM_TYPE_OEM_MIN  \
-          && (__val) <= IPMI_CHANNEL_MEDIUM_TYPE_OEM_MAX) ? 1 : 0)
+#define IPMI_CHANNEL_MEDIUM_TYPE_IS_OEM(__val)  \
+  (((__val) >= IPMI_CHANNEL_MEDIUM_TYPE_OEM_MIN \
+    && (__val) <= IPMI_CHANNEL_MEDIUM_TYPE_OEM_MAX) ? 1 : 0)
 
 #ifdef __cplusplus
 }

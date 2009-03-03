@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.3 2009-02-04 21:56:12 chu11 Exp $
+ *  $Id: pstdout.c,v 1.4 2009-03-03 23:56:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.

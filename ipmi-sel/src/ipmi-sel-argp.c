@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
-   
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-   
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-   
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #if HAVE_CONFIG_H
@@ -43,21 +43,21 @@
 #include "tool-cmdline-common.h"
 #include "tool-config-file-common.h"
 
-const char *argp_program_version = 
+const char *argp_program_version =
   "ipmi-sel - " PACKAGE_VERSION "\n"
   "Copyright (C) 2003-2009 FreeIPMI Core Team\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
 
-const char *argp_program_bug_address = 
+const char *argp_program_bug_address =
   "<" PACKAGE_BUGREPORT ">";
 
-static char cmdline_doc[] = 
+static char cmdline_doc[] =
   "ipmi-sel - display SEL entries";
 
 static char cmdline_args_doc[] = "";
 
-static struct argp_option cmdline_options[] = 
+static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
@@ -71,36 +71,36 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_IGNORE_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    {"verbose",    VERBOSE_KEY,    0, 0,
-     "Increase verbosity in output.", 30},
-    {"info",       INFO_KEY,       0, 0, 
-     "Show general information about the SEL.", 31},
-    {"display",     DISPLAY_KEY,     "REC-LIST", 0, 
-     "Display SEL records by record ids.", 32},
-    {"display-range", DISPLAY_RANGE_KEY, "START-END", 0, 
-     "Display record ids from START to END.", 33},
-    {"delete",     DELETE_KEY,     "REC-LIST", 0, 
-     "Delete SEL records by record ids.", 34},
-    {"delete-all", DELETE_ALL_KEY, 0, 0, 
-     "Delete all SEL records.", 35},
-    {"delete-range", DELETE_RANGE_KEY, "START-END", 0, 
-     "Delete record ids from START to END in the SEL.", 36},
-    {"system-event-only", SYSTEM_EVENT_ONLY_KEY, 0, 0,
-     "Output only system event records (i.e. don't output OEM records).", 37},
-    {"oem-event-only", OEM_EVENT_ONLY_KEY, 0, 0,
-     "Output only oem event records.", 38},
-    {"hex-dump",   HEX_DUMP_KEY, 0, 0,
-     "Hex-dump SEL records.", 39},
-    {"legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-     "Output in legacy format.", 40},
+    { "verbose",    VERBOSE_KEY,    0, 0,
+      "Increase verbosity in output.", 30},
+    { "info",       INFO_KEY,       0, 0,
+      "Show general information about the SEL.", 31},
+    { "display",     DISPLAY_KEY,     "REC-LIST", 0,
+      "Display SEL records by record ids.", 32},
+    { "display-range", DISPLAY_RANGE_KEY, "START-END", 0,
+      "Display record ids from START to END.", 33},
+    { "delete",     DELETE_KEY,     "REC-LIST", 0,
+      "Delete SEL records by record ids.", 34},
+    { "delete-all", DELETE_ALL_KEY, 0, 0,
+      "Delete all SEL records.", 35},
+    { "delete-range", DELETE_RANGE_KEY, "START-END", 0,
+      "Delete record ids from START to END in the SEL.", 36},
+    { "system-event-only", SYSTEM_EVENT_ONLY_KEY, 0, 0,
+      "Output only system event records (i.e. don't output OEM records).", 37},
+    { "oem-event-only", OEM_EVENT_ONLY_KEY, 0, 0,
+      "Output only oem event records.", 38},
+    { "hex-dump",   HEX_DUMP_KEY, 0, 0,
+      "Hex-dump SEL records.", 39},
+    { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
+      "Output in legacy format.", 40},
     { 0 }
   };
 
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
 
 static struct argp cmdline_argp = { cmdline_options,
-                                    cmdline_parse, 
-                                    cmdline_args_doc, 
+                                    cmdline_parse,
+                                    cmdline_args_doc,
                                     cmdline_doc };
 
 static struct argp cmdline_config_file_argp = { cmdline_options,
@@ -109,51 +109,51 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
                                                 cmdline_doc };
 
 static void
-_read_record_list(int *flag,
-                  unsigned int *record_list,
-                  unsigned int *record_list_length,
-                  char *arg)
+_read_record_list (int *flag,
+                   unsigned int *record_list,
+                   unsigned int *record_list_length,
+                   char *arg)
 {
   char *ptr;
   char *tok;
   int value;
 
-  assert(flag);
-  assert(record_list);
-  assert(record_list_length);
-  assert(arg);
+  assert (flag);
+  assert (record_list);
+  assert (record_list_length);
+  assert (arg);
 
   (*flag) = 1;
-  tok = strtok(arg, " ,");
+  tok = strtok (arg, " ,");
   while (tok && (*record_list_length) < IPMI_SEL_MAX_RECORD)
     {
       value = 0;
-      ptr = NULL;	
+      ptr = NULL;
       errno = 0;
-      
-      value = strtol(tok, &ptr, 10);
-      
-      if (errno 
+
+      value = strtol (tok, &ptr, 10);
+
+      if (errno
           || ptr[0] != '\0'
           || value < 0
           || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
           || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
         {
           fprintf (stderr, "invalid record number: %d\n", value);
-          exit(1);
+          exit (1);
         }
-      
+
       record_list[(*record_list_length)] = value;
       (*record_list_length)++;
-      tok = strtok(NULL, " ,");
+      tok = strtok (NULL, " ,");
     }
 }
 
 static void
-_read_range(int *flag,
-            unsigned int *range1,
-            unsigned int *range2,
-            char *arg)
+_read_range (int *flag,
+             unsigned int *range1,
+             unsigned int *range2,
+             char *arg)
 {
   char *ptr;
   char *range_str = NULL;
@@ -161,75 +161,75 @@ _read_range(int *flag,
   char *range1_str = NULL;
   char *range2_str = NULL;
   int value = 0;
-  
-  assert(flag);
-  assert(range1);
-  assert(range2);
-  assert(arg);
+
+  assert (flag);
+  assert (range1);
+  assert (range2);
+  assert (arg);
 
   (*flag) = 1;
-  
+
   if (!(range_str = strdupa (arg)))
     {
-      perror("strdupa");
-      exit(1);
+      perror ("strdupa");
+      exit (1);
     }
   if (!(start_ptr = strchr (range_str, '-')))
     {
       /* invalid input */
       fprintf (stderr, "invalid range input\n");
-      exit(1);
+      exit (1);
     }
   if (!(range2_str = strdupa (start_ptr + 1)))
     {
-      perror("strdupa");
-      exit(1);
+      perror ("strdupa");
+      exit (1);
     }
   *start_ptr = '\0';
   range1_str = range_str;
-	
+
   value = 0;
-  ptr = NULL;	
+  ptr = NULL;
   errno = 0;
   value = strtol (range1_str, &ptr, 10);
 
-  if (errno 
+  if (errno
       || ptr[0] != '\0'
       || value < 0
       || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
       || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     {
       fprintf (stderr, "invalid range record number: %d\n", value);
-      exit(1);
+      exit (1);
     }
-  
+
   (*range1) = value;
-  
+
   value = 0;
-  ptr = NULL;	
+  ptr = NULL;
   errno = 0;
   value = strtol (range2_str, &ptr, 10);
 
-  if (errno 
+  if (errno
       || ptr[0] != '\0'
       || value < 0
       || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
       || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     {
       fprintf (stderr, "invalid range record number: %d\n", value);
-      exit(1);
+      exit (1);
     }
-  
-  (*range2) = value;	
-        
+
+  (*range2) = value;
+
   if ((*range2) < (*range1))
     {
       fprintf (stderr, "invalid END range\n");
-      exit(1);
+      exit (1);
     }
 }
 
-static error_t 
+static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_sel_arguments *cmd_args = state->input;
@@ -245,31 +245,31 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->info = 1;
       break;
     case DISPLAY_KEY:
-      _read_record_list(&(cmd_args->display),
-                        cmd_args->display_record_list,
-                        &(cmd_args->display_record_list_length),
-                        arg);
+      _read_record_list (&(cmd_args->display),
+                         cmd_args->display_record_list,
+                         &(cmd_args->display_record_list_length),
+                         arg);
       break;
     case DISPLAY_RANGE_KEY:
-      _read_range(&(cmd_args->display_range),
-                  &(cmd_args->display_range1),
-                  &(cmd_args->display_range2),
-                  arg);
+      _read_range (&(cmd_args->display_range),
+                   &(cmd_args->display_range1),
+                   &(cmd_args->display_range2),
+                   arg);
       break;
     case DELETE_ALL_KEY:
       cmd_args->delete_all = 1;
       break;
     case DELETE_KEY:
-      _read_record_list(&(cmd_args->delete),
-                        cmd_args->delete_record_list,
-                        &(cmd_args->delete_record_list_length),
-                        arg);
+      _read_record_list (&(cmd_args->delete),
+                         cmd_args->delete_record_list,
+                         &(cmd_args->delete_record_list_length),
+                         arg);
       break;
     case DELETE_RANGE_KEY:
-      _read_range(&(cmd_args->delete_range),
-                  &(cmd_args->delete_range1),
-                  &(cmd_args->delete_range2),
-                  arg);
+      _read_range (&(cmd_args->delete_range),
+                   &(cmd_args->delete_range1),
+                   &(cmd_args->delete_range2),
+                   arg);
       break;
     case SYSTEM_EVENT_ONLY_KEY:
       cmd_args->system_event_only = 1;
@@ -297,18 +297,18 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
       return ret;
     }
-  
+
   return 0;
 }
 
 static void
-_ipmi_sel_config_file_parse(struct ipmi_sel_arguments *cmd_args)
+_ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
 {
   struct config_file_data_ipmi_sel config_file_data;
 
-  memset(&config_file_data,
-         '\0',
-         sizeof(struct config_file_data_ipmi_sel));
+  memset (&config_file_data,
+          '\0',
+          sizeof(struct config_file_data_ipmi_sel));
 
   if (config_file_parse (cmd_args->common.config_file,
                          0,
@@ -319,8 +319,8 @@ _ipmi_sel_config_file_parse(struct ipmi_sel_arguments *cmd_args)
                          CONFIG_FILE_TOOL_IPMI_SEL,
                          &config_file_data) < 0)
     {
-      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
-      exit(1);
+      fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
+      exit (1);
     }
 
   if (config_file_data.legacy_output_count)
@@ -328,7 +328,7 @@ _ipmi_sel_config_file_parse(struct ipmi_sel_arguments *cmd_args)
 }
 
 
-void 
+void
 ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
 {
   init_common_cmd_args_operator (&(cmd_args->common));
@@ -338,18 +338,18 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->verbose_count = 0;
   cmd_args->info = 0;
   cmd_args->display = 0;
-  memset(cmd_args->display_record_list,
-         '\0',
-         sizeof(int)*IPMI_SEL_MAX_RECORD);
+  memset (cmd_args->display_record_list,
+          '\0',
+          sizeof(int)*IPMI_SEL_MAX_RECORD);
   cmd_args->display_record_list_length = 0;
   cmd_args->display_range = 0;
   cmd_args->display_range1 = 0;
   cmd_args->display_range2 = 0;
   cmd_args->delete_all = 0;
   cmd_args->delete = 0;
-  memset(cmd_args->delete_record_list,
-         '\0',
-         sizeof(int)*IPMI_SEL_MAX_RECORD);
+  memset (cmd_args->delete_record_list,
+          '\0',
+          sizeof(int)*IPMI_SEL_MAX_RECORD);
   cmd_args->delete_record_list_length = 0;
   cmd_args->delete_range = 0;
   cmd_args->delete_range1 = 0;
@@ -358,21 +358,21 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->oem_event_only = 0;
   cmd_args->hex_dump = 0;
   cmd_args->legacy_output = 0;
-  
-  argp_parse (&cmdline_config_file_argp, 
-              argc, 
-              argv, 
-              ARGP_IN_ORDER, 
-              NULL, 
+
+  argp_parse (&cmdline_config_file_argp,
+              argc,
+              argv,
+              ARGP_IN_ORDER,
+              NULL,
               &(cmd_args->common));
 
-  _ipmi_sel_config_file_parse(cmd_args);
+  _ipmi_sel_config_file_parse (cmd_args);
 
-  argp_parse (&cmdline_argp, 
-              argc, 
-              argv, 
-              ARGP_IN_ORDER, 
-              NULL, 
+  argp_parse (&cmdline_argp,
+              argc,
+              argv,
+              ARGP_IN_ORDER,
+              NULL,
               cmd_args);
 
   verify_common_cmd_args (&(cmd_args->common));

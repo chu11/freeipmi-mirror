@@ -1,9 +1,23 @@
-#ifndef _IPMI_LAN_SESSION_UTIL_H
-#define	_IPMI_LAN_SESSION_UTIL_H	1
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+*/
+
+#ifndef _IPMI_LAN_SESSION_UTIL_H
+#define _IPMI_LAN_SESSION_UTIL_H        1
 
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
@@ -13,12 +27,12 @@ extern "C" {
 #define IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE 0x00000002
 
 void ipmi_lan_cmd_get_session_parameters (ipmi_ctx_t ctx,
-					  uint8_t *authentication_type,
-					  unsigned int *internal_workaround_flags);
+                                          uint8_t *authentication_type,
+                                          unsigned int *internal_workaround_flags);
 
 void ipmi_lan_2_0_cmd_get_session_parameters (ipmi_ctx_t ctx,
-					      uint8_t *payload_authenticated,
-					      uint8_t *payload_encrypted);
+                                              uint8_t *payload_authenticated,
+                                              uint8_t *payload_encrypted);
 
 int8_t ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                              unsigned int internal_workaround_flags,
@@ -34,8 +48,8 @@ int8_t ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                              fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
-				  fiid_obj_t obj_cmd_rq,
-				  fiid_obj_t obj_cmd_rs);
+                                  fiid_obj_t obj_cmd_rq,
+                                  fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_lan_open_session (ipmi_ctx_t ctx);
 
@@ -64,16 +78,12 @@ int8_t ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                  fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
-				      fiid_obj_t obj_cmd_rq,
-				      fiid_obj_t obj_cmd_rs);
+                                      fiid_obj_t obj_cmd_rq,
+                                      fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_lan_2_0_open_session (ipmi_ctx_t ctx);
 
 int8_t ipmi_lan_2_0_close_session (ipmi_ctx_t ctx);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* ipmi-lan-interface.h */
 

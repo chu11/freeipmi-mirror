@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_config.h,v 1.8 2009-01-13 01:02:20 chu11 Exp $
+ *  $Id: ipmidetectd_config.h,v 1.9 2009-03-03 23:56:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -49,6 +49,6 @@ struct ipmidetectd_config
   hostlist_t hosts;
 };
 
-void ipmidetectd_config_setup(int argc, char **argv);
+void ipmidetectd_config_setup (int argc, char **argv);
 
 #endif /* _IPMIDETECTD_CONFIG_H */

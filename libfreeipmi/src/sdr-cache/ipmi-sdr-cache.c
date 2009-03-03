@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.11 2009-02-23 22:29:21 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.12 2009-03-03 23:57:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -81,43 +81,43 @@ static char *ipmi_sdr_cache_errmsgs[] =
   };
 
 ipmi_sdr_cache_ctx_t
-ipmi_sdr_cache_ctx_create(void)
+ipmi_sdr_cache_ctx_create (void)
 {
   struct ipmi_sdr_cache_ctx *ctx = NULL;
 
-  if (!(ctx = (ipmi_sdr_cache_ctx_t)malloc(sizeof(struct ipmi_sdr_cache_ctx))))
+  if (!(ctx = (ipmi_sdr_cache_ctx_t)malloc (sizeof(struct ipmi_sdr_cache_ctx))))
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return NULL;
     }
-  memset(ctx, '\0', sizeof(struct ipmi_sdr_cache_ctx));
+  memset (ctx, '\0', sizeof(struct ipmi_sdr_cache_ctx));
   ctx->magic = IPMI_SDR_CACHE_CTX_MAGIC;
   ctx->flags = IPMI_SDR_CACHE_FLAGS_DEFAULT;
   ctx->debug_prefix = NULL;
-  ipmi_sdr_cache_init_ctx(ctx);
+  ipmi_sdr_cache_init_ctx (ctx);
   return ctx;
 }
 
 void
-ipmi_sdr_cache_ctx_destroy(ipmi_sdr_cache_ctx_t ctx)
+ipmi_sdr_cache_ctx_destroy (ipmi_sdr_cache_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     return;
 
   if (ctx->fd >= 0)
-    close(ctx->fd);
+    close (ctx->fd);
   if (ctx->sdr_cache)
-    munmap(ctx->sdr_cache, ctx->file_size);
+    munmap (ctx->sdr_cache, ctx->file_size);
 
   ctx->magic = ~IPMI_SDR_CACHE_CTX_MAGIC;
   ctx->operation = IPMI_SDR_CACHE_OPERATION_UNINITIALIZED;
   if (ctx->debug_prefix)
-    free(ctx->debug_prefix);
-  free(ctx);
+    free (ctx->debug_prefix);
+  free (ctx);
 }
 
-int 
-ipmi_sdr_cache_ctx_errnum(ipmi_sdr_cache_ctx_t ctx)
+int
+ipmi_sdr_cache_ctx_errnum (ipmi_sdr_cache_ctx_t ctx)
 {
   if (!ctx)
     return IPMI_SDR_CACHE_ERR_CONTEXT_NULL;
@@ -128,7 +128,7 @@ ipmi_sdr_cache_ctx_errnum(ipmi_sdr_cache_ctx_t ctx)
 }
 
 char *
-ipmi_sdr_cache_ctx_strerror(int errnum)
+ipmi_sdr_cache_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_SDR_CACHE_ERR_SUCCESS && errnum <= IPMI_SDR_CACHE_ERR_ERRNUMRANGE)
     return ipmi_sdr_cache_errmsgs[errnum];
@@ -137,23 +137,23 @@ ipmi_sdr_cache_ctx_strerror(int errnum)
 }
 
 char *
-ipmi_sdr_cache_ctx_errormsg(ipmi_sdr_cache_ctx_t ctx)
+ipmi_sdr_cache_ctx_errormsg (ipmi_sdr_cache_ctx_t ctx)
 {
-  return ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(ctx));
+  return ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (ctx));
 }
 
 int
-ipmi_sdr_cache_ctx_get_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int *flags)
+ipmi_sdr_cache_ctx_get_flags (ipmi_sdr_cache_ctx_t ctx, unsigned int *flags)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
       return (-1);
     }
 
   if (!flags)
     {
-      SDR_CACHE_SET_ERRNUM(ctx, IPMI_SDR_CACHE_ERR_PARAMETERS);
+      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -162,17 +162,17 @@ ipmi_sdr_cache_ctx_get_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int *flags)
 }
 
 int
-ipmi_sdr_cache_ctx_set_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int flags)
+ipmi_sdr_cache_ctx_set_flags (ipmi_sdr_cache_ctx_t ctx, unsigned int flags)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
       return (-1);
     }
 
   if (flags & ~IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP)
     {
-      SDR_CACHE_SET_ERRNUM(ctx, IPMI_SDR_CACHE_ERR_PARAMETERS);
+      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -181,11 +181,11 @@ ipmi_sdr_cache_ctx_set_flags(ipmi_sdr_cache_ctx_t ctx, unsigned int flags)
 }
 
 char *
-ipmi_sdr_cache_ctx_get_debug_prefix(ipmi_sdr_cache_ctx_t ctx)
+ipmi_sdr_cache_ctx_get_debug_prefix (ipmi_sdr_cache_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
       return NULL;
     }
 
@@ -193,25 +193,25 @@ ipmi_sdr_cache_ctx_get_debug_prefix(ipmi_sdr_cache_ctx_t ctx)
 }
 
 int
-ipmi_sdr_cache_ctx_set_debug_prefix(ipmi_sdr_cache_ctx_t ctx, const char *prefix)
+ipmi_sdr_cache_ctx_set_debug_prefix (ipmi_sdr_cache_ctx_t ctx, const char *prefix)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
       return (-1);
     }
 
   if (ctx->debug_prefix)
     {
-      free(ctx->debug_prefix);
+      free (ctx->debug_prefix);
       ctx->debug_prefix = NULL;
     }
 
   if (prefix)
     {
-      if (!(ctx->debug_prefix = strdup(prefix)))
+      if (!(ctx->debug_prefix = strdup (prefix)))
         {
-          SDR_CACHE_SET_ERRNUM(ctx, IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY);
+          SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY);
           return -1;
         }
     }

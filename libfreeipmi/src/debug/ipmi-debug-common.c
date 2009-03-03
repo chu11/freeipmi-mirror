@@ -44,7 +44,7 @@
 #define IPMI_DEBUG_DEFAULT_FD STDERR_FILENO
 
 static int
-_write(int fd, void *buf, size_t n)
+_write (int fd, void *buf, size_t n)
 {
   /* chu: by Chris Dunlap <dunlap6 at llnl dot gov> */
   size_t nleft;
@@ -69,40 +69,40 @@ _write(int fd, void *buf, size_t n)
 }
 
 int
-ipmi_debug_dprintf(int fd, char *fmt, ...)
+ipmi_debug_dprintf (int fd, char *fmt, ...)
 {
   va_list ap;
   int len, rv;
   char buf[IPMI_DEBUG_MAX_BUF_LEN];
 
-  va_start(ap, fmt);
-  len = vsnprintf(buf, IPMI_DEBUG_MAX_BUF_LEN, fmt, ap);
-  rv = _write(fd, buf, len);
-  va_end(ap);
+  va_start (ap, fmt);
+  len = vsnprintf (buf, IPMI_DEBUG_MAX_BUF_LEN, fmt, ap);
+  rv = _write (fd, buf, len);
+  va_end (ap);
 
   return rv;
 }
 
 int8_t
-ipmi_debug_set_prefix(char *buf, unsigned int buflen, const char *prefix)
+ipmi_debug_set_prefix (char *buf, unsigned int buflen, const char *prefix)
 {
-  assert(buf && buflen > 3);
+  assert (buf && buflen > 3);
 
-  memset(buf, '\0', buflen);
+  memset (buf, '\0', buflen);
   if (prefix)
     {
-      strncpy(buf, prefix, buflen);
+      strncpy (buf, prefix, buflen);
       buf[buflen - 1] = '\0'; /* strncpy may not null terminate */
       buf[buflen - 2] = '\0'; /* guaranteed space for ' ' */
       buf[buflen - 3] = '\0'; /* guaranteed space for ':' */
-      strcat(buf, ": ");
+      strcat (buf, ": ");
     }
 
   return (0);
 }
 
 int8_t
-ipmi_debug_output_str(int fd, const char *prefix, const char *str)
+ipmi_debug_output_str (int fd, const char *prefix, const char *str)
 {
   /* achu: Yeah, I know this is slow.  Figure out something better
    * later.
@@ -113,9 +113,9 @@ ipmi_debug_output_str(int fd, const char *prefix, const char *str)
 
       if (prefix)
         {
-          if (ipmi_debug_dprintf(fd, "%s", prefix) < 0)
+          if (ipmi_debug_dprintf (fd, "%s", prefix) < 0)
             {
-              ERRNO_TRACE(errno);
+              ERRNO_TRACE (errno);
               return (-1);
             }
         }
@@ -124,78 +124,78 @@ ipmi_debug_output_str(int fd, const char *prefix, const char *str)
         {
           if (*ptr == '\n')
             {
-              if (ipmi_debug_dprintf(fd, "%c", *ptr++) < 0)
+              if (ipmi_debug_dprintf (fd, "%c", *ptr++) < 0)
                 {
-                  ERRNO_TRACE(errno);
+                  ERRNO_TRACE (errno);
                   return (-1);
                 }
               if (prefix)
                 {
-                  if (ipmi_debug_dprintf(fd, "%s", prefix) < 0)
+                  if (ipmi_debug_dprintf (fd, "%s", prefix) < 0)
                     {
-                      ERRNO_TRACE(errno);
+                      ERRNO_TRACE (errno);
                       return (-1);
                     }
                 }
             }
           else
             {
-              if (ipmi_debug_dprintf(fd, "%c", *ptr++) < 0)
+              if (ipmi_debug_dprintf (fd, "%c", *ptr++) < 0)
                 {
-                  ERRNO_TRACE(errno);
+                  ERRNO_TRACE (errno);
                   return (-1);
                 }
             }
         }
 
-      if (ipmi_debug_dprintf(fd, "\n") < 0)
+      if (ipmi_debug_dprintf (fd, "\n") < 0)
         {
-          ERRNO_TRACE(errno);
+          ERRNO_TRACE (errno);
           return (-1);
         }
     }
 
   return 0;
-} 
+}
 
 int8_t
-ipmi_debug_output_byte_array(int fd, const char *prefix, uint8_t *buf, uint32_t buf_len)
+ipmi_debug_output_byte_array (int fd, const char *prefix, uint8_t *buf, uint32_t buf_len)
 {
   uint32_t count = 0;
 
-  assert(buf);
+  assert (buf);
 
   while (count < buf_len)
     {
       int i = 0;
       if (prefix)
         {
-          if (ipmi_debug_dprintf(fd, "%s", prefix) < 0)
+          if (ipmi_debug_dprintf (fd, "%s", prefix) < 0)
             {
-              ERRNO_TRACE(errno);
+              ERRNO_TRACE (errno);
               return (-1);
             }
         }
 
-      if (ipmi_debug_dprintf(fd, "[ ") < 0)
+      if (ipmi_debug_dprintf (fd, "[ ") < 0)
         {
-          ERRNO_TRACE(errno);
+          ERRNO_TRACE (errno);
           return (-1);
         }
 
       while (count < buf_len && i < IPMI_DEBUG_CHAR_PER_LINE)
-	{
-	  if (ipmi_debug_dprintf(fd, "%02Xh ", buf[count++]) < 0)
+        {
+          if (ipmi_debug_dprintf (fd, "%02Xh ", buf[count++]) < 0)
             {
-              ERRNO_TRACE(errno);
+              ERRNO_TRACE (errno);
               return (-1);
             }
-	  i++;
-	}
+          i++;
+        }
 
-      if (ipmi_debug_dprintf(fd, "]\n") < 0)
+      if (ipmi_debug_dprintf (fd, "]\n") < 0)
         {
-          ERRNO_TRACE(errno);
+          ERRNO_TRACE (errno);
           return (-1);
         }
     }

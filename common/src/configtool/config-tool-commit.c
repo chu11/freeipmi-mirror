@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #if HAVE_CONFIG_H
@@ -35,10 +35,10 @@
 #include "pstdout.h"
 
 config_err_t
-config_commit_section(pstdout_state_t pstate,
-                      struct config_section *section,
-                      struct config_arguments *cmd_args,
-                      void *arg)
+config_commit_section (pstdout_state_t pstate,
+                       struct config_section *section,
+                       struct config_arguments *cmd_args,
+                       void *arg)
 {
   struct config_keyvalue *kv;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -46,29 +46,29 @@ config_commit_section(pstdout_state_t pstate,
   config_err_t this_ret;
   unsigned int commit_count = 0;
 
-  assert(section);
-  assert(cmd_args);
+  assert (section);
+  assert (cmd_args);
 
   if (section->section_pre_commit)
     {
-      if ((this_ret = section->section_pre_commit (section->section_name, 
+      if ((this_ret = section->section_pre_commit (section->section_name,
                                                    arg)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
         {
           PSTDOUT_FPRINTF (pstate,
-                           stderr, 
-                           "ERROR: Section pre-commit `%s'\n", 
+                           stderr,
+                           "ERROR: Section pre-commit `%s'\n",
                            section->section_name);
           ret = CONFIG_ERR_NON_FATAL_ERROR;
         }
     }
 
   kv = section->keyvalues;
-  while (kv) 
+  while (kv)
     {
-      assert(kv->value_input);
+      assert (kv->value_input);
 
       if (!(kv->key->flags & CONFIG_READABLE_ONLY)
           && !(kv->key->flags & CONFIG_UNDEFINED))
@@ -80,12 +80,12 @@ config_commit_section(pstdout_state_t pstate,
 
           if (this_ret == CONFIG_ERR_SUCCESS)
             commit_count++;
-          
+
           if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
             {
               PSTDOUT_FPRINTF (pstate,
-                               stderr, 
-                               "ERROR: Failed to commit `%s:%s'\n", 
+                               stderr,
+                               "ERROR: Failed to commit `%s:%s'\n",
                                section->section_name,
                                kv->key->key_name);
               ret = CONFIG_ERR_NON_FATAL_ERROR;
@@ -94,22 +94,22 @@ config_commit_section(pstdout_state_t pstate,
       else
         {
           PSTDOUT_FPRINTF (pstate,
-                           stderr, 
-                           "ERROR: `%s:%s' is not writeable\n", 
-                           section->section_name, 
+                           stderr,
+                           "ERROR: `%s:%s' is not writeable\n",
+                           section->section_name,
                            kv->key->key_name);
           ret = CONFIG_ERR_NON_FATAL_ERROR;
         }
-      
+
       kv = kv->next;
     }
-  
+
   if (cmd_args->verbose)
     PSTDOUT_FPRINTF (pstate,
-                     stderr, 
+                     stderr,
                      "Completed commit of Section: %s\n",
                      section->section_name);
-  
+
   if (commit_count && section->section_post_commit)
     {
       if ((this_ret = section->section_post_commit (section->section_name,
@@ -119,8 +119,8 @@ config_commit_section(pstdout_state_t pstate,
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
         {
           PSTDOUT_FPRINTF (pstate,
-                           stderr, 
-                           "ERROR: Section post-commit `%s:%s'\n", 
+                           stderr,
+                           "ERROR: Section post-commit `%s:%s'\n",
                            section->section_name,
                            kv->key->key_name);
           ret = CONFIG_ERR_NON_FATAL_ERROR;
@@ -142,16 +142,16 @@ config_commit (pstdout_state_t pstate,
   config_err_t rv = CONFIG_ERR_SUCCESS;
   config_err_t ret;
 
-  assert(sections);
-  assert(cmd_args);
+  assert (sections);
+  assert (cmd_args);
 
   s = sections;
   while (s)
     {
-      if ((ret = config_commit_section(pstate,
-                                       s, 
-                                       cmd_args,
-                                       arg)) != CONFIG_ERR_SUCCESS)
+      if ((ret = config_commit_section (pstate,
+                                        s,
+                                        cmd_args,
+                                        arg)) != CONFIG_ERR_SUCCESS)
         {
           if (ret == CONFIG_ERR_FATAL_ERROR)
             {

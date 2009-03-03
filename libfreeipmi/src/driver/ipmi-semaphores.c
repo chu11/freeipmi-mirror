@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
 */
 
@@ -34,11 +34,11 @@
 
 #include "freeipmi-portability.h"
 
-struct sembuf mutex_lock_buf_interruptible   = {0, -1, IPC_NOWAIT|SEM_UNDO};
-struct sembuf mutex_unlock_buf_interruptible = {0,  1, IPC_NOWAIT|SEM_UNDO};
+struct sembuf mutex_lock_buf_interruptible   = { 0, -1, IPC_NOWAIT|SEM_UNDO};
+struct sembuf mutex_unlock_buf_interruptible = { 0,  1, IPC_NOWAIT|SEM_UNDO};
 
-struct sembuf mutex_lock_buf   = {0, -1, SEM_UNDO};
-struct sembuf mutex_unlock_buf = {0,  1, SEM_UNDO};
+struct sembuf mutex_lock_buf   = { 0, -1, SEM_UNDO};
+struct sembuf mutex_unlock_buf = { 0,  1, SEM_UNDO};
 
 #define IPMI_INBAND_PROJ_ID       0x02
 #define IPMI_INBAND_DEBUG_PROJ_ID 0x03
@@ -60,7 +60,7 @@ ipmi_mutex_init (void)
 #else /* !NDEBUG */
   if ((key = ftok (IPMI_IPCKEY, IPMI_INBAND_PROJ_ID)) == ((key_t)-1))
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 #endif /* NDEBUG */
@@ -68,73 +68,73 @@ ipmi_mutex_init (void)
   if ((semid = semget (key, 1, IPC_CREAT | IPC_EXCL | 0600)) < 0)
     {
       if (errno == EEXIST) /* You are not the first one */
-	{ 
-	  /* Get the orignial semid */
-	  if ((semid = semget (key, 1, IPC_CREAT | 0600)) < 0)
+        {
+          /* Get the orignial semid */
+          if ((semid = semget (key, 1, IPC_CREAT | 0600)) < 0)
             {
-              ERRNO_TRACE(errno);
+              ERRNO_TRACE (errno);
               return (-1);
             }
-          
-	  /* achu: errno may not get reset, so put it back to 0 */
-	  errno = 0;
 
-	  return (semid);
-	}
+          /* achu: errno may not get reset, so put it back to 0 */
+          errno = 0;
 
-      ERRNO_TRACE(errno);
+          return (semid);
+        }
+
+      ERRNO_TRACE (errno);
       return (-1);
     }
-  
+
   /* You are the first one. Initialize the mutex now */
   {
-    union semun mutex_init;  
+    union semun mutex_init;
     unsigned short values[1];
     values[0] = 1;
     mutex_init.array = values;
     if (semctl (semid, 0, SETALL, mutex_init) < 0)
       {
-        ERRNO_TRACE(errno);
+        ERRNO_TRACE (errno);
         return (-1);
       }
   }
   return (semid);
 }
 
-int 
+int
 ipmi_mutex_lock (int semid)
 {
   /* achu: don't check for valid semid - responsibility of calling libs */
   do {
     if (semop (semid, &mutex_lock_buf, 1) < 0)
       {
-        /* While blocked in this system call, the process caught a signal */
-        if (errno == EINTR)
-          continue;
-        ERRNO_TRACE(errno);
-        return (-1);
+    /* While blocked in this system call, the process caught a signal */
+    if (errno == EINTR)
+      continue;
+    ERRNO_TRACE (errno);
+    return (-1);
       }
     break;
   } while (1);
-   
+
   return 0;
 }
 
-int 
+int
 ipmi_mutex_lock_interruptible (int semid)
 {
   /* achu: don't check for valid semid - responsibility of calling libs */
-  return semop(semid, &mutex_lock_buf_interruptible, 1);
+  return semop (semid, &mutex_lock_buf_interruptible, 1);
 }
 
-int 
+int
 ipmi_mutex_unlock (int semid)
 {
   /* achu: don't check for valid semid - responsibility of calling libs */
-  
+
   if (semop (semid, &mutex_unlock_buf, 1) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 

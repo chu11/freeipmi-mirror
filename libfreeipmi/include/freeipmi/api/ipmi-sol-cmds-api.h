@@ -14,7 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-*/
+ */
 
 #ifndef _IPMI_SOL_CMDS_API_H
 #define _IPMI_SOL_CMDS_API_H
@@ -27,10 +27,10 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-int8_t ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx, 
-							     uint8_t channel_number, 
-							     uint8_t sol_enable, 
-							     fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
+                                                             uint8_t channel_number,
+                                                             uint8_t sol_enable,
+                                                             fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
                                                                      uint8_t channel_number,
@@ -66,12 +66,12 @@ int8_t ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_c
                                                                           uint16_t port_number,
                                                                           fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx, 
-							     uint8_t channel_number,
-							     uint8_t get_parameter,
-							     uint8_t set_selector,
-							     uint8_t block_selector,
-							     fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
+                                                             uint8_t channel_number,
+                                                             uint8_t get_parameter,
+                                                             uint8_t set_selector,
+                                                             uint8_t block_selector,
+                                                             fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
                                                                      uint8_t channel_number,

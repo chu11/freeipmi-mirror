@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.h,v 1.8 2009-01-13 01:02:20 chu11 Exp $
+ *  $Id: ipmidetect.h,v 1.9 2009-03-03 23:56:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -61,7 +61,7 @@ typedef struct ipmidetect *ipmidetect_t;
  *
  * Returns handle on success, NULL on error
  */
-ipmidetect_t ipmidetect_handle_create(void);
+ipmidetect_t ipmidetect_handle_create (void);
 
 /* ipmidetect_handle_destroy
  *
@@ -69,7 +69,7 @@ ipmidetect_t ipmidetect_handle_create(void);
  *
  * Returns 0 on success, -1 on error
  */
-int ipmidetect_handle_destroy(ipmidetect_t handle);
+int ipmidetect_handle_destroy (ipmidetect_t handle);
 
 /*
  * ipmidetect_load_data
@@ -82,10 +82,10 @@ int ipmidetect_handle_destroy(ipmidetect_t handle);
  *
  * Returns 0 on success, -1 on error
  */
-int ipmidetect_load_data(ipmidetect_t handle,
-                         const char *hostname,
-                         int port,
-                         int timeout_len);
+int ipmidetect_load_data (ipmidetect_t handle,
+                          const char *hostname,
+                          int port,
+                          int timeout_len);
 
 /*
  * ipmidetect_errnum
@@ -94,7 +94,7 @@ int ipmidetect_load_data(ipmidetect_t handle,
  *
  * Returns error number on success
  */
-int ipmidetect_errnum(ipmidetect_t handle);
+int ipmidetect_errnum (ipmidetect_t handle);
 
 /*
  * ipmidetect_strerror
@@ -103,7 +103,7 @@ int ipmidetect_errnum(ipmidetect_t handle);
  *
  * Returns pointer to message on success
  */
-char *ipmidetect_strerror(int errnum);
+char *ipmidetect_strerror (int errnum);
 
 /*
  * ipmidetect_errormsg
@@ -112,14 +112,14 @@ char *ipmidetect_strerror(int errnum);
  *
  * Returns pointer to message on success
  */
-char *ipmidetect_errormsg(ipmidetect_t handle);
+char *ipmidetect_errormsg (ipmidetect_t handle);
 
 /*
  * ipmidetect_perror
  *
  * Output a message to standard error
  */
-void ipmidetect_perror(ipmidetect_t handle, const char *msg);
+void ipmidetect_perror (ipmidetect_t handle, const char *msg);
 
 /*
  * ipmidetect_get_detected_nodes_string
@@ -128,9 +128,9 @@ void ipmidetect_perror(ipmidetect_t handle, const char *msg);
  *
  * Returns 0 on success, -1 on error
  */
-int ipmidetect_get_detected_nodes_string(ipmidetect_t handle,
-                                         char *buf,
-                                         int buflen);
+int ipmidetect_get_detected_nodes_string (ipmidetect_t handle,
+                                          char *buf,
+                                          int buflen);
 
 /*
  * ipmidetect_get_undetected_nodes_string
@@ -139,9 +139,9 @@ int ipmidetect_get_detected_nodes_string(ipmidetect_t handle,
  *
  * Returns 0 on success, -1 on error
  */
-int ipmidetect_get_undetected_nodes_string(ipmidetect_t handle,
-                                           char *buf,
-                                           int buflen);
+int ipmidetect_get_undetected_nodes_string (ipmidetect_t handle,
+                                            char *buf,
+                                            int buflen);
 
 /*
  * ipmidetect_is_node_detected
@@ -150,7 +150,7 @@ int ipmidetect_get_undetected_nodes_string(ipmidetect_t handle,
  *
  * Returns 1 if detected, 0 if undetected, -1 on error
  */
-int ipmidetect_is_node_detected(ipmidetect_t handle, const char *node);
+int ipmidetect_is_node_detected (ipmidetect_t handle, const char *node);
 
 /*
  * ipmidetect_is_node_undetected
@@ -159,6 +159,6 @@ int ipmidetect_is_node_detected(ipmidetect_t handle, const char *node);
  *
  * Returns 1 if undetected, 0 if detected, -1 on error
  */
-int ipmidetect_is_node_undetected(ipmidetect_t handle, const char *node);
+int ipmidetect_is_node_undetected (ipmidetect_t handle, const char *node);
 
 #endif /* _IPMI_DETECT_H */

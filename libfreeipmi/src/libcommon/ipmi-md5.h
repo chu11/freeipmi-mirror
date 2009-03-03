@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.h,v 1.4 2009-01-13 01:02:39 chu11 Exp $
+ *  $Id: ipmi-md5.h,v 1.5 2009-03-03 23:57:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -27,10 +27,6 @@
 #ifndef _IPMI_MD5_H
 #define _IPMI_MD5_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdint.h>
 
 #define MD5_BLOCK_LENGTH       64
@@ -49,14 +45,10 @@ typedef struct __md5 {
   uint8_t m[MD5_BLOCK_LENGTH];
 } md5_t;
 
-int md5_init(md5_t *ctx);
+int md5_init (md5_t *ctx);
 
-int md5_update_data(md5_t *ctx, uint8_t *buf, unsigned int buflen);
+int md5_update_data (md5_t *ctx, uint8_t *buf, unsigned int buflen);
 
-int md5_finish(md5_t *ctx, uint8_t *digest, unsigned int digestlen);
-
-#ifdef __cplusplus
-}
-#endif
+int md5_finish (md5_t *ctx, uint8_t *digest, unsigned int digestlen);
 
 #endif /* _IPMI_MD5_H */

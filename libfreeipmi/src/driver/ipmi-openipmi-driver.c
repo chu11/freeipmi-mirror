@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
 */
 
@@ -73,7 +73,7 @@
 #elif HAVE_SYS_IPMI_H
 #include <sys/ipmi.h>
 #else  /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_IPMI_H */
-/* 
+/*
  * achu: Most of the definitions below are taken from linux/ipmi.h.
  *
  * Thanks to the ipmitool folks, who's code made it easier for me to
@@ -85,55 +85,55 @@
 
 struct ipmi_system_interface_addr
 {
-  int           addr_type;
-  short         channel;
+  int addr_type;
+  short channel;
   unsigned char lun;
 };
 
 struct ipmi_ipmb_addr
 {
-  int           addr_type;
-  short         channel;
+  int addr_type;
+  short channel;
   unsigned char slave_addr;
   unsigned char lun;
 };
 
 struct ipmi_msg
 {
-  unsigned char   netfn;
-  unsigned char   cmd;
-  unsigned short  data_len;
+  unsigned char netfn;
+  unsigned char cmd;
+  unsigned short data_len;
   unsigned char  *data;
 };
 
 struct ipmi_req
 {
   unsigned char      *addr;
-  unsigned int        addr_len;
-  long                msgid;
-  struct ipmi_msg     msg;
+  unsigned int addr_len;
+  long msgid;
+  struct ipmi_msg msg;
 };
 
 struct ipmi_recv
 {
-  int                 recv_type; 
+  int recv_type;
   unsigned char      *addr;
-  unsigned int        addr_len;
-  long                msgid; 
-  struct ipmi_msg     msg;
+  unsigned int addr_len;
+  long msgid;
+  struct ipmi_msg msg;
 };
 
 #define IPMI_IOC_MAGIC             'i'
-#define IPMICTL_RECEIVE_MSG_TRUNC  _IOWR(IPMI_IOC_MAGIC, 11, struct ipmi_recv)
-#define IPMICTL_RECEIVE_MSG        _IOWR(IPMI_IOC_MAGIC, 12, struct ipmi_recv)
+#define IPMICTL_RECEIVE_MSG_TRUNC  _IOWR (IPMI_IOC_MAGIC, 11, struct ipmi_recv)
+#define IPMICTL_RECEIVE_MSG        _IOWR (IPMI_IOC_MAGIC, 12, struct ipmi_recv)
 #if defined(__FreeBSD__)
-#define IPMICTL_SEND_COMMAND       _IOW(IPMI_IOC_MAGIC,  13, struct ipmi_req)
-#define IPMICTL_SET_MY_ADDRESS_CMD _IOW(IPMI_IOC_MAGIC,  17, unsigned int)
+#define IPMICTL_SEND_COMMAND       _IOW (IPMI_IOC_MAGIC,  13, struct ipmi_req)
+#define IPMICTL_SET_MY_ADDRESS_CMD _IOW (IPMI_IOC_MAGIC,  17, unsigned int)
 #else
-#define IPMICTL_SEND_COMMAND       _IOR(IPMI_IOC_MAGIC,  13, struct ipmi_req)
-#define IPMICTL_SET_MY_ADDRESS_CMD _IOR(IPMI_IOC_MAGIC,  17, unsigned int)
+#define IPMICTL_SEND_COMMAND       _IOR (IPMI_IOC_MAGIC,  13, struct ipmi_req)
+#define IPMICTL_SET_MY_ADDRESS_CMD _IOR (IPMI_IOC_MAGIC,  17, unsigned int)
 #endif
-#define IPMICTL_GET_MY_ADDRESS_CMD _IOR(IPMI_IOC_MAGIC,  18, unsigned int)
+#define IPMICTL_GET_MY_ADDRESS_CMD _IOR (IPMI_IOC_MAGIC,  18, unsigned int)
 #endif /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_IPMI_H */
 
 static char * ipmi_openipmi_ctx_errmsg[] =
@@ -143,7 +143,7 @@ static char * ipmi_openipmi_ctx_errmsg[] =
     "openipmi context invalid",
     "invalid parameter",
     "permission denied",
-    "device not found", 
+    "device not found",
     "io not initialized",
     "out of memory",
     "driver timeout",
@@ -167,7 +167,7 @@ struct ipmi_openipmi_ctx {
 };
 
 static void
-_set_openipmi_ctx_errnum_by_errno(ipmi_openipmi_ctx_t ctx, int __errno)
+_set_openipmi_ctx_errnum_by_errno (ipmi_openipmi_ctx_t ctx, int __errno)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     return;
@@ -195,16 +195,16 @@ _set_openipmi_ctx_errnum_by_errno(ipmi_openipmi_ctx_t ctx, int __errno)
 }
 
 ipmi_openipmi_ctx_t
-ipmi_openipmi_ctx_create(void)
+ipmi_openipmi_ctx_create (void)
 {
   ipmi_openipmi_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_openipmi_ctx_t)malloc(sizeof(struct ipmi_openipmi_ctx))))
+  if (!(ctx = (ipmi_openipmi_ctx_t)malloc (sizeof(struct ipmi_openipmi_ctx))))
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset(ctx, '\0', sizeof(struct ipmi_openipmi_ctx));
+  memset (ctx, '\0', sizeof(struct ipmi_openipmi_ctx));
 
   ctx->magic = IPMI_OPENIPMI_CTX_MAGIC;
   ctx->flags = IPMI_OPENIPMI_FLAGS_DEFAULT;
@@ -217,7 +217,7 @@ ipmi_openipmi_ctx_create(void)
 }
 
 void
-ipmi_openipmi_ctx_destroy(ipmi_openipmi_ctx_t ctx)
+ipmi_openipmi_ctx_destroy (ipmi_openipmi_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     return;
@@ -226,15 +226,15 @@ ipmi_openipmi_ctx_destroy(ipmi_openipmi_ctx_t ctx)
   ctx->errnum = IPMI_OPENIPMI_ERR_SUCCESS;
   if (ctx->driver_device)
     {
-      free(ctx->driver_device);
+      free (ctx->driver_device);
       ctx->driver_device = NULL;
     }
-  close(ctx->device_fd);
-  free(ctx);
+  close (ctx->device_fd);
+  free (ctx);
 }
 
 int
-ipmi_openipmi_ctx_errnum(ipmi_openipmi_ctx_t ctx)
+ipmi_openipmi_ctx_errnum (ipmi_openipmi_ctx_t ctx)
 {
   if (!ctx)
     return (IPMI_OPENIPMI_ERR_NULL);
@@ -245,7 +245,7 @@ ipmi_openipmi_ctx_errnum(ipmi_openipmi_ctx_t ctx)
 }
 
 char *
-ipmi_openipmi_ctx_strerror(int errnum)
+ipmi_openipmi_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_OPENIPMI_ERR_SUCCESS && errnum <= IPMI_OPENIPMI_ERR_ERRNUMRANGE)
     return ipmi_openipmi_ctx_errmsg[errnum];
@@ -254,23 +254,23 @@ ipmi_openipmi_ctx_strerror(int errnum)
 }
 
 char *
-ipmi_openipmi_ctx_errormsg(ipmi_openipmi_ctx_t ctx)
+ipmi_openipmi_ctx_errormsg (ipmi_openipmi_ctx_t ctx)
 {
-  return ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(ctx));
+  return ipmi_openipmi_ctx_strerror (ipmi_openipmi_ctx_errnum (ctx));
 }
 
-int8_t 
-ipmi_openipmi_ctx_get_driver_device(ipmi_openipmi_ctx_t ctx, char **driver_device)
+int8_t
+ipmi_openipmi_ctx_get_driver_device (ipmi_openipmi_ctx_t ctx, char **driver_device)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_openipmi_ctx_errormsg (ctx), ipmi_openipmi_ctx_errnum (ctx));
       return (-1);
     }
 
   if (!driver_device)
     {
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -279,18 +279,18 @@ ipmi_openipmi_ctx_get_driver_device(ipmi_openipmi_ctx_t ctx, char **driver_devic
   return (0);
 }
 
-int8_t 
-ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, unsigned int *flags)
+int8_t
+ipmi_openipmi_ctx_get_flags (ipmi_openipmi_ctx_t ctx, unsigned int *flags)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_openipmi_ctx_errormsg (ctx), ipmi_openipmi_ctx_errnum (ctx));
       return (-1);
     }
 
   if (!flags)
     {
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -299,28 +299,28 @@ ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, unsigned int *flags)
   return (0);
 }
 
-int8_t 
-ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
+int8_t
+ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, char *device)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_openipmi_ctx_errormsg (ctx), ipmi_openipmi_ctx_errnum (ctx));
       return (-1);
     }
 
   if (!device)
     {
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->driver_device)
-    free(ctx->driver_device);
+    free (ctx->driver_device);
   ctx->driver_device = NULL;
 
-  if (!(ctx->driver_device = strdup(device)))
+  if (!(ctx->driver_device = strdup (device)))
     {
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_OUT_OF_MEMORY);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_OUT_OF_MEMORY);
       return (-1);
     }
 
@@ -328,35 +328,35 @@ ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
   return (0);
 }
 
-int8_t 
-ipmi_openipmi_ctx_set_flags(ipmi_openipmi_ctx_t ctx, unsigned int flags)
+int8_t
+ipmi_openipmi_ctx_set_flags (ipmi_openipmi_ctx_t ctx, unsigned int flags)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_openipmi_ctx_errormsg (ctx), ipmi_openipmi_ctx_errnum (ctx));
       return (-1);
     }
 
   if (flags & ~IPMI_OPENIPMI_FLAGS_MASK)
     {
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   ctx->flags = flags;
   ctx->errnum = IPMI_OPENIPMI_ERR_SUCCESS;
   return (0);
 }
 
 int8_t
-ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
+ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx)
 {
   unsigned int addr = IPMI_SLAVE_ADDRESS_BMC;
   char *device;
 
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_openipmi_ctx_errormsg (ctx), ipmi_openipmi_ctx_errnum (ctx));
       return (-1);
     }
 
@@ -368,18 +368,18 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
   else
     device = IPMI_OPENIPMI_DRIVER_DEVICE_DEFAULT;
 
-  if ((ctx->device_fd = open (device, 
+  if ((ctx->device_fd = open (device,
                               O_RDWR)) < 0)
     {
-      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM(ctx, errno);
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
-  if (ioctl(ctx->device_fd, 
-            IPMICTL_SET_MY_ADDRESS_CMD, 
-            &addr) < 0)
+
+  if (ioctl (ctx->device_fd,
+             IPMICTL_SET_MY_ADDRESS_CMD,
+             &addr) < 0)
     {
-      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM(ctx, errno);
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
@@ -389,18 +389,18 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
   return (0);
 
  cleanup:
-  close(ctx->device_fd);
+  close (ctx->device_fd);
   ctx->device_fd = -1;
   return (-1);
 }
 
 static int8_t
-_openipmi_write(ipmi_openipmi_ctx_t ctx, 
-		uint8_t rs_addr,
-                uint8_t lun,
-                uint8_t net_fn,
-                fiid_obj_t obj_cmd_rq,
-		unsigned int is_ipmb)
+_openipmi_write (ipmi_openipmi_ctx_t ctx,
+                 uint8_t rs_addr,
+                 uint8_t lun,
+                 uint8_t net_fn,
+                 fiid_obj_t obj_cmd_rq,
+                 unsigned int is_ipmb)
 {
   uint8_t rq_buf_temp[IPMI_OPENIPMI_BUFLEN];
   uint8_t rq_buf[IPMI_OPENIPMI_BUFLEN];
@@ -411,23 +411,23 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
   struct ipmi_ipmb_addr ipmb_addr;
   struct ipmi_req rq_packet;
 
-  assert(ctx);
-  assert(ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
-  assert(IPMI_BMC_LUN_VALID(lun));
-  assert(IPMI_NET_FN_RQ_VALID(net_fn));
-  assert(fiid_obj_valid(obj_cmd_rq));
-  assert(fiid_obj_packet_valid(obj_cmd_rq));
+  assert (ctx);
+  assert (ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  assert (IPMI_BMC_LUN_VALID (lun));
+  assert (IPMI_NET_FN_RQ_VALID (net_fn));
+  assert (fiid_obj_valid (obj_cmd_rq));
+  assert (fiid_obj_packet_valid (obj_cmd_rq));
 
   /* Due to API differences, we need to extract the cmd out of the
    * request.
    */
-  memset(rq_buf_temp, '\0', IPMI_OPENIPMI_BUFLEN);
+  memset (rq_buf_temp, '\0', IPMI_OPENIPMI_BUFLEN);
 
-  if ((len = fiid_obj_get_all(obj_cmd_rq, 
-                              rq_buf_temp, 
-                              IPMI_OPENIPMI_BUFLEN)) <= 0)
+  if ((len = fiid_obj_get_all (obj_cmd_rq,
+                               rq_buf_temp,
+                               IPMI_OPENIPMI_BUFLEN)) <= 0)
     {
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_INTERNAL_ERROR);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -435,7 +435,7 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
   if (len > 1)
     {
       /* -1 b/c of cmd */
-      memcpy(rq_buf, &rq_buf_temp[1], len - 1);
+      memcpy (rq_buf, &rq_buf_temp[1], len - 1);
       rq_buf_len = len - 1;
     }
   else
@@ -461,17 +461,17 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
       rq_packet.addr_len = sizeof(struct ipmi_ipmb_addr);
     }
 
-  rq_packet.msgid = 0;             
+  rq_packet.msgid = 0;
   rq_packet.msg.netfn = net_fn;
   rq_packet.msg.cmd = rq_cmd;
   rq_packet.msg.data_len = rq_buf_len;
   rq_packet.msg.data = rq_buf;
 
-  if (ioctl(ctx->device_fd, 
-            IPMICTL_SEND_COMMAND,
-            &rq_packet) < 0)
+  if (ioctl (ctx->device_fd,
+             IPMICTL_SEND_COMMAND,
+             &rq_packet) < 0)
     {
-      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM(ctx, errno);
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
       return (-1);
     }
 
@@ -479,7 +479,7 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
 }
 
 static int8_t
-_openipmi_read (ipmi_openipmi_ctx_t ctx, 
+_openipmi_read (ipmi_openipmi_ctx_t ctx,
                 fiid_obj_t obj_cmd_rs)
 {
   uint8_t rs_buf_temp[IPMI_OPENIPMI_BUFLEN];
@@ -490,50 +490,50 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   struct timeval tv;
   int n;
 
-  assert(ctx);
-  assert(ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
-  assert(fiid_obj_valid(obj_cmd_rs));
+  assert (ctx);
+  assert (ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
+  assert (fiid_obj_valid (obj_cmd_rs));
 
   rs_packet.addr = (unsigned char *)&rs_addr;
   rs_packet.addr_len = sizeof(struct ipmi_system_interface_addr);
   rs_packet.msg.data = rs_buf_temp;
   rs_packet.msg.data_len = IPMI_OPENIPMI_BUFLEN;
 
-  FD_ZERO(&read_fds);
-  FD_SET(ctx->device_fd, &read_fds);
+  FD_ZERO (&read_fds);
+  FD_SET (ctx->device_fd, &read_fds);
 
   tv.tv_sec = IPMI_OPENIPMI_TIMEOUT;
   tv.tv_usec = 0;
 
-  if ((n = select(ctx->device_fd + 1, 
-                  &read_fds,
-                  NULL,
-                  NULL,
-                  &tv)) < 0)
+  if ((n = select (ctx->device_fd + 1,
+                   &read_fds,
+                   NULL,
+                   NULL,
+                   &tv)) < 0)
     {
-      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM(ctx, errno);
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
       return (-1);
     }
 
   if (!n)
     {
       /* Could be due to a different error, but we assume a timeout */
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_DRIVER_TIMEOUT);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_DRIVER_TIMEOUT);
       return (-1);
     }
 
-  if (ioctl(ctx->device_fd, 
-            IPMICTL_RECEIVE_MSG_TRUNC, 
-            &rs_packet) < 0)
+  if (ioctl (ctx->device_fd,
+             IPMICTL_RECEIVE_MSG_TRUNC,
+             &rs_packet) < 0)
     {
-      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM(ctx, errno);
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
       return (-1);
     }
 
   /* achu: atleast the completion code should be returned */
   if (!rs_packet.msg.data_len)
     {
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_SYSTEM_ERROR);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
@@ -541,13 +541,13 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   /* -1 b/c of cmd */
   if (rs_packet.msg.data_len >= (IPMI_OPENIPMI_BUFLEN - 1))
     rs_packet.msg.data_len = IPMI_OPENIPMI_BUFLEN - 1;
-  memcpy(rs_buf + 1, rs_buf_temp, rs_packet.msg.data_len);
+  memcpy (rs_buf + 1, rs_buf_temp, rs_packet.msg.data_len);
 
-  if (fiid_obj_set_all(obj_cmd_rs, 
-                       rs_buf, 
-                       rs_packet.msg.data_len + 1) < 0)
+  if (fiid_obj_set_all (obj_cmd_rs,
+                        rs_buf,
+                        rs_packet.msg.data_len + 1) < 0)
     {
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_INTERNAL_ERROR);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -555,7 +555,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
 }
 
 int8_t
-ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx, 
+ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
                    uint8_t lun,
                    uint8_t net_fn,
                    fiid_obj_t obj_cmd_rq,
@@ -563,81 +563,81 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_openipmi_ctx_errormsg (ctx), ipmi_openipmi_ctx_errnum (ctx));
       return (-1);
     }
- 
-  if (!IPMI_BMC_LUN_VALID(lun)
-      || !IPMI_NET_FN_RQ_VALID(net_fn)
-      || !fiid_obj_valid(obj_cmd_rq)
-      || !fiid_obj_valid(obj_cmd_rs)
-      || !fiid_obj_packet_valid(obj_cmd_rq))
+
+  if (!IPMI_BMC_LUN_VALID (lun)
+      || !IPMI_NET_FN_RQ_VALID (net_fn)
+      || !fiid_obj_valid (obj_cmd_rq)
+      || !fiid_obj_valid (obj_cmd_rs)
+      || !fiid_obj_packet_valid (obj_cmd_rq))
     {
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (!ctx->io_init)
     {
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_IO_NOT_INITIALIZED);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_IO_NOT_INITIALIZED);
       return (-1);
     }
 
-  if (_openipmi_write(ctx,
-		      0,
-                      lun,
-                      net_fn,
-                      obj_cmd_rq,
-		      0) < 0)
+  if (_openipmi_write (ctx,
+                       0,
+                       lun,
+                       net_fn,
+                       obj_cmd_rq,
+                       0) < 0)
     return (-1);
 
-  if (_openipmi_read(ctx,
-                     obj_cmd_rs) < 0)
+  if (_openipmi_read (ctx,
+                      obj_cmd_rs) < 0)
     return (-1);
 
   return (0);
 }
 
 int8_t
-ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx, 
-			uint8_t rs_addr,
-			uint8_t lun,
-			uint8_t net_fn,
-			fiid_obj_t obj_cmd_rq,
-			fiid_obj_t obj_cmd_rs)
+ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
+                        uint8_t rs_addr,
+                        uint8_t lun,
+                        uint8_t net_fn,
+                        fiid_obj_t obj_cmd_rq,
+                        fiid_obj_t obj_cmd_rs)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_openipmi_ctx_errormsg(ctx), ipmi_openipmi_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_openipmi_ctx_errormsg (ctx), ipmi_openipmi_ctx_errnum (ctx));
       return (-1);
     }
- 
-  if (!IPMI_BMC_LUN_VALID(lun)
-      || !IPMI_NET_FN_RQ_VALID(net_fn)
-      || !fiid_obj_valid(obj_cmd_rq)
-      || !fiid_obj_valid(obj_cmd_rs)
-      || !fiid_obj_packet_valid(obj_cmd_rq))
+
+  if (!IPMI_BMC_LUN_VALID (lun)
+      || !IPMI_NET_FN_RQ_VALID (net_fn)
+      || !fiid_obj_valid (obj_cmd_rq)
+      || !fiid_obj_valid (obj_cmd_rs)
+      || !fiid_obj_packet_valid (obj_cmd_rq))
     {
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (!ctx->io_init)
     {
-      OPENIPMI_SET_ERRNUM(ctx, IPMI_OPENIPMI_ERR_IO_NOT_INITIALIZED);
+      OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_IO_NOT_INITIALIZED);
       return (-1);
     }
 
-  if (_openipmi_write(ctx,
-		      rs_addr,
-		      lun,
-		      net_fn,
-		      obj_cmd_rq,
-		      1) < 0)
+  if (_openipmi_write (ctx,
+                       rs_addr,
+                       lun,
+                       net_fn,
+                       obj_cmd_rq,
+                       1) < 0)
     return (-1);
 
-  if (_openipmi_read(ctx,
-                     obj_cmd_rs) < 0)
+  if (_openipmi_read (ctx,
+                      obj_cmd_rs) < 0)
     return (-1);
 
   return (0);

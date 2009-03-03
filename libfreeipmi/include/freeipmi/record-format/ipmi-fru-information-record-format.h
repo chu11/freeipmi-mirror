@@ -1,33 +1,33 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-information-record-format.h,v 1.5 2009-01-13 01:02:26 chu11 Exp $
- *****************************************************************************
- *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
- *  Copyright (C) 2007 The Regents of the University of California.
- *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
- *  Written by Albert Chu <chu11@llnl.gov>
- *  UCRL-CODE-232183
- *
- *  This file is part of Ipmi-fru, a tool used for retrieving
- *  motherboard field replaceable unit (FRU) information. For details,
- *  see http://www.llnl.gov/linux/.
- *
- *  Ipmi-fru is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by the
- *  Free Software Foundation; either version 2 of the License, or (at your
- *  option) any later version.
- *
- *  Ipmi-fru is distributed in the hope that it will be useful, but
- *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- *  for more details.
- *
- *  You should have received a copy of the GNU General Public License along
- *  with Ipmi-fru; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+*  $Id: ipmi-fru-information-record-format.h,v 1.6 2009-03-03 23:57:02 chu11 Exp $
+*****************************************************************************
+*  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
+*  Copyright (C) 2007 The Regents of the University of California.
+*  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+*  Written by Albert Chu <chu11@llnl.gov>
+*  UCRL-CODE-232183
+*
+*  This file is part of Ipmi-fru, a tool used for retrieving
+*  motherboard field replaceable unit (FRU) information. For details,
+*  see http://www.llnl.gov/linux/.
+*
+*  Ipmi-fru is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by the
+*  Free Software Foundation; either version 2 of the License, or (at your
+*  option) any later version.
+*
+*  Ipmi-fru is distributed in the hope that it will be useful, but
+*  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+*  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+*  for more details.
+*
+*  You should have received a copy of the GNU General Public License along
+*  with Ipmi-fru; if not, write to the Free Software Foundation, Inc.,
+*  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
 #ifndef _IPMI_FRU_INFORMATION_RECORD_FORMAT_H
-#define	_IPMI_FRU_INFORMATION_RECORD_FORMAT_H
+#define _IPMI_FRU_INFORMATION_RECORD_FORMAT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -57,13 +57,13 @@ extern "C" {
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN                        0xC0
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MAX                        0xFF
 
-#define IPMI_FRU_MULTIRECORD_AREA_TYPE_VALID(__multirecord_area_type) \
-        (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION \
-          && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD) ? 1 : 0)
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_VALID(__multirecord_area_type)                    \
+  (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION \
+    && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD) ? 1 : 0)
 
-#define IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM(__multirecord_area_type) \
-        (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN \
-          && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MAX) ? 1 : 0)
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM(__multirecord_area_type)  \
+  (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN \
+    && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MAX) ? 1 : 0)
 
 #define IPMI_FRU_ONE_PULSE_PER_ROTATION  0x0
 #define IPMI_FRU_TWO_PULSES_PER_ROTATION 0x1
@@ -83,9 +83,9 @@ extern "C" {
 #define IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_PING_ADDRESS    0x06
 #define IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID          0x07
 
-#define IPMI_FRU_SUB_RECORD_TYPE_VALID(__sub_record_type) \
-        (((__sub_record_type) >= IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_MANAGEMENT_URL \
-          && (__sub_record_type) <= IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID) ? 1 : 0)
+#define IPMI_FRU_SUB_RECORD_TYPE_VALID(__sub_record_type)                 \
+  (((__sub_record_type) >= IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_MANAGEMENT_URL \
+    && (__sub_record_type) <= IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID) ? 1 : 0)
 
 #define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_BINARY          0x00
 #define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_BCD             0x40

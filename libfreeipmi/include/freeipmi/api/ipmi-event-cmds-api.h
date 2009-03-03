@@ -14,10 +14,10 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-*/
+ */
 
 #ifndef _IPMI_EVENT_CMDS_API_H
-#define	_IPMI_EVENT_CMDS_API_H
+#define _IPMI_EVENT_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,12 +26,12 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-int8_t ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx, 
+int8_t ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
                                     uint8_t event_receiver_slave_address,
                                     uint8_t event_receiver_lun,
                                     fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx, 
+int8_t ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
                                          uint8_t slave_address,
                                          uint8_t event_receiver_slave_address,
                                          uint8_t event_receiver_lun,

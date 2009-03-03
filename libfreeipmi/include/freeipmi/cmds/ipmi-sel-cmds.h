@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,8 +13,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-*/
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ */
 
 #ifndef _IPMI_SEL_CMDS_H
 #define _IPMI_SEL_CMDS_H
@@ -32,9 +32,9 @@ extern "C" {
 #define IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE        0xAA
 #define IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS    0x0
 
-#define IPMI_SEL_CLEAR_OPERATION_VALID(__val) \
-        (((__val) == IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE \
-          || (__val) == IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS) ? 1 : 0)
+#define IPMI_SEL_CLEAR_OPERATION_VALID(__val)          \
+  (((__val) == IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE \
+    || (__val) == IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS) ? 1 : 0)
 
 #define IPMI_SEL_CLEAR_ERASURE_IN_PROGRESS    0x0
 #define IPMI_SEL_CLEAR_ERASE_COMPLETED        0x1
@@ -45,10 +45,10 @@ extern "C" {
 #define IPMI_AUXILIARY_LOG_TYPE_OEM1 0x01
 #define IPMI_AUXILIARY_LOG_TYPE_OEM2 0x02
 
-#define IPMI_AUXILIARY_LOG_TYPE_VALID(__val) \
-        (((__val) == IPMI_AUXILIARY_LOG_TYPE_MCA \
-          || (__val) == IPMI_AUXILIARY_LOG_TYPE_OEM1 \
-          || (__val) == IPMI_AUXILIARY_LOG_TYPE_OEM2) ? 1 : 0)
+#define IPMI_AUXILIARY_LOG_TYPE_VALID(__val)   \
+  (((__val) == IPMI_AUXILIARY_LOG_TYPE_MCA     \
+    || (__val) == IPMI_AUXILIARY_LOG_TYPE_OEM1 \
+    || (__val) == IPMI_AUXILIARY_LOG_TYPE_OEM2) ? 1 : 0)
 
 extern fiid_template_t tmpl_cmd_get_sel_info_rq;
 extern fiid_template_t tmpl_cmd_get_sel_info_rs;
@@ -89,7 +89,7 @@ int8_t fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq);
 int8_t fill_cmd_reserve_sel (fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_sel_entry (uint16_t reservation_id,
-                               uint16_t record_id, 
+                               uint16_t record_id,
                                uint8_t offset_into_record,
                                uint8_t bytes_to_read,
                                fiid_obj_t obj_cmd_rq);
@@ -98,8 +98,8 @@ int8_t fill_cmd_delete_sel_entry (uint16_t reservation_id,
                                   uint16_t record_id,
                                   fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_clear_sel (uint16_t reservation_id, 
-                           uint8_t operation, 
+int8_t fill_cmd_clear_sel (uint16_t reservation_id,
+                           uint8_t operation,
                            fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_sel_time (fiid_obj_t obj_cmd_rq);

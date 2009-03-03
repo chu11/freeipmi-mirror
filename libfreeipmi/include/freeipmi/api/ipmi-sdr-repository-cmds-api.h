@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,9 +13,9 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
-*/
+ */
 
 #ifndef _IPMI_SDR_REPOSITORY_CMDS_API_H
 #define _IPMI_SDR_REPOSITORY_CMDS_API_H
@@ -28,21 +28,21 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-int8_t ipmi_cmd_get_sdr_repository_info (ipmi_ctx_t ctx, 
-					 fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sdr_repository_info (ipmi_ctx_t ctx,
+                                         fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sdr_repository_allocation_info (ipmi_ctx_t ctx, 
-						    fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sdr_repository_allocation_info (ipmi_ctx_t ctx,
+                                                    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_reserve_sdr_repository (ipmi_ctx_t ctx, 
-					fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_reserve_sdr_repository (ipmi_ctx_t ctx,
+                                        fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sdr (ipmi_ctx_t ctx, 
-			 uint16_t reservation_id, 
-			 uint16_t record_id, 
-			 uint8_t offset_into_record, 
-			 uint8_t bytes_to_read, 
-			 fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sdr (ipmi_ctx_t ctx,
+                         uint16_t reservation_id,
+                         uint16_t record_id,
+                         uint8_t offset_into_record,
+                         uint8_t bytes_to_read,
+                         fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_get_sdr_repository_time (ipmi_ctx_t ctx,
                                          fiid_obj_t obj_cmd_rs);

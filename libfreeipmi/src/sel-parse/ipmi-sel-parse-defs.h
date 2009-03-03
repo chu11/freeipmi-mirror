@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
 */
 
@@ -50,14 +50,14 @@
 
 #define IPMI_SEL_PARSE_SEPARATOR_STRING     " | "
 
-#define IPMI_SEL_PARSE_STRING_MASK \
-  (IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE \
+#define IPMI_SEL_PARSE_STRING_MASK                        \
+  (IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE                    \
    | IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD \
-   | IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE \
-   | IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH \
-   | IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING \
+   | IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE     \
+   | IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH           \
+   | IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING        \
    | IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
-                                            
+
 struct ipmi_sel_parse_entry {
   uint8_t sel_event_record[IPMI_SEL_RECORD_LENGTH];
   unsigned int sel_event_record_len; /* should always be 16, but just in case */

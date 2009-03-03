@@ -14,10 +14,10 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-*/
+ */
 
 #ifndef _IPMI_DEVICE_GLOBAL_CMDS_API_H
-#define	_IPMI_DEVICE_GLOBAL_CMDS_API_H
+#define _IPMI_DEVICE_GLOBAL_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,7 +32,7 @@ int8_t ipmi_cmd_cold_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_warm_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_acpi_power_state (ipmi_ctx_t ctx, 
+int8_t ipmi_cmd_set_acpi_power_state (ipmi_ctx_t ctx,
                                       uint8_t system_power_state_enumeration,
                                       uint8_t set_system_power_state,
                                       uint8_t device_power_state_enumeration,

@@ -14,7 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-*/
+ */
 
 #ifndef _IPMI_CHASSIS_CMDS_API_H
 #define _IPMI_CHASSIS_CMDS_API_H
@@ -27,10 +27,10 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-int8_t ipmi_cmd_get_chassis_capabilities (ipmi_ctx_t ctx, 
+int8_t ipmi_cmd_get_chassis_capabilities (ipmi_ctx_t ctx,
                                           fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_chassis_status (ipmi_ctx_t ctx, 
+int8_t ipmi_cmd_get_chassis_status (ipmi_ctx_t ctx,
                                     fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_chassis_control (ipmi_ctx_t ctx,
@@ -49,26 +49,26 @@ int8_t ipmi_cmd_set_front_panel_enables (ipmi_ctx_t ctx,
                                          uint8_t disable_standby_button_for_entering_standby,
                                          fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_power_restore_policy (ipmi_ctx_t ctx, 
-                                          uint8_t power_restore_policy, 
+int8_t ipmi_cmd_set_power_restore_policy (ipmi_ctx_t ctx,
+                                          uint8_t power_restore_policy,
                                           fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_set_power_cycle_interval (ipmi_ctx_t ctx,
                                           uint8_t interval,
                                           fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_system_restart_cause (ipmi_ctx_t ctx, 
+int8_t ipmi_cmd_get_system_restart_cause (ipmi_ctx_t ctx,
                                           fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_system_boot_options(ipmi_ctx_t ctx,
-                                        uint8_t parameter_selector,
-                                        uint8_t *configuration_parameter_data,
-                                        uint8_t data_len,
-                                        fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
+                                         uint8_t parameter_selector,
+                                         uint8_t *configuration_parameter_data,
+                                         uint8_t data_len,
+                                         fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_system_boot_options_set_in_progress(ipmi_ctx_t ctx, 
-                                                        uint8_t value,
-                                                        fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_system_boot_options_set_in_progress (ipmi_ctx_t ctx,
+                                                         uint8_t value,
+                                                         fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
                                                                           uint8_t dont_clear_on_power_up,

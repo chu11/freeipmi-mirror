@@ -14,10 +14,10 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-*/
+ */
 
 #ifndef _IPMI_DEBUG_H
-#define	_IPMI_DEBUG_H
+#define _IPMI_DEBUG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,24 +25,24 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
- 
+
 extern fiid_template_t tmpl_unexpected_data;
 
 int8_t ipmi_obj_dump (int fd,
-                      const char *prefix, 
+                      const char *prefix,
                       const char *hdr,
-                      const char *trlr, 
+                      const char *trlr,
                       fiid_obj_t obj);
 
 int8_t ipmi_obj_dump_ipmb (int fd,
-                           const char *prefix, 
+                           const char *prefix,
                            const char *hdr,
-                           const char *trlr, 
+                           const char *trlr,
                            fiid_obj_t obj,
                            fiid_template_t tmpl_ipmb_msg_hdr,
                            fiid_template_t tmpl_ipmb_cmd);
 
-int8_t ipmi_dump_rmcp_packet (int fd, 
+int8_t ipmi_dump_rmcp_packet (int fd,
                               const char *prefix,
                               const char *hdr,
                               const char *trlr,
@@ -50,83 +50,83 @@ int8_t ipmi_dump_rmcp_packet (int fd,
                               uint32_t pkt_len,
                               fiid_template_t tmpl_cmd);
 
-int8_t ipmi_dump_kcs_packet (int fd, 
-                             const char *prefix, 
-                             const char *hdr, 
+int8_t ipmi_dump_kcs_packet (int fd,
+                             const char *prefix,
+                             const char *hdr,
                              const char *trlr,
-                             uint8_t *pkt, 
-                             uint32_t pkt_len, 
+                             uint8_t *pkt,
+                             uint32_t pkt_len,
                              fiid_template_t tmpl_cmd);
 
-int8_t ipmi_dump_kcs_packet_ipmb (int fd, 
+int8_t ipmi_dump_kcs_packet_ipmb (int fd,
                                   const char *prefix,
-                                  const char *hdr, 
-                                  const char *trlr, 
-                                  uint8_t *pkt, 
-                                  uint32_t pkt_len, 
-                                  fiid_template_t tmpl_cmd, 
-                                  fiid_template_t tmpl_ipmb_msg_hdr, 
+                                  const char *hdr,
+                                  const char *trlr,
+                                  uint8_t *pkt,
+                                  uint32_t pkt_len,
+                                  fiid_template_t tmpl_cmd,
+                                  fiid_template_t tmpl_ipmb_msg_hdr,
                                   fiid_template_t tmpl_ipmb_cmd);
 
-int8_t ipmi_dump_lan_packet (int fd, 
-                             const char *prefix, 
-                             const char *hdr, 
+int8_t ipmi_dump_lan_packet (int fd,
+                             const char *prefix,
+                             const char *hdr,
                              const char *trlr,
-                             uint8_t *pkt, 
-                             uint32_t pkt_len, 
-                             fiid_template_t tmpl_lan_msg_hdr, 
+                             uint8_t *pkt,
+                             uint32_t pkt_len,
+                             fiid_template_t tmpl_lan_msg_hdr,
                              fiid_template_t tmpl_cmd);
 
-int8_t ipmi_dump_lan_packet_ipmb (int fd, 
+int8_t ipmi_dump_lan_packet_ipmb (int fd,
                                   const char *prefix,
-                                  const char *hdr, 
-                                  const char *trlr, 
-                                  uint8_t *pkt, 
-                                  uint32_t pkt_len, 
-                                  fiid_template_t tmpl_lan_msg_hdr, 
-                                  fiid_template_t tmpl_cmd, 
-                                  fiid_template_t tmpl_ipmb_msg_hdr, 
+                                  const char *hdr,
+                                  const char *trlr,
+                                  uint8_t *pkt,
+                                  uint32_t pkt_len,
+                                  fiid_template_t tmpl_lan_msg_hdr,
+                                  fiid_template_t tmpl_cmd,
+                                  fiid_template_t tmpl_ipmb_msg_hdr,
                                   fiid_template_t tmpl_ipmb_cmd);
 
-int32_t ipmi_dump_rmcpplus_packet (int fd, 
-                                   const char *prefix, 
-                                   const char *hdr, 
-                                   const char *trlr, 
+int32_t ipmi_dump_rmcpplus_packet (int fd,
+                                   const char *prefix,
+                                   const char *hdr,
+                                   const char *trlr,
                                    uint8_t authentication_algorithm,
-                                   uint8_t integrity_algorithm, 
-                                   uint8_t confidentiality_algorithm, 
-                                   uint8_t *integrity_key, 
-                                   uint32_t integrity_key_len, 
-                                   uint8_t *confidentiality_key, 
-                                   uint32_t confidentiality_key_len, 
-                                   uint8_t *pkt, 
-                                   uint32_t pkt_len, 
-                                   fiid_template_t tmpl_lan_msg_hdr, 
+                                   uint8_t integrity_algorithm,
+                                   uint8_t confidentiality_algorithm,
+                                   uint8_t *integrity_key,
+                                   uint32_t integrity_key_len,
+                                   uint8_t *confidentiality_key,
+                                   uint32_t confidentiality_key_len,
+                                   uint8_t *pkt,
+                                   uint32_t pkt_len,
+                                   fiid_template_t tmpl_lan_msg_hdr,
                                    fiid_template_t tmpl_cmd);
 
-int32_t ipmi_dump_rmcpplus_packet_ipmb (int fd, 
-                                        const char *prefix, 
-                                        const char *hdr, 
-                                        const char *trlr, 
+int32_t ipmi_dump_rmcpplus_packet_ipmb (int fd,
+                                        const char *prefix,
+                                        const char *hdr,
+                                        const char *trlr,
                                         uint8_t authentication_algorithm,
-                                        uint8_t integrity_algorithm, 
-                                        uint8_t confidentiality_algorithm, 
-                                        uint8_t *integrity_key, 
-                                        uint32_t integrity_key_len, 
-                                        uint8_t *confidentiality_key, 
-                                        uint32_t confidentiality_key_len, 
-                                        uint8_t *pkt, 
-                                        uint32_t pkt_len, 
-                                        fiid_template_t tmpl_lan_msg_hdr, 
+                                        uint8_t integrity_algorithm,
+                                        uint8_t confidentiality_algorithm,
+                                        uint8_t *integrity_key,
+                                        uint32_t integrity_key_len,
+                                        uint8_t *confidentiality_key,
+                                        uint32_t confidentiality_key_len,
+                                        uint8_t *pkt,
+                                        uint32_t pkt_len,
+                                        fiid_template_t tmpl_lan_msg_hdr,
                                         fiid_template_t tmpl_cmd,
-                                        fiid_template_t tmpl_ipmb_msg_hdr, 
+                                        fiid_template_t tmpl_ipmb_msg_hdr,
                                         fiid_template_t tmpl_ipmb_cmd);
 
-int32_t ipmi_dump_sdr_record (int fd, 
-                              const char *prefix, 
-                              const char *hdr, 
-                              const char *trlr, 
-                              uint8_t *sdr_record, 
+int32_t ipmi_dump_sdr_record (int fd,
+                              const char *prefix,
+                              const char *hdr,
+                              const char *trlr,
+                              uint8_t *sdr_record,
                               uint32_t sdr_record_len);
 
 #ifdef __cplusplus

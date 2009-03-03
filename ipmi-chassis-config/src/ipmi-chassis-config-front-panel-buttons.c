@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2008-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2008-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #if HAVE_CONFIG_H
@@ -63,38 +63,38 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   uint64_t val;
   int8_t flag;
 
-  assert(state_data);
-  assert(data);
+  assert (state_data);
+  assert (data);
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_status_rs)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
   if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_get_chassis_status: %s\n",
-                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_chassis_status: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if ((flag = fiid_obj_get(obj_cmd_rs, 
-                           "front_panel.standby_button_disabled", 
-                           &val)) < 0)
+  if ((flag = fiid_obj_get (obj_cmd_rs,
+                            "front_panel.standby_button_disabled",
+                            &val)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get: 'front_panel.standby_button_disabled': %s\n",
-                      fiid_obj_errormsg(obj_cmd_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'front_panel.standby_button_disabled': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
@@ -103,14 +103,14 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   else
     data->standby = BUTTON_UNKNOWN;
 
-  if ((flag = fiid_obj_get(obj_cmd_rs, 
-                           "front_panel.diagnostic_interrupt_button_disabled", 
-                           &val)) < 0)
+  if ((flag = fiid_obj_get (obj_cmd_rs,
+                            "front_panel.diagnostic_interrupt_button_disabled",
+                            &val)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get: 'front_panel.diagnostic_interrupt_button_disabled': %s\n",
-                      fiid_obj_errormsg(obj_cmd_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'front_panel.diagnostic_interrupt_button_disabled': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
@@ -119,14 +119,14 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   else
     data->diagnostic_interrupt = BUTTON_UNKNOWN;
 
-  if ((flag = fiid_obj_get(obj_cmd_rs, 
-                           "front_panel.reset_button_disabled", 
-                           &val)) < 0)
+  if ((flag = fiid_obj_get (obj_cmd_rs,
+                            "front_panel.reset_button_disabled",
+                            &val)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get: 'front_panel.reset_button_disabled': %s\n",
-                      fiid_obj_errormsg(obj_cmd_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'front_panel.reset_button_disabled': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
@@ -135,14 +135,14 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   else
     data->reset = BUTTON_UNKNOWN;
 
-  if ((flag = fiid_obj_get(obj_cmd_rs,
-                           "front_panel.power_off_button_disabled", 
-                           &val)) < 0)
+  if ((flag = fiid_obj_get (obj_cmd_rs,
+                            "front_panel.power_off_button_disabled",
+                            &val)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get: 'front_panel.power_off_button_disabled': %s\n",
-                      fiid_obj_errormsg(obj_cmd_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'front_panel.power_off_button_disabled': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
@@ -151,14 +151,14 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   else
     data->power_off = BUTTON_UNKNOWN;
 
-  if ((flag = fiid_obj_get(obj_cmd_rs, 
-                           "front_panel.standby_button_disable_allowed", 
-                           &val)) < 0)
+  if ((flag = fiid_obj_get (obj_cmd_rs,
+                            "front_panel.standby_button_disable_allowed",
+                            &val)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get: 'front_panel.standby_button_disable_allowed': %s\n",
-                      fiid_obj_errormsg(obj_cmd_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'front_panel.standby_button_disable_allowed': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
@@ -167,14 +167,14 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   else
     data->standby_disable_allowed = BUTTON_DISABLE_UNKNOWN;
 
-  if ((flag = fiid_obj_get(obj_cmd_rs, 
-                           "front_panel.diagnostic_interrupt_button_disable_allowed", 
-                           &val)) < 0)
+  if ((flag = fiid_obj_get (obj_cmd_rs,
+                            "front_panel.diagnostic_interrupt_button_disable_allowed",
+                            &val)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get: 'front_panel.diagnostic_interrupt_button_disable_allowed': %s\n",
-                      fiid_obj_errormsg(obj_cmd_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'front_panel.diagnostic_interrupt_button_disable_allowed': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
@@ -182,15 +182,15 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
     data->diagnostic_interrupt_disable_allowed = val;
   else
     data->diagnostic_interrupt_disable_allowed = BUTTON_DISABLE_UNKNOWN;
-  
-  if ((flag = fiid_obj_get(obj_cmd_rs, 
-                           "front_panel.reset_button_disable_allowed", 
-                           &val)) < 0)
+
+  if ((flag = fiid_obj_get (obj_cmd_rs,
+                            "front_panel.reset_button_disable_allowed",
+                            &val)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get: 'front_panel.reset_button_disable_allowed': %s\n",
-                      fiid_obj_errormsg(obj_cmd_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'front_panel.reset_button_disable_allowed': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
@@ -199,14 +199,14 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   else
     data->reset_disable_allowed = BUTTON_DISABLE_UNKNOWN;
 
-  if ((flag = fiid_obj_get(obj_cmd_rs, 
-                           "front_panel.power_off_button_disable_allowed", 
-                           &val)) < 0)
+  if ((flag = fiid_obj_get (obj_cmd_rs,
+                            "front_panel.power_off_button_disable_allowed",
+                            &val)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get: 'front_panel.power_off_button_disable_allowed': %s\n",
-                      fiid_obj_errormsg(obj_cmd_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'front_panel.power_off_button_disable_allowed': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
@@ -217,7 +217,7 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }
 
@@ -228,18 +228,18 @@ _set_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
-  assert(state_data);
-  assert(data);
+  assert (state_data);
+  assert (data);
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_front_panel_enables_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_front_panel_enables_rs)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
-  
+
   if (ipmi_cmd_set_front_panel_enables (state_data->ipmi_ctx,
                                         data->power_off,
                                         data->reset,
@@ -248,25 +248,25 @@ _set_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
                                         obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_set_front_panel_enables: %s\n",
-                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_front_panel_enables: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }
 
 static config_err_t
 front_panel_buttons_checkout (const char *section_name,
-			       struct config_keyvalue *kv,
-                               void *arg)
+                              struct config_keyvalue *kv,
+                              void *arg)
 {
   ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
   struct front_panel_buttons data;
@@ -275,20 +275,20 @@ front_panel_buttons_checkout (const char *section_name,
   uint8_t enabled = 0;
   char *enabled_str = NULL;
 
-  memset(&data, '\0', sizeof(struct front_panel_buttons));
+  memset (&data, '\0', sizeof(struct front_panel_buttons));
   if ((ret = _get_front_panel_buttons (state_data, &data)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (!strcasecmp(kv->key->key_name, "Enable_Standby_Button_For_Entering_Standby"))
+  if (!strcasecmp (kv->key->key_name, "Enable_Standby_Button_For_Entering_Standby"))
     enabled = data.standby;
-  else if (!strcasecmp(kv->key->key_name, "Enable_Diagnostic_Interrupt_Button"))
+  else if (!strcasecmp (kv->key->key_name, "Enable_Diagnostic_Interrupt_Button"))
     enabled = data.diagnostic_interrupt;
-  else if (!strcasecmp(kv->key->key_name, "Enable_Reset_Button"))
+  else if (!strcasecmp (kv->key->key_name, "Enable_Reset_Button"))
     enabled = data.reset;
-  else if (!strcasecmp(kv->key->key_name, "Enable_Power_Off_Button_For_Power_Off_Only"))
+  else if (!strcasecmp (kv->key->key_name, "Enable_Power_Off_Button_For_Power_Off_Only"))
     enabled = data.power_off;
   else
     {
@@ -300,7 +300,7 @@ front_panel_buttons_checkout (const char *section_name,
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-  
+
   if (enabled == BUTTON_ENABLED)
     enabled_str = "Yes";
   else if (enabled == BUTTON_DISABLED)
@@ -308,9 +308,9 @@ front_panel_buttons_checkout (const char *section_name,
   else
     enabled_str = "";
 
-  if (config_section_update_keyvalue_output(state_data->pstate,
-                                            kv,
-                                            enabled_str) < 0)
+  if (config_section_update_keyvalue_output (state_data->pstate,
+                                             kv,
+                                             enabled_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -320,8 +320,8 @@ front_panel_buttons_checkout (const char *section_name,
 
 static config_err_t
 front_panel_buttons_commit (const char *section_name,
-			     const struct config_keyvalue *kv,
-                             void *arg)
+                            const struct config_keyvalue *kv,
+                            void *arg)
 {
   ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
   struct front_panel_buttons data;
@@ -330,32 +330,32 @@ front_panel_buttons_commit (const char *section_name,
   uint8_t enable_or_disable;
   uint8_t disable_allowed;
 
-  memset(&data, '\0', sizeof(struct front_panel_buttons));
+  memset (&data, '\0', sizeof(struct front_panel_buttons));
   if ((ret = _get_front_panel_buttons (state_data, &data)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
-  if (!strcasecmp(kv->key->key_name, "Enable_Standby_Button_For_Entering_Standby"))
+  if (!strcasecmp (kv->key->key_name, "Enable_Standby_Button_For_Entering_Standby"))
     {
       data.standby = same (kv->value_input, "yes") ? BUTTON_ENABLED : BUTTON_DISABLED;
       enable_or_disable = data.standby;
       disable_allowed = data.standby_disable_allowed;
     }
-  else if (!strcasecmp(kv->key->key_name, "Enable_Diagnostic_Interrupt_Button"))
+  else if (!strcasecmp (kv->key->key_name, "Enable_Diagnostic_Interrupt_Button"))
     {
       data.diagnostic_interrupt = same (kv->value_input, "yes") ? BUTTON_ENABLED : BUTTON_DISABLED;
       enable_or_disable = data.diagnostic_interrupt;
       disable_allowed = data.diagnostic_interrupt_disable_allowed;
     }
-  else if (!strcasecmp(kv->key->key_name, "Enable_Reset_Button"))
+  else if (!strcasecmp (kv->key->key_name, "Enable_Reset_Button"))
     {
       data.reset = same (kv->value_input, "yes") ? BUTTON_ENABLED : BUTTON_DISABLED;
       enable_or_disable = data.reset;
       disable_allowed = data.reset_disable_allowed;
     }
-  else if (!strcasecmp(kv->key->key_name, "Enable_Power_Off_Button_For_Power_Off_Only"))
+  else if (!strcasecmp (kv->key->key_name, "Enable_Power_Off_Button_For_Power_Off_Only"))
     {
       data.power_off = same (kv->value_input, "yes") ? BUTTON_ENABLED : BUTTON_DISABLED;
       enable_or_disable = data.power_off;
@@ -371,7 +371,7 @@ front_panel_buttons_commit (const char *section_name,
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
- 
+
   if (enable_or_disable == BUTTON_DISABLED
       && disable_allowed == BUTTON_DISABLE_NOT_ALLOWED)
     {
@@ -418,7 +418,7 @@ front_panel_buttons_commit (const char *section_name,
       rv = ret;
       goto cleanup;
     }
-  
+
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   return (rv);
@@ -428,7 +428,7 @@ struct config_section *
 ipmi_chassis_config_front_panel_buttons_get (ipmi_chassis_config_state_data_t *state_data)
 {
   struct config_section *section = NULL;
-  char *section_comment = 
+  char *section_comment =
     "The following configuration options are for enabling or disabling "
     "button functionality on the chassis.  Button may refer to a "
     "pushbutton, switch, or other front panel control built into the "
@@ -491,6 +491,6 @@ ipmi_chassis_config_front_panel_buttons_get (ipmi_chassis_config_state_data_t *s
 
  cleanup:
   if (section)
-    config_section_destroy(state_data->pstate, section);
+    config_section_destroy (state_data->pstate, section);
   return NULL;
 }

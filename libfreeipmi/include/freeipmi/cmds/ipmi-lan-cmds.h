@@ -14,7 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-*/
+ */
 
 #ifndef _IPMI_LAN_CMDS_H
 #define _IPMI_LAN_CMDS_H
@@ -33,8 +33,8 @@ extern "C" {
 #define IPMI_AUTHENTICATION_TYPE_DISABLE               0x0
 
 #define IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(__val) \
-        (((__val) == IPMI_AUTHENTICATION_TYPE_ENABLE \
-         || (__val) == IPMI_AUTHENTICATION_TYPE_DISABLE) ? 1 : 0)
+  (((__val) == IPMI_AUTHENTICATION_TYPE_ENABLE       \
+    || (__val) == IPMI_AUTHENTICATION_TYPE_DISABLE) ? 1 : 0)
 
 #define IPMI_IP_ADDRESS_SOURCE_UNSPECIFIED                0x0
 #define IPMI_IP_ADDRESS_SOURCE_STATIC                     0x1
@@ -42,26 +42,26 @@ extern "C" {
 #define IPMI_IP_ADDRESS_SOURCE_BIOS                       0x3
 #define IPMI_IP_ADDRESS_SOURCE_OTHER                      0x4
 
-#define IPMI_IP_ADDRESS_SOURCE_VALID(__val) \
-        (((__val) == IPMI_IP_ADDRESS_SOURCE_UNSPECIFIED \
-          || (__val) == IPMI_IP_ADDRESS_SOURCE_STATIC \
-          || (__val) == IPMI_IP_ADDRESS_SOURCE_DHCP \
-          || (__val) == IPMI_IP_ADDRESS_SOURCE_BIOS \
-          || (__val) == IPMI_IP_ADDRESS_SOURCE_OTHER) ? 1 : 0)
+#define IPMI_IP_ADDRESS_SOURCE_VALID(__val)       \
+  (((__val) == IPMI_IP_ADDRESS_SOURCE_UNSPECIFIED \
+    || (__val) == IPMI_IP_ADDRESS_SOURCE_STATIC   \
+    || (__val) == IPMI_IP_ADDRESS_SOURCE_DHCP     \
+    || (__val) == IPMI_IP_ADDRESS_SOURCE_BIOS     \
+    || (__val) == IPMI_IP_ADDRESS_SOURCE_OTHER) ? 1 : 0)
 
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARPS_ENABLE     0x1
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARPS_DISABLE    0x0
 
-#define IPMI_BMC_GENERATED_GRATUITOUS_ARPS_VALID(__val) \
-        (((__val) == IPMI_BMC_GENERATED_GRATUITOUS_ARPS_ENABLE \
-         || (__val) == IPMI_BMC_GENERATED_GRATUITOUS_ARPS_DISABLE) ? 1 : 0)
+#define IPMI_BMC_GENERATED_GRATUITOUS_ARPS_VALID(__val)  \
+  (((__val) == IPMI_BMC_GENERATED_GRATUITOUS_ARPS_ENABLE \
+    || (__val) == IPMI_BMC_GENERATED_GRATUITOUS_ARPS_DISABLE) ? 1 : 0)
 
 #define IPMI_BMC_GENERATED_ARP_RESPONSES_ENABLE       0x1
 #define IPMI_BMC_GENERATED_ARP_RESPONSES_DISABLE      0x0
 
-#define IPMI_BMC_GENERATED_ARP_RESPONSES_VALID(__val) \
-        (((__val) == IPMI_BMC_GENERATED_ARP_RESPONSES_ENABLE \
-         || (__val) == IPMI_BMC_GENERATED_ARP_RESPONSES_DISABLE) ? 1 : 0)
+#define IPMI_BMC_GENERATED_ARP_RESPONSES_VALID(__val)  \
+  (((__val) == IPMI_BMC_GENERATED_ARP_RESPONSES_ENABLE \
+    || (__val) == IPMI_BMC_GENERATED_ARP_RESPONSES_DISABLE) ? 1 : 0)
 
 #define IPMI_MAX_COMMUNITY_STRING_LENGTH              18
 
@@ -69,35 +69,35 @@ extern "C" {
 #define IPMI_DESTINATION_SELECTOR_MAX                 15
 
 /* To avoid gcc warnings, added +1 and -1 in comparison */
-#define IPMI_DESTINATION_SELECTOR_VALID(__val) \
-        (((__val + 1) >= (IPMI_DESTINATION_SELECTOR_MIN + 1) \
-          || (__val - 1) <= (IPMI_DESTINATION_SELECTOR_MAX - 1))) ? 1 : 0
+#define IPMI_DESTINATION_SELECTOR_VALID(__val)         \
+  (((__val + 1) >= (IPMI_DESTINATION_SELECTOR_MIN + 1) \
+    || (__val - 1) <= (IPMI_DESTINATION_SELECTOR_MAX - 1))) ? 1 : 0
 
 
 #define IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION      0x0
 #define IPMI_DESTINATION_TYPE_OEM1                      0x6
 #define IPMI_DESTINATION_TYPE_OEM2                      0x7
 
-#define IPMI_DESTINATION_TYPE_VALID(__val) \
-        (((__val) == IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION \
-          || (__val) == IPMI_DESTINATION_TYPE_OEM1 \
-          || (__val) == IPMI_DESTINATION_TYPE_OEM2) ? 1 : 0)
+#define IPMI_DESTINATION_TYPE_VALID(__val)                \
+  (((__val) == IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION \
+    || (__val) == IPMI_DESTINATION_TYPE_OEM1              \
+    || (__val) == IPMI_DESTINATION_TYPE_OEM2) ? 1 : 0)
 
 #define IPMI_ALERT_UNACKNOWLEDGED                       0
 #define IPMI_ALERT_ACKNOWLEDGED                         1
 
-#define IPMI_ALERT_VALID(__val) \
-        (((__val) ==  IPMI_ALERT_UNACKNOWLEDGED \
-          || (__val) == IPMI_ALERT_ACKNOWLEDGED) ? 1 : 0)
+#define IPMI_ALERT_VALID(__val)           \
+  (((__val) ==  IPMI_ALERT_UNACKNOWLEDGED \
+    || (__val) == IPMI_ALERT_ACKNOWLEDGED) ? 1 : 0)
 
 #define IPMI_ADDRESS_FORMAT_IPV4                        0
 
 #define IPMI_GATEWAY_SELECTOR_DEFAULT                   0
-#define IPMI_GATEWAY_SELECTOR_BACKUP                    1 
+#define IPMI_GATEWAY_SELECTOR_BACKUP                    1
 
-#define IPMI_GATEWAY_SELECTOR_VALID(__val) \
-        (((__val) ==  IPMI_GATEWAY_SELECTOR_DEFAULT \
-          || (__val) == IPMI_GATEWAY_SELECTOR_BACKUP) ? 1 : 0)
+#define IPMI_GATEWAY_SELECTOR_VALID(__val)    \
+  (((__val) ==  IPMI_GATEWAY_SELECTOR_DEFAULT \
+    || (__val) == IPMI_GATEWAY_SELECTOR_BACKUP) ? 1 : 0)
 
 /* 3 bit number */
 #define IPMI_ALERT_RETRIES_MAX                          7
@@ -106,36 +106,36 @@ extern "C" {
 #define IPMI_VLAN_ID_DISABLE                            0x0
 
 #define IPMI_VLAN_ID_ENABLE_VALID(__val) \
-        (((__val) ==  IPMI_VLAN_ID_ENABLE \
-          || (__val) == IPMI_VLAN_ID_DISABLE) ? 1 : 0)
+  (((__val) ==  IPMI_VLAN_ID_ENABLE      \
+    || (__val) == IPMI_VLAN_ID_DISABLE) ? 1 : 0)
 
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND    0x0
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND           0x1
 
-#define IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(__val) \
-        (((__val) ==  IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND \
-          || (__val) == IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND) ? 1 : 0)
+#define IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(__val)           \
+  (((__val) ==  IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND \
+    || (__val) == IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND) ? 1 : 0)
 
 #define IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND      0x0
 #define IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPEND             0x1
 
-#define IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(__val) \
-        (((__val) ==  IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND \
-          || (__val) == IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPEND) ? 1 : 0)
+#define IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(__val)           \
+  (((__val) ==  IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND \
+    || (__val) == IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPEND) ? 1 : 0)
 
 #define IPMI_GET_LAN_PARAMETER                          0x0
 #define IPMI_GET_LAN_PARAMETER_REVISION_ONLY            0x1
 
 #define IPMI_GET_LAN_PARAMETER_VALID(__val) \
-        (((__val) == IPMI_GET_LAN_PARAMETER \
-          || (__val) == IPMI_GET_LAN_PARAMETER_REVISION_ONLY) ? 1 : 0)
+  (((__val) == IPMI_GET_LAN_PARAMETER       \
+    || (__val) == IPMI_GET_LAN_PARAMETER_REVISION_ONLY) ? 1 : 0)
 
 #define IPMI_CLEAR_ALL_STATISTICS                       0x1
 #define IPMI_DONT_CLEAR_ALL_STATISTICS                  0x0
 
 #define IPMI_CLEAR_ALL_STATISTICS_VALID(__val) \
-        (((__val) == IPMI_CLEAR_ALL_STATISTICS \
-          || (__val) == IPMI_DONT_CLEAR_ALL_STATISTICS) ? 1 : 0)
+  (((__val) == IPMI_CLEAR_ALL_STATISTICS       \
+    || (__val) == IPMI_DONT_CLEAR_ALL_STATISTICS) ? 1 : 0)
 
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rs;
@@ -193,7 +193,7 @@ int8_t fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                                   uint8_t parameter_selector,
                                                   uint8_t *configuration_parameter_data,
                                                   uint8_t configuration_parameter_data_len,
-						  fiid_obj_t obj_cmd_rq);
+                                                  fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t channel_number,
                                                                               uint8_t callback_level_none,
@@ -222,11 +222,11 @@ int8_t fill_cmd_set_lan_configuration_parameters_authentication_type_enables (ui
                                                                               uint8_t oem_level_straight_password,
                                                                               uint8_t oem_level_oem_proprietary,
                                                                               fiid_obj_t obj_cmd_rq);
- 
+
 int8_t fill_cmd_set_lan_configuration_parameters_ip_address (uint8_t channel_number,
                                                              uint32_t ip_address,
                                                              fiid_obj_t obj_cmd_rq);
-   
+
 int8_t fill_cmd_set_lan_configuration_parameters_ip_address_source (uint8_t channel_number,
                                                                     uint8_t ip_address_source,
                                                                     fiid_obj_t obj_cmd_rq);
@@ -238,7 +238,7 @@ int8_t fill_cmd_set_lan_configuration_parameters_mac_address (uint8_t channel_nu
 int8_t fill_cmd_set_lan_configuration_parameters_subnet_mask (uint8_t channel_number,
                                                               uint32_t subnet_mask,
                                                               fiid_obj_t obj_cmd_rq);
-  
+
 int8_t fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (uint8_t channel_number,
                                                                             uint8_t bmc_generated_gratuitous_arps,
                                                                             uint8_t bmc_generated_arp_responses,
@@ -259,7 +259,7 @@ int8_t fill_cmd_set_lan_configuration_parameters_default_gateway_mac_address (ui
 int8_t fill_cmd_set_lan_configuration_parameters_backup_gateway_address (uint8_t channel_number,
                                                                          uint32_t ip_address,
                                                                          fiid_obj_t obj_cmd_rq);
-  
+
 int8_t fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uint8_t channel_number,
                                                                              uint64_t mac_address,
                                                                              fiid_obj_t obj_cmd_rq);
@@ -292,26 +292,26 @@ int8_t fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number
 int8_t fill_cmd_set_lan_configuration_parameters_vlan_priority (uint8_t channel_number,
                                                                 uint8_t vlan_priority,
                                                                 fiid_obj_t obj_cmd_rq);
-  
-int8_t fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(uint8_t channel_number,
-												  uint8_t maximum_privilege_for_cipher_suite_1,
-												  uint8_t maximum_privilege_for_cipher_suite_2,
-												  uint8_t maximum_privilege_for_cipher_suite_3,
-												  uint8_t maximum_privilege_for_cipher_suite_4,
-												  uint8_t maximum_privilege_for_cipher_suite_5,
-												  uint8_t maximum_privilege_for_cipher_suite_6,
-												  uint8_t maximum_privilege_for_cipher_suite_7,
-												  uint8_t maximum_privilege_for_cipher_suite_8,
-												  uint8_t maximum_privilege_for_cipher_suite_9,
-												  uint8_t maximum_privilege_for_cipher_suite_10,
-												  uint8_t maximum_privilege_for_cipher_suite_11,
-												  uint8_t maximum_privilege_for_cipher_suite_12,
-												  uint8_t maximum_privilege_for_cipher_suite_13,
-												  uint8_t maximum_privilege_for_cipher_suite_14,
-												  uint8_t maximum_privilege_for_cipher_suite_15,
-												  uint8_t maximum_privilege_for_cipher_suite_16,
-												  fiid_obj_t obj_cmd_rq);
-  
+
+int8_t fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (uint8_t channel_number,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_1,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_2,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_3,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_4,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_5,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_6,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_7,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_8,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_9,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_10,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_11,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_12,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_13,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_14,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_15,
+                                                                                                   uint8_t maximum_privilege_for_cipher_suite_16,
+                                                                                                   fiid_obj_t obj_cmd_rq);
+
 int8_t fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
                                                   uint8_t get_parameter,
                                                   uint8_t parameter_selector,

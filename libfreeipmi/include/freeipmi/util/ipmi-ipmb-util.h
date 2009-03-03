@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,11 +13,11 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
-*/
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ */
 
 #ifndef _IPMI_IPMB_UTIL_H
-#define	_IPMI_IPMB_UTIL_H	1
+#define _IPMI_IPMB_UTIL_H       1
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,10 +29,10 @@ extern "C" {
 int8_t ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq);
 
 int8_t ipmi_ipmb_check_checksum (uint8_t rq_addr,
-				 fiid_obj_t obj_ipmb_msg_hdr,
-				 fiid_obj_t obj_cmd,
-				 fiid_obj_t obj_ipmb_msg_trlr);
- 
+                                 fiid_obj_t obj_ipmb_msg_hdr,
+                                 fiid_obj_t obj_cmd,
+                                 fiid_obj_t obj_ipmb_msg_trlr);
+
 #ifdef __cplusplus
 }
 #endif

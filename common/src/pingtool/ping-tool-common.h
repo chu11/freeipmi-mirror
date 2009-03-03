@@ -1,35 +1,31 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.h,v 1.3 2009-01-13 01:02:11 chu11 Exp $
+ *  $Id: ping-tool-common.h,v 1.4 2009-03-03 23:56:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  UCRL-CODE-155448
- *  
+ *
  *  This file is part of Ipmiping, tools for pinging IPMI and RMCP compliant
  *  remote systems. For details, see http://www.llnl.gov/linux/.
  *
- *  Ipmiping is free software; you can redistribute it and/or modify 
- *  it under the terms of the GNU General Public License as published by the 
- *  Free Software Foundation; either version 2 of the License, or (at your 
+ *  Ipmiping is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at your
  *  option) any later version.
- *  
- *  Ipmiping is distributed in the hope that it will be useful, but 
- *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+ *
+ *  Ipmiping is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
  *  for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License along
  *  with Ipmiping.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
 #ifndef _PING_TOOL_COMMON_H
 #define _PING_TOOL_COMMON_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define IPMI_PING_VERSION_1_5    0
 #define IPMI_PING_VERSION_2_0    1
@@ -39,9 +35,9 @@ extern "C" {
  * - Return length of packet created, or -1 on error.
  */
 typedef int (*Ipmi_Ping_CreatePacket)(char *destination,
-                                      char *buffer, 
-                                      int buflen, 
-                                      unsigned int sequence_number, 
+                                      char *buffer,
+                                      int buflen,
+                                      unsigned int sequence_number,
                                       int version,
                                       int debug);
 
@@ -52,11 +48,11 @@ typedef int (*Ipmi_Ping_CreatePacket)(char *destination,
  *   -1 on error.
  */
 typedef int (*Ipmi_Ping_ParsePacket)(char *destination,
-                                     char *buffer, 
-                                     int buflen, 
-                                     const char *from, 
-                                     unsigned int sequence_number, 
-                                     int verbose, 
+                                     char *buffer,
+                                     int buflen,
+                                     const char *from,
+                                     unsigned int sequence_number,
+                                     int verbose,
                                      int version,
                                      int debug);
 
@@ -67,36 +63,32 @@ typedef void (*Ipmi_Ping_LatePacket)(unsigned int sequence_number);
 
 /* Ipmi_Ping_EndResult
  * - Output final results to stdout and return exit code
- */ 
-typedef int (*Ipmi_Ping_EndResult)(const char *progname, 
+ */
+typedef int (*Ipmi_Ping_EndResult)(const char *progname,
                                    const char *dest,
-                                   unsigned int sent_count, 
+                                   unsigned int sent_count,
                                    unsigned int recv_count);
 
 /* ipmi_ping_err_exit
  * - exit with GNU style exit output
  */
-void ipmi_ping_err_exit(char *fmt, ...);
-  
+void ipmi_ping_err_exit (char *fmt, ...);
+
 /* ipmi_ping_setup
  * - setup ipmi ping code by parsing command line arguments
  */
-void ipmi_ping_setup(int argc,
-                     char **argv,
-                     unsigned int min_sequence_number,
-                     unsigned int max_sequence_number,
-                     char *options);
-  
+void ipmi_ping_setup (int argc,
+                      char **argv,
+                      unsigned int min_sequence_number,
+                      unsigned int max_sequence_number,
+                      char *options);
+
 /* ipmi_ping_loop
  * - handle looping ping code
  */
-void ipmi_ping_loop(Ipmi_Ping_CreatePacket _create,
-                    Ipmi_Ping_ParsePacket _parse,
-                    Ipmi_Ping_LatePacket _late,
-                    Ipmi_Ping_EndResult _end);
-
-#ifdef __cplusplus
-}
-#endif
+void ipmi_ping_loop (Ipmi_Ping_CreatePacket _create,
+                     Ipmi_Ping_ParsePacket _parse,
+                     Ipmi_Ping_LatePacket _late,
+                     Ipmi_Ping_EndResult _end);
 
 #endif /* _PING_TOOL_COMMON_H */

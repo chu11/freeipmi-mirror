@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2003-2009 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -13,9 +13,9 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
-*/
+ */
 
 #ifndef _IPMI_KCS_INTERFACE_H
 #define _IPMI_KCS_INTERFACE_H 1
@@ -29,18 +29,18 @@ extern "C" {
 
 extern fiid_template_t tmpl_hdr_kcs;
 
-int8_t fill_hdr_ipmi_kcs (uint8_t lun, 
-			  uint8_t fn, 
-			  fiid_obj_t obj_kcs_hdr);
+int8_t fill_hdr_ipmi_kcs (uint8_t lun,
+                          uint8_t fn,
+                          fiid_obj_t obj_kcs_hdr);
 
-int32_t assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr, 
-                               fiid_obj_t obj_cmd, 
-                               uint8_t *pkt, 
+int32_t assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
+                               fiid_obj_t obj_cmd,
+                               uint8_t *pkt,
                                uint32_t pkt_len);
 
-int32_t unassemble_ipmi_kcs_pkt (uint8_t *pkt, 
-                                 uint32_t pkt_len, 
-                                 fiid_obj_t obj_kcs_hdr, 
+int32_t unassemble_ipmi_kcs_pkt (uint8_t *pkt,
+                                 uint32_t pkt_len,
+                                 fiid_obj_t obj_kcs_hdr,
                                  fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus

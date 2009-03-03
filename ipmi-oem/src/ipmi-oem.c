@@ -5,12 +5,12 @@
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2, or (at your option)
   any later version.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
@@ -61,16 +61,16 @@ static int _supermicro_reset_intrusion (ipmi_oem_state_data_t *);
 
 struct ipmi_oem_command oem_supermicro[] =
   {
-    {"reset-intrusion",
-     "reset motherboard intrusion flag.",
-     _supermicro_reset_intrusion},
-    {NULL, NULL, NULL},
+    { "reset-intrusion",
+      "reset motherboard intrusion flag.",
+      _supermicro_reset_intrusion},
+    { NULL, NULL, NULL},
   };
 
 struct ipmi_oem_id oem_cb[] =
   {
-    {"supermicro", oem_supermicro},
-    {NULL, NULL},
+    { "supermicro", oem_supermicro},
+    { NULL, NULL},
   };
 
 static int
@@ -82,17 +82,17 @@ _list (void)
     {
       struct ipmi_oem_command *oem_cmd = oem_cb->oem_commands;
 
-      printf("OEM ID: %s\n", oem_id->oem_id);
+      printf ("OEM ID: %s\n", oem_id->oem_id);
 
       while (oem_cmd && oem_cmd->oem_command)
         {
-          printf("    Command: %s - %s\n", 
-                 oem_cmd->oem_command,
-                 oem_cmd->description);
+          printf ("    Command: %s - %s\n",
+                  oem_cmd->oem_command,
+                  oem_cmd->description);
           oem_cmd++;
         }
 
-      printf("\n");
+      printf ("\n");
       oem_id++;
     }
 
@@ -106,10 +106,10 @@ _supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   int32_t rs_len;
   int rv = -1;
-  
-  assert(state_data);
-  
-  /* Supermicro OEM 
+
+  assert (state_data);
+
+  /* Supermicro OEM
    *
    * 0x30 - OEM network function
    * 0x03 - OEM cmd
@@ -125,19 +125,19 @@ _supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
                               bytes_rs,
                               IPMI_OEM_MAX_BYTES)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_cmd_raw: %s\n",
-                      ipmi_ctx_errormsg(state_data->ipmi_ctx));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
 
   if (rs_len < 2)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "reset-intrusion invalid response length: %d\n",
-                      rs_len);
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "reset-intrusion invalid response length: %d\n",
+                       rs_len);
       goto cleanup;
     }
 
@@ -145,24 +145,24 @@ _supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
     {
       char errbuf[IPMI_OEM_ERR_BUFLEN];
 
-      memset(errbuf, '\0', IPMI_OEM_ERR_BUFLEN);
-      if (ipmi_completion_code_strerror_r(0x3,
-                                          0x30,
-                                          bytes_rs[1],
-                                          errbuf,
-                                          IPMI_OEM_ERR_BUFLEN) < 0)
+      memset (errbuf, '\0', IPMI_OEM_ERR_BUFLEN);
+      if (ipmi_completion_code_strerror_r (0x3,
+                                           0x30,
+                                           bytes_rs[1],
+                                           errbuf,
+                                           IPMI_OEM_ERR_BUFLEN) < 0)
         {
-          pstdout_perror(state_data->pstate, "ipmi_completion_code_strerror_r");
-          snprintf(errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs[1]);
+          pstdout_perror (state_data->pstate, "ipmi_completion_code_strerror_r");
+          snprintf (errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs[1]);
         }
-      
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "reset-intrusion failed: %s\n",
-                      errbuf);
+
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "reset-intrusion failed: %s\n",
+                       errbuf);
       goto cleanup;
     }
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -176,23 +176,23 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
   int id_found = 0;
   int rv = -1;
 
-  assert(state_data);
+  assert (state_data);
 
   args = state_data->prog_data->args;
 
   while (oem_id && oem_id->oem_id)
     {
-      if (!strcasecmp(oem_id->oem_id, args->oem_id))
+      if (!strcasecmp (oem_id->oem_id, args->oem_id))
         {
           struct ipmi_oem_command *oem_cmd = oem_cb->oem_commands;
           int cmd_found = 0;
-          
+
           id_found++;
 
           while (oem_cmd && oem_cmd->oem_command)
             {
-              if (!strcasecmp(oem_cmd->oem_command, 
-                              args->oem_command))
+              if (!strcasecmp (oem_cmd->oem_command,
+                               args->oem_command))
                 {
                   cmd_found++;
 
@@ -236,14 +236,14 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
   struct ipmi_oem_arguments *args;
   int rv = -1;
 
-  assert(state_data);
+  assert (state_data);
 
   args = state_data->prog_data->args;
 
   /* shouldn't be possible at this point, make sure we've already
-   * exitted 
+   * exitted
    */
-  assert(!args->list);
+  assert (!args->list);
 
   if (!args->oem_id)
     {
@@ -260,10 +260,10 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
                        "OEM Command not specified\n");
       goto cleanup;
     }
-  
+
   if (_run_oem_cmd (state_data) < 0)
     goto cleanup;
- 
+
   rv = 0;
  cleanup:
   return (rv);
@@ -280,21 +280,21 @@ _ipmi_oem (pstdout_state_t pstate,
   int exit_code = -1;
 
   prog_data = (ipmi_oem_prog_data_t *)arg;
-  memset(&state_data, '\0', sizeof(ipmi_oem_state_data_t));
+  memset (&state_data, '\0', sizeof(ipmi_oem_state_data_t));
 
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 
-  if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
-                                        hostname,
-                                        &(prog_data->args->common),
-                                        errmsg,
-                                        IPMI_OPEN_ERRMSGLEN)))
+  if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
+                                         hostname,
+                                         &(prog_data->args->common),
+                                         errmsg,
+                                         IPMI_OPEN_ERRMSGLEN)))
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "%s\n",
-                      errmsg);
+      pstdout_fprintf (pstate,
+                       stderr,
+                       "%s\n",
+                       errmsg);
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -323,9 +323,9 @@ main (int argc, char **argv)
   int exit_code;
   int rv;
 
-  ipmi_disable_coredump();
+  ipmi_disable_coredump ();
 
-  memset(&prog_data, '\0', sizeof(ipmi_oem_prog_data_t));
+  memset (&prog_data, '\0', sizeof(ipmi_oem_prog_data_t));
   prog_data.progname = argv[0];
   ipmi_oem_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
@@ -333,7 +333,7 @@ main (int argc, char **argv)
   /* Special case, just output list, don't do anything else */
   if (cmd_args.list)
     {
-      if (_list() < 0)
+      if (_list () < 0)
         {
           exit_code = EXIT_FAILURE;
           goto cleanup;
@@ -342,24 +342,24 @@ main (int argc, char **argv)
       goto cleanup;
     }
 
-  if (pstdout_setup(&(prog_data.args->common.hostname),
-                    prog_data.args->hostrange.buffer_output,
-                    prog_data.args->hostrange.consolidate_output,
-                    prog_data.args->hostrange.fanout,
-                    prog_data.args->hostrange.eliminate,
-                    prog_data.args->hostrange.always_prefix) < 0)
+  if (pstdout_setup (&(prog_data.args->common.hostname),
+                     prog_data.args->hostrange.buffer_output,
+                     prog_data.args->hostrange.consolidate_output,
+                     prog_data.args->hostrange.fanout,
+                     prog_data.args->hostrange.eliminate,
+                     prog_data.args->hostrange.always_prefix) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
 
-  if ((rv = pstdout_launch(prog_data.args->common.hostname,
-                           _ipmi_oem,
-                           &prog_data)) < 0)
+  if ((rv = pstdout_launch (prog_data.args->common.hostname,
+                            _ipmi_oem,
+                            &prog_data)) < 0)
     {
-      fprintf(stderr,
-              "pstdout_launch: %s\n",
-              pstdout_strerror(pstdout_errnum));
+      fprintf (stderr,
+               "pstdout_launch: %s\n",
+               pstdout_strerror (pstdout_errnum));
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
