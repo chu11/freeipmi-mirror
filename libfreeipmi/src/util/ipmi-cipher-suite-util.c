@@ -80,8 +80,8 @@ ipmi_cipher_suite_id_to_algorithms (uint8_t cipher_suite_id,
            || cipher_suite_id == 13)
     c = IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128;
   else /* cipher_suite_id == 5
-	  || cipher_suite_id == 10
-	  || cipher_suite_id == 14 */
+      || cipher_suite_id == 10
+      || cipher_suite_id == 14 */
     c = IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40;
 
   if (authentication_algorithm)

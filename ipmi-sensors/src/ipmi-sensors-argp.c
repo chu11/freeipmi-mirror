@@ -164,7 +164,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               || ptr[0] != '\0'
               || value < 0
               || value < IPMI_SDR_RECORD_ID_FIRST
-	      || value > IPMI_SDR_RECORD_ID_LAST)
+          || value > IPMI_SDR_RECORD_ID_LAST)
             {
               fprintf (stderr, "invalid sensor record id: %d\n", value);
               exit (1);

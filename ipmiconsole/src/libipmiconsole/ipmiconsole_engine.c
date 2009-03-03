@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.79.12.1 2009-03-03 01:41:05 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.79.12.2 2009-03-03 22:39:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -483,12 +483,12 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_from_bmc not empty, draining"));
       do {
-	char tempbuf[IPMICONSOLE_PACKET_BUFLEN];
-	if (scbuf_read (c->connection.ipmi_from_bmc, tempbuf, IPMICONSOLE_PACKET_BUFLEN) < 0)
-	  {
-	    IPMICONSOLE_CTX_DEBUG (c, ("scbuf_read: %s", strerror (errno)));
-	    break;
-	  }
+    char tempbuf[IPMICONSOLE_PACKET_BUFLEN];
+    if (scbuf_read (c->connection.ipmi_from_bmc, tempbuf, IPMICONSOLE_PACKET_BUFLEN) < 0)
+      {
+        IPMICONSOLE_CTX_DEBUG (c, ("scbuf_read: %s", strerror (errno)));
+        break;
+      }
       } while(!scbuf_is_empty (c->connection.ipmi_from_bmc));
     }
 

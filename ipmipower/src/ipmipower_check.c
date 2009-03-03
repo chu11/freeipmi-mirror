@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.94.12.1 2009-03-03 01:41:11 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.94.12.2 2009-03-03 22:39:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -121,9 +121,9 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
       else if (pkt == ACTIVATE_SESSION_RES)
         authentication_type = cmd_args.common.authentication_type;
       else /* pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-	      || pkt == GET_CHASSIS_STATUS_RES
-	      || pkt == CHASSIS_CONTROL_RES
-	      || pkt == CLOSE_SESSION_RES
+          || pkt == GET_CHASSIS_STATUS_RES
+          || pkt == CHASSIS_CONTROL_RES
+          || pkt == CLOSE_SESSION_RES
            */
         {
           if (!ip->permsgauth_enabled)
@@ -189,12 +189,12 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
         }
     }
   else  /*
-	  (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-	  && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-	  || pkt == GET_CHASSIS_STATUS_RES
-	  || pkt == CHASSIS_CONTROL_RES
-	  || pkt == CLOSE_SESSION_RES))
-	*/
+      (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+      && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+      || pkt == GET_CHASSIS_STATUS_RES
+      || pkt == CHASSIS_CONTROL_RES
+      || pkt == CLOSE_SESSION_RES))
+    */
     {
       /* IPMI 2.0 Checks */
       uint8_t integrity_algorithm;
@@ -264,12 +264,12 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
                   "session_sequence_number",
                   &seq_num);
   else /*
-	 pkt == ACTIVATE_SESSION_RES
-	 || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-	 && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-	 || pkt == GET_CHASSIS_STATUS_RES
-	 || pkt == CHASSIS_CONTROL_RES
-	 || pkt == CLOSE_SESSION_RES))
+     pkt == ACTIVATE_SESSION_RES
+     || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+     && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+     || pkt == GET_CHASSIS_STATUS_RES
+     || pkt == CHASSIS_CONTROL_RES
+     || pkt == CLOSE_SESSION_RES))
        */
     Fiid_obj_get (ip->obj_lan_session_hdr_res,
                   "session_sequence_number",

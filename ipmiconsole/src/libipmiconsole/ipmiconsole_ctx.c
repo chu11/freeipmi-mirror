@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.41.2.1 2009-03-03 01:41:04 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.41.2.2 2009-03-03 22:39:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -918,34 +918,34 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
                        &h_errnop) != 0)
 #elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
     if (!gethostbyname_r (c->config.hostname,
-			  &hent,
-			  buf,
-			  GETHOSTBYNAME_AUX_BUFLEN,
-			  &h_errnop))
+              &hent,
+              buf,
+              GETHOSTBYNAME_AUX_BUFLEN,
+              &h_errnop))
 #else /* !HAVE_FUNC_GETHOSTBYNAME_R */
       if (freeipmi_gethostbyname_r (c->config.hostname,
-				    &hent,
-				    buf,
-				    GETHOSTBYNAME_AUX_BUFLEN,
-				    &hptr,
-				    &h_errnop) != 0)
+                    &hent,
+                    buf,
+                    GETHOSTBYNAME_AUX_BUFLEN,
+                    &hptr,
+                    &h_errnop) != 0)
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
-	{
-	  if (h_errnop == HOST_NOT_FOUND
-	      || h_errnop == NO_ADDRESS
-	      || h_errnop == NO_DATA)
-	    {
-	      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
-	      return -1;
-	    }
+    {
+      if (h_errnop == HOST_NOT_FOUND
+          || h_errnop == NO_ADDRESS
+          || h_errnop == NO_DATA)
+        {
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
+          return -1;
+        }
 #if HAVE_HSTRERROR
-	  IPMICONSOLE_DEBUG (("gethostbyname_r: %s", hstrerror (h_errnop)));
+      IPMICONSOLE_DEBUG (("gethostbyname_r: %s", hstrerror (h_errnop)));
 #else /* !HAVE_HSTRERROR */
-	  IPMICONSOLE_DEBUG (("gethostbyname_r: h_errno = %d", h_errnop));
+      IPMICONSOLE_DEBUG (("gethostbyname_r: h_errno = %d", h_errnop));
 #endif /* !HAVE_HSTRERROR */
-	  ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-	  return -1;
-	}
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
+      return -1;
+    }
 
 #if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
   if (!hptr)

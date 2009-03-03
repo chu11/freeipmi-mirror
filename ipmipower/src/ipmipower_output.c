@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.46.12.1 2009-03-03 01:41:11 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.46.12.2 2009-03-03 22:39:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -99,34 +99,34 @@ ipmipower_output_finish (void)
       for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
         {
           if (hostlist_count (output_hostrange[i]) > 0) {
-	    memset (buffer, '\0', IPMIPOWER_OUTPUT_BUFLEN);
+        memset (buffer, '\0', IPMIPOWER_OUTPUT_BUFLEN);
 
-	    hostlist_sort (output_hostrange[i]);
+        hostlist_sort (output_hostrange[i]);
 
-	    rv = hostlist_ranged_string (output_hostrange[i],
-					 IPMIPOWER_OUTPUT_BUFLEN,
-					 buffer);
-	    if (rv < 0)
-	      {
-		cbuf_printf (ttyout, "OVERFLOWED BUFFER: %s\n",
-			     ipmipower_outputs[i]);
+        rv = hostlist_ranged_string (output_hostrange[i],
+                     IPMIPOWER_OUTPUT_BUFLEN,
+                     buffer);
+        if (rv < 0)
+          {
+        cbuf_printf (ttyout, "OVERFLOWED BUFFER: %s\n",
+                 ipmipower_outputs[i]);
 
-		while (hostlist_count (output_hostrange[i]) > 0)
-		  hostlist_delete_nth (output_hostrange[i], 0);
-	      }
+        while (hostlist_count (output_hostrange[i]) > 0)
+          hostlist_delete_nth (output_hostrange[i], 0);
+          }
 
-	    if (rv > 0)
-	      {
-		cbuf_printf (ttyout, "----------------\n");
-		cbuf_printf (ttyout, "%s\n", buffer);
-		cbuf_printf (ttyout, "----------------\n");
-		cbuf_printf (ttyout, " %s\n",
-			     ipmipower_outputs[i]);
-		hostlist_delete (output_hostrange[i], buffer);
-	      }
+        if (rv > 0)
+          {
+        cbuf_printf (ttyout, "----------------\n");
+        cbuf_printf (ttyout, "%s\n", buffer);
+        cbuf_printf (ttyout, "----------------\n");
+        cbuf_printf (ttyout, " %s\n",
+                 ipmipower_outputs[i]);
+        hostlist_delete (output_hostrange[i], buffer);
+          }
 
-	    assert (!hostlist_count (output_hostrange[i]));
-	  }
+        assert (!hostlist_count (output_hostrange[i]));
+      }
         }
     }
 

@@ -507,7 +507,7 @@ ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt, uint64_t pkt_le
         }
     }
   else /* authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
-	  || authentication_type == IPMI_AUTHENTICATION_TYPE_OEM_PROP */
+      || authentication_type == IPMI_AUTHENTICATION_TYPE_OEM_PROP */
     {
       if (authentication_code_data)
         memcpy (authentication_code_buf, authentication_code_data, authentication_code_data_len);

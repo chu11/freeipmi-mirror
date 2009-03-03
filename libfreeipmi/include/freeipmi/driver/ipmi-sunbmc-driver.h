@@ -61,10 +61,10 @@ extern "C" {
   int8_t ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx);
 
   int8_t ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
-			  uint8_t lun,
-			  uint8_t net_fn,
-			  fiid_obj_t obj_cmd_rq,
-			  fiid_obj_t obj_cmd_rs);
+              uint8_t lun,
+              uint8_t net_fn,
+              fiid_obj_t obj_cmd_rq,
+              fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

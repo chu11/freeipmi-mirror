@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.h,v 1.3.12.1 2009-03-03 01:40:51 chu11 Exp $
+ *  $Id: ping-tool-common.h,v 1.3.12.2 2009-03-03 22:39:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -39,11 +39,11 @@ extern "C" {
    * - Return length of packet created, or -1 on error.
    */
   typedef int (*Ipmi_Ping_CreatePacket)(char *destination,
-					char *buffer,
-					int buflen,
-					unsigned int sequence_number,
-					int version,
-					int debug);
+                    char *buffer,
+                    int buflen,
+                    unsigned int sequence_number,
+                    int version,
+                    int debug);
 
   /* Ipmi_Ping_ParsePacket
    * - Parse packet stored in buffer and output info about received
@@ -52,13 +52,13 @@ extern "C" {
    *   -1 on error.
    */
   typedef int (*Ipmi_Ping_ParsePacket)(char *destination,
-				       char *buffer,
-				       int buflen,
-				       const char *from,
-				       unsigned int sequence_number,
-				       int verbose,
-				       int version,
-				       int debug);
+                       char *buffer,
+                       int buflen,
+                       const char *from,
+                       unsigned int sequence_number,
+                       int verbose,
+                       int version,
+                       int debug);
 
   /* Ipmi_Ping_LatePacket
    * - Output info about timed out packet to stdout
@@ -69,9 +69,9 @@ extern "C" {
    * - Output final results to stdout and return exit code
    */
   typedef int (*Ipmi_Ping_EndResult)(const char *progname,
-				     const char *dest,
-				     unsigned int sent_count,
-				     unsigned int recv_count);
+                     const char *dest,
+                     unsigned int sent_count,
+                     unsigned int recv_count);
 
   /* ipmi_ping_err_exit
    * - exit with GNU style exit output
@@ -82,18 +82,18 @@ extern "C" {
    * - setup ipmi ping code by parsing command line arguments
    */
   void ipmi_ping_setup (int argc,
-			char **argv,
-			unsigned int min_sequence_number,
-			unsigned int max_sequence_number,
-			char *options);
+            char **argv,
+            unsigned int min_sequence_number,
+            unsigned int max_sequence_number,
+            char *options);
 
   /* ipmi_ping_loop
    * - handle looping ping code
    */
   void ipmi_ping_loop (Ipmi_Ping_CreatePacket _create,
-		       Ipmi_Ping_ParsePacket _parse,
-		       Ipmi_Ping_LatePacket _late,
-		       Ipmi_Ping_EndResult _end);
+               Ipmi_Ping_ParsePacket _parse,
+               Ipmi_Ping_LatePacket _late,
+               Ipmi_Ping_EndResult _end);
 
 #ifdef __cplusplus
 }

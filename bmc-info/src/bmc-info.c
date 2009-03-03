@@ -323,8 +323,8 @@ display_get_device_id (bmc_info_state_data_t *state_data)
           case IPMI_MANUFACTURER_ID_INTEL:
             switch (product_id)
               {
-		/* I am assuming all Intel products will decode alike.
-		   -- Anand Babu <ab@gnu.org.in>  */
+        /* I am assuming all Intel products will decode alike.
+           -- Anand Babu <ab@gnu.org.in>  */
               case IPMI_PRODUCT_ID_SR870BN4:
               default:
                 if (display_intel (state_data, obj_cmd_rs) < 0)

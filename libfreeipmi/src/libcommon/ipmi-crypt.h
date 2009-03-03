@@ -28,29 +28,29 @@ extern "C" {
 #define IPMI_CRYPT_HASH_SHA1             0x00
 #define IPMI_CRYPT_HASH_MD5              0x01
 
-#define IPMI_CRYPT_HASH_ALGORITHM_VALID(__hash_algorithm)	\
-  (((__hash_algorithm) == IPMI_CRYPT_HASH_SHA1			\
+#define IPMI_CRYPT_HASH_ALGORITHM_VALID(__hash_algorithm)    \
+  (((__hash_algorithm) == IPMI_CRYPT_HASH_SHA1            \
     || (__hash_algorithm) == IPMI_CRYPT_HASH_MD5) ? 1 : 0)
 
 #define IPMI_CRYPT_HASH_FLAGS_HMAC       0x01
 
 #define IPMI_CRYPT_CIPHER_AES            0x00
 
-#define IPMI_CRYPT_CIPHER_ALGORITHM_VALID(__cipher_algorithm)	\
+#define IPMI_CRYPT_CIPHER_ALGORITHM_VALID(__cipher_algorithm)    \
   (((__cipher_algorithm) == IPMI_CRYPT_CIPHER_AES) ? 1 : 0)
 
 #define IPMI_CRYPT_CIPHER_MODE_NONE      0x00
 #define IPMI_CRYPT_CIPHER_MODE_CBC       0x01
 
-#define IPMI_CRYPT_CIPHER_MODE_VALID(__cipher_mode)		\
-  (((__cipher_mode) == IPMI_CRYPT_CIPHER_MODE_NONE		\
+#define IPMI_CRYPT_CIPHER_MODE_VALID(__cipher_mode)        \
+  (((__cipher_mode) == IPMI_CRYPT_CIPHER_MODE_NONE        \
     || (__cipher_mode) == IPMI_CRYPT_CIPHER_MODE_CBC) ? 1 : 0)
 
 #define IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH   0x00
 #define IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH 0x01
 
-#define IPMI_CRYPT_CIPHER_INFO_VALID(__cipher_info)			\
-  (((__cipher_info) == IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH		\
+#define IPMI_CRYPT_CIPHER_INFO_VALID(__cipher_info)            \
+  (((__cipher_info) == IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH        \
     || (__cipher_info) == IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH) ? 1 : 0)
 
 #define IPMI_CRYPT_AES_CBC_128_IV_LENGTH         16

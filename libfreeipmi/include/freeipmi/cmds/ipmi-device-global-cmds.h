@@ -58,21 +58,21 @@ extern "C" {
 #define IPMI_ACPI_SYSTEM_POWER_STATE_UNKNOWN        0x2A
 #define IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE      0x7F
 
-#define IPMI_ACPI_SYSTEM_POWER_STATE_VALID(__acpi_system_power_state)	\
-  (((__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S0_G0	\
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S1	\
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S2	\
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S3	\
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S4	\
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S5_G2 \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S4_S5 \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_G3	\
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_SLEEPING \
+#define IPMI_ACPI_SYSTEM_POWER_STATE_VALID(__acpi_system_power_state)    \
+  (((__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S0_G0    \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S1    \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S2          \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S3          \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S4          \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S5_G2       \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_S4_S5       \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_G3          \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_SLEEPING    \
     || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_G1_SLEEPING \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_OVERRIDE \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_ON \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_OFF \
-    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_UNKNOWN \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_OVERRIDE    \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_ON   \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_OFF  \
+    || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_UNKNOWN     \
     || (__acpi_system_power_state) == IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE) ? 1 : 0)
 
 #define IPMI_ACPI_SET_SYSTEM_POWER_STATE_SET_SYSTEM_POWER_STATE       0x1
@@ -89,11 +89,11 @@ extern "C" {
 #define IPMI_ACPI_DEVICE_POWER_STATE_UNKNOWN        0x2A
 #define IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE      0x7F
 
-#define IPMI_ACPI_DEVICE_POWER_STATE_VALID(__acpi_device_power_state)	\
-  (((__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D0	\
-    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D1	\
-    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D2	\
-    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D3	\
+#define IPMI_ACPI_DEVICE_POWER_STATE_VALID(__acpi_device_power_state)    \
+  (((__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D0    \
+    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D1    \
+    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D2    \
+    || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_D3    \
     || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_UNKNOWN \
     || (__acpi_device_power_state) == IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE) ? 1 : 0)
 
@@ -131,10 +131,10 @@ extern "C" {
   int8_t fill_cmd_cold_reset (fiid_obj_t obj_cmd_rq);
   int8_t fill_cmd_warm_reset (fiid_obj_t obj_cmd_rq);
   int8_t fill_cmd_set_acpi_power_state (uint8_t system_power_state_enumeration,
-					uint8_t set_system_power_state,
-					uint8_t device_power_state_enumeration,
-					uint8_t set_device_power_state,
-					fiid_obj_t obj_cmd_rq);
+                    uint8_t set_system_power_state,
+                    uint8_t device_power_state_enumeration,
+                    uint8_t set_device_power_state,
+                    fiid_obj_t obj_cmd_rq);
   int8_t fill_cmd_get_acpi_power_state (fiid_obj_t obj_cmd_rq);
   int8_t fill_cmd_get_self_test_results (fiid_obj_t obj_cmd_rq);
   int8_t fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq);

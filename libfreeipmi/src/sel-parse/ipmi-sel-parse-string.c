@@ -761,40 +761,40 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
       switch (system_event_record_data.event_data2_flag)
         {
         case IPMI_SEL_EVENT_DATA_TRIGGER_READING:
-	  {
-	    double reading;
-	    uint8_t sensor_unit;
+      {
+        double reading;
+        uint8_t sensor_unit;
 
-	    if ((ret = _get_sensor_reading (ctx,
-					    &system_event_record_data,
-					    system_event_record_data.event_data2,
-					    &reading,
-					    &sensor_unit)) < 0)
-	      return -1;
+        if ((ret = _get_sensor_reading (ctx,
+                        &system_event_record_data,
+                        system_event_record_data.event_data2,
+                        &reading,
+                        &sensor_unit)) < 0)
+          return -1;
 
-	    if (ret)
-	      {
-		if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
-		  snprintf (tmpbuf,
-			    EVENT_BUFFER_LENGTH,
-			    "Reading = %.2f %s",
-			    _round_double2 (reading),
-			    ipmi_sensor_units_abbreviated[sensor_unit]);
-		else
-		  snprintf (tmpbuf,
-			    EVENT_BUFFER_LENGTH,
-			    "Sensor Reading = %.2f %s",
-			    _round_double2 (reading),
-			    ipmi_sensor_units_abbreviated[sensor_unit]);
-	      }
-	    else
-	      snprintf (tmpbuf,
-			EVENT_BUFFER_LENGTH,
-			"Sensor Reading = %02Xh",
-			system_event_record_data.event_data2);
-	    output_flag++;
-	  }
-	  break;
+        if (ret)
+          {
+        if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+          snprintf (tmpbuf,
+                EVENT_BUFFER_LENGTH,
+                "Reading = %.2f %s",
+                _round_double2 (reading),
+                ipmi_sensor_units_abbreviated[sensor_unit]);
+        else
+          snprintf (tmpbuf,
+                EVENT_BUFFER_LENGTH,
+                "Sensor Reading = %.2f %s",
+                _round_double2 (reading),
+                ipmi_sensor_units_abbreviated[sensor_unit]);
+          }
+        else
+          snprintf (tmpbuf,
+            EVENT_BUFFER_LENGTH,
+            "Sensor Reading = %02Xh",
+            system_event_record_data.event_data2);
+        output_flag++;
+      }
+      break;
         case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
 
           if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
@@ -844,69 +844,69 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
       switch (system_event_record_data.event_data2_flag)
         {
         case IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY:
-	  {
-	    uint8_t previous_offset_from_event_reading_type_code;
-	    uint8_t offset_from_severity_event_reading_type_code;
-	    char tmppreviousbuf[EVENT_BUFFER_LENGTH];
-	    char tmpseveritybuf[EVENT_BUFFER_LENGTH];
-	    int previous_output_flag = 0;
-	    int severity_output_flag = 0;
+      {
+        uint8_t previous_offset_from_event_reading_type_code;
+        uint8_t offset_from_severity_event_reading_type_code;
+        char tmppreviousbuf[EVENT_BUFFER_LENGTH];
+        char tmpseveritybuf[EVENT_BUFFER_LENGTH];
+        int previous_output_flag = 0;
+        int severity_output_flag = 0;
 
-	    if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
-	      {
-		no_output_flag++;
-		break;
-	      }
+        if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+          {
+        no_output_flag++;
+        break;
+          }
 
-	    if (sel_parse_get_previous_state_or_severity (ctx,
-							  sel_parse_entry,
-							  &previous_offset_from_event_reading_type_code,
-							  &offset_from_severity_event_reading_type_code) < 0)
-	      return -1;
+        if (sel_parse_get_previous_state_or_severity (ctx,
+                              sel_parse_entry,
+                              &previous_offset_from_event_reading_type_code,
+                              &offset_from_severity_event_reading_type_code) < 0)
+          return -1;
 
-	    if (previous_offset_from_event_reading_type_code != IPMI_SEL_RECORD_UNSPECIFIED_OFFSET)
-	      {
-		ret = ipmi_get_event_data2_message (system_event_record_data.sensor_type,
-						    system_event_record_data.offset_from_event_reading_type_code,
-						    previous_offset_from_event_reading_type_code,
-						    tmppreviousbuf,
-						    EVENT_BUFFER_LENGTH);
-		if (!ret)
-		  {
-		    snprintf (tmpbuf,
-			      EVENT_BUFFER_LENGTH,
-			      "Previous State = %s",
-			      tmppreviousbuf);
-		    previous_output_flag++;
-		  }
-	      }
-	    if (offset_from_severity_event_reading_type_code != IPMI_SEL_RECORD_UNSPECIFIED_OFFSET)
-	      {
-		ret = ipmi_get_generic_event_message (0x07,  /* 0x07 == severity event reading type code */
-						      offset_from_severity_event_reading_type_code,
-						      tmpseveritybuf,
-						      EVENT_BUFFER_LENGTH);
-		if (!ret)
-		  {
-		    snprintf (tmpbuf,
-			      EVENT_BUFFER_LENGTH,
-			      "Severity State = %s",
-			      tmpseveritybuf);
-		    severity_output_flag++;
-		  }
-	      }
-	    /* achu: special case, we need to combine the outputs into one */
-	    if (previous_output_flag && severity_output_flag)
-	      snprintf (tmpbuf,
-			EVENT_BUFFER_LENGTH,
-			"Previous State = %s%sSeverity State = %s",
-			tmppreviousbuf,
-			ctx->separator ? ctx->separator : IPMI_SEL_PARSE_SEPARATOR_STRING,
-			tmpseveritybuf);
-	    if (previous_output_flag || severity_output_flag)
-	      output_flag++;
-	  }
-	  break;
+        if (previous_offset_from_event_reading_type_code != IPMI_SEL_RECORD_UNSPECIFIED_OFFSET)
+          {
+        ret = ipmi_get_event_data2_message (system_event_record_data.sensor_type,
+                            system_event_record_data.offset_from_event_reading_type_code,
+                            previous_offset_from_event_reading_type_code,
+                            tmppreviousbuf,
+                            EVENT_BUFFER_LENGTH);
+        if (!ret)
+          {
+            snprintf (tmpbuf,
+                  EVENT_BUFFER_LENGTH,
+                  "Previous State = %s",
+                  tmppreviousbuf);
+            previous_output_flag++;
+          }
+          }
+        if (offset_from_severity_event_reading_type_code != IPMI_SEL_RECORD_UNSPECIFIED_OFFSET)
+          {
+        ret = ipmi_get_generic_event_message (0x07,  /* 0x07 == severity event reading type code */
+                              offset_from_severity_event_reading_type_code,
+                              tmpseveritybuf,
+                              EVENT_BUFFER_LENGTH);
+        if (!ret)
+          {
+            snprintf (tmpbuf,
+                  EVENT_BUFFER_LENGTH,
+                  "Severity State = %s",
+                  tmpseveritybuf);
+            severity_output_flag++;
+          }
+          }
+        /* achu: special case, we need to combine the outputs into one */
+        if (previous_output_flag && severity_output_flag)
+          snprintf (tmpbuf,
+            EVENT_BUFFER_LENGTH,
+            "Previous State = %s%sSeverity State = %s",
+            tmppreviousbuf,
+            ctx->separator ? ctx->separator : IPMI_SEL_PARSE_SEPARATOR_STRING,
+            tmpseveritybuf);
+        if (previous_output_flag || severity_output_flag)
+          output_flag++;
+      }
+      break;
         case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
 
           if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
@@ -1050,31 +1050,31 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
       switch (system_event_record_data.event_data3_flag)
         {
         case IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE:
-	  {
-	    double reading;
-	    uint8_t sensor_unit;
+      {
+        double reading;
+        uint8_t sensor_unit;
 
-	    if ((ret = _get_sensor_reading (ctx,
-					    &system_event_record_data,
-					    system_event_record_data.event_data3,
-					    &reading,
-					    &sensor_unit)) < 0)
-	      return -1;
+        if ((ret = _get_sensor_reading (ctx,
+                        &system_event_record_data,
+                        system_event_record_data.event_data3,
+                        &reading,
+                        &sensor_unit)) < 0)
+          return -1;
 
-	    if (ret)
-	      snprintf (tmpbuf,
-			EVENT_BUFFER_LENGTH,
-			"Threshold = %.2f %s",
-			_round_double2 (reading),
-			ipmi_sensor_units_abbreviated[sensor_unit]);
-	    else
-	      snprintf (tmpbuf,
-			EVENT_BUFFER_LENGTH,
-			"Threshold = %02Xh",
-			system_event_record_data.event_data3);
-	    output_flag++;
-	  }
-	  break;
+        if (ret)
+          snprintf (tmpbuf,
+            EVENT_BUFFER_LENGTH,
+            "Threshold = %.2f %s",
+            _round_double2 (reading),
+            ipmi_sensor_units_abbreviated[sensor_unit]);
+        else
+          snprintf (tmpbuf,
+            EVENT_BUFFER_LENGTH,
+            "Threshold = %02Xh",
+            system_event_record_data.event_data3);
+        output_flag++;
+      }
+      break;
         case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
 
           if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)

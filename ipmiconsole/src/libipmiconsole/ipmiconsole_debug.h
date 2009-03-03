@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.h,v 1.9.12.1 2009-03-03 01:41:04 chu11 Exp $
+ *  $Id: ipmiconsole_debug.h,v 1.9.12.2 2009-03-03 22:39:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -43,54 +43,54 @@
 
 #define IPMICONSOLE_DEBUG_ERROR_BUFLEN 4096
 
-#define IPMICONSOLE_DEBUG(__msg)					\
-  do {									\
-    char __err[IPMICONSOLE_DEBUG_ERROR_BUFLEN];				\
-    int __len;								\
-    memset (__err, '\0', IPMICONSOLE_DEBUG_ERROR_BUFLEN);		\
-    __len = snprintf (__err,						\
-		      IPMICONSOLE_DEBUG_ERROR_BUFLEN,			\
-		      "(%s, %s, %d): ",					\
-		      __FILE__,						\
-		      __FUNCTION__,					\
-		      __LINE__);					\
-    if (__len < IPMICONSOLE_DEBUG_ERROR_BUFLEN)				\
-      {									\
-	char *__str;							\
-	if ((__str = __debug_msg_create __msg))				\
-	  {								\
-	    strncat (__err, __str, IPMICONSOLE_DEBUG_ERROR_BUFLEN - __len - 1); \
-	    free (__str);						\
-	  }								\
-      }									\
-    ipmiconsole_debug (__err);						\
+#define IPMICONSOLE_DEBUG(__msg)                                                \
+  do {                                                                          \
+    char __err[IPMICONSOLE_DEBUG_ERROR_BUFLEN];                                 \
+    int __len;                                                                  \
+    memset (__err, '\0', IPMICONSOLE_DEBUG_ERROR_BUFLEN);                       \
+    __len = snprintf (__err,                                                    \
+                      IPMICONSOLE_DEBUG_ERROR_BUFLEN,                           \
+                      "(%s, %s, %d): ",                                         \
+                      __FILE__,                                                 \
+                      __FUNCTION__,                                             \
+                      __LINE__);                                                \
+    if (__len < IPMICONSOLE_DEBUG_ERROR_BUFLEN)                                 \
+      {                                                                         \
+        char *__str;                                                            \
+        if ((__str = __debug_msg_create __msg))                                 \
+          {                                                                     \
+            strncat (__err, __str, IPMICONSOLE_DEBUG_ERROR_BUFLEN - __len - 1); \
+            free (__str);                                                       \
+          }                                                                     \
+      }                                                                         \
+    ipmiconsole_debug (__err);                                                  \
   } while(0)
 
-#define IPMICONSOLE_CTX_DEBUG(__c, __msg)				\
-  do {									\
-    char __err[IPMICONSOLE_DEBUG_ERROR_BUFLEN];				\
-    int __len;								\
-    memset (__err, '\0', IPMICONSOLE_DEBUG_ERROR_BUFLEN);		\
-    __len = snprintf (__err,						\
-                      IPMICONSOLE_DEBUG_ERROR_BUFLEN,			\
-                      "(%s, %s, %d): "					\
-                      "hostname=%s; "					\
-                      "protocol_state=0x%X: ",				\
-                      __FILE__,						\
-                      __FUNCTION__,					\
-                      __LINE__,						\
-                      (__c)->config.hostname,				\
-                      (__c)->session.protocol_state);			\
-    if (__len < IPMICONSOLE_DEBUG_ERROR_BUFLEN)				\
-      {									\
-	char *__str;							\
-	if ((__str = __debug_msg_create __msg))				\
-	  {								\
-	    strncat (__err, __str, IPMICONSOLE_DEBUG_ERROR_BUFLEN - __len - 1); \
-	    free (__str);						\
-	  }								\
-      }									\
-    ipmiconsole_ctx_debug ((__c), __err);				\
+#define IPMICONSOLE_CTX_DEBUG(__c, __msg)                                       \
+  do {                                                                          \
+    char __err[IPMICONSOLE_DEBUG_ERROR_BUFLEN];                                 \
+    int __len;                                                                  \
+    memset (__err, '\0', IPMICONSOLE_DEBUG_ERROR_BUFLEN);                       \
+    __len = snprintf (__err,                                                    \
+                      IPMICONSOLE_DEBUG_ERROR_BUFLEN,                           \
+                      "(%s, %s, %d): "                                          \
+                      "hostname=%s; "                                           \
+                      "protocol_state=0x%X: ",                                  \
+                      __FILE__,                                                 \
+                      __FUNCTION__,                                             \
+                      __LINE__,                                                 \
+                      (__c)->config.hostname,                                   \
+                      (__c)->session.protocol_state);                           \
+    if (__len < IPMICONSOLE_DEBUG_ERROR_BUFLEN)                                 \
+      {                                                                         \
+        char *__str;                                                            \
+        if ((__str = __debug_msg_create __msg))                                 \
+          {                                                                     \
+            strncat (__err, __str, IPMICONSOLE_DEBUG_ERROR_BUFLEN - __len - 1); \
+            free (__str);                                                       \
+          }                                                                     \
+      }                                                                         \
+    ipmiconsole_ctx_debug ((__c), __err);                                       \
   } while(0)
 
 int ipmiconsole_debug_setup (uint32_t debug_flags);

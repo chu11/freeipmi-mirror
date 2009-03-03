@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.39.8.1 2009-03-03 01:41:08 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.39.8.2 2009-03-03 22:39:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -838,13 +838,13 @@ extern "C" {
    * Returns number of sensors values retrieved on success, -1 on error
    */
   int ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
-						    const char *hostname,
-						    struct ipmi_monitoring_ipmi_config *config,
-						    unsigned int sensor_reading_flags,
-						    unsigned int *record_ids,
-						    unsigned int record_ids_len,
-						    Ipmi_Monitoring_Sensor_Readings_Callback callback,
-						    void *callback_data);
+                            const char *hostname,
+                            struct ipmi_monitoring_ipmi_config *config,
+                            unsigned int sensor_reading_flags,
+                            unsigned int *record_ids,
+                            unsigned int record_ids_len,
+                            Ipmi_Monitoring_Sensor_Readings_Callback callback,
+                            void *callback_data);
 
   /*
    * ipmi_monitoring_sensor_readings_by_sensor_group
@@ -859,13 +859,13 @@ extern "C" {
    * Returns number of sensors values retrieved on success, -1 on error
    */
   int ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
-						       const char *hostname,
-						       struct ipmi_monitoring_ipmi_config *config,
-						       unsigned int sensor_reading_flags,
-						       unsigned int *sensor_groups,
-						       unsigned int sensor_groups_len,
-						       Ipmi_Monitoring_Sensor_Readings_Callback callback,
-						       void *callback_data);
+                               const char *hostname,
+                               struct ipmi_monitoring_ipmi_config *config,
+                               unsigned int sensor_reading_flags,
+                               unsigned int *sensor_groups,
+                               unsigned int sensor_groups_len,
+                               Ipmi_Monitoring_Sensor_Readings_Callback callback,
+                               void *callback_data);
 
   /*
    * ipmi_monitoring_iterator_first
@@ -974,10 +974,10 @@ extern "C" {
    * Returns 0 on success, -1 on error
    */
   int ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
-				      int bitmask_type,
-				      unsigned int bitmask,
-				      char *buffer,
-				      unsigned int buflen);
+                      int bitmask_type,
+                      unsigned int bitmask,
+                      char *buffer,
+                      unsigned int buflen);
 #ifdef __cplusplus
 }
 #endif

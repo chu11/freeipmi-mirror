@@ -470,8 +470,8 @@ ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
       sik_key_buf_len = 0;
     }
   else /*
-	 authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
-	 || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+     authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+     || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
        */
     {
       if ((authentication_code_data_len && !authentication_code_data)

@@ -104,40 +104,40 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case ARGP_KEY_ARG:
       {
-	int i;
-	long value;
+    int i;
+    long value;
 
-	if (strlen (arg) >= 2)
-	  {
-	    if (strncmp (arg, "0x", 2) == 0)
-	      arg+=2;
-	  }
+    if (strlen (arg) >= 2)
+      {
+        if (strncmp (arg, "0x", 2) == 0)
+          arg+=2;
+      }
 
-	if (*arg == '\0')
-	  {
-	    fprintf (stderr, "invalid hex byte argument\n");
-	    exit (1);
-	  }
+    if (*arg == '\0')
+      {
+        fprintf (stderr, "invalid hex byte argument\n");
+        exit (1);
+      }
 
-	for (i = 0; arg[i] != (char) NULL; i++)
-	  {
-	    if (i >= 2)
-	      {
-		fprintf (stderr, "invalid hex byte argument\n");
-		exit (1);
-	      }
+    for (i = 0; arg[i] != (char) NULL; i++)
+      {
+        if (i >= 2)
+          {
+        fprintf (stderr, "invalid hex byte argument\n");
+        exit (1);
+          }
 
-	    if (isxdigit (arg[i]) == 0)
-	      {
-		fprintf (stderr, "invalid hex byte argument\n");
-		exit (1);
-	      }
-	  }
+        if (isxdigit (arg[i]) == 0)
+          {
+        fprintf (stderr, "invalid hex byte argument\n");
+        exit (1);
+          }
+      }
 
-	value = strtol (arg, (char **) NULL, 16);
-	cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
+    value = strtol (arg, (char **) NULL, 16);
+    cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
 
-	break;
+    break;
       }
     case ARGP_KEY_END:
       break;

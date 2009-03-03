@@ -227,14 +227,14 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
     pci_class_regs_t regs;
 
     items = sscanf (buf, "%x %x %x " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64,
-		    &dfn, &vendor, &irq,
-		    &base_address[0], &base_address[1], &base_address[2], &base_address[3], &base_address[4], &base_address[5]);
+            &dfn, &vendor, &irq,
+            &base_address[0], &base_address[1], &base_address[2], &base_address[3], &base_address[4], &base_address[5]);
     linfo.intr_num = (uint16_t)irq;
 
     if (items != 9)
       {
-	LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
-	goto cleanup;
+    LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+    goto cleanup;
       }
     bus = dfn >> 8U;
     dev = PCI_SLOT (dfn & 0xff);
@@ -244,31 +244,31 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
       goto cleanup;
 
     if (regs.pci_class != IPMI_CLASS ||
-	regs.pci_subclass != IPMI_SUBCLASS ||
-	regs.pci_prog_interface + 1 != type)
+    regs.pci_subclass != IPMI_SUBCLASS ||
+    regs.pci_prog_interface + 1 != type)
       continue;
 
     for (i = 0; i < 6; i++)
       {
-	if (base_address[i] == 0 || base_address[i] == ~0)
-	  continue;
+    if (base_address[i] == 0 || base_address[i] == ~0)
+      continue;
 
-	switch (base_address[i] & PCI_BASE_ADDRESS_SPACE)
-	  {
-	  case past_io:
-	    linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
-	    linfo.driver_address = base_address[i] & ~PCI_BASE_ADDRESS_IO_MASK;
-	    memcpy (info, &linfo, sizeof(struct ipmi_locate_info));
-	    rv = 0;
-	    goto cleanup;
+    switch (base_address[i] & PCI_BASE_ADDRESS_SPACE)
+      {
+      case past_io:
+        linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
+        linfo.driver_address = base_address[i] & ~PCI_BASE_ADDRESS_IO_MASK;
+        memcpy (info, &linfo, sizeof(struct ipmi_locate_info));
+        rv = 0;
+        goto cleanup;
 
-	  case past_memory:
-	    linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
-	    linfo.driver_address = base_address[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
-	    memcpy (info, &linfo, sizeof(struct ipmi_locate_info));
-	    rv = 0;
-	    goto cleanup;
-	  }
+      case past_memory:
+        linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+        linfo.driver_address = base_address[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
+        memcpy (info, &linfo, sizeof(struct ipmi_locate_info));
+        rv = 0;
+        goto cleanup;
+      }
       }
   }
 

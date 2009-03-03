@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.113.2.1 2009-03-03 01:40:48 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.113.2.2 2009-03-03 22:39:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -76,25 +76,25 @@
 #define BMC_WATCHDOG_RETRY_WAIT_TIME         1
 #define BMC_WATCHDOG_RETRY_ATTEMPT           5
 
-#define _FIID_OBJ_GET(__obj, __field, __val, __func)			\
-  do {									\
-    uint64_t __temp;							\
-    if (fiid_obj_get ((__obj), (__field), &__temp) < 0)			\
-      {									\
-	_bmclog ("%s: fiid_obj_get: %s",				\
-		 (__func),						\
-		 fiid_obj_errormsg ((__obj)));				\
-	if (fiid_obj_errnum ((__obj)) == FIID_ERR_SUCCESS)		\
-	  errno = 0;							\
-	else if (fiid_obj_errnum ((__obj)) == FIID_ERR_OUT_OF_MEMORY)	\
-	  errno = ENOMEM;						\
-	else if (fiid_obj_errnum ((__obj)) == FIID_ERR_OVERFLOW)	\
-	  errno = ENOSPC;						\
-	else								\
-	  errno = EINVAL;						\
-	goto cleanup;							\
-      }									\
-    *(__val) = __temp;							\
+#define _FIID_OBJ_GET(__obj, __field, __val, __func)              \
+  do {                                                            \
+    uint64_t __temp;                                              \
+    if (fiid_obj_get ((__obj), (__field), &__temp) < 0)           \
+      {                                                           \
+    _bmclog ("%s: fiid_obj_get: %s",                              \
+         (__func),                                                \
+         fiid_obj_errormsg ((__obj)));                            \
+    if (fiid_obj_errnum ((__obj)) == FIID_ERR_SUCCESS)            \
+      errno = 0;                                                  \
+    else if (fiid_obj_errnum ((__obj)) == FIID_ERR_OUT_OF_MEMORY) \
+      errno = ENOMEM;                                             \
+    else if (fiid_obj_errnum ((__obj)) == FIID_ERR_OVERFLOW)      \
+      errno = ENOSPC;                                             \
+    else                                                          \
+      errno = EINVAL;                                             \
+    goto cleanup;                                                 \
+      }                                                           \
+    *(__val) = __temp;                                            \
   } while (0)
 
 struct bmc_watchdog_arguments cmd_args;

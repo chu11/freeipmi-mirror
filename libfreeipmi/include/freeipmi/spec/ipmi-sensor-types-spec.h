@@ -70,13 +70,13 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_FRU_STATE                           0x2C
 
   /* To avoid gcc warnings, added +1 and -1 in comparison */
-#define IPMI_SENSOR_TYPE_VALID(__sensor_type)				\
-  (((__sensor_type + 1) >= (IPMI_SENSOR_TYPE_RESERVED + 1)		\
+#define IPMI_SENSOR_TYPE_VALID(__sensor_type)                \
+  (((__sensor_type + 1) >= (IPMI_SENSOR_TYPE_RESERVED + 1)        \
     && (__sensor_type - 1) <= (IPMI_SENSOR_TYPE_FRU_STATE - 1)) ? 1 : 0)
 
   /* "== 0xFF" to remove warnings */
-#define IPMI_SENSOR_TYPE_IS_OEM(__sensor_type)				\
-  (((__sensor_type) >= 0xC0						\
+#define IPMI_SENSOR_TYPE_IS_OEM(__sensor_type)                \
+  (((__sensor_type) >= 0xC0                        \
     && ((__sensor_type) <= 0xFE || (__sensor_type) == 0xFF)) ? 1 : 0)
 
   extern const char *const ipmi_sensor_types[];

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_debug.h,v 1.9.12.1 2009-03-03 01:41:09 chu11 Exp $
+ *  $Id: ipmi_monitoring_debug.h,v 1.9.12.2 2009-03-03 22:39:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -33,27 +33,27 @@
 
 #define IPMI_MONITORING_DEBUG_ERROR_BUFLEN 4096
 
-#define IPMI_MONITORING_DEBUG(__msg)					\
-  do {									\
-    char __err[IPMI_MONITORING_DEBUG_ERROR_BUFLEN];			\
-    int __len;								\
-    memset (__err, '\0', IPMI_MONITORING_DEBUG_ERROR_BUFLEN);		\
-    __len = snprintf (__err,						\
-		      IPMI_MONITORING_DEBUG_ERROR_BUFLEN,		\
-		      "(%s, %s, %d): ",					\
-		      __FILE__,						\
-		      __FUNCTION__,					\
-		      __LINE__);					\
-    if (__len < IPMI_MONITORING_DEBUG_ERROR_BUFLEN)			\
-      {									\
-	char *__str;							\
-	if ((__str = __debug_msg_create __msg))				\
-	  {								\
-	    strncat (__err, __str, IPMI_MONITORING_DEBUG_ERROR_BUFLEN - __len - 1); \
-	    free (__str);						\
-	  }								\
-      }									\
-    ipmi_monitoring_debug (__err);					\
+#define IPMI_MONITORING_DEBUG(__msg)                                                \
+  do {                                                                              \
+    char __err[IPMI_MONITORING_DEBUG_ERROR_BUFLEN];                                 \
+    int __len;                                                                      \
+    memset (__err, '\0', IPMI_MONITORING_DEBUG_ERROR_BUFLEN);                       \
+    __len = snprintf (__err,                                                        \
+                      IPMI_MONITORING_DEBUG_ERROR_BUFLEN,                           \
+                      "(%s, %s, %d): ",                                             \
+                      __FILE__,                                                     \
+                      __FUNCTION__,                                                 \
+                      __LINE__);                                                    \
+    if (__len < IPMI_MONITORING_DEBUG_ERROR_BUFLEN)                                 \
+      {                                                                             \
+        char *__str;                                                                \
+        if ((__str = __debug_msg_create __msg))                                     \
+          {                                                                         \
+            strncat (__err, __str, IPMI_MONITORING_DEBUG_ERROR_BUFLEN - __len - 1); \
+            free (__str);                                                           \
+          }                                                                         \
+      }                                                                             \
+    ipmi_monitoring_debug (__err);                                                  \
   } while(0)
 
 void ipmi_monitoring_debug (const char *fmt, ...);

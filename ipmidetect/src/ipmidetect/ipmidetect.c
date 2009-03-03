@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.13.12.1 2009-03-03 01:41:06 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.13.12.2 2009-03-03 22:39:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -263,43 +263,43 @@ _cmdline_parse (int argc, char **argv)
     while ((c = getopt (argc, argv, options)) != -1)
 #endif
       {
-	switch(c)
-	  {
-	  case 'h':
-	    _usage ();
-	  case 'v':
-	    _version ();
-	  case 'o':
-	    hostname = optarg;
-	    break;
-	  case 'p':
-	    port = strtol (optarg, &ptr, 10);
-	    if (ptr != (optarg + strlen (optarg)))
-	      err_exit ("invalid port specified");
-	    break;
-	  case 'u':
-	    output_type = IPMIDETECT_UNDETECTED_NODES;
-	    break;
-	  case 'd':
-	    output_type = IPMIDETECT_DETECTED_NODES;
-	    break;
-	  case 'q':
-	    output_format = 0;
-	    break;
-	  case 'c':
-	    output_format = ',';
-	    break;
-	  case 'n':
-	    output_format = '\n';
-	    break;
-	  case 's':
-	    output_format = ' ';
-	    break;
-	  default:
-	  case '?':
-	    fprintf (stderr, "command line option error\n");
-	    _usage ();
-	  }
+    switch(c)
+      {
+      case 'h':
+        _usage ();
+      case 'v':
+        _version ();
+      case 'o':
+        hostname = optarg;
+        break;
+      case 'p':
+        port = strtol (optarg, &ptr, 10);
+        if (ptr != (optarg + strlen (optarg)))
+          err_exit ("invalid port specified");
+        break;
+      case 'u':
+        output_type = IPMIDETECT_UNDETECTED_NODES;
+        break;
+      case 'd':
+        output_type = IPMIDETECT_DETECTED_NODES;
+        break;
+      case 'q':
+        output_format = 0;
+        break;
+      case 'c':
+        output_format = ',';
+        break;
+      case 'n':
+        output_format = '\n';
+        break;
+      case 's':
+        output_format = ' ';
+        break;
+      default:
+      case '?':
+        fprintf (stderr, "command line option error\n");
+        _usage ();
+      }
       }
 
   index = optind;

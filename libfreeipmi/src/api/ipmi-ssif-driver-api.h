@@ -34,14 +34,14 @@ extern "C" {
 #include <freeipmi/fiid/fiid.h>
 
   int ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
-			 fiid_obj_t obj_cmd_rq,
-			 fiid_obj_t obj_cmd_rs);
+             fiid_obj_t obj_cmd_rq,
+             fiid_obj_t obj_cmd_rs);
 
   int32_t ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
-				 uint8_t *buf_rq,
-				 size_t buf_rq_len,
-				 uint8_t *buf_rs,
-				 size_t buf_rs_len);
+                 uint8_t *buf_rq,
+                 size_t buf_rq_len,
+                 uint8_t *buf_rs,
+                 size_t buf_rs_len);
 
 #ifdef __cplusplus
 }

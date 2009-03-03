@@ -1928,7 +1928,7 @@ fiid_obj_get_all (fiid_obj_t obj,
   else
     {
       int i, bytes_written = 0, max_bits_counter = 0, set_bits_counter = 0,
-	optional_bits_counter = 0, data_index = 0, obj_data_index = 0;
+    optional_bits_counter = 0, data_index = 0, obj_data_index = 0;
 
       for (i = 0; i < obj->field_data_len; i++)
         {
@@ -2242,7 +2242,7 @@ fiid_obj_get_block (fiid_obj_t obj,
   else
     {
       int i, bytes_written = 0, max_bits_counter = 0, set_bits_counter = 0,
-	optional_bits_counter = 0, data_index = 0, obj_data_index = field_offset;
+    optional_bits_counter = 0, data_index = 0, obj_data_index = field_offset;
 
       for (i = key_index_start; i <= key_index_end; i++)
         {

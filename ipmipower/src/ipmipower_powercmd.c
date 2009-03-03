@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.163.12.1 2009-03-03 01:41:12 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.163.12.2 2009-03-03 22:39:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -119,8 +119,8 @@ _destroy_ipmipower_powercmd (ipmipower_powercmd_t ip)
     int *fd;
     while ((fd = list_pop (ip->sockets_to_close)))
       {
-	Close (*fd);
-	Free (fd);
+    Close (*fd);
+    Free (fd);
       }
   }
 
@@ -390,12 +390,12 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
        * _retry_packets().
        */
       if (list_count (ip->sockets_to_close) > 0) {
-	int *fd;
-	while ((fd = list_pop (ip->sockets_to_close)))
-	  {
-	    Close (*fd);
-	    Free (fd);
-	  }
+    int *fd;
+    while ((fd = list_pop (ip->sockets_to_close)))
+      {
+        Close (*fd);
+        Free (fd);
+      }
       }
     }
   else if (pkt == OPEN_SESSION_REQ)
@@ -617,9 +617,9 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
         }
       else /* (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
               && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-	      || pkt == GET_CHASSIS_STATUS_RES
-	      || pkt == CHASSIS_CONTROL_RES
-	      || pkt == CLOSE_SESSION_RES)) */
+          || pkt == GET_CHASSIS_STATUS_RES
+          || pkt == CHASSIS_CONTROL_RES
+          || pkt == CLOSE_SESSION_RES)) */
         {
           if (!ipmipower_check_payload_type (ip, pkt))
             {

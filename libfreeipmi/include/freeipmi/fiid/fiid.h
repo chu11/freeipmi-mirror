@@ -101,22 +101,22 @@ extern "C" {
 #define FIID_FIELD_OPTIONAL         0x00000002
 #define FIID_FIELD_REQUIRED_MASK    0x0000000F
 
-#define FIID_FIELD_REQUIRED_FLAG(__flags)	\
+#define FIID_FIELD_REQUIRED_FLAG(__flags)    \
   ((__flags) & FIID_FIELD_REQUIRED_MASK)
 
-#define FIID_FIELD_REQUIRED_FLAG_VALID(__flags)				\
-  ((FIID_FIELD_REQUIRED_FLAG (__flags) ==  FIID_FIELD_REQUIRED		\
+#define FIID_FIELD_REQUIRED_FLAG_VALID(__flags)                \
+  ((FIID_FIELD_REQUIRED_FLAG (__flags) ==  FIID_FIELD_REQUIRED        \
     || FIID_FIELD_REQUIRED_FLAG (__flags) ==  FIID_FIELD_OPTIONAL) ? 1 : 0)
 
 #define FIID_FIELD_LENGTH_FIXED     0x00000010
 #define FIID_FIELD_LENGTH_VARIABLE  0x00000020
 #define FIID_FIELD_LENGTH_MASK      0x000000F0
 
-#define FIID_FIELD_LENGTH_FLAG(__flags)		\
+#define FIID_FIELD_LENGTH_FLAG(__flags)        \
   ((__flags) & FIID_FIELD_LENGTH_MASK)
 
-#define FIID_FIELD_LENGTH_FLAG_VALID(__flags)				\
-  ((FIID_FIELD_LENGTH_FLAG (__flags) ==  FIID_FIELD_LENGTH_FIXED	\
+#define FIID_FIELD_LENGTH_FLAG_VALID(__flags)                \
+  ((FIID_FIELD_LENGTH_FLAG (__flags) ==  FIID_FIELD_LENGTH_FIXED    \
     || FIID_FIELD_LENGTH_FLAG (__flags) ==  FIID_FIELD_LENGTH_VARIABLE) ? 1 : 0)
 
   /*
@@ -163,7 +163,7 @@ extern "C" {
    * error.
    */
   int8_t fiid_template_field_lookup (fiid_template_t tmpl,
-				     char *field);
+                     char *field);
 
   /*
    * fiid_template_len
@@ -189,7 +189,7 @@ extern "C" {
    * this template, -1 on error.
    */
   int32_t fiid_template_field_start (fiid_template_t tmpl,
-				     char *field);
+                     char *field);
 
   /*
    * fiid_template_field_start_bytes
@@ -199,7 +199,7 @@ extern "C" {
    * offset is not a multiple of 8.
    */
   int32_t fiid_template_field_start_bytes (fiid_template_t tmpl,
-					   char *field);
+                       char *field);
 
   /*
    * fiid_template_field_end
@@ -208,7 +208,7 @@ extern "C" {
    * template, -1 on error.
    */
   int32_t fiid_template_field_end (fiid_template_t tmpl,
-				   char *field);
+                   char *field);
 
   /*
    * fiid_template_field_end_bytes
@@ -218,7 +218,7 @@ extern "C" {
    * offset is not a multiple of 8.
    */
   int32_t fiid_template_field_end_bytes (fiid_template_t tmpl,
-					 char *field);
+                     char *field);
 
   /*
    * fiid_template_field_len
@@ -227,7 +227,7 @@ extern "C" {
    * error.
    */
   int32_t fiid_template_field_len (fiid_template_t tmpl,
-				   char *field);
+                   char *field);
 
   /*
    * fiid_template_field_len_bytes
@@ -237,7 +237,7 @@ extern "C" {
    * a multiple of 8.
    */
   int32_t fiid_template_field_len_bytes (fiid_template_t tmpl,
-					 char *field);
+                     char *field);
 
   /*
    * fiid_template_block_len
@@ -247,8 +247,8 @@ extern "C" {
    * on error.
    */
   int32_t fiid_template_block_len (fiid_template_t tmpl,
-				   char *field_start,
-				   char *field_end);
+                   char *field_start,
+                   char *field_end);
 
   /*
    * fiid_template_block_len_bytes
@@ -259,8 +259,8 @@ extern "C" {
    * a multiple of 8.
    */
   int32_t fiid_template_block_len_bytes (fiid_template_t tmpl,
-					 char *field_start,
-					 char *field_end);
+                     char *field_start,
+                     char *field_end);
 
   /*
    * fiid_template_compare
@@ -269,7 +269,7 @@ extern "C" {
    * -1 on error.
    */
   int8_t fiid_template_compare (fiid_template_t tmpl1,
-				fiid_template_t tmpl2);
+                fiid_template_t tmpl2);
 
   /*
    * fiid_template_free
@@ -414,8 +414,8 @@ extern "C" {
    * Returns -1 on error.
    */
   int32_t fiid_obj_block_len (fiid_obj_t obj,
-			      char *field_start,
-			      char *field_end);
+                  char *field_start,
+                  char *field_end);
 
   /*
    * fiid_obj_block_len_bytes
@@ -426,8 +426,8 @@ extern "C" {
    * length is not a multiple of 8.
    */
   int32_t fiid_obj_block_len_bytes (fiid_obj_t obj,
-				    char *field_start,
-				    char *field_end);
+                    char *field_start,
+                    char *field_end);
 
   /*
    * fiid_obj_clear
@@ -480,9 +480,9 @@ extern "C" {
    * if the field maximum length is smaller than the data given.
    */
   int32_t fiid_obj_set_data (fiid_obj_t obj,
-			     char *field,
-			     uint8_t *data,
-			     uint32_t data_len);
+                 char *field,
+                 uint8_t *data,
+                 uint32_t data_len);
 
   /*
    * fiid_obj_get_data
@@ -493,9 +493,9 @@ extern "C" {
    * that is a multiple of 8.
    */
   int32_t fiid_obj_get_data (fiid_obj_t obj,
-			     char *field,
-			     uint8_t *data,
-			     uint32_t data_len);
+                 char *field,
+                 uint8_t *data,
+                 uint32_t data_len);
 
   /*
    * fiid_obj_set_all
@@ -529,10 +529,10 @@ extern "C" {
    * entire block.
    */
   int8_t fiid_obj_set_block (fiid_obj_t obj,
-			     char *field_start,
-			     char *field_end,
-			     uint8_t *data,
-			     uint32_t data_len);
+                 char *field_start,
+                 char *field_end,
+                 uint8_t *data,
+                 uint32_t data_len);
 
   /*
    * fiid_obj_get_block
@@ -542,10 +542,10 @@ extern "C" {
    * -1 on error.  Data being read must fall on a byte boundary.
    */
   int8_t fiid_obj_get_block (fiid_obj_t obj,
-			     char *field_start,
-			     char *field_end,
-			     uint8_t *data,
-			     uint32_t data_len);
+                 char *field_start,
+                 char *field_end,
+                 uint8_t *data,
+                 uint32_t data_len);
 
   /*****************************
    * FIID Iterator API         *
@@ -637,8 +637,8 @@ extern "C" {
    * multiple of 8.
    */
   int32_t fiid_iterator_get_data (fiid_iterator_t iter,
-				  uint8_t *data,
-				  uint32_t data_len);
+                  uint8_t *data,
+                  uint32_t data_len);
 
 #ifdef __cplusplus
 }

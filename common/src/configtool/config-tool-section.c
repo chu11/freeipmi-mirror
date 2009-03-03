@@ -480,7 +480,7 @@ config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
                   nonvalid_count++;
                 }
             }
-	next_kv:
+    next_kv:
           kv = kv->next;
         }
 

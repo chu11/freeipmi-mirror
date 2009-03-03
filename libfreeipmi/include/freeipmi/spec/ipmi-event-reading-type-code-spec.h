@@ -25,21 +25,21 @@ extern "C" {
 
   /* Table 42-1 */
 
-#define IPMI_EVENT_READING_TYPE_CODE_IS_UNSPECIFIED(__val)	\
+#define IPMI_EVENT_READING_TYPE_CODE_IS_UNSPECIFIED(__val)    \
   (((__val) == 0x00) ? 1 : 0)
 
-#define IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(__val)	\
+#define IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD(__val)    \
   (((__val) == 0x01) ? 1 : 0)
 
-#define IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(__val)	\
-  (((__val) >= 0x02					\
+#define IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC(__val)    \
+  (((__val) >= 0x02                    \
     && (__val) <= 0x0C) ? 1 : 0)
 
-#define IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(__val)	\
+#define IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC(__val)    \
   (((__val) == 0x6F) ? 1 : 0)
 
-#define IPMI_EVENT_READING_TYPE_CODE_IS_OEM(__val)	\
-  (((__val) >= 0x70					\
+#define IPMI_EVENT_READING_TYPE_CODE_IS_OEM(__val)    \
+  (((__val) >= 0x70                    \
     && (__val) <= 0x7F) ? 1 : 0)
 
 #ifdef __cplusplus

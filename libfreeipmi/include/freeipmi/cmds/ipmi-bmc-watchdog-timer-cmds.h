@@ -32,25 +32,25 @@ extern "C" {
 #define IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_SMS_OS                           0x4
 #define IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OEM                              0x5
 
-#define IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID(__x)		\
-  (((__x) == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2	\
-    || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_POST	\
-    || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OS_LOAD	\
-    || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_SMS_OS	\
+#define IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID(__x)           \
+  (((__x) == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2       \
+    || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_POST    \
+    || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OS_LOAD      \
+    || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_SMS_OS       \
     || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OEM) ? 1 : 0)
 
 #define IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE                          0x0
 #define IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_DISABLE                         0x1
 
-#define IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID(__x)			\
-  (((__x) == IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE			\
+#define IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID(__x)             \
+  (((__x) == IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE            \
     || (__x) == IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_DISABLE) ? 1 : 0)
 
 #define IPMI_BMC_WATCHDOG_TIMER_LOG_ENABLE                                 0x0
 #define IPMI_BMC_WATCHDOG_TIMER_LOG_DISABLE                                0x1
 
-#define IPMI_BMC_WATCHDOG_TIMER_LOG_VALID(__x)			\
-  (((__x) == IPMI_BMC_WATCHDOG_TIMER_LOG_ENABLE			\
+#define IPMI_BMC_WATCHDOG_TIMER_LOG_VALID(__x)             \
+  (((__x) == IPMI_BMC_WATCHDOG_TIMER_LOG_ENABLE            \
     || (__x) == IPMI_BMC_WATCHDOG_TIMER_LOG_DISABLE) ? 1 : 0)
 
 #define IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_NO_ACTION                   0x0
@@ -58,10 +58,10 @@ extern "C" {
 #define IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_DOWN                  0x2
 #define IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_CYCLE                 0x3
 
-#define IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID(__x)		\
-  (((__x) == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_NO_ACTION		\
-    || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_HARD_RESET	\
-    || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_DOWN	\
+#define IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID(__x)            \
+  (((__x) == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_NO_ACTION        \
+    || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_HARD_RESET    \
+    || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_DOWN    \
     || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_CYCLE) ? 1 : 0)
 
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE                 0x0
@@ -69,16 +69,16 @@ extern "C" {
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NMI                  0x2
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT  0x3
 
-#define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID(__x)	\
-  (((__x) == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE		\
-    || (__x) == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_SMI	\
-    || (__x) == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NMI	\
+#define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID(__x)     \
+  (((__x) == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE      \
+    || (__x) == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_SMI    \
+    || (__x) == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NMI    \
     || (__x) == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT) ? 1 : 0)
 
 #define IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_CLEAR_TIMER_EXPIRATION_BIT  0x1
 #define IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_LEAVE_ALONE                 0x0
 
-#define IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(__x)		\
+#define IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(__x)                      \
   (((__x) == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_CLEAR_TIMER_EXPIRATION_BIT \
     || (__x) == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_LEAVE_ALONE) ? 1 : 0)
 
@@ -95,18 +95,18 @@ extern "C" {
   int8_t fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd_rq);
 
   int8_t fill_cmd_set_watchdog_timer (uint8_t timer_use,
-				      uint8_t stop_timer,
-				      uint8_t log,
-				      uint8_t timeout_action,
-				      uint8_t pre_timeout_interrupt,
-				      uint8_t pre_timeout_interval,
-				      uint8_t timer_use_expiration_flag_bios_frb2,
-				      uint8_t timer_use_expiration_flag_bios_post,
-				      uint8_t timer_use_expiration_flag_os_load,
-				      uint8_t timer_use_expiration_flag_sms_os,
-				      uint8_t timer_use_expiration_flag_oem,
-				      uint16_t initial_countdown_value,
-				      fiid_obj_t obj_cmd_rq);
+                      uint8_t stop_timer,
+                      uint8_t log,
+                      uint8_t timeout_action,
+                      uint8_t pre_timeout_interrupt,
+                      uint8_t pre_timeout_interval,
+                      uint8_t timer_use_expiration_flag_bios_frb2,
+                      uint8_t timer_use_expiration_flag_bios_post,
+                      uint8_t timer_use_expiration_flag_os_load,
+                      uint8_t timer_use_expiration_flag_sms_os,
+                      uint8_t timer_use_expiration_flag_oem,
+                      uint16_t initial_countdown_value,
+                      fiid_obj_t obj_cmd_rq);
 
   int8_t fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd_rq);
 

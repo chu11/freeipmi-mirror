@@ -45,9 +45,9 @@ extern "C" {
 #define RMCP_HDR_MESSAGE_CLASS_IPMI  0x07
 #define RMCP_HDR_MESSAGE_CLASS_OEM   0x08
 
-#define RMCP_HDR_MESSAGE_CLASS_VALID(__message_class)			\
-  (((__message_class) == RMCP_HDR_MESSAGE_CLASS_ASF			\
-    || (__message_class) == RMCP_HDR_MESSAGE_CLASS_IPMI			\
+#define RMCP_HDR_MESSAGE_CLASS_VALID(__message_class)            \
+  (((__message_class) == RMCP_HDR_MESSAGE_CLASS_ASF            \
+    || (__message_class) == RMCP_HDR_MESSAGE_CLASS_IPMI            \
     || (__message_class) == RMCP_HDR_MESSAGE_CLASS_OEM) ? 1 : 0)
 
 #define RMCP_ASF_IANA_ENTERPRISE_NUM    0x11BE /* 4542 */

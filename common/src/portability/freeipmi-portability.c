@@ -189,7 +189,7 @@ freeipmi_getline (char **buf, size_t *size, FILE *fp)
       char *newbuf = (char *)realloc (*buf, newsize);
 
       if (newbuf == NULL)
-	return -1;
+    return -1;
       *buf = newbuf;
       *size = newsize;
     }

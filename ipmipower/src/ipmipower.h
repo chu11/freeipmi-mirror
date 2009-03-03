@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.127.12.1 2009-03-03 01:41:10 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.127.12.2 2009-03-03 22:39:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -91,16 +91,16 @@ typedef enum
     POWER_CMD_SOFT_SHUTDOWN_OS = 0x07,
   } power_cmd_t;
 
-#define POWER_CMD_VALID(__c)			\
-  ((__c) > POWER_CMD_POWER_OFF &&		\
+#define POWER_CMD_VALID(__c)             \
+  ((__c) > POWER_CMD_POWER_OFF &&        \
    (__c) <= POWER_CMD_SOFT_SHUTDOWN_OS)
 
-#define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(__c)	\
-  ((__c) == POWER_CMD_POWER_OFF					\
-   || (__c) == POWER_CMD_POWER_ON				\
-   || (__c) == POWER_CMD_POWER_CYCLE				\
-   || (__c) == POWER_CMD_POWER_RESET				\
-   || (__c) == POWER_CMD_PULSE_DIAG_INTR			\
+#define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(__c)    \
+  ((__c) == POWER_CMD_POWER_OFF                             \
+   || (__c) == POWER_CMD_POWER_ON                           \
+   || (__c) == POWER_CMD_POWER_CYCLE                        \
+   || (__c) == POWER_CMD_POWER_RESET                        \
+   || (__c) == POWER_CMD_PULSE_DIAG_INTR                    \
    || (__c) == POWER_CMD_SOFT_SHUTDOWN_OS)
 
 /* packet_type_t
@@ -137,16 +137,16 @@ typedef enum
 #define PACKET_TYPE_RES_MASK           0x200
 #define PACKET_TYPE_PKT_MASK           0x0FF
 
-#define PACKET_TYPE_VALID_REQ(__p)		\
-  (((__p) & PACKET_TYPE_REQ_MASK) &&		\
+#define PACKET_TYPE_VALID_REQ(__p)          \
+  (((__p) & PACKET_TYPE_REQ_MASK) &&        \
    ((__p) & PACKET_TYPE_PKT_MASK))
 
-#define PACKET_TYPE_VALID_RES(__p)		\
-  (((__p) & PACKET_TYPE_RES_MASK) &&		\
+#define PACKET_TYPE_VALID_RES(__p)          \
+  (((__p) & PACKET_TYPE_RES_MASK) &&        \
    ((__p) & PACKET_TYPE_PKT_MASK))
 
-#define PACKET_TYPE_VALID_PKT(__p)		\
-  (PACKET_TYPE_VALID_REQ (__p) ||		\
+#define PACKET_TYPE_VALID_PKT(__p)          \
+  (PACKET_TYPE_VALID_REQ (__p) ||           \
    PACKET_TYPE_VALID_RES (__p))
 
 /* Protocol States */
@@ -167,8 +167,8 @@ typedef enum
     PROTOCOL_STATE_END                                  = 0x0C,
   } protocol_state_t;
 
-#define PROTOCOL_STATE_VALID(__s)		\
-  ((__s) >= PROTOCOL_STATE_START &&		\
+#define PROTOCOL_STATE_VALID(__s)    \
+  ((__s) >= PROTOCOL_STATE_START &&  \
    (__s) <= PROTOCOL_STATE_END)
 
 /* Discovery States */
@@ -179,8 +179,8 @@ typedef enum
     STATE_BADCONNECTION  = 0x03,
   } discover_state_t;
 
-#define DISCOVER_STATE_VALID(__s)		\
-  ((__s) >= STATE_DISCOVERED &&			\
+#define DISCOVER_STATE_VALID(__s)    \
+  ((__s) >= STATE_DISCOVERED &&      \
    (__s) <= STATE_BADCONNECTION)
 
 /* Link States */
@@ -190,8 +190,8 @@ typedef enum
     LINK_BAD  = 0x02,
   } link_state_t;
 
-#define LINK_STATE_VALID(__s)			\
-  ((__s) >= LINK_GOOD &&			\
+#define LINK_STATE_VALID(__s)        \
+  ((__s) >= LINK_GOOD &&             \
    (__s) <= LINK_BAD)
 
 /* Msg Types */
@@ -221,8 +221,8 @@ typedef enum
     MSG_TYPE_BMC_ERROR                          = 21,
   } msg_type_t;
 
-#define MSG_TYPE_VALID(__m)			\
-  ((__m) >= MSG_TYPE_ON &&			\
+#define MSG_TYPE_VALID(__m)          \
+  ((__m) >= MSG_TYPE_ON &&           \
    (__m) <= MSG_TYPE_BMC_ERROR)
 
 #define MSG_TYPE_NUM_ENTRIES (MSG_TYPE_BMC_ERROR+1)

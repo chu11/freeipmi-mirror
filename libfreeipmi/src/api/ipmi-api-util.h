@@ -65,17 +65,17 @@ extern "C" {
   int api_fiid_obj_get (ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
 
   int api_ipmi_cmd (ipmi_ctx_t ctx,
-		    uint8_t lun,
-		    uint8_t net_fn,
-		    fiid_obj_t obj_cmd_rq,
-		    fiid_obj_t obj_cmd_rs);
+            uint8_t lun,
+            uint8_t net_fn,
+            fiid_obj_t obj_cmd_rq,
+            fiid_obj_t obj_cmd_rs);
 
   int api_ipmi_cmd_ipmb (ipmi_ctx_t ctx,
-			 uint8_t rs_addr,
-			 uint8_t lun,
-			 uint8_t net_fn,
-			 fiid_obj_t obj_cmd_rq,
-			 fiid_obj_t obj_cmd_rs);
+             uint8_t rs_addr,
+             uint8_t lun,
+             uint8_t net_fn,
+             fiid_obj_t obj_cmd_rq,
+             fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

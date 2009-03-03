@@ -93,12 +93,12 @@ extern "C" {
   /* FreeBSD don't have strdupa */
 #ifndef strdupa
   /* Duplicate S, returning an identical alloca'd string.  */
-# define strdupa(s)				\
-  ({						\
-    const char *__old = (s);			\
-    size_t __len = strlen (__old) + 1;		\
-    char *__new = (char *) alloca (__len);	\
-    (char *) memcpy (__new, __old, __len);	\
+# define strdupa(s)                           \
+  ({                                          \
+    const char *__old = (s);                  \
+    size_t __len = strlen (__old) + 1;        \
+    char *__new = (char *) alloca (__len);    \
+    (char *) memcpy (__new, __old, __len);    \
   })
 #endif
 
@@ -176,37 +176,37 @@ extern "C" {
    * these definitions ripped from sys/time.h on linux.
    */
 #ifndef timeradd
-# define timeradd(a, b, result)				\
-  do {							\
-    (result)->tv_sec = (a)->tv_sec + (b)->tv_sec;	\
-    (result)->tv_usec = (a)->tv_usec + (b)->tv_usec;	\
-    if ((result)->tv_usec >= 1000000)			\
-      {							\
-	++(result)->tv_sec;				\
-	(result)->tv_usec -= 1000000;			\
-      }							\
+# define timeradd(a, b, result)                      \
+  do {                                               \
+    (result)->tv_sec = (a)->tv_sec + (b)->tv_sec;    \
+    (result)->tv_usec = (a)->tv_usec + (b)->tv_usec; \
+    if ((result)->tv_usec >= 1000000)                \
+      {                                              \
+        ++(result)->tv_sec;                          \
+        (result)->tv_usec -= 1000000;                \
+      }                                              \
   } while (0)
 #endif /* timeradd */
 
 #ifndef timersub
-# define timersub(a, b, result)				\
-  do {							\
-    (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;	\
-    (result)->tv_usec = (a)->tv_usec - (b)->tv_usec;	\
-    if ((result)->tv_usec < 0) {			\
-      --(result)->tv_sec;				\
-      (result)->tv_usec += 1000000;			\
-    }							\
+# define timersub(a, b, result)                      \
+  do {                                               \
+    (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;    \
+    (result)->tv_usec = (a)->tv_usec - (b)->tv_usec; \
+    if ((result)->tv_usec < 0) {                     \
+      --(result)->tv_sec;                            \
+      (result)->tv_usec += 1000000;                  \
+    }                                                \
   } while (0)
 #endif /* timersub */
 
 #if !defined(HAVE_FUNC_GETHOSTBYNAME_R_6) && !defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
   int freeipmi_gethostbyname_r (const char *name,
-				struct hostent *ret,
-				char *buf,
-				size_t buflen,
-				struct hostent **result,
-				int *h_errnop);
+                struct hostent *ret,
+                char *buf,
+                size_t buflen,
+                struct hostent **result,
+                int *h_errnop);
 #endif /* !defined(HAVE_FUNC_GETHOSTBYNAME_R_6) && !defined(HAVE_FUNC_GETHOSTBYNAME_R_5) */
 
 #ifdef __cplusplus

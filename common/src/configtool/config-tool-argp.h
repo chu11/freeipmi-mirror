@@ -47,26 +47,26 @@ enum config_argp_option_keys
     CONFIG_ARGP_VERBOSE_KEY = 'v',
   };
 
-#define CONFIG_ARGP_COMMON_OPTIONS					\
-  { "checkout", CONFIG_ARGP_CHECKOUT_KEY, 0, 0,				\
-      "Fetch configuration information.", 31},				\
-  { "commit", CONFIG_ARGP_COMMIT_KEY, 0, 0,				\
-      "Update configuration information from a config file or key pairs.", 32},	\
-  { "diff", CONFIG_ARGP_DIFF_KEY, 0, 0,					\
+#define CONFIG_ARGP_COMMON_OPTIONS                                                        \
+  { "checkout", CONFIG_ARGP_CHECKOUT_KEY, 0, 0,                                           \
+      "Fetch configuration information.", 31},                                            \
+  { "commit", CONFIG_ARGP_COMMIT_KEY, 0, 0,                                               \
+      "Update configuration information from a config file or key pairs.", 32},           \
+  { "diff", CONFIG_ARGP_DIFF_KEY, 0, 0,                                                   \
       "Show differences between stored information and a config file or key pairs.", 33}, \
-  { "filename", CONFIG_ARGP_FILENAME_KEY, "FILENAME", 0,		\
-      "Specify a config file for checkout/commit/diff.", 34},		\
-  { "key-pair", CONFIG_ARGP_KEYPAIR_KEY, "KEY-PAIR", 0,			\
-      "Specify KEY=VALUE pairs for checkout/commit/diff.", 35},		\
-  { "section", CONFIG_ARGP_SECTIONS_KEY, "SECTION", 0,			\
-      "Specify a SECTION for checkout.", 36},				\
-  { "listsections", CONFIG_ARGP_LIST_SECTIONS_KEY, 0, 0,		\
-      "List available sections for checkout.", 37},			\
-  { "verbose", CONFIG_ARGP_VERBOSE_KEY, 0, 0,				\
+  { "filename", CONFIG_ARGP_FILENAME_KEY, "FILENAME", 0,                                  \
+      "Specify a config file for checkout/commit/diff.", 34},                             \
+  { "key-pair", CONFIG_ARGP_KEYPAIR_KEY, "KEY-PAIR", 0,                                   \
+      "Specify KEY=VALUE pairs for checkout/commit/diff.", 35},                           \
+  { "section", CONFIG_ARGP_SECTIONS_KEY, "SECTION", 0,                                    \
+      "Specify a SECTION for checkout.", 36},                                             \
+  { "listsections", CONFIG_ARGP_LIST_SECTIONS_KEY, 0, 0,                                  \
+      "List available sections for checkout.", 37},                                       \
+  { "verbose", CONFIG_ARGP_VERBOSE_KEY, 0, 0,                                             \
       "Print additional detailed information.", 38}
 
 /* legacy short-option */
-#define CONFIG_ARGP_COMMON_OPTIONS_LEGACY				\
+#define CONFIG_ARGP_COMMON_OPTIONS_LEGACY                \
   { "foobar", CONFIG_ARGP_FILENAME_KEY_LEGACY, "FILENAME", OPTION_HIDDEN, \
       "Specify a config file for checkout/commit/diff.", 39}
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.73.12.1 2009-03-03 01:41:10 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.73.12.2 2009-03-03 22:39:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -244,7 +244,7 @@ _poll_loop (int non_interactive)
             timeout = ping_timeout;
           else
             timeout = (ping_timeout < powercmd_timeout) ?
-	      ping_timeout : powercmd_timeout;
+          ping_timeout : powercmd_timeout;
         }
       else
         timeout = powercmd_timeout;

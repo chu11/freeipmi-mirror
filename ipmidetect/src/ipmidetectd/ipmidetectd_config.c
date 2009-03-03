@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_config.c,v 1.12.2.1 2009-03-03 01:41:07 chu11 Exp $
+ *  $Id: ipmidetectd_config.c,v 1.12.2.2 2009-03-03 22:39:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -127,27 +127,27 @@ _cmdline_parse (int argc, char **argv)
     while ((c = getopt (argc, argv, options)) != -1)
 #endif
       {
-	switch (c)
-	  {
-	  case 'h':       /* --help */
-	    _usage ();
-	    break;
-	  case 'v':       /* --version */
-	    _version ();
-	    break;
+    switch (c)
+      {
+      case 'h':       /* --help */
+        _usage ();
+        break;
+      case 'v':       /* --version */
+        _version ();
+        break;
 #ifndef NDEBUG
-	  case 'c':       /* --config-file */
-	    if (!(conf.config_file = strdup (optarg)))
-	      IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
-	    break;
-	  case 'd':       /* --debug */
-	    conf.debug++;
-	    break;
+      case 'c':       /* --config-file */
+        if (!(conf.config_file = strdup (optarg)))
+          IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
+        break;
+      case 'd':       /* --debug */
+        conf.debug++;
+        break;
 #endif /* NDEBUG */
-	  case '?':
-	  default:
-	    IPMIDETECTD_EXIT (("unknown command line option '%c'", c));
-	  }
+      case '?':
+      default:
+        IPMIDETECTD_EXIT (("unknown command line option '%c'", c));
+      }
       }
 }
 
@@ -176,37 +176,37 @@ _config_file_parse (void)
   struct conffile_option options[] =
     {
       {
-	"ipmiping_period",
-	CONFFILE_OPTION_INT,
-	-1,
-	conffile_int,
-	1,
-	0,
-	&(ipmiping_period_flag),
-	&(conf.ipmiping_period),
-	0
+    "ipmiping_period",
+    CONFFILE_OPTION_INT,
+    -1,
+    conffile_int,
+    1,
+    0,
+    &(ipmiping_period_flag),
+    &(conf.ipmiping_period),
+    0
       },
       {
-	"ipmidetectd_server_port",
-	CONFFILE_OPTION_INT,
-	-1,
-	conffile_int,
-	1,
-	0,
-	&(ipmidetectd_server_port_flag),
-	&(conf.ipmidetectd_server_port),
-	0,
+    "ipmidetectd_server_port",
+    CONFFILE_OPTION_INT,
+    -1,
+    conffile_int,
+    1,
+    0,
+    &(ipmidetectd_server_port_flag),
+    &(conf.ipmidetectd_server_port),
+    0,
       },
       {
-	"host",
-	CONFFILE_OPTION_STRING,
-	-1,
-	_cb_host,
-	INT_MAX,
-	0,
-	&host_flag,
-	NULL,
-	0
+    "host",
+    CONFFILE_OPTION_STRING,
+    -1,
+    _cb_host,
+    INT_MAX,
+    0,
+    &host_flag,
+    NULL,
+    0
       },
     };
   conffile_t cf = NULL;

@@ -33,18 +33,18 @@ extern "C" {
      you check the return status of write before calling read.
   */
   int8_t ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
-			   fiid_obj_t obj_cmd_rq,
-			   fiid_obj_t obj_cmd_rs);
+               fiid_obj_t obj_cmd_rq,
+               fiid_obj_t obj_cmd_rs);
 
   int8_t ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
-				fiid_obj_t obj_cmd_rq,
-				fiid_obj_t obj_cmd_rs);
+                fiid_obj_t obj_cmd_rq,
+                fiid_obj_t obj_cmd_rs);
 
   int32_t ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
-				uint8_t *buf_rq,
-				size_t buf_rq_len,
-				uint8_t *buf_rs,
-				size_t buf_rs_len);
+                uint8_t *buf_rq,
+                size_t buf_rq_len,
+                uint8_t *buf_rs,
+                size_t buf_rs_len);
 
 #ifdef __cplusplus
 }

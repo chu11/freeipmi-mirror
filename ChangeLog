@@ -1,6 +1,7 @@
 2009-03-03  Albert Chu <chu11@llnl.gov>
 
-	* Fix spacing and indentation throughout code for consistency.
+	* Fix spacing, tabbing, and indentation throughout code for
+	consistency.
 	
 2009-03-01  Albert Chu <chu11@llnl.gov>
 

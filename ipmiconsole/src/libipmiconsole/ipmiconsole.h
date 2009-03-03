@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.77.2.1 2009-03-03 01:41:03 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.77.2.2 2009-03-03 22:39:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -492,7 +492,7 @@ extern "C" {
    * indicate error.
    */
   int ipmiconsole_engine_init (unsigned int thread_count,
-			       unsigned int debug_flags);
+                   unsigned int debug_flags);
 
   /*
    * ipmiconsole_engine_submit
@@ -564,8 +564,8 @@ extern "C" {
    * called to determine the cause of the error.
    */
   int ipmiconsole_engine_submit (ipmiconsole_ctx_t c,
-				 Ipmiconsole_callback callback,
-				 void *callback_arg);
+                 Ipmiconsole_callback callback,
+                 void *callback_arg);
 
   /*
    * ipmiconsole_engine_submit_block
@@ -632,9 +632,9 @@ extern "C" {
    * indicate error.
    */
   ipmiconsole_ctx_t ipmiconsole_ctx_create (char *hostname,
-					    struct ipmiconsole_ipmi_config *ipmi_config,
-					    struct ipmiconsole_protocol_config *protocol_config,
-					    struct ipmiconsole_engine_config *engine_config);
+                        struct ipmiconsole_ipmi_config *ipmi_config,
+                        struct ipmiconsole_protocol_config *protocol_config,
+                        struct ipmiconsole_engine_config *engine_config);
 
   /*
    * ipmiconsole_ctx_errnum

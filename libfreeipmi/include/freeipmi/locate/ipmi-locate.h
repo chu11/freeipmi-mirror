@@ -54,12 +54,12 @@ extern "C" {
     };
   typedef enum ipmi_locate_driver_type ipmi_locate_driver_type_t;
 
-#define IPMI_LOCATE_DRIVER_VALID(__val)				\
-  (((__val) == IPMI_LOCATE_DRIVER_NONE				\
-    || (__val) == IPMI_LOCATE_DRIVER_DEFAULTS			\
-    || (__val) == IPMI_LOCATE_DRIVER_SMBIOS			\
-    || (__val) == IPMI_LOCATE_DRIVER_ACPI			\
-    || (__val) == IPMI_LOCATE_DRIVER_PCI			\
+#define IPMI_LOCATE_DRIVER_VALID(__val)                \
+  (((__val) == IPMI_LOCATE_DRIVER_NONE                \
+    || (__val) == IPMI_LOCATE_DRIVER_DEFAULTS            \
+    || (__val) == IPMI_LOCATE_DRIVER_SMBIOS            \
+    || (__val) == IPMI_LOCATE_DRIVER_ACPI            \
+    || (__val) == IPMI_LOCATE_DRIVER_PCI            \
     || (__val) == IPMI_LOCATE_DRIVER_DMIDECODE) ? 1 : 0)
 
   enum ipmi_interface_type
@@ -72,10 +72,10 @@ extern "C" {
     };
   typedef enum ipmi_interface_type ipmi_interface_type_t;
 
-#define IPMI_INTERFACE_TYPE_VALID(__val)	\
-  (((__val) == IPMI_INTERFACE_KCS		\
-    || (__val) == IPMI_INTERFACE_SMIC		\
-    || (__val) == IPMI_INTERFACE_BT		\
+#define IPMI_INTERFACE_TYPE_VALID(__val)    \
+  (((__val) == IPMI_INTERFACE_KCS        \
+    || (__val) == IPMI_INTERFACE_SMIC        \
+    || (__val) == IPMI_INTERFACE_BT        \
     || (__val) == IPMI_INTERFACE_SSIF) ? 1 : 0)
 
   struct ipmi_locate_info
@@ -97,35 +97,35 @@ extern "C" {
   char *ipmi_locate_ctx_errormsg (ipmi_locate_ctx_t ctx);
 
   int ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
-				   ipmi_interface_type_t type,
-				   struct ipmi_locate_info *info);
+                   ipmi_interface_type_t type,
+                   struct ipmi_locate_info *info);
 
   /* Identical to ipmi_locate_get_device_info() but will return
    * defaults if no device info is found.
    */
   int ipmi_locate_discover_device_info (ipmi_locate_ctx_t ctx,
-					ipmi_interface_type_t type,
-					struct ipmi_locate_info *info);
+                    ipmi_interface_type_t type,
+                    struct ipmi_locate_info *info);
 
   int ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
-					  ipmi_interface_type_t type,
-					  struct ipmi_locate_info *info);
+                      ipmi_interface_type_t type,
+                      struct ipmi_locate_info *info);
 
   int ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
-				       ipmi_interface_type_t type,
-				       struct ipmi_locate_info *info);
+                       ipmi_interface_type_t type,
+                       struct ipmi_locate_info *info);
 
   int ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
-					     ipmi_interface_type_t interface_type,
-					     struct ipmi_locate_info *info);
+                         ipmi_interface_type_t interface_type,
+                         struct ipmi_locate_info *info);
 
   int ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
-					    ipmi_interface_type_t type,
-					    struct ipmi_locate_info *info);
+                        ipmi_interface_type_t type,
+                        struct ipmi_locate_info *info);
 
   int ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
-					     ipmi_interface_type_t type,
-					     struct ipmi_locate_info *info);
+                         ipmi_interface_type_t type,
+                         struct ipmi_locate_info *info);
 
 #ifdef __cplusplus
 }

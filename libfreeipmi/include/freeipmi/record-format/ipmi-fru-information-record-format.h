@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-information-record-format.h,v 1.5.12.1 2009-03-03 01:41:19 chu11 Exp $
+ *  $Id: ipmi-fru-information-record-format.h,v 1.5.12.2 2009-03-03 22:39:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -57,11 +57,11 @@ extern "C" {
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN                        0xC0
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MAX                        0xFF
 
-#define IPMI_FRU_MULTIRECORD_AREA_TYPE_VALID(__multirecord_area_type)	\
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_VALID(__multirecord_area_type)    \
   (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION \
     && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD) ? 1 : 0)
 
-#define IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM(__multirecord_area_type)	\
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM(__multirecord_area_type)    \
   (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN \
     && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MAX) ? 1 : 0)
 
@@ -83,7 +83,7 @@ extern "C" {
 #define IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_PING_ADDRESS    0x06
 #define IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID          0x07
 
-#define IPMI_FRU_SUB_RECORD_TYPE_VALID(__sub_record_type)		\
+#define IPMI_FRU_SUB_RECORD_TYPE_VALID(__sub_record_type)        \
   (((__sub_record_type) >= IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_MANAGEMENT_URL \
     && (__sub_record_type) <= IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID) ? 1 : 0)
 

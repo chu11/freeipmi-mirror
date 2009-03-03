@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.13.12.1 2009-03-03 01:41:07 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.13.12.2 2009-03-03 22:39:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -309,14 +309,14 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
   struct conffile_option options[] =
     {
       { "hostnames", CONFFILE_OPTION_LIST_STRING, -1,
-	_cb_hostnames, 1, 0, &(conf->hostnames_flag),
-	conf, 0},
+    _cb_hostnames, 1, 0, &(conf->hostnames_flag),
+    conf, 0},
       { "port", CONFFILE_OPTION_INT, 0,
-	conffile_int, 1, 0, &(conf->port_flag),
-	&(conf->port), 0},
+    conffile_int, 1, 0, &(conf->port_flag),
+    &(conf->port), 0},
       { "timeout_len", CONFFILE_OPTION_INT, 0,
-	conffile_int, 1, 0, &(conf->timeout_len_flag),
-	&(conf->timeout_len), 0},
+    conffile_int, 1, 0, &(conf->timeout_len_flag),
+    &(conf->timeout_len), 0},
     };
   conffile_t cf = NULL;
   int num, rv = -1;
@@ -333,14 +333,14 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
     {
       /* Not an error if the configuration file does not exist */
       if (conffile_errnum (cf) != CONFFILE_ERR_EXIST) {
-	int errnum = conffile_errnum (cf);
-	if (CONFFILE_IS_PARSE_ERR (errnum))
-	  handle->errnum = IPMIDETECT_ERR_CONF_PARSE;
-	else if (errnum == CONFFILE_ERR_OUTMEM)
-	  handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
-	else
-	  handle->errnum = IPMIDETECT_ERR_CONF_INTERNAL;
-	goto cleanup;
+    int errnum = conffile_errnum (cf);
+    if (CONFFILE_IS_PARSE_ERR (errnum))
+      handle->errnum = IPMIDETECT_ERR_CONF_PARSE;
+    else if (errnum == CONFFILE_ERR_OUTMEM)
+      handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
+    else
+      handle->errnum = IPMIDETECT_ERR_CONF_INTERNAL;
+    goto cleanup;
       }
     }
 

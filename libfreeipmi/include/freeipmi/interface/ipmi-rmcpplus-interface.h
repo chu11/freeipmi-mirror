@@ -42,23 +42,23 @@ extern "C" {
   /* 20h - 27h - OEM */
   /* all other reserved */
 
-#define IPMI_PAYLOAD_TYPE_VALID(__payload_type)				\
-  (((__payload_type) == IPMI_PAYLOAD_TYPE_IPMI				\
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_SOL			\
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT		\
+#define IPMI_PAYLOAD_TYPE_VALID(__payload_type)                \
+  (((__payload_type) == IPMI_PAYLOAD_TYPE_IPMI                \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_SOL            \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT        \
     || (__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST \
     || (__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE \
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1		\
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2		\
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3		\
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1        \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2        \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3        \
     || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4) ? 1 : 0)
 
-#define IPMI_PAYLOAD_TYPE_SESSION_SETUP(__payload_type)			\
+#define IPMI_PAYLOAD_TYPE_SESSION_SETUP(__payload_type)            \
   (((__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST \
     || (__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE \
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1		\
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2		\
-    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3		\
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1        \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2        \
+    || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3        \
     || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4) ? 1 : 0)
 
   /**************************
@@ -69,12 +69,12 @@ extern "C" {
 #define IPMI_PAYLOAD_FLAG_UNAUTHENTICATED                  0x0
 #define IPMI_PAYLOAD_FLAG_AUTHENTICATED                    0x1
 
-#define IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID(__payload_flag)		\
-  (((__payload_flag) == IPMI_PAYLOAD_FLAG_UNENCRYPTED			\
+#define IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID(__payload_flag)        \
+  (((__payload_flag) == IPMI_PAYLOAD_FLAG_UNENCRYPTED            \
     || (__payload_flag) == IPMI_PAYLOAD_FLAG_ENCRYPTED) ? 1 : 0)
 
-#define IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID(__payload_flag)		\
-  (((__payload_flag) == IPMI_PAYLOAD_FLAG_UNENCRYPTED			\
+#define IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID(__payload_flag)        \
+  (((__payload_flag) == IPMI_PAYLOAD_FLAG_UNENCRYPTED            \
     || (__payload_flag) == IPMI_PAYLOAD_FLAG_ENCRYPTED) ? 1 : 0)
 
   /*********************************************
@@ -87,9 +87,9 @@ extern "C" {
   /* C0h - FFh - OEM */
   /* all other reserved */
 
-#define IPMI_AUTHENTICATION_ALGORITHM_VALID(__algorithm)		\
-  (((__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE		\
-    || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1	\
+#define IPMI_AUTHENTICATION_ALGORITHM_VALID(__algorithm)        \
+  (((__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE        \
+    || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1    \
     || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5) ? 1 : 0)
 
   /****************************************
@@ -102,10 +102,10 @@ extern "C" {
 #define IPMI_INTEGRITY_ALGORITHM_MD5_128                  0x03
   /* C0h - FFh - OEM */
   /* all other reserved */
-#define IPMI_INTEGRITY_ALGORITHM_VALID(__algorithm)			\
-  (((__algorithm) == IPMI_INTEGRITY_ALGORITHM_NONE			\
-    || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96		\
-    || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128		\
+#define IPMI_INTEGRITY_ALGORITHM_VALID(__algorithm)            \
+  (((__algorithm) == IPMI_INTEGRITY_ALGORITHM_NONE            \
+    || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96        \
+    || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128        \
     || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_MD5_128) ? 1 : 0)
 
   /**********************************************
@@ -119,10 +119,10 @@ extern "C" {
   /* 30h - 3Fh - OEM */
   /* all other reserved */
 
-#define IPMI_CONFIDENTIALITY_ALGORITHM_VALID(__algorithm)		\
-  (((__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_NONE		\
-    || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128	\
-    || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128	\
+#define IPMI_CONFIDENTIALITY_ALGORITHM_VALID(__algorithm)        \
+  (((__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_NONE        \
+    || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128    \
+    || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128    \
     || (__algorithm) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40) ? 1 : 0)
 
   /***************************************
@@ -139,8 +139,8 @@ extern "C" {
 #define IPMI_USER_NAME_PRIVILEGE_LOOKUP                   0x0
 #define IPMI_NAME_ONLY_LOOKUP                             0x1
 
-#define IPMI_USER_NAME_LOOKUP_VALID(__username_lookup_flag)		\
-  (((__username_lookup_flag) == IPMI_USER_NAME_PRIVILEGE_LOOKUP		\
+#define IPMI_USER_NAME_LOOKUP_VALID(__username_lookup_flag)        \
+  (((__username_lookup_flag) == IPMI_USER_NAME_PRIVILEGE_LOOKUP        \
     || (__username_lookup_flag) == IPMI_NAME_ONLY_LOOKUP) ? 1 : 0)
 
 #define IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH          16
@@ -190,82 +190,82 @@ extern "C" {
   int8_t ipmi_rmcpplus_init (void);
 
   int8_t fill_rmcpplus_session_hdr (uint8_t payload_type,
-				    uint8_t payload_authenticated,
-				    uint8_t payload_encrypted,
-				    uint32_t oem_iana,
-				    uint16_t oem_payload_id,
-				    uint32_t session_id,
-				    uint32_t session_sequence_number,
-				    fiid_obj_t obj_rmcpplus_session_hdr);
+                    uint8_t payload_authenticated,
+                    uint8_t payload_encrypted,
+                    uint32_t oem_iana,
+                    uint16_t oem_payload_id,
+                    uint32_t session_id,
+                    uint32_t session_sequence_number,
+                    fiid_obj_t obj_rmcpplus_session_hdr);
 
   int8_t fill_rmcpplus_session_trlr (fiid_obj_t obj_rmcpplus_session_trlr);
 
   int8_t fill_rmcpplus_payload (uint8_t *confidentiality_header,
-				uint32_t confidentiality_header_len,
-				uint8_t *payload_data,
-				uint32_t payload_data_len,
-				uint8_t *confidentiality_trailer,
-				uint32_t confidentiality_trailer_len,
-				fiid_obj_t obj_cmd_rq);
+                uint32_t confidentiality_header_len,
+                uint8_t *payload_data,
+                uint32_t payload_data_len,
+                uint8_t *confidentiality_trailer,
+                uint32_t confidentiality_trailer_len,
+                fiid_obj_t obj_cmd_rq);
 
   int8_t fill_rmcpplus_open_session (uint8_t message_tag,
-				     uint8_t requested_maximum_privilege_level,
-				     uint32_t remote_console_session_id,
-				     uint8_t authentication_algorithm,
-				     uint8_t integrity_algorithm,
-				     uint8_t confidentiality_algorithm,
-				     fiid_obj_t obj_cmd_rq);
+                     uint8_t requested_maximum_privilege_level,
+                     uint32_t remote_console_session_id,
+                     uint8_t authentication_algorithm,
+                     uint8_t integrity_algorithm,
+                     uint8_t confidentiality_algorithm,
+                     fiid_obj_t obj_cmd_rq);
 
   int8_t fill_rmcpplus_rakp_message_1 (uint8_t message_tag,
-				       uint32_t managed_system_session_id,
-				       uint8_t *remote_console_random_number,
-				       uint32_t remote_console_random_number_len,
-				       uint8_t requested_maximum_privilege_level,
-				       uint8_t name_only_lookup_flag,
-				       char *username,
-				       uint32_t username_len,
-				       fiid_obj_t obj_cmd_rq);
+                       uint32_t managed_system_session_id,
+                       uint8_t *remote_console_random_number,
+                       uint32_t remote_console_random_number_len,
+                       uint8_t requested_maximum_privilege_level,
+                       uint8_t name_only_lookup_flag,
+                       char *username,
+                       uint32_t username_len,
+                       fiid_obj_t obj_cmd_rq);
 
   int8_t fill_rmcpplus_rakp_message_3 (uint8_t message_tag,
-				       uint8_t rmcpplus_status_code,
-				       uint32_t managed_system_session_id,
-				       uint8_t *key_exchange_authentication_code,
-				       uint32_t key_exchange_authentication_code_len,
-				       fiid_obj_t obj_cmd_rq);
+                       uint8_t rmcpplus_status_code,
+                       uint32_t managed_system_session_id,
+                       uint8_t *key_exchange_authentication_code,
+                       uint32_t key_exchange_authentication_code_len,
+                       fiid_obj_t obj_cmd_rq);
 
   int32_t assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
-				      uint8_t integrity_algorithm,
-				      uint8_t confidentiality_algorithm,
-				      uint8_t *integrity_key,
-				      uint32_t integrity_key_len,
-				      uint8_t *confidentiality_key,
-				      uint32_t confidentiality_key_len,
-				      uint8_t *authentication_code_data,
-				      uint32_t authentication_code_data_len,
-				      fiid_obj_t obj_rmcp_hdr,
-				      fiid_obj_t obj_rmcpplus_session_hdr,
-				      fiid_obj_t obj_lan_msg_hdr,
-				      fiid_obj_t obj_cmd,
-				      fiid_obj_t obj_rmcpplus_session_trlr,
-				      uint8_t *pkt,
-				      uint32_t pkt_len);
+                      uint8_t integrity_algorithm,
+                      uint8_t confidentiality_algorithm,
+                      uint8_t *integrity_key,
+                      uint32_t integrity_key_len,
+                      uint8_t *confidentiality_key,
+                      uint32_t confidentiality_key_len,
+                      uint8_t *authentication_code_data,
+                      uint32_t authentication_code_data_len,
+                      fiid_obj_t obj_rmcp_hdr,
+                      fiid_obj_t obj_rmcpplus_session_hdr,
+                      fiid_obj_t obj_lan_msg_hdr,
+                      fiid_obj_t obj_cmd,
+                      fiid_obj_t obj_rmcpplus_session_trlr,
+                      uint8_t *pkt,
+                      uint32_t pkt_len);
 
   int32_t unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
-					uint8_t integrity_algorithm,
-					uint8_t confidentiality_algorithm,
-					uint8_t *integrity_key,
-					uint32_t integrity_key_len,
-					uint8_t *confidentiality_key,
-					uint32_t confidentiality_key_len,
-					uint8_t *pkt,
-					uint32_t pkt_len,
-					fiid_obj_t obj_rmcp_hdr,
-					fiid_obj_t obj_rmcpplus_session_hdr,
-					fiid_obj_t obj_rmcpplus_payload,
-					fiid_obj_t obj_lan_msg_hdr,
-					fiid_obj_t obj_cmd,
-					fiid_obj_t obj_lan_msg_trlr,
-					fiid_obj_t obj_rmcpplus_session_trlr);
+                    uint8_t integrity_algorithm,
+                    uint8_t confidentiality_algorithm,
+                    uint8_t *integrity_key,
+                    uint32_t integrity_key_len,
+                    uint8_t *confidentiality_key,
+                    uint32_t confidentiality_key_len,
+                    uint8_t *pkt,
+                    uint32_t pkt_len,
+                    fiid_obj_t obj_rmcp_hdr,
+                    fiid_obj_t obj_rmcpplus_session_hdr,
+                    fiid_obj_t obj_rmcpplus_payload,
+                    fiid_obj_t obj_lan_msg_hdr,
+                    fiid_obj_t obj_cmd,
+                    fiid_obj_t obj_lan_msg_trlr,
+                    fiid_obj_t obj_rmcpplus_session_trlr);
 
 #ifdef __cplusplus
 }

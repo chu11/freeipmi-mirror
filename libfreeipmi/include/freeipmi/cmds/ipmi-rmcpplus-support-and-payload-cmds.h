@@ -29,8 +29,8 @@ extern "C" {
 #define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_ASSERTED   0x0
 #define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_DEASSERTED 0x1
 
-#define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_VALID(__val)		\
-  (((__val) == IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_ASSERTED	\
+#define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_VALID(__val)        \
+  (((__val) == IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_ASSERTED    \
     || (__val) == IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_DEASSERTED) ? 1 : 0)
 
 #define IPMI_SERIAL_MODEM_ALERTS_FAIL_WHILE_SOL_ACTIVE     0x0
@@ -38,30 +38,30 @@ extern "C" {
 #define IPMI_SERIAL_MODEM_ALERTS_SUCCEED_WHILE_SOL_ACTIVE  0x2
 #define IPMI_SERIAL_MODEM_ALERTS_RESERVED                  0x3
 
-#define IPMI_SERIAL_MODEM_ALERTS_VALID(__val)				\
-  (((__val) == IPMI_SERIAL_MODEM_ALERTS_FAIL_WHILE_SOL_ACTIVE		\
-    || (__val) == IPMI_SERIAL_MODEM_ALERTS_DEFERRED_WHILE_SOL_ACTIVE	\
+#define IPMI_SERIAL_MODEM_ALERTS_VALID(__val)                \
+  (((__val) == IPMI_SERIAL_MODEM_ALERTS_FAIL_WHILE_SOL_ACTIVE        \
+    || (__val) == IPMI_SERIAL_MODEM_ALERTS_DEFERRED_WHILE_SOL_ACTIVE    \
     || (__val) == IPMI_SERIAL_MODEM_ALERTS_SUCCEED_WHILE_SOL_ACTIVE) ? 1 : 0)
 
 #define IPMI_TEST_MODE_ACTIVATED   0x1
 #define IPMI_TEST_MODE_DEACTIVATED 0x0
 
-#define IPMI_TEST_MODE_VALID(__val)			\
-  (((__val) == IPMI_TEST_MODE_ACTIVATED			\
+#define IPMI_TEST_MODE_VALID(__val)            \
+  (((__val) == IPMI_TEST_MODE_ACTIVATED            \
     || (__val) == IPMI_TEST_MODE_DEACTIVATED) ? 1 : 0)
 
 #define IPMI_ACTIVATE_PAYLOAD_WITH_AUTHENTICATION   0x1
 #define IPMI_ACTIVATE_PAYLOAD_WITHOUT_AUTHENTICATION 0x0
 
-#define IPMI_AUTHENTICATION_ACTIVATION_VALID(__val)			\
-  (((__val) == IPMI_ACTIVATE_PAYLOAD_WITH_AUTHENTICATION		\
+#define IPMI_AUTHENTICATION_ACTIVATION_VALID(__val)            \
+  (((__val) == IPMI_ACTIVATE_PAYLOAD_WITH_AUTHENTICATION        \
     || (__val) == IPMI_ACTIVATE_PAYLOAD_WITHOUT_AUTHENTICATION) ? 1 : 0)
 
 #define IPMI_ACTIVATE_PAYLOAD_WITH_ENCRYPTION   0x1
 #define IPMI_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION 0x0
 
-#define IPMI_ENCRYPTION_ACTIVATION_VALID(__val)				\
-  (((__val) == IPMI_ACTIVATE_PAYLOAD_WITH_ENCRYPTION			\
+#define IPMI_ENCRYPTION_ACTIVATION_VALID(__val)                \
+  (((__val) == IPMI_ACTIVATE_PAYLOAD_WITH_ENCRYPTION            \
     || (__val) == IPMI_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION) ? 1 : 0)
 
 #define IPMI_TEST_MODE_NOT_SUPPORTED 0x0
@@ -71,23 +71,23 @@ extern "C" {
 #define IPMI_RESUME_ENCRYPTION                 0x1
 #define IPMI_REGENERATE_INITIALIZATION_VECTOR  0x2
 
-#define IPMI_SUSPEND_RESUME_PAYLOAD_ENCRYPTION_OPERATION_VALID(__val)	\
-  (((__val) == IPMI_SUSPEND_ENCRYPTION					\
-    || (__val) == IPMI_RESUME_ENCRYPTION				\
+#define IPMI_SUSPEND_RESUME_PAYLOAD_ENCRYPTION_OPERATION_VALID(__val)    \
+  (((__val) == IPMI_SUSPEND_ENCRYPTION                    \
+    || (__val) == IPMI_RESUME_ENCRYPTION                \
     || (__val) == IPMI_REGENERATE_INITIALIZATION_VECTOR) ? 1 : 0)
 
 #define IPMI_SET_USER_PAYLOAD_OPERATION_ENABLE  0x00
 #define IPMI_SET_USER_PAYLOAD_OPERATION_DISABLE 0x01
 
-#define IPMI_SET_USER_PAYLOAD_OPERATION_VALID(__val)			\
-  (((__val) == IPMI_SET_USER_PAYLOAD_OPERATION_ENABLE			\
+#define IPMI_SET_USER_PAYLOAD_OPERATION_VALID(__val)            \
+  (((__val) == IPMI_SET_USER_PAYLOAD_OPERATION_ENABLE            \
     || (__val) == IPMI_SET_USER_PAYLOAD_OPERATION_DISABLE) ? 1 : 0)
 
   /* achu: See IPMI Spec Set User Payload Access command.  Enable may be
    * 0 or 1, and Disable may be 0 or 1 as well.
    */
-#define IPMI_PAYLOAD_ACCESS_VALID(__val)	\
-  (((__val) == 0				\
+#define IPMI_PAYLOAD_ACCESS_VALID(__val)    \
+  (((__val) == 0                \
     || (__val) == 1) ? 1 : 0)
 
   extern fiid_template_t tmpl_cmd_activate_payload_rq;
@@ -114,73 +114,73 @@ extern "C" {
   extern fiid_template_t tmpl_cmd_get_channel_oem_payload_info_rs;
 
   int8_t fill_cmd_activate_payload (uint8_t payload_type,
-				    uint8_t payload_instance,
-				    uint8_t *auxiliary_request_data,
-				    uint32_t auxiliary_request_data_len,
-				    fiid_obj_t obj_cmd_rq);
+                    uint8_t payload_instance,
+                    uint8_t *auxiliary_request_data,
+                    uint32_t auxiliary_request_data_len,
+                    fiid_obj_t obj_cmd_rq);
 
   int8_t fill_cmd_activate_payload_sol (uint8_t payload_type,
-					uint8_t payload_instance,
-					uint8_t sol_startup_handshake,
-					uint8_t shared_serial_alert_behavior,
-					uint8_t test_mode,
-					uint8_t authentication_activation,
-					uint8_t encryption_activation,
-					fiid_obj_t obj_cmd_rq);
+                    uint8_t payload_instance,
+                    uint8_t sol_startup_handshake,
+                    uint8_t shared_serial_alert_behavior,
+                    uint8_t test_mode,
+                    uint8_t authentication_activation,
+                    uint8_t encryption_activation,
+                    fiid_obj_t obj_cmd_rq);
 
   int8_t fill_cmd_deactivate_payload (uint8_t payload_type,
-				      uint8_t payload_instance,
-				      uint32_t payload_auxiliary_data,
-				      fiid_obj_t obj_cmd_rq);
+                      uint8_t payload_instance,
+                      uint32_t payload_auxiliary_data,
+                      fiid_obj_t obj_cmd_rq);
 
   int8_t fill_cmd_suspend_resume_payload_encryption (uint8_t payload_type,
-						     uint8_t payload_instance,
-						     uint8_t operation,
-						     fiid_obj_t obj_cmd_rq);
+                             uint8_t payload_instance,
+                             uint8_t operation,
+                             fiid_obj_t obj_cmd_rq);
 
   int8_t fill_cmd_get_payload_activation_status (uint8_t payload_type,
-						 fiid_obj_t obj_cmd_rq);
+                         fiid_obj_t obj_cmd_rq);
 
   int8_t fill_cmd_get_payload_instance_info (uint8_t payload_type,
-					     uint8_t payload_instance,
-					     fiid_obj_t obj_cmd_rq);
+                         uint8_t payload_instance,
+                         fiid_obj_t obj_cmd_rq);
 
   int8_t fill_cmd_set_user_payload_access (uint8_t channel_number,
-					   uint8_t user_id,
-					   uint8_t operation,
-					   uint8_t standard_payload_1,
-					   uint8_t standard_payload_2,
-					   uint8_t standard_payload_3,
-					   uint8_t standard_payload_4,
-					   uint8_t standard_payload_5,
-					   uint8_t standard_payload_6,
-					   uint8_t standard_payload_7,
-					   uint8_t oem_payload_0,
-					   uint8_t oem_payload_1,
-					   uint8_t oem_payload_2,
-					   uint8_t oem_payload_3,
-					   uint8_t oem_payload_4,
-					   uint8_t oem_payload_5,
-					   uint8_t oem_payload_6,
-					   uint8_t oem_payload_7,
-					   fiid_obj_t obj_cmd_rq);
+                       uint8_t user_id,
+                       uint8_t operation,
+                       uint8_t standard_payload_1,
+                       uint8_t standard_payload_2,
+                       uint8_t standard_payload_3,
+                       uint8_t standard_payload_4,
+                       uint8_t standard_payload_5,
+                       uint8_t standard_payload_6,
+                       uint8_t standard_payload_7,
+                       uint8_t oem_payload_0,
+                       uint8_t oem_payload_1,
+                       uint8_t oem_payload_2,
+                       uint8_t oem_payload_3,
+                       uint8_t oem_payload_4,
+                       uint8_t oem_payload_5,
+                       uint8_t oem_payload_6,
+                       uint8_t oem_payload_7,
+                       fiid_obj_t obj_cmd_rq);
 
   int8_t fill_cmd_get_user_payload_access (uint8_t channel_number,
-					   uint8_t user_id,
-					   fiid_obj_t obj_cmd_rq);
+                       uint8_t user_id,
+                       fiid_obj_t obj_cmd_rq);
 
   int8_t fill_cmd_get_channel_payload_support (uint8_t channel_number,
-					       fiid_obj_t obj_cmd_rq);
+                           fiid_obj_t obj_cmd_rq);
 
   int8_t fill_cmd_get_channel_payload_version (uint8_t channel_number,
-					       uint8_t payload_type,
-					       fiid_obj_t obj_cmd_rq);
+                           uint8_t payload_type,
+                           fiid_obj_t obj_cmd_rq);
 
   int8_t fill_cmd_get_channel_oem_payload_info (uint8_t channel_number,
-						uint8_t payload_type,
-						uint32_t oem_iana,
-						uint16_t oem_payload_id,
-						fiid_obj_t obj_cmd_rq);
+                        uint8_t payload_type,
+                        uint32_t oem_iana,
+                        uint16_t oem_payload_id,
+                        fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

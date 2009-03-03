@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-language-codes-spec.h,v 1.4.12.1 2009-03-03 01:41:21 chu11 Exp $
+ *  $Id: ipmi-fru-language-codes-spec.h,v 1.4.12.2 2009-03-03 22:39:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -180,8 +180,8 @@ extern "C" {
 #define IPMI_FRU_LANGUAGE_CODE_CHINESE              135
 #define IPMI_FRU_LANGUAGE_CODE_ZULU                 136
 
-#define IPMI_FRU_LANGUAGE_CODE_VALID(__language_code)			\
-  (((__language_code) >= IPMI_FRU_LANGUAGE_CODE_ENGLISH_LEGACY		\
+#define IPMI_FRU_LANGUAGE_CODE_VALID(__language_code)            \
+  (((__language_code) >= IPMI_FRU_LANGUAGE_CODE_ENGLISH_LEGACY        \
     && (__language_code) <= IPMI_FRU_LANGUAGE_CODE_ZULU) ? 1 : 0)
 
   extern const char *const ipmi_fru_language_codes[];

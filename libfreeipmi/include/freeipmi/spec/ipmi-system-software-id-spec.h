@@ -26,30 +26,30 @@ extern "C" {
   /* Table 5-4 */
 
   /* To avoid gcc warnings, added +1 and -1 in comparison */
-#define IPMI_SYSTEM_SOFTWARE_TYPE_IS_BIOS(__val)	\
-  (((__val + 1) >= 0x01					\
+#define IPMI_SYSTEM_SOFTWARE_TYPE_IS_BIOS(__val)    \
+  (((__val + 1) >= 0x01                    \
     && (__val - 1) <= 0x0E) ? 1 : 0)
 
 #define IPMI_SYSTEM_SOFTWARE_TYPE_IS_SMI_HANDLER(__val) \
-  (((__val) >= 0x10					\
+  (((__val) >= 0x10                    \
     && (__val) <= 0x1F) ? 1 : 0)
 
-#define IPMI_SYSTEM_SOFTWARE_TYPE_IS_SYSTEM_MANAGEMENT_SOFTWARE(__val)	\
-  (((__val) >= 0x20							\
+#define IPMI_SYSTEM_SOFTWARE_TYPE_IS_SYSTEM_MANAGEMENT_SOFTWARE(__val)    \
+  (((__val) >= 0x20                            \
     && (__val) <= 0x2F) ? 1 : 0)
 
 #define IPMI_SYSTEM_SOFTWARE_TYPE_IS_OEM(__val) \
-  (((__val) >= 0x30				\
+  (((__val) >= 0x30                \
     && (__val) <= 0x3F) ? 1 : 0)
 
-#define IPMI_SYSTEM_SOFTWARE_TYPE_IS_REMOTE_CONSOLE_SOFTWARE(__val)	\
-  (((__val) >= 0x40							\
+#define IPMI_SYSTEM_SOFTWARE_TYPE_IS_REMOTE_CONSOLE_SOFTWARE(__val)    \
+  (((__val) >= 0x40                            \
     && (__val) <= 0x46) ? 1 : 0)
 
 #define IPMI_SYSTEM_SOFTWARE_TYPE_IS_TERMINAL_MODE_REMOTE_CONSOLE_SOFTWARE(__val) \
   (((__val) == 0x47)) ? 1 : 0)
 
-#define IPMI_SYSTEM_SOFTWARE_TYPE_IS_RESERVED(__val)	\
+#define IPMI_SYSTEM_SOFTWARE_TYPE_IS_RESERVED(__val)    \
     (((__val) > 0x47) ? 1 : 0)
 
 #ifdef __cplusplus

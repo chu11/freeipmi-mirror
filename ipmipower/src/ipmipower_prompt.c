@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.100.12.1 2009-03-03 01:41:12 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.100.12.2 2009-03-03 22:39:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -283,7 +283,7 @@ _cmd_cipher_suite_id (char **argv)
       tmp = strtol (argv[1], &ptr, 10);
       if (ptr != (argv[1] + strlen (argv[1]))
           || tmp < IPMI_CIPHER_SUITE_ID_MIN
-	  || tmp > IPMI_CIPHER_SUITE_ID_MAX)
+      || tmp > IPMI_CIPHER_SUITE_ID_MAX)
         cbuf_printf (ttyout, "%s invalid cipher suite id\n", argv[1]);
       else if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (tmp))
         cbuf_printf (ttyout, "%s unsupported cipher suite id\n", argv[1]);
@@ -568,15 +568,15 @@ _cmd_config (void)
         goto cleanup;
 
       for (i = 0; i < ics_len; i++) {
-	if (ics[i].discover_state == STATE_DISCOVERED)
-	  rv = hostlist_push_host (discovered, ics[i].hostname);
-	else if (ics[i].discover_state == STATE_UNDISCOVERED)
-	  rv = hostlist_push_host (undiscovered, ics[i].hostname);
-	else
-	  rv = hostlist_push_host (badconnection, ics[i].hostname);
+    if (ics[i].discover_state == STATE_DISCOVERED)
+      rv = hostlist_push_host (discovered, ics[i].hostname);
+    else if (ics[i].discover_state == STATE_UNDISCOVERED)
+      rv = hostlist_push_host (undiscovered, ics[i].hostname);
+    else
+      rv = hostlist_push_host (badconnection, ics[i].hostname);
 
-	if (!rv)
-	  goto cleanup;
+    if (!rv)
+      goto cleanup;
       }
 
       if ((rv = hostlist_ranged_string (discovered, IPMIPOWER_OUTPUT_BUFLEN, buffer)) < 0)
@@ -787,8 +787,8 @@ _cmd_set_unsigned_int_ranged (char **argv,
       if (ptr != (argv[1] + strlen (argv[1])))
         cbuf_printf (ttyout, "invalid %s input\n", str);
       else if ((allow_zero && !temp) || (temp <= max && temp >= min)) {
-	*val = temp;
-	cbuf_printf (ttyout, "%s is now %d\n", str, *val);
+    *val = temp;
+    cbuf_printf (ttyout, "%s is now %d\n", str, *val);
       }
       else
         cbuf_printf (ttyout, "invalid %s input, range is %d <=> %d\n",

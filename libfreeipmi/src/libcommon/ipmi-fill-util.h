@@ -36,31 +36,31 @@ extern "C" {
 
 #include "libcommon/ipmi-trace.h"
 
-#define FILL_FIID_OBJ_CLEAR(__obj)		\
-  do {						\
-    if (fiid_obj_clear ((__obj)) < 0)		\
-      {						\
-	FIID_OBJECT_ERROR_TO_ERRNO ((__obj));	\
-	return (-1);				\
-      }						\
+#define FILL_FIID_OBJ_CLEAR(__obj)        \
+  do {                        \
+    if (fiid_obj_clear ((__obj)) < 0)        \
+      {                        \
+    FIID_OBJECT_ERROR_TO_ERRNO ((__obj));    \
+    return (-1);                \
+      }                        \
   } while (0)
 
-#define FILL_FIID_OBJ_SET(__obj, __field, __val)	\
-  do {							\
-    if (fiid_obj_set ((__obj), (__field), (__val)) < 0)	\
-      {							\
-	FIID_OBJECT_ERROR_TO_ERRNO ((__obj));		\
-	return (-1);					\
-      }							\
+#define FILL_FIID_OBJ_SET(__obj, __field, __val)    \
+  do {                            \
+    if (fiid_obj_set ((__obj), (__field), (__val)) < 0)    \
+      {                            \
+    FIID_OBJECT_ERROR_TO_ERRNO ((__obj));        \
+    return (-1);                    \
+      }                            \
   } while (0)
 
-#define FILL_FIID_OBJ_SET_DATA(__obj, __field, __data, __data_len)	\
-  do {									\
+#define FILL_FIID_OBJ_SET_DATA(__obj, __field, __data, __data_len)    \
+  do {                                    \
     if (fiid_obj_set_data ((__obj), (__field), (__data), (__data_len)) < 0) \
-      {									\
-	FIID_OBJECT_ERROR_TO_ERRNO ((__obj));				\
-	return (-1);							\
-      }									\
+      {                                    \
+    FIID_OBJECT_ERROR_TO_ERRNO ((__obj));                \
+    return (-1);                            \
+      }                                    \
   } while (0)
 
 #ifdef __cplusplus

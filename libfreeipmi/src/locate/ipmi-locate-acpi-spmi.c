@@ -1599,23 +1599,23 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
     switch (address_space_id)
       {
       case IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_MEMORY:
-	{
-	  linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
-	  linfo.driver_address = base_address;
-	  break;
-	}
+    {
+      linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
+      linfo.driver_address = base_address;
+      break;
+    }
       case IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_IO:
-	{
-	  linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
-	  linfo.driver_address = base_address;
-	  break;
-	}
+    {
+      linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+      linfo.driver_address = base_address;
+      break;
+    }
       case IPMI_ACPI_ADDRESS_SPACE_ID_SMBUS:
-	{
-	  linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
-	  linfo.driver_address = base_address;
-	  break;
-	}
+    {
+      linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
+      linfo.driver_address = base_address;
+      break;
+    }
       default:
         LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
         goto cleanup;

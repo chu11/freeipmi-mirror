@@ -38,7 +38,7 @@
 
 #define IPMI_SENSOR_READ_CTX_MAGIC 0xABCD1246
 
-#define IPMI_SENSOR_READ_FLAGS_MASK		\
+#define IPMI_SENSOR_READ_FLAGS_MASK        \
   (IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS)
 
 struct ipmi_sensor_read_ctx {

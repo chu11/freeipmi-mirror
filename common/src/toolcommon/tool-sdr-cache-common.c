@@ -122,15 +122,15 @@ _get_home_directory (pstdout_state_t pstate,
   if (pwd.pw_dir)
     {
       if (!access (pwd.pw_dir, R_OK|W_OK|X_OK)) {
-	if (strlen (pwd.pw_dir) > (buflen - 1))
-	  {
-	    PSTDOUT_FPRINTF (pstate,
-			     stderr,
-			     "internal overflow error\n");
-	    return -1;
-	  }
-	strcpy (buf, pwd.pw_dir);
-	return 0;
+    if (strlen (pwd.pw_dir) > (buflen - 1))
+      {
+        PSTDOUT_FPRINTF (pstate,
+                 stderr,
+                 "internal overflow error\n");
+        return -1;
+      }
+    strcpy (buf, pwd.pw_dir);
+    return 0;
       }
     }
 
