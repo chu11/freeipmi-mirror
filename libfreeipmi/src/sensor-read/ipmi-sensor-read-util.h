@@ -20,10 +20,6 @@
 #ifndef _IPMI_SENSOR_READ_UTIL_H
 #define _IPMI_SENSOR_READ_UTIL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
@@ -41,15 +37,11 @@ extern "C" {
 
 #include "ipmi-sensor-read-defs.h"
 
-  void sensor_read_set_sensor_read_errnum_by_errno (ipmi_sensor_read_ctx_t ctx, int __errno);
+void sensor_read_set_sensor_read_errnum_by_errno (ipmi_sensor_read_ctx_t ctx, int __errno);
 
-  void sensor_read_set_sensor_read_errnum_by_fiid_object (ipmi_sensor_read_ctx_t ctx, fiid_obj_t obj);
+void sensor_read_set_sensor_read_errnum_by_fiid_object (ipmi_sensor_read_ctx_t ctx, fiid_obj_t obj);
 
-  int sensor_read_fiid_obj_get (ipmi_sensor_read_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
-#ifdef __cplusplus
-}
-#endif
+int sensor_read_fiid_obj_get (ipmi_sensor_read_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
 
 #endif /* ipmi-sensor-read-util.h */
 

@@ -19,10 +19,6 @@
 #ifndef _IPMI_SEL_PARSE_TRACE_H
 #define _IPMI_SEL_PARSE_TRACE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif /* HAVE_CONFIG_H */

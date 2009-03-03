@@ -20,10 +20,6 @@
 #ifndef _IPMI_SEL_PARSE_UTIL_H
 #define _IPMI_SEL_PARSE_UTIL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
@@ -41,15 +37,11 @@ extern "C" {
 
 #include "ipmi-sel-parse-defs.h"
 
-  void sel_parse_set_sel_parse_errnum_by_errno (ipmi_sel_parse_ctx_t ctx, int __errno);
+void sel_parse_set_sel_parse_errnum_by_errno (ipmi_sel_parse_ctx_t ctx, int __errno);
 
-  void sel_parse_set_sel_parse_errnum_by_fiid_object (ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj);
+void sel_parse_set_sel_parse_errnum_by_fiid_object (ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj);
 
-  int sel_parse_fiid_obj_get (ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
-#ifdef __cplusplus
-}
-#endif
+int sel_parse_fiid_obj_get (ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
 
 #endif /* ipmi-sel-parse-util.h */
 

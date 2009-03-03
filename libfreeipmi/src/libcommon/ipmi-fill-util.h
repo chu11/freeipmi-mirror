@@ -14,15 +14,10 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software Foundation,
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-
 */
 
 #ifndef _IPMI_FILL_UTIL_H
 #define _IPMI_FILL_UTIL_H 1
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -62,9 +57,5 @@ extern "C" {
         return (-1);                                                        \
       }                                                                     \
   } while (0)
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* ipmi-fill-util.h */
