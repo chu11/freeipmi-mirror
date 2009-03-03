@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.h,v 1.4 2009-01-13 01:02:25 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.h,v 1.4.12.1 2009-03-03 01:41:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -27,7 +27,7 @@
 \*****************************************************************************/
 
 #ifndef _IPMI_FRU_INVENTORY_DEVICE_CMDS_H
-#define	_IPMI_FRU_INVENTORY_DEVICE_CMDS_H
+#define _IPMI_FRU_INVENTORY_DEVICE_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,26 +40,26 @@ extern "C" {
 #define IPMI_FRU_INVENTORY_AREA_SIZE_MAX   65536 /* 16 byte field for length */
 #define IPMI_FRU_DATA_MAX                  255
 
-extern fiid_template_t tmpl_cmd_get_fru_inventory_area_info_rq;
-extern fiid_template_t tmpl_cmd_get_fru_inventory_area_info_rs;
-extern fiid_template_t tmpl_cmd_read_fru_data_rq;
-extern fiid_template_t tmpl_cmd_read_fru_data_rs;
-extern fiid_template_t tmpl_cmd_write_fru_data_rq;
-extern fiid_template_t tmpl_cmd_write_fru_data_rs;
+  extern fiid_template_t tmpl_cmd_get_fru_inventory_area_info_rq;
+  extern fiid_template_t tmpl_cmd_get_fru_inventory_area_info_rs;
+  extern fiid_template_t tmpl_cmd_read_fru_data_rq;
+  extern fiid_template_t tmpl_cmd_read_fru_data_rs;
+  extern fiid_template_t tmpl_cmd_write_fru_data_rq;
+  extern fiid_template_t tmpl_cmd_write_fru_data_rs;
 
-int8_t fill_cmd_get_fru_inventory_area_info (uint8_t fru_device_id,
-                                             fiid_obj_t obj_cmd_rq);
-  
-int8_t fill_cmd_read_fru_data (uint8_t fru_device_id,
-                               uint16_t fru_inventory_offset_to_read,
-                               uint8_t count_to_read,
-                               fiid_obj_t obj_cmd_rq);
+  int8_t fill_cmd_get_fru_inventory_area_info (uint8_t fru_device_id,
+					       fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_write_fru_data (uint8_t fru_device_id,
-                                uint16_t fru_inventory_offset_to_write,
-                                uint8_t *data_to_write,
-                                unsigned int data_to_write_len,
-                                fiid_obj_t obj_cmd_rq);
+  int8_t fill_cmd_read_fru_data (uint8_t fru_device_id,
+				 uint16_t fru_inventory_offset_to_read,
+				 uint8_t count_to_read,
+				 fiid_obj_t obj_cmd_rq);
+
+  int8_t fill_cmd_write_fru_data (uint8_t fru_device_id,
+				  uint16_t fru_inventory_offset_to_write,
+				  uint8_t *data_to_write,
+				  unsigned int data_to_write_len,
+				  fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

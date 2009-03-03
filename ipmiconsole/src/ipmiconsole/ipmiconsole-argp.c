@@ -1,25 +1,25 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.25 2009-01-23 01:01:52 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.25.8.1 2009-03-03 01:41:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  UCRL-CODE-221226
- *  
+ *
  *  This file is part of Ipmiconsole, a set of IPMI 2.0 SOL libraries
  *  and utilities.  For details, see http://www.llnl.gov/linux/.
- *  
- *  Ipmipower is free software; you can redistribute it and/or modify 
- *  it under the terms of the GNU General Public License as published by the 
- *  Free Software Foundation; either version 2 of the License, or (at your 
+ *
+ *  Ipmipower is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at your
  *  option) any later version.
- *  
- *  Ipmipower is distributed in the hope that it will be useful, but 
- *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+ *
+ *  Ipmipower is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
  *  for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License along
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
@@ -67,10 +67,10 @@ const char *argp_program_version =
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
 
-const char *argp_program_bug_address = 
+const char *argp_program_bug_address =
   "<" PACKAGE_BUGREPORT ">";
 
-static char cmdline_doc[] = 
+static char cmdline_doc[] =
   "ipmiconsole - IPMI console utility";
 
 static char cmdline_args_doc[] = "";
@@ -80,25 +80,25 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     /* legacy */
-    {"cipher-suite-id", 'c', "CIPHER-SUITE-ID", OPTION_HIDDEN,                         
-     "Specify the IPMI 2.0 cipher suite ID to use.", 14},
+    { "cipher-suite-id", 'c', "CIPHER-SUITE-ID", OPTION_HIDDEN,
+      "Specify the IPMI 2.0 cipher suite ID to use.", 14},
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    {"escape-char", ESCAPE_CHAR_KEY, "CHAR", 0,
-     "Specify an alternate escape character (default char '&')", 30},
-    {"dont-steal", DONT_STEAL_KEY, 0, 0,
-     "Do not steal an SOL session if one is already detected as being in use.", 31},
-    {"deactivate", DEACTIVATE_KEY, 0, 0,
-     "Deactivate a SOL session if one is detected as being in use and exit.", 32},
-    {"lock-memory", LOCK_MEMORY_KEY, 0, 0,
-     "Lock sensitive information (such as usernames and passwords) in memory.", 33},
+    { "escape-char", ESCAPE_CHAR_KEY, "CHAR", 0,
+      "Specify an alternate escape character (default char '&')", 30},
+    { "dont-steal", DONT_STEAL_KEY, 0, 0,
+      "Do not steal an SOL session if one is already detected as being in use.", 31},
+    { "deactivate", DEACTIVATE_KEY, 0, 0,
+      "Deactivate a SOL session if one is detected as being in use and exit.", 32},
+    { "lock-memory", LOCK_MEMORY_KEY, 0, 0,
+      "Lock sensitive information (such as usernames and passwords) in memory.", 33},
 #ifndef NDEBUG
-    {"debugfile", DEBUGFILE_KEY, 0, 0,
-     "Output debugging to the debugfile rather than to standard output.", 34},
-    {"noraw", NORAW_KEY, 0, 0,
-     "Don't enter terminal raw mode.", 35},
+    { "debugfile", DEBUGFILE_KEY, 0, 0,
+      "Output debugging to the debugfile rather than to standard output.", 34},
+    { "noraw", NORAW_KEY, 0, 0,
+      "Don't enter terminal raw mode.", 35},
 #endif
     { 0 }
   };
@@ -106,13 +106,13 @@ static struct argp_option cmdline_options[] =
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
 
 static struct argp cmdline_argp = { cmdline_options,
-                                    cmdline_parse, 
-                                    cmdline_args_doc, 
+                                    cmdline_parse,
+                                    cmdline_args_doc,
                                     cmdline_doc };
 
 static struct argp cmdline_config_file_argp = { cmdline_options,
-                                                cmdline_config_file_parse, 
-                                                cmdline_args_doc, 
+                                                cmdline_config_file_parse,
+                                                cmdline_args_doc,
                                                 cmdline_doc };
 
 static error_t
@@ -136,10 +136,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->lock_memory++;
       break;
 #ifndef NDEBUG
-    case DEBUGFILE_KEY:	/* --debugfile */
+    case DEBUGFILE_KEY: /* --debugfile */
       cmd_args->debugfile++;
       break;
-    case NORAW_KEY:	/* --noraw */
+    case NORAW_KEY:     /* --noraw */
       cmd_args->noraw++;
       break;
 #endif /* NDEBUG */
@@ -150,7 +150,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
       /* 'c' for backwards compatability */
-    case 'c':	/* --cipher-suite-id */
+    case 'c':   /* --cipher-suite-id */
       ret = common_parse_opt (ARGP_CIPHER_SUITE_ID_KEY, arg, state, &(cmd_args->common));
       return ret;
       break;
@@ -163,13 +163,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 }
 
 static void
-_ipmiconsole_config_file_parse(struct ipmiconsole_arguments *cmd_args)
+_ipmiconsole_config_file_parse (struct ipmiconsole_arguments *cmd_args)
 {
   struct config_file_data_ipmiconsole config_file_data;
 
-  memset(&config_file_data, 
-         '\0',
-         sizeof(struct config_file_data_ipmiconsole));
+  memset (&config_file_data,
+          '\0',
+          sizeof(struct config_file_data_ipmiconsole));
 
   if (!cmd_args->common.config_file)
     {
@@ -194,8 +194,8 @@ _ipmiconsole_config_file_parse(struct ipmiconsole_arguments *cmd_args)
                          CONFIG_FILE_TOOL_IPMICONSOLE,
                          &config_file_data) < 0)
     {
-      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
-      exit(1);
+      fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
+      exit (1);
     }
 
  out:
@@ -211,7 +211,7 @@ static void
 _ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
 {
   if (!cmd_args->common.hostname)
-    err_exit("hostname input required");
+    err_exit ("hostname input required");
 }
 
 void
@@ -231,20 +231,20 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->common.session_timeout = 60000;
   cmd_args->common.retransmission_timeout = 500;
 
-  argp_parse (&cmdline_config_file_argp, 
-              argc, 
-              argv, 
-              ARGP_IN_ORDER, 
-              NULL, 
+  argp_parse (&cmdline_config_file_argp,
+              argc,
+              argv,
+              ARGP_IN_ORDER,
+              NULL,
               &(cmd_args->common));
 
-  _ipmiconsole_config_file_parse(cmd_args);
+  _ipmiconsole_config_file_parse (cmd_args);
 
-  argp_parse (&cmdline_argp, 
-              argc, 
-              argv, 
-              ARGP_IN_ORDER, 
-              NULL, 
+  argp_parse (&cmdline_argp,
+              argc,
+              argv,
+              ARGP_IN_ORDER,
+              NULL,
               cmd_args);
 
   verify_common_cmd_args (&(cmd_args->common));

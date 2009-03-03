@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: scbuf.h,v 1.2 2007-12-14 19:16:24 chu11 Exp $
+ *  $Id: scbuf.h,v 1.2.40.1 2009-03-03 01:41:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2002-2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -72,13 +72,13 @@
 typedef struct scbuf * scbuf_t;           /* circular-buffer opaque data type  */
 
 typedef enum {                          /* scbuf option names                 */
-    SCBUF_OPT_OVERWRITE
+  SCBUF_OPT_OVERWRITE
 } scbuf_opt_t;
 
 typedef enum {                          /* SCBUF_OPT_OVERWRITE values:        */
-    SCBUF_NO_DROP,                       /* -never drop data, ENOSPC if full  */
-    SCBUF_WRAP_ONCE,                     /* -drop data, wrapping at most once */
-    SCBUF_WRAP_MANY                      /* -drop data, wrapping as needed    */
+  SCBUF_NO_DROP,                         /* -never drop data, ENOSPC if full  */
+  SCBUF_WRAP_ONCE,                       /* -drop data, wrapping at most once */
+  SCBUF_WRAP_MANY                        /* -drop data, wrapping as needed    */
 } scbuf_overwrite_t;
 
 

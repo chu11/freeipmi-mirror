@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2005-2009 FreeIPMI Core Team
-   
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-   
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-   
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+/*
+  Copyright (C) 2005-2009 FreeIPMI Core Team
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #ifdef HAVE_CONFIG_H
@@ -32,21 +32,21 @@
 
 #include "freeipmi-portability.h"
 
-const char *argp_program_version = 
+const char *argp_program_version =
   "ipmi-locate - " PACKAGE_VERSION "\n"
   "Copyright (C) 2003-2009 FreeIPMI Core Team\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
 
-const char *argp_program_bug_address = 
+const char *argp_program_bug_address =
   "<" PACKAGE_BUGREPORT ">";
 
-static char cmdline_doc[] = 
+static char cmdline_doc[] =
   "ipmi-locate - IPMI probing utility";
 
 static char cmdline_args_doc[] = "";
 
-static struct argp_option cmdline_options[] = 
+static struct argp_option cmdline_options[] =
   {
     { 0 }
   };
@@ -58,7 +58,7 @@ static struct argp cmdline_argp = { cmdline_options,
                                     cmdline_args_doc,
                                     cmdline_doc };
 
-static error_t 
+static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   switch (key)
@@ -72,18 +72,18 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     default:
       return ARGP_ERR_UNKNOWN;
     }
-  
+
   return 0;
 }
 
-void 
+void
 ipmi_locate_argp_parse (int argc, char **argv)
 {
-  argp_parse (&cmdline_argp, 
-              argc, 
-              argv, 
-              ARGP_IN_ORDER, 
-              NULL, 
+  argp_parse (&cmdline_argp,
+              argc,
+              argv,
+              ARGP_IN_ORDER,
+              NULL,
               NULL);
 }
 

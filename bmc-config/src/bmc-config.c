@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #if HAVE_CONFIG_H
@@ -39,11 +39,11 @@
 #include "tool-hostrange-common.h"
 
 static void
-_bmc_config_state_data_init(bmc_config_state_data_t *state_data)
+_bmc_config_state_data_init (bmc_config_state_data_t *state_data)
 {
   assert (state_data);
 
-  memset(state_data, '\0', sizeof(bmc_config_state_data_t));
+  memset (state_data, '\0', sizeof(bmc_config_state_data_t));
   state_data->prog_data = NULL;
   state_data->ipmi_ctx = NULL;
 
@@ -80,20 +80,20 @@ _bmc_config (pstdout_state_t pstate,
 
   prog_data = (bmc_config_prog_data_t *)arg;
 
-  _bmc_config_state_data_init(&state_data);
+  _bmc_config_state_data_init (&state_data);
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 
-  if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
-                                        hostname,
-                                        &(prog_data->args->config_args.common),
-                                        errmsg,
-                                        IPMI_OPEN_ERRMSGLEN)))
+  if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
+                                         hostname,
+                                         &(prog_data->args->config_args.common),
+                                         errmsg,
+                                         IPMI_OPEN_ERRMSGLEN)))
     {
-      pstdout_fprintf(pstate,
-                      stderr, 
-                      "%s\n", 
-                      errmsg);
+      pstdout_fprintf (pstate,
+                       stderr,
+                       "%s\n",
+                       errmsg);
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -110,17 +110,17 @@ _bmc_config (pstdout_state_t pstate,
         {
           if (prog_data->hosts_count > 1)
             {
-              pstdout_fprintf(pstate,
-                              stderr, 
-                              "Cannot output multiple host checkout into a single file\n");
+              pstdout_fprintf (pstate,
+                               stderr,
+                               "Cannot output multiple host checkout into a single file\n");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
 
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
-              pstdout_perror(pstate,
-                             "fopen");
+              pstdout_perror (pstate,
+                              "fopen");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
@@ -137,8 +137,8 @@ _bmc_config (pstdout_state_t pstate,
         {
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
-              pstdout_perror(pstate,
-                             "fopen");
+              pstdout_perror (pstate,
+                              "fopen");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
@@ -160,10 +160,10 @@ _bmc_config (pstdout_state_t pstate,
           && !prog_data->args->config_args.filename
           && !prog_data->args->config_args.keypairs))
     {
-      if (config_parse(pstate, 
-                       sections,
-                       &(prog_data->args->config_args),
-                       fp) < 0)
+      if (config_parse (pstate,
+                        sections,
+                        &(prog_data->args->config_args),
+                        fp) < 0)
         {
           /* errors printed in function call */
           exit_code = EXIT_FAILURE;
@@ -179,9 +179,9 @@ _bmc_config (pstdout_state_t pstate,
        || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
       && prog_data->args->config_args.keypairs)
     {
-      if (config_sections_insert_keyvalues(pstate, 
-                                           sections,
-                                           prog_data->args->config_args.keypairs) < 0)
+      if (config_sections_insert_keyvalues (pstate,
+                                            sections,
+                                            prog_data->args->config_args.keypairs) < 0)
         {
           /* errors printed in function call */
           exit_code = EXIT_FAILURE;
@@ -199,10 +199,10 @@ _bmc_config (pstdout_state_t pstate,
       if (prog_data->args->config_args.action != CONFIG_ACTION_CHECKOUT)
         value_input_required = 1;
 
-      if ((num = config_sections_validate_keyvalue_inputs(pstate, 
-                                                          sections,
-                                                          value_input_required,
-                                                          &state_data)) < 0)
+      if ((num = config_sections_validate_keyvalue_inputs (pstate,
+                                                           sections,
+                                                           value_input_required,
+                                                           &state_data)) < 0)
         {
           /* errors printed in function call */
           exit_code = EXIT_FAILURE;
@@ -225,14 +225,14 @@ _bmc_config (pstdout_state_t pstate,
       sstr = prog_data->args->config_args.section_strs;
       while (sstr)
         {
-          if (!config_find_section(pstate, 
-                                   sections,
-                                   sstr->section_name))
+          if (!config_find_section (pstate,
+                                    sections,
+                                    sstr->section_name))
             {
-              pstdout_fprintf(pstate,
-                              stderr,
-                              "Unknown section `%s'\n",
-                              sstr->section_name);
+              pstdout_fprintf (pstate,
+                               stderr,
+                               "Unknown section `%s'\n",
+                               sstr->section_name);
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
@@ -253,7 +253,7 @@ _bmc_config (pstdout_state_t pstate,
       section = sections;
       while (section)
         {
-          if (stristr(section->section_name, "User"))
+          if (stristr (section->section_name, "User"))
             user_count++;
           section = section->next;
         }
@@ -263,22 +263,22 @@ _bmc_config (pstdout_state_t pstate,
         {
           unsigned int datasize = sizeof(uint8_t) * user_count;
 
-          if (!(state_data.lan_user_session_limit = (uint8_t *)malloc(datasize)))
+          if (!(state_data.lan_user_session_limit = (uint8_t *)malloc (datasize)))
             {
-              pstdout_perror(pstate,
-                             "malloc");
+              pstdout_perror (pstate,
+                              "malloc");
               goto cleanup;
             }
-          memset(state_data.lan_user_session_limit, '\0', datasize);
+          memset (state_data.lan_user_session_limit, '\0', datasize);
 
-          if (!(state_data.serial_user_session_limit = (uint8_t *)malloc(datasize)))
+          if (!(state_data.serial_user_session_limit = (uint8_t *)malloc (datasize)))
             {
-              pstdout_perror(pstate,
-                             "malloc");
+              pstdout_perror (pstate,
+                              "malloc");
               goto cleanup;
             }
-          memset(state_data.serial_user_session_limit, '\0', datasize);
-          
+          memset (state_data.serial_user_session_limit, '\0', datasize);
+
           state_data.lan_user_session_limit_len = user_count;
           state_data.serial_user_session_limit_len = user_count;
 
@@ -288,30 +288,30 @@ _bmc_config (pstdout_state_t pstate,
             {
               struct config_keyvalue *kv;
 
-              if (stristr(section->section_name, "User"))
+              if (stristr (section->section_name, "User"))
                 {
                   uint8_t userid;
-                  
+
                   userid = atoi (section->section_name + strlen ("User"));
 
                   if (userid < user_count)
                     {
-                      if ((kv = config_find_keyvalue(pstate,
-                                                     section,
-                                                     "Lan_Session_Limit")))
-                        state_data.lan_user_session_limit[userid] = atoi(kv->value_input);
-                      
-                      if ((kv = config_find_keyvalue(pstate,
-                                                     section,
-                                                     "Serial_Session_Limit")))
-                        state_data.serial_user_session_limit[userid] = atoi(kv->value_input);
+                      if ((kv = config_find_keyvalue (pstate,
+                                                      section,
+                                                      "Lan_Session_Limit")))
+                        state_data.lan_user_session_limit[userid] = atoi (kv->value_input);
+
+                      if ((kv = config_find_keyvalue (pstate,
+                                                      section,
+                                                      "Serial_Session_Limit")))
+                        state_data.serial_user_session_limit[userid] = atoi (kv->value_input);
                     }
                 }
               section = section->next;
             }
         }
     }
-          
+
   /* Special case: IP addresses and MAC addresses cannot be configured
    * in parallel.  Reject input if user attempts to configure the same
    * IP or MAC on multiple hosts.
@@ -320,29 +320,29 @@ _bmc_config (pstdout_state_t pstate,
       && prog_data->hosts_count > 1)
     {
       struct config_section *section;
-      
-      if ((section = config_find_section(pstate,
-                                         sections,
-                                         "Lan_Conf")))
+
+      if ((section = config_find_section (pstate,
+                                          sections,
+                                          "Lan_Conf")))
         {
-          if (config_find_keyvalue(pstate,
-                                   section,
-                                   "IP_Address"))
+          if (config_find_keyvalue (pstate,
+                                    section,
+                                    "IP_Address"))
             {
-              pstdout_fprintf(pstate,
-                              stderr,
-                              "Cannot configure Lan_Conf:IP_Address on multiple hosts\n");
+              pstdout_fprintf (pstate,
+                               stderr,
+                               "Cannot configure Lan_Conf:IP_Address on multiple hosts\n");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
 
-          if (config_find_keyvalue(pstate,
-                                   section,
-                                   "MAC_Address"))
+          if (config_find_keyvalue (pstate,
+                                    section,
+                                    "MAC_Address"))
             {
-              pstdout_fprintf(pstate,
-                              stderr,
-                              "Cannot configure Lan_Conf:MAC_Address on multiple hosts\n");
+              pstdout_fprintf (pstate,
+                               stderr,
+                               "Cannot configure Lan_Conf:MAC_Address on multiple hosts\n");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
@@ -353,77 +353,77 @@ _bmc_config (pstdout_state_t pstate,
   case CONFIG_ACTION_CHECKOUT:
     if (prog_data->args->config_args.section_strs)
       {
-        struct config_section_str *sstr;
-       
-        /* note: argp validation catches if user specified --section
-         * and --keypair, so all_keys_if_none_specified should be '1'.
-         */
+	struct config_section_str *sstr;
 
-        sstr = prog_data->args->config_args.section_strs;
-        while (sstr)
-          {
-            struct config_section *s;
-            config_err_t this_ret;
-            
-            if (!(s = config_find_section(pstate, 
-                                          sections, 
-                                          sstr->section_name)))
-              {
-                pstdout_fprintf(pstate,
-                                stderr, 
-                                "## FATAL: Cannot checkout section '%s'\n",
-                                sstr->section_name);
-                continue;
-              }
+	/* note: argp validation catches if user specified --section
+	 * and --keypair, so all_keys_if_none_specified should be '1'.
+	 */
 
-            this_ret = config_checkout_section(pstate, 
-                                               s,
-                                               &(prog_data->args->config_args),
-                                               1,
-                                               fp,
-                                               0,
-                                               &state_data);
-            if (this_ret != CONFIG_ERR_SUCCESS)
-              ret = this_ret;
-            if (ret == CONFIG_ERR_FATAL_ERROR)
-              break;
+	sstr = prog_data->args->config_args.section_strs;
+	while (sstr)
+	  {
+	    struct config_section *s;
+	    config_err_t this_ret;
 
-            sstr = sstr->next;
-          }
+	    if (!(s = config_find_section (pstate,
+					   sections,
+					   sstr->section_name)))
+	      {
+		pstdout_fprintf (pstate,
+				 stderr,
+				 "## FATAL: Cannot checkout section '%s'\n",
+				 sstr->section_name);
+		continue;
+	      }
+
+	    this_ret = config_checkout_section (pstate,
+						s,
+						&(prog_data->args->config_args),
+						1,
+						fp,
+						0,
+						&state_data);
+	    if (this_ret != CONFIG_ERR_SUCCESS)
+	      ret = this_ret;
+	    if (ret == CONFIG_ERR_FATAL_ERROR)
+	      break;
+
+	    sstr = sstr->next;
+	  }
       }
     else
       {
-        int all_keys_if_none_specified = 0;
-        
-        if (!prog_data->args->config_args.keypairs)
-          all_keys_if_none_specified++;
-        
-        ret = config_checkout (pstate, 
-                               sections,
-                               &(prog_data->args->config_args),
-                               all_keys_if_none_specified,
-                               fp,
-                               0,
-                               &state_data);
+	int all_keys_if_none_specified = 0;
+
+	if (!prog_data->args->config_args.keypairs)
+	  all_keys_if_none_specified++;
+
+	ret = config_checkout (pstate,
+			       sections,
+			       &(prog_data->args->config_args),
+			       all_keys_if_none_specified,
+			       fp,
+			       0,
+			       &state_data);
       }
     break;
   case CONFIG_ACTION_COMMIT:
-    ret = config_commit (pstate, 
-                         sections,
-                         &(prog_data->args->config_args),
-                         &state_data);
+    ret = config_commit (pstate,
+			 sections,
+			 &(prog_data->args->config_args),
+			 &state_data);
     break;
   case CONFIG_ACTION_DIFF:
-    ret = config_diff (pstate, 
-                       sections,
-                       &(prog_data->args->config_args),
-                       &state_data);
+    ret = config_diff (pstate,
+		       sections,
+		       &(prog_data->args->config_args),
+		       &state_data);
     break;
   case CONFIG_ACTION_LIST_SECTIONS:
     ret = config_output_sections_list (pstate, sections);
     break;
   }
-  
+
   if (ret == CONFIG_ERR_FATAL_ERROR || ret == CONFIG_ERR_NON_FATAL_ERROR)
     {
       exit_code = EXIT_FAILURE;
@@ -438,13 +438,13 @@ _bmc_config (pstdout_state_t pstate,
       ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
   if (state_data.lan_user_session_limit)
-    free(state_data.lan_user_session_limit);
+    free (state_data.lan_user_session_limit);
   if (state_data.serial_user_session_limit)
-    free(state_data.serial_user_session_limit);
+    free (state_data.serial_user_session_limit);
   if (file_opened)
-    fclose(fp);
+    fclose (fp);
   if (sections)
-    config_sections_destroy(pstate, sections);
+    config_sections_destroy (pstate, sections);
   return exit_code;
 }
 
@@ -457,20 +457,20 @@ main (int argc, char *argv[])
   int hosts_count;
   int rv;
 
-  ipmi_disable_coredump();
+  ipmi_disable_coredump ();
 
-  memset(&prog_data, '\0', sizeof(bmc_config_prog_data_t));
+  memset (&prog_data, '\0', sizeof(bmc_config_prog_data_t));
   prog_data.progname = argv[0];
   bmc_config_argp_parse (argc, argv, &cmd_args);
 
   prog_data.args = &cmd_args;
 
-  if ((hosts_count = pstdout_setup(&(prog_data.args->config_args.common.hostname),
-                                   prog_data.args->config_args.hostrange.buffer_output,
-                                   prog_data.args->config_args.hostrange.consolidate_output,
-                                   prog_data.args->config_args.hostrange.fanout,
-                                   prog_data.args->config_args.hostrange.eliminate,
-                                   prog_data.args->config_args.hostrange.always_prefix)) < 0)
+  if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common.hostname),
+                                    prog_data.args->config_args.hostrange.buffer_output,
+                                    prog_data.args->config_args.hostrange.consolidate_output,
+                                    prog_data.args->config_args.hostrange.fanout,
+                                    prog_data.args->config_args.hostrange.eliminate,
+                                    prog_data.args->config_args.hostrange.always_prefix)) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -478,13 +478,13 @@ main (int argc, char *argv[])
 
   prog_data.hosts_count = hosts_count;
 
-  if ((rv = pstdout_launch(prog_data.args->config_args.common.hostname,
-                           _bmc_config,
-                           &prog_data)) < 0)
+  if ((rv = pstdout_launch (prog_data.args->config_args.common.hostname,
+                            _bmc_config,
+                            &prog_data)) < 0)
     {
-      fprintf(stderr,
-              "pstdout_launch: %s\n",
-              pstdout_strerror(pstdout_errnum));
+      fprintf (stderr,
+               "pstdout_launch: %s\n",
+               pstdout_strerror (pstdout_errnum));
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }

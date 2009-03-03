@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2003-2009 FreeIPMI Core Team
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2, or (at your option)
@@ -10,7 +10,7 @@
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
@@ -44,11 +44,11 @@
 #define IPMI_SENSORS_OEM_DATA_LEN 1024
 
 static char *
-_get_record_type_string(ipmi_sensors_state_data_t *state_data,
-                        uint8_t record_type)
+_get_record_type_string (ipmi_sensors_state_data_t *state_data,
+                         uint8_t record_type)
 {
-  assert(state_data);
-  assert(state_data->prog_data->args->verbose_count >= 1);
+  assert (state_data);
+  assert (state_data->prog_data->args->verbose_count >= 1);
 
   switch (record_type)
     {
@@ -87,19 +87,19 @@ _detailed_output_record_type_and_id (ipmi_sensors_state_data_t *state_data,
                                      uint8_t record_type,
                                      uint16_t record_id)
 {
-  assert(state_data);
-  assert(state_data->prog_data->args->verbose_count >= 1);
+  assert (state_data);
+  assert (state_data->prog_data->args->verbose_count >= 1);
 
-  pstdout_printf (state_data->pstate, 
-                  "Record ID: %u\n", 
+  pstdout_printf (state_data->pstate,
+                  "Record ID: %u\n",
                   record_id);
 
   if (state_data->prog_data->args->verbose_count >= 2)
     {
-      char *record_type_str = _get_record_type_string(state_data, record_type);
-      
-      pstdout_printf (state_data->pstate, 
-                      "Record Type: %s (%Xh)\n", 
+      char *record_type_str = _get_record_type_string (state_data, record_type);
+
+      pstdout_printf (state_data->pstate,
+                      "Record Type: %s (%Xh)\n",
                       record_type_str,
                       record_type);
     }
@@ -122,10 +122,10 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
   uint8_t sensor_owner_lun, channel_number;
   uint8_t entity_id, entity_instance;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 1);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 1);
 
   if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
                                     sdr_record,
@@ -135,7 +135,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
@@ -147,7 +147,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
@@ -159,11 +159,11 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_event_reading_type_code: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
-  
-  memset(id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
+
+  memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
 
   if (ipmi_sdr_parse_id_string (state_data->sdr_parse_ctx,
                                 sdr_record,
@@ -174,7 +174,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_id_string: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
@@ -187,7 +187,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_owner_id: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
@@ -200,10 +200,10 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_owner_lun: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
-  
+
   if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_parse_ctx,
                                               sdr_record,
                                               sdr_record_len,
@@ -214,7 +214,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_entity_id_instance_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
@@ -222,16 +222,16 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                                            record_type,
                                            record_id) < 0)
     return -1;
-  
-  pstdout_printf (state_data->pstate, 
-                  "ID String: %s\n", 
+
+  pstdout_printf (state_data->pstate,
+                  "ID String: %s\n",
                   id_string);
-  pstdout_printf (state_data->pstate, 
+  pstdout_printf (state_data->pstate,
                   "Group Name: %s (%Xh)\n",
                   ipmi_sensors_get_sensor_type_string (sensor_type),
                   sensor_type);
-  pstdout_printf (state_data->pstate, 
-                  "Sensor Number: %u\n", 
+  pstdout_printf (state_data->pstate,
+                  "Sensor Number: %u\n",
                   sensor_number);
   if (sensor_owner_id_type)
     pstdout_printf (state_data->pstate,
@@ -252,17 +252,17 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                   channel_number);
   if (state_data->prog_data->args->verbose_count >= 2)
     {
-      pstdout_printf (state_data->pstate, 
-                      "Entity ID: %u\n", 
+      pstdout_printf (state_data->pstate,
+                      "Entity ID: %u\n",
                       entity_id);
-      pstdout_printf (state_data->pstate, 
-                      "Entity Instance: %u\n", 
+      pstdout_printf (state_data->pstate,
+                      "Entity Instance: %u\n",
                       entity_instance);
     }
-  pstdout_printf (state_data->pstate, 
-                  "Event/Reading Type Code: %Xh\n", 
+  pstdout_printf (state_data->pstate,
+                  "Event/Reading Type Code: %Xh\n",
                   event_reading_type_code);
-  
+
 
   return 0;
 }
@@ -280,11 +280,11 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   double *upper_critical_threshold = NULL;
   double *upper_non_recoverable_threshold = NULL;
   int rv = -1;
-  
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 1);
+
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 1);
 
   if (ipmi_sensors_get_thresholds (state_data,
                                    sdr_record,
@@ -311,80 +311,80 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
 
   if (lower_critical_threshold)
     pstdout_printf (state_data->pstate,
-                    "Lower Critical Threshold: %f %s\n", 
-                    *lower_critical_threshold, 
+                    "Lower Critical Threshold: %f %s\n",
+                    *lower_critical_threshold,
                     ipmi_sensor_units[sensor_base_unit_type]);
   else
-    pstdout_printf (state_data->pstate, 
-                    "Lower Critical Threshold: %s\n", 
+    pstdout_printf (state_data->pstate,
+                    "Lower Critical Threshold: %s\n",
                     IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (upper_critical_threshold)
-    pstdout_printf (state_data->pstate, 
-                    "Upper Critical Threshold: %f %s\n", 
-                    *upper_critical_threshold, 
+    pstdout_printf (state_data->pstate,
+                    "Upper Critical Threshold: %f %s\n",
+                    *upper_critical_threshold,
                     ipmi_sensor_units[sensor_base_unit_type]);
   else
-    pstdout_printf (state_data->pstate, 
-                    "Upper Critical Threshold: %s\n", 
+    pstdout_printf (state_data->pstate,
+                    "Upper Critical Threshold: %s\n",
                     IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (lower_non_critical_threshold)
-    pstdout_printf (state_data->pstate, 
-                    "Lower Non-Critical Threshold: %f %s\n", 
-                    *lower_non_critical_threshold, 
+    pstdout_printf (state_data->pstate,
+                    "Lower Non-Critical Threshold: %f %s\n",
+                    *lower_non_critical_threshold,
                     ipmi_sensor_units[sensor_base_unit_type]);
   else
-    pstdout_printf (state_data->pstate, 
-                    "Lower Non-Critical Threshold: %s\n", 
+    pstdout_printf (state_data->pstate,
+                    "Lower Non-Critical Threshold: %s\n",
                     IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (upper_non_critical_threshold)
-    pstdout_printf (state_data->pstate, 
-                    "Upper Non-Critical Threshold: %f %s\n", 
-                    *upper_non_critical_threshold, 
+    pstdout_printf (state_data->pstate,
+                    "Upper Non-Critical Threshold: %f %s\n",
+                    *upper_non_critical_threshold,
                     ipmi_sensor_units[sensor_base_unit_type]);
   else
-    pstdout_printf (state_data->pstate, 
-                    "Upper Non-Critical Threshold: %s\n", 
+    pstdout_printf (state_data->pstate,
+                    "Upper Non-Critical Threshold: %s\n",
                     IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (lower_non_recoverable_threshold)
-    pstdout_printf (state_data->pstate, 
-                    "Lower Non-Recoverable Threshold: %f %s\n", 
-                    *lower_non_recoverable_threshold, 
+    pstdout_printf (state_data->pstate,
+                    "Lower Non-Recoverable Threshold: %f %s\n",
+                    *lower_non_recoverable_threshold,
                     ipmi_sensor_units[sensor_base_unit_type]);
   else
-    pstdout_printf (state_data->pstate, 
-                    "Lower Non-Recoverable Threshold: %s\n", 
+    pstdout_printf (state_data->pstate,
+                    "Lower Non-Recoverable Threshold: %s\n",
                     IPMI_SENSORS_NA_STRING_OUTPUT);
 
   if (upper_non_recoverable_threshold)
-    pstdout_printf (state_data->pstate, 
-                    "Upper Non-Recoverable Threshold: %f %s\n", 
-                    *upper_non_recoverable_threshold, 
+    pstdout_printf (state_data->pstate,
+                    "Upper Non-Recoverable Threshold: %f %s\n",
+                    *upper_non_recoverable_threshold,
                     ipmi_sensor_units[sensor_base_unit_type]);
   else
-    pstdout_printf (state_data->pstate, 
-                    "Upper Non-Recoverable Threshold: %s\n", 
+    pstdout_printf (state_data->pstate,
+                    "Upper Non-Recoverable Threshold: %s\n",
                     IPMI_SENSORS_NA_STRING_OUTPUT);
 
   rv = 0;
  cleanup:
   if (lower_non_critical_threshold)
-    free(lower_non_critical_threshold);
+    free (lower_non_critical_threshold);
   if (lower_critical_threshold)
-    free(lower_critical_threshold);
+    free (lower_critical_threshold);
   if (lower_non_recoverable_threshold)
-    free(lower_non_recoverable_threshold);
+    free (lower_non_recoverable_threshold);
   if (upper_non_critical_threshold)
-    free(upper_non_critical_threshold);
+    free (upper_non_critical_threshold);
   if (upper_critical_threshold)
-    free(upper_critical_threshold);
+    free (upper_critical_threshold);
   if (upper_non_recoverable_threshold)
-    free(upper_non_recoverable_threshold);
+    free (upper_non_recoverable_threshold);
   return rv;
-}                              
+}
 
 static int
 _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
@@ -399,10 +399,10 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   double *sensor_minimum_reading = NULL;
   int rv = -1;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 1);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 1);
 
   if (ipmi_sdr_parse_sensor_reading_ranges (state_data->sdr_parse_ctx,
                                             sdr_record,
@@ -413,7 +413,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
                                             &sensor_maximum_reading,
                                             &sensor_minimum_reading) < 0)
     {
-      if (ipmi_sdr_parse_ctx_errnum(state_data->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_CANNOT_PARSE_OR_CALCULATE)
+      if (ipmi_sdr_parse_ctx_errnum (state_data->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_CANNOT_PARSE_OR_CALCULATE)
         {
           rv = 0;
           goto cleanup;
@@ -422,7 +422,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_reading_ranges: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -490,15 +490,15 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   rv = 0;
  cleanup:
   if (nominal_reading)
-    free(nominal_reading);
+    free (nominal_reading);
   if (normal_maximum)
-    free(normal_maximum);
+    free (normal_maximum);
   if (normal_minimum)
-    free(normal_minimum);
+    free (normal_minimum);
   if (sensor_maximum_reading)
-    free(sensor_maximum_reading);
+    free (sensor_maximum_reading);
   if (sensor_minimum_reading)
-    free(sensor_minimum_reading);
+    free (sensor_minimum_reading);
   return rv;
 }
 
@@ -517,10 +517,10 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
   uint64_t val;
   int rv = -1;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
   /* achu: first lets check if we have anything to output */
   if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_parse_ctx,
@@ -535,7 +535,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_reading_ranges: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -564,7 +564,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -579,16 +579,16 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_units: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sensor_hysteresis_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sensor_hysteresis_rs)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
@@ -598,16 +598,16 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
                                       obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_get_sensor_hysteresis: %s\n",
-                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      
-      if ((ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID)
-          && (ipmi_check_completion_code(obj_cmd_rs,
-                                         IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
-              || ipmi_check_completion_code(obj_cmd_rs,
-                                            IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_sensor_hysteresis: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID)
+          && (ipmi_check_completion_code (obj_cmd_rs,
+                                          IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
+              || ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
         {
           /* The hysteresis cannot be gathered for one reason or
            * another, maybe b/c its a OEM sensor or something.  Output
@@ -615,7 +615,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
            */
           goto output_raw;
         }
-      
+
       goto cleanup;
     }
 
@@ -623,7 +623,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
                      "positive_going_threshold_hysteresis_value",
                      &val);
   positive_going_threshold_hysteresis_raw = val;
-  
+
   TOOL_FIID_OBJ_GET (obj_cmd_rs,
                      "negative_going_threshold_hysteresis_value",
                      &val);
@@ -633,7 +633,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
    * hysteresis value.  Perhaps that's a typo in the spec?  We just
    * output the integer values?  That's the best guess I can make.
    */
-  
+
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     {
       double positive_going_threshold_hysteresis_real;
@@ -659,25 +659,25 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sdr_parse_sensor_decoding_data: %s\n",
-                               ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                               ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
               goto cleanup;
             }
-          
+
           /* if the sensor is not analog, this is most likely a bug in the
            * SDR, since we shouldn't be decoding a non-threshold sensor.
            *
            * Don't return an error.  Output integer value.
            */
-          if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format))
+          if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID (analog_data_format))
             goto output_raw;
-          
+
           /* if the sensor is non-linear, I just don't know what to do
            *
            * Don't return an error.  Output integer value.
            */
-          if (!IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization))
+          if (!IPMI_SDR_LINEARIZATION_IS_LINEAR (linearization))
             goto output_raw;
-          
+
           if (ipmi_sensor_decode_value (r_exponent,
                                         b_exponent,
                                         m,
@@ -690,10 +690,10 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sensor_decode_value: %s\n",
-                               strerror(errno));
+                               strerror (errno));
               goto cleanup;
             }
-          
+
           if (ipmi_sensor_decode_value (r_exponent,
                                         b_exponent,
                                         m,
@@ -706,58 +706,58 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sensor_decode_value: %s\n",
-                               strerror(errno));
+                               strerror (errno));
               goto cleanup;
             }
         }
-          
+
       if (positive_going_threshold_hysteresis_raw)
-        pstdout_printf (state_data->pstate, 
-                        "Positive Hysteresis: %f %s\n", 
+        pstdout_printf (state_data->pstate,
+                        "Positive Hysteresis: %f %s\n",
                         positive_going_threshold_hysteresis_real,
                         ipmi_sensor_units[sensor_base_unit_type]);
       else
         pstdout_printf (state_data->pstate,
-                        "Positive Hysteresis: %s\n", 
+                        "Positive Hysteresis: %s\n",
                         IPMI_SENSORS_NA_STRING_OUTPUT);
 
       if (negative_going_threshold_hysteresis_raw)
-        pstdout_printf (state_data->pstate, 
-                        "Negative Hysteresis: %f %s\n", 
+        pstdout_printf (state_data->pstate,
+                        "Negative Hysteresis: %f %s\n",
                         negative_going_threshold_hysteresis_real,
                         ipmi_sensor_units[sensor_base_unit_type]);
       else
         pstdout_printf (state_data->pstate,
-                        "Negative Hysteresis: %s\n", 
+                        "Negative Hysteresis: %s\n",
                         IPMI_SENSORS_NA_STRING_OUTPUT);
     }
   else
-    {          
+    {
     output_raw:
       if (positive_going_threshold_hysteresis_raw)
-        pstdout_printf (state_data->pstate, 
-                        "Positive Hysteresis: %u %s\n", 
+        pstdout_printf (state_data->pstate,
+                        "Positive Hysteresis: %u %s\n",
                         positive_going_threshold_hysteresis_raw,
                         ipmi_sensor_units[sensor_base_unit_type]);
       else
         pstdout_printf (state_data->pstate,
-                        "Positive Hysteresis: %s\n", 
+                        "Positive Hysteresis: %s\n",
                         IPMI_SENSORS_NA_STRING_OUTPUT);
 
       if (negative_going_threshold_hysteresis_raw)
-        pstdout_printf (state_data->pstate, 
-                        "Negative Hysteresis: %u %s\n", 
+        pstdout_printf (state_data->pstate,
+                        "Negative Hysteresis: %u %s\n",
                         negative_going_threshold_hysteresis_raw,
                         ipmi_sensor_units[sensor_base_unit_type]);
       else
         pstdout_printf (state_data->pstate,
-                        "Negative Hysteresis: %s\n", 
+                        "Negative Hysteresis: %s\n",
                         IPMI_SENSORS_NA_STRING_OUTPUT);
     }
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
   return rv;
 }
 
@@ -780,10 +780,10 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
   int8_t field_len;
   int rv = -1;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
   /* achu:
    *
@@ -803,7 +803,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -815,7 +815,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_event_reading_type_code: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       goto cleanup;
     }
 
@@ -826,10 +826,10 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       && event_reading_type_code_class !=  IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
     {
       if (state_data->prog_data->args->common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "Cannot handle event enables for event type reading code: 0x%X\n",
-                        event_reading_type_code);
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "Cannot handle event enables for event type reading code: 0x%X\n",
+                         event_reading_type_code);
       rv = 0;
       goto cleanup;
     }
@@ -844,35 +844,35 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sdr_parse_sensor_type: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
           goto cleanup;
         }
     }
-  
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sensor_event_enable_rs)))
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sensor_event_enable_rs)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
-  
+
   if (ipmi_cmd_get_sensor_event_enable (state_data->ipmi_ctx,
                                         sensor_number,
                                         obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_get_sensor_hysteresis: %s\n",
-                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      
-      if ((ipmi_ctx_errnum(state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID)
-          && (ipmi_check_completion_code(obj_cmd_rs,
-                                         IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
-              || ipmi_check_completion_code(obj_cmd_rs,
-                                            IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_sensor_hysteresis: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID)
+          && (ipmi_check_completion_code (obj_cmd_rs,
+                                          IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
+              || ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
         {
           /* The event enables cannot be gathered for one reason or
            * another, maybe b/c its a OEM sensor or something.  Just
@@ -881,14 +881,14 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
           rv = 0;
           goto cleanup;
         }
-      
+
       goto cleanup;
     }
 
   TOOL_FIID_OBJ_GET (obj_cmd_rs,
                      "all_event_messages",
                      &val);
-  
+
   if (val == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE)
     {
       if (state_data->prog_data->args->legacy_output)
@@ -943,14 +943,14 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
    * disabled.
    */
 
-  if ((field_len = fiid_obj_get(obj_cmd_rs,
-                                "assertion_event_bitmask",
-                                &val)) < 0)
+  if ((field_len = fiid_obj_get (obj_cmd_rs,
+                                 "assertion_event_bitmask",
+                                 &val)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get: 'assertion_event_bitmask': %s\n",
-                      fiid_obj_errormsg(obj_cmd_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'assertion_event_bitmask': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
@@ -986,14 +986,14 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
         goto cleanup;
     }
 
-  if ((field_len = fiid_obj_get(obj_cmd_rs,
-                                "deassertion_event_bitmask",
-                                &val)) < 0)
+  if ((field_len = fiid_obj_get (obj_cmd_rs,
+                                 "deassertion_event_bitmask",
+                                 &val)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get: 'deassertion_event_bitmask': %s\n",
-                      fiid_obj_errormsg(obj_cmd_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'deassertion_event_bitmask': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
@@ -1020,7 +1020,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                                       IPMI_SENSORS_NONE_STRING) < 0)
             goto cleanup;
         }
-      
+
       if (ipmi_sensors_output_event_message_list (state_data,
                                                   deassertion_event_message_list,
                                                   deassertion_event_message_list_len,
@@ -1031,7 +1031,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
   return rv;
 }
 
@@ -1041,20 +1041,20 @@ _detailed_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                                      unsigned int event_message_list_len)
 {
   assert (state_data);
-  assert(state_data->prog_data->args->verbose_count >= 1);
- 
+  assert (state_data->prog_data->args->verbose_count >= 1);
+
   if (ipmi_sensors_output_event_message_list (state_data,
                                               event_message_list,
                                               event_message_list_len,
                                               IPMI_SENSORS_SENSOR_EVENT_PREFIX_OUTPUT,
                                               1) < 0)
     return -1;
-  
+
   return 0;
 }
 
 static char *
-_linearization_string(ipmi_sensors_state_data_t *state_data, uint8_t linearization)
+_linearization_string (ipmi_sensors_state_data_t *state_data, uint8_t linearization)
 {
   switch (linearization)
     {
@@ -1090,7 +1090,7 @@ _linearization_string(ipmi_sensors_state_data_t *state_data, uint8_t linearizati
 }
 
 static char *
-_analog_data_format_string(ipmi_sensors_state_data_t *state_data, uint8_t analog_data_format)
+_analog_data_format_string (ipmi_sensors_state_data_t *state_data, uint8_t analog_data_format)
 {
   switch (analog_data_format)
     {
@@ -1107,7 +1107,7 @@ _analog_data_format_string(ipmi_sensors_state_data_t *state_data, uint8_t analog
   return IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG_STRING;
 }
 
-static int 
+static int
 _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                               uint8_t *sdr_record,
                               unsigned int sdr_record_len,
@@ -1120,11 +1120,11 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
   uint8_t event_reading_type_code;
   int event_reading_type_code_class;
   uint8_t sensor_base_unit_type;
- 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 1);
+
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 1);
 
   if (_detailed_output_header (state_data,
                                sdr_record,
@@ -1141,7 +1141,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_event_reading_type_code: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
@@ -1156,12 +1156,12 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_units: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
   event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
-  
+
   if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
     {
       if (state_data->prog_data->args->verbose_count >= 2)
@@ -1183,29 +1183,29 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "ipmi_sdr_parse_sensor_decoding_data: %s\n",
-                               ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                               ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
               return -1;
             }
-          
-          pstdout_printf (state_data->pstate, 
-                          "B: %d\n", 
+
+          pstdout_printf (state_data->pstate,
+                          "B: %d\n",
                           b);
           pstdout_printf (state_data->pstate,
-                          "M: %d\n", 
+                          "M: %d\n",
                           m);
-          pstdout_printf (state_data->pstate, 
-                          "R Exponent: %d\n", 
+          pstdout_printf (state_data->pstate,
+                          "R Exponent: %d\n",
                           r_exponent);
-          pstdout_printf (state_data->pstate, 
-                          "B Exponent: %d\n", 
+          pstdout_printf (state_data->pstate,
+                          "B Exponent: %d\n",
                           b_exponent);
-          pstdout_printf (state_data->pstate, 
-                          "Linearization: %s (%Xh)\n", 
-                          _linearization_string(state_data, linearization),
+          pstdout_printf (state_data->pstate,
+                          "Linearization: %s (%Xh)\n",
+                          _linearization_string (state_data, linearization),
                           linearization);
-          pstdout_printf (state_data->pstate, 
-                          "Analog Data Format: %s (%Xh)\n", 
-                          _analog_data_format_string(state_data, analog_data_format),
+          pstdout_printf (state_data->pstate,
+                          "Analog Data Format: %s (%Xh)\n",
+                          _analog_data_format_string (state_data, analog_data_format),
                           analog_data_format);
         }
 
@@ -1214,7 +1214,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                                        sdr_record_len,
                                        sensor_base_unit_type) < 0)
         return -1;
-      
+
       if (_detailed_output_sensor_reading_ranges (state_data,
                                                   sdr_record,
                                                   sdr_record_len,
@@ -1244,7 +1244,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                         "Sensor Reading: %f %s\n",
                         *reading,
                         ipmi_sensor_units[sensor_base_unit_type]);
-      else 
+      else
         pstdout_printf (state_data->pstate,
                         "Sensor Reading: %s\n",
                         IPMI_SENSORS_NA_STRING_OUTPUT);
@@ -1263,18 +1263,18 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                         "Sensor Reading: %s\n",
                         IPMI_SENSORS_NA_STRING_OUTPUT);
     }
-  
+
   if (_detailed_output_event_message_list (state_data,
                                            event_message_list,
                                            event_message_list_len) < 0)
     return -1;
 
   pstdout_printf (state_data->pstate, "\n");
-  
+
   return 0;
 }
 
-static int 
+static int
 _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
                                  uint8_t *sdr_record,
                                  unsigned int sdr_record_len,
@@ -1283,10 +1283,10 @@ _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
                                  char **event_message_list,
                                  unsigned int event_message_list_len)
 {
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 1);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 1);
 
   if (_detailed_output_header (state_data,
                                sdr_record,
@@ -1320,17 +1320,17 @@ _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
   return 0;
 }
 
-static int 
+static int
 _detailed_output_event_only_record (ipmi_sensors_state_data_t *state_data,
                                     uint8_t *sdr_record,
                                     unsigned int sdr_record_len,
                                     uint8_t record_type,
                                     uint16_t record_id)
 {
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 1);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 1);
 
   if (_detailed_output_header (state_data,
                                sdr_record,
@@ -1344,7 +1344,7 @@ _detailed_output_event_only_record (ipmi_sensors_state_data_t *state_data,
   return 0;
 }
 
-static int 
+static int
 _detailed_output_entity_association_record (ipmi_sensors_state_data_t *state_data,
                                             uint8_t *sdr_record,
                                             unsigned int sdr_record_len,
@@ -1354,10 +1354,10 @@ _detailed_output_entity_association_record (ipmi_sensors_state_data_t *state_dat
   uint8_t container_entity_id;
   uint8_t container_entity_instance;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
   if (ipmi_sdr_parse_container_entity (state_data->sdr_parse_ctx,
                                        sdr_record,
@@ -1368,28 +1368,28 @@ _detailed_output_entity_association_record (ipmi_sensors_state_data_t *state_dat
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_container_entity: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
-  
+
   if (_detailed_output_record_type_and_id (state_data,
                                            record_type,
                                            record_id) < 0)
     return -1;
 
-  pstdout_printf (state_data->pstate, 
-                  "Container Entity ID: %u\n", 
+  pstdout_printf (state_data->pstate,
+                  "Container Entity ID: %u\n",
                   container_entity_id);
-  pstdout_printf (state_data->pstate, 
-                  "Container Entity Instance: %u\n", 
+  pstdout_printf (state_data->pstate,
+                  "Container Entity Instance: %u\n",
                   container_entity_instance);
 
   pstdout_printf (state_data->pstate, "\n");
-  
+
   return 0;
 }
 
-static int 
+static int
 _detailed_output_device_relative_entity_association_record (ipmi_sensors_state_data_t *state_data,
                                                             uint8_t *sdr_record,
                                                             unsigned int sdr_record_len,
@@ -1399,10 +1399,10 @@ _detailed_output_device_relative_entity_association_record (ipmi_sensors_state_d
   uint8_t container_entity_id;
   uint8_t container_entity_instance;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
   if (ipmi_sdr_parse_container_entity (state_data->sdr_parse_ctx,
                                        sdr_record,
@@ -1413,24 +1413,24 @@ _detailed_output_device_relative_entity_association_record (ipmi_sensors_state_d
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_container_entity: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
-  
+
   if (_detailed_output_record_type_and_id (state_data,
                                            record_type,
                                            record_id) < 0)
     return -1;
 
-  pstdout_printf (state_data->pstate, 
-                  "Container Entity ID: %u\n", 
+  pstdout_printf (state_data->pstate,
+                  "Container Entity ID: %u\n",
                   container_entity_id);
-  pstdout_printf (state_data->pstate, 
-                  "Container Entity Instance: %u\n", 
+  pstdout_printf (state_data->pstate,
+                  "Container Entity Instance: %u\n",
                   container_entity_instance);
 
   pstdout_printf (state_data->pstate, "\n");
-  
+
   return 0;
 }
 
@@ -1443,12 +1443,12 @@ _detailed_output_header2 (ipmi_sensors_state_data_t *state_data,
 {
   char device_id_string[IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1];
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
-  memset(device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1);
+  memset (device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1);
 
   if (ipmi_sdr_parse_device_id_string (state_data->sdr_parse_ctx,
                                        sdr_record,
@@ -1459,7 +1459,7 @@ _detailed_output_header2 (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_device_id_string: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
@@ -1468,10 +1468,10 @@ _detailed_output_header2 (ipmi_sensors_state_data_t *state_data,
                                            record_id) < 0)
     return -1;
 
-  pstdout_printf (state_data->pstate, 
-                  "Device ID String: %s\n", 
+  pstdout_printf (state_data->pstate,
+                  "Device ID String: %s\n",
                   device_id_string);
-  
+
   return 0;
 }
 
@@ -1483,10 +1483,10 @@ _output_device_type_and_modifier (ipmi_sensors_state_data_t *state_data,
   uint8_t device_type;
   uint8_t device_type_modifier;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
   if (ipmi_sdr_parse_device_type (state_data->sdr_parse_ctx,
                                   sdr_record,
@@ -1497,17 +1497,17 @@ _output_device_type_and_modifier (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_device_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
 
       return -1;
     }
 
-  pstdout_printf (state_data->pstate, 
-                  "Device Type: %Xh\n", 
+  pstdout_printf (state_data->pstate,
+                  "Device Type: %Xh\n",
                   device_type);
 
-  pstdout_printf (state_data->pstate, 
-                  "Device Type Modifier: %Xh\n", 
+  pstdout_printf (state_data->pstate,
+                  "Device Type Modifier: %Xh\n",
                   device_type_modifier);
 
   return 0;
@@ -1521,10 +1521,10 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
   uint8_t entity_id;
   uint8_t entity_instance;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
   if (ipmi_sdr_parse_entity_id_and_instance (state_data->sdr_parse_ctx,
                                              sdr_record,
@@ -1535,22 +1535,22 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_entity_id_and_instance: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
-  pstdout_printf (state_data->pstate, 
-                  "Entity ID: %u\n", 
+  pstdout_printf (state_data->pstate,
+                  "Entity ID: %u\n",
                   entity_id);
-  
-  pstdout_printf (state_data->pstate, 
-                  "Entity Instance: %u\n", 
+
+  pstdout_printf (state_data->pstate,
+                  "Entity Instance: %u\n",
                   entity_instance);
 
   return 0;
 }
 
-static int 
+static int
 _detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state_data,
                                                 uint8_t *sdr_record,
                                                 unsigned int sdr_record_len,
@@ -1564,10 +1564,10 @@ _detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state
   uint8_t lun_for_master_write_read_command;
   uint8_t address_span;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
   if (_detailed_output_header2 (state_data,
                                 sdr_record,
@@ -1589,27 +1589,27 @@ _detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_general_device_locator_parameters: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
-  pstdout_printf (state_data->pstate, 
-                  "Direct Access Address: %Xh\n", 
+  pstdout_printf (state_data->pstate,
+                  "Direct Access Address: %Xh\n",
                   direct_access_address);
-  pstdout_printf (state_data->pstate, 
-                  "Channel Number: %Xh\n", 
+  pstdout_printf (state_data->pstate,
+                  "Channel Number: %Xh\n",
                   channel_number);
-  pstdout_printf (state_data->pstate, 
-                  "Direct Slave Address: %Xh\n", 
+  pstdout_printf (state_data->pstate,
+                  "Direct Slave Address: %Xh\n",
                   device_slave_address);
   pstdout_printf (state_data->pstate,
                   "Private Bus ID: %Xh\n",
                   private_bus_id);
-  pstdout_printf (state_data->pstate, 
-                  "LUN for Master Write-Read Command: %Xh\n", 
+  pstdout_printf (state_data->pstate,
+                  "LUN for Master Write-Read Command: %Xh\n",
                   lun_for_master_write_read_command);
-  pstdout_printf (state_data->pstate, 
-                  "Address Span: %u\n", 
+  pstdout_printf (state_data->pstate,
+                  "Address Span: %u\n",
                   address_span);
 
   if (_output_device_type_and_modifier (state_data,
@@ -1627,7 +1627,7 @@ _detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state
   return 0;
 }
 
-static int 
+static int
 _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_data,
                                             uint8_t *sdr_record,
                                             unsigned int sdr_record_len,
@@ -1643,10 +1643,10 @@ _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_dat
   uint8_t fru_entity_id;
   uint8_t fru_entity_instance;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
   if (_detailed_output_header2 (state_data,
                                 sdr_record,
@@ -1668,34 +1668,34 @@ _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_dat
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_general_device_locator_parameters: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
-      
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+
       return -1;
     }
 
-  pstdout_printf (state_data->pstate, 
-                  "Direct Access Address: %Xh\n", 
+  pstdout_printf (state_data->pstate,
+                  "Direct Access Address: %Xh\n",
                   direct_access_address);
 
   if (logical_physical_fru_device)
-    pstdout_printf (state_data->pstate, 
-                    "FRU Device ID: %Xh\n", 
+    pstdout_printf (state_data->pstate,
+                    "FRU Device ID: %Xh\n",
                     logical_fru_device_device_slave_address);
   else
-    pstdout_printf (state_data->pstate, 
-                    "Device Slave Address: %Xh\n", 
+    pstdout_printf (state_data->pstate,
+                    "Device Slave Address: %Xh\n",
                     logical_fru_device_device_slave_address);
 
   pstdout_printf (state_data->pstate,
                   "Private Bus ID: %Xh\n",
                   private_bus_id);
 
-  pstdout_printf (state_data->pstate, 
-                  "LUN for Master Write-Read or FRU Command: %Xh\n", 
+  pstdout_printf (state_data->pstate,
+                  "LUN for Master Write-Read or FRU Command: %Xh\n",
                   lun_for_master_write_read_fru_command);
 
-  pstdout_printf (state_data->pstate, 
-                  "Channel Number: %Xh\n", 
+  pstdout_printf (state_data->pstate,
+                  "Channel Number: %Xh\n",
                   channel_number);
 
   if (_output_device_type_and_modifier (state_data,
@@ -1712,24 +1712,24 @@ _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_dat
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_fru_entity_id_and_instance: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
-  pstdout_printf (state_data->pstate, 
-                  "FRU Entity ID: %u\n", 
+  pstdout_printf (state_data->pstate,
+                  "FRU Entity ID: %u\n",
                   fru_entity_id);
-  
-  pstdout_printf (state_data->pstate, 
-                  "FRU Entity Instance: %u\n", 
+
+  pstdout_printf (state_data->pstate,
+                  "FRU Entity Instance: %u\n",
                   fru_entity_instance);
-    
+
   pstdout_printf (state_data->pstate, "\n");
 
   return 0;
 }
 
-static int 
+static int
 _detailed_output_management_controller_device_locator_record (ipmi_sensors_state_data_t *state_data,
                                                               uint8_t *sdr_record,
                                                               unsigned int sdr_record_len,
@@ -1739,10 +1739,10 @@ _detailed_output_management_controller_device_locator_record (ipmi_sensors_state
   uint8_t device_slave_address;
   uint8_t channel_number;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
   if (_detailed_output_header2 (state_data,
                                 sdr_record,
@@ -1760,16 +1760,16 @@ _detailed_output_management_controller_device_locator_record (ipmi_sensors_state
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_management_controller_device_locator_parameters: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
-  pstdout_printf (state_data->pstate, 
-                  "Device Slave Address: %Xh\n", 
+  pstdout_printf (state_data->pstate,
+                  "Device Slave Address: %Xh\n",
                   device_slave_address);
 
-  pstdout_printf (state_data->pstate, 
-                  "Channel Number: %Xh\n", 
+  pstdout_printf (state_data->pstate,
+                  "Channel Number: %Xh\n",
                   channel_number);
 
   if (_output_entity_id_and_instance (state_data,
@@ -1789,10 +1789,10 @@ _output_manufacturer_id (ipmi_sensors_state_data_t *state_data,
 {
   uint32_t manufacturer_id;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
   if (ipmi_sdr_parse_manufacturer_id (state_data->sdr_parse_ctx,
                                       sdr_record,
@@ -1802,26 +1802,26 @@ _output_manufacturer_id (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        ": %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
-  if (IPMI_IANA_ENTERPRISE_ID_VALID(manufacturer_id)
+  if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
       && ipmi_iana_enterprise_numbers[manufacturer_id])
-    pstdout_printf(state_data->pstate,
-                   "Manufacturer ID: %s (%Xh)\n",
-                   ipmi_iana_enterprise_numbers[manufacturer_id],
-                   manufacturer_id);
-  
+    pstdout_printf (state_data->pstate,
+                    "Manufacturer ID: %s (%Xh)\n",
+                    ipmi_iana_enterprise_numbers[manufacturer_id],
+                    manufacturer_id);
+
   else
     pstdout_printf (state_data->pstate,
-                    "Manufacturer ID: %Xh\n", 
+                    "Manufacturer ID: %Xh\n",
                     manufacturer_id);
-  
+
   return 0;
 }
 
-static int 
+static int
 _detailed_output_management_controller_confirmation_record (ipmi_sensors_state_data_t *state_data,
                                                             uint8_t *sdr_record,
                                                             unsigned int sdr_record_len,
@@ -1830,10 +1830,10 @@ _detailed_output_management_controller_confirmation_record (ipmi_sensors_state_d
 {
   uint16_t product_id;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
   if (_detailed_output_record_type_and_id (state_data,
                                            record_type,
@@ -1853,12 +1853,12 @@ _detailed_output_management_controller_confirmation_record (ipmi_sensors_state_d
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_product_id: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
-  
+
   pstdout_printf (state_data->pstate,
-                  "Product ID: %Xh\n", 
+                  "Product ID: %Xh\n",
                   product_id);
 
   pstdout_printf (state_data->pstate, "\n");
@@ -1866,17 +1866,17 @@ _detailed_output_management_controller_confirmation_record (ipmi_sensors_state_d
   return 0;
 }
 
-static int 
+static int
 _detailed_output_bmc_message_channel_info_record (ipmi_sensors_state_data_t *state_data,
                                                   uint8_t *sdr_record,
                                                   unsigned int sdr_record_len,
                                                   uint8_t record_type,
                                                   uint16_t record_id)
 {
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
 
   if (_detailed_output_record_type_and_id (state_data,
                                            record_type,
@@ -1888,7 +1888,7 @@ _detailed_output_bmc_message_channel_info_record (ipmi_sensors_state_data_t *sta
   return 0;
 }
 
-static int 
+static int
 _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
                              uint8_t *sdr_record,
                              unsigned int sdr_record_len,
@@ -1898,23 +1898,23 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
   uint8_t oem_data[IPMI_SENSORS_OEM_DATA_LEN];
   int len = 0;
   int i;
-  
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 2);
-  
+
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
+
   if (_detailed_output_record_type_and_id (state_data,
                                            record_type,
                                            record_id) < 0)
     return -1;
-  
-  
+
+
   if (_output_manufacturer_id (state_data,
                                sdr_record,
                                sdr_record_len) < 0)
     return -1;
-  
+
   if ((len = ipmi_sdr_parse_oem_data (state_data->sdr_parse_ctx,
                                       sdr_record,
                                       sdr_record_len,
@@ -1924,25 +1924,25 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_oem_data: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
-  
-  pstdout_printf (state_data->pstate, 
+
+  pstdout_printf (state_data->pstate,
                   "OEM Data: ");
-  
+
   for (i = 0; i < len; i++)
-    pstdout_printf (state_data->pstate, 
-                    "%02X ", 
+    pstdout_printf (state_data->pstate,
+                    "%02X ",
                     oem_data[i]);
   pstdout_printf (state_data->pstate, "\n");
-  
+
   pstdout_printf (state_data->pstate, "\n");
-  
+
   return 0;
 }
 
-int 
+int
 ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                               uint8_t *sdr_record,
                               unsigned int sdr_record_len,
@@ -1953,21 +1953,21 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
   uint16_t record_id;
   uint8_t record_type;
 
-  assert(state_data);
-  assert(sdr_record);
-  assert(sdr_record_len);
-  assert(state_data->prog_data->args->verbose_count >= 1);
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 1);
 
-  if (ipmi_sdr_parse_record_id_and_type(state_data->sdr_parse_ctx,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        &record_id,
-                                        &record_type) < 0)
+  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &record_id,
+                                         &record_type) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_record_id_and_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg(state_data->sdr_parse_ctx));
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return -1;
     }
 
@@ -2050,10 +2050,10 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                                               record_type,
                                               record_id);
         default:
-          pstdout_fprintf(state_data->pstate,
-                          stderr,
-                          "Unknown Record Type: %X\n",
-                          record_type);
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "Unknown Record Type: %X\n",
+                           record_type);
           break;
         }
     }
@@ -2093,6 +2093,6 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
           break;
         }
     }
-  
+
   return (0);
 }

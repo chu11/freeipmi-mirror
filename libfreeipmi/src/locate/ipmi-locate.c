@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #ifdef HAVE_CONFIG_H
@@ -36,8 +36,8 @@
 
 #include "freeipmi-portability.h"
 
-typedef int ((*ipmi_locate_func)(ipmi_locate_ctx_t ctx, 
-                                 ipmi_interface_type_t, 
+typedef int ((*ipmi_locate_func)(ipmi_locate_ctx_t ctx,
+                                 ipmi_interface_type_t,
                                  struct ipmi_locate_info *));
 
 static char * ipmi_locate_ctx_errmsg[] =
@@ -55,16 +55,16 @@ static char * ipmi_locate_ctx_errmsg[] =
   };
 
 ipmi_locate_ctx_t
-ipmi_locate_ctx_create(void)
+ipmi_locate_ctx_create (void)
 {
   ipmi_locate_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_locate_ctx_t)malloc(sizeof(struct ipmi_locate_ctx))))
+  if (!(ctx = (ipmi_locate_ctx_t)malloc (sizeof(struct ipmi_locate_ctx))))
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return NULL;
     }
-  memset(ctx, '\0', sizeof(struct ipmi_locate_ctx));
+  memset (ctx, '\0', sizeof(struct ipmi_locate_ctx));
 
   ctx->magic = IPMI_LOCATE_CTX_MAGIC;
 
@@ -73,18 +73,18 @@ ipmi_locate_ctx_create(void)
 }
 
 void
-ipmi_locate_ctx_destroy(ipmi_locate_ctx_t ctx)
+ipmi_locate_ctx_destroy (ipmi_locate_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
     return;
 
   ctx->magic = ~IPMI_LOCATE_CTX_MAGIC;
   ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
-  free(ctx);
+  free (ctx);
 }
 
 int
-ipmi_locate_ctx_errnum(ipmi_locate_ctx_t ctx)
+ipmi_locate_ctx_errnum (ipmi_locate_ctx_t ctx)
 {
   if (!ctx)
     return (IPMI_LOCATE_ERR_NULL);
@@ -95,7 +95,7 @@ ipmi_locate_ctx_errnum(ipmi_locate_ctx_t ctx)
 }
 
 char *
-ipmi_locate_ctx_strerror(int errnum)
+ipmi_locate_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_LOCATE_ERR_SUCCESS && errnum <= IPMI_LOCATE_ERR_ERRNUMRANGE)
     return ipmi_locate_ctx_errmsg[errnum];
@@ -104,12 +104,12 @@ ipmi_locate_ctx_strerror(int errnum)
 }
 
 char *
-ipmi_locate_ctx_errormsg(ipmi_locate_ctx_t ctx)
+ipmi_locate_ctx_errormsg (ipmi_locate_ctx_t ctx)
 {
-  return ipmi_locate_ctx_strerror(ipmi_locate_ctx_errnum(ctx));
+  return ipmi_locate_ctx_strerror (ipmi_locate_ctx_errnum (ctx));
 }
 
-static int 
+static int
 _ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
                               ipmi_interface_type_t type,
                               struct ipmi_locate_info *info,
@@ -117,7 +117,7 @@ _ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
 {
   static ipmi_locate_func things_to_try[] =
     {
-      ipmi_locate_dmidecode_get_device_info, 
+      ipmi_locate_dmidecode_get_device_info,
       ipmi_locate_smbios_get_device_info,
       ipmi_locate_acpi_spmi_get_device_info,
       ipmi_locate_pci_get_device_info,
@@ -130,13 +130,13 @@ _ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_locate_ctx_errormsg (ctx), ipmi_locate_ctx_errnum (ctx));
       return (-1);
     }
 
-  if (!IPMI_INTERFACE_TYPE_VALID(type) || !info)
+  if (!IPMI_INTERFACE_TYPE_VALID (type) || !info)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -144,21 +144,21 @@ _ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
     things_to_try_len = 5;
   else
     things_to_try_len = 4;
-  
+
   for (i = 0; i < things_to_try_len; i++)
     {
       memset (&linfo, 0, sizeof (struct ipmi_locate_info));
       rv = (*things_to_try[i])(ctx, type, &linfo);
       if (!rv)
-	{
-	  memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
+        {
+          memcpy (info, &linfo, sizeof(struct ipmi_locate_info));
           /* reset errnum if set previously */
           ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
-	  return 0;
-	}
+          return 0;
+        }
     }
 
-  LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+  LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
   return (-1);
 }
 
@@ -167,7 +167,7 @@ ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
                              ipmi_interface_type_t type,
                              struct ipmi_locate_info *info)
 {
-  return _ipmi_locate_get_device_info(ctx, type, info, 1);
+  return _ipmi_locate_get_device_info (ctx, type, info, 1);
 }
 
 int
@@ -175,5 +175,5 @@ ipmi_locate_discover_device_info (ipmi_locate_ctx_t ctx,
                                   ipmi_interface_type_t type,
                                   struct ipmi_locate_info *info)
 {
-  return _ipmi_locate_get_device_info(ctx, type, info, 0);
+  return _ipmi_locate_get_device_info (ctx, type, info, 0);
 }

@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #ifndef _IPMI_SENSOR_UNITS_SPEC_H
@@ -44,7 +44,7 @@ extern "C" {
 #define IPMI_SENSOR_UNIT_RPM                    18
 #define IPMI_SENSOR_UNIT_HZ                     19
 #define IPMI_SENSOR_UNIT_MICROSECOND            20
-#define IPMI_SENSOR_UNIT_MILLISECOND            21  
+#define IPMI_SENSOR_UNIT_MILLISECOND            21
 #define IPMI_SENSOR_UNIT_SECOND                 22
 #define IPMI_SENSOR_UNIT_MINUTE                 23
 #define IPMI_SENSOR_UNIT_HOUR                   24
@@ -62,7 +62,7 @@ extern "C" {
 #define IPMI_SENSOR_UNIT_CU_M                   36
 #define IPMI_SENSOR_UNIT_LITERS                 37
 #define IPMI_SENSOR_UNIT_FLUID_OUNCE            38
-#define IPMI_SENSOR_UNIT_RADIANS                39 
+#define IPMI_SENSOR_UNIT_RADIANS                39
 #define IPMI_SENSOR_UNIT_STERADIANS             40
 #define IPMI_SENSOR_UNIT_REVOLUTIONS            41
 #define IPMI_SENSOR_UNIT_CYCLES                 42
@@ -117,27 +117,27 @@ extern "C" {
 #define IPMI_SENSOR_UNIT_FATAL_ERROR            91
 #define IPMI_SENSOR_UNIT_GRAMS                  92
 
-/* To avoid gcc warnings, added +1 and -1 in comparison */
-#define IPMI_SENSOR_UNIT_VALID(__sensor_unit) \
-        (((__sensor_unit+1) > (IPMI_SENSOR_UNIT_UNSPECIFIED+1) \
-          && (__sensor_unit-1) < (IPMI_SENSOR_UNIT_GRAMS-1)) ? 1 : 0)
+  /* To avoid gcc warnings, added +1 and -1 in comparison */
+#define IPMI_SENSOR_UNIT_VALID(__sensor_unit)			\
+  (((__sensor_unit+1) > (IPMI_SENSOR_UNIT_UNSPECIFIED+1)	\
+    && (__sensor_unit-1) < (IPMI_SENSOR_UNIT_GRAMS-1)) ? 1 : 0)
 
 #define IPMI_SENSOR_RATE_UNIT_NONE               0
 #define IPMI_SENSOR_RATE_UNIT_PER_US             1
 #define IPMI_SENSOR_RATE_UNIT_PER_MS             2
 #define IPMI_SENSOR_RATE_UNIT_PER_S              3
 #define IPMI_SENSOR_RATE_UNIT_PER_MINUTE         4
-#define IPMI_SENSOR_RATE_UNIT_PER_HOUR           5 
+#define IPMI_SENSOR_RATE_UNIT_PER_HOUR           5
 #define IPMI_SENSOR_RATE_UNIT_PER_DAY            6
 
-/* To avoid gcc warnings, added +1 and -1 in comparison */
-#define IPMI_SENSOR_RATE_UNIT_VALID(__sensor_rate_unit) \
-        (((__sensor_rate_unit+1) > (IPMI_SENSOR_RATE_UNIT_NONE-1) \
-          && (__sensor_rate_unit-1) < (IPMI_SENSOR_RATE_UNIT_PER_DAY-1)) ? 1 : 0)
+  /* To avoid gcc warnings, added +1 and -1 in comparison */
+#define IPMI_SENSOR_RATE_UNIT_VALID(__sensor_rate_unit)			\
+  (((__sensor_rate_unit+1) > (IPMI_SENSOR_RATE_UNIT_NONE-1)		\
+    && (__sensor_rate_unit-1) < (IPMI_SENSOR_RATE_UNIT_PER_DAY-1)) ? 1 : 0)
 
-extern const char *const ipmi_sensor_units[];
-extern const char *const ipmi_sensor_units_abbreviated[];
-extern const char *const ipmi_sensor_rate_units[];
+  extern const char *const ipmi_sensor_units[];
+  extern const char *const ipmi_sensor_units_abbreviated[];
+  extern const char *const ipmi_sensor_rate_units[];
 
 #ifdef __cplusplus
 }

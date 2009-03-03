@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.h,v 1.10 2009-02-03 22:48:24 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.h,v 1.10.4.1 2009-03-03 01:41:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -29,15 +29,15 @@
 
 #include "ipmi_monitoring.h"
 
-int ipmi_monitoring_sensor_reading_init(ipmi_monitoring_ctx_t c);
+int ipmi_monitoring_sensor_reading_init (ipmi_monitoring_ctx_t c);
 
-int ipmi_monitoring_sensor_reading_cleanup(ipmi_monitoring_ctx_t c);
+int ipmi_monitoring_sensor_reading_cleanup (ipmi_monitoring_ctx_t c);
 
-int ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c, 
-                                       unsigned int sensor_reading_flags,
-                                       uint8_t *sdr_record,
-                                       unsigned int sdr_record_len,
-                                       unsigned int *sensor_groups,
-                                       unsigned int sensor_groups_len);
+int ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
+                                        unsigned int sensor_reading_flags,
+                                        uint8_t *sdr_record,
+                                        unsigned int sdr_record_len,
+                                        unsigned int *sensor_groups,
+                                        unsigned int sensor_groups_len);
 
 #endif /* _IPMI_MONITORING_SENSOR_READING_H */

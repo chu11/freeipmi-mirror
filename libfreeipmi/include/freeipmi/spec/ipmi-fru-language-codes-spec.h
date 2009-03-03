@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-language-codes-spec.h,v 1.4 2009-01-13 01:02:29 chu11 Exp $
+ *  $Id: ipmi-fru-language-codes-spec.h,v 1.4.12.1 2009-03-03 01:41:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -27,7 +27,7 @@
 \*****************************************************************************/
 
 #ifndef _IPMI_FRU_LANGUAGE_CODES_SPEC_H
-#define	_IPMI_FRU_LANGUAGE_CODES_SPEC_H
+#define _IPMI_FRU_LANGUAGE_CODES_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,16 +35,16 @@ extern "C" {
 
 #include <freeipmi/fiid/fiid.h>
 
-/*
- * achu:
- *
- * Not in IPMI spec.  In "Platform Management FRU Information Storage
- * Definition" document.
- */
+  /*
+   * achu:
+   *
+   * Not in IPMI spec.  In "Platform Management FRU Information Storage
+   * Definition" document.
+   */
 
 #define IPMI_FRU_LANGUAGE_CODE_ENGLISH_LEGACY       0
 #define IPMI_FRU_LANGUAGE_CODE_AFAR                 1
-#define IPMI_FRU_LANGUAGE_CODE_ABKHAZIAN            2            
+#define IPMI_FRU_LANGUAGE_CODE_ABKHAZIAN            2
 #define IPMI_FRU_LANGUAGE_CODE_AFRIKAANS            3
 #define IPMI_FRU_LANGUAGE_CODE_AMHARIC              4
 #define IPMI_FRU_LANGUAGE_CODE_ARABIC               5
@@ -56,7 +56,7 @@ extern "C" {
 #define IPMI_FRU_LANGUAGE_CODE_BULGARIAN            11
 #define IPMI_FRU_LANGUAGE_CODE_BIHARI               12
 #define IPMI_FRU_LANGUAGE_CODE_BISLAMA              13
-#define IPMI_FRU_LANGUAGE_CODE_BENGALI_BANGLA       14 
+#define IPMI_FRU_LANGUAGE_CODE_BENGALI_BANGLA       14
 #define IPMI_FRU_LANGUAGE_CODE_TIBETAN              15
 #define IPMI_FRU_LANGUAGE_CODE_BRETON               16
 #define IPMI_FRU_LANGUAGE_CODE_CATALAN              17
@@ -80,10 +80,10 @@ extern "C" {
 #define IPMI_FRU_LANGUAGE_CODE_FRISIAN              35
 #define IPMI_FRU_LANGUAGE_CODE_IRISH                36
 #define IPMI_FRU_LANGUAGE_CODE_SCOTS_GAELIC         37
-#define IPMI_FRU_LANGUAGE_CODE_GALICIAN             38 
+#define IPMI_FRU_LANGUAGE_CODE_GALICIAN             38
 #define IPMI_FRU_LANGUAGE_CODE_GUARANI              39
-#define IPMI_FRU_LANGUAGE_CODE_GUJARATI             40     
-#define IPMI_FRU_LANGUAGE_CODE_HAUSA                41 
+#define IPMI_FRU_LANGUAGE_CODE_GUJARATI             40
+#define IPMI_FRU_LANGUAGE_CODE_HAUSA                41
 #define IPMI_FRU_LANGUAGE_CODE_HINDI                42
 #define IPMI_FRU_LANGUAGE_CODE_CROATIAN             43
 #define IPMI_FRU_LANGUAGE_CODE_HUNGARIAN            44
@@ -180,11 +180,11 @@ extern "C" {
 #define IPMI_FRU_LANGUAGE_CODE_CHINESE              135
 #define IPMI_FRU_LANGUAGE_CODE_ZULU                 136
 
-#define IPMI_FRU_LANGUAGE_CODE_VALID(__language_code) \
-        (((__language_code) >= IPMI_FRU_LANGUAGE_CODE_ENGLISH_LEGACY \
-          && (__language_code) <= IPMI_FRU_LANGUAGE_CODE_ZULU) ? 1 : 0)
+#define IPMI_FRU_LANGUAGE_CODE_VALID(__language_code)			\
+  (((__language_code) >= IPMI_FRU_LANGUAGE_CODE_ENGLISH_LEGACY		\
+    && (__language_code) <= IPMI_FRU_LANGUAGE_CODE_ZULU) ? 1 : 0)
 
-extern const char *const ipmi_fru_language_codes[];
+  extern const char *const ipmi_fru_language_codes[];
 
 #ifdef __cplusplus
 }

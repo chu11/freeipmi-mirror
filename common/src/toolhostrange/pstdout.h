@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.h,v 1.2 2009-01-13 01:02:12 chu11 Exp $
+ *  $Id: pstdout.h,v 1.2.12.1 2009-03-03 01:40:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -28,7 +28,7 @@
 #ifndef _PSTDOUT_H
 #define _PSTDOUT_H 1
 
-/* 
+/*
  * Pstdout is a library/tool to launch and manage multiple threads,
  * each dealing with a different host.  It will also manage the
  * "parallel" standard output from the launched threads.
@@ -53,7 +53,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-/* 
+/*
  * Error Codes
  */
 #define PSTDOUT_ERR_SUCCESS               0
@@ -63,7 +63,7 @@
 #define PSTDOUT_ERR_INTERNAL              4
 #define PSTDOUT_ERR_ERRNUMRANGE           5
 
-/* 
+/*
  * Debug Flags
  *
  * PSTDOUT_DEBUG_NONE - No debug output
@@ -74,7 +74,7 @@
 #define PSTDOUT_DEBUG_STANDARD            0x00000002
 #define PSTDOUT_DEBUG_MASK                0x00000003
 
-/* 
+/*
  * Output Flags
  *
  * PSTDOUT_OUTPUT_STDOUT_DEFAULT/PSTDOUT_OUTPUT_STDERR_DEFAULT -
@@ -100,7 +100,7 @@
  * not output twice.  Conflicts with
  * PSTDOUT_OUTPUT_STDOUT/STDERR_PREPEND_HOSTNAME and
  * PSTDOUT_OUTPUT_BUFFER_STDOUT/STDERR.
- * 
+ *
  */
 #define PSTDOUT_OUTPUT_STDOUT_DEFAULT          0x00000001
 #define PSTDOUT_OUTPUT_STDERR_DEFAULT          0x00000002
@@ -112,7 +112,7 @@
 #define PSTDOUT_OUTPUT_STDERR_CONSOLIDATE      0x00000080
 #define PSTDOUT_OUTPUT_MASK                    0x000000FF
 
-/* 
+/*
  * Fanout default, min, and max
  */
 #define PSTDOUT_FANOUT_DEFAULT    64
@@ -134,7 +134,7 @@ extern int pstdout_errnum;
  */
 typedef struct pstdout_state *pstdout_state_t;
 
-/* Pstdout_Thread 
+/* Pstdout_Thread
  *
  * Function prototype of the function that pstdout will launch.
  * Passed to 'pstdout_launch'.
@@ -147,13 +147,13 @@ typedef int (*Pstdout_Thread)(pstdout_state_t pstate, const char *hostname, void
  *
  * Must be called before most pstdout API functions can be called.
  */
-int pstdout_init(void);
+int pstdout_init (void);
 
 /* pstdout_strerror
- * 
+ *
  * Returns statically defined string describing the error code.
  */
-char *pstdout_strerror(int errnum);
+char *pstdout_strerror (int errnum);
 
 /* pstdout_set_debug_flags
  *
@@ -161,13 +161,13 @@ char *pstdout_strerror(int errnum);
  *
  * Returns 0 on success, -1 on error
  */
-int pstdout_set_debug_flags(unsigned int flags);
+int pstdout_set_debug_flags (unsigned int flags);
 
 /* pstdout_get_debug_flags
  *
  * Returns current debug flags.
  */
-int pstdout_get_debug_flags(void);
+int pstdout_get_debug_flags (void);
 
 /* pstdout_set_output_flags
  *
@@ -175,13 +175,13 @@ int pstdout_get_debug_flags(void);
  *
  * Returns 0 on success, -1 on error
  */
-int pstdout_set_output_flags(unsigned int flags);
+int pstdout_set_output_flags (unsigned int flags);
 
 /* pstdout_get_output_flags
  *
  * Returns current output flags.
  */
-int pstdout_get_output_flags(void);
+int pstdout_get_output_flags (void);
 
 /* pstdout_set_fanout
  *
@@ -190,13 +190,13 @@ int pstdout_get_output_flags(void);
  *
  * Returns 0 on success, -1 on error
  */
-int pstdout_set_fanout(unsigned int fanout);
+int pstdout_set_fanout (unsigned int fanout);
 
 /* pstdout_get_fanout
  *
  * Returns current fanout.
  */
-int pstdout_get_fanout(void);
+int pstdout_get_fanout (void);
 
 /* pstdout_hostnames_count
  *
@@ -206,7 +206,7 @@ int pstdout_get_fanout(void);
  *
  * Returns number of hostnames on success, -1 on error.
  */
-int pstdout_hostnames_count(const char *hostnames);
+int pstdout_hostnames_count (const char *hostnames);
 
 /* pstdout_printf
  *
@@ -219,7 +219,7 @@ int pstdout_hostnames_count(const char *hostnames);
  * 0, because data is being buffered for output on a later
  * pstdout_printf call.
  */
-int pstdout_printf(pstdout_state_t pstate, const char *format, ...);
+int pstdout_printf (pstdout_state_t pstate, const char *format, ...);
 
 /* pstdout_fprintf
  *
@@ -233,14 +233,14 @@ int pstdout_printf(pstdout_state_t pstate, const char *format, ...);
  * 0, because data is being buffered for output on a later
  * pstdout_fprintf call.
  */
-int pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ...);
+int pstdout_fprintf (pstdout_state_t pstate, FILE *stream, const char *format, ...);
 
 /* pstdout_perror
  *
  * Parallel perror.  Should only be called by a thread executed by
  * 'pstdout_launch'.
  */
-void pstdout_perror(pstdout_state_t pstate, const char *s);
+void pstdout_perror (pstdout_state_t pstate, const char *s);
 
 /* pstdout_launch
  *
@@ -251,27 +251,27 @@ void pstdout_perror(pstdout_state_t pstate, const char *s);
  *
  * Returns: Largest exit code returned from all threads launched.
  */
-int pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg);
+int pstdout_launch (const char *hostnames, Pstdout_Thread pstdout_func, void *arg);
 
 /* PSTDOUT_PRINTF
  *
  * Identical to 'pstdout_printf', but will call standard printf() if an invalid
  * pstate is passed in (i.e. a NULL pstate).
  */
-int PSTDOUT_PRINTF(pstdout_state_t pstate, const char *format, ...);
+int PSTDOUT_PRINTF (pstdout_state_t pstate, const char *format, ...);
 
 /* PSTDOUT_FPRINTF
  *
  * Identical to 'pstdout_fprintf', but will call standard fprintf() if an invalid
  * pstate or stream is passed in (i.e. a NULL pstate).
  */
-int PSTDOUT_FPRINTF(pstdout_state_t pstate, FILE *stream, const char *format, ...);
+int PSTDOUT_FPRINTF (pstdout_state_t pstate, FILE *stream, const char *format, ...);
 
 /* PSTDOUT_PERROR
  *
  * Identical to 'pstdout_perror', but will call standard perror() if an invalid
  * pstate is passed in (i.e. a NULL pstate).
  */
-void PSTDOUT_PERROR(pstdout_state_t pstate, const char *s);
+void PSTDOUT_PERROR (pstdout_state_t pstate, const char *s);
 
 #endif /* _PSTDOUT_H */

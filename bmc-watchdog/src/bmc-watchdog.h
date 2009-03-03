@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.h,v 1.3 2009-01-13 01:02:09 chu11 Exp $
+ *  $Id: bmc-watchdog.h,v 1.3.12.1 2009-03-03 01:40:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -42,7 +42,7 @@
 
 enum bmc_watchdog_argp_option_keys
   {
-    SET_KEY = 's', 
+    SET_KEY = 's',
     GET_KEY = 'g',
     RESET_KEY = 'r',
     START_KEY = 't',
@@ -71,8 +71,8 @@ enum bmc_watchdog_argp_option_keys
     ARP_RESPONSE_KEY = 'A',
     RESET_PERIOD_KEY = 'e',
     HELP_KEY = '?',
-    HELP2_KEY = 'h',             /* legacy */
-    HELP3_KEY = 'H',             /* legacy */
+    HELP2_KEY = 'h',               /* legacy */
+    HELP3_KEY = 'H',               /* legacy */
   };
 
 /* achu

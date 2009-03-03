@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2005-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2005-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #if HAVE_CONFIG_H
@@ -38,13 +38,13 @@
 #include "freeipmi-portability.h"
 #include "tool-common.h"
 
-static void 
+static void
 display_ipmi_locate_info (struct ipmi_locate_info *info)
 {
-  printf ("IPMI Version: %d.%d\n", 
-	  info->ipmi_version_major, 
-	  info->ipmi_version_minor);
-  
+  printf ("IPMI Version: %d.%d\n",
+          info->ipmi_version_major,
+          info->ipmi_version_minor);
+
   switch (info->locate_driver_type)
     {
     case IPMI_LOCATE_DRIVER_NONE:
@@ -68,7 +68,7 @@ display_ipmi_locate_info (struct ipmi_locate_info *info)
     default:
       printf ("IPMI locate driver: UNKNOWN\n");
     };
-  
+
   switch (info->interface_type)
     {
     case IPMI_INTERFACE_RESERVED:
@@ -89,9 +89,9 @@ display_ipmi_locate_info (struct ipmi_locate_info *info)
     default:
       printf ("IPMI interface: UNKNOWN\n");
     }
-  
+
   printf ("BMC driver device: %s\n", info->driver_device);
-  
+
   switch (info->address_space_id)
     {
     case IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY:
@@ -106,31 +106,31 @@ display_ipmi_locate_info (struct ipmi_locate_info *info)
     default:
       printf ("error: Error parsing base address\n");
     }
-  
+
   printf ("Register spacing: %d\n", info->register_spacing);
-  
+
   return;
 }
 
-static void 
+static void
 dmidecode_probe_display (ipmi_locate_ctx_t ctx)
 {
   struct ipmi_locate_info info;
 
-  assert(ctx);
+  assert (ctx);
 
   printf ("Probing KCS device using DMIDECODE... ");
   if (!ipmi_locate_dmidecode_get_device_info (ctx,
-                                              IPMI_INTERFACE_KCS, 
+                                              IPMI_INTERFACE_KCS,
                                               &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
@@ -139,80 +139,80 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
 
   printf ("Probing SMIC device using DMIDECODE... ");
   if (!ipmi_locate_dmidecode_get_device_info (ctx,
-                                              IPMI_INTERFACE_SMIC, 
+                                              IPMI_INTERFACE_SMIC,
                                               &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   printf ("Probing BT device using DMIDECODE... ");
   if (!ipmi_locate_dmidecode_get_device_info (ctx,
-                                              IPMI_INTERFACE_BT, 
+                                              IPMI_INTERFACE_BT,
                                               &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   printf ("Probing SSIF device using DMIDECODE... ");
   if (!ipmi_locate_dmidecode_get_device_info (ctx,
-                                              IPMI_INTERFACE_SSIF, 
+                                              IPMI_INTERFACE_SSIF,
                                               &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   return;
 }
 
-static void 
+static void
 smbios_probe_display (ipmi_locate_ctx_t ctx)
 {
   struct ipmi_locate_info info;
-  
-  assert(ctx);
+
+  assert (ctx);
 
   printf ("Probing KCS device using SMBIOS... ");
   if (!ipmi_locate_smbios_get_device_info (ctx,
-                                           IPMI_INTERFACE_KCS, 
+                                           IPMI_INTERFACE_KCS,
                                            &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
@@ -221,284 +221,284 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
 
   printf ("Probing SMIC device using SMBIOS... ");
   if (!ipmi_locate_smbios_get_device_info (ctx,
-                                           IPMI_INTERFACE_SMIC, 
+                                           IPMI_INTERFACE_SMIC,
                                            &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   printf ("Probing BT device using SMBIOS... ");
   if (!ipmi_locate_smbios_get_device_info (ctx,
-                                           IPMI_INTERFACE_BT, 
+                                           IPMI_INTERFACE_BT,
                                            &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   printf ("Probing SSIF device using SMBIOS... ");
   if (!ipmi_locate_smbios_get_device_info (ctx,
-                                           IPMI_INTERFACE_SSIF, 
+                                           IPMI_INTERFACE_SSIF,
                                            &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   return;
 }
 
-static void 
+static void
 acpi_probe_display (ipmi_locate_ctx_t ctx)
 {
   struct ipmi_locate_info info;
-  
-  assert(ctx);
+
+  assert (ctx);
 
   printf ("Probing KCS device using ACPI... ");
   if (!ipmi_locate_acpi_spmi_get_device_info (ctx,
-                                              IPMI_INTERFACE_KCS, 
+                                              IPMI_INTERFACE_KCS,
                                               &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   printf ("Probing SMIC device using ACPI... ");
   if (!ipmi_locate_acpi_spmi_get_device_info (ctx,
-                                              IPMI_INTERFACE_SMIC, 
+                                              IPMI_INTERFACE_SMIC,
                                               &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   printf ("Probing BT device using ACPI... ");
   if (!ipmi_locate_acpi_spmi_get_device_info (ctx,
-                                              IPMI_INTERFACE_BT, 
+                                              IPMI_INTERFACE_BT,
                                               &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   printf ("Probing SSIF device using ACPI... ");
   if (!ipmi_locate_acpi_spmi_get_device_info (ctx,
-                                              IPMI_INTERFACE_SSIF, 
+                                              IPMI_INTERFACE_SSIF,
                                               &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   return;
 }
 
-static void 
+static void
 pci_probe_display (ipmi_locate_ctx_t ctx)
 {
   struct ipmi_locate_info info;
-  
-  assert(ctx);
+
+  assert (ctx);
 
   printf ("Probing KCS device using PCI... ");
   if (!ipmi_locate_pci_get_device_info (ctx,
-                                        IPMI_INTERFACE_KCS, 
+                                        IPMI_INTERFACE_KCS,
                                         &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   printf ("Probing SMIC device using PCI... ");
   if (!ipmi_locate_pci_get_device_info (ctx,
-                                        IPMI_INTERFACE_SMIC, 
+                                        IPMI_INTERFACE_SMIC,
                                         &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   printf ("Probing BT device using PCI... ");
   if (!ipmi_locate_pci_get_device_info (ctx,
-                                        IPMI_INTERFACE_BT, 
+                                        IPMI_INTERFACE_BT,
                                         &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   printf ("Probing SSIF device using PCI... ");
   if (!ipmi_locate_pci_get_device_info (ctx,
-                                        IPMI_INTERFACE_SSIF, 
+                                        IPMI_INTERFACE_SSIF,
                                         &info))
     {
       printf ("done\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   return;
 }
 
-static void 
+static void
 defaults_display (ipmi_locate_ctx_t ctx)
 {
   struct ipmi_locate_info info;
 
-  assert(ctx);
+  assert (ctx);
 
   printf ("KCS device default values: ");
   if (!ipmi_locate_defaults_get_device_info (ctx,
                                              IPMI_INTERFACE_KCS,
                                              &info))
     {
-      printf("\n");
+      printf ("\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
   printf ("SMIC device default values: ");
   if (!ipmi_locate_defaults_get_device_info (ctx,
-                                             IPMI_INTERFACE_SMIC, 
+                                             IPMI_INTERFACE_SMIC,
                                              &info))
     {
-      printf("\n");
+      printf ("\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
     }
   printf ("\n");
-  
+
 #if 0
 
   /* Default values of BT not known, this will always fail */
 
   printf ("BT device default values: ");
   if (!ipmi_locate_defaults_get_device_info (ctx,
-                                             IPMI_INTERFACE_BT, 
+                                             IPMI_INTERFACE_BT,
                                              &info))
     {
-      printf("\n");
+      printf ("\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
@@ -507,22 +507,22 @@ defaults_display (ipmi_locate_ctx_t ctx)
 #else /* !0 */
 
   printf ("BT device default values: ");
-  printf("\n");
+  printf ("\n");
 
 #endif  /* !0 */
-  
+
   printf ("SSIF device default values: ");
   if (!ipmi_locate_defaults_get_device_info (ctx,
-                                             IPMI_INTERFACE_SSIF, 
+                                             IPMI_INTERFACE_SSIF,
                                              &info))
     {
-      printf("\n");
+      printf ("\n");
       display_ipmi_locate_info (&info);
     }
-  else 
+  else
     {
 #ifndef NDEBUG
-      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg(ctx));
+      printf ("FAILED: %s\n", ipmi_locate_ctx_errormsg (ctx));
 #else
       printf ("FAILED\n");
 #endif
@@ -531,25 +531,25 @@ defaults_display (ipmi_locate_ctx_t ctx)
   return;
 }
 
-int 
+int
 main (int argc, char **argv)
 {
   ipmi_locate_ctx_t ctx = NULL;
 
-  ipmi_disable_coredump();
+  ipmi_disable_coredump ();
 
   ipmi_locate_argp_parse (argc, argv);
 
-  if (!ipmi_is_root())
+  if (!ipmi_is_root ())
     {
-      fprintf(stderr, "%s: permission denied\n", argv[0]);
-      exit(1);
+      fprintf (stderr, "%s: permission denied\n", argv[0]);
+      exit (1);
     }
 
-  if (!(ctx = ipmi_locate_ctx_create()))
+  if (!(ctx = ipmi_locate_ctx_create ()))
     {
-      fprintf(stderr, "ipmi_locate_ctx_create(): %s", strerror(errno));
-      exit(1);
+      fprintf (stderr, "ipmi_locate_ctx_create(): %s", strerror (errno));
+      exit (1);
     }
 
   dmidecode_probe_display (ctx);
@@ -557,9 +557,9 @@ main (int argc, char **argv)
   acpi_probe_display (ctx);
   pci_probe_display (ctx);
   defaults_display (ctx);
-  
+
   if (ctx)
-    ipmi_locate_ctx_destroy(ctx);
+    ipmi_locate_ctx_destroy (ctx);
   return (0);
 }
 

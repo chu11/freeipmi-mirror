@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-information-record-format.h,v 1.5 2009-01-13 01:02:26 chu11 Exp $
+ *  $Id: ipmi-fru-information-record-format.h,v 1.5.12.1 2009-03-03 01:41:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -27,7 +27,7 @@
 \*****************************************************************************/
 
 #ifndef _IPMI_FRU_INFORMATION_RECORD_FORMAT_H
-#define	_IPMI_FRU_INFORMATION_RECORD_FORMAT_H
+#define _IPMI_FRU_INFORMATION_RECORD_FORMAT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,12 +35,12 @@ extern "C" {
 
 #include <freeipmi/fiid/fiid.h>
 
-/*
- * achu:
- *
- * Not in IPMI spec.  In "Platform Management FRU Information Storage
- * Definition" document.
- */
+  /*
+   * achu:
+   *
+   * Not in IPMI spec.  In "Platform Management FRU Information Storage
+   * Definition" document.
+   */
 
 #define IPMI_FRU_COMMON_HEADER_FORMAT_VERSION         0x01
 #define IPMI_FRU_CHASSIS_INFO_AREA_FORMAT_VERSION     0x01
@@ -57,13 +57,13 @@ extern "C" {
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN                        0xC0
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MAX                        0xFF
 
-#define IPMI_FRU_MULTIRECORD_AREA_TYPE_VALID(__multirecord_area_type) \
-        (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION \
-          && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD) ? 1 : 0)
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_VALID(__multirecord_area_type)	\
+  (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION \
+    && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD) ? 1 : 0)
 
-#define IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM(__multirecord_area_type) \
-        (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN \
-          && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MAX) ? 1 : 0)
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM(__multirecord_area_type)	\
+  (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN \
+    && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MAX) ? 1 : 0)
 
 #define IPMI_FRU_ONE_PULSE_PER_ROTATION  0x0
 #define IPMI_FRU_TWO_PULSES_PER_ROTATION 0x1
@@ -83,9 +83,9 @@ extern "C" {
 #define IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_PING_ADDRESS    0x06
 #define IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID          0x07
 
-#define IPMI_FRU_SUB_RECORD_TYPE_VALID(__sub_record_type) \
-        (((__sub_record_type) >= IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_MANAGEMENT_URL \
-          && (__sub_record_type) <= IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID) ? 1 : 0)
+#define IPMI_FRU_SUB_RECORD_TYPE_VALID(__sub_record_type)		\
+  (((__sub_record_type) >= IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_MANAGEMENT_URL \
+    && (__sub_record_type) <= IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID) ? 1 : 0)
 
 #define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_BINARY          0x00
 #define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_BCD             0x40
@@ -102,16 +102,16 @@ extern "C" {
 
 #define IPMI_FRU_SENTINEL_VALUE                        0xC1
 
-extern fiid_template_t tmpl_fru_common_header;
-extern fiid_template_t tmpl_fru_info_area_header;
-extern fiid_template_t tmpl_fru_multirecord_area_header;
-extern fiid_template_t tmpl_fru_power_supply_information;
-extern fiid_template_t tmpl_fru_dc_output;
-extern fiid_template_t tmpl_fru_dc_load;
-extern fiid_template_t tmpl_fru_management_access_record;
-extern fiid_template_t tmpl_fru_base_compatibility_record;
-extern fiid_template_t tmpl_fru_extended_compatibility_record;
-extern fiid_template_t tmpl_fru_oem_record;
+  extern fiid_template_t tmpl_fru_common_header;
+  extern fiid_template_t tmpl_fru_info_area_header;
+  extern fiid_template_t tmpl_fru_multirecord_area_header;
+  extern fiid_template_t tmpl_fru_power_supply_information;
+  extern fiid_template_t tmpl_fru_dc_output;
+  extern fiid_template_t tmpl_fru_dc_load;
+  extern fiid_template_t tmpl_fru_management_access_record;
+  extern fiid_template_t tmpl_fru_base_compatibility_record;
+  extern fiid_template_t tmpl_fru_extended_compatibility_record;
+  extern fiid_template_t tmpl_fru_oem_record;
 
 #ifdef __cplusplus
 }

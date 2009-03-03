@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.h,v 1.21 2009-01-13 01:02:22 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.h,v 1.21.12.1 2009-03-03 01:41:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -71,6 +71,6 @@ extern struct ipmi_sensor_config ipmi_boot_error_config[];
 extern struct ipmi_sensor_config ipmi_button_switch_config[];
 extern struct ipmi_sensor_config ipmi_system_acpi_power_state_config[];
 
-int ipmi_monitoring_sensor_config(int *errnum);
+int ipmi_monitoring_sensor_config (int *errnum);
 
 #endif /* _IPMI_MONITORING_SENSOR_CONFIG_H */

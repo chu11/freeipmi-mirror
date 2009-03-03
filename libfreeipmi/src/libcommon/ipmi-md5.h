@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.h,v 1.4 2009-01-13 01:02:39 chu11 Exp $
+ *  $Id: ipmi-md5.h,v 1.4.12.1 2009-03-03 01:41:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -37,23 +37,23 @@ extern "C" {
 #define MD5_BLOCK_WORDS_LENGTH (MD5_BLOCK_LENGTH/4)
 #define MD5_DIGEST_LENGTH      16
 
-typedef struct __md5 {
-  uint32_t magic;
-  unsigned int mlen;
-  unsigned int bytes_mod_64;
-  uint32_t bit_count[2];
-  uint32_t a;
-  uint32_t b;
-  uint32_t c;
-  uint32_t d;
-  uint8_t m[MD5_BLOCK_LENGTH];
-} md5_t;
+  typedef struct __md5 {
+    uint32_t magic;
+    unsigned int mlen;
+    unsigned int bytes_mod_64;
+    uint32_t bit_count[2];
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint8_t m[MD5_BLOCK_LENGTH];
+  } md5_t;
 
-int md5_init(md5_t *ctx);
+  int md5_init (md5_t *ctx);
 
-int md5_update_data(md5_t *ctx, uint8_t *buf, unsigned int buflen);
+  int md5_update_data (md5_t *ctx, uint8_t *buf, unsigned int buflen);
 
-int md5_finish(md5_t *ctx, uint8_t *digest, unsigned int digestlen);
+  int md5_finish (md5_t *ctx, uint8_t *digest, unsigned int digestlen);
 
 #ifdef __cplusplus
 }

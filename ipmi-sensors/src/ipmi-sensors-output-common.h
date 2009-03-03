@@ -10,7 +10,7 @@
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
@@ -25,25 +25,25 @@
 #define IPMI_SENSORS_NA_STRING_LEGACY "NA"
 #define IPMI_SENSORS_NONE_STRING      "NONE"
 
-#define IPMI_SENSORS_NA_STRING_OUTPUT \
+#define IPMI_SENSORS_NA_STRING_OUTPUT					\
   (state_data->prog_data->args->legacy_output ? IPMI_SENSORS_NA_STRING_LEGACY : IPMI_SENSORS_NA_STRING)
 
 #define IPMI_SENSORS_ASSERTION_EVENT_PREFIX        "Assertion Event Enabled: "
 #define IPMI_SENSORS_ASSERTION_EVENT_PREFIX_LEGACY "Assertion Events Enabled: "
 
-#define IPMI_SENSORS_ASSERTION_EVENT_PREFIX_OUTPUT \
+#define IPMI_SENSORS_ASSERTION_EVENT_PREFIX_OUTPUT			\
   (state_data->prog_data->args->legacy_output ? IPMI_SENSORS_ASSERTION_EVENT_PREFIX_LEGACY : IPMI_SENSORS_ASSERTION_EVENT_PREFIX)
 
 #define IPMI_SENSORS_DEASSERTION_EVENT_PREFIX        "Deassertion Event Enabled: "
 #define IPMI_SENSORS_DEASSERTION_EVENT_PREFIX_LEGACY "Deassertion Events Enabled: "
 
-#define IPMI_SENSORS_DEASSERTION_EVENT_PREFIX_OUTPUT \
+#define IPMI_SENSORS_DEASSERTION_EVENT_PREFIX_OUTPUT			\
   (state_data->prog_data->args->legacy_output ? IPMI_SENSORS_DEASSERTION_EVENT_PREFIX_LEGACY : IPMI_SENSORS_DEASSERTION_EVENT_PREFIX)
 
 #define IPMI_SENSORS_SENSOR_EVENT_PREFIX        "Sensor Event: "
 #define IPMI_SENSORS_SENSOR_EVENT_PREFIX_LEGACY "Sensor Status: "
 
-#define IPMI_SENSORS_SENSOR_EVENT_PREFIX_OUTPUT \
+#define IPMI_SENSORS_SENSOR_EVENT_PREFIX_OUTPUT				\
   (state_data->prog_data->args->legacy_output ? IPMI_SENSORS_SENSOR_EVENT_PREFIX_LEGACY : IPMI_SENSORS_SENSOR_EVENT_PREFIX)
 
 #define IPMI_SENSORS_NO_EVENT_STRING "OK"

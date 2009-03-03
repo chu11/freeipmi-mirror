@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #ifdef HAVE_CONFIG_H
@@ -35,11 +35,11 @@
 #include "freeipmi-portability.h"
 
 int
-debug_hdr_str(uint8_t packet_type,
-              uint8_t packet_direction,
-              const char *str,
-              char *hdrbuf,
-              unsigned int hdrbuf_len)
+debug_hdr_str (uint8_t packet_type,
+               uint8_t packet_direction,
+               const char *str,
+               char *hdrbuf,
+               unsigned int hdrbuf_len)
 {
   char *fmt_inband =
     "=====================================================\n"
@@ -63,8 +63,8 @@ debug_hdr_str(uint8_t packet_type,
         && hdrbuf
         && hdrbuf_len))
     return -1;
-  
-  memset(hdrbuf, '\0', hdrbuf_len);
+
+  memset (hdrbuf, '\0', hdrbuf_len);
 
   if (packet_direction == DEBUG_UTIL_DIRECTION_REQUEST)
     str_direction = "Request";
@@ -75,11 +75,11 @@ debug_hdr_str(uint8_t packet_type,
 
   if (packet_type == DEBUG_UTIL_TYPE_NONE
       || packet_type == DEBUG_UTIL_TYPE_INBAND)
-    len = snprintf(hdrbuf,
-                   hdrbuf_len,
-                   fmt_inband,
-                   str,
-                   str_direction);
+    len = snprintf (hdrbuf,
+                    hdrbuf_len,
+                    fmt_inband,
+                    str,
+                    str_direction);
   else
     {
       char *str_version;
@@ -89,12 +89,12 @@ debug_hdr_str(uint8_t packet_type,
       else
         str_version = "IPMI 2.0";
 
-      len = snprintf(hdrbuf,
-                     hdrbuf_len,
-                     fmt_outofband,
-                     str_version,
-                     str,
-                     str_direction);
+      len = snprintf (hdrbuf,
+                      hdrbuf_len,
+                      fmt_outofband,
+                      str_version,
+                      str,
+                      str_direction);
     }
 
   if (len < 0 || len >= hdrbuf_len)
@@ -104,20 +104,20 @@ debug_hdr_str(uint8_t packet_type,
 }
 
 int
-debug_hdr_cmd(uint8_t packet_type,
-              uint8_t packet_direction,
-              uint8_t net_fn, 
-              uint8_t cmd,
-              char *hdrbuf,
-              unsigned int hdrbuf_len)
+debug_hdr_cmd (uint8_t packet_type,
+               uint8_t packet_direction,
+               uint8_t net_fn,
+               uint8_t cmd,
+               char *hdrbuf,
+               unsigned int hdrbuf_len)
 {
   const char *str_cmd;
 
-  str_cmd = ipmi_cmd_str(net_fn, cmd);
+  str_cmd = ipmi_cmd_str (net_fn, cmd);
 
-  return debug_hdr_str(packet_type,
-                       packet_direction,
-                       str_cmd,
-                       hdrbuf,
-                       hdrbuf_len);
+  return debug_hdr_str (packet_type,
+                        packet_direction,
+                        str_cmd,
+                        hdrbuf,
+                        hdrbuf_len);
 }

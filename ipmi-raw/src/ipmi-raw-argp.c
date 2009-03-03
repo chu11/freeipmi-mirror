@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2005-2009 FreeIPMI Core Team
-   
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-   
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-   
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+/*
+  Copyright (C) 2005-2009 FreeIPMI Core Team
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #if HAVE_CONFIG_H
@@ -43,22 +43,22 @@
 #include "tool-cmdline-common.h"
 #include "tool-config-file-common.h"
 
-const char *argp_program_version = 
+const char *argp_program_version =
   "ipmi-raw - " PACKAGE_VERSION "\n"
   "Copyright (C) 2005-2009 FreeIPMI Core Team\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
 
-const char *argp_program_bug_address = 
+const char *argp_program_bug_address =
   "<" PACKAGE_BUGREPORT ">";
 
-static char cmdline_doc[] = 
+static char cmdline_doc[] =
   "ipmi-raw - execute IPMI commands by hex values";
 
-static char cmdline_args_doc[] = 
+static char cmdline_args_doc[] =
   "[<lun> <netfn> COMMAND-HEX-BYTES]";
 
-static struct argp_option cmdline_options[] = 
+static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
@@ -70,16 +70,16 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    {"file", CMD_FILE_KEY, "CMD-FILE", 0, 
-     "Specify a file to read command requests from.", 30}, 
+    { "file", CMD_FILE_KEY, "CMD-FILE", 0,
+      "Specify a file to read command requests from.", 30},
     { 0 }
   };
 
 static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
 
 static struct argp cmdline_argp = { cmdline_options,
-                                    cmdline_parse, 
-                                    cmdline_args_doc, 
+                                    cmdline_parse,
+                                    cmdline_args_doc,
                                     cmdline_doc };
 
 static struct argp cmdline_config_file_argp = { cmdline_options,
@@ -87,56 +87,56 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
                                                 cmdline_args_doc,
                                                 cmdline_doc };
 
-static error_t 
+static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_raw_arguments *cmd_args = state->input;
   error_t ret;
-  
+
   switch (key)
     {
     case CMD_FILE_KEY:
       if (!(cmd_args->cmd_file = strdup (arg)))
         {
-          perror("strdup");
-          exit(1);
+          perror ("strdup");
+          exit (1);
         }
       break;
     case ARGP_KEY_ARG:
       {
 	int i;
 	long value;
-	
-	if (strlen(arg) >= 2)
+
+	if (strlen (arg) >= 2)
 	  {
-	    if (strncmp(arg, "0x", 2) == 0)
+	    if (strncmp (arg, "0x", 2) == 0)
 	      arg+=2;
 	  }
 
-        if (*arg == '\0')
-          {
-            fprintf (stderr, "invalid hex byte argument\n");
-            exit(1);
-          }
+	if (*arg == '\0')
+	  {
+	    fprintf (stderr, "invalid hex byte argument\n");
+	    exit (1);
+	  }
 
 	for (i = 0; arg[i] != (char) NULL; i++)
 	  {
 	    if (i >= 2)
 	      {
 		fprintf (stderr, "invalid hex byte argument\n");
-                exit(1);
+		exit (1);
 	      }
-	    
+
 	    if (isxdigit (arg[i]) == 0)
 	      {
 		fprintf (stderr, "invalid hex byte argument\n");
-                exit(1);
+		exit (1);
 	      }
 	  }
-	
+
 	value = strtol (arg, (char **) NULL, 16);
 	cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
-	
+
 	break;
       }
     case ARGP_KEY_END:
@@ -147,12 +147,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
       return ret;
     }
-  
+
   return 0;
 }
 
 static void
-_ipmi_raw_config_file_parse(struct ipmi_raw_arguments *cmd_args)
+_ipmi_raw_config_file_parse (struct ipmi_raw_arguments *cmd_args)
 {
   if (config_file_parse (cmd_args->common.config_file,
                          0,
@@ -163,12 +163,12 @@ _ipmi_raw_config_file_parse(struct ipmi_raw_arguments *cmd_args)
                          CONFIG_FILE_TOOL_IPMI_RAW,
                          NULL) < 0)
     {
-      fprintf(stderr, "config_file_parse: %s\n", strerror(errno));
-      exit(1);
+      fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
+      exit (1);
     }
 }
 
-void 
+void
 ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
 {
   long arg_max;
@@ -178,36 +178,36 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
 
   cmd_args->cmd_file = NULL;
   errno = 0;
-  if ((arg_max = sysconf(_SC_ARG_MAX)) < 0)
+  if ((arg_max = sysconf (_SC_ARG_MAX)) < 0)
     {
       if (errno)
         {
-          perror("sysconf");
-          exit(1);
+          perror ("sysconf");
+          exit (1);
         }
       arg_max = LONG_MAX;
     }
-  if (!(cmd_args->cmd = calloc(arg_max, sizeof(uint8_t))))
+  if (!(cmd_args->cmd = calloc (arg_max, sizeof(uint8_t))))
     {
-      perror("calloc");
-      exit(1);
+      perror ("calloc");
+      exit (1);
     }
   cmd_args->cmd_length = 0;
 
-  argp_parse (&cmdline_config_file_argp, 
-              argc, 
-              argv, 
-              ARGP_IN_ORDER, 
-              NULL, 
+  argp_parse (&cmdline_config_file_argp,
+              argc,
+              argv,
+              ARGP_IN_ORDER,
+              NULL,
               &(cmd_args->common));
 
-  _ipmi_raw_config_file_parse(cmd_args);
+  _ipmi_raw_config_file_parse (cmd_args);
 
-  argp_parse (&cmdline_argp, 
-              argc, 
-              argv, 
-              ARGP_IN_ORDER, 
-              NULL, 
+  argp_parse (&cmdline_argp,
+              argc,
+              argv,
+              ARGP_IN_ORDER,
+              NULL,
               cmd_args);
 
   verify_common_cmd_args (&(cmd_args->common));

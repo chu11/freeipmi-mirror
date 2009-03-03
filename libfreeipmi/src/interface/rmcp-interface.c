@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #ifdef HAVE_CONFIG_H
@@ -36,28 +36,28 @@
 
 fiid_template_t tmpl_rmcp_hdr =
   {
-    {8, "version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {5, "message_class.class", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {2, "message_class.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "message_class.ack", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, "", 0}
+    { 8, "version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 5, "message_class.class", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "message_class.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "message_class.ack", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 int8_t
-fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr) 
+fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
 {
-  if (!RMCP_HDR_MESSAGE_CLASS_VALID(message_class)
-      || !fiid_obj_valid(obj_rmcp_hdr))
+  if (!RMCP_HDR_MESSAGE_CLASS_VALID (message_class)
+      || !fiid_obj_valid (obj_rmcp_hdr))
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
-  if (Fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
+  if (Fiid_obj_template_compare (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
@@ -72,15 +72,15 @@ fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
 }
 
 int8_t
-fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr) 
+fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr)
 {
-  return fill_rmcp_hdr(RMCP_HDR_MESSAGE_CLASS_IPMI, obj_rmcp_hdr);
+  return fill_rmcp_hdr (RMCP_HDR_MESSAGE_CLASS_IPMI, obj_rmcp_hdr);
 }
 
 int8_t
 fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr)
 {
-  return fill_rmcp_hdr(RMCP_HDR_MESSAGE_CLASS_ASF, obj_rmcp_hdr);
+  return fill_rmcp_hdr (RMCP_HDR_MESSAGE_CLASS_ASF, obj_rmcp_hdr);
 }
 
 int32_t
@@ -88,66 +88,66 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
 {
   int32_t obj_cmd_len, obj_rmcp_hdr_len;
 
-  if (!fiid_obj_valid(obj_rmcp_hdr) 
-      || !fiid_obj_valid(obj_cmd)
+  if (!fiid_obj_valid (obj_rmcp_hdr)
+      || !fiid_obj_valid (obj_cmd)
       || !pkt
       || !pkt_len)
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
-  if (Fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
+  if (Fiid_obj_template_compare (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
-  if (Fiid_obj_packet_valid(obj_rmcp_hdr) < 0)
+  if (Fiid_obj_packet_valid (obj_rmcp_hdr) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
-  if (Fiid_obj_packet_valid(obj_cmd) < 0)
+  if (Fiid_obj_packet_valid (obj_cmd) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
   if ((obj_rmcp_hdr_len = fiid_obj_len_bytes (obj_rmcp_hdr)) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
   if ((obj_cmd_len = fiid_obj_len_bytes (obj_cmd)) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 
   if (pkt_len < (obj_rmcp_hdr_len + obj_cmd_len))
     {
-      SET_ERRNO(EMSGSIZE);
+      SET_ERRNO (EMSGSIZE);
       return (-1);
     }
 
   memset (pkt, '\0', pkt_len);
-  if ((obj_rmcp_hdr_len = fiid_obj_get_all (obj_rmcp_hdr, 
-                                            pkt, 
+  if ((obj_rmcp_hdr_len = fiid_obj_get_all (obj_rmcp_hdr,
+                                            pkt,
                                             pkt_len)) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcp_hdr);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcp_hdr);
       return (-1);
     }
-  if ((obj_cmd_len = fiid_obj_get_all (obj_cmd, 
-                                       pkt + obj_rmcp_hdr_len, 
+  if ((obj_cmd_len = fiid_obj_get_all (obj_cmd,
+                                       pkt + obj_rmcp_hdr_len,
                                        pkt_len - obj_rmcp_hdr_len)) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 
   return (obj_rmcp_hdr_len + obj_cmd_len);
-}  
+}
 
 int32_t
 unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd)
@@ -156,28 +156,28 @@ unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fi
   int32_t len;
 
   if (!pkt
-      || !fiid_obj_valid(obj_rmcp_hdr)
-      || !fiid_obj_valid(obj_cmd))
+      || !fiid_obj_valid (obj_rmcp_hdr)
+      || !fiid_obj_valid (obj_cmd))
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
-  if (Fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
+  if (Fiid_obj_template_compare (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
-  if (fiid_obj_clear(obj_rmcp_hdr) < 0)
+  if (fiid_obj_clear (obj_rmcp_hdr) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcp_hdr);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcp_hdr);
       return (-1);
     }
 
-  if ((len = fiid_obj_set_all(obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
+  if ((len = fiid_obj_set_all (obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcp_hdr);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcp_hdr);
       return (-1);
     }
   indx += len;
@@ -185,15 +185,15 @@ unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fi
   if (pkt_len <= indx)
     return 0;
 
-  if (fiid_obj_clear(obj_cmd) < 0)
+  if (fiid_obj_clear (obj_cmd) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 
-  if ((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0)
+  if ((len = fiid_obj_set_all (obj_cmd, pkt + indx, pkt_len - indx)) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
   indx += len;

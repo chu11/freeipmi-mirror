@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.h,v 1.9 2009-01-13 01:02:21 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.h,v 1.9.12.1 2009-03-03 01:41:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -31,12 +31,12 @@
 
 #include "ipmi_monitoring.h"
 
-int ipmi_monitoring_ipmi_communication_init(ipmi_monitoring_ctx_t c,
-                                            const char *hostname,
-                                            struct ipmi_monitoring_ipmi_config *config);
+int ipmi_monitoring_ipmi_communication_init (ipmi_monitoring_ctx_t c,
+                                             const char *hostname,
+                                             struct ipmi_monitoring_ipmi_config *config);
 
-void ipmi_monitoring_ipmi_ctx_error_convert(ipmi_monitoring_ctx_t c);
+void ipmi_monitoring_ipmi_ctx_error_convert (ipmi_monitoring_ctx_t c);
 
-int ipmi_monitoring_ipmi_communication_cleanup(ipmi_monitoring_ctx_t c);
+int ipmi_monitoring_ipmi_communication_cleanup (ipmi_monitoring_ctx_t c);
 
 #endif /* _IPMI_MONITORING_IPMI_COMMUNICATION_H */

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-api.h,v 1.4 2009-01-13 01:02:24 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.h,v 1.4.12.1 2009-03-03 01:41:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -27,7 +27,7 @@
 \*****************************************************************************/
 
 #ifndef _IPMI_FRU_INVENTORY_DEVICE_CMDS_API_H
-#define	_IPMI_FRU_INVENTORY_DEVICE_CMDS_API_H
+#define _IPMI_FRU_INVENTORY_DEVICE_CMDS_API_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,15 +36,15 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-int8_t ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
-                                             uint8_t fru_device_id,
-                                             fiid_obj_t obj_cmd_rs);
-  
-int8_t ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
-                               uint8_t fru_device_id,
-                               uint16_t fru_inventory_offset_to_read,
-                               uint8_t count_to_read,
-                               fiid_obj_t obj_cmd_rs);
+  int8_t ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
+					       uint8_t fru_device_id,
+					       fiid_obj_t obj_cmd_rs);
+
+  int8_t ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
+				 uint8_t fru_device_id,
+				 uint16_t fru_inventory_offset_to_read,
+				 uint8_t count_to_read,
+				 fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

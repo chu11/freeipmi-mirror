@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_config.c,v 1.12 2009-02-23 22:29:13 chu11 Exp $
+ *  $Id: ipmidetectd_config.c,v 1.12.2.1 2009-03-03 01:41:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -56,9 +56,9 @@
 struct ipmidetectd_config conf;
 
 static void
-_config_default(void)
+_config_default (void)
 {
-  memset(&conf, '\0', sizeof(struct ipmidetectd_config));
+  memset (&conf, '\0', sizeof(struct ipmidetectd_config));
 
 #ifndef NDEBUG
   conf.debug = IPMIDETECTD_DEBUG_DEFAULT;
@@ -67,135 +67,135 @@ _config_default(void)
   conf.ipmiping_period = IPMIDETECTD_IPMIPING_PERIOD;
   conf.ipmidetectd_server_port = IPMIDETECTD_SERVER_PORT_DEFAULT;
 
-  if (!(conf.hosts = hostlist_create(NULL)))
-    IPMIDETECTD_EXIT(("hostlist_create: %s", strerror(errno)));
+  if (!(conf.hosts = hostlist_create (NULL)))
+    IPMIDETECTD_EXIT (("hostlist_create: %s", strerror (errno)));
 }
 
 static void
-_usage(void)
+_usage (void)
 {
-  fprintf(stderr, "Usage: cerebrod [OPTIONS]\n"
-          "-h    --help          Output Help\n"
-          "-v    --version       Output Version\n");
+  fprintf (stderr, "Usage: cerebrod [OPTIONS]\n"
+           "-h    --help          Output Help\n"
+           "-v    --version       Output Version\n");
 #ifndef NDEBUG
-  fprintf(stderr, 
-	  "-c    --config_file   Specify alternate config file\n"
-          "-d    --debug         Turn on debugging and run daemon in foreground\n"); 
+  fprintf (stderr,
+           "-c    --config_file   Specify alternate config file\n"
+           "-d    --debug         Turn on debugging and run daemon in foreground\n");
 #endif /* NDEBUG */
-  exit(0);
+  exit (0);
 }
 
 static void
-_version(void)
+_version (void)
 {
-  fprintf(stderr, "ipmidetectd %s\n", VERSION);
-  exit(0);
+  fprintf (stderr, "ipmidetectd %s\n", VERSION);
+  exit (0);
 }
 
 static void
-_cmdline_parse(int argc, char **argv)
-{ 
+_cmdline_parse (int argc, char **argv)
+{
   char options[100];
   int c;
 
 #if HAVE_GETOPT_LONG
   struct option long_options[] =
     {
-      {"help",                0, NULL, 'h'},
-      {"version",             0, NULL, 'v'},
+      { "help",                0, NULL, 'h'},
+      { "version",             0, NULL, 'v'},
 #ifndef NDEBUG
-      {"config-file",         1, NULL, 'c'},
-      {"debug",               0, NULL, 'd'},
+      { "config-file",         1, NULL, 'c'},
+      { "debug",               0, NULL, 'd'},
 #endif /* NDEBUG */
     };
 #endif /* HAVE_GETOPT_LONG */
 
-  assert(argv);
+  assert (argv);
 
-  memset(options, '\0', sizeof(options));
-  strcat(options, "hv");
+  memset (options, '\0', sizeof(options));
+  strcat (options, "hv");
 #ifndef NDEBUG
-  strcat(options, "c:d");
+  strcat (options, "c:d");
 #endif /* NDEBUG */
 
   /* turn off output messages */
   opterr = 0;
 
 #if HAVE_GETOPT_LONG
-  while ((c = getopt_long(argc, argv, options, long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, options, long_options, NULL)) != -1)
 #else
-  while ((c = getopt(argc, argv, options)) != -1)
+    while ((c = getopt (argc, argv, options)) != -1)
 #endif
-    {
-      switch (c)
-        {
-        case 'h':       /* --help */
-          _usage();
-          break;
-        case 'v':       /* --version */
-          _version();
-          break;
+      {
+	switch (c)
+	  {
+	  case 'h':       /* --help */
+	    _usage ();
+	    break;
+	  case 'v':       /* --version */
+	    _version ();
+	    break;
 #ifndef NDEBUG
-	case 'c':       /* --config-file */
-          if (!(conf.config_file = strdup(optarg)))
-	    IPMIDETECTD_EXIT(("strdup: %s", strerror(errno)));
-          break;
-        case 'd':       /* --debug */
-          conf.debug++;
-          break;
+	  case 'c':       /* --config-file */
+	    if (!(conf.config_file = strdup (optarg)))
+	      IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
+	    break;
+	  case 'd':       /* --debug */
+	    conf.debug++;
+	    break;
 #endif /* NDEBUG */
-        case '?':
-        default:
-          IPMIDETECTD_EXIT(("unknown command line option '%c'", c));
-        }          
-    }
+	  case '?':
+	  default:
+	    IPMIDETECTD_EXIT (("unknown command line option '%c'", c));
+	  }
+      }
 }
 
 static int
-_cb_host(conffile_t cf,
-	 struct conffile_data *data,
-	 char *optionname,
-	 int option_type,
-	 void *option_ptr,
-	 int option_data,
-	 void *app_ptr,
-	 int app_data)
+_cb_host (conffile_t cf,
+          struct conffile_data *data,
+          char *optionname,
+          int option_type,
+          void *option_ptr,
+          int option_data,
+          void *app_ptr,
+          int app_data)
 {
-  if (!hostlist_push(conf.hosts, data->string))
-    IPMIDETECTD_EXIT(("hostlist_push: %s", strerror(errno)));
+  if (!hostlist_push (conf.hosts, data->string))
+    IPMIDETECTD_EXIT (("hostlist_push: %s", strerror (errno)));
   return 0;
 }
 
 static void
-_config_file_parse(void)
+_config_file_parse (void)
 {
-  int ipmiping_period_flag, 
+  int ipmiping_period_flag,
     ipmidetectd_server_port_flag,
     host_flag;
-  
+
   struct conffile_option options[] =
     {
       {
-        "ipmiping_period",
-        CONFFILE_OPTION_INT,
-        -1,
-        conffile_int,
-        1,
-        0,
-        &(ipmiping_period_flag),
-        &(conf.ipmiping_period),
-        0
+	"ipmiping_period",
+	CONFFILE_OPTION_INT,
+	-1,
+	conffile_int,
+	1,
+	0,
+	&(ipmiping_period_flag),
+	&(conf.ipmiping_period),
+	0
       },
       {
-        "ipmidetectd_server_port",
-        CONFFILE_OPTION_INT,
-        -1,
-        conffile_int,
-        1,
-        0,
-        &(ipmidetectd_server_port_flag),
-        &(conf.ipmidetectd_server_port),
-        0,
+	"ipmidetectd_server_port",
+	CONFFILE_OPTION_INT,
+	-1,
+	conffile_int,
+	1,
+	0,
+	&(ipmidetectd_server_port_flag),
+	&(conf.ipmidetectd_server_port),
+	0,
       },
       {
 	"host",
@@ -212,48 +212,48 @@ _config_file_parse(void)
   conffile_t cf = NULL;
   int num;
 
-  if (!(cf = conffile_handle_create()))
+  if (!(cf = conffile_handle_create ()))
     {
-      IPMIDETECTD_DEBUG(("conffile_handle_create"));
+      IPMIDETECTD_DEBUG (("conffile_handle_create"));
       goto cleanup;
     }
 
   num = sizeof(options)/sizeof(struct conffile_option);
-  if (conffile_parse(cf, conf.config_file, options, num, NULL, 0, 0) < 0)
+  if (conffile_parse (cf, conf.config_file, options, num, NULL, 0, 0) < 0)
     {
       char buf[CONFFILE_MAX_ERRMSGLEN];
 
       /* Its not an error if the default configuration file doesn't exist */
-      if (!strcmp(conf.config_file, IPMIDETECTD_CONFIG_FILE_DEFAULT)
-          && conffile_errnum(cf) == CONFFILE_ERR_EXIST)
-	goto cleanup;
+      if (!strcmp (conf.config_file, IPMIDETECTD_CONFIG_FILE_DEFAULT)
+          && conffile_errnum (cf) == CONFFILE_ERR_EXIST)
+        goto cleanup;
 
-      if (conffile_errmsg(cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
-        IPMIDETECTD_EXIT(("conffile_parse: %d", conffile_errnum(cf)));
+      if (conffile_errmsg (cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
+        IPMIDETECTD_EXIT (("conffile_parse: %d", conffile_errnum (cf)));
       else
-        IPMIDETECTD_EXIT(("conffile_parse: %s", buf));
+        IPMIDETECTD_EXIT (("conffile_parse: %s", buf));
     }
 
  cleanup:
-  conffile_handle_destroy(cf);
+  conffile_handle_destroy (cf);
 }
 
 static void
-_arguments_error_check(void)
+_arguments_error_check (void)
 {
   /* Nothing to check right now */
 }
 
 void
-ipmidetectd_config_setup(int argc, char **argv)
+ipmidetectd_config_setup (int argc, char **argv)
 {
-  assert(argv);
+  assert (argv);
 
-  _config_default();
-  _cmdline_parse(argc, argv);
-  _config_file_parse();
-  _arguments_error_check();
+  _config_default ();
+  _cmdline_parse (argc, argv);
+  _config_file_parse ();
+  _arguments_error_check ();
 
-  if (!hostlist_count(conf.hosts))
-    IPMIDETECTD_EXIT(("No nodes configured"));
+  if (!hostlist_count (conf.hosts))
+    IPMIDETECTD_EXIT (("No nodes configured"));
 }

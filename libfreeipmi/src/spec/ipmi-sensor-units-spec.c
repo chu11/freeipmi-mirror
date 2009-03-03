@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #ifdef HAVE_CONFIG_H
@@ -27,105 +27,105 @@
 
 #include "freeipmi-portability.h"
 
-const char *const ipmi_sensor_units[] = 
+const char *const ipmi_sensor_units[] =
   {
-    "unspecified", 
-    "degrees C", 
-    "degrees F", 
-    "degrees K", 
-    "Volts", 
-    "Amps", 
-    "Watts", 
-    "Joules", 
-    "Coulombs", 
-    "VA", 
-    "Nits", 
-    "Lumen", 
-    "Lux", 
-    "Candela", 
-    "kPA", 
-    "PSI", 
-    "Newton", 
-    "CFM", 
-    "RPM", 
-    "Hz", 
-    "microsecond", 
-    "millisecond", 
-    "second", 
-    "minute", 
-    "hour", 
-    "day", 
-    "week", 
-    "mil", 
-    "inches", 
-    "feet", 
-    "cu in", 
-    "cu feet", 
-    "mm", 
-    "cm", 
-    "m", 
-    "cu cm", 
-    "cu m", 
-    "liters", 
-    "fluid Ounce", 
-    "radians", 
-    "steradians", 
-    "revolutions", 
-    "cycles", 
-    "gravities", 
-    "ounce", 
-    "pound", 
-    "ft-lb", 
-    "oz-in", 
-    "gauss", 
-    "gilberts", 
-    "henry", 
-    "millihenry", 
-    "farad", 
-    "microfarad", 
-    "ohms", 
-    "siemens", 
-    "mole", 
-    "becquerel", 
-    "PPM", 
-    "reserved", 
-    "Decibels", 
-    "DbA", 
-    "DbC", 
-    "gray", 
-    "sievert", 
-    "color temp deg K", 
-    "bit", 
-    "kilobit", 
-    "megabit", 
-    "gigabit", 
-    "byte", 
-    "kilobyte", 
-    "megabyte", 
-    "gigabyte", 
-    "word", 
-    "dword", 
+    "unspecified",
+    "degrees C",
+    "degrees F",
+    "degrees K",
+    "Volts",
+    "Amps",
+    "Watts",
+    "Joules",
+    "Coulombs",
+    "VA",
+    "Nits",
+    "Lumen",
+    "Lux",
+    "Candela",
+    "kPA",
+    "PSI",
+    "Newton",
+    "CFM",
+    "RPM",
+    "Hz",
+    "microsecond",
+    "millisecond",
+    "second",
+    "minute",
+    "hour",
+    "day",
+    "week",
+    "mil",
+    "inches",
+    "feet",
+    "cu in",
+    "cu feet",
+    "mm",
+    "cm",
+    "m",
+    "cu cm",
+    "cu m",
+    "liters",
+    "fluid Ounce",
+    "radians",
+    "steradians",
+    "revolutions",
+    "cycles",
+    "gravities",
+    "ounce",
+    "pound",
+    "ft-lb",
+    "oz-in",
+    "gauss",
+    "gilberts",
+    "henry",
+    "millihenry",
+    "farad",
+    "microfarad",
+    "ohms",
+    "siemens",
+    "mole",
+    "becquerel",
+    "PPM",
+    "reserved",
+    "Decibels",
+    "DbA",
+    "DbC",
+    "gray",
+    "sievert",
+    "color temp deg K",
+    "bit",
+    "kilobit",
+    "megabit",
+    "gigabit",
+    "byte",
+    "kilobyte",
+    "megabyte",
+    "gigabyte",
+    "word",
+    "dword",
     "qword",
-    "line", 
-    "hit", 
-    "miss", 
-    "retry", 
-    "reset", 
-    "overrun / overflow", 
-    "underrun", 
-    "collision", 
-    "packets", 
-    "messages", 
-    "characters", 
-    "error", 
-    "correctable Error", 
+    "line",
+    "hit",
+    "miss",
+    "retry",
+    "reset",
+    "overrun / overflow",
+    "underrun",
+    "collision",
+    "packets",
+    "messages",
+    "characters",
+    "error",
+    "correctable Error",
     "uncorrectable Error",
     "fatal Error",
     "grams",
     NULL
   };
 
-const char *const ipmi_sensor_units_abbreviated[] = 
+const char *const ipmi_sensor_units_abbreviated[] =
   {
     "unspecified",
     "C",
@@ -137,7 +137,7 @@ const char *const ipmi_sensor_units_abbreviated[] =
     "J",
     "C",
     "VA",
-    "nits",			/* ? */
+    "nits",                       /* ? */
     "lm",
     "lux",
     "cd",
@@ -170,7 +170,7 @@ const char *const ipmi_sensor_units_abbreviated[] =
     "sr",
     "rev",
     "c",
-    "gravities",		/* ? */
+    "gravities",                  /* ? */
     "oz",
     "lb",
     "ft lB",
@@ -181,7 +181,7 @@ const char *const ipmi_sensor_units_abbreviated[] =
     "mH",
     "F",
     "uF",
-    "ohms",			/* no abbreviation? */
+    "ohms",                       /* no abbreviation? */
     "S",
     "mol",
     "BecBquerel",
@@ -192,7 +192,7 @@ const char *const ipmi_sensor_units_abbreviated[] =
     "DbC",
     "Gy",
     "Sv",
-    "color temp deg K",		/* ??? */
+    "color temp deg K",           /* ??? */
     "b",
     "Kb",
     "Mb",
@@ -223,7 +223,7 @@ const char *const ipmi_sensor_units_abbreviated[] =
     NULL
   };
 
-const char *const ipmi_sensor_rate_units[] = 
+const char *const ipmi_sensor_rate_units[] =
   {
     "none",
     "per uS",

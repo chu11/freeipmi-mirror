@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2007-2009 FreeIPMI Core Team
-   
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-   
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-   
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+/*
+  Copyright (C) 2007-2009 FreeIPMI Core Team
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #ifndef _IPMI_CHASSIS_H
@@ -54,7 +54,7 @@ enum ipmi_chassis_cmds
     CHASSIS_CMD_GET_CHASSIS_STATUS = 1,
     CHASSIS_CMD_CHASSIS_CONTROL = 2,
     CHASSIS_CMD_CHASSIS_IDENTIFY = 3,
-    CHASSIS_CMD_SET_POWER_RESTORE_POLICY = 4, 
+    CHASSIS_CMD_SET_POWER_RESTORE_POLICY = 4,
     CHASSIS_CMD_SET_POWER_CYCLE_INTERVAL = 5,
     CHASSIS_CMD_GET_SYSTEM_RESTART_CAUSE = 6,
     CHASSIS_CMD_GET_POWER_ON_HOURS_COUNTER = 7,
@@ -76,7 +76,7 @@ struct cmd_boot_option
   int8_t firmware_bios_verbosity;
 };
 
-struct cmd_identify 
+struct cmd_identify
 {
   uint8_t identify_interval;
   uint8_t identify_interval_set;
@@ -94,7 +94,7 @@ struct ipmi_chassis_arguments
     uint8_t chassis_control;
     uint8_t power_restore_policy;
     uint8_t power_cycle_interval;
-    
+
     struct cmd_identify identify_args;
     struct cmd_boot_option boot_option_args;
   } args;

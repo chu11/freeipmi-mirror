@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.23 2009-02-27 01:18:33 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.23.2.1 2009-03-03 01:40:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -44,7 +44,7 @@
 #include "tool-fiid-util.h"
 
 static char *
-voltage_str(uint8_t voltage)
+voltage_str (uint8_t voltage)
 {
   if (voltage == IPMI_FRU_VOLTAGE_12V)
     return "12V";
@@ -59,10 +59,10 @@ voltage_str(uint8_t voltage)
 }
 
 static fru_err_t
-output_power_supply_information(ipmi_fru_state_data_t *state_data,
-                                uint8_t *frubuf,
-                                uint8_t record_length,
-                                uint8_t record_checksum)
+output_power_supply_information (ipmi_fru_state_data_t *state_data,
+                                 uint8_t *frubuf,
+                                 uint8_t record_length,
+                                 uint8_t record_checksum)
 {
   fiid_obj_t obj_record = NULL;
   int32_t tmpl_record_length;
@@ -91,220 +91,220 @@ output_power_supply_information(ipmi_fru_state_data_t *state_data,
   uint64_t total_combined_wattage;
   uint64_t predictive_fail_tachometer_lower_threshold;
 
-  assert(state_data);
-  assert(frubuf);
-  assert(record_length);
+  assert (state_data);
+  assert (frubuf);
+  assert (record_length);
 
-  if ((ret = ipmi_fru_check_checksum(state_data,
-                                     frubuf,
-                                     record_length,
-                                     record_checksum,
-                                     "Power Supply Multirecord")) != FRU_ERR_SUCCESS)
+  if ((ret = ipmi_fru_check_checksum (state_data,
+                                      frubuf,
+                                      record_length,
+                                      record_checksum,
+                                      "Power Supply Multirecord")) != FRU_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-  
-  if ((tmpl_record_length = fiid_template_len_bytes(tmpl_fru_power_supply_information)) < 0)
+
+  if ((tmpl_record_length = fiid_template_len_bytes (tmpl_fru_power_supply_information)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_template_len_bytes: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_template_len_bytes: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
   if (tmpl_record_length != record_length)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "  FRU Power Supply Record Length Incorrect: %u\n",
-                      record_length);
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU Power Supply Record Length Incorrect: %u\n",
+                       record_length);
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (!(obj_record = fiid_obj_create(tmpl_fru_power_supply_information)))
+  if (!(obj_record = fiid_obj_create (tmpl_fru_power_supply_information)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  if (fiid_obj_set_all(obj_record,
-                       frubuf,
-                       record_length) < 0)
+  if (fiid_obj_set_all (obj_record,
+                        frubuf,
+                        record_length) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set_all: %s\n",
-                      fiid_obj_errormsg(obj_record));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set_all: %s\n",
+                       fiid_obj_errormsg (obj_record));
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "overall_capacity",
-                    &overall_capacity);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "peak_va",
-                    &peak_va);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "inrush_current",
-                    &inrush_current);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "inrush_interval",
-                    &inrush_interval);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "low_end_input_voltage_range_1",
-                    &low_end_input_voltage_range_1);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "high_end_input_voltage_range_1",
-                    &high_end_input_voltage_range_1);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "low_end_input_voltage_range_2",
-                    &low_end_input_voltage_range_2);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "high_end_input_voltage_range_2",
-                    &high_end_input_voltage_range_2);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "low_end_input_frequency_range",
-                    &low_end_input_frequency_range);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "high_end_input_frequency_range",
-                    &high_end_input_frequency_range);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "ac_dropout_tolerance",
-                    &ac_dropout_tolerance);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "predictive_fail_support",
-                    &predictive_fail_support);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "power_factor_correction",
-                    &power_factor_correction);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "autoswitch",
-                    &autoswitch);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "hot_swap_support",
-                    &hot_swap_support);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "tachometer_pulses_per_rotation_predictive_fail_polarity",
-                    &tachometer_pulses_per_rotation_predictive_fail_polarity);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "peak_capacity",
-                    &peak_capacity);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "hold_up_time",
-                    &hold_up_time);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "voltage_1",
-                    &voltage_1);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "voltage_2",
-                    &voltage_2);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "total_combined_wattage",
-                    &total_combined_wattage);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "predictive_fail_tachometer_lower_threshold",
-                    &predictive_fail_tachometer_lower_threshold); 
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "overall_capacity",
+                     &overall_capacity);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "peak_va",
+                     &peak_va);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "inrush_current",
+                     &inrush_current);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "inrush_interval",
+                     &inrush_interval);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "low_end_input_voltage_range_1",
+                     &low_end_input_voltage_range_1);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "high_end_input_voltage_range_1",
+                     &high_end_input_voltage_range_1);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "low_end_input_voltage_range_2",
+                     &low_end_input_voltage_range_2);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "high_end_input_voltage_range_2",
+                     &high_end_input_voltage_range_2);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "low_end_input_frequency_range",
+                     &low_end_input_frequency_range);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "high_end_input_frequency_range",
+                     &high_end_input_frequency_range);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "ac_dropout_tolerance",
+                     &ac_dropout_tolerance);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "predictive_fail_support",
+                     &predictive_fail_support);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "power_factor_correction",
+                     &power_factor_correction);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "autoswitch",
+                     &autoswitch);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "hot_swap_support",
+                     &hot_swap_support);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "tachometer_pulses_per_rotation_predictive_fail_polarity",
+                     &tachometer_pulses_per_rotation_predictive_fail_polarity);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "peak_capacity",
+                     &peak_capacity);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "hold_up_time",
+                     &hold_up_time);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "voltage_1",
+                     &voltage_1);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "voltage_2",
+                     &voltage_2);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "total_combined_wattage",
+                     &total_combined_wattage);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "predictive_fail_tachometer_lower_threshold",
+                     &predictive_fail_tachometer_lower_threshold);
 
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Overall Capacity: %u Watts\n",
-                 overall_capacity);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Peak VA: %u VA\n",
-                 peak_va);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Max Inrush Current: %u Amps\n",
-                 inrush_current);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Inrush Interval: %u ms\n",
-                 inrush_interval);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Low End Input Voltage 1: %u mV\n",
-                 low_end_input_voltage_range_1*10);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply High End Input Voltage 1: %u mV\n",
-                 high_end_input_voltage_range_1*10);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Low End Input Voltage 2: %u mV\n",
-                 low_end_input_voltage_range_2*10);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply High End Input Voltage 2: %u mV\n",
-                 high_end_input_voltage_range_2*10);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Low End Acceptable Frequencey: %u Hz\n",
-                 low_end_input_frequency_range);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply High End Acceptable Frequencey: %u Hz\n",
-                 high_end_input_frequency_range);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply A/C Dropout Tolerance: %u ms\n",
-                 ac_dropout_tolerance);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Predictive Fail Support: %s\n",
-                 (predictive_fail_support) ? "Yes" : "No");
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Overall Capacity: %u Watts\n",
+                  overall_capacity);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Peak VA: %u VA\n",
+                  peak_va);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Max Inrush Current: %u Amps\n",
+                  inrush_current);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Inrush Interval: %u ms\n",
+                  inrush_interval);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Low End Input Voltage 1: %u mV\n",
+                  low_end_input_voltage_range_1*10);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply High End Input Voltage 1: %u mV\n",
+                  high_end_input_voltage_range_1*10);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Low End Input Voltage 2: %u mV\n",
+                  low_end_input_voltage_range_2*10);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply High End Input Voltage 2: %u mV\n",
+                  high_end_input_voltage_range_2*10);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Low End Acceptable Frequencey: %u Hz\n",
+                  low_end_input_frequency_range);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply High End Acceptable Frequencey: %u Hz\n",
+                  high_end_input_frequency_range);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply A/C Dropout Tolerance: %u ms\n",
+                  ac_dropout_tolerance);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Predictive Fail Support: %s\n",
+                  (predictive_fail_support) ? "Yes" : "No");
   if (predictive_fail_support)
     {
       if (tachometer_pulses_per_rotation_predictive_fail_polarity)
         {
           if (predictive_fail_tachometer_lower_threshold)
-            pstdout_printf(state_data->pstate,
-                           "  FRU Power Supply Predictive Fail: Tach output, two pulses per rotation\n");             
+            pstdout_printf (state_data->pstate,
+                            "  FRU Power Supply Predictive Fail: Tach output, two pulses per rotation\n");
           else
-            pstdout_printf(state_data->pstate,
-                           "  FRU Power Supply Predictive Fail: Pass/Fail predictive fail pin (0 = fail)\n");
+            pstdout_printf (state_data->pstate,
+                            "  FRU Power Supply Predictive Fail: Pass/Fail predictive fail pin (0 = fail)\n");
         }
       else
         {
           if (predictive_fail_tachometer_lower_threshold)
-            pstdout_printf(state_data->pstate,
-                           "  FRU Power Supply Predictive Fail: Tach output, one pulse per rotation\n");
+            pstdout_printf (state_data->pstate,
+                            "  FRU Power Supply Predictive Fail: Tach output, one pulse per rotation\n");
           else
-            pstdout_printf(state_data->pstate,
-                           "  FRU Power Supply Predictive Fail: Pass/Fail predictive fail pin (1 = fail)\n");
+            pstdout_printf (state_data->pstate,
+                            "  FRU Power Supply Predictive Fail: Pass/Fail predictive fail pin (1 = fail)\n");
         }
     }
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Power Factor Correction Supported: %s\n",
-                 (power_factor_correction) ? "Yes" : "No");
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply AutoSwitch Supprt: %s\n",
-                 (autoswitch) ? "Yes" : "No");
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Hot Swap Support: %s\n",
-                 (hot_swap_support) ? "Yes" : "No");
-      
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Peak Capacity: %u Watts\n",
-                 peak_capacity);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Hold Up Time: %u s\n",
-                 hold_up_time);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Voltage 1: %s\n",
-                 voltage_str(voltage_1));
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Voltage 2: %s\n",
-                 voltage_str(voltage_2));
-  pstdout_printf(state_data->pstate,
-                 "  FRU Power Supply Total Combined Wattage: %u Watts\n",
-                 total_combined_wattage);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Power Factor Correction Supported: %s\n",
+                  (power_factor_correction) ? "Yes" : "No");
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply AutoSwitch Supprt: %s\n",
+                  (autoswitch) ? "Yes" : "No");
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Hot Swap Support: %s\n",
+                  (hot_swap_support) ? "Yes" : "No");
+
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Peak Capacity: %u Watts\n",
+                  peak_capacity);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Hold Up Time: %u s\n",
+                  hold_up_time);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Voltage 1: %s\n",
+                  voltage_str (voltage_1));
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Voltage 2: %s\n",
+                  voltage_str (voltage_2));
+  pstdout_printf (state_data->pstate,
+                  "  FRU Power Supply Total Combined Wattage: %u Watts\n",
+                  total_combined_wattage);
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY (obj_record);
   return rv;
 }
 
 static fru_err_t
-output_dc_output(ipmi_fru_state_data_t *state_data,
-                 uint8_t *frubuf,
-                 uint8_t record_length,
-                 uint8_t record_checksum)
+output_dc_output (ipmi_fru_state_data_t *state_data,
+                  uint8_t *frubuf,
+                  uint8_t record_length,
+                  uint8_t record_checksum)
 {
   fiid_obj_t obj_record = NULL;
   int32_t tmpl_record_length;
@@ -319,120 +319,120 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
   uint64_t minimum_current_draw;
   uint64_t maximum_current_draw;
 
-  assert(state_data);
-  assert(frubuf);
-  assert(record_length);
+  assert (state_data);
+  assert (frubuf);
+  assert (record_length);
 
-  if ((ret = ipmi_fru_check_checksum(state_data,
-                                     frubuf,
-                                     record_length,
-                                     record_checksum,
-                                     "DC Output Multirecord")) != FRU_ERR_SUCCESS)
+  if ((ret = ipmi_fru_check_checksum (state_data,
+                                      frubuf,
+                                      record_length,
+                                      record_checksum,
+                                      "DC Output Multirecord")) != FRU_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-  
-  if ((tmpl_record_length = fiid_template_len_bytes(tmpl_fru_dc_output)) < 0)
+
+  if ((tmpl_record_length = fiid_template_len_bytes (tmpl_fru_dc_output)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_template_len_bytes: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_template_len_bytes: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
   if (tmpl_record_length != record_length)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "  FRU DC Output Record Length Incorrect: %u\n",
-                      record_length);
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU DC Output Record Length Incorrect: %u\n",
+                       record_length);
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (!(obj_record = fiid_obj_create(tmpl_fru_dc_output)))
+  if (!(obj_record = fiid_obj_create (tmpl_fru_dc_output)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  if (fiid_obj_set_all(obj_record,
-                       frubuf,
-                       record_length) < 0)
+  if (fiid_obj_set_all (obj_record,
+                        frubuf,
+                        record_length) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set_all: %s\n",
-                      fiid_obj_errormsg(obj_record));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set_all: %s\n",
+                       fiid_obj_errormsg (obj_record));
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "output_number",
-                    &output_number);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "standby",
-                    &standby);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "nominal_voltage",
-                    &nominal_voltage);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "maximum_negative_voltage_deviation",
-                    &maximum_negative_voltage_deviation);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "maximum_positive_voltage_deviation",
-                    &maximum_positive_voltage_deviation);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "ripple_and_noise_pk_pk",
-                    &ripple_and_noise_pk_pk);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "minimum_current_draw",
-                    &minimum_current_draw);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "maximum_current_draw",
-                    &maximum_current_draw);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "output_number",
+                     &output_number);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "standby",
+                     &standby);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "nominal_voltage",
+                     &nominal_voltage);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "maximum_negative_voltage_deviation",
+                     &maximum_negative_voltage_deviation);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "maximum_positive_voltage_deviation",
+                     &maximum_positive_voltage_deviation);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "ripple_and_noise_pk_pk",
+                     &ripple_and_noise_pk_pk);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "minimum_current_draw",
+                     &minimum_current_draw);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "maximum_current_draw",
+                     &maximum_current_draw);
 
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Output Output Number: %u\n",
-                 output_number);
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Output Output on Standy: %s\n",
-                 (standby) ? "Yes" : "No");
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Output Nominal Voltage: %d mV\n",
-                 (int16_t)nominal_voltage);
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Output Maximum Negative Voltage Deviation: %d mV\n",
-                 (int16_t)maximum_negative_voltage_deviation);
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Output Maximum Positive Voltage Deviation: %d mV\n",
-                 (int16_t)maximum_positive_voltage_deviation);
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Output Ripple and Noise pk-pk: %u mV\n",
-                 ripple_and_noise_pk_pk);
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Output Minimum Current Draw: %u mA\n",
-                 minimum_current_draw);
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Output Maximum Current Draw: %u mA\n",
-                 maximum_current_draw);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Output Output Number: %u\n",
+                  output_number);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Output Output on Standy: %s\n",
+                  (standby) ? "Yes" : "No");
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Output Nominal Voltage: %d mV\n",
+                  (int16_t)nominal_voltage);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Output Maximum Negative Voltage Deviation: %d mV\n",
+                  (int16_t)maximum_negative_voltage_deviation);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Output Maximum Positive Voltage Deviation: %d mV\n",
+                  (int16_t)maximum_positive_voltage_deviation);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Output Ripple and Noise pk-pk: %u mV\n",
+                  ripple_and_noise_pk_pk);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Output Minimum Current Draw: %u mA\n",
+                  minimum_current_draw);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Output Maximum Current Draw: %u mA\n",
+                  maximum_current_draw);
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY (obj_record);
   return rv;
 }
 
 static fru_err_t
-output_dc_load(ipmi_fru_state_data_t *state_data,
-               uint8_t *frubuf,
-               uint8_t record_length,
-               uint8_t record_checksum)
+output_dc_load (ipmi_fru_state_data_t *state_data,
+                uint8_t *frubuf,
+                uint8_t record_length,
+                uint8_t record_checksum)
 {
   fiid_obj_t obj_record = NULL;
   int32_t tmpl_record_length;
@@ -446,114 +446,114 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
   uint64_t minimum_current_load;
   uint64_t maximum_current_load;
 
-  assert(state_data);
-  assert(frubuf);
-  assert(record_length);
+  assert (state_data);
+  assert (frubuf);
+  assert (record_length);
 
-  if ((ret = ipmi_fru_check_checksum(state_data,
-                                     frubuf,
-                                     record_length,
-                                     record_checksum,
-                                     "DC Load Multirecord")) != FRU_ERR_SUCCESS)
+  if ((ret = ipmi_fru_check_checksum (state_data,
+                                      frubuf,
+                                      record_length,
+                                      record_checksum,
+                                      "DC Load Multirecord")) != FRU_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-  
-  if ((tmpl_record_length = fiid_template_len_bytes(tmpl_fru_dc_load)) < 0)
+
+  if ((tmpl_record_length = fiid_template_len_bytes (tmpl_fru_dc_load)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_template_len_bytes: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_template_len_bytes: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
   if (tmpl_record_length != record_length)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "  FRU DC Load Record Length Incorrect: %u\n",
-                      record_length);
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU DC Load Record Length Incorrect: %u\n",
+                       record_length);
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (!(obj_record = fiid_obj_create(tmpl_fru_dc_load)))
+  if (!(obj_record = fiid_obj_create (tmpl_fru_dc_load)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  if (fiid_obj_set_all(obj_record,
-                       frubuf,
-                       record_length) < 0)
+  if (fiid_obj_set_all (obj_record,
+                        frubuf,
+                        record_length) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set_all: %s\n",
-                      fiid_obj_errormsg(obj_record));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set_all: %s\n",
+                       fiid_obj_errormsg (obj_record));
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "output_number",
-                    &output_number);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "nominal_voltage",
-                    &nominal_voltage);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "specd_minimum_voltage",
-                    &specd_minimum_voltage);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "specd_maximum_voltage",
-                    &specd_maximum_voltage);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "specd_ripple_and_noise_pk_pk",
-                    &specd_ripple_and_noise_pk_pk);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "minimum_current_load",
-                    &minimum_current_load);
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "maximum_current_load",
-                    &maximum_current_load);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "output_number",
+                     &output_number);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "nominal_voltage",
+                     &nominal_voltage);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "specd_minimum_voltage",
+                     &specd_minimum_voltage);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "specd_maximum_voltage",
+                     &specd_maximum_voltage);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "specd_ripple_and_noise_pk_pk",
+                     &specd_ripple_and_noise_pk_pk);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "minimum_current_load",
+                     &minimum_current_load);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "maximum_current_load",
+                     &maximum_current_load);
 
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Load Output Number: %u\n",
-                 output_number);
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Load Nominal Voltage: %d mV\n",
-                 (int16_t)nominal_voltage);
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Load Spec'd Minimum Voltage: %d mV\n",
-                 (int16_t)specd_minimum_voltage);
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Load Spec'd Maximum Voltage: %d mV\n",
-                 (int16_t)specd_maximum_voltage);
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Load Spec'd Ripple and Noise pk-pk: %u mV\n",
-                 specd_ripple_and_noise_pk_pk);
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Load Minimum Current Load: %u mA\n",
-                 minimum_current_load);
-  pstdout_printf(state_data->pstate,
-                 "  FRU DC Load Maximum Current Load: %u mA\n",
-                 maximum_current_load);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Load Output Number: %u\n",
+                  output_number);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Load Nominal Voltage: %d mV\n",
+                  (int16_t)nominal_voltage);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Load Spec'd Minimum Voltage: %d mV\n",
+                  (int16_t)specd_minimum_voltage);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Load Spec'd Maximum Voltage: %d mV\n",
+                  (int16_t)specd_maximum_voltage);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Load Spec'd Ripple and Noise pk-pk: %u mV\n",
+                  specd_ripple_and_noise_pk_pk);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Load Minimum Current Load: %u mA\n",
+                  minimum_current_load);
+  pstdout_printf (state_data->pstate,
+                  "  FRU DC Load Maximum Current Load: %u mA\n",
+                  maximum_current_load);
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY (obj_record);
   return rv;
 }
 
 static fru_err_t
-output_management_access_record(ipmi_fru_state_data_t *state_data,
-                                uint8_t *frubuf,
-                                uint8_t record_length,
-                                uint8_t record_checksum)
+output_management_access_record (ipmi_fru_state_data_t *state_data,
+                                 uint8_t *frubuf,
+                                 uint8_t record_length,
+                                 uint8_t record_checksum)
 {
   fiid_obj_t obj_record = NULL;
   int32_t min_tmpl_record_length;
@@ -564,156 +564,156 @@ output_management_access_record(ipmi_fru_state_data_t *state_data,
   uint8_t managementaccessbuf[FRU_BUF_LEN+1];
   int i;
 
-  assert(state_data);
-  assert(frubuf);
-  assert(record_length);
+  assert (state_data);
+  assert (frubuf);
+  assert (record_length);
 
-  memset(managementaccessbuf, '\0', FRU_BUF_LEN+1);
+  memset (managementaccessbuf, '\0', FRU_BUF_LEN+1);
 
-  if ((ret = ipmi_fru_check_checksum(state_data,
-                                     frubuf,
-                                     record_length,
-                                     record_checksum,
-                                     "Management Access Multirecord")) != FRU_ERR_SUCCESS)
+  if ((ret = ipmi_fru_check_checksum (state_data,
+                                      frubuf,
+                                      record_length,
+                                      record_checksum,
+                                      "Management Access Multirecord")) != FRU_ERR_SUCCESS)
     {
       rv = ret;
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-  
+
   /* Variable Length Record - So need to check min length */
-  if ((min_tmpl_record_length = fiid_template_field_start_bytes(tmpl_fru_management_access_record,
-                                                                "record")) < 0)
+  if ((min_tmpl_record_length = fiid_template_field_start_bytes (tmpl_fru_management_access_record,
+                                                                 "record")) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_template_field_start_bytes: 'record': %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_template_field_start_bytes: 'record': %s\n",
+                       strerror (errno));
       goto cleanup;
     }
-  
+
   if (record_length < min_tmpl_record_length)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "  FRU Management Access Record Length Incorrect: %u\n",
-                      record_length);
-      goto cleanup;
-    }
- 
-  if (!(obj_record = fiid_obj_create(tmpl_fru_management_access_record)))
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU Management Access Record Length Incorrect: %u\n",
+                       record_length);
       goto cleanup;
     }
 
-  if (fiid_obj_set_all(obj_record,
-                       frubuf,
-                       record_length) < 0)
+  if (!(obj_record = fiid_obj_create (tmpl_fru_management_access_record)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set_all: %s\n",
-                      fiid_obj_errormsg(obj_record));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "sub_record_type",
-                    &sub_record_type);
-
-  if ((len = fiid_obj_get_data(obj_record,
-                               "record",
-                               managementaccessbuf,
-                               FRU_BUF_LEN)) < 0)
+  if (fiid_obj_set_all (obj_record,
+                        frubuf,
+                        record_length) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get_data: 'record': %s\n",
-                      fiid_obj_errormsg(obj_record));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set_all: %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "sub_record_type",
+                     &sub_record_type);
+
+  if ((len = fiid_obj_get_data (obj_record,
+                                "record",
+                                managementaccessbuf,
+                                FRU_BUF_LEN)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'record': %s\n",
+                       fiid_obj_errormsg (obj_record));
       goto cleanup;
     }
 
   if (!len)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "  FRU Management Access Record: No Record Bytes\n");
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU Management Access Record: No Record Bytes\n");
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
   if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_MANAGEMENT_URL)
-    pstdout_printf(state_data->pstate,
-                   "  FRU Management Access System Management URL: %s\n",
-                   managementaccessbuf);
+    pstdout_printf (state_data->pstate,
+                    "  FRU Management Access System Management URL: %s\n",
+                    managementaccessbuf);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_NAME)
-    pstdout_printf(state_data->pstate,
-                   "  FRU Management Access System Name: %s\n",
-                   managementaccessbuf);
+    pstdout_printf (state_data->pstate,
+                    "  FRU Management Access System Name: %s\n",
+                    managementaccessbuf);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_PING_ADDRESS)
-    pstdout_printf(state_data->pstate,
-                   "  FRU Management Access System Ping Address: %s\n",
-                   managementaccessbuf);
+    pstdout_printf (state_data->pstate,
+                    "  FRU Management Access System Ping Address: %s\n",
+                    managementaccessbuf);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_MANAGEMENT_URL)
-    pstdout_printf(state_data->pstate,
-                   "  FRU Management Access Component Management URL: %s\n",
-                   managementaccessbuf);
+    pstdout_printf (state_data->pstate,
+                    "  FRU Management Access Component Management URL: %s\n",
+                    managementaccessbuf);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_NAME)
-    pstdout_printf(state_data->pstate,
-                   "  FRU Management Access Component Name: %s\n",
-                   managementaccessbuf);
+    pstdout_printf (state_data->pstate,
+                    "  FRU Management Access Component Name: %s\n",
+                    managementaccessbuf);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_PING_ADDRESS)
-    pstdout_printf(state_data->pstate,
-                   "  FRU Management Access Component Ping Address: %s\n",
-                   managementaccessbuf);
+    pstdout_printf (state_data->pstate,
+                    "  FRU Management Access Component Ping Address: %s\n",
+                    managementaccessbuf);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID)
     {
-      pstdout_printf(state_data->pstate,
-                     "  FRU Management Access System Unique ID:");
-      
+      pstdout_printf (state_data->pstate,
+                      "  FRU Management Access System Unique ID:");
+
       for (i = 0; i < len; i++)
         {
           if ((i % 8) == 0)
-            pstdout_printf(state_data->pstate, "\n    ");
-          
-          pstdout_printf(state_data->pstate,
-                         " %02Xh",
-                         managementaccessbuf[i]);
+            pstdout_printf (state_data->pstate, "\n    ");
+
+          pstdout_printf (state_data->pstate,
+                          " %02Xh",
+                          managementaccessbuf[i]);
         }
-      pstdout_printf(state_data->pstate, "\n");
+      pstdout_printf (state_data->pstate, "\n");
     }
   else
     {
-      pstdout_printf(state_data->pstate,
-                     "  FRU Management Access Record: Unknown Sub Record Type:");
+      pstdout_printf (state_data->pstate,
+                      "  FRU Management Access Record: Unknown Sub Record Type:");
       for (i = 0; i < len; i++)
         {
           if ((i % 8) == 0)
-            pstdout_printf(state_data->pstate, "\n    ");
-          
-          pstdout_printf(state_data->pstate,
-                         " %02Xh",
-                         managementaccessbuf[i]);
+            pstdout_printf (state_data->pstate, "\n    ");
+
+          pstdout_printf (state_data->pstate,
+                          " %02Xh",
+                          managementaccessbuf[i]);
         }
-      pstdout_printf(state_data->pstate, "\n");
+      pstdout_printf (state_data->pstate, "\n");
     }
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY (obj_record);
   return rv;
 }
 
 static fru_err_t
-output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
-                                 uint8_t *frubuf,
-                                 uint8_t record_length,
-                                 uint8_t record_checksum)
-{ 
+output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
+                                  uint8_t *frubuf,
+                                  uint8_t record_length,
+                                  uint8_t record_checksum)
+{
   fiid_obj_t obj_record = NULL;
   int32_t min_tmpl_record_length;
   int32_t len;
@@ -725,143 +725,143 @@ output_base_compatibility_record(ipmi_fru_state_data_t *state_data,
   uint64_t compatibility_code_start_value;
   uint8_t codemaskbuf[FRU_BUF_LEN+1];
 
-  assert(state_data);
-  assert(frubuf);
-  assert(record_length);
+  assert (state_data);
+  assert (frubuf);
+  assert (record_length);
 
-  memset(codemaskbuf, '\0', FRU_BUF_LEN+1);
+  memset (codemaskbuf, '\0', FRU_BUF_LEN+1);
 
-  if ((ret = ipmi_fru_check_checksum(state_data,
-                                     frubuf,
-                                     record_length,
-                                     record_checksum,
-                                     "Base Compatibility Multirecord")) != FRU_ERR_SUCCESS)
+  if ((ret = ipmi_fru_check_checksum (state_data,
+                                      frubuf,
+                                      record_length,
+                                      record_checksum,
+                                      "Base Compatibility Multirecord")) != FRU_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-  
+
   /* Variable Length Record - So need to check min length */
-  if ((min_tmpl_record_length = fiid_template_field_start_bytes(tmpl_fru_base_compatibility_record,
-                                                                "code_range_mask")) < 0)
+  if ((min_tmpl_record_length = fiid_template_field_start_bytes (tmpl_fru_base_compatibility_record,
+                                                                 "code_range_mask")) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_template_field_start_bytes: 'code_range_mask': %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_template_field_start_bytes: 'code_range_mask': %s\n",
+                       strerror (errno));
       goto cleanup;
     }
-  
+
   if (record_length < min_tmpl_record_length)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "  FRU Base Compatibility Record Length Incorrect: %u\n",
-                      record_length);
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU Base Compatibility Record Length Incorrect: %u\n",
+                       record_length);
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (!(obj_record = fiid_obj_create(tmpl_fru_base_compatibility_record)))
+  if (!(obj_record = fiid_obj_create (tmpl_fru_base_compatibility_record)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  if (fiid_obj_set_all(obj_record,
-                       frubuf,
-                       record_length) < 0)
+  if (fiid_obj_set_all (obj_record,
+                        frubuf,
+                        record_length) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set_all: %s\n",
-                      fiid_obj_errormsg(obj_record));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set_all: %s\n",
+                       fiid_obj_errormsg (obj_record));
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "manufacturer_id",
-                    &manufacturer_id);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "manufacturer_id",
+                     &manufacturer_id);
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "entity_id_code",
-                    &entity_id_code);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "entity_id_code",
+                     &entity_id_code);
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "compatibility_base",
-                    &compatibility_base);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "compatibility_base",
+                     &compatibility_base);
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "compatibility_code_start_value",
-                    &compatibility_code_start_value);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "compatibility_code_start_value",
+                     &compatibility_code_start_value);
 
-  if ((len = fiid_obj_get_data(obj_record,
-                               "code_range_mask",
-                               codemaskbuf,
-                               FRU_BUF_LEN)) < 0)
+  if ((len = fiid_obj_get_data (obj_record,
+                                "code_range_mask",
+                                codemaskbuf,
+                                FRU_BUF_LEN)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get_data: 'code_range_mask': %s\n",
-                      fiid_obj_errormsg(obj_record));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'code_range_mask': %s\n",
+                       fiid_obj_errormsg (obj_record));
       goto cleanup;
     }
 
-  if (IPMI_IANA_ENTERPRISE_ID_VALID(manufacturer_id)
+  if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
       && ipmi_iana_enterprise_numbers[manufacturer_id])
-    pstdout_printf(state_data->pstate,
-                   "  FRU Base Compatibility Manufacturer ID: %s (%Xh)\n",
-                   ipmi_iana_enterprise_numbers[manufacturer_id],
-                   manufacturer_id);
+    pstdout_printf (state_data->pstate,
+                    "  FRU Base Compatibility Manufacturer ID: %s (%Xh)\n",
+                    ipmi_iana_enterprise_numbers[manufacturer_id],
+                    manufacturer_id);
   else
-    pstdout_printf(state_data->pstate,
-                   "  FRU Base Compatibility Manufacturer ID: %Xh\n",
-                   manufacturer_id);
+    pstdout_printf (state_data->pstate,
+                    "  FRU Base Compatibility Manufacturer ID: %Xh\n",
+                    manufacturer_id);
 
-  pstdout_printf(state_data->pstate,
-                 "  FRU Base Compatibility Entity ID: %Xh\n",
-                 entity_id_code);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Base Compatibility Comptability Base: %Xh\n",
-                 compatibility_base);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Base Compatibility Comptability Code Start Value: %Xh\n",
-                 compatibility_code_start_value);
-      
+  pstdout_printf (state_data->pstate,
+                  "  FRU Base Compatibility Entity ID: %Xh\n",
+                  entity_id_code);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Base Compatibility Comptability Base: %Xh\n",
+                  compatibility_base);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Base Compatibility Comptability Code Start Value: %Xh\n",
+                  compatibility_code_start_value);
+
   if (len)
     {
       int i;
-      
-      pstdout_printf(state_data->pstate,
-                     "  FRU Base Compatibility Code Mask:");
-      
+
+      pstdout_printf (state_data->pstate,
+                      "  FRU Base Compatibility Code Mask:");
+
       for (i = 0; i < len; i++)
         {
           if ((i % 8) == 0)
-            pstdout_printf(state_data->pstate, "\n    ");
-          
-          pstdout_printf(state_data->pstate,
-                         " %02Xh",
-                         codemaskbuf[i]);
+            pstdout_printf (state_data->pstate, "\n    ");
+
+          pstdout_printf (state_data->pstate,
+                          " %02Xh",
+                          codemaskbuf[i]);
         }
-      pstdout_printf(state_data->pstate, "\n");
+      pstdout_printf (state_data->pstate, "\n");
     }
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY (obj_record);
   return rv;
 }
 
 static fru_err_t
-output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
-                                     uint8_t *frubuf,
-                                     uint8_t record_length,
-                                     uint8_t record_checksum)
-{ 
+output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
+                                      uint8_t *frubuf,
+                                      uint8_t record_length,
+                                      uint8_t record_checksum)
+{
   fiid_obj_t obj_record = NULL;
   int32_t min_tmpl_record_length;
   int32_t len;
@@ -873,136 +873,136 @@ output_extended_compatibility_record(ipmi_fru_state_data_t *state_data,
   uint64_t compatibility_code_start_value;
   uint8_t codemaskbuf[FRU_BUF_LEN+1];
 
-  assert(state_data);
-  assert(frubuf);
-  assert(record_length);
+  assert (state_data);
+  assert (frubuf);
+  assert (record_length);
 
-  memset(codemaskbuf, '\0', FRU_BUF_LEN+1);
+  memset (codemaskbuf, '\0', FRU_BUF_LEN+1);
 
-  if ((ret = ipmi_fru_check_checksum(state_data,
-                                     frubuf,
-                                     record_length,
-                                     record_checksum,
-                                     "Extended Compatibility Multirecord")) != FRU_ERR_SUCCESS)
+  if ((ret = ipmi_fru_check_checksum (state_data,
+                                      frubuf,
+                                      record_length,
+                                      record_checksum,
+                                      "Extended Compatibility Multirecord")) != FRU_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-  
+
   /* Variable Length Record - So need to check min length */
-  if ((min_tmpl_record_length = fiid_template_field_start_bytes(tmpl_fru_extended_compatibility_record,
-                                                                "code_range_mask")) < 0)
+  if ((min_tmpl_record_length = fiid_template_field_start_bytes (tmpl_fru_extended_compatibility_record,
+                                                                 "code_range_mask")) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_template_field_start_bytes: 'code_range_mask': %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_template_field_start_bytes: 'code_range_mask': %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
   if (record_length < min_tmpl_record_length)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "  FRU Extended Compatibility Record Length Incorrect: %u\n",
-                      record_length);
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU Extended Compatibility Record Length Incorrect: %u\n",
+                       record_length);
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (!(obj_record = fiid_obj_create(tmpl_fru_extended_compatibility_record)))
+  if (!(obj_record = fiid_obj_create (tmpl_fru_extended_compatibility_record)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  if (fiid_obj_set_all(obj_record,
-                       frubuf,
-                       record_length) < 0)
+  if (fiid_obj_set_all (obj_record,
+                        frubuf,
+                        record_length) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set_all: %s\n",
-                      fiid_obj_errormsg(obj_record));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set_all: %s\n",
+                       fiid_obj_errormsg (obj_record));
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "manufacturer_id",
-                    &manufacturer_id);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "manufacturer_id",
+                     &manufacturer_id);
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "entity_id_code",
-                    &entity_id_code);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "entity_id_code",
+                     &entity_id_code);
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "compatibility_base",
-                    &compatibility_base);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "compatibility_base",
+                     &compatibility_base);
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "compatibility_code_start_value",
-                    &compatibility_code_start_value);
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "compatibility_code_start_value",
+                     &compatibility_code_start_value);
 
-  if ((len = fiid_obj_get_data(obj_record,
-                               "code_range_mask",
-                               codemaskbuf,
-                               FRU_BUF_LEN)) < 0)
+  if ((len = fiid_obj_get_data (obj_record,
+                                "code_range_mask",
+                                codemaskbuf,
+                                FRU_BUF_LEN)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get_data: 'code_range_mask': %s\n",
-                      fiid_obj_errormsg(obj_record));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'code_range_mask': %s\n",
+                       fiid_obj_errormsg (obj_record));
       goto cleanup;
     }
 
-  pstdout_printf(state_data->pstate,
-                 "  FRU Extended Compatibility Manufacturer ID: %Xh\n",
-                 manufacturer_id);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Extended Compatibility Manufacturer ID: %Xh\n",
+                  manufacturer_id);
 
-  pstdout_printf(state_data->pstate,
-                 "  FRU Extended Compatibility Entity ID: %Xh\n",
-                 entity_id_code);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Extended Compatibility Comptability Base: %Xh\n",
-                 compatibility_base);
-  pstdout_printf(state_data->pstate,
-                 "  FRU Extended Compatibility Comptability Code Start Value: %Xh\n",
-                 compatibility_code_start_value);
-  
+  pstdout_printf (state_data->pstate,
+                  "  FRU Extended Compatibility Entity ID: %Xh\n",
+                  entity_id_code);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Extended Compatibility Comptability Base: %Xh\n",
+                  compatibility_base);
+  pstdout_printf (state_data->pstate,
+                  "  FRU Extended Compatibility Comptability Code Start Value: %Xh\n",
+                  compatibility_code_start_value);
+
   if (len)
     {
       int i;
-      
-      pstdout_printf(state_data->pstate,
-                     "  FRU Extended Compatibility Code Mask:");
-      
+
+      pstdout_printf (state_data->pstate,
+                      "  FRU Extended Compatibility Code Mask:");
+
       for (i = 0; i < len; i++)
         {
           if ((i % 8) == 0)
-            pstdout_printf(state_data->pstate, "\n    ");
-          
-          pstdout_printf(state_data->pstate,
-                         " %02Xh",
-                         codemaskbuf[i]);
+            pstdout_printf (state_data->pstate, "\n    ");
+
+          pstdout_printf (state_data->pstate,
+                          " %02Xh",
+                          codemaskbuf[i]);
         }
-      pstdout_printf(state_data->pstate, "\n");
+      pstdout_printf (state_data->pstate, "\n");
     }
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY (obj_record);
   return rv;
 }
 
 static fru_err_t
-output_oem_record(ipmi_fru_state_data_t *state_data,
-                  uint8_t *frubuf,
-                  uint8_t record_length,
-                  uint8_t record_checksum)
-{ 
+output_oem_record (ipmi_fru_state_data_t *state_data,
+                   uint8_t *frubuf,
+                   uint8_t record_length,
+                   uint8_t record_checksum)
+{
   fiid_obj_t obj_record = NULL;
   int32_t min_tmpl_record_length;
   int32_t len;
@@ -1011,112 +1011,112 @@ output_oem_record(ipmi_fru_state_data_t *state_data,
   uint64_t manufacturer_id;
   uint8_t oemdatabuf[FRU_BUF_LEN+1];
 
-  assert(state_data);
-  assert(frubuf);
-  assert(record_length);
+  assert (state_data);
+  assert (frubuf);
+  assert (record_length);
 
-  memset(oemdatabuf, '\0', FRU_BUF_LEN+1);
+  memset (oemdatabuf, '\0', FRU_BUF_LEN+1);
 
-  if ((ret = ipmi_fru_check_checksum(state_data,
-                                     frubuf,
-                                     record_length,
-                                     record_checksum,
-                                     "OEM Multirecord")) != FRU_ERR_SUCCESS)
+  if ((ret = ipmi_fru_check_checksum (state_data,
+                                      frubuf,
+                                      record_length,
+                                      record_checksum,
+                                      "OEM Multirecord")) != FRU_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-  
+
   /* Variable Length Record - So need to check min length */
-  if ((min_tmpl_record_length = fiid_template_field_start_bytes(tmpl_fru_oem_record,
-                                                                "oem_data")) < 0)
+  if ((min_tmpl_record_length = fiid_template_field_start_bytes (tmpl_fru_oem_record,
+                                                                 "oem_data")) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_template_field_start_bytes: 'oem_data': %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_template_field_start_bytes: 'oem_data': %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
   if (record_length < min_tmpl_record_length)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "  FRU OEM Record Length Incorrect: %u\n",
-                      record_length);
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU OEM Record Length Incorrect: %u\n",
+                       record_length);
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  if (!(obj_record = fiid_obj_create(tmpl_fru_oem_record)))
+  if (!(obj_record = fiid_obj_create (tmpl_fru_oem_record)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  if (fiid_obj_set_all(obj_record,
-                       frubuf,
-                       record_length) < 0)
+  if (fiid_obj_set_all (obj_record,
+                        frubuf,
+                        record_length) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_set_all: %s\n",
-                      fiid_obj_errormsg(obj_record));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set_all: %s\n",
+                       fiid_obj_errormsg (obj_record));
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET(obj_record,
-                    "manufacturer_id",
-                    &manufacturer_id);
- 
-  if ((len = fiid_obj_get_data(obj_record,
-                               "oem_data",
-                               oemdatabuf,
-                               FRU_BUF_LEN)) < 0)
+  TOOL_FIID_OBJ_GET (obj_record,
+                     "manufacturer_id",
+                     &manufacturer_id);
+
+  if ((len = fiid_obj_get_data (obj_record,
+                                "oem_data",
+                                oemdatabuf,
+                                FRU_BUF_LEN)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get_data: 'oem_data': %s\n",
-                      fiid_obj_errormsg(obj_record));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'oem_data': %s\n",
+                       fiid_obj_errormsg (obj_record));
       goto cleanup;
     }
 
-  pstdout_printf(state_data->pstate,
-                 "  FRU OEM Manufacturer ID: %Xh\n",
-                 manufacturer_id);
+  pstdout_printf (state_data->pstate,
+                  "  FRU OEM Manufacturer ID: %Xh\n",
+                  manufacturer_id);
 
   if (len)
     {
       int i;
-      
-      pstdout_printf(state_data->pstate,
-                     "  FRU OEM Code Mask:");
-      
+
+      pstdout_printf (state_data->pstate,
+                      "  FRU OEM Code Mask:");
+
       for (i = 0; i < len; i++)
         {
           if ((i % 8) == 0)
-            pstdout_printf(state_data->pstate, "\n    ");
-          
-          pstdout_printf(state_data->pstate,
-                         " %02Xh",
-                         oemdatabuf[i]);
+            pstdout_printf (state_data->pstate, "\n    ");
+
+          pstdout_printf (state_data->pstate,
+                          " %02Xh",
+                          oemdatabuf[i]);
         }
-      pstdout_printf(state_data->pstate, "\n");
+      pstdout_printf (state_data->pstate, "\n");
     }
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_record);
+  TOOL_FIID_OBJ_DESTROY (obj_record);
   return rv;
 }
 
 fru_err_t
-ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
-                                      uint8_t device_id,
-                                      unsigned int offset)
+ipmi_fru_output_multirecord_info_area (ipmi_fru_state_data_t *state_data,
+                                       uint8_t device_id,
+                                       unsigned int offset)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   fiid_obj_t fru_multirecord_header = NULL;
@@ -1131,44 +1131,44 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
   uint32_t multirecord_offset = 0;
   int output_count = 0;
 
-  assert(state_data);
-  assert(offset);
+  assert (state_data);
+  assert (offset);
 
-  if ((record_header_length = fiid_template_len_bytes(tmpl_fru_multirecord_area_header)) < 0)
+  if ((record_header_length = fiid_template_len_bytes (tmpl_fru_multirecord_area_header)) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_template_len_bytes: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_template_len_bytes: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
   if ((offset*8 + record_header_length) > state_data->fru_inventory_area_size)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "  FRU MultirecordInfo Info Area size too small\n");
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU MultirecordInfo Info Area size too small\n");
       rv = FRU_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-  
-  if ((ret = ipmi_fru_read_fru_data(state_data,
-                                    device_id,
-                                    frubuf,
-                                    IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
-                                    offset*8,
-                                    record_header_length)) != FRU_ERR_SUCCESS)
+
+  if ((ret = ipmi_fru_read_fru_data (state_data,
+                                     device_id,
+                                     frubuf,
+                                     IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                     offset*8,
+                                     record_header_length)) != FRU_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-  
-  if (!(fru_multirecord_header = fiid_obj_create(tmpl_fru_multirecord_area_header)))
+
+  if (!(fru_multirecord_header = fiid_obj_create (tmpl_fru_multirecord_area_header)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
@@ -1186,36 +1186,36 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
           goto cleanup;
         }
 
-      if ((ret = ipmi_fru_dump_hex(state_data,
-                                   frubuf,
-                                   record_header_length,
-                                   "MultiRecord Record Header")) != FRU_ERR_SUCCESS)
+      if ((ret = ipmi_fru_dump_hex (state_data,
+                                    frubuf,
+                                    record_header_length,
+                                    "MultiRecord Record Header")) != FRU_ERR_SUCCESS)
         {
           rv = ret;
           goto cleanup;
         }
 
-      if ((ret = ipmi_fru_check_checksum(state_data,
-                                         frubuf,
-                                         record_header_length,
-                                         0,
-                                         "Multirecord Record Header")) != FRU_ERR_SUCCESS)
+      if ((ret = ipmi_fru_check_checksum (state_data,
+                                          frubuf,
+                                          record_header_length,
+                                          0,
+                                          "Multirecord Record Header")) != FRU_ERR_SUCCESS)
         {
           rv = ret;
           goto cleanup;
         }
-      
-      if (fiid_obj_set_all(fru_multirecord_header,
-                           frubuf,
-                           record_header_length) < 0)
+
+      if (fiid_obj_set_all (fru_multirecord_header,
+                            frubuf,
+                            record_header_length) < 0)
         {
-          pstdout_fprintf(state_data->pstate,
-                          stderr,
-                          "fiid_obj_set_all: %s\n",
-                          fiid_obj_errormsg(fru_multirecord_header));
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_set_all: %s\n",
+                           fiid_obj_errormsg (fru_multirecord_header));
           goto cleanup;
         }
-      
+
       TOOL_FIID_OBJ_GET (fru_multirecord_header,
                          "record_type_id",
                          &record_type_id);
@@ -1234,29 +1234,29 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
 
       if (state_data->prog_data->args->verbose_count >= 2)
         {
-          pstdout_printf(state_data->pstate, 
-                         "  FRU Multirecord Info Area Record Type ID: %02Xh\n",
-                         record_type_id);
-          pstdout_printf(state_data->pstate, 
-                         "  FRU Multirecord Info Area Record Format Version: %02Xh\n",
-                         record_format_version);
-          pstdout_printf(state_data->pstate, 
-                         "  FRU Multirecord Info Area End Of List: %02Xh\n",
-                         end_of_list);
-          pstdout_printf(state_data->pstate,
-                         "  FRU Multirecord Info Area Record Length: %u\n", 
-                         record_length);
+          pstdout_printf (state_data->pstate,
+                          "  FRU Multirecord Info Area Record Type ID: %02Xh\n",
+                          record_type_id);
+          pstdout_printf (state_data->pstate,
+                          "  FRU Multirecord Info Area Record Format Version: %02Xh\n",
+                          record_format_version);
+          pstdout_printf (state_data->pstate,
+                          "  FRU Multirecord Info Area End Of List: %02Xh\n",
+                          end_of_list);
+          pstdout_printf (state_data->pstate,
+                          "  FRU Multirecord Info Area Record Length: %u\n",
+                          record_length);
         }
-           
+
       if (end_of_list)
         break;
 
       if (record_format_version != IPMI_FRU_MULTIRECORD_INFO_AREA_FORMAT_VERSION)
         {
-          pstdout_fprintf(state_data->pstate, 
-                          stderr,
-                          "  FRU Multirecord Area Format Unknown: %02Xh\n", 
-                          record_format_version);
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "  FRU Multirecord Area Format Unknown: %02Xh\n",
+                           record_format_version);
           continue;
         }
 
@@ -1265,13 +1265,13 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
           multirecord_offset += record_header_length;
           continue;
         }
-      
+
       /* Note: Unlike Info Areas, record_length is in bytes */
       if (state_data->fru_inventory_area_size < (multirecord_offset + record_header_length + record_length))
         {
-          pstdout_fprintf(state_data->pstate, 
-                          stderr,
-                          "  FRU Multirecord Info Area too small\n");
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "  FRU Multirecord Info Area too small\n");
           rv = FRU_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -1289,10 +1289,10 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
           goto cleanup;
         }
 
-      if ((ret = ipmi_fru_dump_hex(state_data,
-                                   frubuf,
-                                   record_length,
-                                   "MultiRecord")) != FRU_ERR_SUCCESS)
+      if ((ret = ipmi_fru_dump_hex (state_data,
+                                    frubuf,
+                                    record_length,
+                                    "MultiRecord")) != FRU_ERR_SUCCESS)
         {
           rv = ret;
           goto cleanup;
@@ -1301,73 +1301,9 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
       if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION)
         {
           if (output_count)
-            pstdout_printf(state_data->pstate, "\n");
+            pstdout_printf (state_data->pstate, "\n");
           output_count++;
-          ret = output_power_supply_information(state_data,
-                                                frubuf,
-                                                record_length,
-                                                record_checksum);
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          /* else continue on */
-        }
-      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_DC_OUTPUT)
-        {
-          if (output_count)
-            pstdout_printf(state_data->pstate, "\n");
-          output_count++;
-          ret = output_dc_output(state_data,
-                                 frubuf,
-                                 record_length,
-                                 record_checksum);
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          /* else continue on */
-        }
-      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_DC_LOAD)
-        {
-          if (output_count)
-            pstdout_printf(state_data->pstate, "\n");
-          output_count++;
-          ret = output_dc_load(state_data,
-                               frubuf,
-                               record_length,
-                               record_checksum);
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          /* else continue on */
-        }
-      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_MANAGEMENT_ACCESS_RECORD)
-        {
-          if (output_count)
-            pstdout_printf(state_data->pstate, "\n");
-          output_count++;
-          ret = output_management_access_record(state_data,
-                                                frubuf,
-                                                record_length,
-                                                record_checksum);
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          /* else continue on */
-        }
-      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_BASE_COMPATIBILITY_RECORD)
-        {
-          if (output_count)
-            pstdout_printf(state_data->pstate, "\n");
-          output_count++;
-          ret = output_base_compatibility_record(state_data,
+          ret = output_power_supply_information (state_data,
                                                  frubuf,
                                                  record_length,
                                                  record_checksum);
@@ -1378,28 +1314,12 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
             }
           /* else continue on */
         }
-      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD)
+      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_DC_OUTPUT)
         {
           if (output_count)
-            pstdout_printf(state_data->pstate, "\n");
+            pstdout_printf (state_data->pstate, "\n");
           output_count++;
-          ret = output_extended_compatibility_record(state_data,
-                                                     frubuf,
-                                                     record_length,
-                                                     record_checksum);
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          /* else continue on */
-        }
-      else if (IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM(record_type_id))
-        {
-          if (output_count)
-            pstdout_printf(state_data->pstate, "\n");
-          output_count++;
-          ret = output_oem_record(state_data,
+          ret = output_dc_output (state_data,
                                   frubuf,
                                   record_length,
                                   record_checksum);
@@ -1410,18 +1330,98 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
             }
           /* else continue on */
         }
+      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_DC_LOAD)
+        {
+          if (output_count)
+            pstdout_printf (state_data->pstate, "\n");
+          output_count++;
+          ret = output_dc_load (state_data,
+                                frubuf,
+                                record_length,
+                                record_checksum);
+          if (ret == FRU_ERR_FATAL_ERROR)
+            {
+              rv = ret;
+              goto cleanup;
+            }
+          /* else continue on */
+        }
+      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_MANAGEMENT_ACCESS_RECORD)
+        {
+          if (output_count)
+            pstdout_printf (state_data->pstate, "\n");
+          output_count++;
+          ret = output_management_access_record (state_data,
+                                                 frubuf,
+                                                 record_length,
+                                                 record_checksum);
+          if (ret == FRU_ERR_FATAL_ERROR)
+            {
+              rv = ret;
+              goto cleanup;
+            }
+          /* else continue on */
+        }
+      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_BASE_COMPATIBILITY_RECORD)
+        {
+          if (output_count)
+            pstdout_printf (state_data->pstate, "\n");
+          output_count++;
+          ret = output_base_compatibility_record (state_data,
+                                                  frubuf,
+                                                  record_length,
+                                                  record_checksum);
+          if (ret == FRU_ERR_FATAL_ERROR)
+            {
+              rv = ret;
+              goto cleanup;
+            }
+          /* else continue on */
+        }
+      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD)
+        {
+          if (output_count)
+            pstdout_printf (state_data->pstate, "\n");
+          output_count++;
+          ret = output_extended_compatibility_record (state_data,
+                                                      frubuf,
+                                                      record_length,
+                                                      record_checksum);
+          if (ret == FRU_ERR_FATAL_ERROR)
+            {
+              rv = ret;
+              goto cleanup;
+            }
+          /* else continue on */
+        }
+      else if (IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM (record_type_id))
+        {
+          if (output_count)
+            pstdout_printf (state_data->pstate, "\n");
+          output_count++;
+          ret = output_oem_record (state_data,
+                                   frubuf,
+                                   record_length,
+                                   record_checksum);
+          if (ret == FRU_ERR_FATAL_ERROR)
+            {
+              rv = ret;
+              goto cleanup;
+            }
+          /* else continue on */
+        }
       else
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "  FRU Multirecord Record ID Type Unknown: %02Xh\n",
-                        record_type_id);
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "  FRU Multirecord Record ID Type Unknown: %02Xh\n",
+                         record_type_id);
 
       multirecord_offset += record_length;
     }
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(fru_multirecord_header);
+  TOOL_FIID_OBJ_DESTROY (fru_multirecord_header);
   return (rv);
 
 }

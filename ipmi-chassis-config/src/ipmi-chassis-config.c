@@ -38,11 +38,11 @@
 #include "tool-hostrange-common.h"
 
 static void
-_ipmi_chassis_config_state_data_init(ipmi_chassis_config_state_data_t *state_data)
+_ipmi_chassis_config_state_data_init (ipmi_chassis_config_state_data_t *state_data)
 {
   assert (state_data);
 
-  memset(state_data, '\0', sizeof(ipmi_chassis_config_state_data_t));
+  memset (state_data, '\0', sizeof(ipmi_chassis_config_state_data_t));
   state_data->prog_data = NULL;
   state_data->ipmi_ctx = NULL;
 
@@ -52,7 +52,7 @@ _ipmi_chassis_config_state_data_init(ipmi_chassis_config_state_data_t *state_dat
   state_data->front_panel_enable_power_off_button_for_power_off_only_initialized = 0;
 }
 
-static int 
+static int
 _ipmi_chassis_config (pstdout_state_t pstate,
                       const char *hostname,
                       void *arg)
@@ -67,21 +67,21 @@ _ipmi_chassis_config (pstdout_state_t pstate,
   FILE *fp = NULL;              /* init NULL to remove warnings */
 
   prog_data = (ipmi_chassis_config_prog_data_t *) arg;
-  
+
   _ipmi_chassis_config_state_data_init (&state_data);
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 
-  if (!(state_data.ipmi_ctx = ipmi_open(prog_data->progname,
-                                        hostname,
-                                        &(prog_data->args->config_args.common),
-                                        errmsg,
-                                        IPMI_OPEN_ERRMSGLEN)))
+  if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
+                                         hostname,
+                                         &(prog_data->args->config_args.common),
+                                         errmsg,
+                                         IPMI_OPEN_ERRMSGLEN)))
     {
-      pstdout_fprintf(pstate,
-                      stderr, 
-                      "%s\n", 
-                      errmsg);
+      pstdout_fprintf (pstate,
+                       stderr,
+                       "%s\n",
+                       errmsg);
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -98,17 +98,17 @@ _ipmi_chassis_config (pstdout_state_t pstate,
         {
           if (prog_data->hosts_count > 1)
             {
-              pstdout_fprintf(pstate,
-                              stderr,
-                              "Cannot output multiple host checkout into a single file\n");
+              pstdout_fprintf (pstate,
+                               stderr,
+                               "Cannot output multiple host checkout into a single file\n");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
 
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
-              pstdout_perror(pstate,
-                             "fopen");
+              pstdout_perror (pstate,
+                              "fopen");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
@@ -120,13 +120,13 @@ _ipmi_chassis_config (pstdout_state_t pstate,
   else if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
            || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
     {
-      if (prog_data->args->config_args.filename 
+      if (prog_data->args->config_args.filename
           && strcmp (prog_data->args->config_args.filename, "-"))
         {
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
-              pstdout_perror(pstate,
-                             "fopen");
+              pstdout_perror (pstate,
+                              "fopen");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
@@ -148,10 +148,10 @@ _ipmi_chassis_config (pstdout_state_t pstate,
           && !prog_data->args->config_args.filename
           && !prog_data->args->config_args.keypairs))
     {
-      if (config_parse(pstate,
-                       sections,
-                       &(prog_data->args->config_args),
-                       fp) < 0)
+      if (config_parse (pstate,
+                        sections,
+                        &(prog_data->args->config_args),
+                        fp) < 0)
         {
           /* errors printed in function call */
           exit_code = EXIT_FAILURE;
@@ -167,9 +167,9 @@ _ipmi_chassis_config (pstdout_state_t pstate,
        || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
       && prog_data->args->config_args.keypairs)
     {
-      if (config_sections_insert_keyvalues(pstate,
-                                           sections,
-                                           prog_data->args->config_args.keypairs) < 0)
+      if (config_sections_insert_keyvalues (pstate,
+                                            sections,
+                                            prog_data->args->config_args.keypairs) < 0)
         {
           /* errors printed in function call */
           exit_code = EXIT_FAILURE;
@@ -187,10 +187,10 @@ _ipmi_chassis_config (pstdout_state_t pstate,
       if (prog_data->args->config_args.action != CONFIG_ACTION_CHECKOUT)
         value_input_required = 1;
 
-      if ((num = config_sections_validate_keyvalue_inputs(pstate,
-                                                          sections,
-                                                          value_input_required,
-                                                          &state_data)) < 0)
+      if ((num = config_sections_validate_keyvalue_inputs (pstate,
+                                                           sections,
+                                                           value_input_required,
+                                                           &state_data)) < 0)
         {
           /* errors printed in function call */
           exit_code = EXIT_FAILURE;
@@ -204,7 +204,7 @@ _ipmi_chassis_config (pstdout_state_t pstate,
           goto cleanup;
         }
     }
-  
+
   if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT
       && prog_data->args->config_args.section_strs)
     {
@@ -213,14 +213,14 @@ _ipmi_chassis_config (pstdout_state_t pstate,
       sstr = prog_data->args->config_args.section_strs;
       while (sstr)
         {
-          if (!config_find_section(pstate,
-                                   sections,
-                                   sstr->section_name))
+          if (!config_find_section (pstate,
+                                    sections,
+                                    sstr->section_name))
             {
-              pstdout_fprintf(pstate,
-                              stderr,
-                              "Unknown section `%s'\n",
-                              sstr->section_name);
+              pstdout_fprintf (pstate,
+                               stderr,
+                               "Unknown section `%s'\n",
+                               sstr->section_name);
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
@@ -240,36 +240,36 @@ _ipmi_chassis_config (pstdout_state_t pstate,
       while (section)
         {
           struct config_keyvalue *kv;
-          
-          if (!strcasecmp(section->section_name, "Chassis_Front_Panel_Buttons"))
+
+          if (!strcasecmp (section->section_name, "Chassis_Front_Panel_Buttons"))
             {
-              if ((kv = config_find_keyvalue(pstate,
-                                             section,
-                                             "Enable_Standby_Button_For_Entering_Standby")))
+              if ((kv = config_find_keyvalue (pstate,
+                                              section,
+                                              "Enable_Standby_Button_For_Entering_Standby")))
                 {
                   state_data.front_panel_enable_standby_button_for_entering_standby_initialized++;
                   state_data.front_panel_enable_standby_button_for_entering_standby = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
                 }
 
-              if ((kv = config_find_keyvalue(pstate,
-                                             section,
-                                             "Enable_Diagnostic_Interrupt_Button")))
+              if ((kv = config_find_keyvalue (pstate,
+                                              section,
+                                              "Enable_Diagnostic_Interrupt_Button")))
                 {
                   state_data.front_panel_enable_diagnostic_interrupt_button_initialized++;
                   state_data.front_panel_enable_diagnostic_interrupt_button = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
                 }
 
-              if ((kv = config_find_keyvalue(pstate,
-                                             section,
-                                             "Enable_Reset_Button")))
+              if ((kv = config_find_keyvalue (pstate,
+                                              section,
+                                              "Enable_Reset_Button")))
                 {
                   state_data.front_panel_enable_reset_button_initialized++;
                   state_data.front_panel_enable_reset_button = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
                 }
 
-              if ((kv = config_find_keyvalue(pstate,
-                                             section,
-                                             "Enable_Power_Off_Button_For_Power_Off_Only")))
+              if ((kv = config_find_keyvalue (pstate,
+                                              section,
+                                              "Enable_Power_Off_Button_For_Power_Off_Only")))
                 {
                   state_data.front_panel_enable_power_off_button_for_power_off_only_initialized++;
                   state_data.front_panel_enable_power_off_button_for_power_off_only = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
@@ -283,71 +283,71 @@ _ipmi_chassis_config (pstdout_state_t pstate,
   case CONFIG_ACTION_CHECKOUT:
     if (prog_data->args->config_args.section_strs)
       {
-        struct config_section_str *sstr;
+	struct config_section_str *sstr;
 
-        /* note: argp validation catches if user specified --section
-         * and --keypair, so all_keys_if_none_specified should be '1'.
-         */
+	/* note: argp validation catches if user specified --section
+	 * and --keypair, so all_keys_if_none_specified should be '1'.
+	 */
 
-        sstr = prog_data->args->config_args.section_strs;
-        while (sstr)
-          {
+	sstr = prog_data->args->config_args.section_strs;
+	while (sstr)
+	  {
 	    struct config_section *s;
-            config_err_t this_ret;
+	    config_err_t this_ret;
 
-	    if (!(s = config_find_section(pstate,
-                                          sections, 
-                                          sstr->section_name)))
-              {
-                pstdout_fprintf(pstate,
-                                stderr, 
-                                "## FATAL: Cannot checkout section '%s'\n",
-                                sstr->section_name);
-                continue;
-              }
+	    if (!(s = config_find_section (pstate,
+					   sections,
+					   sstr->section_name)))
+	      {
+		pstdout_fprintf (pstate,
+				 stderr,
+				 "## FATAL: Cannot checkout section '%s'\n",
+				 sstr->section_name);
+		continue;
+	      }
 
-            this_ret = config_checkout_section(pstate,
-                                               s,
-                                               &(prog_data->args->config_args),
-                                               1,
-                                               fp,
-                                               0,
-                                               &state_data);
-            if (this_ret != CONFIG_ERR_SUCCESS)
-              ret = this_ret;
-            if (ret == CONFIG_ERR_FATAL_ERROR)
-              break;
+	    this_ret = config_checkout_section (pstate,
+						s,
+						&(prog_data->args->config_args),
+						1,
+						fp,
+						0,
+						&state_data);
+	    if (this_ret != CONFIG_ERR_SUCCESS)
+	      ret = this_ret;
+	    if (ret == CONFIG_ERR_FATAL_ERROR)
+	      break;
 
-            sstr = sstr->next;
-          }
+	    sstr = sstr->next;
+	  }
       }
     else
       {
-        int all_keys_if_none_specified = 0;
+	int all_keys_if_none_specified = 0;
 
-        if (!prog_data->args->config_args.keypairs)
-          all_keys_if_none_specified++;
+	if (!prog_data->args->config_args.keypairs)
+	  all_keys_if_none_specified++;
 
-        ret = config_checkout (pstate,
-                               sections,
-                               &(prog_data->args->config_args),
-                               all_keys_if_none_specified,
-                               fp,
-                               0,
-                               &state_data);
+	ret = config_checkout (pstate,
+			       sections,
+			       &(prog_data->args->config_args),
+			       all_keys_if_none_specified,
+			       fp,
+			       0,
+			       &state_data);
       }
     break;
   case CONFIG_ACTION_COMMIT:
     ret = config_commit (pstate,
-                         sections,
-                         &(prog_data->args->config_args),
-                         &state_data);
+			 sections,
+			 &(prog_data->args->config_args),
+			 &state_data);
     break;
   case CONFIG_ACTION_DIFF:
     ret = config_diff (pstate,
-                       sections,
-                       &(prog_data->args->config_args),
-                       &state_data);
+		       sections,
+		       &(prog_data->args->config_args),
+		       &state_data);
     break;
   case CONFIG_ACTION_LIST_SECTIONS:
     ret = config_output_sections_list (pstate, sections);
@@ -359,7 +359,7 @@ _ipmi_chassis_config (pstdout_state_t pstate,
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
-  
+
   exit_code = 0;
  cleanup:
   if (state_data.ipmi_ctx)
@@ -368,13 +368,13 @@ _ipmi_chassis_config (pstdout_state_t pstate,
       ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
   if (file_opened)
-    fclose(fp);
+    fclose (fp);
   if (sections)
-    config_sections_destroy(pstate, sections);
+    config_sections_destroy (pstate, sections);
   return exit_code;
 }
 
-int 
+int
 main (int argc, char **argv)
 {
   ipmi_chassis_config_prog_data_t prog_data;
@@ -383,38 +383,38 @@ main (int argc, char **argv)
   int hosts_count;
   int rv;
 
-  ipmi_disable_coredump();
+  ipmi_disable_coredump ();
 
-  memset(&prog_data, '\0', sizeof(ipmi_chassis_config_prog_data_t));
+  memset (&prog_data, '\0', sizeof(ipmi_chassis_config_prog_data_t));
   prog_data.progname = argv[0];
   ipmi_chassis_config_argp_parse (argc, argv, &cmd_args);
 
   prog_data.args = &cmd_args;
 
-  if ((hosts_count = pstdout_setup(&(prog_data.args->config_args.common.hostname),
-                                   prog_data.args->config_args.hostrange.buffer_output,
-                                   prog_data.args->config_args.hostrange.consolidate_output,
-                                   prog_data.args->config_args.hostrange.fanout,
-                                   prog_data.args->config_args.hostrange.eliminate,
-                                   prog_data.args->config_args.hostrange.always_prefix)) < 0)
+  if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common.hostname),
+                                    prog_data.args->config_args.hostrange.buffer_output,
+                                    prog_data.args->config_args.hostrange.consolidate_output,
+                                    prog_data.args->config_args.hostrange.fanout,
+                                    prog_data.args->config_args.hostrange.eliminate,
+                                    prog_data.args->config_args.hostrange.always_prefix)) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
 
   prog_data.hosts_count = hosts_count;
-  
-  if ((rv = pstdout_launch(prog_data.args->config_args.common.hostname,
-                           _ipmi_chassis_config,
-                           &prog_data)) < 0)
+
+  if ((rv = pstdout_launch (prog_data.args->config_args.common.hostname,
+                            _ipmi_chassis_config,
+                            &prog_data)) < 0)
     {
-      fprintf(stderr,
-              "pstdout_launch: %s\n",
-              pstdout_strerror(pstdout_errnum));
+      fprintf (stderr,
+               "pstdout_launch: %s\n",
+               pstdout_strerror (pstdout_errnum));
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
-  
+
   exit_code = rv;
  cleanup:
   return exit_code;

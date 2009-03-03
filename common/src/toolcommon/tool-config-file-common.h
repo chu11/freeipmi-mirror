@@ -1,19 +1,19 @@
 /*
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #ifndef _TOOL_CONFIG_FILE_COMMON_H
@@ -35,7 +35,7 @@
 #define CONFIG_FILE_TOOL_NONE                0x00000000
 #define CONFIG_FILE_TOOL_BMC_CONFIG          0x00000001
 #define CONFIG_FILE_TOOL_BMC_DEVICE          0x00000002
-#define CONFIG_FILE_TOOL_BMC_INFO            0x00000004 
+#define CONFIG_FILE_TOOL_BMC_INFO            0x00000004
 #define CONFIG_FILE_TOOL_BMC_WATCHDOG        0x00000008
 #define CONFIG_FILE_TOOL_IPMI_CHASSIS        0x00000010
 #define CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG 0x00000020
@@ -139,13 +139,13 @@ struct config_file_data_ipmipower
   int ping_consec_count_count;
 };
 
-int config_file_parse(const char *filename,
-                      int no_error_if_not_found,
-                      struct common_cmd_args *cmd_args, 
-                      struct sdr_cmd_args *sdr_args, 
-                      struct hostrange_cmd_args *hostrange_args, 
-                      unsigned int support,
-                      unsigned int tool_support,
-                      void *tool_data);
+int config_file_parse (const char *filename,
+                       int no_error_if_not_found,
+                       struct common_cmd_args *cmd_args,
+                       struct sdr_cmd_args *sdr_args,
+                       struct hostrange_cmd_args *hostrange_args,
+                       unsigned int support,
+                       unsigned int tool_support,
+                       void *tool_data);
 
 #endif

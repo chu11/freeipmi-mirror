@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-chassis-types-spec.h,v 1.4 2009-01-13 01:02:29 chu11 Exp $
+ *  $Id: ipmi-fru-chassis-types-spec.h,v 1.4.12.1 2009-03-03 01:41:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -27,7 +27,7 @@
 \*****************************************************************************/
 
 #ifndef _IPMI_FRU_CHASSIS_TYPES_SPEC_H
-#define	_IPMI_FRU_CHASSIS_TYPES_SPEC_H
+#define _IPMI_FRU_CHASSIS_TYPES_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,12 +35,12 @@ extern "C" {
 
 #include <freeipmi/fiid/fiid.h>
 
-/*
- * achu:
- *
- * Not in IPMI spec.  In "Platform Management FRU Information Storage
- * Definition" document.
- */
+  /*
+   * achu:
+   *
+   * Not in IPMI spec.  In "Platform Management FRU Information Storage
+   * Definition" document.
+   */
 
 #define IPMI_FRU_CHASSIS_TYPE_OTHER                 0x01
 #define IPMI_FRU_CHASSIS_TYPE_UNKNOWN               0x02
@@ -66,11 +66,11 @@ extern "C" {
 #define IPMI_FRU_CHASSIS_TYPE_RAID_CHASSIS          0x16
 #define IPMI_FRU_CHASSIS_TYPE_RACK_MOUNT_CHASSIS    0x17
 
-#define IPMI_FRU_CHASSIS_TYPE_VALID(__chassis_type) \
-        (((__chassis_type) >= IPMI_FRU_CHASSIS_TYPE_OTHER \
-          && (__chassis_type) <= IPMI_FRU_CHASSIS_TYPE_RACK_MOUNT_CHASSIS) ? 1 : 0)
+#define IPMI_FRU_CHASSIS_TYPE_VALID(__chassis_type)			\
+  (((__chassis_type) >= IPMI_FRU_CHASSIS_TYPE_OTHER			\
+    && (__chassis_type) <= IPMI_FRU_CHASSIS_TYPE_RACK_MOUNT_CHASSIS) ? 1 : 0)
 
-extern const char *const ipmi_fru_chassis_types[];
+  extern const char *const ipmi_fru_chassis_types[];
 
 #ifdef __cplusplus
 }

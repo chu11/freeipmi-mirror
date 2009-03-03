@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd.c,v 1.12 2009-02-23 22:29:13 chu11 Exp $
+ *  $Id: ipmidetectd.c,v 1.12.2.1 2009-03-03 01:41:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -53,64 +53,64 @@
 extern struct ipmidetectd_config conf;
 
 static void
-_daemon_init(void)
+_daemon_init (void)
 {
   /* Based on code in Unix network programming by R. Stevens */
   pid_t pid;
   int i;
 
-  if ((pid = fork()) < 0)
-    IPMIDETECTD_EXIT(("fork: %s", strerror(errno)));
+  if ((pid = fork ()) < 0)
+    IPMIDETECTD_EXIT (("fork: %s", strerror (errno)));
 
   if (pid != 0)                 /* Terminate Parent */
-    exit(0);
+    exit (0);
 
-  setsid();
+  setsid ();
 
-  if (signal(SIGHUP, SIG_IGN) == SIG_ERR)
-    IPMIDETECTD_EXIT(("signal: %s", strerror(errno)));
+  if (signal (SIGHUP, SIG_IGN) == SIG_ERR)
+    IPMIDETECTD_EXIT (("signal: %s", strerror (errno)));
 
-  if ((pid = fork()) < 0)
-    IPMIDETECTD_EXIT(("fork: %s", strerror(errno)));
+  if ((pid = fork ()) < 0)
+    IPMIDETECTD_EXIT (("fork: %s", strerror (errno)));
 
   if (pid != 0)                 /* Terminate 1st Child */
-    exit(0);
+    exit (0);
 
-  chdir("/");
+  chdir ("/");
 
-  umask(0);
+  umask (0);
 
   for (i = 0; i < 64; i++)
-    close(i);
+    close (i);
 }
 
 int
-main(int argc, char **argv)
+main (int argc, char **argv)
 {
-  err_init(argv[0]);
-  err_set_flags(ERROR_STDOUT);
+  err_init (argv[0]);
+  err_set_flags (ERROR_STDOUT);
 
-  ipmidetectd_config_setup(argc, argv);
+  ipmidetectd_config_setup (argc, argv);
 
 #ifndef NDEBUG
   if (!conf.debug)
     {
-      _daemon_init();
-      err_set_flags(ERROR_SYSLOG);
+      _daemon_init ();
+      err_set_flags (ERROR_SYSLOG);
     }
   else
-    err_set_flags(ERROR_STDERR);
+    err_set_flags (ERROR_STDERR);
 #else  /* NDEBUG */
-  _daemon_init();
-  err_set_flags(ERROR_SYSLOG);
+  _daemon_init ();
+  err_set_flags (ERROR_SYSLOG);
 #endif /* NDEBUG */
 
   /* Call after daemonization, since daemonization closes currently
    * open fds
    */
-  openlog(argv[0], LOG_ODELAY | LOG_PID, LOG_DAEMON);
+  openlog (argv[0], LOG_ODELAY | LOG_PID, LOG_DAEMON);
 
-  ipmidetectd_loop();
+  ipmidetectd_loop ();
 
   return 0;
 }

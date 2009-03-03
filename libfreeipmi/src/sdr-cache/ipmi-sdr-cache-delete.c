@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-delete.c,v 1.6 2009-02-23 22:29:20 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-delete.c,v 1.6.2.1 2009-03-03 01:41:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -46,40 +46,40 @@
 
 #include "freeipmi-portability.h"
 
-int 
-ipmi_sdr_cache_delete(ipmi_sdr_cache_ctx_t ctx, char *filename)
+int
+ipmi_sdr_cache_delete (ipmi_sdr_cache_ctx_t ctx, char *filename)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_sdr_cache_ctx_errormsg(ctx), ipmi_sdr_cache_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!filename)
     {
-      SDR_CACHE_SET_ERRNUM(ctx, IPMI_SDR_CACHE_ERR_PARAMETERS);
+      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_PARAMETERS);
       return (-1);
     }
 
   if (ctx->operation != IPMI_SDR_CACHE_OPERATION_UNINITIALIZED)
     {
       if (ctx->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE)
-        SDR_CACHE_SET_ERRNUM(ctx, IPMI_SDR_CACHE_ERR_CACHE_DELETE_CTX_SET_TO_READ);
+        SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_DELETE_CTX_SET_TO_READ);
       else
-        SDR_CACHE_SET_ERRNUM(ctx, IPMI_SDR_CACHE_ERR_INTERNAL_ERROR);
+        SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
-  if (unlink(filename) < 0)
+  if (unlink (filename) < 0)
     {
       /* If there is no file (ENOENT), its ok */
       if (errno != ENOENT)
         {
-          SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM(ctx, errno);
+          SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM (ctx, errno);
           return -1;
         }
     }
-  
+
   ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
   return 0;
 }

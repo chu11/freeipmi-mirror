@@ -1,25 +1,25 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
 */
 
 /* 2's complement checksum of preceding bytes in the connection header
    or between the previous checksum. 8-bit checksum algorithm:
-   Initialize checksum to 0. 
+   Initialize checksum to 0.
    For each byte, checksum = (checksum + byte) modulo 256. Then find
    1's compliment of checksum and add one to it.
    To verify add all the bytes and the checksum and then % 256 should
@@ -64,7 +64,7 @@ ipmi_checksum (uint8_t *buf, uint64_t len)
 {
   register uint64_t i = 0;
   register int8_t checksum = 0;
- 
+
   if (buf == NULL || len == 0)
     return (checksum);
 
@@ -75,38 +75,38 @@ ipmi_checksum (uint8_t *buf, uint64_t len)
 }
 
 int8_t
-ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
+ipmi_check_cmd (fiid_obj_t obj_cmd, uint8_t cmd)
 {
   uint64_t cmd_recv;
   int32_t len;
 
-  if (!fiid_obj_valid(obj_cmd))
+  if (!fiid_obj_valid (obj_cmd))
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
   if (Fiid_obj_field_lookup (obj_cmd, "cmd") < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
   if ((len = fiid_obj_field_len (obj_cmd, "cmd")) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 
   if (!len)
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
-  if (Fiid_obj_get(obj_cmd, "cmd", &cmd_recv) < 0)
+  if (Fiid_obj_get (obj_cmd, "cmd", &cmd_recv) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
@@ -114,52 +114,52 @@ ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
 }
 
 int8_t
-ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code)
+ipmi_check_completion_code (fiid_obj_t obj_cmd, uint8_t completion_code)
 {
   uint64_t completion_code_recv;
   int32_t len;
 
-  if (!fiid_obj_valid(obj_cmd))
+  if (!fiid_obj_valid (obj_cmd))
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
   if (Fiid_obj_field_lookup (obj_cmd, "comp_code") < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
   if ((len = fiid_obj_field_len (obj_cmd, "comp_code")) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 
   if (!len)
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
-  if (Fiid_obj_get(obj_cmd, "comp_code", &completion_code_recv) < 0)
+  if (Fiid_obj_get (obj_cmd, "comp_code", &completion_code_recv) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
   return ((((uint8_t)completion_code_recv) == completion_code) ? 1 : 0);
 }
 
-int8_t 
+int8_t
 ipmi_check_completion_code_success (fiid_obj_t obj_cmd)
 {
-  return ipmi_check_completion_code(obj_cmd, IPMI_COMP_CODE_COMMAND_SUCCESS);
+  return ipmi_check_completion_code (obj_cmd, IPMI_COMP_CODE_COMMAND_SUCCESS);
 }
 
 int
-ipmi_get_random(uint8_t *buf, uint32_t buflen)
+ipmi_get_random (uint8_t *buf, uint32_t buflen)
 {
 #if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
   int fd, rv;
@@ -167,49 +167,49 @@ ipmi_get_random(uint8_t *buf, uint32_t buflen)
 
   if (!buf)
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (!buflen)
     return (0);
-  
+
 #if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
 #if HAVE_DEVURANDOM
-  if ((fd = open("/dev/urandom", O_RDONLY)) < 0)
+  if ((fd = open ("/dev/urandom", O_RDONLY)) < 0)
     goto gcrypt_rand;
 #else  /* !HAVE_DEVURANDOM */
   if ((fd = open ("/dev/random", O_RDONLY)) < 0)
     goto gcrypt_rand;
 #endif /* !HAVE_DEVURANDOM */
 
-  if ((rv = read(fd, (void *)buf, buflen)) < buflen)
+  if ((rv = read (fd, (void *)buf, buflen)) < buflen)
     goto gcrypt_rand;
 
-  close(fd);
+  close (fd);
   return rv;
 #endif /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */
 
  gcrypt_rand:
-  gcry_randomize((unsigned char *)buf, buflen, GCRY_STRONG_RANDOM);
+  gcry_randomize ((unsigned char *)buf, buflen, GCRY_STRONG_RANDOM);
   return buflen;
 }
 
 int8_t
-ipmi_is_ipmi_1_5_packet(uint8_t *pkt, uint32_t pkt_len)
+ipmi_is_ipmi_1_5_packet (uint8_t *pkt, uint32_t pkt_len)
 {
   int32_t rmcp_hdr_len;
   uint8_t auth_type;
 
-  if ((rmcp_hdr_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
+  if ((rmcp_hdr_len = fiid_template_len_bytes (tmpl_rmcp_hdr)) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
   if (pkt_len <= rmcp_hdr_len)
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -219,20 +219,20 @@ ipmi_is_ipmi_1_5_packet(uint8_t *pkt, uint32_t pkt_len)
 }
 
 int8_t
-ipmi_is_ipmi_2_0_packet(uint8_t *pkt, uint32_t pkt_len)
+ipmi_is_ipmi_2_0_packet (uint8_t *pkt, uint32_t pkt_len)
 {
   int32_t rmcp_hdr_len;
   uint8_t auth_type;
 
-  if ((rmcp_hdr_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
+  if ((rmcp_hdr_len = fiid_template_len_bytes (tmpl_rmcp_hdr)) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
   if (pkt_len <= rmcp_hdr_len)
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -242,7 +242,7 @@ ipmi_is_ipmi_2_0_packet(uint8_t *pkt, uint32_t pkt_len)
 }
 
 const char *
-ipmi_cmd_str(uint8_t net_fn, uint8_t cmd)
+ipmi_cmd_str (uint8_t net_fn, uint8_t cmd)
 {
   switch (net_fn)
     {

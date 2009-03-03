@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.h,v 1.8 2009-01-13 01:02:21 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.h,v 1.8.12.1 2009-03-03 01:41:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -29,12 +29,12 @@
 
 #include "ipmi_monitoring.h"
 
-int ipmi_monitoring_sdr_cache_load(ipmi_monitoring_ctx_t c,
-                                   const char *hostname);
-
-int ipmi_monitoring_sdr_cache_unload(ipmi_monitoring_ctx_t c);
-
-int ipmi_monitoring_sdr_cache_flush(ipmi_monitoring_ctx_t c,
+int ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
                                     const char *hostname);
+
+int ipmi_monitoring_sdr_cache_unload (ipmi_monitoring_ctx_t c);
+
+int ipmi_monitoring_sdr_cache_flush (ipmi_monitoring_ctx_t c,
+                                     const char *hostname);
 
 #endif /* _IPMI_MONITORING_SDR_CACHE_H */

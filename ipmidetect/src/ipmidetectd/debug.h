@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: debug.h,v 1.6 2009-02-23 22:29:13 chu11 Exp $
+ *  $Id: debug.h,v 1.6.2.1 2009-03-03 01:41:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -12,7 +12,7 @@
  *
  *  The code in this file began with the code in the Cerebro project.
  *  See below for original copyright information.
- * 
+ *
  *  Ipmidetect is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2 of the License, or (at your
@@ -67,29 +67,29 @@
 
 #define DEBUG_BUFFER_LEN 8192
 
-#define DEBUG_MSG_CREATE(__msg) \
-    char __err[DEBUG_BUFFER_LEN]; \
-    int __len; \
-    \
-    memset(__err, '\0', DEBUG_BUFFER_LEN); \
-    \
-    __len = snprintf(__err, \
-                     DEBUG_BUFFER_LEN, \
-                     "(%s, %s, %d): ", \
-                     __FILE__, \
-                     __FUNCTION__, \
-                     __LINE__); \
-    \
-    if (__len < DEBUG_BUFFER_LEN) \
-      { \
-        char *__str; \
-        if ((__str = _debug_msg_create __msg)) \
-          { \
-            strncat(__err, __str, DEBUG_BUFFER_LEN - __len - 1); \
-            __len += strlen(__str); \
-            free(__str); \
-          } \
-      }
+#define DEBUG_MSG_CREATE(__msg)					\
+  char __err[DEBUG_BUFFER_LEN];					\
+  int __len;							\
+								\
+  memset (__err, '\0', DEBUG_BUFFER_LEN);			\
+								\
+  __len = snprintf (__err,					\
+                    DEBUG_BUFFER_LEN,				\
+                    "(%s, %s, %d): ",				\
+                    __FILE__,					\
+                    __FUNCTION__,				\
+                    __LINE__);					\
+								\
+  if (__len < DEBUG_BUFFER_LEN)					\
+    {								\
+      char *__str;						\
+      if ((__str = _debug_msg_create __msg))			\
+	{							\
+	  strncat (__err, __str, DEBUG_BUFFER_LEN - __len - 1); \
+	  __len += strlen (__str);				\
+	  free (__str);						\
+	}							\
+    }
 
 /*
  * _debug_msg_create
@@ -98,41 +98,41 @@
  *
  * Returns message buffer or NULL on error
  */
-char *_debug_msg_create(const char *fmt, ...);
+char *_debug_msg_create (const char *fmt, ...);
 
 #ifndef NDEBUG
 
-#define IPMIDETECTD_DEBUG(__msg) \
-    do { \
-      DEBUG_MSG_CREATE(__msg) \
-      err_debug(__err); \
-    } while(0)
+#define IPMIDETECTD_DEBUG(__msg)		\
+  do {						\
+    DEBUG_MSG_CREATE (__msg)			\
+      err_debug (__err);			\
+  } while(0)
 
-#define IPMIDETECTD_OUTPUT(__msg) \
-    do { \
-      DEBUG_MSG_CREATE(__msg) \
-      err_output(__err); \
-    } while(0)
+#define IPMIDETECTD_OUTPUT(__msg)		\
+  do {						\
+    DEBUG_MSG_CREATE (__msg)			\
+      err_output (__err);			\
+  } while(0)
 
-#define IPMIDETECTD_EXIT(__msg) \
-    do { \
-      DEBUG_MSG_CREATE(__msg) \
-      err_exit(__err); \
-    } while(0)
-   
+#define IPMIDETECTD_EXIT(__msg)			\
+  do {						\
+    DEBUG_MSG_CREATE (__msg)			\
+      err_exit (__err);				\
+  } while(0)
+
 #else /* NDEBUG */
 
 #define IPMIDETECTD_DEBUG(__msg)
 
-#define IPMIDETECTD_OUTPUT(__msg) \
-    do { \
-      err_output __msg; \
-    } while(0)
+#define IPMIDETECTD_OUTPUT(__msg)		\
+  do {						\
+    err_output __msg;				\
+  } while(0)
 
-#define IPMIDETECTD_EXIT(__msg) \
-    do { \
-      err_exit __msg; \
-    } while(0)
+#define IPMIDETECTD_EXIT(__msg)			\
+  do {						\
+    err_exit __msg;				\
+  } while(0)
 
 #endif /* NDEBUG */
 

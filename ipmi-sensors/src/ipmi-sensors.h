@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
-   
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-   
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-   
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #ifndef _IPMI_SENSORS_H
@@ -30,14 +30,14 @@
 #define IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH 256
 
 enum ipmi_sensors_argp_option_keys
-  { 
-    VERBOSE_KEY = 'v', 
+  {
+    VERBOSE_KEY = 'v',
     QUIET_READINGS_KEY = 'q',
-    SDR_INFO_KEY = 'i', 
-    LIST_GROUPS_KEY = 'L', 
-    GROUP_KEY = 160,            /* legacy */
-    GROUPS_KEY = 'g', 
-    SENSORS_KEY = 's', 
+    SDR_INFO_KEY = 'i',
+    LIST_GROUPS_KEY = 'L',
+    GROUP_KEY = 160,              /* legacy */
+    GROUPS_KEY = 'g',
+    SENSORS_KEY = 's',
     BRIDGE_SENSORS_KEY = 'b',
     LEGACY_OUTPUT_KEY = 161,
   };

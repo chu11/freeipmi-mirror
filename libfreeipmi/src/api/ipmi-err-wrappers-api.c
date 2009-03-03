@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #ifdef HAVE_CONFIG_H
@@ -42,7 +42,7 @@
 #include "freeipmi-portability.h"
 
 void
-ipmi_set_api_errnum_by_errno(ipmi_ctx_t ctx, int __errno)
+ipmi_set_api_errnum_by_errno (ipmi_ctx_t ctx, int __errno)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
@@ -60,45 +60,45 @@ ipmi_set_api_errnum_by_errno(ipmi_ctx_t ctx, int __errno)
 }
 
 void
-ipmi_set_api_errnum_by_bad_response(ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
+ipmi_set_api_errnum_by_bad_response (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
 
-  if (!fiid_obj_valid(obj_cmd_rs))
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
-      API_SET_ERRNUM(IPMI_ERR_INTERNAL_ERROR);
+      API_SET_ERRNUM (IPMI_ERR_INTERNAL_ERROR);
       return;
     }
-  
-  if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_NODE_BUSY) == 1
-      || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_OUT_OF_SPACE) == 1
-      || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_SDR_UPDATE_MODE) == 1
-      || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_FIRMWARE_UPDATE_MODE) == 1
-      || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_BMC_INIT_MODE) == 1)
+
+  if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_NODE_BUSY) == 1
+      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OUT_OF_SPACE) == 1
+      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_SDR_UPDATE_MODE) == 1
+      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_FIRMWARE_UPDATE_MODE) == 1
+      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_BMC_INIT_MODE) == 1)
     ctx->errnum = IPMI_ERR_BMC_BUSY;
-  else if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID) == 1
-           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID_FOR_LUN) == 1)
+  else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID) == 1
+           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID_FOR_LUN) == 1)
     ctx->errnum = IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND;
-  else if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_TRUNCATED) == 1
-           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1
-           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_LENGTH_LIMIT_EXCEEDED) == 1
-           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1
-           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1
-           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1
-           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
-           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_DESTINATION_UNAVAILABLE) == 1
-           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1
-           || ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_REQUEST_PARAMETER_ILLEGAL) == 1)
+  else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_TRUNCATED) == 1
+           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1
+           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_LENGTH_LIMIT_EXCEEDED) == 1
+           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1
+           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1
+           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1
+           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
+           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_DESTINATION_UNAVAILABLE) == 1
+           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1
+           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_PARAMETER_ILLEGAL) == 1)
     ctx->errnum = IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID;
-  else if (ipmi_check_completion_code(obj_cmd_rs, IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL) == 1)
+  else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL) == 1)
     ctx->errnum = IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
   else
     ctx->errnum = IPMI_ERR_BAD_COMPLETION_CODE;
 }
 
 void
-ipmi_set_api_errnum_by_locate_errnum(ipmi_ctx_t ctx, int locate_errnum)
+ipmi_set_api_errnum_by_locate_errnum (ipmi_ctx_t ctx, int locate_errnum)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
@@ -118,7 +118,7 @@ ipmi_set_api_errnum_by_locate_errnum(ipmi_ctx_t ctx, int locate_errnum)
 }
 
 void
-ipmi_set_api_errnum_by_kcs_errnum(ipmi_ctx_t ctx, int kcs_errnum)
+ipmi_set_api_errnum_by_kcs_errnum (ipmi_ctx_t ctx, int kcs_errnum)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
@@ -144,7 +144,7 @@ ipmi_set_api_errnum_by_kcs_errnum(ipmi_ctx_t ctx, int kcs_errnum)
 }
 
 void
-ipmi_set_api_errnum_by_ssif_errnum(ipmi_ctx_t ctx, int ssif_errnum)
+ipmi_set_api_errnum_by_ssif_errnum (ipmi_ctx_t ctx, int ssif_errnum)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
@@ -170,7 +170,7 @@ ipmi_set_api_errnum_by_ssif_errnum(ipmi_ctx_t ctx, int ssif_errnum)
 }
 
 void
-ipmi_set_api_errnum_by_openipmi_errnum(ipmi_ctx_t ctx, int openipmi_errnum)
+ipmi_set_api_errnum_by_openipmi_errnum (ipmi_ctx_t ctx, int openipmi_errnum)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
@@ -194,7 +194,7 @@ ipmi_set_api_errnum_by_openipmi_errnum(ipmi_ctx_t ctx, int openipmi_errnum)
 }
 
 void
-ipmi_set_api_errnum_by_sunbmc_errnum(ipmi_ctx_t ctx, int sunbmc_errnum)
+ipmi_set_api_errnum_by_sunbmc_errnum (ipmi_ctx_t ctx, int sunbmc_errnum)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;

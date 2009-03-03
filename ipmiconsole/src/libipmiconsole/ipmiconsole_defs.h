@@ -1,25 +1,25 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.68 2009-01-13 01:02:19 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.68.12.1 2009-03-03 01:41:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  UCRL-CODE-221226
- *  
+ *
  *  This file is part of Ipmiconsole, a set of IPMI 2.0 SOL libraries
  *  and utilities.  For details, see http://www.llnl.gov/linux/.
- *  
- *  Ipmiconsole is free software; you can redistribute it and/or modify 
- *  it under the terms of the GNU General Public License as published by the 
- *  Free Software Foundation; either version 2 of the License, or (at your 
+ *
+ *  Ipmiconsole is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2 of the License, or (at your
  *  option) any later version.
- *  
- *  Ipmiconsole is distributed in the hope that it will be useful, but 
- *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+ *
+ *  Ipmiconsole is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
  *  for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License along
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
@@ -42,7 +42,7 @@
 #include <sys/time.h>
 #else /* !HAVE_SYS_TIME_H */
 #include <time.h>
-#endif	/* !HAVE_SYS_TIME_H */
+#endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 #include <sys/param.h>
 #include <netinet/in.h>
@@ -109,37 +109,37 @@ typedef enum
     IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS                       = 0x17,
   } ipmiconsole_packet_type_t;
 
-#define IPMICONSOLE_PACKET_TYPE_REQUEST(__p) \
-   (((__p) == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1 \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3 \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) ? 1 : 0)
+#define IPMICONSOLE_PACKET_TYPE_REQUEST(__p)				\
+  (((__p) == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ \
+    || (__p) == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST		\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1			\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3			\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ	\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ	\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ \
+    || (__p) == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ		\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ		\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ	\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ		\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) ? 1 : 0)
 
-#define IPMICONSOLE_PACKET_TYPE_RESPONSE(__p) \
-   (((__p) == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2 \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4 \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS \
-     || (__p) == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS) ? 1 : 0)
+#define IPMICONSOLE_PACKET_TYPE_RESPONSE(__p)				\
+  (((__p) == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS \
+    || (__p) == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE		\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2			\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4			\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS	\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS	\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS \
+    || (__p) == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS		\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS		\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS	\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS		\
+    || (__p) == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS) ? 1 : 0)
 
-#define IPMICONSOLE_PACKET_TYPE_VALID(__p) \
-   ((IPMICONSOLE_PACKET_TYPE_REQUEST(__p) \
-     || IPMICONSOLE_PACKET_TYPE_RESPONSE(__p)) ? 1 : 0)
+#define IPMICONSOLE_PACKET_TYPE_VALID(__p)		\
+  ((IPMICONSOLE_PACKET_TYPE_REQUEST (__p)		\
+    || IPMICONSOLE_PACKET_TYPE_RESPONSE (__p)) ? 1 : 0)
 
 #define IPMICONSOLE_SESSION_TIMEOUT_LENGTH_DEFAULT                  60000
 #define IPMICONSOLE_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT           500
@@ -175,7 +175,7 @@ typedef enum
 #define IPMI_MAX_INTEGRITY_KEY_LENGTH                         64
 #define IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH                   64
 #define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH      64
- 
+
 #define IPMI_SESSION_SEQUENCE_NUMBER_WINDOW                   16
 #define IPMI_SESSION_MAX_SEQUENCE_NUMBER                      0xFFFFFFFF
 
@@ -194,29 +194,29 @@ typedef enum
 
 #define IPMICONSOLE_PIPE_GENERATE_BREAK_CODE  0x01
 
-#define IPMICONSOLE_DEBUG_MASK \
-        (IPMICONSOLE_DEBUG_STDOUT \
-         | IPMICONSOLE_DEBUG_STDERR \
-         | IPMICONSOLE_DEBUG_SYSLOG \
-         | IPMICONSOLE_DEBUG_FILE \
-         | IPMICONSOLE_DEBUG_IPMI_PACKETS)
+#define IPMICONSOLE_DEBUG_MASK			\
+  (IPMICONSOLE_DEBUG_STDOUT			\
+   | IPMICONSOLE_DEBUG_STDERR			\
+   | IPMICONSOLE_DEBUG_SYSLOG			\
+   | IPMICONSOLE_DEBUG_FILE			\
+   | IPMICONSOLE_DEBUG_IPMI_PACKETS)
 
-#define IPMICONSOLE_WORKAROUND_MASK \
-        (IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES \
-         | IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE \
-         | IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT \
-         | IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION \
-	 | IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION \
-         | IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION)
+#define IPMICONSOLE_WORKAROUND_MASK			\
+  (IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES	\
+   | IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE	\
+   | IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT		\
+   | IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION		\
+   | IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION	\
+   | IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION)
 
-#define IPMICONSOLE_ENGINE_MASK \
-        (IPMICONSOLE_ENGINE_CLOSE_FD \
-         | IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED \
-         | IPMICONSOLE_ENGINE_LOCK_MEMORY)
+#define IPMICONSOLE_ENGINE_MASK				\
+  (IPMICONSOLE_ENGINE_CLOSE_FD				\
+   | IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED	\
+   | IPMICONSOLE_ENGINE_LOCK_MEMORY)
 
-#define IPMICONSOLE_BEHAVIOR_MASK \
-        (IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE \
-         | IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY)
+#define IPMICONSOLE_BEHAVIOR_MASK		\
+  (IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE	\
+   | IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY)
 
 #define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED 0x1
 #define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR       0x2
@@ -316,7 +316,7 @@ struct ipmiconsole_ctx_connection {
   fiid_obj_t obj_close_session_rs;
 };
 
-/* 
+/*
  * IPMI Session Information - actual data used to keep track of a SOL
  * session.  Separated from ipmiconsole_ctx_connection above, b/c
  * everything below will need to be re-initialized if the session is
@@ -465,13 +465,13 @@ struct ipmiconsole_ctx_fds {
    * The need to manage asynccomm at the API level is b/c users could
    * access it via ipmiconsole_ctx_generate_break().  If one end of
    * the asynccomm is closed by the engine, it becomes difficult to
-   * know if we can actually generate a break.  
-   * 
+   * know if we can actually generate a break.
+   *
    * We could manage this situation through some mutexes, but that would
    * slow down closing/generate-break code.  We could capture EPIPE in the
    * API and return a "IS_CLOSING" error to the user, but that would require
-   * the user to set SIGPIPE to SIG_IGN.  Moving it to all be managed in 
-   * the API level is best.  We just have to check for POLLNVAL in the 
+   * the user to set SIGPIPE to SIG_IGN.  Moving it to all be managed in
+   * the API level is best.  We just have to check for POLLNVAL in the
    * engine poll().
    *
    */
@@ -491,7 +491,7 @@ struct ipmiconsole_ctx {
   int errnum_retrieved;
 
   struct ipmiconsole_ctx_config config;
-  
+
   struct ipmiconsole_ctx_debug debug;
 
   struct ipmiconsole_ctx_signal signal;
@@ -500,9 +500,9 @@ struct ipmiconsole_ctx {
 
   struct ipmiconsole_ctx_blocking blocking;
 
-  struct ipmiconsole_ctx_connection connection; 
+  struct ipmiconsole_ctx_connection connection;
 
-  struct ipmiconsole_ctx_session session; 
+  struct ipmiconsole_ctx_session session;
 
   struct ipmiconsole_ctx_fds fds;
 

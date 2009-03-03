@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.7 2009-02-23 22:29:16 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.7.2.1 2009-03-03 01:41:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -45,71 +45,71 @@
 
 fiid_template_t tmpl_cmd_get_fru_inventory_area_info_rq =
   {
-    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "fru_device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, "", 0}
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "fru_device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_get_fru_inventory_area_info_rs =
   {
-    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {16, "fru_inventory_area_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "device_is_accessed", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {7,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, "", 0}
+    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "fru_inventory_area_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "device_is_accessed", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_read_fru_data_rq =
   {
-    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "fru_device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {16, "fru_inventory_offset_to_read", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "count_to_read", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, "", 0}
+    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "fru_device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "fru_inventory_offset_to_read", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "count_to_read", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_read_fru_data_rs =
   {
-    {8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,    "count_returned", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,    "count_returned", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* 2040 = 255 * 8, 255 b/c count_returned field in request is 1 byte long */
-    {2040, "requested_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
-    {0, "", 0}
+    { 2040, "requested_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_write_fru_data_rq =
   {
-    {8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,    "fru_device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {16,   "fru_inventory_offset_to_write", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,    "fru_device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16,   "fru_inventory_offset_to_write", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* 2040 = 255 * 8, 255 b/c bytes_to_write field in request is 1 byte long */
-    {2040, "data_to_write", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
-    {0, "", 0}
+    { 2040, "data_to_write", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_write_fru_data_rs =
   {
-    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "count_written", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, "", 0}
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "count_written", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 int8_t
 fill_cmd_get_fru_inventory_area_info (uint8_t fru_device_id,
                                       fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
+  if (!fiid_obj_valid (obj_cmd_rq))
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
-  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_get_fru_inventory_area_info_rq) < 0)
+  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_fru_inventory_area_info_rq) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
@@ -125,15 +125,15 @@ fill_cmd_read_fru_data (uint8_t fru_device_id,
                         uint8_t count_to_read,
                         fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
+  if (!fiid_obj_valid (obj_cmd_rq))
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
-  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_read_fru_data_rq) < 0)
+  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_read_fru_data_rq) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
@@ -154,15 +154,15 @@ fill_cmd_write_fru_data (uint8_t fru_device_id,
 {
   if ((data_to_write
        && data_to_write_len > IPMI_FRU_DATA_MAX)
-      || !fiid_obj_valid(obj_cmd_rq))
+      || !fiid_obj_valid (obj_cmd_rq))
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
-  if (Fiid_obj_template_compare(obj_cmd_rq, tmpl_cmd_write_fru_data_rq) < 0)
+  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_write_fru_data_rq) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 

@@ -41,10 +41,10 @@
 
 #include "freeipmi-portability.h"
 
-int8_t 
-ipmi_dump_rmcp_packet (int fd, 
-                       const char *prefix, 
-                       const char *hdr, 
+int8_t
+ipmi_dump_rmcp_packet (int fd,
+                       const char *prefix,
+                       const char *hdr,
                        const char *trlr,
                        uint8_t *pkt,
                        uint32_t pkt_len,
@@ -69,108 +69,108 @@ ipmi_dump_rmcp_packet (int fd,
 
   if (!pkt || !tmpl_cmd)
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
   if (ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
   if (ipmi_debug_output_str (fd, prefix_buf, hdr) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
   /* Dump rmcp header */
-  
+
   if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       goto cleanup;
     }
-  
+
   if ((len = fiid_obj_set_all (obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_rmcp_hdr);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcp_hdr);
       goto cleanup;
     }
   indx += len;
-  
-  if (ipmi_obj_dump(fd, prefix, rmcp_hdr, NULL, obj_rmcp_hdr) < 0)
+
+  if (ipmi_obj_dump (fd, prefix, rmcp_hdr, NULL, obj_rmcp_hdr) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       goto cleanup;
     }
-  
+
   if (pkt_len <= indx)
     {
       rv = 0;
       goto cleanup;
     }
-  
+
   /* Dump command data */
-  
+
   if (!(obj_cmd = fiid_obj_create (tmpl_cmd)))
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       goto cleanup;
     }
-  
+
   if ((len = fiid_obj_set_all (obj_cmd, pkt + indx, pkt_len - indx)) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       goto cleanup;
     }
   indx += len;
-  
-  if (ipmi_obj_dump(fd, prefix, rmcp_cmd, NULL, obj_cmd) < 0)
+
+  if (ipmi_obj_dump (fd, prefix, rmcp_cmd, NULL, obj_cmd) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       goto cleanup;
     }
-  
+
   if (pkt_len <= indx)
     {
       rv = 0;
       goto cleanup;
     }
-  
+
   /* Dump unexpected stuff */
-  
+
   if (!(obj_unexpected_data = fiid_obj_create (tmpl_unexpected_data)))
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       goto cleanup;
     }
-  
+
   if ((len = fiid_obj_set_all (obj_unexpected_data, pkt + indx, pkt_len - indx)) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_unexpected_data);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_unexpected_data);
       goto cleanup;
     }
   indx += len;
-  
-  if (ipmi_obj_dump(fd, prefix, unexpected_hdr, NULL, obj_unexpected_data) < 0)
+
+  if (ipmi_obj_dump (fd, prefix, unexpected_hdr, NULL, obj_unexpected_data) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       goto cleanup;
     }
-  
-  if (ipmi_debug_output_str(fd, prefix_buf, trlr) < 0)
+
+  if (ipmi_debug_output_str (fd, prefix_buf, trlr) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       goto cleanup;
     }
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY(obj_rmcp_hdr);
-  FIID_OBJ_DESTROY(obj_cmd);
-  FIID_OBJ_DESTROY(obj_unexpected_data);
+  FIID_OBJ_DESTROY (obj_rmcp_hdr);
+  FIID_OBJ_DESTROY (obj_cmd);
+  FIID_OBJ_DESTROY (obj_unexpected_data);
   return (rv);
 }
 

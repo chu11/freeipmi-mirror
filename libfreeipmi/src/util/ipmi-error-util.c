@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
 */
 
@@ -39,26 +39,26 @@
 
 #include "freeipmi-portability.h"
 
-#define SNPRINTF_RETURN(arg...)    \
-do				   \
-{				   \
-  snprintf (errstr, len, arg);	   \
-  return 0;                        \
-} while (0)
+#define SNPRINTF_RETURN(arg...)			\
+  do						\
+    {						\
+      snprintf (errstr, len, arg);		\
+      return 0;					\
+    } while (0)
 
-int8_t 
-ipmi_completion_code_strerror_r (uint8_t cmd, 
+int8_t
+ipmi_completion_code_strerror_r (uint8_t cmd,
                                  uint8_t netfn,
-                                 uint8_t comp_code, 
-                                 char *errstr, 
+                                 uint8_t comp_code,
+                                 char *errstr,
                                  size_t len)
 {
   if (!errstr)
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   switch (comp_code)
     {
     case IPMI_COMP_CODE_COMMAND_SUCCESS:
@@ -142,20 +142,20 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
     SNPRINTF_RETURN ("Device specific (OEM) completion code %02Xh.", comp_code);
 
   /* Command specific completion codes */
-  if ((comp_code >= 0x80) && (comp_code <= 0xBE)) 
+  if ((comp_code >= 0x80) && (comp_code <= 0xBE))
     {
-      if (!IPMI_NET_FN_VALID(netfn))
+      if (!IPMI_NET_FN_VALID (netfn))
         {
-          SET_ERRNO(EINVAL);
+          SET_ERRNO (EINVAL);
           return (-1);
         }
-      
+
       switch (netfn)
         {
         case IPMI_NET_FN_CHASSIS_RQ:
         case IPMI_NET_FN_CHASSIS_RS:
 
-          switch (cmd) 
+          switch (cmd)
             {
             case IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS:
               switch (comp_code)
@@ -176,7 +176,7 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                 case IPMI_COMP_CODE_GET_BOOT_OPTION_PARAMETER_NOT_SUPPORTED:
                   SNPRINTF_RETURN (IPMI_COMP_CODE_GET_BOOT_OPTION_PARAMETER_NOT_SUPPORTED_STR);
                 }
-              break;             
+              break;
             }
           break;
         case IPMI_NET_FN_BRIDGE_RQ:
@@ -185,7 +185,7 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
 
         case IPMI_NET_FN_SENSOR_EVENT_RQ:
         case IPMI_NET_FN_SENSOR_EVENT_RS:
-          switch (cmd) 
+          switch (cmd)
             {
             case IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS:
               switch (comp_code)
@@ -214,7 +214,7 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_SET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS_STR);
                 }
               break;
-              
+
             case IPMI_CMD_GET_LAST_PROCESSED_EVENT_ID:
               switch (comp_code)
                 {
@@ -227,7 +227,7 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                 {
                 case IPMI_COMP_CODE_ALERT_ALREADY_IN_PROGRESS:
                   SNPRINTF_RETURN (IPMI_COMP_CODE_ALERT_ALREADY_IN_PROGRESS_STR);
-                  
+
                 case IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE:
                   SNPRINTF_RETURN (IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE_STR);
                 }
@@ -246,13 +246,13 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG_STR);
                 }
               break;
-	    case IPMI_CMD_GET_MESSAGE:
-	      switch (comp_code)
-		{
-		case IPMI_COMP_CODE_DATA_NOT_AVAILABLE:
-		  SNPRINTF_RETURN (IPMI_COMP_CODE_DATA_NOT_AVAILABLE_STR);
-		}
-	      break;
+            case IPMI_CMD_GET_MESSAGE:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_DATA_NOT_AVAILABLE:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_DATA_NOT_AVAILABLE_STR);
+                }
+              break;
             case IPMI_CMD_GET_SESSION_CHALLENGE:
               switch (comp_code)
                 {
@@ -279,7 +279,7 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL_STR);
                 }
               break;
-            case IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL: 
+            case IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL:
               switch (comp_code)
                 {
                 case IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER:
@@ -317,35 +317,35 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
               switch (comp_code)
                 {
                 case IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT:
-                  SNPRINTF_RETURN(IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT_STR);
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT_STR);
                 case IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT:
-                  SNPRINTF_RETURN(IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT_STR);
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT_STR);
                 }
               break;
-	    case IPMI_CMD_ACTIVATE_PAYLOAD:
-	      switch (comp_code)
-		{
-		case IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION:
-		  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION_STR);
-		case IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED:
-		  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED_STR);
-		case IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED:
-		  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED_STR);
-		case IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION:
-		  SNPRINTF_RETURN (IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION_STR);
-		case IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION:
-		  SNPRINTF_RETURN (IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION_STR);
-		}
-	      break;
-	    case IPMI_CMD_DEACTIVATE_PAYLOAD:
-	      switch (comp_code)
-		{
-		case IPMI_COMP_CODE_PAYLOAD_ALREADY_DEACTIVATED:
-		  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_ALREADY_DEACTIVATED_STR);
-		case IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED:
-		  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED_STR);
-		}
-	      break;
+            case IPMI_CMD_ACTIVATE_PAYLOAD:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION_STR);
+                case IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED_STR);
+                case IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED_STR);
+                case IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION_STR);
+                case IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION_STR);
+                }
+              break;
+            case IPMI_CMD_DEACTIVATE_PAYLOAD:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_PAYLOAD_ALREADY_DEACTIVATED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_ALREADY_DEACTIVATED_STR);
+                case IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED_STR);
+                }
+              break;
             case IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION:
               switch (comp_code)
                 {
@@ -360,18 +360,18 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED_STR);
                 }
               break;
-	    case IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION:
-	      switch (comp_code)
-		{
-		case IPMI_COMP_CODE_OPERATION_NOT_SUPPORTED:
-		  SNPRINTF_RETURN (IPMI_COMP_CODE_OPERATION_NOT_SUPPORTED_STR);
-		case IPMI_COMP_CODE_OPERATION_NOT_ALLOWED_UNDER_PRESENT_CONFIGURATION:
-		  SNPRINTF_RETURN (IPMI_COMP_CODE_OPERATION_NOT_ALLOWED_UNDER_PRESENT_CONFIGURATION_STR);
-		case IPMI_COMP_CODE_ENCRYPTION_IS_NOT_AVAILABLE_FOR_SESSION:
-		  SNPRINTF_RETURN (IPMI_COMP_CODE_ENCRYPTION_IS_NOT_AVAILABLE_FOR_SESSION_STR);
-		case IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE:
-		  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE_STR);
-		}
+            case IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_OPERATION_NOT_SUPPORTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_OPERATION_NOT_SUPPORTED_STR);
+                case IPMI_COMP_CODE_OPERATION_NOT_ALLOWED_UNDER_PRESENT_CONFIGURATION:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_OPERATION_NOT_ALLOWED_UNDER_PRESENT_CONFIGURATION_STR);
+                case IPMI_COMP_CODE_ENCRYPTION_IS_NOT_AVAILABLE_FOR_SESSION:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_ENCRYPTION_IS_NOT_AVAILABLE_FOR_SESSION_STR);
+                case IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE_STR);
+                }
               break;
             case IPMI_CMD_SET_CHANNEL_SECURITY_KEYS:
               switch (comp_code)
@@ -388,8 +388,8 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_KR_IS_NOT_USED_STR);
                 }
               break;
-	    }
-	  break;
+            }
+          break;
 
         case IPMI_NET_FN_FIRMWARE_RQ:
         case IPMI_NET_FN_FIRMWARE_RS:
@@ -436,7 +436,7 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
 
         case IPMI_NET_FN_TRANSPORT_RQ:
         case IPMI_NET_FN_TRANSPORT_RS:
-          switch (cmd) 
+          switch (cmd)
             {
             case IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS:
               switch (comp_code)
@@ -500,103 +500,103 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
               break;
             }
           break;
-          
+
         default:
-          SET_ERRNO(EINVAL);
+          SET_ERRNO (EINVAL);
           return (-1);
         }
 
       SNPRINTF_RETURN ("No error message found for command "
                        "%02Xh, network function %02Xh, and completion code %02Xh.  "
-                       "Please report to <freeipmi-devel@gnu.org>", 
-                       cmd, 
+                       "Please report to <freeipmi-devel@gnu.org>",
+                       cmd,
                        netfn,
                        comp_code);
     }
-  
-  SNPRINTF_RETURN ("Unknown completion code %02Xh for command %02Xh and network function %02Xh.", 
-		   comp_code, 
-		   cmd,
+
+  SNPRINTF_RETURN ("Unknown completion code %02Xh for command %02Xh and network function %02Xh.",
+                   comp_code,
+                   cmd,
                    netfn);
 }
 
-int8_t 
-ipmi_completion_code_strerror_cmd_r (fiid_obj_t obj_cmd, 
+int8_t
+ipmi_completion_code_strerror_cmd_r (fiid_obj_t obj_cmd,
                                      uint8_t netfn,
-                                     char *errstr, 
+                                     char *errstr,
                                      size_t len)
 {
   uint64_t cmd, comp_code;
   int32_t _len;
 
   /* The netfn need not be valid */
-  if (!fiid_obj_valid(obj_cmd)
+  if (!fiid_obj_valid (obj_cmd)
       || !errstr)
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (Fiid_obj_field_lookup (obj_cmd, "cmd") < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
   if (Fiid_obj_field_lookup (obj_cmd, "comp_code") < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
 
   if ((_len = fiid_obj_field_len (obj_cmd, "cmd")) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
   if (!_len)
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
   if ((_len = fiid_obj_field_len (obj_cmd, "comp_code")) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO(obj_cmd);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
   if (!_len)
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
-  if (Fiid_obj_get(obj_cmd, "cmd", &cmd) < 0)
+  if (Fiid_obj_get (obj_cmd, "cmd", &cmd) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
-  if (Fiid_obj_get(obj_cmd, "comp_code", &comp_code) < 0)
+  if (Fiid_obj_get (obj_cmd, "comp_code", &comp_code) < 0)
     {
-      ERRNO_TRACE(errno);
+      ERRNO_TRACE (errno);
       return (-1);
     }
-  
-  return ipmi_completion_code_strerror_r (cmd, netfn, comp_code, errstr, len); 
+
+  return ipmi_completion_code_strerror_r (cmd, netfn, comp_code, errstr, len);
 }
 
 
-int8_t 
-ipmi_rmcpplus_status_strerror_r(uint8_t rmcpplus_status_code,
-                                char *errstr,
-                                size_t len)
+int8_t
+ipmi_rmcpplus_status_strerror_r (uint8_t rmcpplus_status_code,
+                                 char *errstr,
+                                 size_t len)
 {
   if (!errstr)
     {
-      SET_ERRNO(EINVAL);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
-  switch (rmcpplus_status_code) 
+  switch (rmcpplus_status_code)
     {
     case RMCPPLUS_STATUS_NO_ERRORS:
       SNPRINTF_RETURN (RMCPPLUS_STATUS_NO_ERRORS_STR);
@@ -638,6 +638,6 @@ ipmi_rmcpplus_status_strerror_r(uint8_t rmcpplus_status_code,
       SNPRINTF_RETURN (RMCPPLUS_STATUS_ILLEGAL_OR_UNRECOGNIZED_PARAMETER_STR);
     }
 
-  SNPRINTF_RETURN ("Unknown rmcp+ or rakp status code %02Xh.", 
+  SNPRINTF_RETURN ("Unknown rmcp+ or rakp status code %02Xh.",
                    rmcpplus_status_code);
 }

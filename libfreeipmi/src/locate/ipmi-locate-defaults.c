@@ -1,19 +1,19 @@
-/* 
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
 #ifdef HAVE_CONFIG_H
@@ -51,24 +51,24 @@ ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
 
   if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
     {
-      ERR_TRACE(ipmi_locate_ctx_errormsg(ctx), ipmi_locate_ctx_errnum(ctx));
+      ERR_TRACE (ipmi_locate_ctx_errormsg (ctx), ipmi_locate_ctx_errnum (ctx));
       return (-1);
     }
 
   if ((type != IPMI_INTERFACE_KCS
        && type != IPMI_INTERFACE_SMIC
-       && type != IPMI_INTERFACE_SSIF) 
+       && type != IPMI_INTERFACE_SSIF)
       || !info)
     {
-      LOCATE_SET_ERRNUM(ctx, IPMI_LOCATE_ERR_PARAMETERS);
+      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
-  
-  memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
+
+  memset (&linfo, '\0', sizeof(struct ipmi_locate_info));
   linfo.interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
     {
-      strncpy(linfo.driver_device, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
+      strncpy (linfo.driver_device, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
       linfo.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
   linfo.locate_driver_type = IPMI_LOCATE_DRIVER_DEFAULTS;
@@ -100,9 +100,9 @@ ipmi_locate_defaults_get_device_info (ipmi_locate_ctx_t ctx,
       break;
     default:
       /* Should not reach */
-      assert(0);
+      assert (0);
     }
 
-  memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
+  memcpy (info, &linfo, sizeof(struct ipmi_locate_info));
   return 0;
 }
