@@ -49,9 +49,9 @@ extern "C" {
     __ERRNO_TRACE ((__errno));                                          \
   } while (0)
 
-#define SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(__ctx, __obj)	\
-  do {									\
-    sdr_parse_set_sdr_parse_errnum_by_fiid_object ((__ctx), (__obj));   \
+#define SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM(__ctx, __obj)	  \
+  do {									  \
+    sdr_parse_set_sdr_parse_errnum_by_fiid_object ((__ctx), (__obj));     \
     __MSG_TRACE (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 

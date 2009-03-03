@@ -50,7 +50,7 @@ extern "C" {
   } while (0)
 
 #define SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM(__ctx, __obj) \
-  do {									\
+  do {									  \
     sensor_read_set_sensor_read_errnum_by_fiid_object ((__ctx), (__obj)); \
     __MSG_TRACE (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)

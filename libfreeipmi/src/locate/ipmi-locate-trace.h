@@ -51,9 +51,9 @@ extern "C" {
     __ERRNO_TRACE ((__errno));					\
   } while (0)
 
-#define LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM(__ctx, __obj)		\
-  do {									\
-    locate_set_locate_errnum_by_fiid_object ((__ctx), (__obj));         \
+#define LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM(__ctx, __obj)		  \
+  do {									  \
+    locate_set_locate_errnum_by_fiid_object ((__ctx), (__obj));           \
     __MSG_TRACE (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 

@@ -49,9 +49,9 @@ extern "C" {
     __ERRNO_TRACE ((__errno));                                          \
   } while (0)
 
-#define SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(__ctx, __obj)	\
-  do {									\
-    sel_parse_set_sel_parse_errnum_by_fiid_object ((__ctx), (__obj));   \
+#define SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM(__ctx, __obj)	  \
+  do {									  \
+    sel_parse_set_sel_parse_errnum_by_fiid_object ((__ctx), (__obj));     \
     __MSG_TRACE (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 

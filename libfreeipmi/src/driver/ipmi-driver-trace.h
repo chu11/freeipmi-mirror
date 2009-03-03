@@ -54,9 +54,9 @@ extern "C" {
     __ERRNO_TRACE (__errno);				\
   } while (0)
 
-#define KCS_FIID_OBJECT_ERROR_TO_KCS_ERRNUM(__ctx, __obj)               \
-  do {                                                                  \
-    _set_kcs_errnum_by_fiid_object ((__ctx), (__obj));			\
+#define KCS_FIID_OBJECT_ERROR_TO_KCS_ERRNUM(__ctx, __obj)                 \
+  do {                                                                    \
+    _set_kcs_errnum_by_fiid_object ((__ctx), (__obj));			  \
     __MSG_TRACE (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 
@@ -72,9 +72,9 @@ extern "C" {
     __ERRNO_TRACE (__errno);				\
   } while (0)
 
-#define SSIF_FIID_OBJECT_ERROR_TO_SSIF_ERRNUM(__ctx, __obj)             \
-  do {                                                                  \
-    _set_ssif_errnum_by_fiid_object ((__ctx), (__obj));			\
+#define SSIF_FIID_OBJECT_ERROR_TO_SSIF_ERRNUM(__ctx, __obj)               \
+  do {                                                                    \
+    _set_ssif_errnum_by_fiid_object ((__ctx), (__obj));			  \
     __MSG_TRACE (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 
