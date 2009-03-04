@@ -109,14 +109,14 @@ _fiid_template_check_valid_keys (fiid_template_t tmpl)
       unsigned int len;
 
       if (!tmpl[i].key)
-        return -1;
+        return (-1);
 
       len = strlen (tmpl[i].key);
       if (!len || len > FIID_FIELD_MAX_KEY_LEN)
-        return -1;
+        return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -130,10 +130,10 @@ _fiid_template_check_valid_flags (fiid_template_t tmpl)
     {
       if (!FIID_FIELD_REQUIRED_FLAG_VALID (tmpl[i].flags)
           || !FIID_FIELD_LENGTH_FLAG_VALID (tmpl[i].flags))
-        return -1;
+        return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 static int32_t
@@ -143,7 +143,8 @@ _fiid_template_len (fiid_template_t tmpl,
   int32_t len = 0;
   int i;
 
-  assert (tmpl && tmpl_len);
+  assert (tmpl);
+  assert (tmpl_len);
 
   for (i = 0; tmpl[i].max_field_len != 0; i++)
     len += tmpl[i].max_field_len;
@@ -165,7 +166,8 @@ _fiid_template_len_bytes (fiid_template_t tmpl,
 {
   int32_t len;
 
-  assert (tmpl && tmpl_len);
+  assert (tmpl);
+  assert (tmpl_len);
 
   if ((len = _fiid_template_len (tmpl,
                                  tmpl_len)) < 0)
@@ -265,7 +267,10 @@ _fiid_template_field_start_end (fiid_template_t tmpl,
   int _start = 0;
   int _end = 0;
 
-  assert (tmpl && field && start && end);
+  assert (tmpl);
+  assert (field);
+  assert (start);
+  assert (end);
 
   for (i = 0; tmpl[i].max_field_len != 0; i++)
     {
@@ -291,7 +296,7 @@ fiid_template_field_start (fiid_template_t tmpl,
   uint32_t start = 0;
   uint32_t end = 0;
 
-  if (!(tmpl && field))
+  if (!tmpl || !field)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -320,7 +325,7 @@ fiid_template_field_start_bytes (fiid_template_t tmpl,
 {
   int32_t start = 0;
 
-  if (!(tmpl && field))
+  if (!tmpl || !field)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -355,7 +360,7 @@ fiid_template_field_end (fiid_template_t tmpl,
   uint32_t start = 0;
   uint32_t end = 0;
 
-  if (!(tmpl && field))
+  if (!tmpl || !field)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -384,7 +389,7 @@ fiid_template_field_end_bytes (fiid_template_t tmpl,
 {
   int32_t end = 0;
 
-  if (!(tmpl && field))
+  if (!tmpl || !field)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -418,7 +423,7 @@ fiid_template_field_len (fiid_template_t tmpl,
 {
   int i;
 
-  if (!(tmpl && field))
+  if (!tmpl || !field)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -449,7 +454,7 @@ fiid_template_field_len_bytes (fiid_template_t tmpl,
 {
   int32_t len;
 
-  if (!(tmpl && field))
+  if (!tmpl || !field)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -485,7 +490,7 @@ fiid_template_block_len (fiid_template_t tmpl,
   int32_t start;
   int32_t end;
 
-  if (!(tmpl && field_start && field_end))
+  if (!tmpl || !field_start || !field_end)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -524,7 +529,7 @@ fiid_template_block_len_bytes (fiid_template_t tmpl,
 {
   int32_t len;
 
-  if (!(tmpl && field_start && field_end))
+  if (!tmpl || !field_start || !field_end)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
@@ -601,7 +606,7 @@ fiid_template_compare (fiid_template_t tmpl1,
 void
 fiid_template_free (fiid_field_t *tmpl_dynamic)
 {
-  if (tmpl_dynamic != NULL)
+  if (tmpl_dynamic)
     free (tmpl_dynamic);
 }
 
@@ -615,7 +620,11 @@ _fiid_obj_field_start_end (fiid_obj_t obj,
   int _start = 0;
   int _end = 0;
 
-  assert (obj && obj->magic == FIID_OBJ_MAGIC && field && start && end);
+  assert (obj);
+  assert (obj->magic == FIID_OBJ_MAGIC);
+  assert (field);
+  assert (start);
+  assert (end);
 
   for (i = 0; obj->field_data[i].max_field_len != 0; i++)
     {
@@ -639,7 +648,9 @@ _fiid_obj_field_start (fiid_obj_t obj, char *field)
   uint32_t start = 0;
   uint32_t end = 0; /* excluded always */
 
-  assert (obj && obj->magic == FIID_OBJ_MAGIC && field);
+  assert (obj);
+  assert (obj->magic == FIID_OBJ_MAGIC);
+  assert (field);
 
   if (_fiid_obj_field_start_end (obj, field, &start, &end) < 0)
     return (-1);
@@ -652,7 +663,9 @@ _fiid_obj_field_end (fiid_obj_t obj, char *field)
   uint32_t start = 0;
   uint32_t end = 0; /* excluded always */
 
-  assert (obj && obj->magic == FIID_OBJ_MAGIC && field);
+  assert (obj);
+  assert (obj->magic == FIID_OBJ_MAGIC);
+  assert (field);
 
   if (_fiid_obj_field_start_end (obj, field, &start, &end) < 0)
     return (-1);
@@ -664,7 +677,9 @@ _fiid_obj_field_len (fiid_obj_t obj, char *field)
 {
   int i;
 
-  assert (obj && obj->magic == FIID_OBJ_MAGIC && field);
+  assert (obj);
+  assert (obj->magic == FIID_OBJ_MAGIC);
+  assert (field);
 
   for (i = 0; obj->field_data[i].max_field_len != 0; i++)
     {
@@ -680,9 +695,9 @@ char *
 fiid_strerror (fiid_err_t errnum)
 {
   if (errnum >= FIID_ERR_SUCCESS && errnum <= FIID_ERR_ERRNUMRANGE)
-    return fiid_errmsg[errnum];
+    return (fiid_errmsg[errnum]);
   else
-    return fiid_errmsg[FIID_ERR_ERRNUMRANGE];
+    return (fiid_errmsg[FIID_ERR_ERRNUMRANGE]);
 }
 
 fiid_obj_t
@@ -819,7 +834,7 @@ fiid_obj_dup (fiid_obj_t src_obj)
 {
   fiid_obj_t dest_obj = NULL;
 
-  if (!(src_obj && src_obj->magic == FIID_OBJ_MAGIC))
+  if (!src_obj || src_obj->magic != FIID_OBJ_MAGIC)
     goto cleanup;
 
   if (!(dest_obj = malloc (sizeof(struct fiid_obj))))
@@ -850,7 +865,7 @@ fiid_obj_dup (fiid_obj_t src_obj)
 
   src_obj->errnum = FIID_ERR_SUCCESS;
   dest_obj->errnum = FIID_ERR_SUCCESS;
-  return dest_obj;
+  return (dest_obj);
 
  cleanup:
   if (dest_obj)
@@ -861,7 +876,7 @@ fiid_obj_dup (fiid_obj_t src_obj)
         free (dest_obj->field_data);
       free (dest_obj);
     }
-  return NULL;
+  return (NULL);
 }
 
 fiid_obj_t
@@ -872,7 +887,7 @@ fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl)
   unsigned int field_data_len = 0;
   uint8_t *databuf = NULL;
 
-  if (!(src_obj && src_obj->magic == FIID_OBJ_MAGIC))
+  if (!src_obj || src_obj->magic != FIID_OBJ_MAGIC)
     goto cleanup;
 
   if ((data_len = _fiid_template_len_bytes (alt_tmpl, &field_data_len)) < 0)
@@ -903,20 +918,20 @@ fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl)
     }
 
   free (databuf);
-  return dest_obj;
+  return (dest_obj);
 
  cleanup:
   if (dest_obj)
     fiid_obj_destroy (dest_obj);
   if (databuf)
     free (databuf);
-  return NULL;
+  return (NULL);
 }
 
 int8_t
 fiid_obj_valid (fiid_obj_t obj)
 {
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (0);
   return (1);
 }
@@ -927,7 +942,7 @@ fiid_obj_packet_valid (fiid_obj_t obj)
   int i, total_set_bits_counter = 0, max_bits_counter = 0,
     set_bits_counter = 0, optional_bits_counter = 0;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   for (i = 0; i < obj->field_data_len; i++)
@@ -1036,7 +1051,7 @@ fiid_obj_template (fiid_obj_t obj)
   fiid_field_t *tmpl;
   int i;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (NULL);
 
   if (!(tmpl = (fiid_field_t *)malloc (sizeof(fiid_field_t) * obj->field_data_len)))
@@ -1062,7 +1077,7 @@ fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl)
 {
   int i;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!tmpl)
@@ -1136,7 +1151,9 @@ _fiid_obj_lookup_field_index (fiid_obj_t obj, char *field)
 {
   int i;
 
-  assert (obj && obj->magic == FIID_OBJ_MAGIC && field);
+  assert (obj);
+  assert (obj->magic == FIID_OBJ_MAGIC);
+  assert (field);
 
   for (i = 0; obj->field_data[i].max_field_len != 0; i++)
     {
@@ -1154,7 +1171,7 @@ fiid_obj_len (fiid_obj_t obj)
   int32_t counter = 0;
   int i;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   for (i = 0; obj->field_data[i].max_field_len != 0; i++)
@@ -1169,7 +1186,7 @@ fiid_obj_len_bytes (fiid_obj_t obj)
 {
   int32_t len;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if ((len = fiid_obj_len (obj)) < 0)
@@ -1190,7 +1207,7 @@ fiid_obj_field_len (fiid_obj_t obj, char *field)
 {
   int key_index = -1;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!field)
@@ -1211,7 +1228,7 @@ fiid_obj_field_len_bytes (fiid_obj_t obj, char *field)
 {
   int32_t len;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!field)
@@ -1240,7 +1257,7 @@ fiid_obj_block_len (fiid_obj_t obj, char *field_start, char *field_end)
   int32_t counter = 0;
   int i;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!field_start || !field_end)
@@ -1273,7 +1290,7 @@ fiid_obj_block_len_bytes (fiid_obj_t obj, char *field_start, char *field_end)
 {
   int32_t len;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!field_start || !field_end)
@@ -1300,7 +1317,7 @@ fiid_obj_clear (fiid_obj_t obj)
 {
   int i;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   secure_memset (obj->data, '\0', obj->data_len);
@@ -1317,7 +1334,7 @@ fiid_obj_clear_field (fiid_obj_t obj, char *field)
   int32_t bits_len;
   int key_index = -1;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!field)
@@ -1383,7 +1400,7 @@ fiid_obj_field_lookup (fiid_obj_t obj, char *field)
   uint32_t start = 0;
   uint32_t end = 0; /* excluded always */
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!field)
@@ -1420,7 +1437,7 @@ fiid_obj_set (fiid_obj_t obj,
   uint64_t merged_val = 0;
   uint8_t *temp_data = NULL;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     goto cleanup;
 
   if (!field)
@@ -1571,7 +1588,7 @@ fiid_obj_get (fiid_obj_t obj,
   int key_index = -1;
   uint64_t merged_val = 0;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!field || !val)
@@ -1711,7 +1728,7 @@ fiid_obj_set_data (fiid_obj_t obj,
   int field_offset;
   int key_index = -1;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!field || !data)
@@ -1767,7 +1784,7 @@ fiid_obj_get_data (fiid_obj_t obj,
   int field_offset;
   int key_index = -1;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!field || !data)
@@ -1833,7 +1850,7 @@ fiid_obj_set_all (fiid_obj_t obj,
   int bits_counter, data_bits_len;
   int i;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!data)
@@ -1898,8 +1915,8 @@ fiid_obj_get_all (fiid_obj_t obj,
 {
   int32_t bits_len, bytes_len;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
-    return -1;
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
+    return (-1);
 
   if (!data)
     {
@@ -1908,7 +1925,7 @@ fiid_obj_get_all (fiid_obj_t obj,
     }
 
   if ((bits_len = fiid_obj_len (obj)) < 0)
-    return -1;
+    return (-1);
 
   if (bits_len == (obj->data_len * 8))
     bytes_len = obj->data_len;
@@ -1918,7 +1935,7 @@ fiid_obj_get_all (fiid_obj_t obj,
   if (data_len < bytes_len)
     {
       obj->errnum = FIID_ERR_OVERFLOW;
-      return -1;
+      return (-1);
     }
 
   memset (data, '\0', data_len);
@@ -2036,7 +2053,10 @@ _fiid_obj_max_block_len (fiid_obj_t obj,
   int end;
   int start;
 
-  assert (obj && obj->magic == FIID_OBJ_MAGIC && field_start && field_end);
+  assert (obj);
+  assert (obj->magic == FIID_OBJ_MAGIC);
+  assert (field_start);
+  assert (field_end);
 
   if ((start = _fiid_obj_field_start (obj, field_start)) < 0)
     return (-1);
@@ -2065,7 +2085,7 @@ fiid_obj_set_block (fiid_obj_t obj,
   int bits_counter, data_bits_len;
   int i, field_offset;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!field_start || !field_end || !data)
@@ -2172,7 +2192,7 @@ fiid_obj_get_block (fiid_obj_t obj,
   int key_index_start = -1, key_index_end = -1;
   int field_offset;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
   if (!field_start || !field_end || !data)
@@ -2348,7 +2368,7 @@ fiid_iterator_create (fiid_obj_t obj)
 {
   fiid_iterator_t iter = NULL;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
     goto cleanup;
 
   if (!(iter = (fiid_iterator_t)malloc (sizeof(struct fiid_iterator))))
