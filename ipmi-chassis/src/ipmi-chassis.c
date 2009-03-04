@@ -121,17 +121,13 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
                   "Sys Mgmt Device Address    : %Xh\n",
                   (unsigned char) val);
 
-  if (fiid_obj_get (obj_cmd_rs, "bridge_device_address", &val) >= 0)
-    {
-      pstdout_printf (state_data->pstate,
-                      "Bridge Device Address      : %Xh\n",
-                      (unsigned char) val);
-    }
+  if (fiid_obj_get (obj_cmd_rs, "bridge_device_address", &val) > 0)
+    pstdout_printf (state_data->pstate,
+                    "Bridge Device Address      : %Xh\n",
+                    (unsigned char) val);
   else
-    {
-      pstdout_printf (state_data->pstate,
-                      "Bridge Device Address      : 20h (assuming default)\n");
-    }
+    pstdout_printf (state_data->pstate,
+                    "Bridge Device Address      : 20h (assuming default)\n");
 
   rv = 0;
  cleanup:
