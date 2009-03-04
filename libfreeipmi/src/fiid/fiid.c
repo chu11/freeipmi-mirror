@@ -1143,7 +1143,7 @@ fiid_obj_errnum (fiid_obj_t obj)
 char *
 fiid_obj_errormsg (fiid_obj_t obj)
 {
-  return fiid_strerror (fiid_obj_errnum (obj));
+  return (fiid_strerror (fiid_obj_errnum (obj)));
 }
 
 static int32_t

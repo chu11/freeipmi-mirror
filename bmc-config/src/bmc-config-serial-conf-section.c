@@ -180,9 +180,9 @@ enable_basic_mode_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              cm.basic_mode ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -217,9 +217,9 @@ enable_ppp_mode_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              cm.ppp_mode ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -254,9 +254,9 @@ enable_terminal_mode_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              cm.terminal_mode ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -291,9 +291,9 @@ connect_mode_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              connect_mode_string (cm.connect_mode)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -362,7 +362,7 @@ page_blackout_interval_checkout (const char *section_name,
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  val) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -467,7 +467,7 @@ call_retry_interval_checkout (const char *section_name,
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  val) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -647,9 +647,9 @@ enable_dtr_hangup_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              cs.dtr_hangup ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -684,9 +684,9 @@ flow_control_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              flow_control_string (cs.flow_control)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -721,9 +721,9 @@ bit_rate_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              bit_rate_string (cs.bit_rate)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t

@@ -108,7 +108,7 @@ _get_sdr_decoding_data (ipmi_sensors_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static config_err_t
@@ -162,7 +162,7 @@ _decode_value (ipmi_sensors_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static config_err_t
@@ -231,7 +231,7 @@ _decode_value_raw (ipmi_sensors_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static config_err_t
@@ -871,7 +871,7 @@ _floating_point_in_range (const char *section_name,
     rv = CONFIG_VALIDATE_VALID_VALUE;
 
  cleanup:
-  return rv;
+  return (rv);
 }
 
 config_validate_t
@@ -935,7 +935,7 @@ hysteresis_threshold_validate (const char *section_name,
   assert (value);
 
   if (!strcasecmp (value, "None"))
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
 
   conv = strtod (value, &endptr);
 
@@ -961,7 +961,7 @@ hysteresis_threshold_validate_positive (const char *section_name,
   assert (value);
 
   if (!strcasecmp (value, "None"))
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
 
   conv = strtod (value, &endptr);
 
@@ -1017,10 +1017,10 @@ _setup_threshold_key (ipmi_sensors_config_state_data_t *state_data,
         goto cleanup;
     }
 
-  return 0;
+  return (0);
 
  cleanup:
-  return -1;
+  return (-1);
 }
 
 static int
@@ -1152,7 +1152,7 @@ _setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1226,7 +1226,7 @@ _setup_threshold_hysteresis_fields (ipmi_sensors_config_state_data_t *state_data
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 config_err_t
@@ -1367,10 +1367,10 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
     }
 
   *section_ptr = section;
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 
  cleanup:
   if (section)
     config_section_destroy (state_data->pstate, section);
-  return rv;
+  return (rv);
 }

@@ -188,9 +188,9 @@ k_r_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              (char *)k_r) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -213,7 +213,7 @@ k_r_validate (const char *section_name,
               void *arg)
 {
   if (strlen (value) <= IPMI_MAX_K_R_LENGTH)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -246,30 +246,30 @@ k_g_checkout (const char *section_name,
 
       memset (kv_k_g, '\0', IPMI_MAX_K_G_LENGTH);
       if (parse_kg (kv_k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value_input) < 0)
-        return CONFIG_ERR_FATAL_ERROR;
+        return (CONFIG_ERR_FATAL_ERROR);
 
       if (!memcmp (kv_k_g, k_g, IPMI_MAX_K_G_LENGTH))
         {
           if (config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
                                                      kv->value_input) < 0)
-            return CONFIG_ERR_FATAL_ERROR;
+            return (CONFIG_ERR_FATAL_ERROR);
 
-          return CONFIG_ERR_SUCCESS;
+          return (CONFIG_ERR_SUCCESS);
         }
       /* else, fall through and return the default checked out value */
     }
 
   memset (k_g_str, '\0', IPMI_MAX_K_G_LENGTH*2+3);
   if (!format_kg (k_g_str, IPMI_MAX_K_G_LENGTH*2+3, (unsigned char *)k_g))
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              (char *)k_g_str) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -284,7 +284,7 @@ k_g_commit (const char *section_name,
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
 
   if ((k_g_len = parse_kg (k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value_input)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
   return _set_key (state_data,
                    IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
@@ -302,7 +302,7 @@ k_g_validate (const char *section_name,
 
   if (parse_kg (k_g, IPMI_MAX_K_G_LENGTH + 1, value) < 0)
     return CONFIG_VALIDATE_INVALID_VALUE;
-  return CONFIG_VALIDATE_VALID_VALUE;
+  return (CONFIG_VALIDATE_VALID_VALUE);
 }
 
 struct config_section *

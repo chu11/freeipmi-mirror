@@ -85,5 +85,5 @@ sensor_read_fiid_obj_get (ipmi_sensor_read_ctx_t ctx, fiid_obj_t obj, char *fiel
     }
 
   *val = lval;
-  return (1);                   /* return 1 like real call */
+  return (1);                   /* return (1) like real call */
 }

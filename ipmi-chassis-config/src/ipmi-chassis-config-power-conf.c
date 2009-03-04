@@ -71,7 +71,7 @@ power_restore_policy_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              power_restore_policy_string ((uint8_t)val)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -128,9 +128,9 @@ power_cycle_interval_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              "") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t

@@ -198,15 +198,15 @@ char *
 ipmi_sunbmc_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_SUNBMC_ERR_SUCCESS && errnum <= IPMI_SUNBMC_ERR_ERRNUMRANGE)
-    return ipmi_sunbmc_ctx_errmsg[errnum];
+    return (ipmi_sunbmc_ctx_errmsg[errnum]);
   else
-    return ipmi_sunbmc_ctx_errmsg[IPMI_SUNBMC_ERR_ERRNUMRANGE];
+    return (ipmi_sunbmc_ctx_errmsg[IPMI_SUNBMC_ERR_ERRNUMRANGE]);
 }
 
 char *
 ipmi_sunbmc_ctx_errormsg (ipmi_sunbmc_ctx_t ctx)
 {
-  return ipmi_sunbmc_ctx_strerror (ipmi_sunbmc_ctx_errnum (ctx));
+  return (ipmi_sunbmc_ctx_strerror (ipmi_sunbmc_ctx_errnum (ctx)));
 }
 
 int8_t
@@ -474,7 +474,7 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
   if (msg)
     free (msg);
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
-  return rv;
+  return (rv);
 }
 
 static int8_t

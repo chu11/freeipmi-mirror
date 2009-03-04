@@ -339,7 +339,7 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
   secure_memset (authentication_code_recv, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   secure_memset (authentication_code_calc, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   secure_memset (pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
-  return rv;
+  return (rv);
 }
 
 int8_t
@@ -379,17 +379,17 @@ ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt, uint64_t pkt_le
   authentication_type_offset = rmcp_hdr_len + authentication_type_index;
 
   if (pkt_len < authentication_type_offset)
-    return 0;
+    return (0);
 
   authentication_type_recv = pkt[authentication_type_offset];
 
   /* authentication code check fails if authentication types do not match */
   if (authentication_type != authentication_type_recv)
-    return 0;
+    return (0);
 
-  /* Automatically return 1 if auth type is none */
+  /* Automatically return (1) if auth type is none */
   if (authentication_type_recv == IPMI_AUTHENTICATION_TYPE_NONE)
-    return 1;
+    return (1);
 
   if ((authentication_code_index = fiid_template_field_start_bytes (tmpl_lan_session_hdr,
                                                                     "authentication_code")) < 0)
@@ -401,7 +401,7 @@ ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt, uint64_t pkt_le
   authentication_code_offset = rmcp_hdr_len + authentication_code_index;
 
   if (pkt_len < (authentication_code_offset + IPMI_1_5_MAX_PASSWORD_LENGTH))
-    return 0;
+    return (0);
 
   memset (authentication_code_buf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
@@ -522,7 +522,7 @@ ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt, uint64_t pkt_le
  cleanup:
   secure_memset (authentication_code_buf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   secure_memset (pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
-  return rv;
+  return (rv);
 }
 
 int8_t

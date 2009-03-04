@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.40 2009-03-03 23:57:16 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.41 2009-03-04 18:07:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -86,10 +86,10 @@ createpacket (char *destination,
   assert (buffer != NULL);
 
   if (buflen < 0)
-    return -1;
+    return (-1);
 
   if (buflen == 0)
-    return 0;
+    return (0);
 
   obj_rmcp_hdr = _fiid_obj_create (tmpl_rmcp_hdr);
   obj_rmcp_cmd = _fiid_obj_create (tmpl_cmd_asf_presence_ping);
@@ -148,13 +148,13 @@ parsepacket (char * destination,
   fiid_obj_t obj_rmcp_hdr = NULL;
   fiid_obj_t obj_rmcp_cmd = NULL;
   uint64_t message_type, ipmi_supported, message_tag;
-  int retval = -1;
+  int rv = -1;
 
   assert (destination != NULL);
   assert (buffer != NULL && from != NULL);
 
   if (buflen == 0)
-    return 0;
+    return (0);
 
   obj_rmcp_hdr = _fiid_obj_create (tmpl_rmcp_hdr);
   obj_rmcp_cmd = _fiid_obj_create (tmpl_cmd_asf_presence_pong);
@@ -189,14 +189,14 @@ parsepacket (char * destination,
 
   if (message_type != RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG)
     {
-      retval = 0;
+      rv = 0;
       goto cleanup;
     }
 
   _fiid_obj_get (obj_rmcp_cmd, "message_tag", (uint64_t *)&message_tag);
   if (message_tag != (sequence_number % (RMCP_ASF_MESSAGE_TAG_MAX + 1)))
     {
-      retval = 0;
+      rv = 0;
       goto cleanup;
     }
 
@@ -210,11 +210,11 @@ parsepacket (char * destination,
     }
   printf ("\n");
 
-  retval = 1;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_rmcp_hdr);
   fiid_obj_destroy (obj_rmcp_cmd);
-  return retval;
+  return (rv);
 }
 
 void

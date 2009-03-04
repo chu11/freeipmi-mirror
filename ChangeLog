@@ -1,3 +1,7 @@
+2009-03-04  Albert Chu <chu11@llnl.gov>
+
+	* Various code consistency style cleanup.
+	
 2009-03-03  Albert Chu <chu11@llnl.gov>
 
 	* Fix spacing, tabbing, and indentation throughout code for

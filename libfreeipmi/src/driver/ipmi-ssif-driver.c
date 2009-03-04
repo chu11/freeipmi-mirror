@@ -270,7 +270,7 @@ _ipmi_i2c_smbus_access (ipmi_ssif_ctx_t ctx,
       return (-1);
     }
 
-  return rv;
+  return (rv);
 }
 
 static ssize_t
@@ -514,15 +514,15 @@ char *
 ipmi_ssif_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_SSIF_ERR_SUCCESS && errnum <= IPMI_SSIF_ERR_ERRNUMRANGE)
-    return ipmi_ssif_ctx_errmsg[errnum];
+    return (ipmi_ssif_ctx_errmsg[errnum]);
   else
-    return ipmi_ssif_ctx_errmsg[IPMI_SSIF_ERR_ERRNUMRANGE];
+    return (ipmi_ssif_ctx_errmsg[IPMI_SSIF_ERR_ERRNUMRANGE]);
 }
 
 char *
 ipmi_ssif_ctx_errormsg (ipmi_ssif_ctx_t ctx)
 {
-  return ipmi_ssif_ctx_strerror (ipmi_ssif_ctx_errnum (ctx));
+  return (ipmi_ssif_ctx_strerror (ipmi_ssif_ctx_errnum (ctx)));
 }
 
 int8_t
@@ -877,7 +877,7 @@ _ipmi_ssif_cmd_write (ipmi_ssif_ctx_t ctx,
   FIID_OBJ_DESTROY (obj_hdr);
   if (pkt)
     free (pkt);
-  return rv;
+  return (rv);
 }
 
 static int8_t
@@ -956,7 +956,7 @@ _ipmi_ssif_cmd_read (ipmi_ssif_ctx_t ctx,
   FIID_OBJ_DESTROY (obj_hdr);
   if (pkt)
     free (pkt);
-  return rv;
+  return (rv);
 }
 
 int8_t

@@ -206,9 +206,9 @@ enable_pef_checkout (pstdout_state_t pstate,
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
                                              pc.enable_pef ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -249,9 +249,9 @@ enable_pef_event_messages_checkout (pstdout_state_t pstate,
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
                                              pc.enable_pef_event_messages ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -292,9 +292,9 @@ enable_pef_startup_delay_checkout (pstdout_state_t pstate,
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
                                              pc.enable_pef_startup_delay ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -335,9 +335,9 @@ enable_pef_alert_startup_delay_checkout (pstdout_state_t pstate,
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
                                              pc.enable_pef_alert_startup_delay ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -533,9 +533,9 @@ enable_alert_action_checkout (pstdout_state_t pstate,
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
                                              gc.enable_alert_action ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -576,9 +576,9 @@ enable_power_down_action_checkout (pstdout_state_t pstate,
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
                                              gc.enable_power_down_action ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -619,9 +619,9 @@ enable_reset_action_checkout (pstdout_state_t pstate,
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
                                              gc.enable_reset_action ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -662,9 +662,9 @@ enable_power_cycle_action_checkout (pstdout_state_t pstate,
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
                                              gc.enable_power_cycle_action ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -705,9 +705,9 @@ enable_oem_action_checkout (pstdout_state_t pstate,
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
                                              gc.enable_oem_action ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -748,9 +748,9 @@ enable_diagnostic_interrupt_checkout (pstdout_state_t pstate,
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
                                              gc.enable_diagnostic_interrupt ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -824,7 +824,7 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
   if (config_section_update_keyvalue_output_int (pstate,
                                                  kv,
                                                  val) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -927,7 +927,7 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
   if (config_section_update_keyvalue_output_int (pstate,
                                                  kv,
                                                  val) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:

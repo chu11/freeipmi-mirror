@@ -94,7 +94,7 @@ community_string_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              community_string) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -158,7 +158,7 @@ community_string_validate (const char *section_name,
 {
   if (!value || strlen (value) > IPMI_MAX_COMMUNITY_STRING_LENGTH)
     return CONFIG_VALIDATE_INVALID_VALUE;
-  return CONFIG_VALIDATE_VALID_VALUE;
+  return (CONFIG_VALIDATE_VALID_VALUE);
 }
 
 struct config_section *
@@ -190,6 +190,6 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
  cleanup:
   if (section)
     config_section_destroy (state_data->pstate, section);
-  return NULL;
+  return (NULL);
 }
 

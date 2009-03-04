@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.80 2009-03-03 23:56:51 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.81 2009-03-04 18:07:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -158,7 +158,7 @@ _ipmiconsole_garbage_collector_create (void)
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 /* Notes: One of the reason we do not create the threads in this
@@ -181,7 +181,7 @@ ipmiconsole_engine_setup (unsigned int thread_count)
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
       errno = perr;
-      return -1;
+      return (-1);
     }
 
   memset (console_engine_ctxs, '\0', IPMICONSOLE_THREAD_COUNT_MAX * sizeof(List));
@@ -283,7 +283,7 @@ ipmiconsole_engine_setup (unsigned int thread_count)
       goto cleanup;
     }
 
-  return 0;
+  return (0);
 
  cleanup:
   for (i = 0; i < IPMICONSOLE_THREAD_COUNT_MAX; i++)
@@ -308,7 +308,7 @@ ipmiconsole_engine_setup (unsigned int thread_count)
   if ((perr = pthread_mutex_unlock (&console_engine_is_setup_mutex)))
     IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
 
-  return -1;
+  return (-1);
 }
 
 int
@@ -319,7 +319,7 @@ ipmiconsole_engine_is_setup (void)
   if ((perr = pthread_mutex_lock (&console_engine_is_setup_mutex)))
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
-      return -1;
+      return (-1);
     }
 
   is_setup = console_engine_is_setup;
@@ -327,7 +327,7 @@ ipmiconsole_engine_is_setup (void)
   if ((perr = pthread_mutex_unlock (&console_engine_is_setup_mutex)))
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
-      return -1;
+      return (-1);
     }
 
   return is_setup;
@@ -341,7 +341,7 @@ ipmiconsole_engine_thread_count (void)
   if ((perr = pthread_mutex_lock (&console_engine_thread_count_mutex)))
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
-      return -1;
+      return (-1);
     }
 
   thread_count = console_engine_thread_count;
@@ -349,7 +349,7 @@ ipmiconsole_engine_thread_count (void)
   if ((perr = pthread_mutex_unlock (&console_engine_thread_count_mutex)))
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
-      return -1;
+      return (-1);
     }
 
   return thread_count;
@@ -370,7 +370,7 @@ _teardown_initiate (void *x, void *arg)
   if (!c->session.close_session_flag)
     c->session.close_session_flag++;
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -428,7 +428,7 @@ _poll_setup (void *x, void *arg)
   poll_data->pfds_ctxs[poll_data->pfds_index] = c;
 
   poll_data->pfds_index++;
-  return 0;
+  return (0);
 }
 
 /*
@@ -459,14 +459,14 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_lan_recvfrom: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (!len)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_lan_recvfrom: no data", strerror (errno)));
       /* Note: Not a fatal error, just return*/
-      return 0;
+      return (0);
     }
 
   /* Sanity Check */
@@ -475,7 +475,7 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("received from invalid address"));
       /* Note: Not a fatal error, just return */
-      return 0;
+      return (0);
     }
 
   /* Empty the scbuf if it's not empty */
@@ -496,24 +496,24 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (n != len)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: invalid bytes written; n=%d; len=%d", n, len));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (dropped)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: dropped data: dropped=%d", dropped));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 /*
@@ -534,7 +534,7 @@ _ipmi_sendto (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("scbuf_read: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if ((len = ipmi_lan_sendto (c->connection.ipmi_fd,
@@ -546,14 +546,14 @@ _ipmi_sendto (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_lan_sendto: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (len != n)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_lan_sendto: invalid bytes written; n=%d; len=%d", n, len));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return -1;
+      return (-1);
     }
 
   /* scbuf should be empty now */
@@ -561,10 +561,10 @@ _ipmi_sendto (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_to_bmc not empty"));
       /* Note: Not a fatal error, just return*/
-      return 0;
+      return (0);
     }
 
-  return 0;
+  return (0);
 }
 
 /*
@@ -584,14 +584,14 @@ _asynccomm (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("read: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (!len)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("asynccomm closed"));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   /* User may have requested several break conditions in a
@@ -609,13 +609,13 @@ _asynccomm (ipmiconsole_ctx_t c)
             {
               IPMICONSOLE_CTX_DEBUG (c, ("scbuf_used: %s", strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-              return -1;
+              return (-1);
             }
           c->session.console_remote_console_to_bmc_bytes_before_break = bytes_before_break;
         }
     }
 
-  return 0;
+  return (0);
 }
 
 /*
@@ -642,7 +642,7 @@ _console_read (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("read: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (!len)
@@ -651,31 +651,31 @@ _console_read (ipmiconsole_ctx_t c)
        * since the user is allowed to close the session
        */
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
-      return -1;
+      return (-1);
     }
 
   if ((n = scbuf_write (c->connection.console_remote_console_to_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (n != len)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: invalid bytes written; n=%d; len=%d", n, len));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (dropped)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: dropped data: dropped=%d", dropped));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 /*
@@ -704,7 +704,7 @@ _console_write (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("scbuf_read: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if ((len = write (c->connection.ipmiconsole_fd,
@@ -722,14 +722,14 @@ _console_write (ipmiconsole_ctx_t c)
         }
       else
         ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (len != n)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("write: invalid bytes written; n=%d; len=%d", n, len));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   /* scbuf should be empty now */
@@ -737,10 +737,10 @@ _console_write (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("console_bmc_to_remote_console not empty"));
       /* Note: Not a fatal error, just return*/
-      return 0;
+      return (0);
     }
 
-  return 0;
+  return (0);
 }
 
 static void *
@@ -1067,7 +1067,7 @@ ipmiconsole_engine_thread_create (void)
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
       errno = perr;
-      return -1;
+      return (-1);
     }
 
   assert (console_engine_thread_count < IPMICONSOLE_THREAD_COUNT_MAX);
@@ -1120,10 +1120,10 @@ ipmiconsole_engine_thread_create (void)
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
       errno = perr;
-      return -1;
+      return (-1);
     }
 
-  return rv;
+  return (rv);
 }
 
 int
@@ -1142,7 +1142,7 @@ ipmiconsole_engine_submit_ctx (ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_lock (&console_engine_thread_count_mutex)))
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
-      return -1;
+      return (-1);
     }
 
   for (i = 0; i < console_engine_thread_count; i++)
@@ -1228,7 +1228,7 @@ ipmiconsole_engine_cleanup (int cleanup_sol_sessions)
   if ((perr = pthread_mutex_lock (&console_engine_is_setup_mutex)))
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
-      return -1;
+      return (-1);
     }
 
   if (!console_engine_is_setup)
@@ -1361,5 +1361,5 @@ ipmiconsole_engine_cleanup (int cleanup_sol_sessions)
   if ((perr = pthread_mutex_unlock (&console_engine_is_setup_mutex)))
     IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
 
-  return rv;
+  return (rv);
 }

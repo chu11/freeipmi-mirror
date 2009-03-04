@@ -54,7 +54,7 @@ config_checkout_section (pstdout_state_t pstate,
   assert (fp);
 
   if (section->flags & CONFIG_DO_NOT_CHECKOUT)
-    return CONFIG_ERR_SUCCESS;
+    return (CONFIG_ERR_SUCCESS);
 
   /* if no keyvalues specified by user, we want to checkout all keys,
    * so build keyvalues list appropriately
@@ -80,7 +80,7 @@ config_checkout_section (pstdout_state_t pstate,
     }
 
   if (!section->keyvalues)
-    return CONFIG_ERR_SUCCESS;
+    return (CONFIG_ERR_SUCCESS);
 
   /* no need to output if fp NULL, for example if 'diff' is calling
    * us.

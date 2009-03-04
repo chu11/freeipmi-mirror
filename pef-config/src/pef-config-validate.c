@@ -45,7 +45,7 @@ alert_destination_type_validate (const char *section_name,
                                  void *arg)
 {
   if (alert_destination_type_number (value) != -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -56,7 +56,7 @@ alert_gateway_validate (const char *section_name,
                         void *arg)
 {
   if (alert_gateway_number (value) != -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -67,7 +67,7 @@ policy_type_validate (const char *section_name,
                       void *arg)
 {
   if (policy_type_number (value) != -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -78,7 +78,7 @@ filter_type_validate (const char *section_name,
                       void *arg)
 {
   if (filter_type_number (value) != -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -89,7 +89,7 @@ event_severity_validate (const char *section_name,
                          void *arg)
 {
   if (event_severity_number (value) != -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -100,6 +100,6 @@ sensor_type_validate (const char *section_name,
                       void *arg)
 {
   if (sensor_type_number (value) != -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }

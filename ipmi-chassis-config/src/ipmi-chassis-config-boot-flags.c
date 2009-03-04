@@ -212,14 +212,14 @@ boot_flags_persistent_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              data.boot_flags_persistent ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -232,14 +232,14 @@ boot_flags_persistent_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.boot_flags_persistent = same (kv->value_input, "yes");
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -252,14 +252,14 @@ bios_boot_type_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              bios_boot_type_string (data.bios_boot_type)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -272,14 +272,14 @@ bios_boot_type_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.bios_boot_type = bios_boot_type_number (kv->value_input);
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -292,14 +292,14 @@ cmos_clear_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              data.cmos_clear ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -312,14 +312,14 @@ cmos_clear_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.cmos_clear = same (kv->value_input, "yes");
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -332,14 +332,14 @@ lock_keyboard_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              data.lock_keyboard ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -352,14 +352,14 @@ lock_keyboard_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.lock_keyboard = same (kv->value_input, "yes");
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -372,14 +372,14 @@ screen_blank_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              data.screen_blank ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -392,14 +392,14 @@ screen_blank_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.screen_blank = same (kv->value_input, "yes");
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -412,14 +412,14 @@ boot_device_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              boot_device_string (data.boot_device)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -432,14 +432,14 @@ boot_device_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.boot_device = boot_device_number (kv->value_input);
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -452,14 +452,14 @@ lock_out_reset_button_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              data.lock_out_reset_button ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -472,14 +472,14 @@ lock_out_reset_button_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.lock_out_reset_button = same (kv->value_input, "yes");
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -492,14 +492,14 @@ lock_out_power_button_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              data.lock_out_power_button ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -512,14 +512,14 @@ lock_out_power_button_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.lock_out_power_button = same (kv->value_input, "yes");
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -532,14 +532,14 @@ lock_out_sleep_button_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              data.lock_out_sleep_button ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -552,14 +552,14 @@ lock_out_sleep_button_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.lock_out_sleep_button = same (kv->value_input, "yes");
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -618,14 +618,14 @@ firmware_bios_verbosity_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              firmware_bios_verbosity_string (data.firmware_bios_verbosity)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -638,14 +638,14 @@ firmware_bios_verbosity_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.firmware_bios_verbosity = firmware_bios_verbosity_number (kv->value_input);
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -658,14 +658,14 @@ force_progress_event_traps_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              data.force_progress_event_traps ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -678,14 +678,14 @@ force_progress_event_traps_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.force_progress_event_traps = same (kv->value_input, "yes");
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -698,14 +698,14 @@ user_password_bypass_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              data.user_password_bypass ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -718,14 +718,14 @@ user_password_bypass_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.user_password_bypass = same (kv->value_input, "yes");
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -738,14 +738,14 @@ console_redirection_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              console_redirection_string (data.console_redirection)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -758,14 +758,14 @@ console_redirection_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   data.console_redirection = console_redirection_number (kv->value_input);
 
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 struct config_section *

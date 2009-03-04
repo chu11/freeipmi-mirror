@@ -699,7 +699,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   indx += len;
 
   if (pkt_len <= indx)
-    return 0;
+    return (0);
 
   if (fiid_obj_clear (obj_lan_session_hdr) < 0)
     {
@@ -744,7 +744,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
       indx += len;
 
       if (pkt_len <= indx)
-        return 0;
+        return (0);
     }
 
   if ((len = fiid_obj_set_data (obj_lan_session_hdr,
@@ -758,7 +758,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   indx += len;
 
   if (pkt_len <= indx)
-    return 0;
+    return (0);
 
   if (fiid_obj_clear (obj_lan_msg_hdr) < 0)
     {
@@ -773,7 +773,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   indx += len;
 
   if (pkt_len <= indx)
-    return 0;
+    return (0);
 
   if ((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0)
     {
@@ -801,7 +801,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
       indx += len;
 
       if (pkt_len <= indx)
-        return 0;
+        return (0);
     }
 
   if (fiid_obj_clear (obj_lan_msg_trlr) < 0)
@@ -816,7 +816,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
     }
   indx += len;
 
-  return 0;
+  return (0);
 }
 
 ssize_t

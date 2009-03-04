@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.42 2009-03-03 23:56:50 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.43 2009-03-04 18:07:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -97,12 +97,12 @@ ipmiconsole_ctx_setup (ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_init (&(c->errnum_mutex), NULL)) != 0)
     {
       errno = perr;
-      return -1;
+      return (-1);
     }
 
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
 
-  return 0;
+  return (0);
 }
 
 void
@@ -229,7 +229,7 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
                                           &(c->config.confidentiality_algorithm)) < 0)
     {
       IPMICONSOLE_DEBUG (("ipmi_cipher_suite_id_to_algorithms: %s", strerror (errno)));
-      return -1;
+      return (-1);
     }
 
   /* Retransmission timeout cannot be larger than the session timeout */
@@ -239,7 +239,7 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
                           c->config.retransmission_timeout_len,
                           c->config.session_timeout_len));
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
 
   /* Keepalive timeout cannot be larger than the session timeout */
@@ -249,7 +249,7 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
                           c->config.keepalive_timeout_len,
                           c->config.session_timeout_len));
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
 
   /* Retransmission timeout cannot be larger than the keepalive timeout */
@@ -259,7 +259,7 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
                           c->config.retransmission_timeout_len,
                           c->config.keepalive_timeout_len));
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
 
   /* Retransmission keepalive timeout cannot be larger than the keepalive timeout */
@@ -269,10 +269,10 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
                           c->config.retransmission_keepalive_timeout_len,
                           c->config.keepalive_timeout_len));
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 void
@@ -308,11 +308,11 @@ ipmiconsole_ctx_debug_setup (ipmiconsole_ctx_t c)
           IPMICONSOLE_CTX_DEBUG (c, ("open: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
           c->config.debug_flags = 0;
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 void
@@ -340,19 +340,19 @@ ipmiconsole_ctx_signal_setup (ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_init (&c->signal.status_mutex, NULL)) != 0)
     {
       errno = perr;
-      return -1;
+      return (-1);
     }
   c->signal.status = IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED;
 
   if ((perr = pthread_mutex_init (&c->signal.destroyed_mutex, NULL)) != 0)
     {
       errno = perr;
-      return -1;
+      return (-1);
     }
   c->signal.user_has_destroyed = 0;
   c->signal.moved_to_destroyed = 0;
 
-  return 0;
+  return (0);
 }
 
 void
@@ -376,7 +376,7 @@ ipmiconsole_ctx_non_blocking_setup (ipmiconsole_ctx_t c,
   c->non_blocking.callback = callback;
   c->non_blocking.callback_arg = callback_arg;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -390,14 +390,14 @@ ipmiconsole_ctx_blocking_setup (ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_init (&c->blocking.blocking_mutex, NULL)) != 0)
     {
       errno = perr;
-      return -1;
+      return (-1);
     }
   c->blocking.blocking_submit_requested = 0;
   c->blocking.blocking_notification[0] = -1;
   c->blocking.blocking_notification[1] = -1;
   c->blocking.sol_session_established = 0;
 
-  return 0;
+  return (0);
 }
 
 void
@@ -626,14 +626,14 @@ ipmiconsole_ctx_connection_setup (ipmiconsole_ctx_t c)
   if (!(c->connection.obj_close_session_rs = Fiid_obj_create (c, tmpl_cmd_close_session_rs)))
     goto cleanup;
 
-  return 0;
+  return (0);
 
  cleanup:
   /* Previously called here, but this is now supposed to be handled in API land */
   /* ipmiconsole_ctx_connection_cleanup(c) */
   /* _ipmiconsole_ctx_fds_cleanup(c); */
   /* _ipmiconsole_ctx_fds_setup(c); */
-  return -1;
+  return (-1);
 }
 
 static void
@@ -905,7 +905,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("gettimeofday: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return -1;
+      return (-1);
     }
 
   memset (&hent, '\0', sizeof(struct hostent));
@@ -936,7 +936,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
           || h_errnop == NO_DATA)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
-          return -1;
+          return (-1);
         }
 #if HAVE_HSTRERROR
       IPMICONSOLE_DEBUG (("gethostbyname_r: %s", hstrerror (h_errnop)));
@@ -944,21 +944,21 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
       IPMICONSOLE_DEBUG (("gethostbyname_r: h_errno = %d", h_errnop));
 #endif /* !HAVE_HSTRERROR */
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return -1;
+      return (-1);
     }
 
 #if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
   if (!hptr)
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
-      return -1;
+      return (-1);
     }
 #elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
 #else /* !HAVE_FUNC_GETHOSTBYNAME_R */
   if (!hptr)
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
-      return -1;
+      return (-1);
     }
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
 
@@ -984,14 +984,14 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
   if (ipmi_get_random (&(c->session.requester_sequence_number),
                        sizeof(c->session.requester_sequence_number)) < 0)
     {
       IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
   c->session.requester_sequence_number %= (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
 
@@ -1006,7 +1006,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
         {
           IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
     } while (!c->session.remote_console_session_id);
 
@@ -1015,7 +1015,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   /* Keys and ptrs will be calculated during session setup.  We just
@@ -1065,7 +1065,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   c->session.last_sol_output_packet_sequence_number = 0;
   c->session.last_sol_output_accepted_character_count = 0;
 
-  return 0;
+  return (0);
 }
 
 void

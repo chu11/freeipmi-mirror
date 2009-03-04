@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.8 2009-03-03 23:56:54 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.9 2009-03-04 18:07:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -282,7 +282,7 @@ cmdline_parse (int key,
       return ret;
     }
 
-  return 0;
+  return (0);
 }
 
 static void

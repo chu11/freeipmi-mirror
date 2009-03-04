@@ -83,10 +83,10 @@ ipmi_sensors_config_discrete_section (ipmi_sensors_config_state_data_t *state_da
     goto cleanup;
 
   *section_ptr = section;
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 
  cleanup:
   if (section)
     config_section_destroy (state_data->pstate, section);
-  return rv;
+  return (rv);
 }

@@ -416,7 +416,7 @@ _authentication_type_enable_available (bmc_config_state_data_t *state_data,
 
   /* always output under verbose mode */
   if (state_data->prog_data->args->config_args.verbose)
-    return CONFIG_ERR_SUCCESS;
+    return (CONFIG_ERR_SUCCESS);
 
   if (!state_data->authentication_type_initialized)
     {
@@ -443,7 +443,7 @@ _authentication_type_enable_available (bmc_config_state_data_t *state_data,
         *available = 0;
     }
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -475,17 +475,17 @@ _authentication_level_checkout (const char *section_name,
                                                 section_name,
                                                 kv->key->key_name,
                                                 &al)))
-        return CONFIG_ERR_FATAL_ERROR;
+        return (CONFIG_ERR_FATAL_ERROR);
 
       if (config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
                                                  *al_ptr ? "Yes" : "No") < 0)
-        return CONFIG_ERR_FATAL_ERROR;
+        return (CONFIG_ERR_FATAL_ERROR);
 
-      return CONFIG_ERR_SUCCESS;
+      return (CONFIG_ERR_SUCCESS);
     }
 
-  return CONFIG_ERR_NON_FATAL_ERROR;
+  return (CONFIG_ERR_NON_FATAL_ERROR);
 }
 
 static config_err_t
@@ -506,7 +506,7 @@ _authentication_level_commit (const char *section_name,
                                           section_name,
                                           kv->key->key_name,
                                           &al)))
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
   *flag = same (kv->value_input, "yes");
 
@@ -514,7 +514,7 @@ _authentication_level_commit (const char *section_name,
                                                &al)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 struct config_section *

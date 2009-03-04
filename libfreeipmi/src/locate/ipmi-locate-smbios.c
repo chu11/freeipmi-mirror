@@ -220,7 +220,7 @@ _is_ipmi_entry (ipmi_locate_ctx_t ctx,
   assert (sigp);
 
   if (memcmp (sigp, smbios_entry_sig, sizeof (smbios_entry_sig)) != 0)
-    return 0;
+    return (0);
 
   entry_len = sigp[IPMI_SMBIOS_ENTRY_LEN_OFFSET];
 
@@ -260,10 +260,10 @@ _is_ipmi_dev_info (ipmi_locate_ctx_t ctx,
   assert (dev_info_p);
 
   if (*dev_info_p != IPMI_SMBIOS_IPMI_DEV_INFO_SIG)
-    return 0;
+    return (0);
 
   if (dev_info_p[IPMI_SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET] != type)
-    return 0;
+    return (0);
 
   return 1;
 }
@@ -318,7 +318,7 @@ _map_physmem (ipmi_locate_ctx_t ctx,
 
  cleanup:
   close (mem_fd);
-  return NULL;
+  return (NULL);
 }
 
 /* _copy_ipmi_dev_info

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.c,v 1.9 2009-03-03 23:57:09 chu11 Exp $
+ *  $Id: ipmi-md2.c,v 1.10 2009-03-04 18:07:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -110,7 +110,7 @@ md2_init (md2_t *ctx)
   if (ctx == NULL)
     {
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
 
   ctx->magic = MD2_MAGIC;
@@ -121,7 +121,7 @@ md2_init (md2_t *ctx)
   memset (C, '\0', MD2_CHKSUM_LENGTH);
   memset (M, '\0', MD2_BLOCK_LENGTH);
 
-  return 0;
+  return (0);
 }
 
 static void
@@ -176,11 +176,11 @@ md2_update_data (md2_t *ctx, uint8_t *buf, unsigned int buflen)
   if (ctx == NULL || ctx->magic != MD2_MAGIC || buf == NULL)
     {
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
 
   if (buflen == 0)
-    return 0;
+    return (0);
 
   if ((Mlen + buflen) >= MD2_BLOCK_LENGTH)
     {
@@ -233,7 +233,7 @@ md2_finish (md2_t *ctx, uint8_t *digest, unsigned int digestlen)
       || digest == NULL || digestlen < MD2_DIGEST_LENGTH)
     {
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
 
   _md2_append_padding_and_checksum (ctx);

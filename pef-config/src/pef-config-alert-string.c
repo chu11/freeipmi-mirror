@@ -158,14 +158,14 @@ event_filter_number_checkout (const char *section_name,
   if ((ret = _get_alert_string_keys (state_data,
                                      section_name,
                                      &ask)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  ask.event_filter_number) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -180,7 +180,7 @@ event_filter_number_commit (const char *section_name,
   if ((ret = _get_alert_string_keys (state_data,
                                      section_name,
                                      &ask)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   ask.event_filter_number = atoi (kv->value_input);
 
@@ -201,14 +201,14 @@ alert_string_set_checkout (const char *section_name,
   if ((ret = _get_alert_string_keys (state_data,
                                      section_name,
                                      &ask)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  ask.alert_string_set) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -223,7 +223,7 @@ alert_string_set_commit (const char *section_name,
   if ((ret = _get_alert_string_keys (state_data,
                                      section_name,
                                      &ask)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   ask.alert_string_set = atoi (kv->value_input);
 
@@ -317,7 +317,7 @@ alert_string_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              (char *)alert_string) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -416,7 +416,7 @@ alert_string_validate (const char *section_name,
                        void *arg)
 {
   if (strlen (value) <= PEF_ALERT_STRING_MAX_LEN)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -431,7 +431,7 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "Invalid Num = %d\n", num);
-      return NULL;
+      return (NULL);
     }
 
   snprintf (buf, CONFIG_MAX_SECTION_NAME_LEN, "Alert_String_%d", num);
@@ -480,6 +480,6 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
  cleanup:
   if (section)
     config_section_destroy (state_data->pstate, section);
-  return NULL;
+  return (NULL);
 }
 

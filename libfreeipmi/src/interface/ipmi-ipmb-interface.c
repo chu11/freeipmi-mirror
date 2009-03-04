@@ -334,7 +334,7 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
   indx += len;
 
   if (buf_len <= indx)
-    return 0;
+    return (0);
 
   if ((obj_ipmb_msg_trlr_len = fiid_template_len_bytes (tmpl_ipmb_msg_trlr)) < 0)
     {
@@ -362,7 +362,7 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
       indx += len;
 
       if (buf_len <= indx)
-        return 0;
+        return (0);
     }
 
   if (fiid_obj_clear (obj_ipmb_msg_trlr) < 0)
@@ -377,5 +377,5 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
     }
   indx += len;
 
-  return 0;
+  return (0);
 }

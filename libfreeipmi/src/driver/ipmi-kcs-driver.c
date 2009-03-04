@@ -309,15 +309,15 @@ char *
 ipmi_kcs_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_KCS_ERR_SUCCESS && errnum <= IPMI_KCS_ERR_ERRNUMRANGE)
-    return ipmi_kcs_ctx_errmsg[errnum];
+    return (ipmi_kcs_ctx_errmsg[errnum]);
   else
-    return ipmi_kcs_ctx_errmsg[IPMI_KCS_ERR_ERRNUMRANGE];
+    return (ipmi_kcs_ctx_errmsg[IPMI_KCS_ERR_ERRNUMRANGE]);
 }
 
 char *
 ipmi_kcs_ctx_errormsg (ipmi_kcs_ctx_t ctx)
 {
-  return ipmi_kcs_ctx_strerror (ipmi_kcs_ctx_errnum (ctx));
+  return (ipmi_kcs_ctx_strerror (ipmi_kcs_ctx_errnum (ctx)));
 }
 
 int8_t
@@ -965,7 +965,7 @@ _ipmi_kcs_cmd_write (ipmi_kcs_ctx_t ctx,
   FIID_OBJ_DESTROY (obj_hdr);
   if (pkt)
     free (pkt);
-  return rv;
+  return (rv);
 }
 
 static int8_t
@@ -1044,7 +1044,7 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
   FIID_OBJ_DESTROY (obj_hdr);
   if (pkt)
     free (pkt);
-  return rv;
+  return (rv);
 }
 
 int8_t

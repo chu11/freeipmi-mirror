@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.31 2009-03-03 23:56:51 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.32 2009-03-04 18:07:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -248,7 +248,7 @@ _packet_dump_hdr (ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_CTX_DEBUG (c, ("invalid packet type: %d", p));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   /* special case: there is no "Request/Response" with SOL data */
@@ -268,10 +268,10 @@ _packet_dump_hdr (ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_CTX_DEBUG (c, ("debug_hdr_str: p = %d", p));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 int
@@ -298,7 +298,7 @@ ipmiconsole_packet_dump (ipmiconsole_ctx_t c,
   else if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE)
     fd = c->debug.debug_fd;
   else
-    return 0;
+    return (0);
 
   tmpl_cmd = ipmiconsole_packet_template (c, p);
 
@@ -308,7 +308,7 @@ ipmiconsole_packet_dump (ipmiconsole_ctx_t c,
     tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rs[0];
 
   if (_packet_dump_hdr (c, p, hdr, IPMICONSOLE_MAX_PACKET_DUMP_HDR_LEN) < 0)
-    return -1;
+    return (-1);
 
   /* IPMI 1.5 Style Packets */
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
@@ -325,7 +325,7 @@ ipmiconsole_packet_dump (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("ipmi_dump_lan_packet: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
     }
   else /* IPMI 2.0 Style Packets */
@@ -358,7 +358,7 @@ ipmiconsole_packet_dump (ipmiconsole_ctx_t c,
             {
               IPMICONSOLE_CTX_DEBUG (c, ("ipmi_dump_rmcpplus_packet: p = %d; %s", p, strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-              return -1;
+              return (-1);
             }
         }
       else
@@ -381,13 +381,13 @@ ipmiconsole_packet_dump (ipmiconsole_ctx_t c,
             {
               IPMICONSOLE_CTX_DEBUG (c, ("ipmi_dump_rmcpplus_packet: p = %d; %s", p, strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-              return -1;
+              return (-1);
             }
 
         }
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -416,7 +416,7 @@ _packet_dump_unknown_hdr (ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_is_ipmi_1_5_packet: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (rv)
@@ -427,7 +427,7 @@ _packet_dump_unknown_hdr (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("ipmi_rmcpplus_calculate_payload_type: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
 
       if (rv == IPMI_PAYLOAD_TYPE_SOL)
@@ -454,14 +454,14 @@ _packet_dump_unknown_hdr (ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_CTX_DEBUG (c, ("snprintf"));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (len >= hdrlen)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("snprintf truncation: len = %d", len));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   return (len);
@@ -488,16 +488,16 @@ ipmiconsole_packet_dump_unknown (ipmiconsole_ctx_t c,
   else if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE)
     fd = c->debug.debug_fd;
   else
-    return 0;
+    return (0);
 
   if (_packet_dump_unknown_hdr (c, buf, buflen, hdr, IPMICONSOLE_MAX_PACKET_DUMP_HDR_LEN) < 0)
-    return -1;
+    return (-1);
 
   if ((rv = ipmi_is_ipmi_1_5_packet (buf, buflen)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_is_ipmi_1_5_packet: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (rv)
@@ -513,7 +513,7 @@ ipmiconsole_packet_dump_unknown (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("ipmi_dump_lan_packet: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
     }
   else
@@ -536,11 +536,11 @@ ipmiconsole_packet_dump_unknown (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("ipmi_dump_rmcpplus_packet: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 
@@ -566,17 +566,17 @@ _ipmi_1_5_packet_assemble (ipmiconsole_ctx_t c,
   assert (buflen);
 
   if (Fiid_obj_clear (c, c->connection.obj_rmcp_hdr_rq) < 0)
-    return -1;
+    return (-1);
   if (Fiid_obj_clear (c, c->connection.obj_lan_session_hdr_rq) < 0)
-    return -1;
+    return (-1);
   if (Fiid_obj_clear (c, c->connection.obj_lan_msg_hdr_rq) < 0)
-    return -1;
+    return (-1);
 
   if (fill_rmcp_hdr_ipmi (c->connection.obj_rmcp_hdr_rq) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fill_rmcp_hdr_ipmi: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (fill_lan_session_hdr (authentication_type,
@@ -586,7 +586,7 @@ _ipmi_1_5_packet_assemble (ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fill_lan_session_hdr: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (fill_lan_msg_hdr (IPMI_SLAVE_ADDRESS_BMC,
@@ -597,7 +597,7 @@ _ipmi_1_5_packet_assemble (ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fill_lan_msg_hdr: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if ((pkt_len = assemble_ipmi_lan_pkt (c->connection.obj_rmcp_hdr_rq,
@@ -611,7 +611,7 @@ _ipmi_1_5_packet_assemble (ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_CTX_DEBUG (c, ("assemble_ipmi_lan_pkt: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   return (pkt_len);
@@ -648,19 +648,19 @@ _ipmi_2_0_packet_assemble (ipmiconsole_ctx_t c,
   assert (buflen);
 
   if (Fiid_obj_clear (c, c->connection.obj_rmcp_hdr_rq) < 0)
-    return -1;
+    return (-1);
   if (Fiid_obj_clear (c, c->connection.obj_lan_msg_hdr_rq) < 0)
-    return -1;
+    return (-1);
   if (Fiid_obj_clear (c, c->connection.obj_rmcpplus_session_hdr_rq) < 0)
-    return -1;
+    return (-1);
   if (Fiid_obj_clear (c, c->connection.obj_rmcpplus_session_trlr_rq) < 0)
-    return -1;
+    return (-1);
 
   if (fill_rmcp_hdr_ipmi (c->connection.obj_rmcp_hdr_rq) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fill_rmcp_hdr_ipmi: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (fill_rmcpplus_session_hdr (payload_type,
@@ -674,7 +674,7 @@ _ipmi_2_0_packet_assemble (ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fill_rmcpplus_session_hdr: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (fill_lan_msg_hdr (IPMI_SLAVE_ADDRESS_BMC,
@@ -685,14 +685,14 @@ _ipmi_2_0_packet_assemble (ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fill_lan_msg_hdr: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (fill_rmcpplus_session_trlr (c->connection.obj_rmcpplus_session_trlr_rq) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fill_rmcpplus_session_trlr: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if ((pkt_len = assemble_ipmi_rmcpplus_pkt (authentication_algorithm,
@@ -714,7 +714,7 @@ _ipmi_2_0_packet_assemble (ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_CTX_DEBUG (c, ("assemble_ipmi_rmcpplus_pkt: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   return (pkt_len);
@@ -821,7 +821,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
                         c->connection.obj_open_session_response,
                         "managed_system_session_id",
                         &val) < 0)
-        return -1;
+        return (-1);
       session_id = val;
     }
 
@@ -833,7 +833,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
                         c->connection.obj_open_session_response,
                         "managed_system_session_id",
                         &val) < 0)
-        return -1;
+        return (-1);
       managed_system_session_id = val;
     }
 
@@ -928,7 +928,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fill_cmd_get_channel_authentication_capabilities_v20: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       obj_cmd_rq = c->connection.obj_authentication_capabilities_v20_rq;
     }
@@ -955,7 +955,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fill_rmcpplus_open_session: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       obj_cmd_rq = c->connection.obj_open_session_request;
     }
@@ -973,7 +973,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fill_rmcpplus_rakp_message_1: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       obj_cmd_rq = c->connection.obj_rakp_message_1;
     }
@@ -999,12 +999,12 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
                                                                  "managed_system_random_number",
                                                                  managed_system_random_number,
                                                                  IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
-        return -1;
+        return (-1);
       if (managed_system_random_number_len != IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: invalid managed system random number length: %d", managed_system_random_number_len));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
 
       if ((key_exchange_authentication_code_len = ipmi_calculate_rakp_3_key_exchange_authentication_code (c->config.authentication_algorithm,
@@ -1022,7 +1022,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("ipmi_calculate_rakp_3_key_exchange_authentication_code: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
 
       if (fill_rmcpplus_rakp_message_3 (c->session.message_tag,
@@ -1034,7 +1034,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fill_rmcpplus_rakp_message_3: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       obj_cmd_rq = c->connection.obj_rakp_message_3;
     }
@@ -1045,7 +1045,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fill_cmd_set_session_privilege_level: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       obj_cmd_rq = c->connection.obj_set_session_privilege_level_rq;
     }
@@ -1056,7 +1056,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fill_cmd_get_channel_payload_support: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       obj_cmd_rq = c->connection.obj_get_channel_payload_support_rq;
     }
@@ -1067,7 +1067,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fill_cmd_get_payload_activation_status: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       obj_cmd_rq = c->connection.obj_get_payload_activation_status_rq;
     }
@@ -1109,7 +1109,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fill_cmd_activate_payload_sol: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       obj_cmd_rq = c->connection.obj_activate_payload_rq;
     }
@@ -1123,7 +1123,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fill_cmd_get_channel_payload_version: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       obj_cmd_rq = c->connection.obj_get_channel_payload_version_rq;
     }
@@ -1143,7 +1143,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fill_cmd_deactivate_payload: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       obj_cmd_rq = c->connection.obj_deactivate_payload_rq;
     }
@@ -1154,7 +1154,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fill_cmd_close_session: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       obj_cmd_rq = c->connection.obj_close_session_rq;
     }
@@ -1173,7 +1173,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
                                                 obj_cmd_rq,
                                                 buf,
                                                 buflen)) < 0)
-        return -1;
+        return (-1);
     }
   else /* IPMI 2.0 Style Packets */
     {
@@ -1197,7 +1197,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
                                                 obj_cmd_rq,
                                                 buf,
                                                 buflen)) < 0)
-        return -1;
+        return (-1);
     }
 
   return pkt_len;
@@ -1322,7 +1322,7 @@ ipmiconsole_sol_packet_assemble (ipmiconsole_ctx_t c,
  cleanup:
   /* Clear out data */
   fiid_obj_clear (c->connection.obj_sol_payload_data_rq);
-  return rv;
+  return (rv);
 }
 
 
@@ -1343,19 +1343,19 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
   assert (buflen);
 
   if (Fiid_obj_clear (c, c->connection.obj_rmcp_hdr_rs) < 0)
-    return -1;
+    return (-1);
   if (Fiid_obj_clear (c, c->connection.obj_lan_session_hdr_rs) < 0)
-    return -1;
+    return (-1);
   if (Fiid_obj_clear (c, c->connection.obj_lan_msg_hdr_rs) < 0)
-    return -1;
+    return (-1);
   if (Fiid_obj_clear (c, c->connection.obj_lan_msg_trlr_rs) < 0)
-    return -1;
+    return (-1);
   if (Fiid_obj_clear (c, c->connection.obj_rmcpplus_session_hdr_rs) < 0)
-    return -1;
+    return (-1);
   if (Fiid_obj_clear (c, c->connection.obj_rmcpplus_payload_rs) < 0)
-    return -1;
+    return (-1);
   if (Fiid_obj_clear (c, c->connection.obj_rmcpplus_session_trlr_rs) < 0)
-    return -1;
+    return (-1);
 
   /* Calculate packet type */
 
@@ -1363,7 +1363,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_is_ipmi_1_5_packet: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (rv)
@@ -1374,12 +1374,12 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
         {
           /* Unexpected packet, throw it away */
           IPMICONSOLE_CTX_DEBUG (c, ("Unexpected IPMI 1.5 Packet: protocol_state = %d", c->session.protocol_state));
-          return -1;
+          return (-1);
         }
 
       obj_cmd =  ipmiconsole_packet_object (c, pkt);
       if (Fiid_obj_clear (c, obj_cmd) < 0)
-        return -1;
+        return (-1);
 
       if (unassemble_ipmi_lan_pkt (buf,
                                    buflen,
@@ -1391,7 +1391,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("unassemble_ipmi_lan_pkt: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       *p = pkt;
     }
@@ -1401,7 +1401,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
         {
           IPMICONSOLE_CTX_DEBUG (c, ("ipmi_rmcpplus_calculate_payload_type: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
 
       if (rv == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
@@ -1417,12 +1417,12 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
           else
             {
               IPMICONSOLE_CTX_DEBUG (c, ("Unexpected IPMI 2.0 Session Setup Packet: protocol_state = %d", c->session.protocol_state));
-              return -1;
+              return (-1);
             }
 
           obj_cmd =  ipmiconsole_packet_object (c, pkt);
           if (Fiid_obj_clear (c, obj_cmd) < 0)
-            return -1;
+            return (-1);
           /* IPMI 2.0 Pre-Session Establishment Packets */
           if (unassemble_ipmi_rmcpplus_pkt (IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
                                             IPMI_INTEGRITY_ALGORITHM_NONE,
@@ -1443,7 +1443,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
             {
               IPMICONSOLE_CTX_DEBUG (c, ("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-              return -1;
+              return (-1);
             }
           *p = pkt;
         }
@@ -1469,7 +1469,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
               else
                 {
                   IPMICONSOLE_CTX_DEBUG (c, ("Unexpected IPMI 2.0 IPMI Packet: protocol_state = %d", c->session.protocol_state));
-                  return -1;
+                  return (-1);
                 }
             }
           else
@@ -1477,14 +1477,14 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
               if (c->session.protocol_state != IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
                 {
                   IPMICONSOLE_CTX_DEBUG (c, ("Unexpected IPMI 2.0 SOL Packet: protocol_state = %d", c->session.protocol_state));
-                  return -1;
+                  return (-1);
                 }
               pkt = IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS;
             }
 
           obj_cmd =  ipmiconsole_packet_object (c, pkt);
           if (Fiid_obj_clear (c, obj_cmd) < 0)
-            return -1;
+            return (-1);
 
           /* IPMI 2.0 Session Packets */
           if (unassemble_ipmi_rmcpplus_pkt (c->config.authentication_algorithm,
@@ -1506,7 +1506,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
             {
               IPMICONSOLE_CTX_DEBUG (c, ("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-              return -1;
+              return (-1);
             }
 
           *p = pkt;
@@ -1514,11 +1514,11 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
       else
         {
           IPMICONSOLE_CTX_DEBUG (c, ("Unexpected payload_type: payload_type = %d", rv));
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 int
@@ -1533,7 +1533,7 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
   assert (IPMICONSOLE_PACKET_TYPE_RESPONSE (p));
 
   if (!(obj_cmd = ipmiconsole_packet_object (c, p)))
-    return -1;
+    return (-1);
 
   if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
       || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2
@@ -1542,35 +1542,35 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
       uint8_t rmcpplus_status_code;
 
       if (Fiid_obj_get (c, obj_cmd, "rmcpplus_status_code", &val) < 0)
-        return -1;
+        return (-1);
       rmcpplus_status_code = val;
 
       if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("called with valid success code; p = %d", p));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
                || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_BMC_BUSY);
-          return 0;
+          return (0);
         }
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
-          return 0;
+          return (0);
         }
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_USERNAME_INVALID);
-          return 0;
+          return (0);
         }
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE);
-          return 0;
+          return (0);
         }
     }
   else
@@ -1578,63 +1578,63 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
       uint8_t comp_code;
 
       if (Fiid_obj_get (c, obj_cmd, "comp_code", &val) < 0)
-        return -1;
+        return (-1);
       comp_code = val;
 
       if (comp_code == IPMI_COMP_CODE_COMMAND_SUCCESS)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("called with valid success code; p = %d", p));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return -1;
+          return (-1);
         }
 
       if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
           && comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE);
-          return 0;
+          return (0);
         }
       else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
                && (comp_code == IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION
                    || comp_code == IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED))
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_INUSE);
-          return 0;
+          return (0);
         }
       else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
                && comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION);
-          return 0;
+          return (0);
         }
       else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
                && comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION);
-          return 0;
+          return (0);
         }
       else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
                && comp_code == IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_UNAVAILABLE);
-          return 0;
+          return (0);
         }
       else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
                && (comp_code == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER
                    || comp_code == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT))
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
-          return 0;
+          return (0);
         }
 
       if (comp_code == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INSUFFICIENT);
-          return 0;
+          return (0);
         }
 
     }
 
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_BMC_ERROR);
-  return 0;
+  return (0);
 }

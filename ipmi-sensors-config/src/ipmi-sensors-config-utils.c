@@ -51,7 +51,7 @@ convert_id_string (ipmi_sensors_config_state_data_t *state_data,
   while ((ptr = strchr (id_string, '/')))
     *ptr = '_';
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -133,7 +133,7 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 config_err_t
@@ -215,5 +215,5 @@ get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
  cleanup:
   if (str)
     free (str);
-  return rv;
+  return (rv);
 }

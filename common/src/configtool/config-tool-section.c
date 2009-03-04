@@ -577,5 +577,5 @@ config_output_sections_list (pstdout_state_t pstate,
       s = s->next;
     }
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }

@@ -202,7 +202,7 @@ fill_cmd_set_serial_modem_configuration (uint8_t channel_number,
                           configuration_parameter_data,
                           configuration_parameter_data_len);
 
-  return 0;
+  return (0);
 }
 
 
@@ -242,7 +242,7 @@ fill_cmd_set_serial_modem_configuration_connection_mode (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "connect_mode", connect_mode);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -279,7 +279,7 @@ fill_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (uint8_t ch
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bit_rate", bit_rate);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -307,7 +307,7 @@ fill_cmd_set_serial_modem_configuration_page_blackout_interval (uint8_t channel_
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SERIAL_MODEM_PARAMETER_PAGE_BLACKOUT_INTERVAL);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "page_blackout_interval", page_blackout_interval);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -335,7 +335,7 @@ fill_cmd_set_serial_modem_configuration_call_retry_interval (uint8_t channel_num
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SERIAL_MODEM_PARAMETER_CALL_RETRY_INTERVAL);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "call_retry_interval", call_retry_interval);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -369,6 +369,6 @@ fill_cmd_get_serial_modem_configuration (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
 
-  return 0;
+  return (0);
 }
 

@@ -336,7 +336,7 @@ fill_sol_payload_data (uint8_t packet_sequence_number,
                             character_data,
                             character_data_len);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -393,7 +393,7 @@ fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
                             character_data,
                             character_data_len);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -428,7 +428,7 @@ fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
                           configuration_parameter_data,
                           configuration_parameter_data_len);
 
-  return 0;
+  return (0);
 }
 
 
@@ -459,7 +459,7 @@ fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "sol_enable", sol_enable);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -495,7 +495,7 @@ fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_nu
   FILL_FIID_OBJ_SET (obj_cmd_rq, "force_sol_payload_authentication", force_sol_payload_authentication);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "force_sol_payload_encryption", force_sol_payload_encryption);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -525,7 +525,7 @@ fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
   FILL_FIID_OBJ_SET (obj_cmd_rq, "character_accumulate_interval", character_accumulate_interval);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "character_send_threshold", character_send_threshold);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -556,7 +556,7 @@ fill_cmd_set_sol_configuration_parameters_sol_retry (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "retry_interval", retry_interval);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -586,7 +586,7 @@ fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (uint8_t cha
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bit_rate", bit_rate);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -616,7 +616,7 @@ fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (uint8_t channel
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bit_rate", bit_rate);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -644,7 +644,7 @@ fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t chann
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_PAYLOAD_PORT_NUMBER);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "port_number", port_number);
 
-  return 0;
+  return (0);
 }
 
 
@@ -679,6 +679,6 @@ fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
 
-  return 0;
+  return (0);
 }
 

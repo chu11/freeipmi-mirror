@@ -534,7 +534,7 @@ fill_cmd_get_pef_capabilities (fiid_obj_t obj_cmd_rq)
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_PEF_CAPABILITIES);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -555,7 +555,7 @@ fill_cmd_arm_pef_postpone_timer (uint8_t pef_postpone_timeout, fiid_obj_t obj_cm
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_ARM_PEF_POSTPONE_TIMER);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "pef_postpone_timeout", pef_postpone_timeout);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -587,7 +587,7 @@ fill_cmd_set_pef_configuration_parameters (fiid_obj_t obj_cmd_rq,
                           configuration_parameter_data,
                           configuration_parameter_data_len);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -622,7 +622,7 @@ fill_cmd_set_pef_configuration_parameters_pef_control (uint8_t pef,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "pef_startup_delay", pef_startup_delay);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "pef_alert_startup_delay", pef_alert_startup_delay);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -663,7 +663,7 @@ fill_cmd_set_pef_configuration_parameters_pef_action_global_control (uint8_t ale
   FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_action", oem_action);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "diagnostic_interrupt", diagnostic_interrupt);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -686,7 +686,7 @@ fill_cmd_set_pef_configuration_parameters_pef_startup_delay (uint8_t pef_startup
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAMETER_PEF_STARTUP_DELAY);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "pef_startup_delay", pef_startup_delay);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -709,7 +709,7 @@ fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (uint8_t pef_a
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAMETER_PEF_ALERT_STARTUP_DELAY);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "pef_alert_startup_delay", pef_alert_startup_delay);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -801,7 +801,7 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table (uint8_t filter_num
   FILL_FIID_OBJ_SET (obj_cmd_rq, "event_data3_AND_mask", event_data3_AND_mask);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "event_data3_compare1", event_data3_compare1);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "event_data3_compare2", event_data3_compare2);
-  return 0;
+  return (0);
 }
 
 
@@ -834,7 +834,7 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (uint8_t filt
   FILL_FIID_OBJ_SET (obj_cmd_rq, "filter_configuration.reserved", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "filter_configuration.type", filter_configuration_type);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "filter_configuration.filter", filter_configuration_filter);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -866,7 +866,7 @@ fill_cmd_set_pef_configuration_parameters_alert_string_keys (uint8_t string_sele
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_number_for_string", set_number_for_string);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -904,7 +904,7 @@ fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_selector
                           string_data,
                           string_data_len);
 
-  return 0;
+  return (0);
 }
 
 
@@ -949,7 +949,7 @@ fill_cmd_set_pef_configuration_parameters_alert_policy_table (uint8_t alert_poli
   FILL_FIID_OBJ_SET (obj_cmd_rq, "alert_string_key.alert_string_set_selector", alert_string_set_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "alert_string_key.event_specific_alert_string", event_specific_alert_string);
 
-  return 0;
+  return (0);
 }
 
 
@@ -981,7 +981,7 @@ fill_cmd_get_pef_configuration_parameters (uint8_t parameter_selector,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1007,7 +1007,7 @@ fill_cmd_set_last_processed_event_id (uint8_t set_record_id_for_last_record,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_record_id_for_last_record,", set_record_id_for_last_record);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "record_id", record_id);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1027,7 +1027,7 @@ fill_cmd_get_last_processed_event_id (fiid_obj_t obj_cmd_rq)
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_LAST_PROCESSED_EVENT_ID);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1063,7 +1063,7 @@ fill_cmd_alert_immediate (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "string_selector", string_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "send_alert_string", send_alert_string);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1095,6 +1095,6 @@ fill_cmd_pet_acknowledge (uint16_t sequence_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_device", sensor_device);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "event_data", event_data);
-  return 0;
+  return (0);
 }
 

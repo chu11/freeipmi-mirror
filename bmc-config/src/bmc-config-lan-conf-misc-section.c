@@ -165,9 +165,9 @@ enable_gratuitous_arps_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ac.bmc_generated_gratuitous_arps ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -201,9 +201,9 @@ enable_arp_response_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ac.bmc_generated_arp_responses ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -271,7 +271,7 @@ gratuitous_arp_interval_checkout (const char *section_name,
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  (uint8_t)val) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:

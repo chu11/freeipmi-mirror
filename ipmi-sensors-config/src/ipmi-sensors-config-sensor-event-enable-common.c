@@ -793,10 +793,10 @@ _setup_event_enable_key (ipmi_sensors_config_state_data_t *state_data,
         goto cleanup;
     }
 
-  return 0;
+  return (0);
 
  cleanup:
-  return -1;
+  return (-1);
 }
 
 static config_err_t
@@ -1096,7 +1096,7 @@ _setup_threshold_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_d
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 int
@@ -1130,7 +1130,7 @@ _setup_threshold_event_enable (ipmi_sensors_config_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1275,30 +1275,30 @@ _generic_event_enable_get_event_strings (ipmi_sensors_config_state_data_t *state
   switch (event_reading_type_code)
     {
     case 0x02:
-      return &generic_event_strings_0x02[0];
+      return (&generic_event_strings_0x02[0]);
     case 0x03:
-      return &generic_event_strings_0x03[0];
+      return (&generic_event_strings_0x03[0]);
     case 0x04:
-      return &generic_event_strings_0x04[0];
+      return (&generic_event_strings_0x04[0]);
     case 0x05:
-      return &generic_event_strings_0x05[0];
+      return (&generic_event_strings_0x05[0]);
     case 0x06:
-      return &generic_event_strings_0x06[0];
+      return (&generic_event_strings_0x06[0]);
     case 0x07:
-      return &generic_event_strings_0x07[0];
+      return (&generic_event_strings_0x07[0]);
     case 0x08:
-      return &generic_event_strings_0x08[0];
+      return (&generic_event_strings_0x08[0]);
     case 0x09:
-      return &generic_event_strings_0x09[0];
+      return (&generic_event_strings_0x09[0]);
     case 0x0A:
-      return &generic_event_strings_0x0A[0];
+      return (&generic_event_strings_0x0A[0]);
     case 0x0B:
-      return &generic_event_strings_0x0B[0];
+      return (&generic_event_strings_0x0B[0]);
     case 0x0C:
-      return &generic_event_strings_0x0C[0];
+      return (&generic_event_strings_0x0C[0]);
     }
 
-  return NULL;
+  return (NULL);
 }
 
 static config_err_t
@@ -1544,7 +1544,7 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 int
@@ -1581,7 +1581,7 @@ _setup_generic_event_enable (ipmi_sensors_config_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static config_err_t
@@ -1662,46 +1662,46 @@ _sensor_specific_event_enable_get_event_strings (ipmi_sensors_config_state_data_
   switch (sensor_type)
     {
     case IPMI_SENSOR_TYPE_PHYSICAL_SECURITY:
-      return &sensor_specific_event_strings_physical_security_chassis_intrusion[0];
+      return (&sensor_specific_event_strings_physical_security_chassis_intrusion[0]);
     case IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT:
-      return &sensor_specific_event_strings_platform_security_violation_attempt[0];
+      return (&sensor_specific_event_strings_platform_security_violation_attempt[0]);
     case IPMI_SENSOR_TYPE_PROCESSOR:
-      return &sensor_specific_event_strings_processor[0];
+      return (&sensor_specific_event_strings_processor[0]);
     case IPMI_SENSOR_TYPE_POWER_SUPPLY:
-      return &sensor_specific_event_strings_power_supply[0];
+      return (&sensor_specific_event_strings_power_supply[0]);
     case IPMI_SENSOR_TYPE_POWER_UNIT:
-      return &sensor_specific_event_strings_power_unit[0];
+      return (&sensor_specific_event_strings_power_unit[0]);
     case IPMI_SENSOR_TYPE_MEMORY:
-      return &sensor_specific_event_strings_memory[0];
+      return (&sensor_specific_event_strings_memory[0]);
     case IPMI_SENSOR_TYPE_DRIVE_SLOT:
-      return &sensor_specific_event_strings_drive_slot[0];
+      return (&sensor_specific_event_strings_drive_slot[0]);
     case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS:
-      return &sensor_specific_event_strings_system_firmware_progress[0];
+      return (&sensor_specific_event_strings_system_firmware_progress[0]);
     case IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED:
-      return &sensor_specific_event_strings_event_logging_disabled[0];
+      return (&sensor_specific_event_strings_event_logging_disabled[0]);
     case IPMI_SENSOR_TYPE_SYSTEM_EVENT:
-      return &sensor_specific_event_strings_system_event[0];
+      return (&sensor_specific_event_strings_system_event[0]);
     case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT:
-      return &sensor_specific_event_strings_critical_interrupt[0];
+      return (&sensor_specific_event_strings_critical_interrupt[0]);
     case IPMI_SENSOR_TYPE_CABLE_INTERCONNECT:
-      return &sensor_specific_event_strings_cable_interconnect[0];
+      return (&sensor_specific_event_strings_cable_interconnect[0]);
     case IPMI_SENSOR_TYPE_BOOT_ERROR:
-      return &sensor_specific_event_strings_boot_error[0];
+      return (&sensor_specific_event_strings_boot_error[0]);
     case IPMI_SENSOR_TYPE_SLOT_CONNECTOR:
-      return &sensor_specific_event_strings_slot_connector[0];
+      return (&sensor_specific_event_strings_slot_connector[0]);
     case IPMI_SENSOR_TYPE_WATCHDOG2:
-      return &sensor_specific_event_strings_watchdog2[0];
+      return (&sensor_specific_event_strings_watchdog2[0]);
     case IPMI_SENSOR_TYPE_ENTITY_PRESENCE:
-      return &sensor_specific_event_strings_entity_presence[0];
+      return (&sensor_specific_event_strings_entity_presence[0]);
     case IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH:
-      return &sensor_specific_event_strings_management_subsystem_health[0];
+      return (&sensor_specific_event_strings_management_subsystem_health[0]);
     case IPMI_SENSOR_TYPE_BATTERY:
-      return &sensor_specific_event_strings_battery[0];
+      return (&sensor_specific_event_strings_battery[0]);
     case IPMI_SENSOR_TYPE_FRU_STATE:
-      return &sensor_specific_event_strings_fru_state[0];
+      return (&sensor_specific_event_strings_fru_state[0]);
     }
 
-  return NULL;
+  return (NULL);
 }
 
 static config_err_t
@@ -2005,7 +2005,7 @@ _setup_sensor_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *s
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 int
@@ -2040,7 +2040,7 @@ _setup_sensor_specific_event_enable (ipmi_sensors_config_state_data_t *state_dat
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 int
@@ -2151,5 +2151,5 @@ setup_sensor_event_enable_fields (ipmi_sensors_config_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }

@@ -212,8 +212,8 @@ int8_t
 ipmi_rmcpplus_init (void)
 {
   if (ipmi_crypt_init ())
-    return -1;
-  return 0;
+    return (-1);
+  return (0);
 }
 
 int8_t
@@ -1914,7 +1914,7 @@ _deconstruct_payload_buf (uint8_t payload_type,
       indx += len;
 
       if (indx >= lan_msg_len)
-        return 0;
+        return (0);
 
       /* achu: For payload_type == IPMI Whatever is in between the
        * header and the trailer is the command data
@@ -1946,7 +1946,7 @@ _deconstruct_payload_buf (uint8_t payload_type,
       indx += len;
 
       if (indx >= lan_msg_len)
-        return 0;
+        return (0);
     }
 
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
@@ -2388,7 +2388,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   indx += obj_rmcp_hdr_len;
 
   if (pkt_len <= indx)
-    return 0;
+    return (0);
 
   /*
    * Extract auth_type and payload information
@@ -2410,7 +2410,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   indx += obj_len;
 
   if (pkt_len <= indx)
-    return 0;
+    return (0);
 
   if (Fiid_obj_get (obj_rmcpplus_session_hdr,
                     "payload_type",
@@ -2451,7 +2451,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       indx += obj_len;
 
       if (pkt_len <= indx)
-        return 0;
+        return (0);
     }
 
   /*
@@ -2469,7 +2469,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   indx += obj_len;
 
   if (pkt_len <= indx)
-    return 0;
+    return (0);
 
   if (Fiid_obj_get (obj_rmcpplus_session_hdr,
                     "payload_type.authenticated",
@@ -2624,7 +2624,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   indx += ipmi_payload_len;
 
   if (pkt_len <= indx)
-    return 0;
+    return (0);
 
   if (fiid_obj_clear (obj_rmcpplus_session_trlr) < 0)
     {
@@ -2660,7 +2660,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
       /* achu: There needs to be atleast the next_header and pad_length fields */
       if ((pkt_len - indx) < (authentication_code_len + pad_length_field_len + next_header_field_len))
-        return 0;
+        return (0);
 
       if (authentication_code_len)
         {

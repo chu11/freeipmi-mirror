@@ -1636,7 +1636,7 @@ _get_12_event_data2_message_offset_03 (int offset, uint8_t event_data2, char *bu
 
  cleanup:
   FIID_OBJ_DESTROY (obj);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1777,7 +1777,7 @@ _get_12_event_data2_message_offset_04 (int offset, uint8_t event_data2, char *bu
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1836,7 +1836,7 @@ _get_12_event_data2_message_offset_05 (int offset, uint8_t event_data2, char *bu
 
  cleanup:
   FIID_OBJ_DESTROY (obj);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1907,7 +1907,7 @@ get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 
     cleanup:
       FIID_OBJ_DESTROY (obj);
-      return rv;
+      return (rv);
     }
 
   SET_ERRNO (EINVAL);
@@ -1952,7 +1952,7 @@ get_21_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 
  cleanup:
   FIID_OBJ_DESTROY (obj);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -2014,7 +2014,7 @@ get_23_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 
  cleanup:
   FIID_OBJ_DESTROY (obj);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -2085,7 +2085,7 @@ get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 
     cleanup:
       FIID_OBJ_DESTROY (obj);
-      return rv;
+      return (rv);
     }
 
   SET_ERRNO (EINVAL);
@@ -2134,7 +2134,7 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 
     cleanup:
       FIID_OBJ_DESTROY (obj);
-      return rv;
+      return (rv);
     }
 
   SET_ERRNO (EINVAL);
@@ -2204,7 +2204,7 @@ get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 
  cleanup:
   FIID_OBJ_DESTROY (obj);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -2247,7 +2247,7 @@ get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 
     cleanup:
       FIID_OBJ_DESTROY (obj);
-      return rv;
+      return (rv);
     }
 
   SET_ERRNO (EINVAL);
@@ -2336,7 +2336,7 @@ get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 
       cleanup:
         FIID_OBJ_DESTROY (obj);
-        return rv;
+        return (rv);
       }
     case 0x05:
       return _snprintf (buf, buflen, "%d% full", event_data3);
@@ -2449,7 +2449,7 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 
     cleanup:
       FIID_OBJ_DESTROY (obj);
-      return rv;
+      return (rv);
     }
 
   SET_ERRNO (EINVAL);
@@ -2516,7 +2516,7 @@ ipmi_get_generic_event_message (uint8_t event_reading_type_code,
     case 0x0C: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0C_desc_max, ipmi_generic_event_reading_type_code_0C_desc);
     }
 
-  return -1;
+  return (-1);
 }
 
 int
@@ -2602,7 +2602,7 @@ ipmi_get_generic_event_message_short (uint8_t event_reading_type_code,
     case 0x0C: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0C_short_desc_max, ipmi_generic_event_reading_type_code_0C_short_desc);
     }
 
-  return -1;
+  return (-1);
 }
 
 int

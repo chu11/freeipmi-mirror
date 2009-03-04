@@ -71,7 +71,7 @@ _channel_info (bmc_config_state_data_t *state_data,
         return ret;
     }
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -328,14 +328,14 @@ username_checkout (const char *section_name,
       if (config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
                                                  "anonymous") < 0)
-        return CONFIG_ERR_FATAL_ERROR;
+        return (CONFIG_ERR_FATAL_ERROR);
     }
   else
     {
       if (config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
                                                  (char *)username) < 0)
-        return CONFIG_ERR_FATAL_ERROR;
+        return (CONFIG_ERR_FATAL_ERROR);
     }
 
   rv = CONFIG_ERR_SUCCESS;
@@ -360,9 +360,9 @@ username_commit (const char *section_name,
       /* anonymous for backwards compatability */
       if (same (kv->value_input, "NULL")
           || same (kv->value_input, "anonymous"))
-        return CONFIG_ERR_SUCCESS;
+        return (CONFIG_ERR_SUCCESS);
       else
-        return CONFIG_ERR_NON_FATAL_ERROR;
+        return (CONFIG_ERR_NON_FATAL_ERROR);
     }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_user_name_rs)))
@@ -408,14 +408,14 @@ username_validate (const char *section_name,
   if (userid == 1)
     {
       if (!value || same (value, "null") || same (value, "anonymous"))
-        return CONFIG_VALIDATE_VALID_VALUE;
+        return (CONFIG_VALIDATE_VALID_VALUE);
       else
         return CONFIG_VALIDATE_INVALID_VALUE;
     }
 
   if (!value || strlen (value) > IPMI_MAX_USER_NAME_LENGTH)
     return CONFIG_VALIDATE_INVALID_VALUE;
-  return CONFIG_VALIDATE_VALID_VALUE;
+  return (CONFIG_VALIDATE_VALID_VALUE);
 }
 
 static config_err_t
@@ -450,24 +450,24 @@ enable_user_checkout (const char *section_name,
       if (config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
                                                  "Yes") < 0)
-        return CONFIG_ERR_FATAL_ERROR;
+        return (CONFIG_ERR_FATAL_ERROR);
     }
   else if (ua.user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_DISABLED)
     {
       if (config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
                                                  "No") < 0)
-        return CONFIG_ERR_FATAL_ERROR;
+        return (CONFIG_ERR_FATAL_ERROR);
     }
   else /* ua.user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED */
     {
       if (config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
                                                  "") < 0)
-        return CONFIG_ERR_FATAL_ERROR;
+        return (CONFIG_ERR_FATAL_ERROR);
     }
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -701,9 +701,9 @@ password_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              str) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -755,7 +755,7 @@ password_validate (const char *section_name,
                    void *arg)
 {
   if (strlen (value) <= IPMI_1_5_MAX_PASSWORD_LENGTH)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -877,9 +877,9 @@ password20_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              str) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -933,7 +933,7 @@ password20_validate (const char *section_name,
                      void *arg)
 {
   if (strlen (value) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -958,8 +958,8 @@ lan_enable_ipmi_messaging_checkout (const char *section_name,
           if (config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
                                                      CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return CONFIG_ERR_FATAL_ERROR;
-          return CONFIG_ERR_SUCCESS;
+            return (CONFIG_ERR_FATAL_ERROR);
+          return (CONFIG_ERR_SUCCESS);
         }
       else
         return ret;
@@ -968,9 +968,9 @@ lan_enable_ipmi_messaging_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ua.user_ipmi_messaging ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1019,8 +1019,8 @@ lan_enable_link_auth_checkout (const char *section_name,
           if (config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
                                                      CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return CONFIG_ERR_FATAL_ERROR;
-          return CONFIG_ERR_SUCCESS;
+            return (CONFIG_ERR_FATAL_ERROR);
+          return (CONFIG_ERR_SUCCESS);
         }
       else
         return ret;
@@ -1029,9 +1029,9 @@ lan_enable_link_auth_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ua.user_link_authentication ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1084,8 +1084,8 @@ lan_enable_restricted_to_callback_checkout (const char *section_name,
           if (config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
                                                      CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return CONFIG_ERR_FATAL_ERROR;
-          return CONFIG_ERR_SUCCESS;
+            return (CONFIG_ERR_FATAL_ERROR);
+          return (CONFIG_ERR_SUCCESS);
         }
       else
         return ret;
@@ -1094,9 +1094,9 @@ lan_enable_restricted_to_callback_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ua.user_restricted_to_callback ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1149,8 +1149,8 @@ lan_privilege_limit_checkout (const char *section_name,
           if (config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
                                                      CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return CONFIG_ERR_FATAL_ERROR;
-          return CONFIG_ERR_SUCCESS;
+            return (CONFIG_ERR_FATAL_ERROR);
+          return (CONFIG_ERR_SUCCESS);
         }
       else
         return ret;
@@ -1159,9 +1159,9 @@ lan_privilege_limit_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              get_privilege_limit_string (ua.privilege_limit)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1204,9 +1204,9 @@ lan_session_limit_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              "") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1298,7 +1298,7 @@ sol_payload_access_checkout (const char *section_name,
           if (config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
                                                      CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return CONFIG_ERR_FATAL_ERROR;
+            return (CONFIG_ERR_FATAL_ERROR);
           goto out;
         }
 
@@ -1311,7 +1311,7 @@ sol_payload_access_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              val ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
  out:
   rv = CONFIG_ERR_SUCCESS;
@@ -1411,8 +1411,8 @@ serial_enable_ipmi_messaging_checkout (const char *section_name,
           if (config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
                                                      CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return CONFIG_ERR_FATAL_ERROR;
-          return CONFIG_ERR_SUCCESS;
+            return (CONFIG_ERR_FATAL_ERROR);
+          return (CONFIG_ERR_SUCCESS);
         }
       else
         return ret;
@@ -1421,9 +1421,9 @@ serial_enable_ipmi_messaging_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ua.user_ipmi_messaging ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1476,8 +1476,8 @@ serial_enable_link_auth_checkout (const char *section_name,
           if (config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
                                                      CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return CONFIG_ERR_FATAL_ERROR;
-          return CONFIG_ERR_SUCCESS;
+            return (CONFIG_ERR_FATAL_ERROR);
+          return (CONFIG_ERR_SUCCESS);
         }
       else
         return ret;
@@ -1486,9 +1486,9 @@ serial_enable_link_auth_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ua.user_link_authentication ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1541,8 +1541,8 @@ serial_enable_restricted_to_callback_checkout (const char *section_name,
           if (config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
                                                      CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return CONFIG_ERR_FATAL_ERROR;
-          return CONFIG_ERR_SUCCESS;
+            return (CONFIG_ERR_FATAL_ERROR);
+          return (CONFIG_ERR_SUCCESS);
         }
       else
         return ret;
@@ -1551,9 +1551,9 @@ serial_enable_restricted_to_callback_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ua.user_restricted_to_callback ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1606,8 +1606,8 @@ serial_privilege_limit_checkout (const char *section_name,
           if (config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
                                                      CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return CONFIG_ERR_FATAL_ERROR;
-          return CONFIG_ERR_SUCCESS;
+            return (CONFIG_ERR_FATAL_ERROR);
+          return (CONFIG_ERR_SUCCESS);
         }
       else
         return ret;
@@ -1616,9 +1616,9 @@ serial_privilege_limit_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              get_privilege_limit_string (ua.privilege_limit)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1661,9 +1661,9 @@ serial_session_limit_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              "") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t

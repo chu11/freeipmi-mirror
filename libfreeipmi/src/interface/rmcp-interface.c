@@ -68,7 +68,7 @@ fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
   FILL_FIID_OBJ_SET (obj_rmcp_hdr, "message_class.class", message_class);
   FILL_FIID_OBJ_SET (obj_rmcp_hdr, "message_class.reserved", 0);
   FILL_FIID_OBJ_SET (obj_rmcp_hdr, "message_class.ack", RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_NORMAL);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -183,7 +183,7 @@ unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fi
   indx += len;
 
   if (pkt_len <= indx)
-    return 0;
+    return (0);
 
   if (fiid_obj_clear (obj_cmd) < 0)
     {
@@ -198,6 +198,6 @@ unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fi
     }
   indx += len;
 
-  return 0;
+  return (0);
 }
 

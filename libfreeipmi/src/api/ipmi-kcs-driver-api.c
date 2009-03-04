@@ -762,7 +762,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   if (!bytes_read)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_SYSTEM_ERROR);
-      return -1;
+      return (-1);
     }
 
   if ((bytes_read - hdr_len) > 0)

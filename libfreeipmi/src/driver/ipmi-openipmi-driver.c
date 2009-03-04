@@ -248,15 +248,15 @@ char *
 ipmi_openipmi_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_OPENIPMI_ERR_SUCCESS && errnum <= IPMI_OPENIPMI_ERR_ERRNUMRANGE)
-    return ipmi_openipmi_ctx_errmsg[errnum];
+    return (ipmi_openipmi_ctx_errmsg[errnum]);
   else
-    return ipmi_openipmi_ctx_errmsg[IPMI_OPENIPMI_ERR_ERRNUMRANGE];
+    return (ipmi_openipmi_ctx_errmsg[IPMI_OPENIPMI_ERR_ERRNUMRANGE]);
 }
 
 char *
 ipmi_openipmi_ctx_errormsg (ipmi_openipmi_ctx_t ctx)
 {
-  return ipmi_openipmi_ctx_strerror (ipmi_openipmi_ctx_errnum (ctx));
+  return (ipmi_openipmi_ctx_strerror (ipmi_openipmi_ctx_errnum (ctx)));
 }
 
 int8_t

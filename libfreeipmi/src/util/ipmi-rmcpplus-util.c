@@ -1335,7 +1335,7 @@ ipmi_rmcpplus_check_packet_session_authentication_code (int8_t integrity_algorit
  cleanup:
   secure_memset (integrity_digest, '\0', IPMI_MAX_INTEGRITY_DATA_LENGTH);
   secure_memset (authentication_code, '\0', IPMI_MAX_INTEGRITY_DATA_LENGTH);
-  return rv;
+  return (rv);
 }
 
 int8_t

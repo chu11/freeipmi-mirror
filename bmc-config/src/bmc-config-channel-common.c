@@ -70,7 +70,7 @@ _channel_info (bmc_config_state_data_t *state_data,
         return ret;
     }
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -99,7 +99,7 @@ _get_key_info (bmc_config_state_data_t *state_data,
   else
     *access_type = IPMI_CHANNEL_ACCESS_GET_VOLATILE;
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -128,7 +128,7 @@ _set_key_info (bmc_config_state_data_t *state_data,
   else
     *access_type = IPMI_CHANNEL_ACCESS_SET_VOLATILE;
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -292,9 +292,9 @@ _access_mode_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              channel_access_mode_string (ch.access_mode)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -320,7 +320,7 @@ _access_mode_commit (const char *section_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -342,9 +342,9 @@ _enable_user_level_authentication_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ch.user_level_authentication ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -370,7 +370,7 @@ _enable_user_level_authentication_commit (const char *section_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -392,9 +392,9 @@ _enable_per_message_authentication_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ch.per_message_authentication ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -420,7 +420,7 @@ _enable_per_message_authentication_commit (const char *section_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -442,9 +442,9 @@ _enable_pef_alerting_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ch.pef_alerting ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -470,7 +470,7 @@ _enable_pef_alerting_commit (const char *section_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -491,9 +491,9 @@ _channel_privilege_limit_checkout (const char *section_name,
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              privilege_level_string (ch.channel_privilege_limit)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -519,7 +519,7 @@ _channel_privilege_limit_commit (const char *section_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 int

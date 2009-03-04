@@ -754,7 +754,7 @@ fill_cmd_set_sensor_hysteresis (uint8_t sensor_number,
                      "negative_going_threshold_hysteresis_value",
                      negative_going_threshold_hysteresis_value);
 
-  return 0;
+  return (0);
 }
 
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
@@ -781,7 +781,7 @@ fill_cmd_get_sensor_hysteresis (uint8_t sensor_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "hysteresis_mask", hysteresis_mask);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -877,7 +877,7 @@ fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
       FILL_FIID_OBJ_SET (obj_cmd_rq, "upper_non_recoverable_threshold", 0);
     }
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -899,7 +899,7 @@ fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_THRESHOLDS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -936,7 +936,7 @@ fill_cmd_set_sensor_event_enable (uint8_t sensor_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_bitmask", assertion_event_bitmask);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_bitmask", deassertion_event_bitmask);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1045,7 +1045,7 @@ fill_cmd_set_sensor_event_enable_threshold (uint8_t sensor_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_recoverable_going_high", deassertion_event_upper_non_recoverable_going_high);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1172,7 +1172,7 @@ fill_cmd_set_sensor_event_enable_discrete (uint8_t sensor_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_14", deassertion_event_state_bit_14);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1194,7 +1194,7 @@ fill_cmd_get_sensor_event_enable (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_EVENT_ENABLE);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1216,5 +1216,5 @@ fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_READING);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
 
-  return 0;
+  return (0);
 }

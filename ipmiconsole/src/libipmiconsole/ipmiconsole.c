@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.90 2009-03-03 23:56:50 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.91 2009-03-04 18:07:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -122,7 +122,7 @@ ipmiconsole_engine_init (unsigned int thread_count, unsigned int debug_flags)
       || (debug_flags & ~IPMICONSOLE_DEBUG_MASK))
     {
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
 
   /* Note: Must be called first before anything else for debugging purposes */
@@ -130,7 +130,7 @@ ipmiconsole_engine_init (unsigned int thread_count, unsigned int debug_flags)
     goto cleanup;
 
   if (ipmiconsole_engine_is_setup ())
-    return 0;
+    return (0);
 
   if (ipmiconsole_engine_setup (thread_count) < 0)
     goto cleanup;
@@ -149,12 +149,12 @@ ipmiconsole_engine_init (unsigned int thread_count, unsigned int debug_flags)
       setrlimit (RLIMIT_NOFILE, &rlim);
     }
 
-  return 0;
+  return (0);
 
  cleanup:
   ipmiconsole_debug_cleanup ();
   ipmiconsole_engine_cleanup (0);
-  return -1;
+  return (-1);
 }
 
 int
@@ -167,18 +167,18 @@ ipmiconsole_engine_submit (ipmiconsole_ctx_t c,
   if (!c
       || c->magic != IPMICONSOLE_CTX_MAGIC
       || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
-    return -1;
+    return (-1);
 
   if (!ipmiconsole_engine_is_setup ())
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_NOT_SETUP);
-      return -1;
+      return (-1);
     }
 
   if (c->session_submitted)
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_CTX_IS_SUBMITTED);
-      return -1;
+      return (-1);
     }
 
   /* Set to success, so we know if an IPMI error occurred later */
@@ -224,14 +224,14 @@ ipmiconsole_engine_submit (ipmiconsole_ctx_t c,
   /* may have been set already */
   c->session_submitted++;
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
-  return 0;
+  return (0);
 
  cleanup:
   ipmiconsole_ctx_connection_cleanup_session_not_submitted (c);
  cleanup_ctx_fds_only:
   /* fds are the API responsibility, even though we didn't create them */
   ipmiconsole_ctx_fds_cleanup (c);
-  return -1;
+  return (-1);
 }
 
 static int
@@ -247,7 +247,7 @@ _ipmiconsole_blocking_notification_cleanup (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (c->blocking.blocking_submit_requested)
@@ -264,10 +264,10 @@ _ipmiconsole_blocking_notification_cleanup (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -302,11 +302,11 @@ _ipmiconsole_blocking_notification_setup (ipmiconsole_ctx_t c)
       goto cleanup;
     }
 
-  return 0;
+  return (0);
 
  cleanup:
   _ipmiconsole_blocking_notification_cleanup (c);
-  return -1;
+  return (-1);
 }
 
 static int
@@ -376,10 +376,10 @@ _ipmiconsole_block (ipmiconsole_ctx_t c)
     }
 
  success:
-  return 0;
+  return (0);
 
  cleanup:
-  return -1;
+  return (-1);
 }
 
 int
@@ -390,18 +390,18 @@ ipmiconsole_engine_submit_block (ipmiconsole_ctx_t c)
   if (!c
       || c->magic != IPMICONSOLE_CTX_MAGIC
       || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
-    return -1;
+    return (-1);
 
   if (!ipmiconsole_engine_is_setup ())
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_NOT_SETUP);
-      return -1;
+      return (-1);
     }
 
   if (c->session_submitted)
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_CTX_IS_SUBMITTED);
-      return -1;
+      return (-1);
     }
 
   /* Set to success, so we know if an IPMI error occurred later */
@@ -452,7 +452,7 @@ ipmiconsole_engine_submit_block (ipmiconsole_ctx_t c)
   /* may have been set already */
   c->session_submitted++;
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
-  return 0;
+  return (0);
 
  cleanup:
   ipmiconsole_ctx_connection_cleanup_session_not_submitted (c);
@@ -460,7 +460,7 @@ ipmiconsole_engine_submit_block (ipmiconsole_ctx_t c)
   _ipmiconsole_blocking_notification_cleanup (c);
   /* fds are the API responsibility, even though we didn't create them */
   ipmiconsole_ctx_fds_cleanup (c);
-  return -1;
+  return (-1);
 }
 
 void
@@ -636,12 +636,12 @@ ipmiconsole_ctx_fd (ipmiconsole_ctx_t c)
   if (!c
       || c->magic != IPMICONSOLE_CTX_MAGIC
       || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
-    return -1;
+    return (-1);
 
   if (!c->session_submitted)
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_CTX_NOT_SUBMITTED);
-      return -1;
+      return (-1);
     }
 
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
@@ -656,23 +656,23 @@ ipmiconsole_ctx_generate_break (ipmiconsole_ctx_t c)
   if (!c
       || c->magic != IPMICONSOLE_CTX_MAGIC
       || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
-    return -1;
+    return (-1);
 
   if (!c->session_submitted)
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_CTX_NOT_SUBMITTED);
-      return -1;
+      return (-1);
     }
 
   val = IPMICONSOLE_PIPE_GENERATE_BREAK_CODE;
   if (write (c->fds.asynccomm[1], &val, 1) < 0)
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return -1;
+      return (-1);
     }
 
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
-  return 0;
+  return (0);
 }
 
 void

@@ -68,7 +68,7 @@ fill_hdr_ipmi_kcs (uint8_t lun,
   FILL_FIID_OBJ_SET (obj_kcs_hdr, "lun", lun);
   FILL_FIID_OBJ_SET (obj_kcs_hdr, "net_fn", fn);
 
-  return 0;
+  return (0);
 }
 
 int32_t
@@ -177,7 +177,7 @@ unassemble_ipmi_kcs_pkt (uint8_t *pkt,
   indx += len;
 
   if (pkt_len <= indx)
-    return 0;
+    return (0);
 
   if (fiid_obj_clear (obj_cmd) < 0)
     {
@@ -192,5 +192,5 @@ unassemble_ipmi_kcs_pkt (uint8_t *pkt,
     }
   indx += len;
 
-  return 0;
+  return (0);
 }

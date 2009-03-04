@@ -108,7 +108,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         ret = common_parse_opt (key, arg, state, &cmd_args->config_args.common);
       if (ret == ARGP_ERR_UNKNOWN)
         ret = hostrange_parse_opt (key, arg, state, &(cmd_args->config_args.hostrange));
-      return ret;
+      return (ret);
     }
 
   return 0;

@@ -98,7 +98,7 @@ sel_parse_get_reservation_id (ipmi_sel_parse_ctx_t ctx,
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 int
@@ -165,7 +165,7 @@ sel_parse_get_record_header_info (ipmi_sel_parse_ctx_t ctx,
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_sel_record_header);
-  return rv;
+  return (rv);
 }
 
 int
@@ -244,7 +244,7 @@ sel_parse_get_timestamp (ipmi_sel_parse_ctx_t ctx,
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_sel_record);
-  return rv;
+  return (rv);
 }
 
 int
@@ -310,7 +310,7 @@ sel_parse_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_sel_record);
-  return rv;
+  return (rv);
 }
 
 int
@@ -389,7 +389,7 @@ sel_parse_get_oem (ipmi_sel_parse_ctx_t ctx,
   rv = len;
  cleanup:
   FIID_OBJ_DESTROY (obj_sel_record);
-  return rv;
+  return (rv);
 }
 
 int
@@ -599,7 +599,7 @@ sel_parse_get_system_event_record (ipmi_sel_parse_ctx_t ctx,
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_sel_system_event_record);
-  return rv;
+  return (rv);
 }
 
 int
@@ -677,5 +677,5 @@ sel_parse_get_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY (obj_sel_system_event_record);
-  return rv;
+  return (rv);
 }

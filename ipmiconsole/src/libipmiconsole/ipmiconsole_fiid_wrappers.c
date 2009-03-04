@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.c,v 1.15 2009-03-03 23:56:51 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.c,v 1.16 2009-03-04 18:07:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -59,10 +59,10 @@ Fiid_template_len_bytes (ipmiconsole_ctx_t c, fiid_template_t tmpl)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_template_len_bytes: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return rv;
+  return (rv);
 }
 
 int32_t
@@ -80,10 +80,10 @@ Fiid_template_block_len_bytes (ipmiconsole_ctx_t c, fiid_template_t tmpl, char *
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_template_len_bytes: field_start=%s; field_end=%s; %s", field_start, field_end, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return rv;
+  return (rv);
 }
 
 fiid_obj_t
@@ -118,10 +118,10 @@ Fiid_obj_clear (ipmiconsole_ctx_t c, fiid_obj_t obj)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_clear: %s", fiid_obj_errormsg (obj)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return rv;
+  return (rv);
 }
 
 int8_t
@@ -138,10 +138,10 @@ Fiid_obj_clear_field (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_clear_field: %s", fiid_obj_errormsg (obj)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return rv;
+  return (rv);
 }
 
 void
@@ -169,17 +169,17 @@ Fiid_obj_get (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint64_t *val)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get: field=%s; %s", field, fiid_obj_errormsg (obj)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
   if (!rv)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get: field=%s; no data set", field));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return rv;
+  return (rv);
 }
 
 int32_t
@@ -198,10 +198,10 @@ Fiid_obj_get_data (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint8_t *da
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: field=%s; %s", field, fiid_obj_errormsg (obj)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return rv;
+  return (rv);
 }
 
 int8_t
@@ -218,10 +218,10 @@ Fiid_obj_set (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint64_t val)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_set: field=%s; %s", field, fiid_obj_errormsg (obj)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return rv;
+  return (rv);
 }
 
 int32_t
@@ -240,10 +240,10 @@ Fiid_obj_set_data (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint8_t *da
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_set_data: %s", fiid_obj_errormsg (obj)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return rv;
+  return (rv);
 }
 
 int32_t
@@ -261,8 +261,8 @@ Fiid_obj_set_all (ipmiconsole_ctx_t c, fiid_obj_t obj, uint8_t *data, uint32_t d
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_set_all: %s", fiid_obj_errormsg (obj)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return rv;
+  return (rv);
 }

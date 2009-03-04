@@ -55,12 +55,12 @@ get_lan_channel_number (struct pef_config_state_data *state_data, uint8_t *chann
                          stderr,
                          "ipmi_get_channel_number: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      return CONFIG_ERR_NON_FATAL_ERROR;
+      return (CONFIG_ERR_NON_FATAL_ERROR);
     }
 
   state_data->lan_channel_number_initialized = 1;
   *channel_number = state_data->lan_channel_number;
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -78,7 +78,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
   if (state_data->number_of_lan_alert_destinations_initialized)
     {
       *number_of_lan_alert_destinations = state_data->number_of_lan_alert_destinations;
-      return CONFIG_ERR_SUCCESS;
+      return (CONFIG_ERR_SUCCESS);
     }
 
   if ((rc = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -145,7 +145,7 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *
   if (state_data->number_of_alert_strings_initialized)
     {
       *number_of_alert_strings = state_data->number_of_alert_strings;
-      return CONFIG_ERR_SUCCESS;
+      return (CONFIG_ERR_SUCCESS);
     }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
@@ -205,7 +205,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
   if (state_data->number_of_alert_policy_entries_initialized)
     {
       *number_of_alert_policy_entries = state_data->number_of_alert_policy_entries;
-      return CONFIG_ERR_SUCCESS;
+      return (CONFIG_ERR_SUCCESS);
     }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
@@ -265,7 +265,7 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *
   if (state_data->number_of_event_filters_initialized)
     {
       *number_of_event_filters = state_data->number_of_event_filters;
-      return CONFIG_ERR_SUCCESS;
+      return (CONFIG_ERR_SUCCESS);
     }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))

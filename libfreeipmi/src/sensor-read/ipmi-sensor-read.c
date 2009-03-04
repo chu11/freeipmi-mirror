@@ -88,13 +88,13 @@ ipmi_sensor_read_ctx_create (ipmi_ctx_t ipmi_ctx)
   if (!ipmi_ctx)
     {
       SET_ERRNO (EINVAL);
-      return NULL;
+      return (NULL);
     }
 
   if (!(ctx = (ipmi_sensor_read_ctx_t)malloc (sizeof(struct ipmi_sensor_read_ctx))))
     {
       ERRNO_TRACE (errno);
-      return NULL;
+      return (NULL);
     }
   memset (ctx, '\0', sizeof(struct ipmi_sensor_read_ctx));
   ctx->magic = IPMI_SENSOR_READ_CTX_MAGIC;
@@ -117,7 +117,7 @@ ipmi_sensor_read_ctx_create (ipmi_ctx_t ipmi_ctx)
         ipmi_sdr_parse_ctx_destroy (ctx->sdr_parse_ctx);
       free (ctx);
     }
-  return NULL;
+  return (NULL);
 }
 
 void
@@ -146,15 +146,15 @@ char *
 ipmi_sensor_read_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_SENSOR_READ_ERR_SUCCESS && errnum <= IPMI_SENSOR_READ_ERR_ERRNUMRANGE)
-    return ipmi_sensor_read_errmsgs[errnum];
+    return (ipmi_sensor_read_errmsgs[errnum]);
   else
-    return ipmi_sensor_read_errmsgs[IPMI_SENSOR_READ_ERR_ERRNUMRANGE];
+    return (ipmi_sensor_read_errmsgs[IPMI_SENSOR_READ_ERR_ERRNUMRANGE]);
 }
 
 char *
 ipmi_sensor_read_ctx_errormsg (ipmi_sensor_read_ctx_t ctx)
 {
-  return ipmi_sensor_read_ctx_strerror (ipmi_sensor_read_ctx_errnum (ctx));
+  return (ipmi_sensor_read_ctx_strerror (ipmi_sensor_read_ctx_errnum (ctx)));
 }
 
 int
@@ -173,7 +173,7 @@ ipmi_sensor_read_ctx_get_flags (ipmi_sensor_read_ctx_t ctx, unsigned int *flags)
     }
 
   *flags = ctx->flags;
-  return 0;
+  return (0);
 }
 
 int
@@ -192,7 +192,7 @@ ipmi_sensor_read_ctx_set_flags (ipmi_sensor_read_ctx_t ctx, unsigned int flags)
     }
 
   ctx->flags = flags;
-  return 0;
+  return (0);
 }
 
 int
@@ -207,7 +207,7 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
                                   IPMI_COMP_CODE_NODE_BUSY) == 1)
     {
       SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_NODE_BUSY);
-      return -1;
+      return (-1);
     }
   else if ((ipmi_check_completion_code (obj_get_sensor_reading_rs,
                                         IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
@@ -220,10 +220,10 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
     {
       /* A sensor listed by the SDR is not present or cannot be obtained for some reason */
       SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED);
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 int
@@ -250,7 +250,7 @@ _get_sensor_reading (ipmi_sensor_read_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 int
@@ -302,7 +302,7 @@ _get_sensor_reading_ipmb (ipmi_sensor_read_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 int

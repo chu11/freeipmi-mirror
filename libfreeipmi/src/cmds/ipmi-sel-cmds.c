@@ -246,7 +246,7 @@ fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_INFO);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -266,7 +266,7 @@ fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq)
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_ALLOCATION_INFO);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -286,7 +286,7 @@ fill_cmd_reserve_sel (fiid_obj_t obj_cmd_rq)
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_RESERVE_SEL);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -315,7 +315,7 @@ fill_cmd_get_sel_entry (uint16_t reservation_id,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "offset_into_record", offset_into_record);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bytes_to_read", bytes_to_read);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -340,7 +340,7 @@ fill_cmd_delete_sel_entry (uint16_t reservation_id,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reservation_id", reservation_id);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "record_id", record_id);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -370,7 +370,7 @@ fill_cmd_clear_sel (uint16_t reservation_id,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "R", 'R');
   FILL_FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -391,7 +391,7 @@ fill_cmd_get_sel_time (fiid_obj_t obj_cmd_rq)
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_TIME);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -413,7 +413,7 @@ fill_cmd_set_sel_time (uint32_t time, fiid_obj_t obj_cmd_rq)
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SEL_TIME);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "time", time);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -438,7 +438,7 @@ fill_cmd_get_auxiliary_log_status (uint8_t log_type,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "log_type", log_type);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -472,5 +472,5 @@ fill_cmd_set_auxiliary_log_status (uint8_t log_type,
                           log_data,
                           log_data_len);
 
-  return 0;
+  return (0);
 }

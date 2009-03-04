@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.37 2009-03-03 23:56:56 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.38 2009-03-04 18:07:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -131,7 +131,7 @@ Cbuf_peek_and_drop (cbuf_t buf, void *buffer, int len)
 
   /* Nothing there */
   if (!r_len)
-    return 0;
+    return (0);
 
   if ((dropped = cbuf_drop (buf, len)) < 0)
     ierr_exit ("Cbuf_peek: cbuf_drop: %s", strerror (errno));
@@ -230,7 +230,7 @@ Fiid_obj_get_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len
   if ((rv = fiid_obj_get_data (obj, field, data, data_len)) < 0)
     ierr_exit ("Fiid_obj_get_data: field=%s: %s", field, fiid_obj_errormsg (obj));
 
-  return rv;
+  return (rv);
 }
 
 int32_t
@@ -243,7 +243,7 @@ Fiid_obj_set_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len
   if ((rv = fiid_obj_set_data (obj, field, data, data_len)) < 0)
     ierr_exit ("Fiid_obj_set_data: field=%s: %s", field, fiid_obj_errormsg (obj));
 
-  return rv;
+  return (rv);
 }
 
 int32_t
@@ -256,5 +256,5 @@ Fiid_obj_set_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len)
   if ((rv = fiid_obj_set_all (obj, data, data_len)) < 0)
     ierr_exit ("Fiid_obj_set_all: %s", fiid_obj_errormsg (obj));
 
-  return rv;
+  return (rv);
 }

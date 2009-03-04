@@ -153,7 +153,7 @@ ipmi_ctx_create (void)
   if (!(ctx = (struct ipmi_ctx *)malloc (sizeof(struct ipmi_ctx))))
     {
       ERRNO_TRACE (errno);
-      return NULL;
+      return (NULL);
     }
 
   _ipmi_ctx_init (ctx);
@@ -177,15 +177,15 @@ char *
 ipmi_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_ERR_SUCCESS && errnum <= IPMI_ERR_ERRNUMRANGE)
-    return ipmi_errmsg[errnum];
+    return (ipmi_errmsg[errnum]);
   else
-    return ipmi_errmsg[IPMI_ERR_ERRNUMRANGE];
+    return (ipmi_errmsg[IPMI_ERR_ERRNUMRANGE]);
 }
 
 char *
 ipmi_ctx_errormsg (ipmi_ctx_t ctx)
 {
-  return ipmi_ctx_strerror (ipmi_ctx_errnum (ctx));
+  return (ipmi_ctx_strerror (ipmi_ctx_errnum (ctx)));
 }
 
 static void
@@ -335,7 +335,7 @@ _setup_socket (ipmi_ctx_t ctx)
       return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 

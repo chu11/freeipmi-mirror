@@ -41,7 +41,7 @@ power_restore_policy_number (const char *string)
     return IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE;
   if (same (string, "on_state_ac_apply"))
     return IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -66,7 +66,7 @@ bios_boot_type_number (const char *string)
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_PC_COMPATIBLE;
   if (same (string, "EFI"))
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_EFI;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -101,7 +101,7 @@ boot_device_number (const char *string)
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_BIOS_SETUP;
   if (same (string, "FLOPPY"))
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -138,7 +138,7 @@ firmware_bios_verbosity_number (const char *string)
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_QUIET;
   if (same (string, "VERBOSE"))
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VERBOSE;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -165,7 +165,7 @@ console_redirection_number (const char *string)
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPPRESS;
   if (same (string, "ENABLE"))
     return IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE;
-  return -1;
+  return (-1);
 }
 
 char *

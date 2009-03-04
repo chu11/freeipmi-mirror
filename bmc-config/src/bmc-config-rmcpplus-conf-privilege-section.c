@@ -53,7 +53,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
   if (state_data->cipher_suite_entry_count
       && state_data->cipher_suite_id_supported_set
       && state_data->cipher_suite_priv_set)
-    return CONFIG_ERR_SUCCESS;
+    return (CONFIG_ERR_SUCCESS);
 
   if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
@@ -280,10 +280,10 @@ id_checkout (const char *section_name,
       if (config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
                                                  rmcpplus_priv_string (privilege)) < 0)
-        return CONFIG_ERR_FATAL_ERROR;
-      return CONFIG_ERR_SUCCESS;
+        return (CONFIG_ERR_FATAL_ERROR);
+      return (CONFIG_ERR_SUCCESS);
     }
-  return CONFIG_ERR_NON_FATAL_ERROR;
+  return (CONFIG_ERR_NON_FATAL_ERROR);
 }
 
 static config_err_t

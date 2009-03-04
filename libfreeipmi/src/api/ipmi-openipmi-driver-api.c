@@ -123,7 +123,7 @@ ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx,
                               obj_cmd_rs) < 0)
     {
       API_OPENIPMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_openipmi_ctx_errnum (ctx->io.inband.openipmi_ctx));
-      return -1;
+      return (-1);
     }
 
   return (0);

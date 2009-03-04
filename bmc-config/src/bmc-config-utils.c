@@ -38,7 +38,7 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
   if (state_data->lan_channel_number_initialized)
     {
       *channel_num = state_data->lan_channel_number;
-      return CONFIG_ERR_SUCCESS;
+      return (CONFIG_ERR_SUCCESS);
     }
 
   if ((state_data->lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
@@ -49,12 +49,12 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
                          stderr,
                          "ipmi_get_channel_number: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      return CONFIG_ERR_NON_FATAL_ERROR;
+      return (CONFIG_ERR_NON_FATAL_ERROR);
     }
 
   state_data->lan_channel_number_initialized = 1;
   *channel_num = state_data->lan_channel_number;
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -63,7 +63,7 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel
   if (state_data->serial_channel_number_initialized)
     {
       *channel_num = state_data->serial_channel_number;
-      return CONFIG_ERR_SUCCESS;
+      return (CONFIG_ERR_SUCCESS);
     }
 
   if ((state_data->serial_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
@@ -74,12 +74,12 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel
                          stderr,
                          "ipmi_get_channel_number: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      return CONFIG_ERR_NON_FATAL_ERROR;
+      return (CONFIG_ERR_NON_FATAL_ERROR);
     }
 
   state_data->serial_channel_number_initialized = 1;
   *channel_num = state_data->serial_channel_number;
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
@@ -94,7 +94,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
   if (state_data->sol_channel_number_initialized)
     {
       *channel_num = state_data->sol_channel_number;
-      return CONFIG_ERR_SUCCESS;
+      return (CONFIG_ERR_SUCCESS);
     }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs)))
@@ -160,7 +160,7 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
   if (state_data->number_of_users_initialized)
     {
       *number_of_users = state_data->number_of_users;
-      return CONFIG_ERR_SUCCESS;
+      return (CONFIG_ERR_SUCCESS);
     }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_user_access_rs)))

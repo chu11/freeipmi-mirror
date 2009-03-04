@@ -590,10 +590,10 @@ ipmi_dump_lan_packet_ipmb (int fd,
     }
 
   if ((ret1 = fiid_template_compare (tmpl_cmd, tmpl_cmd_send_message_rq)) < 0)
-    return -1;
+    return (-1);
 
   if ((ret2 = fiid_template_compare (tmpl_cmd, tmpl_cmd_get_message_rs)) < 0)
-    return -1;
+    return (-1);
 
   if (!ret1 && !ret2)
     {

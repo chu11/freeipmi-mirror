@@ -1150,7 +1150,7 @@ fill_cmd_set_channel_access (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_privilege_level_limit", channel_privilege_level_limit);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_privilege_level_limit_set", channel_privilege_level_limit_set);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1179,7 +1179,7 @@ fill_cmd_get_channel_access (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_access_get", channel_access_get);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1203,7 +1203,7 @@ fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq)
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1306,7 +1306,7 @@ fill_cmd_set_user_access (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "user_session_limit", user_session_limit);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1334,7 +1334,7 @@ fill_cmd_get_user_access (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1373,7 +1373,7 @@ fill_cmd_set_user_name (uint8_t user_id,
 
   FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "user_name", buf, IPMI_MAX_USER_NAME_LENGTH);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1396,7 +1396,7 @@ fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_cmd_rq)
   FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1443,7 +1443,7 @@ fill_cmd_set_user_password (uint8_t user_id,
       FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, IPMI_1_5_MAX_PASSWORD_LENGTH);
     }
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1508,5 +1508,5 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
       FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, buf_max_len);
     }
 
-  return 0;
+  return (0);
 }

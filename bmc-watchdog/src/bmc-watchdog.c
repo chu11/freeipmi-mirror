@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.114 2009-03-03 23:56:40 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.115 2009-03-04 18:07:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -823,7 +823,7 @@ _reset_watchdog_timer_cmd (int retry_wait_time, int retry_attempt)
 {
   fiid_obj_t cmd_rq = NULL;
   fiid_obj_t cmd_rs = NULL;
-  int retval = -1;
+  int rv = -1;
 
   if (!(cmd_rq = fiid_obj_create (tmpl_cmd_reset_watchdog_timer_rq)))
     {
@@ -846,18 +846,18 @@ _reset_watchdog_timer_cmd (int retry_wait_time, int retry_attempt)
       goto cleanup;
     }
 
-  retval = _cmd ("Reset Cmd",
-                 retry_wait_time,
-                 retry_attempt,
-                 IPMI_NET_FN_APP_RQ,
-                 IPMI_CMD_RESET_WATCHDOG_TIMER,
-                 cmd_rq,
-                 cmd_rs);
+  rv = _cmd ("Reset Cmd",
+             retry_wait_time,
+             retry_attempt,
+             IPMI_NET_FN_APP_RQ,
+             IPMI_CMD_RESET_WATCHDOG_TIMER,
+             cmd_rq,
+             cmd_rs);
 
  cleanup:
   fiid_obj_destroy (cmd_rq);
   fiid_obj_destroy (cmd_rs);
-  return retval;
+  return rv;
 }
 
 static int
@@ -879,7 +879,7 @@ _set_watchdog_timer_cmd (int retry_wait_time,
   fiid_obj_t cmd_rq = NULL;
   fiid_obj_t cmd_rs = NULL;
   uint16_t initial_countdown_chunks;
-  int retval = -1;
+  int rv = -1;
 
   /* IPMI specifies timeout in 100 millisecond chunks */
   initial_countdown_chunks = initial_countdown_seconds * 10;
@@ -917,18 +917,18 @@ _set_watchdog_timer_cmd (int retry_wait_time,
       goto cleanup;
     }
 
-  retval = _cmd ("Set Cmd",
-                 retry_wait_time,
-                 retry_attempt,
-                 IPMI_NET_FN_APP_RQ,
-                 IPMI_CMD_SET_WATCHDOG_TIMER,
-                 cmd_rq,
-                 cmd_rs);
+  rv = _cmd ("Set Cmd",
+             retry_wait_time,
+             retry_attempt,
+             IPMI_NET_FN_APP_RQ,
+             IPMI_CMD_SET_WATCHDOG_TIMER,
+             cmd_rq,
+             cmd_rs);
 
  cleanup:
   fiid_obj_destroy (cmd_rq);
   fiid_obj_destroy (cmd_rs);
-  return retval;
+  return rv;
 }
 
 static int
@@ -951,7 +951,7 @@ _get_watchdog_timer_cmd (int retry_wait_time,
   fiid_obj_t cmd_rq = NULL;
   fiid_obj_t cmd_rs = NULL;
   uint64_t val, *valptr;
-  int retval = -1;
+  int rv = -1;
 
   if (!(cmd_rq = fiid_obj_create (tmpl_cmd_get_watchdog_timer_rq)))
     {
@@ -974,13 +974,13 @@ _get_watchdog_timer_cmd (int retry_wait_time,
       goto cleanup;
     }
 
-  if ((retval = _cmd ("Get Cmd",
-                      retry_wait_time,
-                      retry_attempt,
-                      IPMI_NET_FN_APP_RQ,
-                      IPMI_CMD_GET_WATCHDOG_TIMER,
-                      cmd_rq,
-                      cmd_rs)))
+  if ((rv = _cmd ("Get Cmd",
+                  retry_wait_time,
+                  retry_attempt,
+                  IPMI_NET_FN_APP_RQ,
+                  IPMI_CMD_GET_WATCHDOG_TIMER,
+                  cmd_rq,
+                  cmd_rs)))
     goto cleanup;
 
   if (timer_use)
@@ -1072,7 +1072,7 @@ _get_watchdog_timer_cmd (int retry_wait_time,
  cleanup:
   fiid_obj_destroy (cmd_rq);
   fiid_obj_destroy (cmd_rs);
-  return retval;
+  return rv;
 }
 
 static int
@@ -1200,7 +1200,7 @@ _suspend_bmc_arps_cmd (int retry_wait_time,
 {
   fiid_obj_t cmd_rq = NULL;
   fiid_obj_t cmd_rs = NULL;
-  int retval = -1;
+  int rv = -1;
   int8_t num;
 
   if (!(cmd_rq = fiid_obj_create (tmpl_cmd_suspend_bmc_arps_rq)))
@@ -1231,18 +1231,18 @@ _suspend_bmc_arps_cmd (int retry_wait_time,
       goto cleanup;
     }
 
-  retval = _cmd ("Suspend Cmd",
-                 retry_wait_time,
-                 retry_attempt,
-                 IPMI_NET_FN_TRANSPORT_RQ,
-                 IPMI_CMD_SUSPEND_BMC_ARPS,
-                 cmd_rq,
-                 cmd_rs);
+  rv = _cmd ("Suspend Cmd",
+             retry_wait_time,
+             retry_attempt,
+             IPMI_NET_FN_TRANSPORT_RQ,
+             IPMI_CMD_SUSPEND_BMC_ARPS,
+             cmd_rq,
+             cmd_rs);
 
  cleanup:
   fiid_obj_destroy (cmd_rq);
   fiid_obj_destroy (cmd_rs);
-  return retval;
+  return rv;
 }
 
 static void

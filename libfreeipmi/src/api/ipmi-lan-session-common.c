@@ -209,7 +209,7 @@ _calculate_timeout (ipmi_ctx_t ctx,
       timeout->tv_usec = session_timeout_val.tv_usec;
     }
 
-  return 0;
+  return (0);
 }
 
 static void

@@ -60,7 +60,7 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "## FATAL: Unable to get Number of Alert Destinations\n");
-      return NULL;
+      return (NULL);
     }
 
   if (get_number_of_alert_policy_entries (state_data,
@@ -70,7 +70,7 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "## FATAL: Unable to get Number of Alert Policy Entries\n");
-      return NULL;
+      return (NULL);
     }
 
   if (get_number_of_alert_strings (state_data,
@@ -80,7 +80,7 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "## FATAL: Unable to get Number of Alert Strings\n");
-      return NULL;
+      return (NULL);
     }
 
   if (get_number_of_event_filters (state_data,
@@ -90,7 +90,7 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "## FATAL: Unable to get Number of Event Filters\n");
-      return NULL;
+      return (NULL);
     }
 
   if (!(section = pef_config_pef_conf_section_get (state_data)))
@@ -139,5 +139,5 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
 
  cleanup:
   config_sections_destroy (state_data->pstate, sections);
-  return NULL;
+  return (NULL);
 }

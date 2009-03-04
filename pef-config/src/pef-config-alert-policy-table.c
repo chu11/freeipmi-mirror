@@ -181,14 +181,14 @@ policy_type_checkout (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              policy_type_string (apt.policy_type)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -203,7 +203,7 @@ policy_type_commit (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   apt.policy_type = policy_type_number (kv->value_input);
 
@@ -224,14 +224,14 @@ policy_enabled_checkout (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              apt.policy_enabled ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -246,7 +246,7 @@ policy_enabled_commit (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   apt.policy_enabled = same (kv->value_input, "yes");
 
@@ -267,14 +267,14 @@ policy_number_checkout (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  apt.policy_number) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -289,7 +289,7 @@ policy_number_commit (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   apt.policy_number = atoi (kv->value_input);
 
@@ -310,14 +310,14 @@ destination_selector_checkout (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  apt.destination_selector) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -332,7 +332,7 @@ destination_selector_commit (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   apt.destination_selector = atoi (kv->value_input);
 
@@ -353,14 +353,14 @@ channel_number_checkout (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  apt.channel_number) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -375,7 +375,7 @@ channel_number_commit (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   apt.channel_number = atoi (kv->value_input);
 
@@ -396,14 +396,14 @@ alert_string_set_selector_checkout (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  apt.alert_string_set_selector) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -418,7 +418,7 @@ alert_string_set_selector_commit (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   apt.alert_string_set_selector = atoi (kv->value_input);
 
@@ -439,14 +439,14 @@ event_specific_alert_string_checkout (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              apt.event_specific_alert_string ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -461,7 +461,7 @@ event_specific_alert_string_commit (const char *section_name,
   if ((ret = _get_alert_policy_table (state_data,
                                       section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   apt.event_specific_alert_string = same (kv->value_input, "yes");
 
@@ -485,7 +485,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                        stderr,
                        "Invalid Num = %d\n",
                        num);
-      return NULL;
+      return (NULL);
     }
 
   snprintf (buf, CONFIG_MAX_SECTION_NAME_LEN, "Alert_Policy_%d", num);
@@ -603,6 +603,6 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
     free (strp);
   if (section)
     config_section_destroy (state_data->pstate, section);
-  return NULL;
+  return (NULL);
 }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_util.c,v 1.10 2009-03-03 23:56:52 chu11 Exp $
+ *  $Id: ipmiconsole_util.c,v 1.11 2009-03-04 18:07:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -65,7 +65,7 @@ ipmiconsole_set_closeonexec (ipmiconsole_ctx_t c, int fd)
       IPMICONSOLE_DEBUG (("fcntl: %s", strerror (errno)));
       if (c && c->magic == IPMICONSOLE_CTX_MAGIC)
         ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return -1;
+      return (-1);
     }
   closeonexec |= FD_CLOEXEC;
   if (fcntl (fd, F_SETFD, closeonexec) < 0)
@@ -73,8 +73,8 @@ ipmiconsole_set_closeonexec (ipmiconsole_ctx_t c, int fd)
       IPMICONSOLE_DEBUG (("fcntl: %s", strerror (errno)));
       if (c && c->magic == IPMICONSOLE_CTX_MAGIC)
         ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }

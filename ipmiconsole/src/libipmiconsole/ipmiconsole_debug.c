@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.c,v 1.15 2009-03-03 23:56:51 chu11 Exp $
+ *  $Id: ipmiconsole_debug.c,v 1.16 2009-03-04 18:07:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -84,11 +84,11 @@ ipmiconsole_debug_setup (uint32_t debug_flags)
           console_debug_flags &= ~IPMICONSOLE_DEBUG_FILE;
           IPMICONSOLE_DEBUG (("open: %s", strerror (errno)));
           console_debug_flags = 0;
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 void

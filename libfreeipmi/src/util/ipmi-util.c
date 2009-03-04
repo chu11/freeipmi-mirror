@@ -187,7 +187,7 @@ ipmi_get_random (uint8_t *buf, uint32_t buflen)
     goto gcrypt_rand;
 
   close (fd);
-  return rv;
+  return (rv);
 #endif /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */
 
  gcrypt_rand:

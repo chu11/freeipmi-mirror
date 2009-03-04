@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.59 2009-03-03 23:56:54 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.60 2009-03-04 18:07:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -201,7 +201,7 @@ parsepacket (char *destination,
     user_level_authentication, per_message_authentication,
     k_g, ipmi_v20_extended_capabilities_available, ipmi_v15, ipmi_v20;
   fiid_field_t *tmpl_cmd_get_channel_authentication_capabilities_ptr = NULL;
-  int ret, retval = -1;
+  int ret, rv = -1;
 
   assert (destination != NULL);
   assert (buffer != NULL && from != NULL);
@@ -253,7 +253,7 @@ parsepacket (char *destination,
     {
       if (debug)
         fprintf (stderr, "%s(%d): checksum failed\n", __FUNCTION__, __LINE__);
-      retval = 0;
+      rv = 0;
       goto cleanup;
     }
 
@@ -273,7 +273,7 @@ parsepacket (char *destination,
     {
       if (debug)
         fprintf (stderr, "%s(%d): net_fn failed\n", __FUNCTION__, __LINE__);
-      retval = 0;
+      rv = 0;
       goto cleanup;
     }
 
@@ -284,7 +284,7 @@ parsepacket (char *destination,
     {
       if (debug)
         fprintf (stderr, "%s(%d): cmd failed\n", __FUNCTION__, __LINE__);
-      retval = 0;
+      rv = 0;
       goto cleanup;
     }
 
@@ -295,7 +295,7 @@ parsepacket (char *destination,
     {
       if (debug)
         fprintf (stderr, "%s(%d): comp_code failed\n", __FUNCTION__, __LINE__);
-      retval = 0;
+      rv = 0;
       goto cleanup;
     }
 
@@ -305,7 +305,7 @@ parsepacket (char *destination,
     {
       if (debug)
         fprintf (stderr, "%s(%d): req_seq failed\n", __FUNCTION__, __LINE__);
-      retval = 0;
+      rv = 0;
       goto cleanup;
     }
 
@@ -382,14 +382,14 @@ parsepacket (char *destination,
     }
   printf ("\n");
 
-  retval = 1;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_rmcp_hdr);
   fiid_obj_destroy (obj_lan_session_hdr);
   fiid_obj_destroy (obj_lan_msg_hdr);
   fiid_obj_destroy (obj_cmd);
   fiid_obj_destroy (obj_lan_msg_trlr);
-  return retval;
+  return (rv);
 }
 
 void

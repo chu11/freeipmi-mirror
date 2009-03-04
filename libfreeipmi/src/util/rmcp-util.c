@@ -68,8 +68,8 @@ ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag)
     }
 
   if (message_tag == val)
-    return 1;
+    return (1);
   else
-    return 0;
+    return (0);
 }
 

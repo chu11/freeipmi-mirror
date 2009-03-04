@@ -45,7 +45,7 @@ channel_access_mode_validate (const char *section_name,
                               void *arg)
 {
   if (channel_access_mode (value) >= 0)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -56,7 +56,7 @@ get_privilege_limit_number_validate (const char *section_name,
                                      void *arg)
 {
   if (get_privilege_limit_number (value) > 0)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -67,7 +67,7 @@ privilege_level_number_validate (const char *section_name,
                                  void *arg)
 {
   if (privilege_level_number (value) > 0)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -78,7 +78,7 @@ rmcpplus_priv_number_validate (const char *section_name,
                                void *arg)
 {
   if (rmcpplus_priv_number (value) >= 0)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -89,7 +89,7 @@ ip_address_source_number_validate (const char *section_name,
                                    void *arg)
 {
   if (ip_address_source_number (value) >= 0)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -100,7 +100,7 @@ power_restore_policy_number_validate (const char *section_name,
                                       void *arg)
 {
   if (power_restore_policy_number (value) != -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -111,7 +111,7 @@ connect_mode_number_validate (const char *section_name,
                               void *arg)
 {
   if (connect_mode_number (value) != -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -122,7 +122,7 @@ flow_control_number_validate (const char *section_name,
                               void *arg)
 {
   if (flow_control_number (value) > -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -133,7 +133,7 @@ bit_rate_number_validate (const char *section_name,
                           void *arg)
 {
   if (bit_rate_number (value) > -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -144,7 +144,7 @@ sol_bit_rate_number_validate (const char *section_name,
                               void *arg)
 {
   if (sol_bit_rate_number (value) != -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -155,7 +155,7 @@ alert_destination_type_number_validate (const char *section_name,
                                         void *arg)
 {
   if (alert_destination_type_number (value) != -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
@@ -166,6 +166,6 @@ alert_gateway_number_validate (const char *section_name,
                                void *arg)
 {
   if (alert_gateway_number (value) != -1)
-    return CONFIG_VALIDATE_VALID_VALUE;
+    return (CONFIG_VALIDATE_VALID_VALUE);
   return CONFIG_VALIDATE_INVALID_VALUE;
 }

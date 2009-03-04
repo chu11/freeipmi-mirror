@@ -157,7 +157,7 @@ fill_cmd_get_repository_info (fiid_obj_t obj_cmd_rq)
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SDR_REPOSITORY_INFO);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -177,7 +177,7 @@ fill_cmd_get_repository_allocation_info (fiid_obj_t obj_cmd_rq)
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SDR_REPOSITORY_ALLOCATION_INFO);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -197,7 +197,7 @@ fill_cmd_reserve_sdr_repository (fiid_obj_t obj_cmd_rq)
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_RESERVE_SDR_REPOSITORY);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -225,7 +225,7 @@ fill_cmd_get_sdr (uint16_t reservation_id,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "record_id", record_id);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "offset_into_record", offset_into_record);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bytes_to_read", bytes_to_read);
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -246,7 +246,7 @@ fill_cmd_get_sdr_repository_time (fiid_obj_t obj_cmd_rq)
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SDR_REPOSITORY_TIME);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -268,5 +268,5 @@ fill_cmd_set_sdr_repository_time (uint32_t time, fiid_obj_t obj_cmd_rq)
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SDR_REPOSITORY_TIME);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "time", time);
 
-  return 0;
+  return (0);
 }

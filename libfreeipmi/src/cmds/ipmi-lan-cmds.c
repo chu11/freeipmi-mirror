@@ -720,7 +720,7 @@ fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                           configuration_parameter_data,
                           configuration_parameter_data_len);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -830,7 +830,7 @@ fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t c
   FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_level.straight_password", oem_level_straight_password);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_level.oem_proprietary", oem_level_oem_proprietary);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_level.reserved2", 0);
-  return 0;
+  return (0);
 }
 
 static int8_t
@@ -906,7 +906,7 @@ fill_cmd_set_lan_configuration_parameters_ip_address_source (uint8_t channel_num
   FILL_FIID_OBJ_SET (obj_cmd_rq, "ip_address_source", ip_address_source);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
-  return 0;
+  return (0);
 }
 
 static int8_t
@@ -980,7 +980,7 @@ fill_cmd_set_lan_configuration_parameters_subnet_mask (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_SUBNET_MASK);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "subnet_mask", subnet_mask);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1013,7 +1013,7 @@ fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (uint8_t cha
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bmc_generated_arp_responses", bmc_generated_arp_responses);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1041,7 +1041,7 @@ fill_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (uint8_t chann
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAMETER_GRATUITOUS_ARP_INTERVAL);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "gratuitous_arp_interval", gratuitous_arp_interval);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1179,7 +1179,7 @@ fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_numb
 
   FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "community_string", buf, IPMI_MAX_COMMUNITY_STRING_LENGTH);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1223,7 +1223,7 @@ fill_cmd_set_lan_configuration_parameters_destination_type (uint8_t channel_numb
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved5", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1263,7 +1263,7 @@ fill_cmd_set_lan_configuration_parameters_destination_addresses (uint8_t channel
   FILL_FIID_OBJ_SET (obj_cmd_rq, "alerting_ip_address", alerting_ip_address);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "alerting_mac_address", alerting_mac_address);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1295,7 +1295,7 @@ fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "vlan_id_enable", vlan_id_enable);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1325,7 +1325,7 @@ fill_cmd_set_lan_configuration_parameters_vlan_priority (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "unspecified", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1416,7 +1416,7 @@ fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
   FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_15", maximum_privilege_for_cipher_suite_15);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_16", maximum_privilege_for_cipher_suite_16);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1451,7 +1451,7 @@ fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1483,7 +1483,7 @@ fill_cmd_suspend_bmc_arps (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "arp_response_suspend", arp_response_suspend);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
-  return 0;
+  return (0);
 }
 
 int8_t
@@ -1512,7 +1512,7 @@ fill_cmd_get_ip_udp_rmcp_statistics (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "clear_all_statistics", clear_all_statistics);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
-  return 0;
+  return (0);
 }
 
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.164 2009-03-03 23:56:56 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.165 2009-03-04 18:07:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -443,7 +443,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
   assert (PACKET_TYPE_VALID_RES (pkt));
 
   if (!(recv_len = Cbuf_peek_and_drop (ip->ic->ipmi_in, recv_buf, IPMIPOWER_PACKET_BUFLEN)))
-    return 0;
+    return (0);
 
   ipmipower_packet_dump (ip, pkt, recv_buf, recv_len);
 
@@ -717,7 +717,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
   secure_memset (recv_buf, '\0', IPMIPOWER_PACKET_BUFLEN);
   Fiid_obj_clear (ip->obj_lan_session_hdr_res);
   Fiid_obj_clear (ip->obj_rmcpplus_session_trlr_res);
-  return rv;
+  return (rv);
 }
 
 /* _has_timed_out
@@ -732,7 +732,7 @@ _has_timed_out (ipmipower_powercmd_t ip)
 
   /* If we haven't started yet */
   if (ip->protocol_state == PROTOCOL_STATE_START)
-    return 0;
+    return (0);
 
   Gettimeofday (&cur_time, NULL);
   timeval_sub (&cur_time, &(ip->time_begin), &result);
@@ -757,7 +757,7 @@ _has_timed_out (ipmipower_powercmd_t ip)
       return 1;
     }
 
-  return 0;
+  return (0);
 }
 
 /* _retry_packets
@@ -774,7 +774,7 @@ _retry_packets (ipmipower_powercmd_t ip)
 
   /* Don't retransmit if any of the following are true */
   if (ip->protocol_state == PROTOCOL_STATE_START) /* we haven't started yet */
-    return 0;
+    return (0);
 
   /* Did we timeout on this packet? */
   if ((ip->wait_until_on_state
@@ -790,14 +790,14 @@ _retry_packets (ipmipower_powercmd_t ip)
   timeval_millisecond_calc (&result, &time_since_last_ipmi_send);
 
   if (time_since_last_ipmi_send < retransmission_timeout)
-    return 0;
+    return (0);
 
   /* Do we have enough time to retransmit? */
   timeval_add_ms (&cur_time, cmd_args.common.session_timeout, &end_time);
   timeval_sub (&end_time, &cur_time, &result);
   timeval_millisecond_calc (&result, &time_left);
   if (time_left < retransmission_timeout)
-    return 0;
+    return (0);
 
   ip->retransmission_count++;
   ierr_dbg ("_retry_packets(%s:%d): Sending retry, retry count=%d",
@@ -839,7 +839,7 @@ _retry_packets (ipmipower_powercmd_t ip)
             lsd_fatal_error (__FILE__, __LINE__, "socket");
           else
             ipmipower_output (MSG_TYPE_RESOURCES, ip->ic->hostname);
-          return -1;
+          return (-1);
         }
 
       bzero (&srcaddr, sizeof(struct sockaddr_in));
@@ -975,7 +975,7 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
               && !authentication_status_non_null_username))
         {
           ipmipower_output (MSG_TYPE_USERNAME_INVALID, ip->ic->hostname);
-          return -1;
+          return (-1);
         }
     }
 
@@ -990,7 +990,7 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
             && authentication_type_straight_password_key)))
     {
       ipmipower_output (MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);
-      return -1;
+      return (-1);
     }
 
   /* IPMI Workaround (achu)
@@ -1010,7 +1010,7 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
   else
     ip->permsgauth_enabled = 1;
 
-  return 0;
+  return (0);
 }
 
 /* _check_ipmi_2_0_authentication_capabilities
@@ -1073,18 +1073,18 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
               && !authentication_status_non_null_username))
         {
           ipmipower_output (MSG_TYPE_USERNAME_INVALID, ip->ic->hostname);
-          return -1;
+          return (-1);
         }
 
       if ((!cmd_args.common.k_g_len && authentication_status_k_g)
           || (cmd_args.common.k_g_len && !authentication_status_k_g))
         {
           ipmipower_output (MSG_TYPE_K_G_INVALID, ip->ic->hostname);
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 /* _check_ipmi_version_support
@@ -1135,7 +1135,7 @@ _check_ipmi_version_support (ipmipower_powercmd_t ip, int *ipmi_1_5, int *ipmi_2
         *ipmi_2_0 = 0;
     }
 
-  return 0;
+  return (0);
 }
 
 /* _check_activate_session_authentication_type
@@ -1159,7 +1159,7 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
                 &authentication_type);
 
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
-    return 0;
+    return (0);
 
   /* IPMI Workaround (achu)
    *
@@ -1191,11 +1191,11 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
 
           ip->retransmission_count = 0;  /* important to reset */
           Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 /* _calculate_cipher_keys
@@ -1295,7 +1295,7 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
     ierr_exit ("_calculate_cipher_keys(%s:%d): ipmi_calculate_rmcpplus_session_keys: %s",
                ip->ic->hostname, ip->protocol_state, strerror (errno));
 
-  return 0;
+  return (0);
 }
 
 /* _process_ipmi_packets
@@ -1316,13 +1316,13 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 
   /* if timeout, give up */
   if (_has_timed_out (ip))
-    return -1;
+    return (-1);
 
   /* retransmit? */
   if ((rv = _retry_packets (ip)))
     {
       if (rv < 0)
-        return -1;
+        return (-1);
       goto done;
     }
 
@@ -1353,22 +1353,22 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       if ((rv = _recv_packet (ip, AUTHENTICATION_CAPABILITIES_V20_RES)) != 1)
         {
           if (rv < 0)
-            return -1;
+            return (-1);
           goto done;
         }
 
       if (_check_ipmi_version_support (ip, &ipmi_1_5, &ipmi_2_0) < 0)
-        return -1;
+        return (-1);
 
       if (!ipmi_2_0)
         {
           ipmipower_output (MSG_TYPE_IPMI_2_0_UNAVAILABLE, ip->ic->hostname);
-          return -1;
+          return (-1);
         }
       /* else we continue with the IPMI 2.0 protocol */
 
       if (_check_ipmi_2_0_authentication_capabilities (ip) < 0)
-        return -1;
+        return (-1);
 
       _send_packet (ip, OPEN_SESSION_REQ);
     }
@@ -1377,12 +1377,12 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       if ((rv = _recv_packet (ip, AUTHENTICATION_CAPABILITIES_RES)) != 1)
         {
           if (rv < 0)
-            return -1;
+            return (-1);
           goto done;
         }
 
       if ((rv = _check_ipmi_1_5_authentication_capabilities (ip, AUTHENTICATION_CAPABILITIES_RES)) < 0)
-        return -1;
+        return (-1);
 
       if (rv)
         {
@@ -1401,7 +1401,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or
              * should we timeout?? */
-            return -1;
+            return (-1);
           goto done;
         }
 
@@ -1414,14 +1414,14 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or
              * should we timeout?? */
-            return -1;
+            return (-1);
           goto done;
         }
 
       if (_check_activate_session_authentication_type (ip) < 0)
         /* XXX Session is not up, is it ok to quit here?  Or
          * should we timeout?? */
-        return -1;
+        return (-1);
 
       _send_packet (ip, SET_SESSION_PRIVILEGE_LEVEL_REQ);
     }
@@ -1432,7 +1432,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or
              * should we timeout?? */
-            return -1;
+            return (-1);
           goto done;
         }
 
@@ -1445,12 +1445,12 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or
              * should we timeout?? */
-            return -1;
+            return (-1);
           goto done;
         }
 
       if (_calculate_cipher_keys (ip) < 0)
-        return -1;
+        return (-1);
 
       _send_packet (ip, RAKP_MESSAGE_3_REQ);
     }
@@ -1461,7 +1461,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           if (rv < 0)
             /* XXX Session is not up, is it ok to quit here?  Or
              * should we timeout?? */
-            return -1;
+            return (-1);
           goto done;
         }
 
@@ -1603,7 +1603,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       /* Regardless of packet error or success, finish up */
     finish_up:
       ip->protocol_state = PROTOCOL_STATE_END;
-      return -1; /* don't goto done and calculate timeout */
+      return (-1); /* don't goto done and calculate timeout */
     }
   else
     ierr_exit ("_process_ipmi_packets: invalid state: %d", ip->protocol_state);
@@ -1645,7 +1645,7 @@ ipmipower_powercmd_process_pending (int *timeout)
 
   /* if there are no pending jobs, don't edit the timeout */
   if (list_is_empty (pending))
-    return 0;
+    return (0);
 
   /* If we have a fanout, powercmds should be executed "in order" on
    * this list.  So no need to iterate through this list twice.

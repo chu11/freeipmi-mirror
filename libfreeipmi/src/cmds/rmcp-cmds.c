@@ -85,6 +85,6 @@ fill_cmd_asf_presence_ping (uint8_t message_tag, fiid_obj_t obj_cmd)
   FILL_FIID_OBJ_SET (obj_cmd, "message_tag", message_tag);
   FILL_FIID_OBJ_SET (obj_cmd, "reserved", 0);
   FILL_FIID_OBJ_SET (obj_cmd, "data_length", 0x00);
-  return 0;
+  return (0);
 }
 

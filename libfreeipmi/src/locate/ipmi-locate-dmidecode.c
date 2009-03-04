@@ -154,10 +154,10 @@ _myread (ipmi_locate_ctx_t ctx,
     {
       LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       close (fd);
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 #endif
 
@@ -261,7 +261,7 @@ _mem_chunk (ipmi_locate_ctx_t ctx,
   close (fd);
   if (!rv)
     free (p);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -283,7 +283,7 @@ _dmi_table (ipmi_locate_ctx_t ctx,
   assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
   if ((buf = _mem_chunk (ctx, base, len, devmem)) == NULL)
-    return -1;
+    return (-1);
 
   data = buf;
   while ((i < num) &&
@@ -507,7 +507,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
     }
 
   if (!(buf = _mem_chunk (ctx, fp, 0x20, DEFAULT_MEM_DEV)))
-    return -1;
+    return (-1);
 
   if (!(_smbios_decode (ctx, buf, DEFAULT_MEM_DEV, type, &locate_info) < 0))
     found++;
@@ -515,7 +515,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
   free (buf);
 #else /* USE_EFI */
   if (!(buf = _mem_chunk (ctx, 0xF0000, 0x10000, DEFAULT_MEM_DEV)))
-    return -1;
+    return (-1);
 
   for (fp = 0; fp <= 0xFFF0; fp += 16)
     {
@@ -557,5 +557,5 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
   else
     LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
 
-  return rv;
+  return (rv);
 }

@@ -44,7 +44,7 @@ _gpg_error_to_errno (gcry_error_t e)
 {
   /* be lazy right now */
   if (e == GPG_ERR_NO_ERROR)
-    return 0;
+    return (0);
   else
     return EINVAL;
 }

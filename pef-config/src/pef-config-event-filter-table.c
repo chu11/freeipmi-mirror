@@ -296,14 +296,14 @@ filter_type_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              filter_type_string (eft.filter_type)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -318,7 +318,7 @@ filter_type_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.filter_type = filter_type_number (kv->value_input);
 
@@ -339,14 +339,14 @@ enable_filter_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              eft.enable_filter ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -361,7 +361,7 @@ enable_filter_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.enable_filter = same (kv->value_input, "yes");
 
@@ -382,14 +382,14 @@ event_filter_action_alert_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              eft.event_filter_action_alert ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -404,7 +404,7 @@ event_filter_action_alert_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_filter_action_alert = same (kv->value_input, "yes");
 
@@ -425,14 +425,14 @@ event_filter_action_power_off_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              eft.event_filter_action_power_off ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -447,7 +447,7 @@ event_filter_action_power_off_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_filter_action_power_off = same (kv->value_input, "yes");
 
@@ -468,14 +468,14 @@ event_filter_action_reset_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              eft.event_filter_action_reset ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -490,7 +490,7 @@ event_filter_action_reset_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_filter_action_reset = same (kv->value_input, "yes");
 
@@ -511,14 +511,14 @@ event_filter_action_power_cycle_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              eft.event_filter_action_power_cycle ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -533,7 +533,7 @@ event_filter_action_power_cycle_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_filter_action_power_cycle = same (kv->value_input, "yes");
 
@@ -554,14 +554,14 @@ event_filter_action_oem_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              eft.event_filter_action_oem ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -576,7 +576,7 @@ event_filter_action_oem_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_filter_action_oem = same (kv->value_input, "yes");
 
@@ -597,14 +597,14 @@ event_filter_action_diagnostic_interrupt_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              eft.event_filter_action_diagnostic_interrupt ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -619,7 +619,7 @@ event_filter_action_diagnostic_interrupt_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_filter_action_diagnostic_interrupt = same (kv->value_input, "yes");
 
@@ -640,14 +640,14 @@ event_filter_action_group_control_operation_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              eft.event_filter_action_group_control_operation ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -662,7 +662,7 @@ event_filter_action_group_control_operation_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_filter_action_group_control_operation = same (kv->value_input, "yes");
 
@@ -683,14 +683,14 @@ alert_policy_number_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  eft.alert_policy_number) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -705,7 +705,7 @@ alert_policy_number_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.alert_policy_number = atoi (kv->value_input);
 
@@ -726,14 +726,14 @@ group_control_selector_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  eft.group_control_selector) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -748,7 +748,7 @@ group_control_selector_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.group_control_selector = atoi (kv->value_input);
 
@@ -769,14 +769,14 @@ event_severity_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              event_severity_string (eft.event_severity)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -791,7 +791,7 @@ event_severity_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_severity = event_severity_number (kv->value_input);
 
@@ -812,14 +812,14 @@ generator_id_byte_1_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.generator_id_byte_1) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -834,7 +834,7 @@ generator_id_byte_1_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.generator_id_byte_1 = strtol (kv->value_input, NULL, 0);
 
@@ -856,14 +856,14 @@ generator_id_byte_2_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.generator_id_byte_2) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -878,7 +878,7 @@ generator_id_byte_2_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.generator_id_byte_2 = strtol (kv->value_input, NULL, 0);
 
@@ -899,14 +899,14 @@ sensor_type_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              sensor_type_string (eft.sensor_type)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -921,7 +921,7 @@ sensor_type_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.sensor_type = sensor_type_number (kv->value_input);
 
@@ -942,14 +942,14 @@ sensor_number_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.sensor_number) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -964,7 +964,7 @@ sensor_number_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.sensor_number = strtol (kv->value_input, NULL, 0);
 
@@ -985,14 +985,14 @@ event_trigger_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.event_trigger) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1007,7 +1007,7 @@ event_trigger_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_trigger = strtol (kv->value_input, NULL, 0);
 
@@ -1028,14 +1028,14 @@ event_data1_offset_mask_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.event_data1_offset_mask) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1050,7 +1050,7 @@ event_data1_offset_mask_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_data1_offset_mask = strtol (kv->value_input, NULL, 0);
 
@@ -1071,14 +1071,14 @@ event_data1_and_mask_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.event_data1_and_mask) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1093,7 +1093,7 @@ event_data1_and_mask_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_data1_and_mask = strtol (kv->value_input, NULL, 0);
 
@@ -1114,14 +1114,14 @@ event_data1_compare1_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.event_data1_compare1) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1136,7 +1136,7 @@ event_data1_compare1_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_data1_compare1 = strtol (kv->value_input, NULL, 0);
 
@@ -1157,14 +1157,14 @@ event_data1_compare2_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.event_data1_compare2) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1179,7 +1179,7 @@ event_data1_compare2_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_data1_compare2 = strtol (kv->value_input, NULL, 0);
 
@@ -1200,14 +1200,14 @@ event_data2_and_mask_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.event_data2_and_mask) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1222,7 +1222,7 @@ event_data2_and_mask_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_data2_and_mask = strtol (kv->value_input, NULL, 0);
 
@@ -1243,14 +1243,14 @@ event_data2_compare1_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.event_data2_compare1) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1265,7 +1265,7 @@ event_data2_compare1_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_data2_compare1 = strtol (kv->value_input, NULL, 0);
 
@@ -1286,14 +1286,14 @@ event_data2_compare2_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.event_data2_compare2) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1308,7 +1308,7 @@ event_data2_compare2_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_data2_compare2 = strtol (kv->value_input, NULL, 0);
 
@@ -1329,14 +1329,14 @@ event_data3_and_mask_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.event_data3_and_mask) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1351,7 +1351,7 @@ event_data3_and_mask_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_data3_and_mask = strtol (kv->value_input, NULL, 0);
 
@@ -1372,14 +1372,14 @@ event_data3_compare1_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.event_data3_compare1) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1394,7 +1394,7 @@ event_data3_compare1_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_data3_compare1 = strtol (kv->value_input, NULL, 0);
 
@@ -1415,14 +1415,14 @@ event_data3_compare2_checkout (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (_config_section_update_keyvalue_output_hex (state_data->pstate,
                                                   kv,
                                                   eft.event_data3_compare2) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -1437,7 +1437,7 @@ event_data3_compare2_commit (const char *section_name,
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   eft.event_data3_compare2 = strtol (kv->value_input, NULL, 0);
 
@@ -1458,7 +1458,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                        stderr,
                        "Invalid Num = %d\n",
                        num);
-      return NULL;
+      return (NULL);
     }
 
   snprintf (buf, CONFIG_MAX_SECTION_NAME_LEN, "Event_Filter_%d", num);
@@ -1747,5 +1747,5 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
  cleanup:
   if (section)
     config_section_destroy (state_data->pstate, section);
-  return NULL;
+  return (NULL);
 }

@@ -88,6 +88,6 @@ bits_merge (uint64_t bits, uint8_t start, uint8_t end, uint64_t val, uint64_t *r
   bits     |= ~msb_ones;
   msb_ones |= (val << start);
   *result = (bits & msb_ones);
-  return 0;
+  return (0);
 }
 

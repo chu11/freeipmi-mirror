@@ -85,5 +85,5 @@ sel_parse_fiid_obj_get (ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj, char *field, u
     }
 
   *val = lval;
-  return (1);                   /* return 1 like real call */
+  return (1);                   /* return (1) like real call */
 }

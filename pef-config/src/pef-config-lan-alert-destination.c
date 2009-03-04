@@ -190,14 +190,14 @@ alert_destination_type_checkout (const char *section_name,
   if ((ret = _get_destination_type (state_data,
                                     section_name,
                                     &dt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              alert_destination_type_string (dt.alert_destination_type)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -212,7 +212,7 @@ alert_destination_type_commit (const char *section_name,
   if ((ret = _get_destination_type (state_data,
                                     section_name,
                                     &dt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   dt.alert_destination_type = alert_destination_type_number (kv->value_input);
 
@@ -233,14 +233,14 @@ alert_acknowledge_checkout (const char *section_name,
   if ((ret = _get_destination_type (state_data,
                                     section_name,
                                     &dt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              dt.alert_acknowledge ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -255,7 +255,7 @@ alert_acknowledge_commit (const char *section_name,
   if ((ret = _get_destination_type (state_data,
                                     section_name,
                                     &dt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   dt.alert_acknowledge = same (kv->value_input, "yes");
 
@@ -276,14 +276,14 @@ alert_acknowledge_timeout_checkout (const char *section_name,
   if ((ret = _get_destination_type (state_data,
                                     section_name,
                                     &dt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  dt.alert_acknowledge_timeout) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -298,7 +298,7 @@ alert_acknowledge_timeout_commit (const char *section_name,
   if ((ret = _get_destination_type (state_data,
                                     section_name,
                                     &dt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   dt.alert_acknowledge_timeout = atoi (kv->value_input);
 
@@ -319,14 +319,14 @@ alert_retries_checkout (const char *section_name,
   if ((ret = _get_destination_type (state_data,
                                     section_name,
                                     &dt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
                                                  dt.alert_retries) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -341,7 +341,7 @@ alert_retries_commit (const char *section_name,
   if ((ret = _get_destination_type (state_data,
                                     section_name,
                                     &dt)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   dt.alert_retries = atoi (kv->value_input);
 
@@ -544,14 +544,14 @@ alert_gateway_checkout (const char *section_name,
   if ((ret = _get_destination_addresses (state_data,
                                          section_name,
                                          &da)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              alert_gateway_string (da.alert_gateway)) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -566,7 +566,7 @@ alert_gateway_commit (const char *section_name,
   if ((ret = _get_destination_addresses (state_data,
                                          section_name,
                                          &da)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   da.alert_gateway = alert_gateway_number (kv->value_input);
 
@@ -587,14 +587,14 @@ alert_ip_address_checkout (const char *section_name,
   if ((ret = _get_destination_addresses (state_data,
                                          section_name,
                                          &da)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              da.alert_ip) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -609,7 +609,7 @@ alert_ip_address_commit (const char *section_name,
   if ((ret = _get_destination_addresses (state_data,
                                          section_name,
                                          &da)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   /* length checked earlier during validation */
   strcpy (da.alert_ip, kv->value_input);
@@ -631,14 +631,14 @@ alert_mac_address_checkout (const char *section_name,
   if ((ret = _get_destination_addresses (state_data,
                                          section_name,
                                          &da)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              da.alert_mac) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+    return (CONFIG_ERR_FATAL_ERROR);
 
-  return CONFIG_ERR_SUCCESS;
+  return (CONFIG_ERR_SUCCESS);
 }
 
 static config_err_t
@@ -653,7 +653,7 @@ alert_mac_address_commit (const char *section_name,
   if ((ret = _get_destination_addresses (state_data,
                                          section_name,
                                          &da)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   /* length checked earlier during validation */
   strcpy (da.alert_mac, kv->value_input);
@@ -675,7 +675,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                        stderr,
                        "Invalid Num = %d\n",
                        num);
-      return NULL;
+      return (NULL);
     }
 
   snprintf (buf, CONFIG_MAX_SECTION_NAME_LEN, "Lan_Alert_Destination_%d", num);
@@ -764,6 +764,6 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
  cleanup:
   if (section)
     config_section_destroy (state_data->pstate, section);
-  return NULL;
+  return (NULL);
 }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.95 2009-03-03 23:56:55 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.96 2009-03-04 18:07:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -423,7 +423,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
               ip->ic->hostname, ip->protocol_state, (unsigned int)seq_num,
               ip->highest_received_sequence_number);
 
-  return rv;
+  return (rv);
 }
 
 int

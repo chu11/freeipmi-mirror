@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.38 2009-03-03 23:56:55 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.39 2009-03-04 18:07:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -123,14 +123,14 @@ _connection_setup (struct ipmipower_connection *ic, char *hostname)
   if ((ic->ipmi_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
     {
       if (errno == EMFILE)
-        return -1;
+        return (-1);
       ierr_exit ("socket() error: %s", strerror (errno));
     }
 
   if ((ic->ping_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
     {
       if (errno == EMFILE)
-        return -1;
+        return (-1);
       ierr_exit ("socket() error: %s", strerror (errno));
     }
 
@@ -187,13 +187,13 @@ _connection_setup (struct ipmipower_connection *ic, char *hostname)
           cbuf_printf (ttyout, "gethostbyname() error %s: h_errno = %d", ic->hostname, h_errno);
 #endif /* !HAVE_HSTRERROR */
         }
-      return -1;
+      return (-1);
     }
   ic->destaddr.sin_addr = *((struct in_addr *)result->h_addr);
 
   ic->skip = 0;
 
-  return 0;
+  return (0);
 }
 
 struct ipmipower_connection *
@@ -316,5 +316,5 @@ ipmipower_connection_hostname_index (struct ipmipower_connection *ics,
     }
 
   ierr_dbg ("ipmipower_connection_hostname_index: %s not found", hostname);
-  return -1;
+  return (-1);
 }

@@ -165,7 +165,7 @@ _pci_get_regs (ipmi_locate_ctx_t ctx,
   rv = 0;
  cleanup:
   fclose (fp);
-  return rv;
+  return (rv);
 }
 
 #if (__WORDSIZE == 32)
@@ -275,7 +275,7 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
  cleanup:
   if (fp_devices)
     fclose (fp_devices);
-  return rv;
+  return (rv);
 }
 
 #else  /* __linux */
@@ -298,7 +298,7 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
     }
 
   LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
-  return -1;
+  return (-1);
 }
 
 #endif /* !__linux */

@@ -117,7 +117,7 @@ ipmi_mutex_lock (int semid)
     break;
   } while (1);
 
-  return 0;
+  return (0);
 }
 
 int
@@ -144,5 +144,5 @@ ipmi_mutex_unlock (int semid)
      optimizations in Linux kernel.  --Anand Babu
   */
   usleep (1);
-  return 0;
+  return (0);
 }
