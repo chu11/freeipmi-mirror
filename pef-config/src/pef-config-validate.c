@@ -5,7 +5,7 @@
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2, or (at your option)
   any later version.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -38,7 +38,7 @@
 
 #include "freeipmi-portability.h"
 
-config_validate_t 
+config_validate_t
 alert_destination_type_validate (const char *section_name,
                                  const char *key_name,
                                  const char *value,
@@ -49,7 +49,7 @@ alert_destination_type_validate (const char *section_name,
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-config_validate_t 
+config_validate_t
 alert_gateway_validate (const char *section_name,
                         const char *key_name,
                         const char *value,
@@ -71,7 +71,7 @@ policy_type_validate (const char *section_name,
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-config_validate_t 
+config_validate_t
 filter_type_validate (const char *section_name,
                       const char *key_name,
                       const char *value,
@@ -82,7 +82,7 @@ filter_type_validate (const char *section_name,
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-config_validate_t 
+config_validate_t
 event_severity_validate (const char *section_name,
                          const char *key_name,
                          const char *value,
@@ -93,7 +93,7 @@ event_severity_validate (const char *section_name,
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-config_validate_t 
+config_validate_t
 sensor_type_validate (const char *section_name,
                       const char *key_name,
                       const char *value,

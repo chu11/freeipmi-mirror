@@ -5,7 +5,7 @@
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2, or (at your option)
   any later version.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -123,7 +123,7 @@ policy_type_string (uint8_t source)
   return "";
 }
 
-int 
+int
 filter_type_number (const char *source)
 {
   if (same (source, "manufacturer_pre_configured"))
@@ -155,7 +155,7 @@ filter_type_string (uint8_t source)
   return "";
 }
 
-int 
+int
 event_severity_number (const char *source)
 {
   if (same (source, "unspecified"))
@@ -172,7 +172,7 @@ event_severity_number (const char *source)
     return IPMI_EVENT_SEVERITY_CRITICAL_CONDITION;
   if (same (source, "non_recoverable"))
     return IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION;
-  
+
   return -1;
 }
 
@@ -199,7 +199,7 @@ event_severity_string (uint8_t source)
   return "";
 }
 
-int 
+int
 sensor_type_number (const char *source)
 {
   if (same (source, "reserved"))
@@ -294,7 +294,7 @@ sensor_type_number (const char *source)
     return IPMI_EVENT_SENSOR_TYPE_FRU_STATE;
   if (same (source, "any"))
     return IPMI_EVENT_SENSOR_TYPE_ANY;
-  
+
   return -1;
 }
 

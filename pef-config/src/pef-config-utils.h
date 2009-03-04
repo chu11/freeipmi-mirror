@@ -5,7 +5,7 @@
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2, or (at your option)
   any later version.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -23,19 +23,19 @@
 
 #include "pef-config.h"
 
-config_err_t get_lan_channel_number (struct pef_config_state_data *state_data, 
-                                  uint8_t *channel_number);
+config_err_t get_lan_channel_number (struct pef_config_state_data *state_data,
+                                     uint8_t *channel_number);
 
-config_err_t get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
-                                                uint8_t *number_of_lan_alert_destinations);
+config_err_t get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data,
+                                                   uint8_t *number_of_lan_alert_destinations);
 
-config_err_t get_number_of_alert_strings (struct pef_config_state_data *state_data, 
-                                       uint8_t *number_of_alert_strings);
+config_err_t get_number_of_alert_strings (struct pef_config_state_data *state_data,
+                                          uint8_t *number_of_alert_strings);
 
-config_err_t get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, 
-                                              uint8_t *number_of_alert_policy_entries);
+config_err_t get_number_of_alert_policy_entries (struct pef_config_state_data *state_data,
+                                                 uint8_t *number_of_alert_policy_entries);
 
-config_err_t get_number_of_event_filters (struct pef_config_state_data *state_data, 
-                                       uint8_t *number_of_event_filters);
+config_err_t get_number_of_event_filters (struct pef_config_state_data *state_data,
+                                          uint8_t *number_of_event_filters);
 
 #endif

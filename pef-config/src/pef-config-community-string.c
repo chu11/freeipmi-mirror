@@ -5,7 +5,7 @@
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2, or (at your option)
   any later version.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -46,59 +46,59 @@ community_string_checkout (const char *section_name,
   config_err_t ret;
   uint8_t channel_number;
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_community_string_rs)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-  
-  if (ipmi_cmd_get_lan_configuration_parameters_community_string(state_data->ipmi_ctx,
-                                                                 channel_number,
-                                                                 IPMI_GET_LAN_PARAMETER,
-                                                                 SET_SELECTOR,
-                                                                 BLOCK_SELECTOR,
-                                                                 obj_cmd_rs) < 0)
+
+  if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->ipmi_ctx,
+                                                                  channel_number,
+                                                                  IPMI_GET_LAN_PARAMETER,
+                                                                  SET_SELECTOR,
+                                                                  BLOCK_SELECTOR,
+                                                                  obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_get_lan_configuration_parameters_community_string: %s\n",
-                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_lan_configuration_parameters_community_string: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-  
-  memset(community_string,'\0', IPMI_MAX_COMMUNITY_STRING_LENGTH+1);
-  if (fiid_obj_get_data(obj_cmd_rs,
-                        "community_string",
-                        (uint8_t *)community_string,
-                        IPMI_MAX_COMMUNITY_STRING_LENGTH+1) < 0)
+
+  memset (community_string,'\0', IPMI_MAX_COMMUNITY_STRING_LENGTH+1);
+  if (fiid_obj_get_data (obj_cmd_rs,
+                         "community_string",
+                         (uint8_t *)community_string,
+                         IPMI_MAX_COMMUNITY_STRING_LENGTH+1) < 0)
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_get_data: 'obj_cmd_rs': %s\n",
-                      fiid_obj_errormsg(obj_cmd_rs));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'obj_cmd_rs': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
-  if (config_section_update_keyvalue_output(state_data->pstate, 
-                                            kv,
-                                            community_string) < 0)
+  if (config_section_update_keyvalue_output (state_data->pstate,
+                                             kv,
+                                             community_string) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }
 
@@ -112,41 +112,41 @@ community_string_commit (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
-  
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
     {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "fiid_obj_create: %s\n",
-                      strerror(errno));
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number(state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-  
-  if (ipmi_cmd_set_lan_configuration_parameters_community_string(state_data->ipmi_ctx,
-                                                                 channel_number,
-                                                                 kv->value_input,
-                                                                 strlen(kv->value_input),
-                                                                 obj_cmd_rs) < 0)
+
+  if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->ipmi_ctx,
+                                                                  channel_number,
+                                                                  kv->value_input,
+                                                                  strlen (kv->value_input),
+                                                                  obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
-        pstdout_fprintf(state_data->pstate,
-                        stderr,
-                        "ipmi_cmd_set_lan_configuration_parameters_community_string: %s\n",
-                        ipmi_ctx_errormsg(state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_lan_configuration_parameters_community_string: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-  
+
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY(obj_cmd_rs);
+  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }
 
@@ -166,30 +166,30 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
 {
   struct config_section *section = NULL;
 
-  if (!(section = config_section_create (state_data->pstate, 
+  if (!(section = config_section_create (state_data->pstate,
                                          "Community_String",
-                                         NULL, 
-                                         NULL, 
+                                         NULL,
+                                         NULL,
                                          0,
                                          NULL,
                                          NULL)))
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate, 
+  if (config_section_add_key (state_data->pstate,
                               section,
                               "Community_String",
                               "Give valid string",
                               0,
                               community_string_checkout,
                               community_string_commit,
-                              community_string_validate) < 0) 
+                              community_string_validate) < 0)
     goto cleanup;
 
   return section;
 
  cleanup:
   if (section)
-    config_section_destroy(state_data->pstate, section);
+    config_section_destroy (state_data->pstate, section);
   return NULL;
 }
 
