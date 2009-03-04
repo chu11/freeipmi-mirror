@@ -129,11 +129,11 @@ pef_info (pef_config_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters(state_data->ipmi_ctx,
-                                                                            IPMI_GET_PEF_PARAMETER,
-                                                                            SET_SELECTOR,
-                                                                            BLOCK_SELECTOR,
-                                                                            obj_cmd_rs) < 0)
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->ipmi_ctx,
+                                                                             IPMI_GET_PEF_PARAMETER,
+                                                                             SET_SELECTOR,
+                                                                             BLOCK_SELECTOR,
+                                                                             obj_cmd_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
             pstdout_fprintf (state_data->pstate,
@@ -164,11 +164,11 @@ pef_info (pef_config_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries(state_data->ipmi_ctx,
-                                                                                   IPMI_GET_PEF_PARAMETER,
-                                                                                   SET_SELECTOR,
-                                                                                   BLOCK_SELECTOR,
-                                                                                   obj_cmd_rs) < 0)
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->ipmi_ctx,
+                                                                                    IPMI_GET_PEF_PARAMETER,
+                                                                                    SET_SELECTOR,
+                                                                                    BLOCK_SELECTOR,
+                                                                                    obj_cmd_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
             pstdout_fprintf (state_data->pstate,
@@ -199,11 +199,11 @@ pef_info (pef_config_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings(state_data->ipmi_ctx,
-                                                                            IPMI_GET_PEF_PARAMETER,
-                                                                            SET_SELECTOR,
-                                                                            BLOCK_SELECTOR,
-                                                                            obj_cmd_rs) < 0)
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->ipmi_ctx,
+                                                                             IPMI_GET_PEF_PARAMETER,
+                                                                             SET_SELECTOR,
+                                                                             BLOCK_SELECTOR,
+                                                                             obj_cmd_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
             pstdout_fprintf (state_data->pstate,
