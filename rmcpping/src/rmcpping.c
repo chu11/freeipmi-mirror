@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.43 2009-03-04 23:02:38 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.44 2009-03-04 23:03:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -75,7 +75,7 @@ _fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val)
                         fiid_obj_errormsg (obj));
 
   if (!ret)
-    ipmi_ping_err_exit ("fiid_obj_get: '%s': no data"
+    ipmi_ping_err_exit ("fiid_obj_get: '%s': no data",
                         field);
 }
 
