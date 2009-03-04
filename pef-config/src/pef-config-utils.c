@@ -129,7 +129,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 config_err_t

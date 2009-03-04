@@ -515,7 +515,7 @@ _ipmi_kcs_get_status (ipmi_kcs_ctx_t ctx)
   assert (ctx);
   assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  return _INB (IPMI_KCS_REG_STATUS (ctx->driver_address, ctx->register_spacing));
+  return (_INB (IPMI_KCS_REG_STATUS (ctx->driver_address, ctx->register_spacing)));
 }
 
 /*
@@ -576,7 +576,7 @@ _ipmi_kcs_read_byte (ipmi_kcs_ctx_t ctx)
   assert (ctx);
   assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  return _INB (IPMI_KCS_REG_DATAOUT (ctx->driver_address));
+  return (_INB (IPMI_KCS_REG_DATAOUT (ctx->driver_address)));
 }
 
 /*

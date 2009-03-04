@@ -2428,7 +2428,7 @@ fiid_iterator_errnum (fiid_iterator_t iter)
 char *
 fiid_iterator_errormsg (fiid_iterator_t iter)
 {
-  return fiid_strerror (fiid_iterator_errnum (iter));
+  return (fiid_strerror (fiid_iterator_errnum (iter)));
 }
 
 int8_t

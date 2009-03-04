@@ -155,7 +155,7 @@ _session_timed_out (ipmi_ctx_t ctx)
       return (-1);
     }
 
-  return timercmp (&current, &session_timeout, >);
+  return (timercmp (&current, &session_timeout, >));
 }
 
 static int
@@ -451,7 +451,7 @@ _ipmi_check_session_sequence_number (ipmi_ctx_t ctx,
     }
 
  out:
-  return rv;
+  return (rv);
 }
 
 static int8_t

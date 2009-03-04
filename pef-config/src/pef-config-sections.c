@@ -135,7 +135,7 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
         goto cleanup;
     }
 
-  return sections;
+  return (sections);
 
  cleanup:
   config_sections_destroy (state_data->pstate, sections);

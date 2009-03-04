@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.49 2009-03-04 19:41:29 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.50 2009-03-04 22:39:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -174,7 +174,7 @@ ipmi_monitoring_ctx_create (void)
     }
 
   _init_ctx (c);
-  return c;
+  return (c);
 }
 
 void
@@ -758,7 +758,7 @@ ipmi_monitoring_read_record_id (ipmi_monitoring_ctx_t c)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return sensor_reading->record_id;
+  return (sensor_reading->record_id);
 }
 
 int
@@ -770,7 +770,7 @@ ipmi_monitoring_read_sensor_group (ipmi_monitoring_ctx_t c)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return sensor_reading->sensor_group;
+  return (sensor_reading->sensor_group);
 }
 
 char *
@@ -782,7 +782,7 @@ ipmi_monitoring_read_sensor_name (ipmi_monitoring_ctx_t c)
     return (NULL);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return sensor_reading->sensor_name;
+  return (sensor_reading->sensor_name);
 }
 
 
@@ -795,7 +795,7 @@ ipmi_monitoring_read_sensor_state (ipmi_monitoring_ctx_t c)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return sensor_reading->sensor_state;
+  return (sensor_reading->sensor_state);
 }
 
 int
@@ -807,7 +807,7 @@ ipmi_monitoring_read_sensor_units (ipmi_monitoring_ctx_t c)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return sensor_reading->sensor_units;
+  return (sensor_reading->sensor_units);
 }
 
 int
@@ -819,7 +819,7 @@ ipmi_monitoring_read_sensor_reading_type (ipmi_monitoring_ctx_t c)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return sensor_reading->sensor_reading_type;
+  return (sensor_reading->sensor_reading_type);
 }
 
 int
@@ -831,7 +831,7 @@ ipmi_monitoring_read_sensor_bitmask_type (ipmi_monitoring_ctx_t c)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return sensor_reading->sensor_bitmask_type;
+  return (sensor_reading->sensor_bitmask_type);
 }
 
 int
@@ -843,7 +843,7 @@ ipmi_monitoring_read_sensor_bitmask (ipmi_monitoring_ctx_t c)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return sensor_reading->sensor_bitmask;
+  return (sensor_reading->sensor_bitmask);
 }
 
 void *

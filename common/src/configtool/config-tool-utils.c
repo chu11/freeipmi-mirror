@@ -132,7 +132,7 @@ config_keypair_parse_string (char *str,
           *value = NULL;
         }
     }
-  return rv;
+  return (rv);
 }
 
 int
@@ -223,7 +223,7 @@ config_keypair_create (const char *section_name,
         }
     }
 
-  return keypair;
+  return (keypair);
 
  cleanup:
   if (keypair)
@@ -264,7 +264,7 @@ config_section_str_create (char *section_name)
     }
   sstr->next = NULL;
 
-  return sstr;
+  return (sstr);
 
  cleanup:
   config_section_str_destroy (sstr);
@@ -423,7 +423,7 @@ config_find_section (pstdout_state_t pstate,
       s = s->next;
     }
 
-  return s;
+  return (s);
 }
 
 struct config_key *
@@ -444,7 +444,7 @@ config_find_key (pstdout_state_t pstate,
       k = k->next;
     }
 
-  return k;
+  return (k);
 }
 
 struct config_keyvalue *
@@ -465,5 +465,5 @@ config_find_keyvalue (pstdout_state_t pstate,
       kv = kv->next;
     }
 
-  return kv;
+  return (kv);
 }

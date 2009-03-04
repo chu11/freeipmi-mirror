@@ -102,8 +102,9 @@
 static inline void*
 freeipmi_memcpy (void *dest, const void *src, size_t n)
 {
-  while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
-  return dest;
+  while (0 <= --n)
+    ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
+  return (dest);
 }
 #define memcpy freeipmi_memcpy
 #endif /* HAVE_MEMCPY */
@@ -118,7 +119,7 @@ static inline void*
 freeipmi_memset (void *s, int c, size_t n)
 {
   while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
-  return s;
+  return (s);
 }
 #define memset freeipmi_memset
 #endif /* HAVE_MEMSET */
@@ -128,9 +129,11 @@ static inline char*
 freeipmi_strchr (const char* s, int c)
 {
   while (*s != '\0')
-    if (*s == (char)c) return s;
-    else s++;
-  return NULL;
+    if (*s == (char)c)
+      return s;
+    else
+      s++;
+  return (NULL);
 }
 # define strchr freeipmi_strchr
 #endif /* HAVE_STRCHR */

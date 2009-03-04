@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.15 2009-03-04 19:41:29 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.16 2009-03-04 22:39:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -231,7 +231,7 @@ ipmidetect_handle_create ()
 
   _initialize_handle (handle);
   handle->errnum = IPMIDETECT_ERR_SUCCESS;
-  return handle;
+  return (handle);
 }
 
 /*
@@ -347,7 +347,7 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
   rv = 0;
  cleanup:
   (void)conffile_handle_destroy (cf);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -461,7 +461,7 @@ _low_timeout_connect (ipmidetect_t handle,
       goto cleanup;
     }
 
-  return fd;
+  return (fd);
 
  cleanup:
   close (fd);
@@ -528,7 +528,7 @@ _get_data (ipmidetect_t handle,
   rv = 0;
  cleanup:
   close (fd);
-  return rv;
+  return (rv);
 
 }
 
@@ -650,26 +650,26 @@ int
 ipmidetect_errnum (ipmidetect_t handle)
 {
   if (!handle)
-    return IPMIDETECT_ERR_HANDLE_NULL;
+    return (IPMIDETECT_ERR_HANDLE_NULL);
   else if (handle->magic != IPMIDETECT_MAGIC_NUM)
-    return IPMIDETECT_ERR_HANDLE_INVALID;
+    return (IPMIDETECT_ERR_HANDLE_INVALID);
 
-  return handle->errnum;
+  return (handle->errnum);
 }
 
 char *
 ipmidetect_strerror (int errnum)
 {
   if (errnum < IPMIDETECT_ERR_SUCCESS || errnum > IPMIDETECT_ERR_ERRNUMRANGE)
-    return ipmidetect_errmsg[IPMIDETECT_ERR_ERRNUMRANGE];
+    return (ipmidetect_errmsg[IPMIDETECT_ERR_ERRNUMRANGE]);
 
-  return ipmidetect_errmsg[errnum];
+  return (ipmidetect_errmsg[errnum]);
 }
 
 char *
 ipmidetect_errormsg (ipmidetect_t handle)
 {
-  return ipmidetect_strerror (ipmidetect_errnum (handle));
+  return (ipmidetect_strerror (ipmidetect_errnum (handle)));
 }
 
 void
@@ -723,13 +723,13 @@ _get_nodes_string (ipmidetect_t handle, char *buf, int buflen, int which)
 int
 ipmidetect_get_detected_nodes_string (ipmidetect_t handle, char *buf, int buflen)
 {
-  return _get_nodes_string (handle, buf, buflen, IPMIDETECT_DETECTED_NODES);
+  return (_get_nodes_string (handle, buf, buflen, IPMIDETECT_DETECTED_NODES));
 }
 
 int
 ipmidetect_get_undetected_nodes_string (ipmidetect_t handle, char *buf, int buflen)
 {
-  return _get_nodes_string (handle, buf, buflen, IPMIDETECT_UNDETECTED_NODES);
+  return (_get_nodes_string (handle, buf, buflen, IPMIDETECT_UNDETECTED_NODES));
 }
 
 /*
@@ -772,18 +772,18 @@ _is_node (ipmidetect_t handle, const char *node, int which)
     rv = 0;
 
   handle->errnum = IPMIDETECT_ERR_SUCCESS;
-  return rv;
+  return (rv);
 }
 
 int
 ipmidetect_is_node_detected (ipmidetect_t handle, const char *node)
 {
-  return _is_node (handle, node, IPMIDETECT_DETECTED_NODES);
+  return (_is_node (handle, node, IPMIDETECT_DETECTED_NODES));
 }
 
 int
 ipmidetect_is_node_undetected (ipmidetect_t handle, const char *node)
 {
-  return _is_node (handle, node, IPMIDETECT_UNDETECTED_NODES);
+  return (_is_node (handle, node, IPMIDETECT_UNDETECTED_NODES));
 }
 

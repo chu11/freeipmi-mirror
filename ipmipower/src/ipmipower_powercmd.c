@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.166 2009-03-04 19:41:30 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.167 2009-03-04 22:39:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -327,7 +327,8 @@ int
 ipmipower_powercmd_pending ()
 {
   assert (pending);  /* did not run ipmipower_powercmd_setup() */
-  return !list_is_empty (pending);
+
+  return (!list_is_empty (pending));
 }
 
 /* _send_packet
@@ -1333,7 +1334,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
        */
       if (cmd_args.hostrange.fanout
           && (executing_count >= cmd_args.hostrange.fanout))
-        return cmd_args.common.session_timeout;
+        return (cmd_args.common.session_timeout);
 
       if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
         _send_packet (ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
@@ -1679,5 +1680,5 @@ ipmipower_powercmd_process_pending (int *timeout)
     *timeout = min_timeout;
   else
     *timeout = 0;
-  return num_pending;
+  return (num_pending);
 }

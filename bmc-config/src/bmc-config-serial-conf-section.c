@@ -175,7 +175,7 @@ enable_basic_mode_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -195,11 +195,11 @@ enable_basic_mode_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   cm.basic_mode = same (kv->value_input, "yes");
 
-  return _set_connection_mode (state_data, &cm);
+  return (_set_connection_mode (state_data, &cm));
 }
 
 static config_err_t
@@ -212,7 +212,7 @@ enable_ppp_mode_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -232,11 +232,11 @@ enable_ppp_mode_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   cm.ppp_mode = same (kv->value_input, "yes");
 
-  return _set_connection_mode (state_data, &cm);
+  return (_set_connection_mode (state_data, &cm));
 }
 
 static config_err_t
@@ -249,7 +249,7 @@ enable_terminal_mode_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -269,11 +269,11 @@ enable_terminal_mode_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   cm.terminal_mode = same (kv->value_input, "yes");
 
-  return _set_connection_mode (state_data, &cm);
+  return (_set_connection_mode (state_data, &cm));
 }
 
 static config_err_t
@@ -286,7 +286,7 @@ connect_mode_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -306,11 +306,11 @@ connect_mode_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   cm.connect_mode = connect_mode_number (kv->value_input);
 
-  return _set_connection_mode (state_data, &cm);
+  return (_set_connection_mode (state_data, &cm));
 }
 
 static config_err_t
@@ -642,7 +642,7 @@ enable_dtr_hangup_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, &cs)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -662,11 +662,11 @@ enable_dtr_hangup_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, &cs)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   cs.dtr_hangup = same (kv->value_input, "yes");
 
-  return _set_ipmi_messaging_comm_settings (state_data, &cs);
+  return (_set_ipmi_messaging_comm_settings (state_data, &cs));
 }
 
 static config_err_t
@@ -679,7 +679,7 @@ flow_control_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, &cs)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -699,11 +699,11 @@ flow_control_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, &cs)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   cs.flow_control = flow_control_number (kv->value_input);
 
-  return _set_ipmi_messaging_comm_settings (state_data, &cs);
+  return (_set_ipmi_messaging_comm_settings (state_data, &cs));
 }
 
 static config_err_t
@@ -716,7 +716,7 @@ bit_rate_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, &cs)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -736,17 +736,17 @@ bit_rate_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, &cs)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   cs.bit_rate = bit_rate_number (kv->value_input);
 
-  return _set_ipmi_messaging_comm_settings (state_data, &cs);
+  return (_set_ipmi_messaging_comm_settings (state_data, &cs));
 }
 
 struct config_section *
 bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
 {
-  struct config_section *bmc_serial_conf_section = NULL;
+  struct config_section *section = NULL;
   char *section_comment =
     "In the Serial_Conf section, typical serial communication configuration "
     "is setup.  Most users will only be interested in IPMI over LAN, "
@@ -762,17 +762,17 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
   else
     verbose_flags = CONFIG_DO_NOT_CHECKOUT;
 
-  if (!(bmc_serial_conf_section = config_section_create (state_data->pstate,
-                                                         "Serial_Conf",
-                                                         "Serial_Conf",
-                                                         section_comment,
-                                                         verbose_flags,
-                                                         NULL,
-                                                         NULL)))
+  if (!(section = config_section_create (state_data->pstate,
+                                         "Serial_Conf",
+                                         "Serial_Conf",
+                                         section_comment,
+                                         verbose_flags,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              bmc_serial_conf_section,
+                              section,
                               "Enable_Basic_Mode",
                               "Possible values: Yes/No",
                               verbose_flags,
@@ -782,7 +782,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              bmc_serial_conf_section,
+                              section,
                               "Enable_PPP_Mode",
                               "Possible values: Yes/No",
                               verbose_flags,
@@ -792,7 +792,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              bmc_serial_conf_section,
+                              section,
                               "Enable_Terminal_Mode",
                               "Possible values: Yes/No",
                               verbose_flags,
@@ -802,7 +802,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              bmc_serial_conf_section,
+                              section,
                               "Connect_Mode",
                               "Possible values: Modem_Connect/Direct_Connect",
                               verbose_flags,
@@ -812,7 +812,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              bmc_serial_conf_section,
+                              section,
                               "Page_Blackout_Interval",
                               "Give a valid number",
                               verbose_flags,
@@ -822,7 +822,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              bmc_serial_conf_section,
+                              section,
                               "Call_Retry_Interval",
                               "Give a valid number",
                               verbose_flags,
@@ -833,7 +833,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
   if (config_section_add_key (state_data->pstate,
-                              bmc_serial_conf_section,
+                              section,
                               "Call_Retry_Time",
                               "Give a valid number",
                               CONFIG_DO_NOT_CHECKOUT,
@@ -843,7 +843,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              bmc_serial_conf_section,
+                              section,
                               "Enable_DTR_Hangup",
                               "Possible values: Yes/No",
                               verbose_flags,
@@ -853,7 +853,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              bmc_serial_conf_section,
+                              section,
                               "Flow_Control",
                               "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF",
                               verbose_flags,
@@ -863,7 +863,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              bmc_serial_conf_section,
+                              section,
                               "Bit_Rate",
                               "Possible values: 9600/19200/38400/57600/115200",
                               verbose_flags,
@@ -872,10 +872,10 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                               bit_rate_number_validate) < 0)
     goto cleanup;
 
-  return bmc_serial_conf_section;
+  return (section);
 
  cleanup:
-  if (bmc_serial_conf_section)
-    config_section_destroy (state_data->pstate, bmc_serial_conf_section);
-  return NULL;
+  if (section)
+    config_section_destroy (state_data->pstate, section);
+  return (NULL);
 }

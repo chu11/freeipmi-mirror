@@ -890,11 +890,11 @@ threshold_validate (const char *section_name,
   if (*endptr)
     return (CONFIG_VALIDATE_INVALID_VALUE);
 
-  return _floating_point_in_range (section_name,
-                                   key_name,
-                                   value,
-                                   conv,
-                                   arg);
+  return (_floating_point_in_range (section_name,
+                                    key_name,
+                                    value,
+                                    conv,
+                                    arg));
 }
 
 config_validate_t
@@ -916,11 +916,11 @@ threshold_validate_positive (const char *section_name,
   if (conv < 0.0)
     return (CONFIG_VALIDATE_OUT_OF_RANGE_VALUE);
 
-  return _floating_point_in_range (section_name,
-                                   key_name,
-                                   value,
-                                   conv,
-                                   arg);
+  return (_floating_point_in_range (section_name,
+                                    key_name,
+                                    value,
+                                    conv,
+                                    arg));
 }
 
 config_validate_t
@@ -942,11 +942,11 @@ hysteresis_threshold_validate (const char *section_name,
   if (*endptr)
     return (CONFIG_VALIDATE_INVALID_VALUE);
 
-  return _floating_point_in_range (section_name,
-                                   key_name,
-                                   value,
-                                   conv,
-                                   arg);
+  return (_floating_point_in_range (section_name,
+                                    key_name,
+                                    value,
+                                    conv,
+                                    arg));
 }
 
 config_validate_t
@@ -971,11 +971,11 @@ hysteresis_threshold_validate_positive (const char *section_name,
   if (conv < 0.0)
     return (CONFIG_VALIDATE_OUT_OF_RANGE_VALUE);
 
-  return _floating_point_in_range (section_name,
-                                   key_name,
-                                   value,
-                                   conv,
-                                   arg);
+  return (_floating_point_in_range (section_name,
+                                    key_name,
+                                    value,
+                                    conv,
+                                    arg));
 }
 
 static int

@@ -135,11 +135,11 @@ int
 ipmi_sensor_read_ctx_errnum (ipmi_sensor_read_ctx_t ctx)
 {
   if (!ctx)
-    return IPMI_SENSOR_READ_ERR_CONTEXT_NULL;
+    return (IPMI_SENSOR_READ_ERR_CONTEXT_NULL);
   else if (ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
-    return IPMI_SENSOR_READ_ERR_CONTEXT_INVALID;
+    return (IPMI_SENSOR_READ_ERR_CONTEXT_INVALID);
   else
-    return (ctx)->errnum;
+    return (ctx->errnum);
 }
 
 char *

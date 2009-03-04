@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.27 2009-03-04 19:41:28 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.28 2009-03-04 22:39:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -152,11 +152,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       /* 'c' for backwards compatability */
     case 'c':   /* --cipher-suite-id */
       ret = common_parse_opt (ARGP_CIPHER_SUITE_ID_KEY, arg, state, &(cmd_args->common));
-      return ret;
+      return (ret);
       break;
     default:
       ret = common_parse_opt (key, arg, state, &(cmd_args->common));
-      return ret;
+      return (ret);
     }
 
   return (0);

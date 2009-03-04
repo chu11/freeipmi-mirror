@@ -239,7 +239,7 @@ config_checkout_section (pstdout_state_t pstate,
                    "EndSection\n");
   rv = ret;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 config_err_t
@@ -280,5 +280,5 @@ config_checkout (pstdout_state_t pstate,
       s = s->next;
     }
 
-  return rv;
+  return (rv);
 }

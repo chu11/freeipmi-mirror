@@ -94,7 +94,7 @@ static fipmiu64 U64 (fipmiu32 low, fipmiu32 high)
   self.l=low;
   self.h=high;
 
-  return self;
+  return (self);
 }
 #endif
 
@@ -408,14 +408,14 @@ _smbios_decode (ipmi_locate_ctx_t ctx,
   if (_checksum (buf, buf[0x05]) &&
       (memcmp (buf + 0x10, "_DMI_", 5) == 0) &&
       _checksum (buf + 0x10, 0x0F))
-    return _dmi_table (ctx,
-                       DWORD (buf + 0x18),
-                       WORD (buf + 0x16),
-                       WORD (buf + 0x1C),
-                       (buf[0x06] << 8) + buf[0x07],
-                       devmem,
-                       type,
-                       locate_info);
+    return (_dmi_table (ctx,
+                        DWORD (buf + 0x18),
+                        WORD (buf + 0x16),
+                        WORD (buf + 0x1C),
+                        (buf[0x06] << 8) + buf[0x07],
+                        devmem,
+                        type,
+                        locate_info));
 
   return (-1);
 }
@@ -435,14 +435,14 @@ _legacy_decode (ipmi_locate_ctx_t ctx,
   assert (locate_info);
 
   if (_checksum (buf, 0x0F))
-    return _dmi_table (ctx,
-                       DWORD (buf + 0x08),
-                       WORD (buf + 0x06),
-                       WORD (buf + 0x0C),
-                       ((buf[0x0E] & 0xF0) << 4) + (buf[0x0E] & 0x0F),
-                       devmem,
-                       type,
-                       locate_info);
+    return (_dmi_table (ctx,
+                        DWORD (buf + 0x08),
+                        WORD (buf + 0x06),
+                        WORD (buf + 0x0C),
+                        ((buf[0x0E] & 0xF0) << 4) + (buf[0x0E] & 0x0F),
+                        devmem,
+                        type,
+                        locate_info));
 
   return (-1);
 }

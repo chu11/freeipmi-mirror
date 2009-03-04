@@ -228,7 +228,7 @@ enable_pef_commit (pstdout_state_t pstate,
 
   pc.enable_pef = same (kv->value_input, "yes");
 
-  return _set_pef_control (pstate, ipmi_ctx, cmd_args, &pc);
+  return (_set_pef_control (pstate, ipmi_ctx, cmd_args, &pc));
 }
 
 config_err_t
@@ -271,7 +271,7 @@ enable_pef_event_messages_commit (pstdout_state_t pstate,
 
   pc.enable_pef_event_messages = same (kv->value_input, "yes");
 
-  return _set_pef_control (pstate, ipmi_ctx, cmd_args, &pc);
+  return (_set_pef_control (pstate, ipmi_ctx, cmd_args, &pc));
 }
 
 config_err_t
@@ -314,7 +314,7 @@ enable_pef_startup_delay_commit (pstdout_state_t pstate,
 
   pc.enable_pef_startup_delay = same (kv->value_input, "yes");
 
-  return _set_pef_control (pstate, ipmi_ctx, cmd_args, &pc);
+  return (_set_pef_control (pstate, ipmi_ctx, cmd_args, &pc));
 }
 
 config_err_t
@@ -357,7 +357,7 @@ enable_pef_alert_startup_delay_commit (pstdout_state_t pstate,
 
   pc.enable_pef_alert_startup_delay = same (kv->value_input, "yes");
 
-  return _set_pef_control (pstate, ipmi_ctx, cmd_args, &pc);
+  return (_set_pef_control (pstate, ipmi_ctx, cmd_args, &pc));
 }
 
 static config_err_t
@@ -555,7 +555,7 @@ enable_alert_action_commit (pstdout_state_t pstate,
 
   gc.enable_alert_action = same (kv->value_input, "yes");
 
-  return _set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc);
+  return (_set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc));
 }
 
 config_err_t
@@ -598,7 +598,7 @@ enable_power_down_action_commit (pstdout_state_t pstate,
 
   gc.enable_power_down_action = same (kv->value_input, "yes");
 
-  return _set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc);
+  return (_set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc));
 }
 
 config_err_t
@@ -641,7 +641,7 @@ enable_reset_action_commit (pstdout_state_t pstate,
 
   gc.enable_reset_action = same (kv->value_input, "yes");
 
-  return _set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc);
+  return (_set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc));
 }
 
 config_err_t
@@ -684,7 +684,7 @@ enable_power_cycle_action_commit (pstdout_state_t pstate,
 
   gc.enable_power_cycle_action = same (kv->value_input, "yes");
 
-  return _set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc);
+  return (_set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc));
 }
 
 config_err_t
@@ -727,7 +727,7 @@ enable_oem_action_commit (pstdout_state_t pstate,
 
   gc.enable_oem_action = same (kv->value_input, "yes");
 
-  return _set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc);
+  return (_set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc));
 }
 
 config_err_t
@@ -770,7 +770,7 @@ enable_diagnostic_interrupt_commit (pstdout_state_t pstate,
 
   gc.enable_diagnostic_interrupt = same (kv->value_input, "yes");
 
-  return _set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc);
+  return (_set_pef_action_global_control (pstate, ipmi_ctx, cmd_args, &gc));
 }
 
 config_err_t

@@ -1151,19 +1151,19 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
   args = state_data->prog_data->args;
 
   if (args->info)
-    return _display_sel_info (state_data);
+    return (_display_sel_info (state_data));
 
   if (args->sdr.flush_cache)
-    return _flush_cache (state_data);
+    return (_flush_cache (state_data));
 
   if (args->delete_all)
-    return _clear_entries (state_data);
+    return (_clear_entries (state_data));
 
   if (args->delete)
-    return _delete_records (state_data);
+    return (_delete_records (state_data));
 
   if (args->delete_range)
-    return _delete_range (state_data);
+    return (_delete_range (state_data));
 
   /* else default to displaying records */
 

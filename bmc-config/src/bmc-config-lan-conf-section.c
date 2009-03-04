@@ -1185,7 +1185,7 @@ vlan_id_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_vlan_id (state_data, &vi)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
@@ -1205,11 +1205,11 @@ vlan_id_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_vlan_id (state_data, &vi)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   vi.vlan_id = atoi (kv->value_input);
 
-  return _set_vlan_id (state_data, &vi);
+  return (_set_vlan_id (state_data, &vi));
 }
 
 static config_validate_t
@@ -1218,7 +1218,7 @@ vlan_id_validate (const char *section_name,
                   const char *value,
                   void *arg)
 {
-  return config_check_number_range (value, 0, 4095);
+  return (config_check_number_range (value, 0, 4095));
 }
 
 static config_err_t
@@ -1231,7 +1231,7 @@ vlan_id_enable_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_vlan_id (state_data, &vi)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -1251,11 +1251,11 @@ vlan_id_enable_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_vlan_id (state_data, &vi)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   vi.vlan_id_enable = same (kv->value_input, "yes");
 
-  return _set_vlan_id (state_data, &vi);
+  return (_set_vlan_id (state_data, &vi));
 }
 
 static config_err_t
@@ -1365,24 +1365,24 @@ vlan_priority_commit (const char *section_name,
 struct config_section *
 bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
 {
-  struct config_section *lan_conf_section = NULL;
+  struct config_section *section = NULL;
   char *section_comment =
     "In the Lan_Conf section, typical networking configuration is setup.  "
     "Most users will choose to set \"Static\" for the \"IP_Address_Source\" "
     "and set the appropriate \"IP_Address\", \"MAC_Address\", "
     "\"Subnet_Mask\", etc. for the machine.";
 
-  if (!(lan_conf_section = config_section_create (state_data->pstate,
-                                                  "Lan_Conf",
-                                                  "Lan_Conf",
-                                                  section_comment,
-                                                  0,
-                                                  NULL,
-                                                  NULL)))
+  if (!(section = config_section_create (state_data->pstate,
+                                         "Lan_Conf",
+                                         "Lan_Conf",
+                                         section_comment,
+                                         0,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
+                              section,
                               "IP_Address_Source",
                               "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
                               0,
@@ -1392,7 +1392,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
+                              section,
                               "IP_Address",
                               "Give valid IP address",
                               0,
@@ -1402,7 +1402,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
+                              section,
                               "MAC_Address",
                               "Give valid MAC address",
                               0,
@@ -1413,7 +1413,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
 
   /* TODO: checking valid netmask is not same as checking valid IP */
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
+                              section,
                               "Subnet_Mask",
                               "Give valid Subnet Mask",
                               0,
@@ -1423,7 +1423,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
+                              section,
                               "Default_Gateway_IP_Address",
                               "Give valid IP address",
                               0,
@@ -1433,7 +1433,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
+                              section,
                               "Default_Gateway_MAC_Address",
                               "Give valid MAC address",
                               0,
@@ -1443,7 +1443,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
+                              section,
                               "Backup_Gateway_IP_Address",
                               "Give valid IP address",
                               0,
@@ -1453,7 +1453,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
+                              section,
                               "Backup_Gateway_MAC_Address",
                               "Give valid MAC address",
                               0,
@@ -1463,7 +1463,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
+                              section,
                               "Vlan_id",
                               "Give valid unsigned number",
                               0,
@@ -1473,7 +1473,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
+                              section,
                               "Vlan_Id_Enable",
                               "Possible values: Yes/No",
                               0,
@@ -1483,7 +1483,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_section,
+                              section,
                               "Vlan_Priority",
                               "Give valid unsigned number",
                               0,
@@ -1492,11 +1492,11 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                               config_number_range_one_byte) < 0)
     goto cleanup;
 
-  return lan_conf_section;
+  return (section);
 
  cleanup:
-  if (lan_conf_section)
-    config_section_destroy (state_data->pstate, lan_conf_section);
-  return NULL;
+  if (section)
+    config_section_destroy (state_data->pstate, section);
+  return (NULL);
 }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_debug.c,v 1.16 2009-03-04 19:41:29 chu11 Exp $
+ *  $Id: ipmi_monitoring_debug.c,v 1.17 2009-03-04 22:39:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -89,5 +89,5 @@ __debug_msg_create (const char *fmt, ...)
   vsnprintf (buffer, IPMI_MONITORING_DEBUG_ERROR_BUFLEN, fmt, ap);
   va_end (ap);
 
-  return buffer;
+  return (buffer);
 }

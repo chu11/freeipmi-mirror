@@ -440,7 +440,7 @@ _ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
         break;
     }
 
-  return bytes_read;
+  return (bytes_read);
 }
 
 ipmi_ssif_ctx_t

@@ -3483,5 +3483,5 @@ config_file_parse (const char *filename,
  cleanup:
   if (cf)
     conffile_handle_destroy (cf);
-  return rv;
+  return (rv);
 }

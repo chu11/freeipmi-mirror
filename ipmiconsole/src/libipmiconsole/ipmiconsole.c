@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.92 2009-03-04 19:41:28 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.93 2009-03-04 22:39:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -545,7 +545,7 @@ ipmiconsole_ctx_create (char *hostname,
   c->session_submitted = 0;
 
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
-  return c;
+  return (c);
 
  cleanup:
 
@@ -603,7 +603,7 @@ ipmiconsole_ctx_status (ipmiconsole_ctx_t c)
   if (!c
       || c->magic != IPMICONSOLE_CTX_MAGIC
       || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
-    return IPMICONSOLE_CTX_STATUS_ERROR;
+    return (IPMICONSOLE_CTX_STATUS_ERROR);
 
   /* Do not check if the context is submitted, b/c it may not be.
    *
@@ -615,7 +615,7 @@ ipmiconsole_ctx_status (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return IPMICONSOLE_CTX_STATUS_ERROR;
+      return (IPMICONSOLE_CTX_STATUS_ERROR);
     }
 
   status = c->signal.status;
@@ -624,10 +624,10 @@ ipmiconsole_ctx_status (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return IPMICONSOLE_CTX_STATUS_ERROR;
+      return (IPMICONSOLE_CTX_STATUS_ERROR);
     }
 
-  return status;
+  return (status);
 }
 
 int
@@ -645,7 +645,7 @@ ipmiconsole_ctx_fd (ipmiconsole_ctx_t c)
     }
 
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
-  return c->fds.user_fd;
+  return (c->fds.user_fd);
 }
 
 int

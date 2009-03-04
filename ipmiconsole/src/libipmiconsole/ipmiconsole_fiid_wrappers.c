@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.c,v 1.17 2009-03-04 19:41:29 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.c,v 1.18 2009-03-04 22:39:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -102,7 +102,7 @@ Fiid_obj_create (ipmiconsole_ctx_t c, fiid_template_t tmpl)
       return (NULL);
     }
 
-  return obj;
+  return (obj);
 }
 
 int8_t

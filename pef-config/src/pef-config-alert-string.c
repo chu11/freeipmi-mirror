@@ -184,9 +184,9 @@ event_filter_number_commit (const char *section_name,
 
   ask.event_filter_number = atoi (kv->value_input);
 
-  return _set_alert_string_keys (state_data,
-                                 section_name,
-                                 &ask);
+  return (_set_alert_string_keys (state_data,
+                                  section_name,
+                                  &ask));
 }
 
 static config_err_t
@@ -227,9 +227,9 @@ alert_string_set_commit (const char *section_name,
 
   ask.alert_string_set = atoi (kv->value_input);
 
-  return _set_alert_string_keys (state_data,
-                                 section_name,
-                                 &ask);
+  return (_set_alert_string_keys (state_data,
+                                  section_name,
+                                  &ask));
 }
 
 static config_err_t
@@ -475,7 +475,7 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
                               alert_string_validate) < 0)
     goto cleanup;
 
-  return section;
+  return (section);
 
  cleanup:
   if (section)

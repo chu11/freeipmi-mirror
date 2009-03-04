@@ -207,9 +207,9 @@ policy_type_commit (const char *section_name,
 
   apt.policy_type = policy_type_number (kv->value_input);
 
-  return _set_alert_policy_table (state_data,
-                                  section_name,
-                                  &apt);
+  return (_set_alert_policy_table (state_data,
+                                   section_name,
+                                   &apt));
 }
 
 static config_err_t
@@ -250,9 +250,9 @@ policy_enabled_commit (const char *section_name,
 
   apt.policy_enabled = same (kv->value_input, "yes");
 
-  return _set_alert_policy_table (state_data,
-                                  section_name,
-                                  &apt);
+  return (_set_alert_policy_table (state_data,
+                                   section_name,
+                                   &apt));
 }
 
 static config_err_t
@@ -293,9 +293,9 @@ policy_number_commit (const char *section_name,
 
   apt.policy_number = atoi (kv->value_input);
 
-  return _set_alert_policy_table (state_data,
-                                  section_name,
-                                  &apt);
+  return (_set_alert_policy_table (state_data,
+                                   section_name,
+                                   &apt));
 }
 
 static config_err_t
@@ -336,9 +336,9 @@ destination_selector_commit (const char *section_name,
 
   apt.destination_selector = atoi (kv->value_input);
 
-  return _set_alert_policy_table (state_data,
-                                  section_name,
-                                  &apt);
+  return (_set_alert_policy_table (state_data,
+                                   section_name,
+                                   &apt));
 }
 
 static config_err_t
@@ -379,9 +379,9 @@ channel_number_commit (const char *section_name,
 
   apt.channel_number = atoi (kv->value_input);
 
-  return _set_alert_policy_table (state_data,
-                                  section_name,
-                                  &apt);
+  return (_set_alert_policy_table (state_data,
+                                   section_name,
+                                   &apt));
 }
 
 static config_err_t
@@ -422,9 +422,9 @@ alert_string_set_selector_commit (const char *section_name,
 
   apt.alert_string_set_selector = atoi (kv->value_input);
 
-  return _set_alert_policy_table (state_data,
-                                  section_name,
-                                  &apt);
+  return (_set_alert_policy_table (state_data,
+                                   section_name,
+                                   &apt));
 }
 
 static config_err_t
@@ -465,9 +465,9 @@ event_specific_alert_string_commit (const char *section_name,
 
   apt.event_specific_alert_string = same (kv->value_input, "yes");
 
-  return _set_alert_policy_table (state_data,
-                                  section_name,
-                                  &apt);
+  return (_set_alert_policy_table (state_data,
+                                   section_name,
+                                   &apt));
 }
 
 struct config_section *
@@ -596,7 +596,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
 
   if (strp)
     free (strp);
-  return section;
+  return (section);
 
  cleanup:
   if (strp)

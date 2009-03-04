@@ -513,7 +513,7 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
  cleanup:
   if (rv < 0)
     ipmi_sdr_cache_delete (ctx, cachefilenamebuf);
-  return rv;
+  return (rv);
 }
 
 int
@@ -605,7 +605,7 @@ sdr_cache_create_and_load (ipmi_sdr_cache_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 int
@@ -642,5 +642,5 @@ sdr_cache_flush_cache (ipmi_sdr_cache_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }

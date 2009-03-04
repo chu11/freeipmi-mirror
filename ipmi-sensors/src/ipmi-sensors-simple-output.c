@@ -254,7 +254,7 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
     free (lower_non_recoverable_threshold);
   if (upper_non_recoverable_threshold)
     free (upper_non_recoverable_threshold);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -438,7 +438,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static int
@@ -524,36 +524,36 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
     {
     case IPMI_SDR_FORMAT_FULL_SENSOR_RECORD:
       if (state_data->prog_data->args->legacy_output)
-        return _legacy_simple_output_full_record (state_data,
-                                                  sdr_record,
-                                                  sdr_record_len,
-                                                  record_id,
-                                                  reading,
-                                                  event_message_list,
-                                                  event_message_list_len);
+        return (_legacy_simple_output_full_record (state_data,
+                                                   sdr_record,
+                                                   sdr_record_len,
+                                                   record_id,
+                                                   reading,
+                                                   event_message_list,
+                                                   event_message_list_len));
       else
-        return _simple_output_full_record (state_data,
-                                           sdr_record,
-                                           sdr_record_len,
-                                           record_id,
-                                           reading,
-                                           event_message_list,
-                                           event_message_list_len);
+        return (_simple_output_full_record (state_data,
+                                            sdr_record,
+                                            sdr_record_len,
+                                            record_id,
+                                            reading,
+                                            event_message_list,
+                                            event_message_list_len));
     case IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD:
       if (state_data->prog_data->args->legacy_output)
-        return _legacy_simple_output_compact_record (state_data,
-                                                     sdr_record,
-                                                     sdr_record_len,
-                                                     record_id,
-                                                     event_message_list,
-                                                     event_message_list_len);
+        return (_legacy_simple_output_compact_record (state_data,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      record_id,
+                                                      event_message_list,
+                                                      event_message_list_len));
       else
-        return _simple_output_compact_record (state_data,
-                                              sdr_record,
-                                              sdr_record_len,
-                                              record_id,
-                                              event_message_list,
-                                              event_message_list_len);
+        return (_simple_output_compact_record (state_data,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               record_id,
+                                               event_message_list,
+                                               event_message_list_len));
     default:
       /* don't output any other types in simple mode */
       break;

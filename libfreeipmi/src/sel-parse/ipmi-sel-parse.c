@@ -666,7 +666,7 @@ ipmi_sel_parse_sel_entry_count (ipmi_sel_parse_ctx_t ctx)
       return (-1);
     }
 
-  return list_count (ctx->sel_entries);
+  return (list_count (ctx->sel_entries));
 }
 
 static int
@@ -727,17 +727,17 @@ _ipmi_sel_parse_find_record_id (ipmi_sel_parse_ctx_t ctx,
 int
 ipmi_sel_parse_seek_record_id (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
 {
-  return _ipmi_sel_parse_find_record_id (ctx,
-                                         record_id,
-                                         0);
+  return (_ipmi_sel_parse_find_record_id (ctx,
+                                          record_id,
+                                          0));
 }
 
 int
 ipmi_sel_parse_search_record_id (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
 {
-  return _ipmi_sel_parse_find_record_id (ctx,
-                                         record_id,
-                                         1);
+  return (_ipmi_sel_parse_find_record_id (ctx,
+                                          record_id,
+                                          1));
 }
 
 int
@@ -1402,13 +1402,13 @@ ipmi_sel_parse_read_record_string (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  return sel_parse_format_record_string (ctx,
-                                         fmt,
-                                         sel_parse_entry->sel_event_record,
-                                         sel_parse_entry->sel_event_record_len,
-                                         buf,
-                                         buflen,
-                                         flags);
+  return (sel_parse_format_record_string (ctx,
+                                          fmt,
+                                          sel_parse_entry->sel_event_record,
+                                          sel_parse_entry->sel_event_record_len,
+                                          buf,
+                                          buflen,
+                                          flags));
 }
 
 int
@@ -1585,26 +1585,26 @@ ipmi_sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  return sel_parse_format_record_string (ctx,
-                                         fmt,
-                                         record_buf,
-                                         record_buflen,
-                                         buf,
-                                         buflen,
-                                         flags);
+  return (sel_parse_format_record_string (ctx,
+                                          fmt,
+                                          record_buf,
+                                          record_buflen,
+                                          buf,
+                                          buflen,
+                                          flags));
 }
 
 int
 ipmi_sel_record_type_class (uint8_t record_type)
 {
   if (IPMI_SEL_RECORD_TYPE_IS_EVENT (record_type))
-    return IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD;
+    return (IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD);
 
   if (IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM (record_type))
-    return IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD;
+    return (IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD);
 
   if (IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM (record_type))
-    return IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD;
+    return (IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD);
 
-  return IPMI_SEL_RECORD_TYPE_CLASS_UNKNOWN;
+  return (IPMI_SEL_RECORD_TYPE_CLASS_UNKNOWN);
 }

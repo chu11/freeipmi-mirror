@@ -129,7 +129,7 @@ config_commit_section (pstdout_state_t pstate,
 
   rv = ret;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 config_err_t
@@ -163,5 +163,5 @@ config_commit (pstdout_state_t pstate,
       s = s->next;
     }
 
-  return rv;
+  return (rv);
 }

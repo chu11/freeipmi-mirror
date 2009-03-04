@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.66 2009-03-04 19:41:30 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.67 2009-03-04 22:39:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -119,7 +119,7 @@ _allocate_sensor_reading (ipmi_monitoring_ctx_t c)
     }
   memset (s, '\0', sizeof(struct ipmi_monitoring_sensor_reading));
 
-  return s;
+  return (s);
 
  cleanup:
   if (s)
@@ -288,7 +288,7 @@ _get_sensor_state (ipmi_monitoring_ctx_t c,
       i++;
     }
 
-  return sensor_state;
+  return (sensor_state);
 }
 
 static int
@@ -298,7 +298,7 @@ _get_threshold_sensor_state (ipmi_monitoring_ctx_t c,
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  return _get_sensor_state (c, sensor_event_bitmask, ipmi_threshold_sensor_config);
+  return (_get_sensor_state (c, sensor_event_bitmask, ipmi_threshold_sensor_config));
 }
 
 static int
@@ -377,7 +377,7 @@ _get_digital_sensor_state (ipmi_monitoring_ctx_t c,
       return (IPMI_MONITORING_SENSOR_STATE_UNKNOWN);
     }
 
-  return _get_sensor_state (c, sensor_event_bitmask, config);
+  return (_get_sensor_state (c, sensor_event_bitmask, config));
 }
 
 static int
@@ -438,7 +438,7 @@ _get_specific_sensor_state (ipmi_monitoring_ctx_t c,
       return (IPMI_MONITORING_SENSOR_STATE_UNKNOWN);
     }
 
-  return _get_sensor_state (c, sensor_event_bitmask, config);
+  return (_get_sensor_state (c, sensor_event_bitmask, config));
 }
 
 static void
@@ -706,7 +706,7 @@ _get_digital_sensor_bitmask_type (ipmi_monitoring_ctx_t c,
       sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN;
     }
 
-  return sensor_bitmask_type;
+  return (sensor_bitmask_type);
 }
 
 static int
@@ -842,7 +842,7 @@ _get_specific_sensor_bitmask_type (ipmi_monitoring_ctx_t c,
       sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN;
     }
 
-  return sensor_bitmask_type;
+  return (sensor_bitmask_type);
 }
 
 static int

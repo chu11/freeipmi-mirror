@@ -159,7 +159,7 @@ ipmi_ctx_create (void)
   _ipmi_ctx_init (ctx);
   ctx->errnum = IPMI_ERR_SUCCESS;
 
-  return ctx;
+  return (ctx);
 }
 
 int

@@ -688,7 +688,7 @@ _ipmi_acpi_table_checksum (ipmi_locate_ctx_t ctx,
   for (i = 0; i < len; i++)
     sum += buffer[i];
 
-  return sum;
+  return (sum);
 }
 
 static int

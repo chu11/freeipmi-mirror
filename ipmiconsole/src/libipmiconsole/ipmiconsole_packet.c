@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.33 2009-03-04 19:41:29 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.34 2009-03-04 22:39:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1200,7 +1200,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         return (-1);
     }
 
-  return pkt_len;
+  return (pkt_len);
 }
 
 int

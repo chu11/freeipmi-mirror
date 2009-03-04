@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.c,v 1.10 2009-03-04 18:07:36 chu11 Exp $
+ *  $Id: ipmi-md5.c,v 1.11 2009-03-04 22:39:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -311,7 +311,7 @@ md5_update_data (md5_t *ctx, uint8_t *buf, unsigned int buflen)
       _md5_update_count (ctx, buflen);
     }
 
-  return buflen;
+  return (buflen);
 }
 
 static void
@@ -382,5 +382,5 @@ md5_finish (md5_t *ctx, uint8_t *digest, unsigned int digestlen)
   digest[15] = (D & 0xff000000) >> 24;
 
   ctx->magic = ~MD5_MAGIC;
-  return MD5_DIGEST_LENGTH;
+  return (MD5_DIGEST_LENGTH);
 }

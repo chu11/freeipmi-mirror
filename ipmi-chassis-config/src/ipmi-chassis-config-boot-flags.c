@@ -926,7 +926,7 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
                               console_redirection_number_validate) < 0)
     goto cleanup;
 
-  return section;
+  return (section);
 
  cleanup:
   if (section)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: tool-hostrange-common.c,v 1.5 2009-03-04 19:41:26 chu11 Exp $
+ *  $Id: tool-hostrange-common.c,v 1.6 2009-03-04 22:39:35 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -131,7 +131,7 @@ eliminate_nodes (char **hosts)
     hostlist_destroy (hlnew);
   if (host)
     free (host);
-  return rv;
+  return (rv);
 }
 
 int
@@ -228,7 +228,7 @@ pstdout_setup (char **hosts,
         goto cleanup;
     }
 
-  return hosts_count;
+  return (hosts_count);
 
  cleanup:
   return (-1);

@@ -383,7 +383,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
     free (upper_critical_threshold);
   if (upper_non_recoverable_threshold)
     free (upper_non_recoverable_threshold);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -499,7 +499,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
     free (sensor_maximum_reading);
   if (sensor_minimum_reading)
     free (sensor_minimum_reading);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -758,7 +758,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1032,7 +1032,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1095,16 +1095,16 @@ _analog_data_format_string (ipmi_sensors_state_data_t *state_data, uint8_t analo
   switch (analog_data_format)
     {
     case IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED:
-      return IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED_STRING;
+      return (IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED_STRING);
     case IPMI_SDR_ANALOG_DATA_FORMAT_1S_COMPLEMENT:
-      return IPMI_SDR_ANALOG_DATA_FORMAT_1S_COMPLEMENT_STRING;
+      return (IPMI_SDR_ANALOG_DATA_FORMAT_1S_COMPLEMENT_STRING);
     case IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT:
-      return IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT_STRING;
+      return (IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT_STRING);
     default:
-      return IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG_STRING;
+      return (IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG_STRING);
     }
 
-  return IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG_STRING;
+  return (IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG_STRING);
 }
 
 static int
@@ -1976,79 +1976,79 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
       switch (record_type)
         {
         case IPMI_SDR_FORMAT_FULL_SENSOR_RECORD:
-          return _detailed_output_full_record (state_data,
+          return (_detailed_output_full_record (state_data,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                record_type,
+                                                record_id,
+                                                reading,
+                                                event_message_list,
+                                                event_message_list_len));
+        case IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD:
+          return (_detailed_output_compact_record (state_data,
+                                                   sdr_record,
+                                                   sdr_record_len,
+                                                   record_type,
+                                                   record_id,
+                                                   event_message_list,
+                                                   event_message_list_len));
+        case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
+          return (_detailed_output_event_only_record (state_data,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      record_type,
+                                                      record_id));
+        case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
+          return (_detailed_output_entity_association_record (state_data,
+                                                              sdr_record,
+                                                              sdr_record_len,
+                                                              record_type,
+                                                              record_id));
+
+        case IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD:
+          return (_detailed_output_device_relative_entity_association_record (state_data,
+                                                                              sdr_record,
+                                                                              sdr_record_len,
+                                                                              record_type,
+                                                                              record_id));
+        case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
+          return (_detailed_output_general_device_locator_record (state_data,
+                                                                  sdr_record,
+                                                                  sdr_record_len,
+                                                                  record_type,
+                                                                  record_id));
+        case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
+          return (_detailed_output_fru_device_locator_record (state_data,
+                                                              sdr_record,
+                                                              sdr_record_len,
+                                                              record_type,
+                                                              record_id));
+        case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
+          return (_detailed_output_management_controller_device_locator_record (state_data,
+                                                                                sdr_record,
+                                                                                sdr_record_len,
+                                                                                record_type,
+                                                                                record_id));
+        case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
+          return (_detailed_output_management_controller_confirmation_record (state_data,
+                                                                              sdr_record,
+                                                                              sdr_record_len,
+                                                                              record_type,
+                                                                              record_id));
+          break;
+        case IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD:
+          return (_detailed_output_bmc_message_channel_info_record (state_data,
+                                                                    sdr_record,
+                                                                    sdr_record_len,
+                                                                    record_type,
+                                                                    record_id));
+          break;
+        case IPMI_SDR_FORMAT_OEM_RECORD:
+          return (_detailed_output_oem_record (state_data,
                                                sdr_record,
                                                sdr_record_len,
                                                record_type,
-                                               record_id,
-                                               reading,
-                                               event_message_list,
-                                               event_message_list_len);
-        case IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD:
-          return _detailed_output_compact_record (state_data,
-                                                  sdr_record,
-                                                  sdr_record_len,
-                                                  record_type,
-                                                  record_id,
-                                                  event_message_list,
-                                                  event_message_list_len);
-        case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
-          return _detailed_output_event_only_record (state_data,
-                                                     sdr_record,
-                                                     sdr_record_len,
-                                                     record_type,
-                                                     record_id);
-        case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
-          return _detailed_output_entity_association_record (state_data,
-                                                             sdr_record,
-                                                             sdr_record_len,
-                                                             record_type,
-                                                             record_id);
-
-        case IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD:
-          return _detailed_output_device_relative_entity_association_record (state_data,
-                                                                             sdr_record,
-                                                                             sdr_record_len,
-                                                                             record_type,
-                                                                             record_id);
-        case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
-          return _detailed_output_general_device_locator_record (state_data,
-                                                                 sdr_record,
-                                                                 sdr_record_len,
-                                                                 record_type,
-                                                                 record_id);
-        case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
-          return _detailed_output_fru_device_locator_record (state_data,
-                                                             sdr_record,
-                                                             sdr_record_len,
-                                                             record_type,
-                                                             record_id);
-        case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
-          return _detailed_output_management_controller_device_locator_record (state_data,
-                                                                               sdr_record,
-                                                                               sdr_record_len,
-                                                                               record_type,
-                                                                               record_id);
-        case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
-          return _detailed_output_management_controller_confirmation_record (state_data,
-                                                                             sdr_record,
-                                                                             sdr_record_len,
-                                                                             record_type,
-                                                                             record_id);
-          break;
-        case IPMI_SDR_FORMAT_BMC_MESSAGE_CHANNEL_INFO_RECORD:
-          return _detailed_output_bmc_message_channel_info_record (state_data,
-                                                                   sdr_record,
-                                                                   sdr_record_len,
-                                                                   record_type,
-                                                                   record_id);
-          break;
-        case IPMI_SDR_FORMAT_OEM_RECORD:
-          return _detailed_output_oem_record (state_data,
-                                              sdr_record,
-                                              sdr_record_len,
-                                              record_type,
-                                              record_id);
+                                               record_id));
         default:
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -2062,32 +2062,32 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
       switch (record_type)
         {
         case IPMI_SDR_FORMAT_FULL_SENSOR_RECORD:
-          return _detailed_output_full_record (state_data,
-                                               sdr_record,
-                                               sdr_record_len,
-                                               record_type,
-                                               record_id,
-                                               reading,
-                                               event_message_list,
-                                               event_message_list_len);
+          return (_detailed_output_full_record (state_data,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                record_type,
+                                                record_id,
+                                                reading,
+                                                event_message_list,
+                                                event_message_list_len));
         case IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD:
-          return _detailed_output_compact_record (state_data,
-                                                  sdr_record,
-                                                  sdr_record_len,
-                                                  record_type,
-                                                  record_id,
-                                                  event_message_list,
-                                                  event_message_list_len);
+          return (_detailed_output_compact_record (state_data,
+                                                   sdr_record,
+                                                   sdr_record_len,
+                                                   record_type,
+                                                   record_id,
+                                                   event_message_list,
+                                                   event_message_list_len));
         case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
           /* only in legacy output, I dond't know why this was output
            * under verbose before
            */
           if (state_data->prog_data->args->legacy_output)
-            return _detailed_output_event_only_record (state_data,
-                                                       sdr_record,
-                                                       sdr_record_len,
-                                                       record_type,
-                                                       record_id);
+            return (_detailed_output_event_only_record (state_data,
+                                                        sdr_record,
+                                                        sdr_record_len,
+                                                        record_type,
+                                                        record_id));
         default:
           /* don't output any other types in verbose mode */
           break;

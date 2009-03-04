@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.61 2009-03-04 19:41:30 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.62 2009-03-04 22:39:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -61,7 +61,7 @@ _fiid_obj_create (fiid_template_t tmpl)
   if ((obj = fiid_obj_create (tmpl)) == NULL)
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
 
-  return obj;
+  return (obj);
 }
 
 static void
@@ -178,7 +178,7 @@ createpacket (char *destination,
   fiid_obj_destroy (obj_lan_msg_hdr);
   fiid_obj_destroy (obj_cmd);
 
-  return len;
+  return (len);
 }
 
 int

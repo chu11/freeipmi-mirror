@@ -34,7 +34,7 @@
 struct config_section *
 bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
 {
-  struct config_section * lan_channel_section = NULL;
+  struct config_section * section = NULL;
   char *section_comment =
     "In the Lan_Channel section, general IPMI over LAN can be enabled for "
     "disabled.  In the below, \"Volatile\" configurations are immediately "
@@ -52,25 +52,25 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
     "\"User_Level_Auth\" and \"Per_Message_Auth\" are typically set to "
     "\"Yes\" for additional security.";
 
-  if (!(lan_channel_section = config_section_create (state_data->pstate,
-                                                     "Lan_Channel",
-                                                     "Lan_Channel",
-                                                     section_comment,
-                                                     0,
-                                                     NULL,
-                                                     NULL)))
+  if (!(section = config_section_create (state_data->pstate,
+                                         "Lan_Channel",
+                                         "Lan_Channel",
+                                         section_comment,
+                                         0,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (bmc_config_channel_common_section_get (state_data,
-                                             lan_channel_section,
+                                             section,
                                              0) < 0)
     goto cleanup;
 
-  return lan_channel_section;
+  return (section);
 
  cleanup:
-  if (lan_channel_section)
-    config_section_destroy (state_data->pstate, lan_channel_section);
-  return NULL;
+  if (section)
+    config_section_destroy (state_data->pstate, section);
+  return (NULL);
 }
 

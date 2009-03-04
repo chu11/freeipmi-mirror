@@ -328,7 +328,7 @@ ipmi_open (const char *progname,
  out:
   if (locate_ctx)
     ipmi_locate_ctx_destroy (locate_ctx);
-  return ipmi_ctx;
+  return (ipmi_ctx);
 
  cleanup:
   if (ipmi_ctx)
@@ -416,7 +416,7 @@ parse_kg (unsigned char *outbuf, int outsz, const char *instr)
       rv = strlen (instr);
     }
 
-  return rv;
+  return (rv);
 }
 
 char *
@@ -481,5 +481,5 @@ format_kg (char *outstr, int outsz, const unsigned char *k_g)
         sprintf (p, "%02x", k_g[i]);
     }
 
-  return outstr;
+  return (outstr);
 }

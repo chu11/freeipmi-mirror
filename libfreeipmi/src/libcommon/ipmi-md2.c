@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.c,v 1.10 2009-03-04 18:07:36 chu11 Exp $
+ *  $Id: ipmi-md2.c,v 1.11 2009-03-04 22:39:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -208,7 +208,7 @@ md2_update_data (md2_t *ctx, uint8_t *buf, unsigned int buflen)
       Mlen += buflen;
     }
 
-  return buflen;
+  return (buflen);
 }
 
 static void
@@ -240,6 +240,6 @@ md2_finish (md2_t *ctx, uint8_t *digest, unsigned int digestlen)
   memcpy (digest, X, MD2_DIGEST_LENGTH);
 
   ctx->magic = ~MD2_MAGIC;
-  return MD2_DIGEST_LENGTH;
+  return (MD2_DIGEST_LENGTH);
 }
 

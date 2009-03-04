@@ -115,9 +115,9 @@ debug_hdr_cmd (uint8_t packet_type,
 
   str_cmd = ipmi_cmd_str (net_fn, cmd);
 
-  return debug_hdr_str (packet_type,
-                        packet_direction,
-                        str_cmd,
-                        hdrbuf,
-                        hdrbuf_len);
+  return (debug_hdr_str (packet_type,
+                         packet_direction,
+                         str_cmd,
+                         hdrbuf,
+                         hdrbuf_len));
 }

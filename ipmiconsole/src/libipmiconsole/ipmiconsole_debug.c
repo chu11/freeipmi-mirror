@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.c,v 1.17 2009-03-04 19:41:28 chu11 Exp $
+ *  $Id: ipmiconsole_debug.c,v 1.18 2009-03-04 22:39:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -296,5 +296,5 @@ __debug_msg_create (const char *fmt, ...)
   vsnprintf (buffer, IPMICONSOLE_DEBUG_ERROR_BUFLEN, fmt, ap);
   va_end (ap);
 
-  return buffer;
+  return (buffer);
 }

@@ -185,7 +185,7 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
                               community_string_validate) < 0)
     goto cleanup;
 
-  return section;
+  return (section);
 
  cleanup:
   if (section)

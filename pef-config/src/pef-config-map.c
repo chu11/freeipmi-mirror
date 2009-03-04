@@ -36,11 +36,11 @@ int
 alert_destination_type_number (const char *source)
 {
   if (same (source, "pet_trap"))
-    return IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION;
+    return (IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION);
   if (same (source, "oem1"))
-    return IPMI_DESTINATION_TYPE_OEM1;
+    return (IPMI_DESTINATION_TYPE_OEM1);
   if (same (source, "oem2"))
-    return IPMI_DESTINATION_TYPE_OEM2;
+    return (IPMI_DESTINATION_TYPE_OEM2);
   return (-1);
 }
 
@@ -63,9 +63,9 @@ int
 alert_gateway_number (const char *source)
 {
   if (same (source, "default"))
-    return IPMI_GATEWAY_SELECTOR_DEFAULT;
+    return (IPMI_GATEWAY_SELECTOR_DEFAULT);
   if (same (source, "backup"))
-    return IPMI_GATEWAY_SELECTOR_BACKUP;
+    return (IPMI_GATEWAY_SELECTOR_BACKUP);
   return (-1);
 }
 
@@ -86,15 +86,15 @@ int
 policy_type_number (const char *source)
 {
   if (same (source, "always_send_to_this_destination"))
-    return IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION;
+    return (IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION);
   if (same (source, "proceed_to_next_entry"))
-    return IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY;
+    return (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY);
   if (same (source, "do_not_proceed_any_more_entries"))
-    return IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES;
+    return (IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES);
   if (same (source, "proceed_to_next_entry_different_channel"))
-    return IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL;
+    return (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL);
   if (same (source, "proceed_to_next_entry_different_destination_type"))
-    return IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE;
+    return (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE);
   return (-1);
 }
 
@@ -127,9 +127,9 @@ int
 filter_type_number (const char *source)
 {
   if (same (source, "manufacturer_pre_configured"))
-    return IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER;
+    return (IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER);
   if (same (source, "software_configurable"))
-    return IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER;
+    return (IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER);
   if (same (source, "reserved1"))
     return (0x1);
   if (same (source, "reserved3"))
@@ -159,19 +159,19 @@ int
 event_severity_number (const char *source)
 {
   if (same (source, "unspecified"))
-    return IPMI_EVENT_SEVERITY_UNSPECIFIED;
+    return (IPMI_EVENT_SEVERITY_UNSPECIFIED);
   if (same (source, "monitor"))
-    return IPMI_EVENT_SEVERITY_MONITOR;
+    return (IPMI_EVENT_SEVERITY_MONITOR);
   if (same (source, "information"))
-    return IPMI_EVENT_SEVERITY_INFORMATION;
+    return (IPMI_EVENT_SEVERITY_INFORMATION);
   if (same (source, "ok"))
-    return IPMI_EVENT_SEVERITY_OK;
+    return (IPMI_EVENT_SEVERITY_OK);
   if (same (source, "non_critical"))
-    return IPMI_EVENT_SEVERITY_NON_CRITICAL_CONDITION;
+    return (IPMI_EVENT_SEVERITY_NON_CRITICAL_CONDITION);
   if (same (source, "critical"))
-    return IPMI_EVENT_SEVERITY_CRITICAL_CONDITION;
+    return (IPMI_EVENT_SEVERITY_CRITICAL_CONDITION);
   if (same (source, "non_recoverable"))
-    return IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION;
+    return (IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION);
 
   return (-1);
 }
@@ -203,97 +203,97 @@ int
 sensor_type_number (const char *source)
 {
   if (same (source, "reserved"))
-    return IPMI_EVENT_SENSOR_TYPE_RESERVED;
+    return (IPMI_EVENT_SENSOR_TYPE_RESERVED);
   if (same (source, "temperature"))
-    return IPMI_EVENT_SENSOR_TYPE_TEMPERATURE;
+    return (IPMI_EVENT_SENSOR_TYPE_TEMPERATURE);
   if (same (source, "voltage"))
-    return IPMI_EVENT_SENSOR_TYPE_VOLTAGE;
+    return (IPMI_EVENT_SENSOR_TYPE_VOLTAGE);
   if (same (source, "current"))
-    return IPMI_EVENT_SENSOR_TYPE_CURRENT;
+    return (IPMI_EVENT_SENSOR_TYPE_CURRENT);
   if (same (source, "fan"))
-    return IPMI_EVENT_SENSOR_TYPE_FAN;
+    return (IPMI_EVENT_SENSOR_TYPE_FAN);
   if (same (source, "physical_security"))
-    return IPMI_EVENT_SENSOR_TYPE_PHYSICAL_SECURITY;
+    return (IPMI_EVENT_SENSOR_TYPE_PHYSICAL_SECURITY);
   if (same (source, "platform_security_violation_attempt"))
-    return IPMI_EVENT_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
+    return (IPMI_EVENT_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT);
   if (same (source, "processor"))
-    return IPMI_EVENT_SENSOR_TYPE_PROCESSOR;
+    return (IPMI_EVENT_SENSOR_TYPE_PROCESSOR);
   if (same (source, "power_supply"))
-    return IPMI_EVENT_SENSOR_TYPE_POWER_SUPPLY;
+    return (IPMI_EVENT_SENSOR_TYPE_POWER_SUPPLY);
   if (same (source, "power_unit"))
-    return IPMI_EVENT_SENSOR_TYPE_POWER_UNIT;
+    return (IPMI_EVENT_SENSOR_TYPE_POWER_UNIT);
   if (same (source, "cooling_device"))
-    return IPMI_EVENT_SENSOR_TYPE_COOLING_DEVICE;
+    return (IPMI_EVENT_SENSOR_TYPE_COOLING_DEVICE);
   if (same (source, "other_units_based_sensor"))
-    return IPMI_EVENT_SENSOR_TYPE_OTHER_UNITS_BASED_SENSOR;
+    return (IPMI_EVENT_SENSOR_TYPE_OTHER_UNITS_BASED_SENSOR);
   if (same (source, "memory"))
-    return IPMI_EVENT_SENSOR_TYPE_MEMORY;
+    return (IPMI_EVENT_SENSOR_TYPE_MEMORY);
   if (same (source, "drive_slot"))
-    return IPMI_EVENT_SENSOR_TYPE_DRIVE_SLOT;
+    return (IPMI_EVENT_SENSOR_TYPE_DRIVE_SLOT);
   if (same (source, "post_memory_resize"))
-    return IPMI_EVENT_SENSOR_TYPE_POST_MEMORY_RESIZE;
+    return (IPMI_EVENT_SENSOR_TYPE_POST_MEMORY_RESIZE);
   if (same (source, "system_firmware_progress"))
-    return IPMI_EVENT_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS;
+    return (IPMI_EVENT_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS);
   if (same (source, "event_logging_disabled"))
-    return IPMI_EVENT_SENSOR_TYPE_EVENT_LOGGING_DISABLED;
+    return (IPMI_EVENT_SENSOR_TYPE_EVENT_LOGGING_DISABLED);
   if (same (source, "watchdog1"))
-    return IPMI_EVENT_SENSOR_TYPE_WATCHDOG1;
+    return (IPMI_EVENT_SENSOR_TYPE_WATCHDOG1);
   if (same (source, "system_event"))
-    return IPMI_EVENT_SENSOR_TYPE_SYSTEM_EVENT;
+    return (IPMI_EVENT_SENSOR_TYPE_SYSTEM_EVENT);
   if (same (source, "critical_interrupt"))
-    return IPMI_EVENT_SENSOR_TYPE_CRITICAL_INTERRUPT;
+    return (IPMI_EVENT_SENSOR_TYPE_CRITICAL_INTERRUPT);
   if (same (source, "button_switch"))
-    return IPMI_EVENT_SENSOR_TYPE_BUTTON_SWITCH;
+    return (IPMI_EVENT_SENSOR_TYPE_BUTTON_SWITCH);
   if (same (source, "module_board"))
-    return IPMI_EVENT_SENSOR_TYPE_MODULE_BOARD;
+    return (IPMI_EVENT_SENSOR_TYPE_MODULE_BOARD);
   if (same (source, "microcontroller_coprocessor"))
-    return IPMI_EVENT_SENSOR_TYPE_MICROCONTROLLER_COPROCESSOR;
+    return (IPMI_EVENT_SENSOR_TYPE_MICROCONTROLLER_COPROCESSOR);
   if (same (source, "add_in_card"))
-    return IPMI_EVENT_SENSOR_TYPE_ADD_IN_CARD;
+    return (IPMI_EVENT_SENSOR_TYPE_ADD_IN_CARD);
   if (same (source, "chassis"))
-    return IPMI_EVENT_SENSOR_TYPE_CHASSIS;
+    return (IPMI_EVENT_SENSOR_TYPE_CHASSIS);
   if (same (source, "chip_set"))
-    return IPMI_EVENT_SENSOR_TYPE_CHIP_SET;
+    return (IPMI_EVENT_SENSOR_TYPE_CHIP_SET);
   if (same (source, "other_fru"))
-    return IPMI_EVENT_SENSOR_TYPE_OTHER_FRU;
+    return (IPMI_EVENT_SENSOR_TYPE_OTHER_FRU);
   if (same (source, "cable_interconnect"))
-    return IPMI_EVENT_SENSOR_TYPE_CABLE_INTERCONNECT;
+    return (IPMI_EVENT_SENSOR_TYPE_CABLE_INTERCONNECT);
   if (same (source, "terminator"))
-    return IPMI_EVENT_SENSOR_TYPE_TERMINATOR;
+    return (IPMI_EVENT_SENSOR_TYPE_TERMINATOR);
   if (same (source, "system_boot_initiated"))
-    return IPMI_EVENT_SENSOR_TYPE_SYSTEM_BOOT_INITIATED;
+    return (IPMI_EVENT_SENSOR_TYPE_SYSTEM_BOOT_INITIATED);
   if (same (source, "boot_error"))
-    return IPMI_EVENT_SENSOR_TYPE_BOOT_ERROR;
+    return (IPMI_EVENT_SENSOR_TYPE_BOOT_ERROR);
   if (same (source, "os_boot"))
-    return IPMI_EVENT_SENSOR_TYPE_OS_BOOT;
+    return (IPMI_EVENT_SENSOR_TYPE_OS_BOOT);
   if (same (source, "os_critical_stop"))
-    return IPMI_EVENT_SENSOR_TYPE_OS_CRITICAL_STOP;
+    return (IPMI_EVENT_SENSOR_TYPE_OS_CRITICAL_STOP);
   if (same (source, "slot_connector"))
-    return IPMI_EVENT_SENSOR_TYPE_SLOT_CONNECTOR;
+    return (IPMI_EVENT_SENSOR_TYPE_SLOT_CONNECTOR);
   if (same (source, "system_acpi_power_state"))
-    return IPMI_EVENT_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE;
+    return (IPMI_EVENT_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE);
   if (same (source, "watchdog2"))
-    return IPMI_EVENT_SENSOR_TYPE_WATCHDOG2;
+    return (IPMI_EVENT_SENSOR_TYPE_WATCHDOG2);
   if (same (source, "platform_alert"))
-    return IPMI_EVENT_SENSOR_TYPE_PLATFORM_ALERT;
+    return (IPMI_EVENT_SENSOR_TYPE_PLATFORM_ALERT);
   if (same (source, "entity_presence"))
-    return IPMI_EVENT_SENSOR_TYPE_ENTITY_PRESENCE;
+    return (IPMI_EVENT_SENSOR_TYPE_ENTITY_PRESENCE);
   if (same (source, "monitor_asic_ic"))
-    return IPMI_EVENT_SENSOR_TYPE_MONITOR_ASIC_IC;
+    return (IPMI_EVENT_SENSOR_TYPE_MONITOR_ASIC_IC);
   if (same (source, "lan"))
-    return IPMI_EVENT_SENSOR_TYPE_LAN;
+    return (IPMI_EVENT_SENSOR_TYPE_LAN);
   if (same (source, "management_subsystem_health"))
-    return IPMI_EVENT_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH;
+    return (IPMI_EVENT_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH);
   if (same (source, "battery"))
-    return IPMI_EVENT_SENSOR_TYPE_BATTERY;
+    return (IPMI_EVENT_SENSOR_TYPE_BATTERY);
   if (same (source, "session_audit"))
-    return IPMI_EVENT_SENSOR_TYPE_SESSION_AUDIT;
+    return (IPMI_EVENT_SENSOR_TYPE_SESSION_AUDIT);
   if (same (source, "version_change"))
-    return IPMI_EVENT_SENSOR_TYPE_VERSION_CHANGE;
+    return (IPMI_EVENT_SENSOR_TYPE_VERSION_CHANGE);
   if (same (source, "fru_state"))
-    return IPMI_EVENT_SENSOR_TYPE_FRU_STATE;
+    return (IPMI_EVENT_SENSOR_TYPE_FRU_STATE);
   if (same (source, "any"))
-    return IPMI_EVENT_SENSOR_TYPE_ANY;
+    return (IPMI_EVENT_SENSOR_TYPE_ANY);
 
   return (-1);
 }

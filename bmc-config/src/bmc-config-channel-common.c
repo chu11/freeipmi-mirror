@@ -61,13 +61,13 @@ _channel_info (bmc_config_state_data_t *state_data,
     {
       if ((ret = get_lan_channel_number (state_data,
                                          channel_number)) != CONFIG_ERR_SUCCESS)
-        return ret;
+        return (ret);
     }
   else
     {
       if ((ret = get_serial_channel_number (state_data,
                                             channel_number)) != CONFIG_ERR_SUCCESS)
-        return ret;
+        return (ret);
     }
 
   return (CONFIG_ERR_SUCCESS);
@@ -91,7 +91,7 @@ _get_key_info (bmc_config_state_data_t *state_data,
   if ((ret = _channel_info (state_data,
                             section_name,
                             channel_number)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   /* Must check for Non_Volatile b/c Volatile is a substring of the former */
   if (stristr (section_name, "Non_Volatile"))
@@ -120,7 +120,7 @@ _set_key_info (bmc_config_state_data_t *state_data,
   if ((ret = _channel_info (state_data,
                             section_name,
                             channel_number)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   /* Must check for Non_Volatile b/c Volatile is a substring of the former */
   if (stristr (section_name, "Non_Volatile"))
@@ -287,7 +287,7 @@ _access_mode_checkout (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -310,7 +310,7 @@ _access_mode_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   ch.access_mode = channel_access_mode (kv->value_input);
 
@@ -318,7 +318,7 @@ _access_mode_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   return (CONFIG_ERR_SUCCESS);
 }
@@ -336,7 +336,7 @@ _enable_user_level_authentication_checkout (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   /* achu: Backwards values in this command are handled above */
   if (config_section_update_keyvalue_output (state_data->pstate,
@@ -360,7 +360,7 @@ _enable_user_level_authentication_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   ch.user_level_authentication = same (kv->value_input, "yes");
 
@@ -368,7 +368,7 @@ _enable_user_level_authentication_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   return (CONFIG_ERR_SUCCESS);
 }
@@ -386,7 +386,7 @@ _enable_per_message_authentication_checkout (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   /* achu: Backwards values in this command are handled above */
   if (config_section_update_keyvalue_output (state_data->pstate,
@@ -410,7 +410,7 @@ _enable_per_message_authentication_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   ch.per_message_authentication = same (kv->value_input, "yes");
 
@@ -418,7 +418,7 @@ _enable_per_message_authentication_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   return (CONFIG_ERR_SUCCESS);
 }
@@ -436,7 +436,7 @@ _enable_pef_alerting_checkout (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   /* achu: Backwards values in this command are handled above */
   if (config_section_update_keyvalue_output (state_data->pstate,
@@ -460,7 +460,7 @@ _enable_pef_alerting_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   ch.pef_alerting = same (kv->value_input, "yes");
 
@@ -468,7 +468,7 @@ _enable_pef_alerting_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   return (CONFIG_ERR_SUCCESS);
 }
@@ -486,7 +486,7 @@ _channel_privilege_limit_checkout (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -509,7 +509,7 @@ _channel_privilege_limit_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   ch.channel_privilege_limit = privilege_level_number (kv->value_input);
 
@@ -517,7 +517,7 @@ _channel_privilege_limit_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   return (CONFIG_ERR_SUCCESS);
 }

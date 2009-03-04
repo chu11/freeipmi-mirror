@@ -160,7 +160,7 @@ enable_gratuitous_arps_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_bmc_generated_arp_control (state_data, &ac)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -180,10 +180,10 @@ enable_gratuitous_arps_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_bmc_generated_arp_control (state_data, &ac)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   ac.bmc_generated_gratuitous_arps = same (kv->value_input, "yes");
-  return _set_bmc_generated_arp_control (state_data, &ac);
+  return (_set_bmc_generated_arp_control (state_data, &ac));
 }
 
 static config_err_t
@@ -196,7 +196,7 @@ enable_arp_response_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_bmc_generated_arp_control (state_data, &ac)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -216,10 +216,10 @@ enable_arp_response_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_bmc_generated_arp_control (state_data, &ac)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   ac.bmc_generated_arp_responses = same (kv->value_input, "yes");
-  return _set_bmc_generated_arp_control (state_data, &ac);
+  return (_set_bmc_generated_arp_control (state_data, &ac));
 }
 
 static config_err_t
@@ -324,7 +324,7 @@ gratuitous_arp_interval_commit (const char *section_name,
 struct config_section *
 bmc_config_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
 {
-  struct config_section *lan_conf_misc_section = NULL;
+  struct config_section *section = NULL;
   char *section_comment =
     "The following miscellaneous configuration options are optionally "
     "implemented by the vendor.  They may not be available your system and "
@@ -341,17 +341,17 @@ bmc_config_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
     "If set to \"Yes\", \"Enable_ARP_Response\" will inform the BMC to"
     "respond to ARP requests from other machines.";
 
-  if (!(lan_conf_misc_section = config_section_create (state_data->pstate,
-                                                       "Lan_Conf_Misc",
-                                                       "Lan_Conf_Misc",
-                                                       section_comment,
-                                                       0,
-                                                       NULL,
-                                                       NULL)))
+  if (!(section = config_section_create (state_data->pstate,
+                                         "Lan_Conf_Misc",
+                                         "Lan_Conf_Misc",
+                                         section_comment,
+                                         0,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_misc_section,
+                              section,
                               "Enable_Gratuitous_ARPs",
                               "Possible values: Yes/No",
                               0,
@@ -361,7 +361,7 @@ bmc_config_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_misc_section,
+                              section,
                               "Enable_ARP_Response",
                               "Possible values: Yes/No",
                               0,
@@ -371,7 +371,7 @@ bmc_config_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_misc_section,
+                              section,
                               "Gratuitous_ARP_Interval",
                               "Give a number (x 500ms)",
                               0,
@@ -379,10 +379,11 @@ bmc_config_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
                               gratuitous_arp_interval_commit,
                               config_number_range_one_byte) < 0)
     goto cleanup;
-  return lan_conf_misc_section;
+
+  return (section);
 
  cleanup:
-  if (lan_conf_misc_section)
-    config_section_destroy (state_data->pstate, lan_conf_misc_section);
-  return NULL;
+  if (section)
+    config_section_destroy (state_data->pstate, section);
+  return (NULL);
 }

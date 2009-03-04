@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.82 2009-03-04 19:41:28 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.83 2009-03-04 22:39:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -330,7 +330,7 @@ ipmiconsole_engine_is_setup (void)
       return (-1);
     }
 
-  return is_setup;
+  return (is_setup);
 }
 
 int
@@ -352,7 +352,7 @@ ipmiconsole_engine_thread_count (void)
       return (-1);
     }
 
-  return thread_count;
+  return (thread_count);
 }
 
 static int
@@ -1217,7 +1217,7 @@ ipmiconsole_engine_submit_ctx (ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_unlock (&console_engine_thread_count_mutex)))
     IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
 
-  return ret;
+  return (ret);
 }
 
 int

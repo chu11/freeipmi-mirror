@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.14 2009-03-03 23:56:52 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.15 2009-03-04 22:39:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -326,7 +326,7 @@ _ipmi_ping_build (struct ipmidetectd_info *info, char *buf, unsigned int buflen)
   fiid_obj_destroy (obj_cmd);
 
   info->sequence_number++;
-  return len;
+  return (len);
 }
 
 static void

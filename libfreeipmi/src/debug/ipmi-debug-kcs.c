@@ -351,15 +351,15 @@ ipmi_dump_kcs_packet (int fd,
       return (-1);
     }
 
-  return _ipmi_dump_kcs_packet (fd,
-                                prefix,
-                                hdr,
-                                trlr,
-                                pkt,
-                                pkt_len,
-                                tmpl_cmd,
-                                NULL,
-                                NULL);
+  return (_ipmi_dump_kcs_packet (fd,
+                                 prefix,
+                                 hdr,
+                                 trlr,
+                                 pkt,
+                                 pkt_len,
+                                 tmpl_cmd,
+                                 NULL,
+                                 NULL));
 }
 
 int8_t
@@ -396,13 +396,13 @@ ipmi_dump_kcs_packet_ipmb (int fd,
       return (-1);
     }
 
-  return _ipmi_dump_kcs_packet (fd,
-                                prefix,
-                                hdr,
-                                trlr,
-                                pkt,
-                                pkt_len,
-                                tmpl_cmd,
-                                tmpl_ipmb_msg_hdr,
-                                tmpl_ipmb_cmd);
+  return (_ipmi_dump_kcs_packet (fd,
+                                 prefix,
+                                 hdr,
+                                 trlr,
+                                 pkt,
+                                 pkt_len,
+                                 tmpl_cmd,
+                                 tmpl_ipmb_msg_hdr,
+                                 tmpl_ipmb_cmd));
 }

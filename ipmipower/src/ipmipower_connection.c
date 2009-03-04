@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.40 2009-03-04 19:41:30 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.41 2009-03-04 22:39:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -312,7 +312,7 @@ ipmipower_connection_hostname_index (struct ipmipower_connection *ics,
   for (i = 0; i < ics_len; i++)
     {
       if (!strcmp (ics[i].hostname, hostname))
-        return i;
+        return (i);
     }
 
   ierr_dbg ("ipmipower_connection_hostname_index: %s not found", hostname);

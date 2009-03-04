@@ -121,7 +121,8 @@ config_section_create (pstdout_state_t pstate,
   section->section_pre_commit = section_pre_commit;
   section->section_post_commit = section_post_commit;
 
-  return section;
+  return (section);
+
  cleanup:
   if (section)
     config_section_destroy (pstate, section);
@@ -489,7 +490,7 @@ config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
 
   rv = nonvalid_count;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 int
@@ -558,7 +559,7 @@ config_sections_insert_keyvalues (pstdout_state_t pstate,
     }
 
  cleanup:
-  return rv;
+  return (rv);
 }
 
 config_err_t

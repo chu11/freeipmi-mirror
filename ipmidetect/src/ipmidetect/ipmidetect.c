@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.14 2009-03-03 23:56:52 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.15 2009-03-04 22:39:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -501,7 +501,7 @@ _log10 (int num)
         count++;
     }
 
-  return count;
+  return (count);
 }
 
 /*
@@ -609,7 +609,7 @@ _output_data (void)
   else
     exit_val = (!detected_count) ? 0 : 1;
 
-  return exit_val;
+  return (exit_val);
 }
 
 int

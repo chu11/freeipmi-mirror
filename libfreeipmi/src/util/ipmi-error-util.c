@@ -581,7 +581,7 @@ ipmi_completion_code_strerror_cmd_r (fiid_obj_t obj_cmd,
       return (-1);
     }
 
-  return ipmi_completion_code_strerror_r (cmd, netfn, comp_code, errstr, len);
+  return (ipmi_completion_code_strerror_r (cmd, netfn, comp_code, errstr, len));
 }
 
 

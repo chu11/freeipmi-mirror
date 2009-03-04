@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.80 2009-03-04 19:41:29 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.81 2009-03-04 22:39:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1315,7 +1315,7 @@ _check_close_session (ipmiconsole_ctx_t c)
   if (!c->session.close_session_flag)
     return (0);
 
-  return _close_session (c);
+  return (_close_session (c));
 }
 
 /*
@@ -1340,7 +1340,7 @@ _session_timeout (ipmiconsole_ctx_t c)
       return (-1);
     }
 
-  return timeval_gt (&current, &timeout);
+  return (timeval_gt (&current, &timeout));
 }
 
 /*

@@ -181,7 +181,7 @@ k_r_checkout (const char *section_name,
                        IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
                        (uint8_t *)k_r,
                        IPMI_MAX_K_R_LENGTH)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   k_r[IPMI_MAX_K_R_LENGTH] = '\0';
 
@@ -200,10 +200,10 @@ k_r_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
 
-  return _set_key (state_data,
-                   IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
-                   (uint8_t *)kv->value_input,
-                   strlen (kv->value_input));
+  return (_set_key (state_data,
+                    IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
+                    (uint8_t *)kv->value_input,
+                    strlen (kv->value_input)));
 }
 
 static config_validate_t
@@ -233,7 +233,7 @@ k_g_checkout (const char *section_name,
                        IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
                        k_g,
                        IPMI_MAX_K_G_LENGTH)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   /* a printable k_g key can have two representations, so compare the
    * binary keys and return what the user passed in if they are the
@@ -286,10 +286,10 @@ k_g_commit (const char *section_name,
   if ((k_g_len = parse_kg (k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value_input)) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
-  return _set_key (state_data,
-                   IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
-                   k_g,
-                   k_g_len);
+  return (_set_key (state_data,
+                    IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
+                    k_g,
+                    k_g_len));
 }
 
 static config_validate_t
@@ -308,24 +308,24 @@ k_g_validate (const char *section_name,
 struct config_section *
 bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data)
 {
-  struct config_section *lan_conf_security_keys_section = NULL;
+  struct config_section *section = NULL;
   char *section_comment =
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), a "
     "K_g BMC key may be configurable.  The K_g key is an optional key that "
     "can be set for two key authentication in IPMI 2.0.  It is optionally "
     "configured.  Most users will want to set this to zero (or blank).";
 
-  if (!(lan_conf_security_keys_section = config_section_create (state_data->pstate,
-                                                                "Lan_Conf_Security_Keys",
-                                                                "Lan_Conf_Security_Keys",
-                                                                section_comment,
-                                                                0,
-                                                                NULL,
-                                                                NULL)))
+  if (!(section = config_section_create (state_data->pstate,
+                                         "Lan_Conf_Security_Keys",
+                                         "Lan_Conf_Security_Keys",
+                                         section_comment,
+                                         0,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_security_keys_section,
+                              section,
                               "K_R",
                               "Give string or blank to clear. Max 20 chars",
                               0,
@@ -335,7 +335,7 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              lan_conf_security_keys_section,
+                              section,
                               "K_G",
                               "Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",
                               0,
@@ -344,10 +344,10 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
                               k_g_validate) < 0)
     goto cleanup;
 
-  return lan_conf_security_keys_section;
+  return (section);
 
  cleanup:
-  if (lan_conf_security_keys_section)
-    config_section_destroy (state_data->pstate, lan_conf_security_keys_section);
-  return NULL;
+  if (section)
+    config_section_destroy (state_data->pstate, section);
+  return (NULL);
 }

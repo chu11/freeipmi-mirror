@@ -273,14 +273,14 @@ _calculate_k_rakp_hmac_sha1 (uint8_t *sik_key,
       return (-1);
     }
 
-  return _calculate_k_rakp_hmac (IPMI_CRYPT_HASH_SHA1,
-                                 IPMI_HMAC_SHA1_DIGEST_LENGTH,
-                                 sik_key,
-                                 sik_key_len,
-                                 k,
-                                 k_len,
-                                 constant,
-                                 constant_len);
+  return (_calculate_k_rakp_hmac (IPMI_CRYPT_HASH_SHA1,
+                                  IPMI_HMAC_SHA1_DIGEST_LENGTH,
+                                  sik_key,
+                                  sik_key_len,
+                                  k,
+                                  k_len,
+                                  constant,
+                                  constant_len));
 }
 
 static int32_t
@@ -303,14 +303,14 @@ _calculate_k_rakp_hmac_md5 (uint8_t *sik_key,
       return (-1);
     }
 
-  return _calculate_k_rakp_hmac (IPMI_CRYPT_HASH_MD5,
-                                 IPMI_HMAC_MD5_DIGEST_LENGTH,
-                                 sik_key,
-                                 sik_key_len,
-                                 k,
-                                 k_len,
-                                 constant,
-                                 constant_len);
+  return (_calculate_k_rakp_hmac (IPMI_CRYPT_HASH_MD5,
+                                  IPMI_HMAC_MD5_DIGEST_LENGTH,
+                                  sik_key,
+                                  sik_key_len,
+                                  k,
+                                  k_len,
+                                  constant,
+                                  constant_len));
 }
 
 static int32_t
@@ -337,19 +337,19 @@ _ipmi_calculate_k (uint8_t authentication_algorithm,
     }
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
-    return _calculate_k_rakp_hmac_sha1 (sik_key,
+    return (_calculate_k_rakp_hmac_sha1 (sik_key,
+                                         sik_key_len,
+                                         k,
+                                         k_len,
+                                         constant,
+                                         constant_len));
+  else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 */
+    return (_calculate_k_rakp_hmac_md5 (sik_key,
                                         sik_key_len,
                                         k,
                                         k_len,
                                         constant,
-                                        constant_len);
-  else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 */
-    return _calculate_k_rakp_hmac_md5 (sik_key,
-                                       sik_key_len,
-                                       k,
-                                       k_len,
-                                       constant,
-                                       constant_len);
+                                        constant_len));
 }
 
 int32_t
@@ -364,13 +364,13 @@ ipmi_calculate_k1 (uint8_t authentication_algorithm,
                                                  0x01, 0x01, 0x01, 0x01, 0x01,
                                                  0x01, 0x01, 0x01, 0x01, 0x01};
 
-  return _ipmi_calculate_k (authentication_algorithm,
-                            sik_key,
-                            sik_key_len,
-                            k1,
-                            k1_len,
-                            constant,
-                            IPMI_KEY_CONSTANT_LENGTH);
+  return (_ipmi_calculate_k (authentication_algorithm,
+                             sik_key,
+                             sik_key_len,
+                             k1,
+                             k1_len,
+                             constant,
+                             IPMI_KEY_CONSTANT_LENGTH));
 }
 
 int32_t
@@ -384,13 +384,13 @@ ipmi_calculate_k2 (uint8_t authentication_algorithm,
                                                  0x02, 0x02, 0x02, 0x02, 0x02,
                                                  0x02, 0x02, 0x02, 0x02, 0x02,
                                                  0x02, 0x02, 0x02, 0x02, 0x02};
-  return _ipmi_calculate_k (authentication_algorithm,
-                            sik_key,
-                            sik_key_len,
-                            k1,
-                            k1_len,
-                            constant,
-                            IPMI_KEY_CONSTANT_LENGTH);
+  return (_ipmi_calculate_k (authentication_algorithm,
+                             sik_key,
+                             sik_key_len,
+                             k1,
+                             k1_len,
+                             constant,
+                             IPMI_KEY_CONSTANT_LENGTH));
 }
 
 int32_t
@@ -1572,5 +1572,5 @@ ipmi_rmcpplus_calculate_payload_type (uint8_t *pkt, uint32_t pkt_len)
       return (-1);
     }
 
-  return payload_type;
+  return (payload_type);
 }

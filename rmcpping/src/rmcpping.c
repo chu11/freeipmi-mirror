@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.41 2009-03-04 18:07:41 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.42 2009-03-04 22:39:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -57,7 +57,7 @@ _fiid_obj_create (fiid_template_t tmpl)
   if ((obj = fiid_obj_create (tmpl)) == NULL)
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
 
-  return obj;
+  return (obj);
 }
 
 static void
@@ -132,7 +132,7 @@ createpacket (char *destination,
 
   fiid_obj_destroy (obj_rmcp_hdr);
   fiid_obj_destroy (obj_rmcp_cmd);
-  return len;
+  return (len);
 }
 
 int

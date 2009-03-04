@@ -74,13 +74,13 @@ fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
 int8_t
 fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr)
 {
-  return fill_rmcp_hdr (RMCP_HDR_MESSAGE_CLASS_IPMI, obj_rmcp_hdr);
+  return (fill_rmcp_hdr (RMCP_HDR_MESSAGE_CLASS_IPMI, obj_rmcp_hdr));
 }
 
 int8_t
 fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr)
 {
-  return fill_rmcp_hdr (RMCP_HDR_MESSAGE_CLASS_ASF, obj_rmcp_hdr);
+  return (fill_rmcp_hdr (RMCP_HDR_MESSAGE_CLASS_ASF, obj_rmcp_hdr));
 }
 
 int32_t

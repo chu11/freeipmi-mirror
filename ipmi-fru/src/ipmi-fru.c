@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.45 2009-03-04 19:41:26 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.46 2009-03-04 22:39:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -332,7 +332,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
   args = state_data->prog_data->args;
 
   if (args->sdr.flush_cache)
-    return _flush_cache (state_data);
+    return (_flush_cache (state_data));
 
   if (args->sdr.ignore_sdr_cache)
     {

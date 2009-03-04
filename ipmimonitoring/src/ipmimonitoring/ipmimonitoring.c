@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.88 2009-03-04 19:41:29 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.89 2009-03-04 22:39:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -299,7 +299,7 @@ _get_sensor_state (ipmimonitoring_state_data_t *state_data, int sensor_state)
   else if (sensor_state == IPMI_MONITORING_SENSOR_STATE_CRITICAL)
     return "Critical";
 
-  return IPMIMONITORING_NA_STRING;
+  return (IPMIMONITORING_NA_STRING);
 }
 
 static void
@@ -437,7 +437,7 @@ _output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static int
@@ -667,7 +667,7 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static int
@@ -681,10 +681,10 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   args = state_data->prog_data->args;
 
   if (args->list_groups)
-    return _list_groups (state_data);
+    return (_list_groups (state_data));
 
   if (args->sdr.flush_cache)
-    return _flush_cache (state_data);
+    return (_flush_cache (state_data));
 
   /* libipmimonitoring SDR creation/loading on its own.  However we do
    * it here so the ipmimonitoring tool and resemble other FreeIPMI

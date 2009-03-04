@@ -399,7 +399,7 @@ _sdr_record_get_common (ipmi_sdr_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  return obj_sdr_record;
+  return (obj_sdr_record);
 
  cleanup:
   FIID_OBJ_DESTROY (obj_sdr_record);

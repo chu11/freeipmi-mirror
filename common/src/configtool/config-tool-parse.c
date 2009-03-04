@@ -183,5 +183,5 @@ config_parse (pstdout_state_t pstate,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  return rv;
+  return (rv);
 }

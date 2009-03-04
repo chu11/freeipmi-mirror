@@ -62,7 +62,7 @@ bmc_config_sections_create (bmc_config_state_data_t *state_data)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "## FATAL: Unable to get Number of Users\n");
-      return NULL;
+      return (NULL);
     }
 
   for (i = 0; i < number_of_users; i++)
@@ -128,10 +128,10 @@ bmc_config_sections_create (bmc_config_state_data_t *state_data)
   if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
-  return sections;
+  return (sections);
 
  cleanup:
   config_sections_destroy (state_data->pstate, sections);
-  return NULL;
+  return (NULL);
 }
 

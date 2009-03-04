@@ -217,7 +217,7 @@ ipmi_chassis_config_power_conf_get (ipmi_chassis_config_state_data_t *state_data
                               config_number_range_one_byte_non_zero) < 0)
     goto cleanup;
 
-  return section;
+  return (section);
 
  cleanup:
   if (section)

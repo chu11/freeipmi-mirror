@@ -279,7 +279,7 @@ sol_privilege_level_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -299,11 +299,11 @@ sol_privilege_level_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   sa.sol_privilege_level = privilege_level_number (kv->value_input);
 
-  return _set_sol_sol_authentication (state_data, &sa);
+  return (_set_sol_sol_authentication (state_data, &sa));
 }
 
 static config_err_t
@@ -316,7 +316,7 @@ force_sol_payload_authentication_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -336,11 +336,11 @@ force_sol_payload_authentication_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   sa.force_sol_payload_authentication = same (kv->value_input, "yes") ? 1 : 0;
 
-  return _set_sol_sol_authentication (state_data, &sa);
+  return (_set_sol_sol_authentication (state_data, &sa));
 }
 
 static config_err_t
@@ -353,7 +353,7 @@ force_sol_payload_encryption_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -373,11 +373,11 @@ force_sol_payload_encryption_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   sa.force_sol_payload_encryption = same (kv->value_input, "yes") ? 1 : 0;
 
-  return _set_sol_sol_authentication (state_data, &sa);
+  return (_set_sol_sol_authentication (state_data, &sa));
 }
 
 static config_err_t
@@ -496,7 +496,7 @@ character_accumulate_interval_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
@@ -516,11 +516,11 @@ character_accumulate_interval_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   it.character_accumulate_interval = atoi (kv->value_input);
 
-  return _set_sol_character_accumulate_interval_and_send_threshold (state_data, &it);
+  return (_set_sol_character_accumulate_interval_and_send_threshold (state_data, &it));
 }
 
 static config_err_t
@@ -533,7 +533,7 @@ character_send_threshold_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
@@ -553,11 +553,11 @@ character_send_threshold_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   it.character_send_threshold = atoi (kv->value_input);
 
-  return _set_sol_character_accumulate_interval_and_send_threshold (state_data, &it);
+  return (_set_sol_character_accumulate_interval_and_send_threshold (state_data, &it));
 }
 
 static config_err_t
@@ -673,7 +673,7 @@ sol_retry_count_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
@@ -694,11 +694,11 @@ sol_retry_count_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   sr.retry_count = atoi (kv->value_input);
 
-  return _set_sol_sol_retry (state_data, &sr);
+  return (_set_sol_sol_retry (state_data, &sr));
 }
 
 static config_err_t
@@ -711,7 +711,7 @@ sol_retry_interval_checkout (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
@@ -731,11 +731,11 @@ sol_retry_interval_commit (const char *section_name,
   config_err_t ret;
 
   if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   sr.retry_interval = atoi (kv->value_input);
 
-  return _set_sol_sol_retry (state_data, &sr);
+  return (_set_sol_sol_retry (state_data, &sr));
 }
 
 static config_err_t
@@ -1053,7 +1053,7 @@ sol_payload_port_commit (const char *section_name,
 struct config_section *
 bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
 {
-  struct config_section * sol_conf_section = NULL;
+  struct config_section * section = NULL;
   char *section_comment =
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), the "
     "following configuration options will allow SOL configuration."
@@ -1070,17 +1070,17 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     "rate for your system.  This is typically the same baud rate configured "
     "in the BIOS and/or operating system.";
 
-  if (!(sol_conf_section = config_section_create (state_data->pstate,
-                                                  "SOL_Conf",
-                                                  "SOL_Conf",
-                                                  section_comment,
-                                                  0,
-                                                  NULL,
-                                                  NULL)))
+  if (!(section = config_section_create (state_data->pstate,
+                                         "SOL_Conf",
+                                         "SOL_Conf",
+                                         section_comment,
+                                         0,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              sol_conf_section,
+                              section,
                               "Enable_SOL",
                               "Possible values: Yes/No",
                               0,
@@ -1090,7 +1090,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              sol_conf_section,
+                              section,
                               "SOL_Privilege_Level",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                               0,
@@ -1100,7 +1100,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              sol_conf_section,
+                              section,
                               "Force_SOL_Payload_Authentication",
                               "Possible values: Yes/No",
                               0,
@@ -1110,7 +1110,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              sol_conf_section,
+                              section,
                               "Force_SOL_Payload_Encryption",
                               "Possible values: Yes/No",
                               0,
@@ -1120,7 +1120,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              sol_conf_section,
+                              section,
                               "Character_Accumulate_Interval",
                               "Give a non-zero valid integer. Each unit is 5ms",
                               0,
@@ -1130,7 +1130,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              sol_conf_section,
+                              section,
                               "Character_Send_Threshold",
                               "Give a valid number",
                               0,
@@ -1140,7 +1140,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              sol_conf_section,
+                              section,
                               "SOL_Retry_Count",
                               "Give a valid integer",
                               0,
@@ -1150,7 +1150,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              sol_conf_section,
+                              section,
                               "SOL_Retry_Interval",
                               "Give a valid integer. Interval unit is 10ms",
                               0,
@@ -1160,7 +1160,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              sol_conf_section,
+                              section,
                               "Non_Volatile_Bit_Rate",
                               "Possible values: Serial/9600/19200/38400/57600/115200",
                               0,
@@ -1170,7 +1170,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              sol_conf_section,
+                              section,
                               "Volatile_Bit_Rate",
                               "Possible values: Serial/9600/19200/38400/57600/115200",
                               0,
@@ -1180,7 +1180,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              sol_conf_section,
+                              section,
                               "SOL_Payload_Port_Number",
                               "Give a valid port number",
                               CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
@@ -1189,10 +1189,10 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                               config_number_range_two_bytes) < 0)
     goto cleanup;
 
-  return sol_conf_section;
+  return (section);
 
  cleanup:
-  if (sol_conf_section)
-    config_section_destroy (state_data->pstate, sol_conf_section);
-  return NULL;
+  if (section)
+    config_section_destroy (state_data->pstate, section);
+  return (NULL);
 }

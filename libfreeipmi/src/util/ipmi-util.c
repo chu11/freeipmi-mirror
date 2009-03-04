@@ -155,7 +155,7 @@ ipmi_check_completion_code (fiid_obj_t obj_cmd, uint8_t completion_code)
 int8_t
 ipmi_check_completion_code_success (fiid_obj_t obj_cmd)
 {
-  return ipmi_check_completion_code (obj_cmd, IPMI_COMP_CODE_COMMAND_SUCCESS);
+  return (ipmi_check_completion_code (obj_cmd, IPMI_COMP_CODE_COMMAND_SUCCESS));
 }
 
 int
@@ -192,7 +192,7 @@ ipmi_get_random (uint8_t *buf, uint32_t buflen)
 
  gcrypt_rand:
   gcry_randomize ((unsigned char *)buf, buflen, GCRY_STRONG_RANDOM);
-  return buflen;
+  return (buflen);
 }
 
 int8_t

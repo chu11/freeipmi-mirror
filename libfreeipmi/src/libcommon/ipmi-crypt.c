@@ -46,7 +46,7 @@ _gpg_error_to_errno (gcry_error_t e)
   if (e == GPG_ERR_NO_ERROR)
     return (0);
   else
-    return EINVAL;
+    return (EINVAL);
 }
 
 int8_t
@@ -202,7 +202,7 @@ ipmi_crypt_hash_digest_len (int hash_algorithm)
   else
     gcry_md_algorithm = GCRY_MD_MD5;
 
-  return gcry_md_get_algo_dlen (gcry_md_algorithm);
+  return (gcry_md_get_algo_dlen (gcry_md_algorithm));
 }
 
 static int32_t
@@ -362,15 +362,15 @@ ipmi_crypt_cipher_encrypt (int cipher_algorithm,
                            uint8_t *data,
                            uint32_t data_len)
 {
-  return _cipher_crypt (cipher_algorithm,
-                        cipher_mode,
-                        key,
-                        key_len,
-                        iv,
-                        iv_len,
-                        data,
-                        data_len,
-                        1);
+  return (_cipher_crypt (cipher_algorithm,
+                         cipher_mode,
+                         key,
+                         key_len,
+                         iv,
+                         iv_len,
+                         data,
+                         data_len,
+                         1));
 }
 
 int32_t
@@ -383,15 +383,15 @@ ipmi_crypt_cipher_decrypt (int cipher_algorithm,
                            uint8_t *data,
                            uint32_t data_len)
 {
-  return _cipher_crypt (cipher_algorithm,
-                        cipher_mode,
-                        key,
-                        key_len,
-                        iv,
-                        iv_len,
-                        data,
-                        data_len,
-                        0);
+  return (_cipher_crypt (cipher_algorithm,
+                         cipher_mode,
+                         key,
+                         key_len,
+                         iv,
+                         iv_len,
+                         data,
+                         data_len,
+                         0));
 }
 
 static int32_t
@@ -438,11 +438,11 @@ _ipmi_crypt_cipher_info (int cipher_algorithm, int cipher_info)
 int32_t
 ipmi_crypt_cipher_key_len (int cipher_algorithm)
 {
-  return _ipmi_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH);
+  return (_ipmi_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH));
 }
 
 int32_t
 ipmi_crypt_cipher_block_len (int cipher_algorithm)
 {
-  return _ipmi_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH);
+  return (_ipmi_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH));
 }

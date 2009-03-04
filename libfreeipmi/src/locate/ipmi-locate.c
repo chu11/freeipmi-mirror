@@ -69,7 +69,7 @@ ipmi_locate_ctx_create (void)
   ctx->magic = IPMI_LOCATE_CTX_MAGIC;
 
   ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
-  return ctx;
+  return (ctx);
 }
 
 void
@@ -167,7 +167,7 @@ ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
                              ipmi_interface_type_t type,
                              struct ipmi_locate_info *info)
 {
-  return _ipmi_locate_get_device_info (ctx, type, info, 1);
+  return (_ipmi_locate_get_device_info (ctx, type, info, 1));
 }
 
 int
@@ -175,5 +175,5 @@ ipmi_locate_discover_device_info (ipmi_locate_ctx_t ctx,
                                   ipmi_interface_type_t type,
                                   struct ipmi_locate_info *info)
 {
-  return _ipmi_locate_get_device_info (ctx, type, info, 0);
+  return (_ipmi_locate_get_device_info (ctx, type, info, 0));
 }

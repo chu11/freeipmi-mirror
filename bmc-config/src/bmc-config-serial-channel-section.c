@@ -34,7 +34,7 @@
 struct config_section *
 bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
 {
-  struct config_section * serial_channel_section = NULL;
+  struct config_section * section = NULL;
   char *section_comment =
     "In the Serial_Channel section, IPMI over Serial communication can be "
     "enabled or disabled.  "
@@ -58,25 +58,25 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
   else
     verbose_flags = CONFIG_DO_NOT_CHECKOUT;
 
-  if (!(serial_channel_section = config_section_create (state_data->pstate,
-                                                        "Serial_Channel",
-                                                        "Serial_Channel",
-                                                        section_comment,
-                                                        verbose_flags,
-                                                        NULL,
-                                                        NULL)))
+  if (!(section = config_section_create (state_data->pstate,
+                                         "Serial_Channel",
+                                         "Serial_Channel",
+                                         section_comment,
+                                         verbose_flags,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (bmc_config_channel_common_section_get (state_data,
-                                             serial_channel_section,
+                                             section,
                                              verbose_flags) < 0)
     goto cleanup;
 
-  return serial_channel_section;
+  return (section);
 
  cleanup:
-  if (serial_channel_section)
-    config_section_destroy (state_data->pstate, serial_channel_section);
-  return NULL;
+  if (section)
+    config_section_destroy (state_data->pstate, section);
+  return (NULL);
 }
 

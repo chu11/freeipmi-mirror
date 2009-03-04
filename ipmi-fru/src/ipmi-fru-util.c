@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.33 2009-03-04 19:41:26 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.34 2009-03-04 22:39:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -667,7 +667,7 @@ ipmi_fru_dump_hex (ipmi_fru_state_data_t *state_data,
                        "\n");
     }
 
-  return FRU_ERR_SUCCESS;
+  return (FRU_ERR_SUCCESS);;
 }
 
 fru_err_t
@@ -697,9 +697,9 @@ ipmi_fru_check_checksum (ipmi_fru_state_data_t *state_data,
                            "  FRU %s Checksum Invalid: %02Xh\n",
                            str,
                            checksum);
-          return FRU_ERR_NON_FATAL_ERROR;
+          return (FRU_ERR_NON_FATAL_ERROR);
         }
     }
 
-  return FRU_ERR_SUCCESS;
+  return (FRU_ERR_SUCCESS);;
 }

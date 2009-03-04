@@ -92,7 +92,7 @@ config_diff (pstdout_state_t pstate,
 
   rv = ret;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 

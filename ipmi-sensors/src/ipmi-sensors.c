@@ -493,7 +493,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
         free (event_message_list[j]);
       free (event_message_list);
     }
-  return rv;
+  return (rv);
 }
 
 static int
@@ -621,13 +621,13 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
   args = state_data->prog_data->args;
 
   if (args->sdr_info)
-    return _sdr_repository_info (state_data);
+    return (_sdr_repository_info (state_data));
 
   if (args->sdr.flush_cache)
-    return _flush_cache (state_data);
+    return (_flush_cache (state_data));
 
   if (args->list_groups)
-    return _display_group (state_data);
+    return (_display_group (state_data));
 
   if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
                                  state_data->pstate,

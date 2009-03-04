@@ -79,7 +79,7 @@ cold_reset (bmc_device_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -111,7 +111,7 @@ warm_reset (bmc_device_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -227,7 +227,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -387,7 +387,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -429,7 +429,7 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -539,7 +539,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -585,7 +585,7 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -872,7 +872,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
   TOOL_FIID_OBJ_DESTROY (mca_obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1093,49 +1093,49 @@ run_cmd_args (bmc_device_state_data_t *state_data)
   args = state_data->prog_data->args;
 
   if (args->cold_reset)
-    return cold_reset (state_data);
+    return (cold_reset (state_data));
 
   if (args->warm_reset)
-    return warm_reset (state_data);
+    return (warm_reset (state_data));
 
   if (args->get_self_test_results)
-    return get_self_test_results (state_data);
+    return (get_self_test_results (state_data));
 
   if (args->get_acpi_power_state)
-    return get_acpi_power_state (state_data);
+    return (get_acpi_power_state (state_data));
 
   if (args->set_acpi_power_state)
-    return set_acpi_power_state (state_data);
+    return (set_acpi_power_state (state_data));
 
   if (args->get_lan_statistics)
-    return get_lan_statistics (state_data);
+    return (get_lan_statistics (state_data));
 
   if (args->clear_lan_statistics)
-    return clear_lan_statistics (state_data);
+    return (clear_lan_statistics (state_data));
 
   if (args->get_sdr_repository_time)
-    return get_sdr_repository_time (state_data);
+    return (get_sdr_repository_time (state_data));
 
   if (args->set_sdr_repository_time)
-    return set_sdr_repository_time (state_data);
+    return (set_sdr_repository_time (state_data));
 
   if (args->get_sel_time)
-    return get_sel_time (state_data);
+    return (get_sel_time (state_data));
 
   if (args->set_sel_time)
-    return set_sel_time (state_data);
+    return (set_sel_time (state_data));
 
   if (args->get_mca_auxiliary_log_status)
-    return get_mca_auxiliary_log_status (state_data);
+    return (get_mca_auxiliary_log_status (state_data));
 
   if (args->get_ssif_interface_capabilities)
-    return get_ssif_interface_capabilities (state_data);
+    return (get_ssif_interface_capabilities (state_data));
 
   if (args->get_kcs_interface_capabilities)
-    return get_kcs_interface_capabilities (state_data);
+    return (get_kcs_interface_capabilities (state_data));
 
   if (args->get_bt_interface_capabilities)
-    return get_bt_interface_capabilities (state_data);
+    return (get_bt_interface_capabilities (state_data));
 
   rv = 0;
   return (rv);

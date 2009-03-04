@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.15 2009-03-04 19:41:24 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.16 2009-03-04 22:39:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -165,7 +165,7 @@ _cmd_string (struct bmc_watchdog_arguments *cmd_args)
   else if (cmd_args->daemon)
     return "--daemon";
   else
-    return NULL;
+    return (NULL);
 }
 
 static void
@@ -496,7 +496,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     default:
       ret = common_parse_opt (key, arg, state, &(cmd_args->common));
-      return ret;
+      return (ret);
     }
 
   return (0);

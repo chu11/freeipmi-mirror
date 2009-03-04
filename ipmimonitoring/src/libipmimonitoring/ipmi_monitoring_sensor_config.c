@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.34 2009-03-04 19:41:30 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.35 2009-03-04 22:39:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -474,11 +474,11 @@ _sensor_state (conffile_t cf,
     conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
 
   if (!strcasecmp (option_string, "Nominal"))
-    return IPMI_MONITORING_SENSOR_STATE_NOMINAL;
+    return (IPMI_MONITORING_SENSOR_STATE_NOMINAL);
   else if (!strcasecmp (option_string, "Warning"))
-    return IPMI_MONITORING_SENSOR_STATE_WARNING;
+    return (IPMI_MONITORING_SENSOR_STATE_WARNING);
   else if (!strcasecmp (option_string, "Critical"))
-    return IPMI_MONITORING_SENSOR_STATE_CRITICAL;
+    return (IPMI_MONITORING_SENSOR_STATE_CRITICAL);
 
   conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
   return (-1);

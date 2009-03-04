@@ -816,6 +816,6 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
       if (tmp_upper_non_recoverable_threshold)
         free (tmp_upper_non_recoverable_threshold);
     }
-  return rv;
+  return (rv);
 }
 

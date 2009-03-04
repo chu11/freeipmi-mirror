@@ -109,7 +109,7 @@ _format_comment (pstdout_state_t pstate,
   rv = 0;
  cleanup:
   free (inbuf);
-  return rv;
+  return (rv);
 }
 
 int
@@ -177,5 +177,5 @@ config_section_comments (pstdout_state_t pstate,
   rv = 0;
  cleanup:
   free (inbuf);
-  return rv;
+  return (rv);
 }

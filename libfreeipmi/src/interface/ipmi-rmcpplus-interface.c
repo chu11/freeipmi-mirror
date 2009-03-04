@@ -727,7 +727,7 @@ _construct_payload_confidentiality_none (uint8_t payload_type,
       return (-1);
     }
 
-  return payload_len;
+  return (payload_len);
 }
 
 static int32_t
@@ -963,23 +963,23 @@ _construct_payload (uint8_t payload_type,
     {
 
       if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
-        return _construct_payload_confidentiality_none (payload_type,
-                                                        obj_lan_msg_hdr,
-                                                        obj_cmd,
-                                                        obj_rmcpplus_payload);
+        return (_construct_payload_confidentiality_none (payload_type,
+                                                         obj_lan_msg_hdr,
+                                                         obj_cmd,
+                                                         obj_rmcpplus_payload));
       else /* IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 */
-        return _construct_payload_confidentiality_aes_cbc_128 (payload_type,
-                                                               payload_encrypted,
-                                                               obj_lan_msg_hdr,
-                                                               obj_cmd,
-                                                               confidentiality_key,
-                                                               confidentiality_key_len,
-                                                               obj_rmcpplus_payload);
+        return (_construct_payload_confidentiality_aes_cbc_128 (payload_type,
+                                                                payload_encrypted,
+                                                                obj_lan_msg_hdr,
+                                                                obj_cmd,
+                                                                confidentiality_key,
+                                                                confidentiality_key_len,
+                                                                obj_rmcpplus_payload));
     }
   else
-    return _construct_payload_rakp (payload_type,
-                                    obj_cmd,
-                                    obj_rmcpplus_payload);
+    return (_construct_payload_rakp (payload_type,
+                                     obj_cmd,
+                                     obj_rmcpplus_payload));
 }
 
 static int8_t
@@ -2277,31 +2277,31 @@ _deconstruct_payload (uint8_t payload_type,
       || payload_type == IPMI_PAYLOAD_TYPE_SOL)
     {
       if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
-        return _deconstruct_payload_confidentiality_none (payload_type,
-                                                          obj_rmcpplus_payload,
-                                                          obj_lan_msg_hdr,
-                                                          obj_cmd,
-                                                          obj_lan_msg_trlr,
-                                                          pkt,
-                                                          ipmi_payload_len);
+        return (_deconstruct_payload_confidentiality_none (payload_type,
+                                                           obj_rmcpplus_payload,
+                                                           obj_lan_msg_hdr,
+                                                           obj_cmd,
+                                                           obj_lan_msg_trlr,
+                                                           pkt,
+                                                           ipmi_payload_len));
       else /* IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 */
-        return _deconstruct_payload_confidentiality_aes_cbc_128 (payload_type,
-                                                                 payload_encrypted,
-                                                                 obj_rmcpplus_payload,
-                                                                 obj_lan_msg_hdr,
-                                                                 obj_cmd,
-                                                                 obj_lan_msg_trlr,
-                                                                 confidentiality_key,
-                                                                 confidentiality_key_len,
-                                                                 pkt,
-                                                                 ipmi_payload_len);
+        return (_deconstruct_payload_confidentiality_aes_cbc_128 (payload_type,
+                                                                  payload_encrypted,
+                                                                  obj_rmcpplus_payload,
+                                                                  obj_lan_msg_hdr,
+                                                                  obj_cmd,
+                                                                  obj_lan_msg_trlr,
+                                                                  confidentiality_key,
+                                                                  confidentiality_key_len,
+                                                                  pkt,
+                                                                  ipmi_payload_len));
     }
   else
-    return _deconstruct_payload_rakp (payload_type,
-                                      obj_rmcpplus_payload,
-                                      obj_cmd,
-                                      pkt,
-                                      ipmi_payload_len);
+    return (_deconstruct_payload_rakp (payload_type,
+                                       obj_rmcpplus_payload,
+                                       obj_cmd,
+                                       pkt,
+                                       ipmi_payload_len));
 }
 
 int32_t

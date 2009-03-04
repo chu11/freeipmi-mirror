@@ -119,7 +119,7 @@ power_restore_policy_commit (const char *section_name,
 struct config_section *
 bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
 {
-  struct config_section *misc_section = NULL;
+  struct config_section *section = NULL;
   char *section_comment =
     "The following miscellaneous configuration options are optionally "
     "implemented by the vendor.  They may not be available your system and "
@@ -131,17 +131,17 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
     "machine (\"Off_State_AC_Apply\"), or return the power to the state that "
     "existed before the power loss (\"Restore_State_AC_Apply\").";
 
-  if (!(misc_section = config_section_create (state_data->pstate,
-                                              "Misc",
-                                              "Misc",
-                                              section_comment,
-                                              CONFIG_DO_NOT_CHECKOUT,
-                                              NULL,
-                                              NULL)))
+  if (!(section = config_section_create (state_data->pstate,
+                                         "Misc",
+                                         "Misc",
+                                         section_comment,
+                                         CONFIG_DO_NOT_CHECKOUT,
+                                         NULL,
+                                         NULL)))
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
-                              misc_section,
+                              section,
                               "Power_Restore_Policy",
                               "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
                               CONFIG_DO_NOT_CHECKOUT | CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
@@ -150,10 +150,10 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
                               power_restore_policy_number_validate) < 0)
     goto cleanup;
 
-  return misc_section;
+  return (section);
 
  cleanup:
-  if (misc_section)
-    config_section_destroy (state_data->pstate, misc_section);
-  return NULL;
+  if (section)
+    config_section_destroy (state_data->pstate, section);
+  return (NULL);
 }

@@ -70,7 +70,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return ARGP_ERR_UNKNOWN;
+      return (ARGP_ERR_UNKNOWN);
     }
 
   return (0);

@@ -292,7 +292,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       break;
 
     default:
-      return ARGP_ERR_UNKNOWN;
+      return (ARGP_ERR_UNKNOWN);
     }
 
   if ((cmd_args->cmd != CHASSIS_CMD_SET_SYSTEM_BOOT_OPTIONS))
@@ -300,7 +300,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       fprintf (stderr, "please specify set-boot-flags option\n");
       exit (1);
     }
-  return 0;
+  return (0);
 }
 
 static error_t
@@ -484,10 +484,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         ret = common_parse_opt (key, arg, state, &(cmd_args->common));
       if (ret == ARGP_ERR_UNKNOWN)
         ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
-      return ret;
+      return (ret);
     }
 
-  return 0;
+  return (0);
 }
 
 static void

@@ -117,7 +117,7 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -160,7 +160,7 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (intel_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -343,7 +343,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -395,7 +395,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -498,7 +498,7 @@ run_cmd_args (bmc_info_state_data_t *state_data)
   args = state_data->prog_data->args;
 
   if (args->guid)
-    return display_get_device_guid (state_data);
+    return (display_get_device_guid (state_data));
 
   if (display_get_device_id (state_data) < 0)
     goto cleanup;

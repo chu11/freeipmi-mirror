@@ -216,9 +216,9 @@ alert_destination_type_commit (const char *section_name,
 
   dt.alert_destination_type = alert_destination_type_number (kv->value_input);
 
-  return _set_destination_type (state_data,
-                                section_name,
-                                &dt);
+  return (_set_destination_type (state_data,
+                                 section_name,
+                                 &dt));
 }
 
 static config_err_t
@@ -259,9 +259,9 @@ alert_acknowledge_commit (const char *section_name,
 
   dt.alert_acknowledge = same (kv->value_input, "yes");
 
-  return _set_destination_type (state_data,
-                                section_name,
-                                &dt);
+  return (_set_destination_type (state_data,
+                                 section_name,
+                                 &dt));
 }
 
 static config_err_t
@@ -302,9 +302,9 @@ alert_acknowledge_timeout_commit (const char *section_name,
 
   dt.alert_acknowledge_timeout = atoi (kv->value_input);
 
-  return _set_destination_type (state_data,
-                                section_name,
-                                &dt);
+  return (_set_destination_type (state_data,
+                                 section_name,
+                                 &dt));
 }
 
 static config_err_t
@@ -345,9 +345,9 @@ alert_retries_commit (const char *section_name,
 
   dt.alert_retries = atoi (kv->value_input);
 
-  return _set_destination_type (state_data,
-                                section_name,
-                                &dt);
+  return (_set_destination_type (state_data,
+                                 section_name,
+                                 &dt));
 }
 
 config_validate_t
@@ -356,7 +356,7 @@ alert_retries_validate (const char *section_name,
                         const char *value,
                         void *arg)
 {
-  return config_check_number_range (value, 0, IPMI_ALERT_RETRIES_MAX);
+  return (config_check_number_range (value, 0, IPMI_ALERT_RETRIES_MAX));
 }
 
 static config_err_t
@@ -570,9 +570,9 @@ alert_gateway_commit (const char *section_name,
 
   da.alert_gateway = alert_gateway_number (kv->value_input);
 
-  return _set_destination_addresses (state_data,
-                                     section_name,
-                                     &da);
+  return (_set_destination_addresses (state_data,
+                                      section_name,
+                                      &da));
 }
 
 static config_err_t
@@ -614,9 +614,9 @@ alert_ip_address_commit (const char *section_name,
   /* length checked earlier during validation */
   strcpy (da.alert_ip, kv->value_input);
 
-  return _set_destination_addresses (state_data,
-                                     section_name,
-                                     &da);
+  return (_set_destination_addresses (state_data,
+                                      section_name,
+                                      &da));
 }
 
 static config_err_t
@@ -658,9 +658,9 @@ alert_mac_address_commit (const char *section_name,
   /* length checked earlier during validation */
   strcpy (da.alert_mac, kv->value_input);
 
-  return _set_destination_addresses (state_data,
-                                     section_name,
-                                     &da);
+  return (_set_destination_addresses (state_data,
+                                      section_name,
+                                      &da));
 }
 
 struct config_section *
@@ -759,7 +759,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                               config_mac_address_validate) < 0)
     goto cleanup;
 
-  return section;
+  return (section);
 
  cleanup:
   if (section)

@@ -124,7 +124,7 @@ int
 ipmi_mutex_lock_interruptible (int semid)
 {
   /* achu: don't check for valid semid - responsibility of calling libs */
-  return semop (semid, &mutex_lock_buf_interruptible, 1);
+  return (semop (semid, &mutex_lock_buf_interruptible, 1));
 }
 
 int

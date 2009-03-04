@@ -487,7 +487,7 @@ ipmi_chassis_config_front_panel_buttons_get (ipmi_chassis_config_state_data_t *s
                               config_yes_no_validate) < 0)
     goto cleanup;
 
-  return section;
+  return (section);
 
  cleanup:
   if (section)

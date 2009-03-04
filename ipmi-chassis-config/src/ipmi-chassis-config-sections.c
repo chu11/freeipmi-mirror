@@ -58,7 +58,7 @@ ipmi_chassis_config_sections_create (ipmi_chassis_config_state_data_t *state_dat
   if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
-  return sections;
+  return (sections);
 
  cleanup:
   config_sections_destroy (state_data->pstate, sections);

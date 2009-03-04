@@ -115,7 +115,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
  cleanup:
   if (bytes_rs)
     free (bytes_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -308,7 +308,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
     free (line);
   if (bytes_rq)
     free (bytes_rq);
-  return rv;
+  return (rv);
 }
 
 int

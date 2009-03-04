@@ -145,7 +145,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 config_err_t
@@ -209,5 +209,5 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }

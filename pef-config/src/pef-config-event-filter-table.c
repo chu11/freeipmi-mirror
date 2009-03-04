@@ -78,7 +78,8 @@ _config_section_update_keyvalue_output_hex (pstdout_state_t pstate,
   assert (kv);
 
   sprintf (buf, "0x%02X", value_output);
-  return config_section_update_keyvalue_output (pstate, kv, buf);
+
+  return (config_section_update_keyvalue_output (pstate, kv, buf));
 }
 
 static config_err_t
@@ -322,9 +323,9 @@ filter_type_commit (const char *section_name,
 
   eft.filter_type = filter_type_number (kv->value_input);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -365,9 +366,9 @@ enable_filter_commit (const char *section_name,
 
   eft.enable_filter = same (kv->value_input, "yes");
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -408,9 +409,9 @@ event_filter_action_alert_commit (const char *section_name,
 
   eft.event_filter_action_alert = same (kv->value_input, "yes");
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -451,9 +452,9 @@ event_filter_action_power_off_commit (const char *section_name,
 
   eft.event_filter_action_power_off = same (kv->value_input, "yes");
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -494,9 +495,9 @@ event_filter_action_reset_commit (const char *section_name,
 
   eft.event_filter_action_reset = same (kv->value_input, "yes");
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -537,9 +538,9 @@ event_filter_action_power_cycle_commit (const char *section_name,
 
   eft.event_filter_action_power_cycle = same (kv->value_input, "yes");
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -580,9 +581,9 @@ event_filter_action_oem_commit (const char *section_name,
 
   eft.event_filter_action_oem = same (kv->value_input, "yes");
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -623,9 +624,9 @@ event_filter_action_diagnostic_interrupt_commit (const char *section_name,
 
   eft.event_filter_action_diagnostic_interrupt = same (kv->value_input, "yes");
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -666,9 +667,9 @@ event_filter_action_group_control_operation_commit (const char *section_name,
 
   eft.event_filter_action_group_control_operation = same (kv->value_input, "yes");
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -709,9 +710,9 @@ alert_policy_number_commit (const char *section_name,
 
   eft.alert_policy_number = atoi (kv->value_input);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -752,9 +753,9 @@ group_control_selector_commit (const char *section_name,
 
   eft.group_control_selector = atoi (kv->value_input);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -795,9 +796,9 @@ event_severity_commit (const char *section_name,
 
   eft.event_severity = event_severity_number (kv->value_input);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -839,9 +840,9 @@ generator_id_byte_1_commit (const char *section_name,
   eft.generator_id_byte_1 = strtol (kv->value_input, NULL, 0);
 
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -882,9 +883,9 @@ generator_id_byte_2_commit (const char *section_name,
 
   eft.generator_id_byte_2 = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -925,9 +926,9 @@ sensor_type_commit (const char *section_name,
 
   eft.sensor_type = sensor_type_number (kv->value_input);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -968,9 +969,9 @@ sensor_number_commit (const char *section_name,
 
   eft.sensor_number = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -1011,9 +1012,9 @@ event_trigger_commit (const char *section_name,
 
   eft.event_trigger = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -1054,9 +1055,9 @@ event_data1_offset_mask_commit (const char *section_name,
 
   eft.event_data1_offset_mask = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -1097,9 +1098,9 @@ event_data1_and_mask_commit (const char *section_name,
 
   eft.event_data1_and_mask = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -1140,9 +1141,9 @@ event_data1_compare1_commit (const char *section_name,
 
   eft.event_data1_compare1 = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -1183,9 +1184,9 @@ event_data1_compare2_commit (const char *section_name,
 
   eft.event_data1_compare2 = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -1226,9 +1227,9 @@ event_data2_and_mask_commit (const char *section_name,
 
   eft.event_data2_and_mask = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -1269,9 +1270,9 @@ event_data2_compare1_commit (const char *section_name,
 
   eft.event_data2_compare1 = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -1312,9 +1313,9 @@ event_data2_compare2_commit (const char *section_name,
 
   eft.event_data2_compare2 = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -1355,9 +1356,9 @@ event_data3_and_mask_commit (const char *section_name,
 
   eft.event_data3_and_mask = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -1398,9 +1399,9 @@ event_data3_compare1_commit (const char *section_name,
 
   eft.event_data3_compare1 = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 static config_err_t
@@ -1441,9 +1442,9 @@ event_data3_compare2_commit (const char *section_name,
 
   eft.event_data3_compare2 = strtol (kv->value_input, NULL, 0);
 
-  return _set_event_filter_table (state_data,
-                                  section_name,
-                                  &eft);
+  return (_set_event_filter_table (state_data,
+                                   section_name,
+                                   &eft));
 }
 
 struct config_section *
@@ -1742,7 +1743,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                               config_number_range_one_byte) < 0)
     goto cleanup;
 
-  return section;
+  return (section);
 
  cleanup:
   if (section)

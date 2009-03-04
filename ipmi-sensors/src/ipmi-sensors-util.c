@@ -394,7 +394,7 @@ ipmi_sensors_get_sensor_type_string (unsigned int sensor_type)
   const char *sensor_group;
 
   if ((sensor_group = ipmi_get_sensor_type_string (sensor_type)))
-    return sensor_group;
+    return (sensor_group);
 
-  return UNRECOGNIZED_GROUP;
+  return (UNRECOGNIZED_GROUP);
 }
