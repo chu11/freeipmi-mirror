@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.62 2009-03-04 22:39:39 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.63 2009-03-04 23:02:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -56,7 +56,7 @@ _fiid_obj_create (fiid_template_t tmpl)
 {
   fiid_obj_t obj;
 
-  assert (tmpl != NULL);
+  assert (tmpl);
 
   if ((obj = fiid_obj_create (tmpl)) == NULL)
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
@@ -67,11 +67,20 @@ _fiid_obj_create (fiid_template_t tmpl)
 static void
 _fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val)
 {
-  assert (obj != NULL && field != NULL && val != NULL);
+  int ret;
 
-  if (fiid_obj_get (obj, field, val) < 0)
-    ipmi_ping_err_exit ("fiid_obj_get: %s",
+  assert (obj);
+  assert (field);
+  assert (val);
+
+  if ((ret = fiid_obj_get (obj, field, val)) < 0)
+    ipmi_ping_err_exit ("fiid_obj_get: '%s': %s",
+                        field,
                         fiid_obj_errormsg (obj));
+
+  if (!ret)
+    ipmi_ping_err_exit ("fiid_obj_get: '%s': no data"
+                        field);
 }
 
 int
@@ -89,8 +98,8 @@ createpacket (char *destination,
   fiid_field_t *tmpl_cmd_get_channel_authentication_capabilities_ptr = NULL;
   int len;
 
-  assert (destination != NULL);
-  assert (buffer != NULL);
+  assert (destination);
+  assert (buffer);
   assert (version == IPMI_PING_VERSION_1_5 || version == IPMI_PING_VERSION_2_0);
 
   if (buflen < 0)
@@ -203,8 +212,9 @@ parsepacket (char *destination,
   fiid_field_t *tmpl_cmd_get_channel_authentication_capabilities_ptr = NULL;
   int ret, rv = -1;
 
-  assert (destination != NULL);
-  assert (buffer != NULL && from != NULL);
+  assert (destination);
+  assert (buffer);
+  assert (from);
   assert (version == IPMI_PING_VERSION_1_5 || version == IPMI_PING_VERSION_2_0);
 
   if (buflen < 0)
@@ -406,7 +416,8 @@ endresult (const char *progname,
 {
   double percent = 0;
 
-  assert (progname != NULL && dest != NULL);
+  assert (progname);
+  assert (dest);
 
   if (sent_count > 0)
     percent = ((double)(sent_count - recv_count)/sent_count)*100;

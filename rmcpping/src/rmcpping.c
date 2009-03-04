@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.42 2009-03-04 22:39:43 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.43 2009-03-04 23:02:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -52,7 +52,7 @@ _fiid_obj_create (fiid_template_t tmpl)
 {
   fiid_obj_t obj;
 
-  assert (tmpl != NULL);
+  assert (tmpl);
 
   if ((obj = fiid_obj_create (tmpl)) == NULL)
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
@@ -63,11 +63,20 @@ _fiid_obj_create (fiid_template_t tmpl)
 static void
 _fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val)
 {
-  assert (obj && field && val);
+  int ret;
 
-  if (fiid_obj_get (obj, field, val) < 0)
-    ipmi_ping_err_exit ("fiid_obj_get: %s",
+  assert (obj);
+  assert (field);
+  assert (val);
+
+  if ((ret = fiid_obj_get (obj, field, val)) < 0)
+    ipmi_ping_err_exit ("fiid_obj_get: '%s': %s",
+                        field,
                         fiid_obj_errormsg (obj));
+
+  if (!ret)
+    ipmi_ping_err_exit ("fiid_obj_get: '%s': no data"
+                        field);
 }
 
 int
@@ -82,8 +91,8 @@ createpacket (char *destination,
   fiid_obj_t obj_rmcp_cmd = NULL;
   int len;
 
-  assert (destination != NULL);
-  assert (buffer != NULL);
+  assert (destination);
+  assert (buffer);
 
   if (buflen < 0)
     return (-1);
@@ -150,8 +159,9 @@ parsepacket (char * destination,
   uint64_t message_type, ipmi_supported, message_tag;
   int rv = -1;
 
-  assert (destination != NULL);
-  assert (buffer != NULL && from != NULL);
+  assert (destination);
+  assert (buffer);
+  assert (from);
 
   if (buflen == 0)
     return (0);
@@ -231,7 +241,8 @@ endresult (const char *progname,
 {
   double percent = 0;
 
-  assert (progname != NULL && destination != NULL);
+  assert (progname);
+  assert (destination);
 
   if (sent_count > 0)
     percent = ((double)(sent_count - recv_count)/sent_count)*100;

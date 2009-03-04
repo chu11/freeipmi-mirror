@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.9 2009-03-04 19:41:25 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.10 2009-03-04 23:02:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -131,7 +131,7 @@ _err_init (char *__progname)
 {
   char *ptr = NULL;
 
-  assert (__progname != NULL);
+  assert (__progname);
 
   ptr = strrchr (__progname, '/');
   _progname = (ptr == NULL) ? __progname : ptr + 1;
@@ -159,7 +159,8 @@ ipmi_ping_err_exit (char *fmt, ...)
 static void
 _strncpy (char *dest, char *src, unsigned int len)
 {
-  assert (dest != NULL && src != NULL);
+  assert (dest);
+  assert (src);
 
   strncpy (dest, src, len);
   dest[len] = '0';
@@ -168,7 +169,7 @@ _strncpy (char *dest, char *src, unsigned int len)
 static void
 _output_usage (char *options)
 {
-  assert (_progname != NULL);
+  assert (_progname);
 
   fprintf (stderr, "%s [OPTIONS] destination\n", _progname);
   if (strchr (options, 'c'))
@@ -193,8 +194,10 @@ _output_usage (char *options)
 static void
 _output_version (void)
 {
-  assert (_progname != NULL);
+  assert (_progname);
+
   fprintf (stderr, "%s %s\n", _progname, VERSION);
+
   exit (1);
 }
 
@@ -297,7 +300,8 @@ _signal_handler (int sig)
 {
   int ret;
 
-  assert (_progname != NULL && _end_result != NULL);
+  assert (_progname);
+  assert (_end_result);
 
   /* Must output result here, b/c who knows where in the code we are
    * when we caught the signal
@@ -386,11 +390,11 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
   time_t last_send = 0;
   int ret;
 
-  assert (_create != NULL
-          && _parse != NULL
-          && _late != NULL
-          && _progname != NULL
-          && _end_result != NULL);
+  assert (_create);
+  assert (_parse);
+  assert (_late);
+  assert (_progname);
+  assert (_end_result);
 
   if (_initial_sequence_number < 0)
     {
