@@ -20,8 +20,6 @@ libfreeipmi
     system I can test on?
 * document templates in .h files or something
   - split up and make '-template" .h files"
-make consistent
-  - return 0 vs return (0)
 const char *
 
 units
