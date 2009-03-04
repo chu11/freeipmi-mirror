@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.33 2009-03-03 23:56:54 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.34 2009-03-04 19:41:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -481,7 +481,7 @@ _sensor_state (conffile_t cf,
     return IPMI_MONITORING_SENSOR_STATE_CRITICAL;
 
   conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
-  return -1;
+  return (-1);
 }
 
 static int
@@ -504,7 +504,7 @@ _cb_sensor_state_parse (conffile_t cf,
   assert (option_ptr);
 
   if ((sensor_state = _sensor_state (cf, option_type, data->string)) < 0)
-    return -1;
+    return (-1);
 
   i = 0;
   sensor_config = (struct ipmi_sensor_config *)option_ptr;
@@ -513,13 +513,13 @@ _cb_sensor_state_parse (conffile_t cf,
       if (!strcasecmp (optionname, sensor_config[i].option_str))
         {
           sensor_config[i].sensor_state = sensor_state;
-          return 0;
+          return (0);
         }
       i++;
     }
 
   conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
-  return -1;
+  return (-1);
 }
 
 int
@@ -3099,12 +3099,12 @@ ipmi_monitoring_sensor_config (int *errnum)
   char *config_file = NULL;
 
   if (_ipmi_monitoring_sensor_config_loaded)
-    return 0;
+    return (0);
 
   if (!(cf = conffile_handle_create ()))
     {
       IPMI_MONITORING_DEBUG (("conffile_handle_create: %s", strerror (errno)));
-      return -1;
+      return (-1);
     }
 
   if (sensor_config_file_set)
@@ -3158,5 +3158,5 @@ ipmi_monitoring_sensor_config (int *errnum)
  cleanup:
   if (cf)
     conffile_handle_destroy (cf);
-  return rv;
+  return (rv);
 }

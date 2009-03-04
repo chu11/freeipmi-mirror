@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.59 2009-03-03 23:56:50 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.60 2009-03-04 19:41:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -76,7 +76,7 @@ _set_mode_raw (void)
   if (tcgetattr (STDIN_FILENO, &saved_tty) < 0)
     {
       perror ("tcgetattr");
-      return -1;
+      return (-1);
     }
 
   memcpy (&tty, &saved_tty, sizeof(struct termios));
@@ -93,25 +93,25 @@ _set_mode_raw (void)
   if (tcsetattr (STDIN_FILENO, TCSADRAIN, &tty) < 0)
     {
       perror ("tcsetattr");
-      return -1;
+      return (-1);
     }
 
   raw_mode_set++;
-  return 0;
+  return (0);
 }
 
 static int
 _reset_mode (void)
 {
   if (!raw_mode_set)
-    return 0;
+    return (0);
 
   if (tcsetattr (STDIN_FILENO, TCSAFLUSH, &saved_tty) < 0)
     {
       perror ("tcsetattr");
-      return -1;
+      return (-1);
     }
-  return 0;
+  return (0);
 }
 
 static int
@@ -157,17 +157,17 @@ _stdin (ipmiconsole_ctx_t c,
                   if (n < 0)
                     {
                       perror ("write");
-                      return -1;
+                      return (-1);
                     }
                   if (n != tbuflen)
                     {
                       perror ("write");
-                      return -1;
+                      return (-1);
                     }
                 }
 
               /* b/c we're exitting */
-              return -1;
+              return (-1);
             }
           else if (buf[i] == 'B')
             {
@@ -181,13 +181,13 @@ _stdin (ipmiconsole_ctx_t c,
                   if (n < 0)
                     {
                       perror ("write");
-                      return -1;
+                      return (-1);
                     }
 
                   if (n != tbuflen)
                     {
                       perror ("write");
-                      return -1;
+                      return (-1);
                     }
                 }
               tbuflen = 0;
@@ -198,7 +198,7 @@ _stdin (ipmiconsole_ctx_t c,
                   fprintf (stderr,
                            "ipmiconsole_ctx_generate_break: %s\r\n",
                            ipmiconsole_ctx_errormsg (c));
-                  return -1;
+                  return (-1);
                 }
             }
           else if (buf[i] == 'D')
@@ -241,17 +241,17 @@ _stdin (ipmiconsole_ctx_t c,
                 printf ("\r\n[error received]: %s\r\n",
                         ipmiconsole_ctx_errormsg (c));
             }
-          return -1;
+          return (-1);
         }
 
       if (n != tbuflen)
         {
           perror ("write");
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 int
@@ -494,5 +494,5 @@ main (int argc, char **argv)
   _reset_mode ();
 #endif /* !NDEBUG */
 
-  return 0;
+  return (0);
 }

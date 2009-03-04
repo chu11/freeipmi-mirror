@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.23 2009-03-04 18:07:37 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.24 2009-03-04 19:41:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -357,7 +357,7 @@ ipmi_sdr_cache_next (ipmi_sdr_cache_ctx_t ctx)
   ctx->current_offset += record_length;
 
   ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
-  return 1;
+  return (1);
 }
 
 int

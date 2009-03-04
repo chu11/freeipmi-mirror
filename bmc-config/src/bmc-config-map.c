@@ -43,7 +43,7 @@ channel_access_mode (const char *string)
     return IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE;
   if (same (string, "shared"))
     return IPMI_MESSAGING_ACCESS_MODE_SHARED;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -78,7 +78,7 @@ get_privilege_limit_number (const char *value)
     return IPMI_PRIVILEGE_LEVEL_OEM;
   if (same (value, "no_access"))
     return IPMI_PRIVILEGE_LEVEL_NO_ACCESS;
-  return 0;
+  return (0);
 }
 
 char *
@@ -115,7 +115,7 @@ privilege_level_number (const char *string)
     return IPMI_PRIVILEGE_LEVEL_ADMIN;
   if (same (string, "oem_proprietary"))
     return IPMI_PRIVILEGE_LEVEL_OEM;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -141,7 +141,7 @@ int
 rmcpplus_priv_number (const char *value)
 {
   if (same (value, "unused"))
-    return 0;
+    return (0);
   if (same (value, "callback"))
     return IPMI_PRIVILEGE_LEVEL_CALLBACK;
   if (same (value, "user"))
@@ -152,7 +152,7 @@ rmcpplus_priv_number (const char *value)
     return IPMI_PRIVILEGE_LEVEL_ADMIN;
   if (same (value, "oem_proprietary"))
     return IPMI_PRIVILEGE_LEVEL_OEM;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -189,7 +189,7 @@ ip_address_source_number (const char *source)
     return IPMI_IP_ADDRESS_SOURCE_BIOS;
   if (same (source, "use_others"))
     return IPMI_IP_ADDRESS_SOURCE_OTHER;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -220,7 +220,7 @@ power_restore_policy_number (const char *string)
     return IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE;
   if (same (string, "on_state_ac_apply"))
     return IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -246,7 +246,7 @@ connect_mode_number (const char *string)
   if (same (string, "Direct_Connect"))
     return IPMI_CONNECT_MODE_DIRECT;
 
-  return -1;
+  return (-1);
 }
 
 char *
@@ -271,7 +271,7 @@ flow_control_number (const char *string)
     return IPMI_FLOW_CONTROL_RTS_CTS_FLOW_CONTROL;
   if (same (string, "xon_xoff"))
     return IPMI_FLOW_CONTROL_XON_XOFF_FLOW_CONTROL;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -302,7 +302,7 @@ bit_rate_number (const char *string)
     return IPMI_BIT_RATE_57600_BPS;
   if (same (string, "115200"))
     return IPMI_BIT_RATE_115200_BPS;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -339,7 +339,7 @@ sol_bit_rate_number (const char *string)
     return IPMI_SOL_BIT_RATE_576_KBPS;
   if (same (string, "115200"))
     return IPMI_SOL_BIT_RATE_1152_KBPS;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -372,7 +372,7 @@ alert_destination_type_number (const char *source)
     return IPMI_DESTINATION_TYPE_OEM1;
   if (same (source, "oem2"))
     return IPMI_DESTINATION_TYPE_OEM2;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -397,7 +397,7 @@ alert_gateway_number (const char *source)
     return IPMI_GATEWAY_SELECTOR_DEFAULT;
   if (same (source, "backup"))
     return IPMI_GATEWAY_SELECTOR_BACKUP;
-  return -1;
+  return (-1);
 }
 
 char *

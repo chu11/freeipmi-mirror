@@ -417,7 +417,7 @@ alert_string_validate (const char *section_name,
 {
   if (strlen (value) <= PEF_ALERT_STRING_MAX_LEN)
     return (CONFIG_VALIDATE_VALID_VALUE);
-  return CONFIG_VALIDATE_INVALID_VALUE;
+  return (CONFIG_VALIDATE_INVALID_VALUE);
 }
 
 struct config_section *

@@ -155,7 +155,7 @@ config_keypair_append (struct config_keypair **keypairs,
               fprintf (stderr,
                        "Duplicate section:key pair '%s:%s' specified\n",
                        kp->section_name, kp->key_name);
-              return -1;
+              return (-1);
             }
           kp = kp->next;
         }
@@ -168,7 +168,7 @@ config_keypair_append (struct config_keypair **keypairs,
   else
     *keypairs = keypair;
 
-  return 0;
+  return (0);
 }
 
 void
@@ -228,7 +228,7 @@ config_keypair_create (const char *section_name,
  cleanup:
   if (keypair)
     config_keypair_destroy (keypair);
-  return NULL;
+  return (NULL);
 }
 
 void
@@ -268,7 +268,7 @@ config_section_str_create (char *section_name)
 
  cleanup:
   config_section_str_destroy (sstr);
-  return NULL;
+  return (NULL);
 }
 
 int
@@ -290,7 +290,7 @@ config_section_str_append (struct config_section_str **section_strs,
               fprintf (stderr,
                        "Duplicate section '%s' specified\n",
                        sstr->section_name);
-              return -1;
+              return (-1);
             }
           sstr = sstr->next;
         }
@@ -303,7 +303,7 @@ config_section_str_append (struct config_section_str **section_strs,
   else
     *section_strs = section_str;
 
-  return 0;
+  return (0);
 }
 
 void

@@ -620,7 +620,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
     secure_memset (pkt, '\0', pkt_len);
   FIID_OBJ_DESTROY (obj_lan_msg_trlr);
   secure_memset (pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
-  return rv;
+  return (rv);
 }
 
 /*

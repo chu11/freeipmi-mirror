@@ -387,7 +387,7 @@ _ipmi_sensors_config (pstdout_state_t pstate,
     fclose (fp);
   if (sections)
     config_sections_destroy (pstate, sections);
-  return exit_code;
+  return (exit_code);
 }
 
 int
@@ -437,6 +437,6 @@ main (int argc, char **argv)
 
   exit_code = rv;
  cleanup:
-  return exit_code;
+  return (exit_code);
 }
 

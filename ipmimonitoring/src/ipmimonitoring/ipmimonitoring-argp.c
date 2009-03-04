@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.29 2009-03-03 23:56:53 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.30 2009-03-04 19:41:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -212,10 +212,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         ret = sdr_parse_opt (key, arg, state, &(cmd_args->sdr));
       if (ret == ARGP_ERR_UNKNOWN)
         ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
-      return ret;
+      return (ret);
     }
 
-  return 0;
+  return (0);
 }
 
 static void

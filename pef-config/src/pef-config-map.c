@@ -41,7 +41,7 @@ alert_destination_type_number (const char *source)
     return IPMI_DESTINATION_TYPE_OEM1;
   if (same (source, "oem2"))
     return IPMI_DESTINATION_TYPE_OEM2;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -66,7 +66,7 @@ alert_gateway_number (const char *source)
     return IPMI_GATEWAY_SELECTOR_DEFAULT;
   if (same (source, "backup"))
     return IPMI_GATEWAY_SELECTOR_BACKUP;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -95,7 +95,7 @@ policy_type_number (const char *source)
     return IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL;
   if (same (source, "proceed_to_next_entry_different_destination_type"))
     return IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE;
-  return -1;
+  return (-1);
 }
 
 char *
@@ -131,11 +131,11 @@ filter_type_number (const char *source)
   if (same (source, "software_configurable"))
     return IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER;
   if (same (source, "reserved1"))
-    return 0x1;
+    return (0x1);
   if (same (source, "reserved3"))
-    return 0x3;
+    return (0x3);
 
-  return -1;
+  return (-1);
 }
 
 char *
@@ -173,7 +173,7 @@ event_severity_number (const char *source)
   if (same (source, "non_recoverable"))
     return IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION;
 
-  return -1;
+  return (-1);
 }
 
 char *
@@ -295,7 +295,7 @@ sensor_type_number (const char *source)
   if (same (source, "any"))
     return IPMI_EVENT_SENSOR_TYPE_ANY;
 
-  return -1;
+  return (-1);
 }
 
 char *

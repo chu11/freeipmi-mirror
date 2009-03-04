@@ -222,5 +222,5 @@ ipmi_chassis_config_power_conf_get (ipmi_chassis_config_state_data_t *state_data
  cleanup:
   if (section)
     config_section_destroy (state_data->pstate, section);
-  return NULL;
+  return (NULL);
 }

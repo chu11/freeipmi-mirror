@@ -196,7 +196,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       return ret;
     }
 
-  return 0;
+  return (0);
 }
 
 static void

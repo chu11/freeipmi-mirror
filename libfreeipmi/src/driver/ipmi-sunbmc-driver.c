@@ -163,7 +163,7 @@ ipmi_sunbmc_ctx_create (void)
   ctx->putmsg_intf_msg_id = 0;  /* XXX: randomize? */
 
   ctx->errnum = IPMI_SUNBMC_ERR_SUCCESS;
-  return ctx;
+  return (ctx);
 }
 
 void

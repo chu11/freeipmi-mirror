@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.c,v 1.16 2009-03-04 18:07:31 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.c,v 1.17 2009-03-04 19:41:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -99,7 +99,7 @@ Fiid_obj_create (ipmiconsole_ctx_t c, fiid_template_t tmpl)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
-      return NULL;
+      return (NULL);
     }
 
   return obj;

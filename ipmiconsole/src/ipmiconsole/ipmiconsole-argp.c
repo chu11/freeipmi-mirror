@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.26 2009-03-03 23:56:50 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.27 2009-03-04 19:41:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -159,7 +159,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       return ret;
     }
 
-  return 0;
+  return (0);
 }
 
 static void

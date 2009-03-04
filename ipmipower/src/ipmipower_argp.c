@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.9 2009-03-04 18:07:32 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.10 2009-03-04 19:41:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -268,18 +268,18 @@ cmdline_parse (int key,
       /* backwards compatability */
     case SESSION_TIMEOUT_KEY:
       ret = common_parse_opt (ARGP_SESSION_TIMEOUT_KEY, arg, state, &(cmd_args->common));
-      return ret;
+      return (ret);
       break;
       /* backwards compatability */
     case RETRANSMISSION_TIMEOUT_KEY:
       ret = common_parse_opt (ARGP_RETRANSMISSION_TIMEOUT_KEY, arg, state, &(cmd_args->common));
-      return ret;
+      return (ret);
       break;
     default:
       ret = common_parse_opt (key, arg, state, &(cmd_args->common));
       if (ret == ARGP_ERR_UNKNOWN)
         ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
-      return ret;
+      return (ret);
     }
 
   return (0);

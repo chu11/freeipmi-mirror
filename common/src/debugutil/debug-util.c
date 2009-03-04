@@ -62,7 +62,7 @@ debug_hdr_str (uint8_t packet_type,
         && str
         && hdrbuf
         && hdrbuf_len))
-    return -1;
+    return (-1);
 
   memset (hdrbuf, '\0', hdrbuf_len);
 
@@ -98,9 +98,9 @@ debug_hdr_str (uint8_t packet_type,
     }
 
   if (len < 0 || len >= hdrbuf_len)
-    return -1;
+    return (-1);
 
-  return 0;
+  return (0);
 }
 
 int

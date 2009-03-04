@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: tool-hostrange-common.c,v 1.4 2009-03-03 23:56:44 chu11 Exp $
+ *  $Id: tool-hostrange-common.c,v 1.5 2009-03-04 19:41:26 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -231,5 +231,5 @@ pstdout_setup (char **hosts,
   return hosts_count;
 
  cleanup:
-  return -1;
+  return (-1);
 }

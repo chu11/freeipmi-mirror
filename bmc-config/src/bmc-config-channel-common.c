@@ -538,7 +538,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               _access_mode_checkout,
                               _access_mode_commit,
                               channel_access_mode_validate) < 0)
-    return -1;
+    return (-1);
 
   if (config_section_add_key (state_data->pstate,
                               channel_section,
@@ -548,7 +548,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               _enable_user_level_authentication_checkout,
                               _enable_user_level_authentication_commit,
                               config_yes_no_validate) < 0)
-    return -1;
+    return (-1);
 
   if (config_section_add_key (state_data->pstate,
                               channel_section,
@@ -558,7 +558,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               _enable_per_message_authentication_checkout,
                               _enable_per_message_authentication_commit,
                               config_yes_no_validate) < 0)
-    return -1;
+    return (-1);
 
   if (config_section_add_key (state_data->pstate,
                               channel_section,
@@ -568,7 +568,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               _enable_pef_alerting_checkout,
                               _enable_pef_alerting_commit,
                               config_yes_no_validate) < 0)
-    return -1;
+    return (-1);
 
   if (config_section_add_key (state_data->pstate,
                               channel_section,
@@ -578,7 +578,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               _channel_privilege_limit_checkout,
                               _channel_privilege_limit_commit,
                               privilege_level_number_validate) < 0)
-    return -1;
+    return (-1);
 
   if (config_section_add_key (state_data->pstate,
                               channel_section,
@@ -588,7 +588,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               _access_mode_checkout,
                               _access_mode_commit,
                               channel_access_mode_validate) < 0)
-    return -1;
+    return (-1);
 
   if (config_section_add_key (state_data->pstate,
                               channel_section,
@@ -598,7 +598,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               _enable_user_level_authentication_checkout,
                               _enable_user_level_authentication_commit,
                               config_yes_no_validate) < 0)
-    return -1;
+    return (-1);
 
   if (config_section_add_key (state_data->pstate,
                               channel_section,
@@ -608,7 +608,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               _enable_per_message_authentication_checkout,
                               _enable_per_message_authentication_commit,
                               config_yes_no_validate) < 0)
-    return -1;
+    return (-1);
 
   if (config_section_add_key (state_data->pstate,
                               channel_section,
@@ -618,7 +618,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               _enable_pef_alerting_checkout,
                               _enable_pef_alerting_commit,
                               config_yes_no_validate) < 0)
-    return -1;
+    return (-1);
 
   if (config_section_add_key (state_data->pstate,
                               channel_section,
@@ -628,7 +628,7 @@ bmc_config_channel_common_section_get (bmc_config_state_data_t *state_data,
                               _channel_privilege_limit_checkout,
                               _channel_privilege_limit_commit,
                               privilege_level_number_validate) < 0)
-    return -1;
+    return (-1);
 
-  return 0;
+  return (0);
 }

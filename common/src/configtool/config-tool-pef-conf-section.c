@@ -201,7 +201,7 @@ enable_pef_checkout (pstdout_state_t pstate,
                                ipmi_ctx,
                                cmd_args,
                                &pc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
@@ -224,7 +224,7 @@ enable_pef_commit (pstdout_state_t pstate,
                                ipmi_ctx,
                                cmd_args,
                                &pc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   pc.enable_pef = same (kv->value_input, "yes");
 
@@ -244,7 +244,7 @@ enable_pef_event_messages_checkout (pstdout_state_t pstate,
                                ipmi_ctx,
                                cmd_args,
                                &pc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
@@ -267,7 +267,7 @@ enable_pef_event_messages_commit (pstdout_state_t pstate,
                                ipmi_ctx,
                                cmd_args,
                                &pc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   pc.enable_pef_event_messages = same (kv->value_input, "yes");
 
@@ -287,7 +287,7 @@ enable_pef_startup_delay_checkout (pstdout_state_t pstate,
                                ipmi_ctx,
                                cmd_args,
                                &pc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
@@ -310,7 +310,7 @@ enable_pef_startup_delay_commit (pstdout_state_t pstate,
                                ipmi_ctx,
                                cmd_args,
                                &pc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   pc.enable_pef_startup_delay = same (kv->value_input, "yes");
 
@@ -330,7 +330,7 @@ enable_pef_alert_startup_delay_checkout (pstdout_state_t pstate,
                                ipmi_ctx,
                                cmd_args,
                                &pc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
@@ -353,7 +353,7 @@ enable_pef_alert_startup_delay_commit (pstdout_state_t pstate,
                                ipmi_ctx,
                                cmd_args,
                                &pc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   pc.enable_pef_alert_startup_delay = same (kv->value_input, "yes");
 
@@ -528,7 +528,7 @@ enable_alert_action_checkout (pstdout_state_t pstate,
                                              ipmi_ctx,
                                              cmd_args,
                                              &gc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
@@ -551,7 +551,7 @@ enable_alert_action_commit (pstdout_state_t pstate,
                                              ipmi_ctx,
                                              cmd_args,
                                              &gc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   gc.enable_alert_action = same (kv->value_input, "yes");
 
@@ -571,7 +571,7 @@ enable_power_down_action_checkout (pstdout_state_t pstate,
                                              ipmi_ctx,
                                              cmd_args,
                                              &gc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
@@ -594,7 +594,7 @@ enable_power_down_action_commit (pstdout_state_t pstate,
                                              ipmi_ctx,
                                              cmd_args,
                                              &gc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   gc.enable_power_down_action = same (kv->value_input, "yes");
 
@@ -614,7 +614,7 @@ enable_reset_action_checkout (pstdout_state_t pstate,
                                              ipmi_ctx,
                                              cmd_args,
                                              &gc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
@@ -637,7 +637,7 @@ enable_reset_action_commit (pstdout_state_t pstate,
                                              ipmi_ctx,
                                              cmd_args,
                                              &gc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   gc.enable_reset_action = same (kv->value_input, "yes");
 
@@ -657,7 +657,7 @@ enable_power_cycle_action_checkout (pstdout_state_t pstate,
                                              ipmi_ctx,
                                              cmd_args,
                                              &gc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
@@ -680,7 +680,7 @@ enable_power_cycle_action_commit (pstdout_state_t pstate,
                                              ipmi_ctx,
                                              cmd_args,
                                              &gc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   gc.enable_power_cycle_action = same (kv->value_input, "yes");
 
@@ -700,7 +700,7 @@ enable_oem_action_checkout (pstdout_state_t pstate,
                                              ipmi_ctx,
                                              cmd_args,
                                              &gc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
@@ -723,7 +723,7 @@ enable_oem_action_commit (pstdout_state_t pstate,
                                              ipmi_ctx,
                                              cmd_args,
                                              &gc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   gc.enable_oem_action = same (kv->value_input, "yes");
 
@@ -743,7 +743,7 @@ enable_diagnostic_interrupt_checkout (pstdout_state_t pstate,
                                              ipmi_ctx,
                                              cmd_args,
                                              &gc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   if (config_section_update_keyvalue_output (pstate,
                                              kv,
@@ -766,7 +766,7 @@ enable_diagnostic_interrupt_commit (pstdout_state_t pstate,
                                              ipmi_ctx,
                                              cmd_args,
                                              &gc)) != CONFIG_ERR_SUCCESS)
-    return ret;
+    return (ret);
 
   gc.enable_diagnostic_interrupt = same (kv->value_input, "yes");
 

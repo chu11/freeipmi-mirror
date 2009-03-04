@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.39 2009-03-04 18:07:32 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.40 2009-03-04 19:41:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -216,7 +216,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
   if (!(hl = hostlist_create (hostname)))
     {
       ipmipower_output (MSG_TYPE_HOSTNAME_INVALID, hostname);
-      return NULL;
+      return (NULL);
     }
 
   if (!(itr = hostlist_iterator_create (hl)))
@@ -272,11 +272,11 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
             cbuf_destroy (ics[i].ping_out);
         }
       Free (ics);
-      return NULL;
+      return (NULL);
     }
 
   *len = hl_count;
-  return ics;
+  return (ics);
 }
 
 void

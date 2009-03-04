@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_garbage_collector.c,v 1.19 2009-03-03 23:56:51 chu11 Exp $
+ *  $Id: ipmiconsole_garbage_collector.c,v 1.20 2009-03-04 19:41:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -152,5 +152,5 @@ ipmiconsole_garbage_collector (void *arg)
         list_iterator_destroy (itr);
     }
 
-  return NULL;
+  return (NULL);
 }

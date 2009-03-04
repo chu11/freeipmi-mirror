@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.14 2009-03-03 23:56:53 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.15 2009-03-04 19:41:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -145,9 +145,9 @@ static int
 _ipmidetect_handle_error_check (ipmidetect_t handle)
 {
   if (!handle || handle->magic != IPMIDETECT_MAGIC_NUM)
-    return -1;
+    return (-1);
 
-  return 0;
+  return (0);
 }
 
 /*
@@ -161,21 +161,21 @@ static int
 _unloaded_handle_error_check (ipmidetect_t handle)
 {
   if (_ipmidetect_handle_error_check (handle) < 0)
-    return -1;
+    return (-1);
 
   if (handle->load_state == IPMIDETECT_LOAD_STATE_LOADED)
     {
       handle->errnum = IPMIDETECT_ERR_ISLOADED;
-      return -1;
+      return (-1);
     }
 
   if (handle->load_state != IPMIDETECT_LOAD_STATE_UNLOADED)
     {
       handle->errnum = IPMIDETECT_ERR_INTERNAL;
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 /*
@@ -189,21 +189,21 @@ static int
 _loaded_handle_error_check (ipmidetect_t handle)
 {
   if (_ipmidetect_handle_error_check (handle) < 0)
-    return -1;
+    return (-1);
 
   if (handle->load_state == IPMIDETECT_LOAD_STATE_UNLOADED)
     {
       handle->errnum = IPMIDETECT_ERR_NOTLOADED;
-      return -1;
+      return (-1);
     }
 
   if (handle->load_state != IPMIDETECT_LOAD_STATE_LOADED)
     {
       handle->errnum = IPMIDETECT_ERR_INTERNAL;
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 /*
@@ -227,7 +227,7 @@ ipmidetect_handle_create ()
   ipmidetect_t handle;
 
   if (!(handle = (ipmidetect_t)malloc (sizeof(struct ipmidetect))))
-    return NULL;
+    return (NULL);
 
   _initialize_handle (handle);
   handle->errnum = IPMIDETECT_ERR_SUCCESS;
@@ -251,7 +251,7 @@ int
 ipmidetect_handle_destroy (ipmidetect_t handle)
 {
   if (_ipmidetect_handle_error_check (handle) < 0)
-    return -1;
+    return (-1);
 
   _free_handle_data (handle);
 
@@ -259,7 +259,7 @@ ipmidetect_handle_destroy (ipmidetect_t handle)
   handle->magic = ~IPMIDETECT_MAGIC_NUM;
 
   free (handle);
-  return 0;
+  return (0);
 }
 
 /*
@@ -280,20 +280,20 @@ _cb_hostnames (conffile_t cf, struct conffile_data *data, char *optionname,
   if (!option_ptr)
     {
       conffile_seterrnum (cf, CONFFILE_ERR_PARAMETERS);
-      return -1;
+      return (-1);
     }
 
   if (data->stringlist_len > IPMIDETECT_CONFIG_HOSTNAMES_MAX)
-    return -1;
+    return (-1);
 
   for (i = 0; i < data->stringlist_len; i++)
     {
       if (strlen (data->stringlist[i]) > IPMIDETECT_MAXHOSTNAMELEN)
-        return -1;
+        return (-1);
       strcpy (conf->hostnames[i], data->stringlist[i]);
     }
   conf->hostnames_len = data->stringlist_len;
-  return 0;
+  return (0);
 }
 
 /*
@@ -364,7 +364,7 @@ _low_timeout_connect (ipmidetect_t handle,
   if (!(hptr = gethostbyname (hostname)))
     {
       handle->errnum = IPMIDETECT_ERR_HOSTNAME_INVALID;
-      return -1;
+      return (-1);
     }
 
   /* Alot of this code is from Unix Network Programming, by Stevens */
@@ -465,7 +465,7 @@ _low_timeout_connect (ipmidetect_t handle,
 
  cleanup:
   close (fd);
-  return -1;
+  return (-1);
 }
 
 static int
@@ -639,11 +639,11 @@ ipmidetect_load_data (ipmidetect_t handle,
   handle->load_state = IPMIDETECT_LOAD_STATE_LOADED;
 
   handle->errnum = IPMIDETECT_ERR_SUCCESS;
-  return 0;
+  return (0);
 
  cleanup:
   _free_handle_data (handle);
-  return -1;
+  return (-1);
 }
 
 int
@@ -697,12 +697,12 @@ _get_nodes_string (ipmidetect_t handle, char *buf, int buflen, int which)
   hostlist_t hl;
 
   if (_loaded_handle_error_check (handle) < 0)
-    return -1;
+    return (-1);
 
   if (!buf || buflen <= 0)
     {
       handle->errnum = IPMIDETECT_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   if (which == IPMIDETECT_DETECTED_NODES)
@@ -713,11 +713,11 @@ _get_nodes_string (ipmidetect_t handle, char *buf, int buflen, int which)
   if (hostlist_ranged_string (hl, buflen, buf) < 0)
     {
       handle->errnum = IPMIDETECT_ERR_OVERFLOW;
-      return -1;
+      return (-1);
     }
 
   handle->errnum = IPMIDETECT_ERR_SUCCESS;
-  return 0;
+  return (0);
 }
 
 int
@@ -746,19 +746,19 @@ _is_node (ipmidetect_t handle, const char *node, int which)
   int temp, rv = -1;
 
   if (_loaded_handle_error_check (handle) < 0)
-    return -1;
+    return (-1);
 
   if (!node)
     {
       handle->errnum = IPMIDETECT_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   if (hostlist_find (handle->detected_nodes, node) < 0
       && hostlist_find (handle->undetected_nodes, node) < 0)
     {
       handle->errnum = IPMIDETECT_ERR_NOTFOUND;
-      return -1;
+      return (-1);
     }
 
   if (which == IPMIDETECT_DETECTED_NODES)

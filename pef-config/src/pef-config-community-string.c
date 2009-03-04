@@ -157,7 +157,7 @@ community_string_validate (const char *section_name,
                            void *arg)
 {
   if (!value || strlen (value) > IPMI_MAX_COMMUNITY_STRING_LENGTH)
-    return CONFIG_VALIDATE_INVALID_VALUE;
+    return (CONFIG_VALIDATE_INVALID_VALUE);
   return (CONFIG_VALIDATE_VALID_VALUE);
 }
 

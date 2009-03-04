@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.21 2009-03-03 23:56:46 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.22 2009-03-04 19:41:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -139,7 +139,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       return ret;
     }
 
-  return 0;
+  return (0);
 }
 
 static void

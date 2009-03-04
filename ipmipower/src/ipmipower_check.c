@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.96 2009-03-04 18:07:32 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.97 2009-03-04 19:41:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -76,7 +76,7 @@ ipmipower_check_checksum (ipmipower_powercmd_t ip, packet_type_t pkt)
     ierr_dbg ("ipmipower_check_checksum(%s:%d): checksum check failed",
               ip->ic->hostname, ip->protocol_state);
 
-  return (int)rv;
+  return ((int)rv);
 }
 
 int
@@ -221,7 +221,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
               "authentication code check failed",
               ip->ic->hostname, ip->protocol_state);
 
-  return (int)rv;
+  return ((int)rv);
 }
 
 int
@@ -253,7 +253,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
       || pkt == OPEN_SESSION_RES
       || pkt == RAKP_MESSAGE_2_RES
       || pkt == RAKP_MESSAGE_4_RES)
-    return 1;
+    return (1);
 
   if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
@@ -301,7 +301,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
        * initial outbound sequence number.
        */
       ip->highest_received_sequence_number = seq_num;
-      return 1;
+      return (1);
     }
 
   /* Drop duplicate packet */
@@ -439,7 +439,7 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == AUTHENTICATION_CAPABILITIES_RES
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES)
-    return 1;
+    return (1);
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
                || pkt == GET_CHASSIS_STATUS_RES
@@ -941,7 +941,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
               "rakp 2 check failed",
               ip->ic->hostname, ip->protocol_state);
 
-  return (int)rv;
+  return ((int)rv);
 }
 
 int
@@ -984,7 +984,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_ty
          * remote BMC gives us.  This has been documented in the
          * manpage.
          */
-        return 1;
+        return (1);
     }
   else
     authentication_algorithm = ip->authentication_algorithm;
@@ -1017,7 +1017,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_ty
               "rakp 4 check failed",
               ip->ic->hostname, ip->protocol_state);
 
-  return (int)rv;
+  return ((int)rv);
 }
 
 int
@@ -1047,7 +1047,7 @@ ipmipower_check_payload_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
               "payload pad check failed",
               ip->ic->hostname, ip->protocol_state);
 
-  return (int)rv;
+  return ((int)rv);
 }
 
 int
@@ -1064,7 +1064,7 @@ ipmipower_check_integrity_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
               || pkt == CLOSE_SESSION_RES));
 
   if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
-    return 1;
+    return (1);
 
   if ((rv = ipmi_rmcpplus_check_integrity_pad (ip->obj_rmcpplus_session_trlr_res)) < 0)
     ierr_exit ("ipmipower_check_integrity_pad(%s:%d): "
@@ -1076,6 +1076,6 @@ ipmipower_check_integrity_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
               "integrity pad check failed",
               ip->ic->hostname, ip->protocol_state);
 
-  return (int)rv;
+  return ((int)rv);
 }
 

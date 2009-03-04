@@ -62,5 +62,5 @@ ipmi_chassis_config_sections_create (ipmi_chassis_config_state_data_t *state_dat
 
  cleanup:
   config_sections_destroy (state_data->pstate, sections);
-  return NULL;
+  return (NULL);
 }

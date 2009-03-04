@@ -122,7 +122,7 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                         "Unknown");
     }
 
-  return 0;
+  return (0);
 }
 
 /* emulate a call to ipmi_cmd_get_sensor_thresholds succeeding by
@@ -536,7 +536,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
         {
           /* The thresholds cannot be gathered for one reason or
            * another, maybe b/c its a OEM sensor or something.  We can
-           * return 0 gracefully.
+           * return (0) gracefully.
            */
           rv = 0;
           goto cleanup;

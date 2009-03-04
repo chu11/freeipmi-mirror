@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.28 2009-03-03 23:56:53 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.29 2009-03-04 19:41:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -84,7 +84,7 @@ _inband_init (ipmi_monitoring_ctx_t c,
               && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_SUNBMC)))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   workaround_flags = 0;
@@ -161,7 +161,7 @@ _inband_init (ipmi_monitoring_ctx_t c,
                         c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
                       else
                         c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-                      return -1;
+                      return (-1);
                     }
                 }
             }
@@ -207,11 +207,11 @@ _inband_init (ipmi_monitoring_ctx_t c,
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
           else
             c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -252,7 +252,7 @@ _ipmi_1_5_init (ipmi_monitoring_ctx_t c,
               || (config->workaround_flags & ~workaround_flags_mask))))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   if (config && config->privilege_level >= 0)
@@ -294,7 +294,7 @@ _ipmi_1_5_init (ipmi_monitoring_ctx_t c,
   if (retransmission_timeout_len > session_timeout_len)
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   workaround_flags = 0;
@@ -361,10 +361,10 @@ _ipmi_1_5_init (ipmi_monitoring_ctx_t c,
         c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
       else
         c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -409,7 +409,7 @@ _ipmi_2_0_init (ipmi_monitoring_ctx_t c,
               || (config->workaround_flags & ~workaround_flags_mask))))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   if (config && config->privilege_level >= 0)
@@ -442,7 +442,7 @@ _ipmi_2_0_init (ipmi_monitoring_ctx_t c,
   if (retransmission_timeout_len > session_timeout_len)
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   workaround_flags = 0;
@@ -513,10 +513,10 @@ _ipmi_2_0_init (ipmi_monitoring_ctx_t c,
         c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
       else
         c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -536,7 +536,7 @@ _outofband_init (ipmi_monitoring_ctx_t c,
                    && config->protocol_version != IPMI_MONITORING_PROTOCOL_VERSION_2_0)))))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   if (!config
@@ -546,17 +546,17 @@ _outofband_init (ipmi_monitoring_ctx_t c,
       if (_ipmi_1_5_init (c,
                           hostname,
                           config) < 0)
-        return -1;
+        return (-1);
     }
   else
     {
       if (_ipmi_2_0_init (c,
                           hostname,
                           config) < 0)
-        return -1;
+        return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 int
@@ -589,11 +589,11 @@ ipmi_monitoring_ipmi_communication_init (ipmi_monitoring_ctx_t c,
         goto cleanup;
     }
 
-  return 0;
+  return (0);
 
  cleanup:
   _ipmi_communication_cleanup (c);
-  return -1;
+  return (-1);
 }
 
 void
@@ -627,5 +627,5 @@ ipmi_monitoring_ipmi_communication_cleanup (ipmi_monitoring_ctx_t c)
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
   _ipmi_communication_cleanup (c);
-  return 0;
+  return (0);
 }

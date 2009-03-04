@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.165 2009-03-04 18:07:32 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.166 2009-03-04 19:41:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -754,7 +754,7 @@ _has_timed_out (ipmipower_powercmd_t ip)
           else
             ipmipower_output (MSG_TYPE_SESSION_TIMEOUT, ip->ic->hostname);
         }
-      return 1;
+      return (1);
     }
 
   return (0);
@@ -888,7 +888,7 @@ _retry_packets (ipmipower_powercmd_t ip)
      */
     ip->close_timeout++;
 
-  return 1;
+  return (1);
 }
 
 /* _check_ipmi_1_5_authentication_capabilities
@@ -1629,7 +1629,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
         timeout = retransmission_timeout;
     }
 
-  return (int)timeout;
+  return ((int)timeout);
 }
 
 int

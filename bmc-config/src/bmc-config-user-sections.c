@@ -410,11 +410,11 @@ username_validate (const char *section_name,
       if (!value || same (value, "null") || same (value, "anonymous"))
         return (CONFIG_VALIDATE_VALID_VALUE);
       else
-        return CONFIG_VALIDATE_INVALID_VALUE;
+        return (CONFIG_VALIDATE_INVALID_VALUE);
     }
 
   if (!value || strlen (value) > IPMI_MAX_USER_NAME_LENGTH)
-    return CONFIG_VALIDATE_INVALID_VALUE;
+    return (CONFIG_VALIDATE_INVALID_VALUE);
   return (CONFIG_VALIDATE_VALID_VALUE);
 }
 
@@ -756,7 +756,7 @@ password_validate (const char *section_name,
 {
   if (strlen (value) <= IPMI_1_5_MAX_PASSWORD_LENGTH)
     return (CONFIG_VALIDATE_VALID_VALUE);
-  return CONFIG_VALIDATE_INVALID_VALUE;
+  return (CONFIG_VALIDATE_INVALID_VALUE);
 }
 
 static config_err_t
@@ -934,7 +934,7 @@ password20_validate (const char *section_name,
 {
   if (strlen (value) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
     return (CONFIG_VALIDATE_VALID_VALUE);
-  return CONFIG_VALIDATE_INVALID_VALUE;
+  return (CONFIG_VALIDATE_INVALID_VALUE);
 }
 
 static config_err_t

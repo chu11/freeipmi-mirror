@@ -65,47 +65,47 @@ cmdline_config_file_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      /* don't parse anything else, fall to return 0 */
+      /* don't parse anything else, fall to return (0) */
       break;
     }
 
-  return 0;
+  return (0);
 }
 
 int
 parse_inband_driver_type (char *str)
 {
   if (!str)
-    return -1;
+    return (-1);
 
   if (strcasecmp (str, "kcs") == 0)
-    return IPMI_DEVICE_KCS;
+    return (IPMI_DEVICE_KCS);
   else if (strcasecmp (str, "ssif") == 0)
-    return IPMI_DEVICE_SSIF;
+    return (IPMI_DEVICE_SSIF);
   /* support "open" for those that might be used to
    * ipmitool.
    */
   else if (strcasecmp (str, "open") == 0
            || strcasecmp (str, "openipmi") == 0)
-    return IPMI_DEVICE_OPENIPMI;
+    return (IPMI_DEVICE_OPENIPMI);
   /* support "bmc" for those that might be used to
    * ipmitool.
    */
   else if (strcasecmp (str, "bmc") == 0
            || strcasecmp (str, "sunbmc") == 0)
-    return IPMI_DEVICE_SUNBMC;
+    return (IPMI_DEVICE_SUNBMC);
 
-  return -1;
+  return (-1);
 }
 
 int
 parse_outofband_driver_type (char *str)
 {
   if (!str)
-    return -1;
+    return (-1);
 
   if (strcasecmp (str, "lan") == 0)
-    return IPMI_DEVICE_LAN;
+    return (IPMI_DEVICE_LAN);
   /* support "lanplus" for those that might be used to ipmitool.
    * support typo variants to ease.
    */
@@ -115,9 +115,9 @@ parse_outofband_driver_type (char *str)
            || strcasecmp (str, "lan_20") == 0
            || strcasecmp (str, "lan2_0") == 0
            || strcasecmp (str, "lan2_0") == 0)
-    return IPMI_DEVICE_LAN_2_0;
+    return (IPMI_DEVICE_LAN_2_0);
 
-  return -1;
+  return (-1);
 }
 
 int
@@ -126,48 +126,48 @@ parse_driver_type (char *str)
   int ret;
 
   if (!str)
-    return -1;
+    return (-1);
 
   if ((ret = parse_inband_driver_type (str)) < 0)
     ret = parse_outofband_driver_type (str);
 
-  return ret;
+  return (ret);
 }
 
 int
 parse_authentication_type (char *str)
 {
   if (!str)
-    return -1;
+    return (-1);
 
   if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_NONE_STR) == 0)
-    return IPMI_AUTHENTICATION_TYPE_NONE;
+    return (IPMI_AUTHENTICATION_TYPE_NONE);
   /* keep "plain" for backwards compatability */
   else if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR_OLD) == 0
            || strcasecmp (str, IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR) == 0)
-    return IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
+    return (IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY);
   else if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_MD2_STR) == 0)
-    return IPMI_AUTHENTICATION_TYPE_MD2;
+    return (IPMI_AUTHENTICATION_TYPE_MD2);
   else if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_MD5_STR) == 0)
-    return IPMI_AUTHENTICATION_TYPE_MD5;
+    return (IPMI_AUTHENTICATION_TYPE_MD5);
 
-  return -1;
+  return (-1);
 }
 int
 parse_privilege_level (char *str)
 {
   if (!str)
-    return -1;
+    return (-1);
 
   if (strcasecmp (str, IPMI_PRIVILEGE_LEVEL_USER_STR) == 0)
-    return IPMI_PRIVILEGE_LEVEL_USER;
+    return (IPMI_PRIVILEGE_LEVEL_USER);
   else if (strcasecmp (str, IPMI_PRIVILEGE_LEVEL_OPERATOR_STR) == 0)
-    return IPMI_PRIVILEGE_LEVEL_OPERATOR;
+    return (IPMI_PRIVILEGE_LEVEL_OPERATOR);
   else if (strcasecmp (str, IPMI_PRIVILEGE_LEVEL_ADMIN_STR) == 0
            || strcasecmp (str, IPMI_PRIVILEGE_LEVEL_ADMIN_STR2) == 0)
-    return IPMI_PRIVILEGE_LEVEL_ADMIN;
+    return (IPMI_PRIVILEGE_LEVEL_ADMIN);
 
-  return -1;
+  return (-1);
 }
 
 int
@@ -178,7 +178,7 @@ parse_workaround_flags (char *str)
   int flags = 0;
 
   if (!str)
-    return -1;
+    return (-1);
 
   memset (buf, '\0', WORKAROUND_FLAG_BUFLEN+1);
   strncpy (buf, str, WORKAROUND_FLAG_BUFLEN);
@@ -208,7 +208,8 @@ parse_workaround_flags (char *str)
         flags |= IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PORT;
       tok = strtok (NULL, ",");
     }
-  return flags;
+
+  return (flags);
 }
 
 /* From David Wheeler's Secure Programming Guide */
@@ -218,13 +219,13 @@ __secure_memset (void *s, int c, size_t n)
   volatile char *p;
 
   if (!s || !n)
-    return NULL;
+    return (NULL);
 
   p = s;
   while (n--)
     *p++=c;
 
-  return s;
+  return (s);
 }
 
 error_t
@@ -493,10 +494,10 @@ common_parse_opt (int key,
       cmd_args->debug++;
       break;
     default:
-      return ARGP_ERR_UNKNOWN;
+      return (ARGP_ERR_UNKNOWN);
     }
 
-  return 0;
+  return (0);
 }
 
 error_t
@@ -529,10 +530,10 @@ sdr_parse_opt (int key,
       cmd_args->ignore_sdr_cache = 1;
       break;
     default:
-      return ARGP_ERR_UNKNOWN;
+      return (ARGP_ERR_UNKNOWN);
     }
 
-  return 0;
+  return (0);
 }
 
 error_t
@@ -571,10 +572,10 @@ hostrange_parse_opt (int key,
       cmd_args->always_prefix = 1;
       break;
     default:
-      return ARGP_ERR_UNKNOWN;
+      return (ARGP_ERR_UNKNOWN);
     }
 
-  return 0;
+  return (0);
 }
 
 static void

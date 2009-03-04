@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.26 2009-03-04 18:07:31 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.27 2009-03-04 19:41:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -839,7 +839,7 @@ ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmiconsole
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5;
       else if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
         /* achu: I have not been able to reverse engineer this.  So accept it */
-        return 1;
+        return (1);
     }
   else
     authentication_algorithm = c->config.authentication_algorithm;
@@ -926,7 +926,7 @@ ipmiconsole_check_integrity_pad (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t 
           || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
   if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
-    return 1;
+    return (1);
 
   if ((rv = ipmi_rmcpplus_check_integrity_pad (c->connection.obj_rmcpplus_session_trlr_rs)) < 0)
 

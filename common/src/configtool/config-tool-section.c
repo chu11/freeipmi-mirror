@@ -51,7 +51,7 @@ config_section_append (pstdout_state_t pstate,
   else
     *sections = section;
 
-  return 0;
+  return (0);
 }
 
 void
@@ -125,7 +125,7 @@ config_section_create (pstdout_state_t pstate,
  cleanup:
   if (section)
     config_section_destroy (pstate, section);
-  return NULL;
+  return (NULL);
 }
 
 static void
@@ -236,10 +236,10 @@ config_section_add_key (pstdout_state_t pstate,
   else
     section->keys = k;
 
-  return 0;
+  return (0);
  cleanup:
   _config_key_destroy (pstate, k);
-  return -1;
+  return (-1);
 }
 
 int
@@ -297,11 +297,11 @@ config_section_add_keyvalue (pstdout_state_t pstate,
   else
     section->keyvalues = kv;
 
-  return 0;
+  return (0);
 
  cleanup:
   _config_keyvalue_destroy (pstate, kv);
-  return -1;
+  return (-1);
 }
 
 int
@@ -323,11 +323,11 @@ config_section_update_keyvalue_input (pstdout_state_t pstate,
         {
           PSTDOUT_PERROR (pstate,
                           "strdup");
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 int
@@ -345,11 +345,11 @@ config_section_update_keyvalue_output (pstdout_state_t pstate,
         {
           PSTDOUT_PERROR (pstate,
                           "strdup");
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 int
@@ -368,10 +368,10 @@ config_section_update_keyvalue_output_int (pstdout_state_t pstate,
     {
       PSTDOUT_PERROR (pstate,
                       "strdup");
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 int
@@ -390,10 +390,10 @@ config_section_update_keyvalue_output_double (pstdout_state_t pstate,
     {
       PSTDOUT_PERROR (pstate,
                       "strdup");
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 int

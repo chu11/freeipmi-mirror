@@ -62,7 +62,7 @@ freeipmi_strndup (const char *s, size_t n)
     len = n;
   new = (char *)malloc (len + 1);
   if (new == NULL)
-    return NULL;
+    return (NULL);
 
   new[len] = '\0';
   return (char *)memcpy (new, s, len);
@@ -97,7 +97,7 @@ freeipmi_strsep (char **stringp, const char *delim)
   if (*stringp == NULL)
     {
       /* No more tokens */
-      return NULL;
+      return (NULL);
     }
 
   token = *stringp;
@@ -158,7 +158,7 @@ freeipmi_stristr (const char *s1, const char *s2)
  cleanup:
   if (s1cpy)
     free (s1cpy);
-  return rv;
+  return (rv);
 }
 #endif /* !HAVE_STRISTR */
 
@@ -171,14 +171,14 @@ freeipmi_getline (char **buf, size_t *size, FILE *fp)
 
   if (buf == NULL || size == NULL) {
     errno = EINVAL;
-    return -1;
+    return (-1);
   }
 
   if (*buf == NULL || *size == 0) {
     *size = 120;
     *buf = (char *)malloc (*size);
     if (*buf == NULL)
-      return -1;
+      return (-1);
   }
 
   for (;;) {
@@ -189,7 +189,7 @@ freeipmi_getline (char **buf, size_t *size, FILE *fp)
       char *newbuf = (char *)realloc (*buf, newsize);
 
       if (newbuf == NULL)
-    return -1;
+    return (-1);
       *buf = newbuf;
       *size = newsize;
     }
@@ -198,7 +198,7 @@ freeipmi_getline (char **buf, size_t *size, FILE *fp)
 
     if (ch == -1) {
       (*buf)[n++] = '\0';
-      return -1;
+      return (-1);
     }
 
     (*buf)[n++] = ch;

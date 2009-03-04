@@ -888,7 +888,7 @@ threshold_validate (const char *section_name,
   conv = strtod (value, &endptr);
 
   if (*endptr)
-    return CONFIG_VALIDATE_INVALID_VALUE;
+    return (CONFIG_VALIDATE_INVALID_VALUE);
 
   return _floating_point_in_range (section_name,
                                    key_name,
@@ -911,10 +911,10 @@ threshold_validate_positive (const char *section_name,
   conv = strtod (value, &endptr);
 
   if (*endptr)
-    return CONFIG_VALIDATE_INVALID_VALUE;
+    return (CONFIG_VALIDATE_INVALID_VALUE);
 
   if (conv < 0.0)
-    return CONFIG_VALIDATE_OUT_OF_RANGE_VALUE;
+    return (CONFIG_VALIDATE_OUT_OF_RANGE_VALUE);
 
   return _floating_point_in_range (section_name,
                                    key_name,
@@ -940,7 +940,7 @@ hysteresis_threshold_validate (const char *section_name,
   conv = strtod (value, &endptr);
 
   if (*endptr)
-    return CONFIG_VALIDATE_INVALID_VALUE;
+    return (CONFIG_VALIDATE_INVALID_VALUE);
 
   return _floating_point_in_range (section_name,
                                    key_name,
@@ -966,10 +966,10 @@ hysteresis_threshold_validate_positive (const char *section_name,
   conv = strtod (value, &endptr);
 
   if (*endptr)
-    return CONFIG_VALIDATE_INVALID_VALUE;
+    return (CONFIG_VALIDATE_INVALID_VALUE);
 
   if (conv < 0.0)
-    return CONFIG_VALIDATE_OUT_OF_RANGE_VALUE;
+    return (CONFIG_VALIDATE_OUT_OF_RANGE_VALUE);
 
   return _floating_point_in_range (section_name,
                                    key_name,

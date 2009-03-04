@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: secure.c,v 1.4 2009-03-03 23:56:42 chu11 Exp $
+ *  $Id: secure.c,v 1.5 2009-03-04 19:41:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -47,13 +47,13 @@ void *secure_memset (void *s, int c, size_t n)
   volatile char *p;
 
   if (!s || !n)
-    return NULL;
+    return (NULL);
 
   p = s;
   while (n--)
     *p++=c;
 
-  return s;
+  return (s);
 }
 
 void *
@@ -70,7 +70,7 @@ secure_malloc (size_t len)
                    MAP_SHARED | MAP_ANONYMOUS | MAP_LOCKED,
                    -1,
                    0)) == MAP_FAILED)
-    return NULL;
+    return (NULL);
 #elif defined(MAP_ANONYMOUS) && !defined(MAP_LOCK)
   if ((ptr = mmap (NULL,
                    len,
@@ -78,15 +78,15 @@ secure_malloc (size_t len)
                    MAP_SHARED | MAP_ANONYMOUS,
                    -1,
                    0)) == MAP_FAILED)
-    return NULL;
+    return (NULL);
   if (mlock (ptr, len) < 0)
     {
       munmap (ptr, len);
-      return NULL;
+      return (NULL);
     }
 #else /* !defined(MAP_ANONYMOUS) */
   if (!(ptr = malloc (len)))
-    return NULL;
+    return (NULL);
 #endif /* !defined(MAP_ANONYMOUS) */
 
 #if 0
@@ -94,7 +94,7 @@ secure_malloc (size_t len)
    * it because it can cause fd leaks.
    */
   if ((fd = open ("/dev/zero", O_RDWR)) < 0)
-    return NULL;
+    return (NULL);
   if ((ptr = mmap (NULL,
                    len,
                    PROT_READ | PROT_WRITE,
@@ -103,18 +103,18 @@ secure_malloc (size_t len)
                    0)) == MAP_FAILED)
     {
       close (fd);
-      return NULL;
+      return (NULL);
     }
   if (mlock (ptr, len) < 0)
     {
       munmap (ptr, len);
       close (fd);
-      return NULL;
+      return (NULL);
     }
 #endif /* 0 */
 
   secure_memset (ptr, '\0', len);
-  return ptr;
+  return (ptr);
 }
 
 void

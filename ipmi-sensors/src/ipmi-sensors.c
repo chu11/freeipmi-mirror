@@ -179,9 +179,9 @@ _flush_cache (ipmi_sensors_state_data_t *state_data)
                              state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
                              state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
-    return -1;
+    return (-1);
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -218,7 +218,7 @@ _display_group (ipmi_sensors_state_data_t *state_data)
   str_replace_char (group, '/', '_');
   pstdout_printf (state_data->pstate, "%s\n", group);
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -246,7 +246,7 @@ _sensors_group_specified (ipmi_sensors_state_data_t *state_data,
                        stderr,
                        "ipmi_sdr_parse_record_id_and_type: %s\n",
                        ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-      return -1;
+      return (-1);
     }
 
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
@@ -262,7 +262,7 @@ _sensors_group_specified (ipmi_sensors_state_data_t *state_data,
                            stderr,
                            "ipmi_sdr_parse_sensor_type: %s\n",
                            ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-          return -1;
+          return (-1);
         }
 
       sdr_group_name = ipmi_get_sensor_type_string (sensor_type);
@@ -282,11 +282,11 @@ _sensors_group_specified (ipmi_sensors_state_data_t *state_data,
                            state_data->prog_data->args->groups[i]) == 0)
               || (strcasecmp (sdr_group_name_subst,
                               state_data->prog_data->args->groups[i]) == 0))
-            return 1;
+            return (1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -529,7 +529,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                                    stderr,
                                    "ipmi_sdr_cache_search_record_id: %s\n",
                                    ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-                  return -1;
+                  return (-1);
                 }
             }
 
@@ -541,7 +541,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                                stderr,
                                "ipmi_sdr_cache_record_read: %s\n",
                                ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-              return -1;
+              return (-1);
             }
 
           /* Shouldn't be possible */
@@ -551,7 +551,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
           if (_output_sensor (state_data,
                               sdr_record,
                               sdr_record_len) < 0)
-            return -1;
+            return (-1);
         }
     }
   else
@@ -564,7 +564,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                            stderr,
                            "ipmi_sdr_cache_record_count: %s\n",
                            ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-          return -1;
+          return (-1);
         }
 
       for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
@@ -581,7 +581,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                                stderr,
                                "ipmi_sdr_cache_record_read: %s\n",
                                ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-              return -1;
+              return (-1);
             }
 
           /* Shouldn't be possible */
@@ -593,7 +593,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
               if ((ret = _sensors_group_specified (state_data,
                                                    sdr_record,
                                                    sdr_record_len)) < 0)
-                return -1;
+                return (-1);
             }
           else
             ret = 1;            /* display everything */
@@ -603,12 +603,12 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
               if (_output_sensor (state_data,
                                   sdr_record,
                                   sdr_record_len) < 0)
-                return -1;
+                return (-1);
             }
         }
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -636,12 +636,12 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
                                  args->sdr.sdr_cache_recreate,
                                  state_data->hostname,
                                  args->sdr.sdr_cache_directory) < 0)
-    return -1;
+    return (-1);
 
   if (_display_sensors (state_data) < 0)
-    return -1;
+    return (-1);
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -755,7 +755,7 @@ _ipmi_sensors (pstdout_state_t pstate,
       ipmi_ctx_close (state_data.ipmi_ctx);
       ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
-  return exit_code;
+  return (exit_code);
 }
 
 int

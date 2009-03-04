@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.8 2009-03-03 23:56:43 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.9 2009-03-04 19:41:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -289,7 +289,7 @@ _sleep (unsigned int len)
   if (select (1, NULL, NULL, NULL, &tv) < 0)
     ipmi_ping_err_exit ("select: %s", strerror (errno));
 
-  return 0;
+  return (0);
 }
 
 static void

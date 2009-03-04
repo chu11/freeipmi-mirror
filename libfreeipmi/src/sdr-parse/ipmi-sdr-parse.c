@@ -91,7 +91,7 @@ ipmi_sdr_parse_ctx_create (void)
   ctx->magic = IPMI_SDR_PARSE_CTX_MAGIC;
   ctx->flags = IPMI_SDR_PARSE_FLAGS_DEFAULT;
 
-  return ctx;
+  return (ctx);
 }
 
 void

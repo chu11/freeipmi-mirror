@@ -152,10 +152,10 @@ config_parse_opt (int key,
       config_args->verbose = 1;
       break;
     default:
-      return ARGP_ERR_UNKNOWN;
+      return (ARGP_ERR_UNKNOWN);
     }
 
-  return 0;
+  return (0);
 }
 
 void

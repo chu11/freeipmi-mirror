@@ -112,7 +112,7 @@ ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_c
       goto cleanup;
     }
 
-  return ctx;
+  return (ctx);
 
  cleanup:
   if (ctx)
@@ -174,11 +174,11 @@ int
 ipmi_sel_parse_ctx_errnum (ipmi_sel_parse_ctx_t ctx)
 {
   if (!ctx)
-    return IPMI_SEL_PARSE_ERR_CONTEXT_NULL;
+    return (IPMI_SEL_PARSE_ERR_CONTEXT_NULL);
   else if (ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
-    return IPMI_SEL_PARSE_ERR_CONTEXT_INVALID;
+    return (IPMI_SEL_PARSE_ERR_CONTEXT_INVALID);
   else
-    return ctx->errnum;
+    return (ctx->errnum);
 }
 
 char *
@@ -243,7 +243,7 @@ ipmi_sel_parse_ctx_get_debug_prefix (ipmi_sel_parse_ctx_t ctx)
       return (NULL);
     }
 
-  return ctx->debug_prefix;
+  return (ctx)->debug_prefix;
 }
 
 int
@@ -282,7 +282,7 @@ ipmi_sel_parse_ctx_get_separator (ipmi_sel_parse_ctx_t ctx)
       return (NULL);
     }
 
-  return ctx->separator;
+  return (ctx)->separator;
 }
 
 int

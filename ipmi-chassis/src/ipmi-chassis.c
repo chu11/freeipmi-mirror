@@ -136,7 +136,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int32_t
@@ -464,7 +464,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int32_t
@@ -499,7 +499,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int32_t
@@ -535,7 +535,7 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int32_t
@@ -593,7 +593,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int32_t
@@ -628,7 +628,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int32_t
@@ -720,7 +720,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int32_t
@@ -769,7 +769,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
 
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int32_t
@@ -1069,7 +1069,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   rv = 0;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int32_t
@@ -1270,7 +1270,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   TOOL_FIID_OBJ_DESTROY (get_boot_flags_rs);
   TOOL_FIID_OBJ_DESTROY (boot_info_ack_obj_cmd_rs);
   TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1387,7 +1387,7 @@ _ipmi_chassis (pstdout_state_t pstate,
       ipmi_ctx_close (state_data.ipmi_ctx);
       ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
-  return exit_code;
+  return (exit_code);
 }
 
 int

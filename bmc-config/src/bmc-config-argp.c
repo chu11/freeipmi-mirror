@@ -106,7 +106,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         ret = hostrange_parse_opt (key, arg, state, &(cmd_args->config_args.hostrange));
       return ret;
     }
-  return 0;
+  return (0);
 }
 
 static void

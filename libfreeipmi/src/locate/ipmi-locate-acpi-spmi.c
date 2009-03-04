@@ -646,14 +646,14 @@ _ipmi_physical_address_valid (ipmi_locate_ctx_t ctx,
   if (physical_address < physical_memory_size
       && (physical_address + length) > physical_address
       && (physical_address + length) < physical_memory_size)
-    return 1;
+    return (1);
   else
     return (0);
 #else /* !(_SC_PAGESIZE && _SC_PHYS_PAGES) */
   /* achu: For now we return 1.  Later we can maybe read /dev/meminfo
    * or something.
    */
-  return 1;
+  return (1);
 #endif /* !(_SC_PAGESIZE && _SC_PHYS_PAGES) */
 }
 

@@ -169,9 +169,9 @@ _flush_cache (ipmi_sel_state_data_t *state_data)
                              state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
                              state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
-    return -1;
+    return (-1);
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -192,7 +192,7 @@ _clear_entries (ipmi_sel_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static int
@@ -221,7 +221,7 @@ _delete_entry (ipmi_sel_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static int
@@ -239,10 +239,10 @@ _delete_records (ipmi_sel_state_data_t *state_data)
       if (_delete_entry (state_data,
                          args->delete_record_list[i],
                          0) < 0)
-        return -1;
+        return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -258,13 +258,13 @@ _delete_range (ipmi_sel_state_data_t *state_data)
   for (i = args->delete_range1; i <= args->delete_range2; i++)
     {
       if (_delete_entry (state_data, i, 1) < 0)
-        return -1;
+        return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
-/* return -1, real error */
+/* return (-1), real error */
 static int
 _sel_parse_err_handle (ipmi_sel_state_data_t *state_data, char *func)
 {
@@ -278,7 +278,7 @@ _sel_parse_err_handle (ipmi_sel_state_data_t *state_data, char *func)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "Invalid SEL entry read\n");
-      return 0;
+      return (0);
     }
 
   pstdout_fprintf (state_data->pstate,
@@ -286,7 +286,7 @@ _sel_parse_err_handle (ipmi_sel_state_data_t *state_data, char *func)
                    "%s: %s\n",
                    func,
                    ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
-  return -1;
+  return (-1);
 }
 
 static int
@@ -344,12 +344,12 @@ _hex_output (ipmi_sel_state_data_t *state_data)
  out:
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 /* return 1 on success
- * return 0 on non-success, but don't fail
- * return -1 on error
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
  */
 static int
 _get_system_event_record_info (ipmi_sel_state_data_t *state_data,
@@ -371,8 +371,8 @@ _get_system_event_record_info (ipmi_sel_state_data_t *state_data,
     {
       if (_sel_parse_err_handle (state_data,
                                  "ipmi_sel_parse_read_event_type_code") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (ipmi_sel_parse_read_event_data1_event_data2_flag (state_data->sel_parse_ctx,
@@ -380,8 +380,8 @@ _get_system_event_record_info (ipmi_sel_state_data_t *state_data,
     {
       if (_sel_parse_err_handle (state_data,
                                  "ipmi_sel_parse_read_event_data1_event_data2_flag") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (ipmi_sel_parse_read_event_data1_event_data3_flag (state_data->sel_parse_ctx,
@@ -389,8 +389,8 @@ _get_system_event_record_info (ipmi_sel_state_data_t *state_data,
     {
       if (_sel_parse_err_handle (state_data,
                                  "ipmi_sel_parse_read_event_data1_event_data3_flag") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (ipmi_sel_parse_read_event_data2 (state_data->sel_parse_ctx,
@@ -398,8 +398,8 @@ _get_system_event_record_info (ipmi_sel_state_data_t *state_data,
     {
       if (_sel_parse_err_handle (state_data,
                                  "ipmi_sel_parse_read_event_data2") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (ipmi_sel_parse_read_event_data3 (state_data->sel_parse_ctx,
@@ -407,11 +407,11 @@ _get_system_event_record_info (ipmi_sel_state_data_t *state_data,
     {
       if (_sel_parse_err_handle (state_data,
                                  "ipmi_sel_parse_read_event_data3") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
-  return 1;
+  return (1);
 }
 
 static int
@@ -516,12 +516,12 @@ _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
  out:
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 /* return 1 on success
- * return 0 on non-success, but don't fail
- * return -1 on error
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
  */
 static int
 _normal_output_record_id (ipmi_sel_state_data_t *state_data, unsigned int flags)
@@ -540,19 +540,19 @@ _normal_output_record_id (ipmi_sel_state_data_t *state_data, unsigned int flags)
                                                        flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, "%-9s", outbuf);
 
-  return 1;
+  return (1);
 }
 
 /* return 1 on success
- * return 0 on non-success, but don't fail
- * return -1 on error
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
  */
 static int
 _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int flags)
@@ -571,8 +571,8 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
                                                        flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (outbuf_len)
@@ -586,19 +586,19 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
                                                        flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %-8s", outbuf);
 
-  return 1;
+  return (1);
 }
 
 /* return 1 on success
- * return 0 on non-success, but don't fail
- * return -1 on error
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
  */
 static int
 _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigned int flags)
@@ -617,8 +617,8 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
                                                        flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (outbuf_len)
@@ -632,19 +632,19 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
                                                        flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %-24s", outbuf);
 
-  return 1;
+  return (1);
 }
 
 /* return 1 on success
- * return 0 on non-success, but don't fail
- * return -1 on error
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
  */
 static int
 _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int flags)
@@ -664,19 +664,19 @@ _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int 
                                                        flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %-15s", outbuf);
 
-  return 1;
+  return (1);
 }
 
 /* return 1 on success
- * return 0 on non-success, but don't fail
- * return -1 on error
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
  */
 static int
 _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
@@ -695,19 +695,19 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
                                                        flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %-33s", outbuf);
 
-  return 1;
+  return (1);
 }
 
 /* return 1 on success
- * return 0 on non-success, but don't fail
- * return -1 on error
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
  */
 static int
 _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int flags)
@@ -733,10 +733,10 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                                             &event_data3_flag,
                                             &event_data2,
                                             &event_data3)) < 0)
-    return -1;
+    return (-1);
 
   if (!ret)
-    return 0;
+    return (0);
 
   /* note: previously set sel parse library separator to " ; "
    * so some places where there could be two outputs
@@ -787,19 +787,19 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                                                        flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %s", outbuf);
 
-  return 1;
+  return (1);
 }
 
 /* return 1 on success
- * return 0 on non-success, but don't fail
- * return -1 on error
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
  */
 static int
 _normal_output_manufacturer_id (ipmi_sel_state_data_t *state_data, unsigned int flags)
@@ -818,19 +818,19 @@ _normal_output_manufacturer_id (ipmi_sel_state_data_t *state_data, unsigned int 
                                                        flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %-16s", outbuf);
 
-  return 1;
+  return (1);
 }
 
 /* return 1 on success
- * return 0 on non-success, but don't fail
- * return -1 on error
+ * return (0) on non-success, but don't fail
+ * return (-1) on error
  */
 static int
 _normal_output_oem_data (ipmi_sel_state_data_t *state_data, unsigned int flags)
@@ -849,14 +849,14 @@ _normal_output_oem_data (ipmi_sel_state_data_t *state_data, unsigned int flags)
                                                        flags)) < 0)
     {
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %s", outbuf);
 
-  return 1;
+  return (1);
 }
 
 static int
@@ -996,7 +996,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
  out:
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1091,7 +1091,7 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
  out:
   rv = 0;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1112,7 +1112,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                      args->sdr.sdr_cache_recreate,
                                      state_data->hostname,
                                      args->sdr.sdr_cache_directory) < 0)
-        return -1;
+        return (-1);
     }
 
   if (!args->legacy_output)
@@ -1123,7 +1123,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                            stderr,
                            "ipmi_sel_parse: %s\n",
                            ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
-          return -1;
+          return (-1);
         }
     }
 
@@ -1135,10 +1135,10 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                        stderr,
                        "ipmi_sel_parse: %s\n",
                        ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -1168,9 +1168,9 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
   /* else default to displaying records */
 
   if (_display_sel_records (state_data) < 0)
-    return -1;
+    return (-1);
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -1285,7 +1285,7 @@ _ipmi_sel (pstdout_state_t pstate,
       ipmi_ctx_close (state_data.ipmi_ctx);
       ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
-  return exit_code;
+  return (exit_code);
 }
 
 int

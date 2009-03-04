@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.24 2009-03-03 23:56:46 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.25 2009-03-04 19:41:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -297,7 +297,7 @@ output_power_supply_information (ipmi_fru_state_data_t *state_data,
   rv = FRU_ERR_SUCCESS;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_record);
-  return rv;
+  return (rv);
 }
 
 static fru_err_t
@@ -425,7 +425,7 @@ output_dc_output (ipmi_fru_state_data_t *state_data,
   rv = FRU_ERR_SUCCESS;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_record);
-  return rv;
+  return (rv);
 }
 
 static fru_err_t
@@ -546,7 +546,7 @@ output_dc_load (ipmi_fru_state_data_t *state_data,
   rv = FRU_ERR_SUCCESS;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_record);
-  return rv;
+  return (rv);
 }
 
 static fru_err_t
@@ -705,7 +705,7 @@ output_management_access_record (ipmi_fru_state_data_t *state_data,
   rv = FRU_ERR_SUCCESS;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_record);
-  return rv;
+  return (rv);
 }
 
 static fru_err_t
@@ -853,7 +853,7 @@ output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
   rv = FRU_ERR_SUCCESS;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_record);
-  return rv;
+  return (rv);
 }
 
 static fru_err_t
@@ -994,7 +994,7 @@ output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
   rv = FRU_ERR_SUCCESS;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_record);
-  return rv;
+  return (rv);
 }
 
 static fru_err_t
@@ -1110,7 +1110,7 @@ output_oem_record (ipmi_fru_state_data_t *state_data,
   rv = FRU_ERR_SUCCESS;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (obj_record);
-  return rv;
+  return (rv);
 }
 
 fru_err_t

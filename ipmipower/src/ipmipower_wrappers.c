@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.38 2009-03-04 18:07:32 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.39 2009-03-04 19:41:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -50,7 +50,7 @@ Cbuf_create (int minsize, int maxsize)
   if (!(c = cbuf_create (minsize, maxsize)))
     ierr_exit ("Cbuf_create: %s", strerror (errno));
   cbuf_opt_set (c, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
-  return c;
+  return (c);
 }
 
 void
@@ -145,7 +145,7 @@ Cbuf_peek_and_drop (cbuf_t buf, void *buffer, int len)
   if (rv > 0)
     ierr_dbg ("Cbuf_peek: cbuf_drop dropped data: %d", rv);
 
-  return r_len;
+  return (r_len);
 }
 
 int
@@ -159,7 +159,7 @@ Cbuf_peek_to_fd (cbuf_t src, int dstfd, int len)
   if ((ret = cbuf_peek_to_fd (src, dstfd, len)) < 0)
     ierr_exit ("Cbuf_peek_to_fd: %s", strerror (errno));
 
-  return ret;
+  return (ret);
 }
 
 fiid_obj_t
@@ -171,7 +171,7 @@ Fiid_obj_create (fiid_template_t tmpl)
 
   if (!(obj = fiid_obj_create (tmpl)))
     ierr_exit ("Fiid_obj_create: %s", strerror (errno));
-  return obj;
+  return (obj);
 }
 
 void

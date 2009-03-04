@@ -98,15 +98,15 @@ char *
 ipmi_locate_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_LOCATE_ERR_SUCCESS && errnum <= IPMI_LOCATE_ERR_ERRNUMRANGE)
-    return ipmi_locate_ctx_errmsg[errnum];
+    return (ipmi_locate_ctx_errmsg[errnum]);
   else
-    return ipmi_locate_ctx_errmsg[IPMI_LOCATE_ERR_ERRNUMRANGE];
+    return (ipmi_locate_ctx_errmsg[IPMI_LOCATE_ERR_ERRNUMRANGE]);
 }
 
 char *
 ipmi_locate_ctx_errormsg (ipmi_locate_ctx_t ctx)
 {
-  return ipmi_locate_ctx_strerror (ipmi_locate_ctx_errnum (ctx));
+  return (ipmi_locate_ctx_strerror (ipmi_locate_ctx_errnum (ctx)));
 }
 
 static int

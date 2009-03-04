@@ -265,7 +265,7 @@ _is_ipmi_dev_info (ipmi_locate_ctx_t ctx,
   if (dev_info_p[IPMI_SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET] != type)
     return (0);
 
-  return 1;
+  return (1);
 }
 
 /* _map_physmem

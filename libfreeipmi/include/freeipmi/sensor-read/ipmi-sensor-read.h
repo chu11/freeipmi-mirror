@@ -79,7 +79,7 @@ int ipmi_sensor_read_ctx_set_flags (ipmi_sensor_read_ctx_t ctx, unsigned int fla
  * interpreted, b/c (for example) it is a non-analog or non-linear
  * sensor.
  *
- * return -1 - error, neither a reading nor sensor_event_bitmask can
+ * return (-1) - error, neither a reading nor sensor_event_bitmask can
  * be returned.
  *
  * if reading returned, must be free'd by caller

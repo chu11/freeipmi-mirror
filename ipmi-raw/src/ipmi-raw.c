@@ -326,7 +326,7 @@ run_cmd_args (ipmi_raw_state_data_t *state_data)
     {
       if (ipmi_raw_cmdline (state_data) < 0)
         goto cleanup;
-      return 0;
+      return (0);
     }
 
   if (args->cmd_file)
@@ -393,7 +393,7 @@ _ipmi_raw (pstdout_state_t pstate,
       ipmi_ctx_close (state_data.ipmi_ctx);
       ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
-  return exit_code;
+  return (exit_code);
 }
 
 int

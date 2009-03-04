@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.101 2009-03-03 23:56:56 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.102 2009-03-04 19:41:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1058,5 +1058,5 @@ ipmipower_prompt_process_cmdline (void)
     } while (!quit && strlen ((char *)buf) > 0);
   Free (buf);
 
-  return !quit;
+  return (!quit);
 }

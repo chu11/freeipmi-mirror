@@ -270,7 +270,7 @@ ipmi_kcs_ctx_create (void)
       goto cleanup;
     }
   ctx->errnum = IPMI_KCS_ERR_SUCCESS;
-  return ctx;
+  return (ctx);
 
  cleanup:
   if (ctx)
@@ -656,7 +656,7 @@ _ipmi_kcs_test_if_state (ipmi_kcs_ctx_t ctx, uint8_t status)
 
   if ((_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_STATE) ==
       (status & IPMI_KCS_STATUS_REG_STATE))
-    return 1;
+    return (1);
   else
     return (0);
 }

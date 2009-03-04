@@ -46,8 +46,8 @@ ipmi_is_root ()
 {
   uid_t uid = getuid ();
   if (uid == 0)
-    return 1;
-  return 0;
+    return (1);
+  return (0);
 }
 
 void
@@ -338,7 +338,7 @@ ipmi_open (const char *progname,
     }
   if (locate_ctx)
     ipmi_locate_ctx_destroy (locate_ctx);
-  return NULL;
+  return (NULL);
 }
 
 /* Check if kg len is decent */
@@ -348,20 +348,20 @@ check_kg_len (const char *instr)
   assert (instr != NULL);
 
   if (strlen (instr) == 0)
-    return 0;
+    return (0);
 
   if (strncasecmp (instr, "0x", 2) == 0)
     {
       if (strlen (instr) > IPMI_MAX_K_G_LENGTH*2+2)
-        return -1;
+        return (-1);
     }
   else
     {
       if (strlen (instr) > IPMI_MAX_K_G_LENGTH)
-        return -1;
+        return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 /* a k_g key is interpreted as ascii text unless it is prefixed with
@@ -379,19 +379,19 @@ parse_kg (unsigned char *outbuf, int outsz, const char *instr)
   assert (outsz > IPMI_MAX_K_G_LENGTH);
 
   if (strlen (instr) == 0)
-    return 0;
+    return (0);
 
   if (strncasecmp (instr, "0x", 2) == 0)
     {
       if (strlen (instr) > IPMI_MAX_K_G_LENGTH*2+2)
-        return -1;
+        return (-1);
       p = (char *)instr + 2;
       memset (outbuf, 0, IPMI_MAX_K_G_LENGTH);
       for (i = j = 0; i < strlen (p); i+=2, j++)
         {
           if (!isxdigit (p[i])
               || (p[i+1] && !isxdigit (p[i+1])))
-            return -1;
+            return (-1);
           buf[0] = p[i];
           if (p[i+1])
             buf[1] = p[i+1];
@@ -403,14 +403,14 @@ parse_kg (unsigned char *outbuf, int outsz, const char *instr)
           if (errno
               || ((p[i+1] && (q != buf + 2))
                   || (!p[i+1] && (q != buf + 1))))
-            return -1;
+            return (-1);
           rv++;
         }
     }
   else
     {
       if (strlen (instr) > IPMI_MAX_K_G_LENGTH)
-        return -1;
+        return (-1);
       memset (outbuf, 0, IPMI_MAX_K_G_LENGTH);
       memcpy (outbuf, instr, strlen (instr));
       rv = strlen (instr);
@@ -460,7 +460,7 @@ format_kg (char *outstr, int outsz, const unsigned char *k_g)
   if (printable)
     {
       if (outsz < IPMI_MAX_K_G_LENGTH+1)
-        return NULL;
+        return (NULL);
       p = outstr;
       for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
         {
@@ -473,7 +473,7 @@ format_kg (char *outstr, int outsz, const unsigned char *k_g)
   else
     {
       if (outsz < IPMI_MAX_K_G_LENGTH*2+3)
-        return NULL;
+        return (NULL);
       p = outstr;
       p[0] = '0'; p[1] = 'x';
       p+=2;

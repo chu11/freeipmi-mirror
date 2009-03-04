@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.23 2009-03-03 23:56:54 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.24 2009-03-04 19:41:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -75,7 +75,7 @@ _ipmi_monitoring_sdr_cache_ctx_init (ipmi_monitoring_ctx_t c, const char *hostna
             c->errnum = IPMI_MONITORING_ERR_PERMISSION;
           else
             c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          return -1;
+          return (-1);
         }
 
       if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS)
@@ -93,7 +93,7 @@ _ipmi_monitoring_sdr_cache_ctx_init (ipmi_monitoring_ctx_t c, const char *hostna
         }
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -146,7 +146,7 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
                     {
                       IPMI_MONITORING_DEBUG (("gethostname: %s", strerror (errno)));
                       c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
-                      return -1;
+                      return (-1);
                     }
 
                   /* shorten hostname if necessary */
@@ -157,7 +157,7 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
                     {
                       IPMI_MONITORING_DEBUG (("_ipmi_monitoring_sdr_cache_filename: overflow"));
                       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-                      return -1;
+                      return (-1);
                     }
 
                   strcat (&sdr_cache_filename[index], local_hostname);
@@ -169,7 +169,7 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
                     {
                       IPMI_MONITORING_DEBUG (("_ipmi_monitoring_sdr_cache_filename: overflow"));
                       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-                      return -1;
+                      return (-1);
                     }
                   strcat (&sdr_cache_filename[index], hostname);
                   index += strlen (hostname);
@@ -206,7 +206,7 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
             dir,
             sdr_cache_filename);
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -239,10 +239,10 @@ _ipmi_monitoring_sdr_cache_retrieve (ipmi_monitoring_ctx_t c,
         c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
       else
         c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -264,11 +264,11 @@ _ipmi_monitoring_sdr_cache_delete (ipmi_monitoring_ctx_t c,
             c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION;
           else
             c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 int
@@ -346,7 +346,7 @@ ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
         }
     }
 
-  return 0;
+  return (0);
 
  cleanup:
   if (c->sdr_cache_ctx)
@@ -356,7 +356,7 @@ ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
       ipmi_sdr_cache_ctx_destroy (c->sdr_cache_ctx);
       c->sdr_cache_ctx = NULL;
     }
-  return -1;
+  return (-1);
 }
 
 int
@@ -371,7 +371,7 @@ ipmi_monitoring_sdr_cache_unload (ipmi_monitoring_ctx_t c)
       ipmi_sdr_cache_ctx_destroy (c->sdr_cache_ctx);
       c->sdr_cache_ctx = NULL;
     }
-  return 0;
+  return (0);
 }
 
 int
@@ -392,7 +392,7 @@ ipmi_monitoring_sdr_cache_flush (ipmi_monitoring_ctx_t c,
   if (_ipmi_monitoring_sdr_cache_delete (c, hostname, filename) < 0)
     goto cleanup;
 
-  return 0;
+  return (0);
 
  cleanup:
   if (c->sdr_cache_ctx)
@@ -400,5 +400,5 @@ ipmi_monitoring_sdr_cache_flush (ipmi_monitoring_ctx_t c,
       ipmi_sdr_cache_ctx_destroy (c->sdr_cache_ctx);
       c->sdr_cache_ctx = NULL;
     }
-  return -1;
+  return (-1);
 }

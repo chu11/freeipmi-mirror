@@ -72,12 +72,12 @@ get_msg_message_list (struct ipmi_sensors_state_data *state_data,
   *event_message_list = tmp_event_message_list;
   *event_message_list_len = 1;
 
-  return 0;
+  return (0);
 
  cleanup:
   if (tmp_event_message_list)
     free (tmp_event_message_list);
-  return -1;
+  return (-1);
 }
 
 int
@@ -171,14 +171,14 @@ get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
    */
   *event_message_list_len = 1;
 
-  return 0;
+  return (0);
 
  cleanup:
   for (i = 0; i < num_messages; i++)
     free (tmp_message_list[i]);
   if (tmp_event_message_list)
     free (tmp_event_message_list);
-  return -1;
+  return (-1);
 }
 
 int
@@ -267,14 +267,14 @@ get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
   *event_message_list = tmp_event_message_list;
   *event_message_list_len = count;
 
-  return 0;
+  return (0);
 
  cleanup:
   for (i = 0; i < num_messages; i++)
     free (tmp_message_list[i]);
   if (tmp_event_message_list)
     free (tmp_event_message_list);
-  return -1;
+  return (-1);
 }
 
 int
@@ -364,14 +364,14 @@ get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_da
   *event_message_list = tmp_event_message_list;
   *event_message_list_len = count;
 
-  return 0;
+  return (0);
 
  cleanup:
   for (i = 0; i < num_messages; i++)
     free (tmp_message_list[i]);
   if (tmp_event_message_list)
     free (tmp_event_message_list);
-  return -1;
+  return (-1);
 }
 
 void

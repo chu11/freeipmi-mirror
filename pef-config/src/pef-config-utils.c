@@ -44,7 +44,7 @@ get_lan_channel_number (struct pef_config_state_data *state_data, uint8_t *chann
   if (state_data->lan_channel_number_initialized)
     {
       *channel_number = state_data->lan_channel_number;
-      return 0;
+      return (0);
     }
 
   if ((state_data->lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,

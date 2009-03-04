@@ -108,7 +108,7 @@ ipmi_sensor_read_ctx_create (ipmi_ctx_t ipmi_ctx)
       goto cleanup;
     }
 
-  return ctx;
+  return (ctx);
 
  cleanup:
   if (ctx)
@@ -139,7 +139,7 @@ ipmi_sensor_read_ctx_errnum (ipmi_sensor_read_ctx_t ctx)
   else if (ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
     return IPMI_SENSOR_READ_ERR_CONTEXT_INVALID;
   else
-    return ctx->errnum;
+    return (ctx)->errnum;
 }
 
 char *

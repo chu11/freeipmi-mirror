@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.106 2009-03-03 23:56:55 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.107 2009-03-04 19:41:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -52,54 +52,54 @@ ipmipower_packet_cmd_template (ipmipower_powercmd_t ip, packet_type_t pkt)
   assert (PACKET_TYPE_VALID_PKT (pkt));
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
-    return &tmpl_cmd_get_channel_authentication_capabilities_v20_rq[0];
+    return (&tmpl_cmd_get_channel_authentication_capabilities_v20_rq[0]);
   else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES)
-    return &tmpl_cmd_get_channel_authentication_capabilities_v20_rs[0];
+    return (&tmpl_cmd_get_channel_authentication_capabilities_v20_rs[0]);
   else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
-    return &tmpl_cmd_get_channel_authentication_capabilities_rq[0];
+    return (&tmpl_cmd_get_channel_authentication_capabilities_rq[0]);
   else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
-    return &tmpl_cmd_get_channel_authentication_capabilities_rs[0];
+    return (&tmpl_cmd_get_channel_authentication_capabilities_rs[0]);
   else if (pkt == GET_SESSION_CHALLENGE_REQ)
-    return &tmpl_cmd_get_session_challenge_rq[0];
+    return (&tmpl_cmd_get_session_challenge_rq[0]);
   else if (pkt == GET_SESSION_CHALLENGE_RES)
-    return &tmpl_cmd_get_session_challenge_rs[0];
+    return (&tmpl_cmd_get_session_challenge_rs[0]);
   else if (pkt == ACTIVATE_SESSION_REQ)
-    return &tmpl_cmd_activate_session_rq[0];
+    return (&tmpl_cmd_activate_session_rq[0]);
   else if (pkt == ACTIVATE_SESSION_RES)
-    return &tmpl_cmd_activate_session_rs[0];
+    return (&tmpl_cmd_activate_session_rs[0]);
   else if (pkt == OPEN_SESSION_REQ)
-    return &tmpl_rmcpplus_open_session_request[0];
+    return (&tmpl_rmcpplus_open_session_request[0]);
   else if (pkt == OPEN_SESSION_RES)
-    return &tmpl_rmcpplus_open_session_response[0];
+    return (&tmpl_rmcpplus_open_session_response[0]);
   else if (pkt == RAKP_MESSAGE_1_REQ)
-    return &tmpl_rmcpplus_rakp_message_1[0];
+    return (&tmpl_rmcpplus_rakp_message_1[0]);
   else if (pkt == RAKP_MESSAGE_2_RES)
-    return &tmpl_rmcpplus_rakp_message_2[0];
+    return (&tmpl_rmcpplus_rakp_message_2[0]);
   else if (pkt == RAKP_MESSAGE_3_REQ)
-    return &tmpl_rmcpplus_rakp_message_3[0];
+    return (&tmpl_rmcpplus_rakp_message_3[0]);
   else if (pkt == RAKP_MESSAGE_4_RES)
-    return &tmpl_rmcpplus_rakp_message_4[0];
+    return (&tmpl_rmcpplus_rakp_message_4[0]);
   else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ)
-    return &tmpl_cmd_set_session_privilege_level_rq[0];
+    return (&tmpl_cmd_set_session_privilege_level_rq[0]);
   else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES)
-    return &tmpl_cmd_set_session_privilege_level_rs[0];
+    return (&tmpl_cmd_set_session_privilege_level_rs[0]);
   else if (pkt == GET_CHASSIS_STATUS_REQ)
-    return &tmpl_cmd_get_chassis_status_rq[0];
+    return (&tmpl_cmd_get_chassis_status_rq[0]);
   else if (pkt == GET_CHASSIS_STATUS_RES)
-    return &tmpl_cmd_get_chassis_status_rs[0];
+    return (&tmpl_cmd_get_chassis_status_rs[0]);
   else if (pkt == CHASSIS_CONTROL_REQ)
-    return &tmpl_cmd_chassis_control_rq[0];
+    return (&tmpl_cmd_chassis_control_rq[0]);
   else if (pkt == CHASSIS_CONTROL_RES)
-    return &tmpl_cmd_chassis_control_rs[0];
+    return (&tmpl_cmd_chassis_control_rs[0]);
   else if (pkt == CLOSE_SESSION_REQ)
-    return &tmpl_cmd_close_session_rq[0];
+    return (&tmpl_cmd_close_session_rq[0]);
   else if (pkt == CLOSE_SESSION_RES)
-    return &tmpl_cmd_close_session_rs[0];
+    return (&tmpl_cmd_close_session_rs[0]);
   else
     ierr_exit ("ipmipower_packet_cmd_template: Invalid packet type(%s:%d)",
                ip->ic->hostname, ip->protocol_state);
 
-  return NULL;                  /* NOT REACHED */
+  return (NULL);                  /* NOT REACHED */
 }
 
 fiid_obj_t
@@ -109,54 +109,54 @@ ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
   assert (PACKET_TYPE_VALID_PKT (pkt));
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
-    return ip->obj_authentication_capabilities_v20_req;
+    return (ip->obj_authentication_capabilities_v20_req);
   else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES)
-    return ip->obj_authentication_capabilities_v20_res;
+    return (ip->obj_authentication_capabilities_v20_res);
   else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
-    return ip->obj_authentication_capabilities_req;
+    return (ip->obj_authentication_capabilities_req);
   else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
-    return ip->obj_authentication_capabilities_res;
+    return (ip->obj_authentication_capabilities_res);
   else if (pkt == GET_SESSION_CHALLENGE_REQ)
-    return ip->obj_get_session_challenge_req;
+    return (ip->obj_get_session_challenge_req);
   else if (pkt == GET_SESSION_CHALLENGE_RES)
-    return ip->obj_get_session_challenge_res;
+    return (ip->obj_get_session_challenge_res);
   else if (pkt == ACTIVATE_SESSION_REQ)
-    return ip->obj_activate_session_req;
+    return (ip->obj_activate_session_req);
   else if (pkt == ACTIVATE_SESSION_RES)
-    return ip->obj_activate_session_res;
+    return (ip->obj_activate_session_res);
   else if (pkt == OPEN_SESSION_REQ)
-    return ip->obj_open_session_req;
+    return (ip->obj_open_session_req);
   else if (pkt == OPEN_SESSION_RES)
-    return ip->obj_open_session_res;
+    return (ip->obj_open_session_res);
   else if (pkt == RAKP_MESSAGE_1_REQ)
-    return ip->obj_rakp_message_1_req;
+    return (ip->obj_rakp_message_1_req);
   else if (pkt == RAKP_MESSAGE_2_RES)
-    return ip->obj_rakp_message_2_res;
+    return (ip->obj_rakp_message_2_res);
   else if (pkt == RAKP_MESSAGE_3_REQ)
-    return ip->obj_rakp_message_3_req;
+    return (ip->obj_rakp_message_3_req);
   else if (pkt == RAKP_MESSAGE_4_RES)
-    return ip->obj_rakp_message_4_res;
+    return (ip->obj_rakp_message_4_res);
   else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ)
-    return ip->obj_set_session_privilege_level_req;
+    return (ip->obj_set_session_privilege_level_req);
   else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES)
-    return ip->obj_set_session_privilege_level_res;
+    return (ip->obj_set_session_privilege_level_res);
   else if (pkt == GET_CHASSIS_STATUS_REQ)
-    return ip->obj_get_chassis_status_req;
+    return (ip->obj_get_chassis_status_req);
   else if (pkt == GET_CHASSIS_STATUS_RES)
-    return ip->obj_get_chassis_status_res;
+    return (ip->obj_get_chassis_status_res);
   else if (pkt == CHASSIS_CONTROL_REQ)
-    return ip->obj_chassis_control_req;
+    return (ip->obj_chassis_control_req);
   else if (pkt == CHASSIS_CONTROL_RES)
-    return ip->obj_chassis_control_res;
+    return (ip->obj_chassis_control_res);
   else if (pkt == CLOSE_SESSION_REQ)
-    return ip->obj_close_session_req;
+    return (ip->obj_close_session_req);
   else if (pkt == CLOSE_SESSION_RES)
-    return ip->obj_close_session_res;
+    return (ip->obj_close_session_res);
   else
     ierr_exit ("ipmipower_packet_cmd_obj: Invalid packet type(%s:%d)",
                ip->ic->hostname, ip->protocol_state);
 
-  return NULL;                  /* NOT REACHED */
+  return (NULL);                  /* NOT REACHED */
 }
 
 void
@@ -1022,7 +1022,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip, packet_type_t pkt,
     ierr_exit ("ipmipower_packet_create(%s: %d): invalid logic",
                ip->ic->hostname, ip->protocol_state);
 
-  return len;
+  return (len);
 }
 
 msg_type_t
@@ -1068,13 +1068,13 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, packet_type_t pkt)
                    ip->ic->hostname, ip->protocol_state, pkt);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
                || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
-        return MSG_TYPE_BMC_BUSY;
+        return (MSG_TYPE_BMC_BUSY);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED)
-        return MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED;
+        return (MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
-        return MSG_TYPE_USERNAME_INVALID;
+        return (MSG_TYPE_USERNAME_INVALID);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
-        return MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE;
+        return (MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE);
     }
   else
     {
@@ -1087,34 +1087,34 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, packet_type_t pkt)
                    ip->ic->hostname, ip->protocol_state, pkt);
       else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
                && comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
-        return MSG_TYPE_IPMI_2_0_UNAVAILABLE;
+        return (MSG_TYPE_IPMI_2_0_UNAVAILABLE);
       else if (pkt == GET_SESSION_CHALLENGE_RES
                && (comp_code == IPMI_COMP_CODE_INVALID_USERNAME
                    || comp_code == IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED))
-        return MSG_TYPE_USERNAME_INVALID;
+        return (MSG_TYPE_USERNAME_INVALID);
       else if (pkt == ACTIVATE_SESSION_RES
                && comp_code == IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL)
-        return MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED;
+        return (MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else if (pkt == ACTIVATE_SESSION_RES
                && (comp_code == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE
                    || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER
                    || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
-        return MSG_TYPE_BMC_BUSY;
+        return (MSG_TYPE_BMC_BUSY);
       else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
                && (comp_code == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER
                    || comp_code == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT
                    || comp_code == IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
-        return MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED;
+        return (MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
 #if 0
       /* Should not reach this point, should be handled by other code */
       else if (pkt == CHASSIS_CONTROL_RES
                && comp_code == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
-        return MSG_TYPE_PRIVILEGE_LEVEL_INSUFFICIENT;
+        return (MSG_TYPE_PRIVILEGE_LEVEL_INSUFFICIENT);
 #endif
       else if (pkt == CHASSIS_CONTROL_RES
                && comp_code == IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED)
-        return MSG_TYPE_OPERATION_INVALID;
+        return (MSG_TYPE_OPERATION_INVALID);
     }
 
-  return MSG_TYPE_BMC_ERROR;
+  return (MSG_TYPE_BMC_ERROR);
 }

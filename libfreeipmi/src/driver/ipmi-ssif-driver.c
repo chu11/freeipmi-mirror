@@ -473,7 +473,7 @@ ipmi_ssif_ctx_create (void)
     }
 
   ctx->errnum = IPMI_SSIF_ERR_SUCCESS;
-  return ctx;
+  return (ctx);
 
  cleanup:
   if (ctx)

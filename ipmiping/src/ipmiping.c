@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.60 2009-03-04 18:07:32 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.61 2009-03-04 19:41:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -94,10 +94,10 @@ createpacket (char *destination,
   assert (version == IPMI_PING_VERSION_1_5 || version == IPMI_PING_VERSION_2_0);
 
   if (buflen < 0)
-    return -1;
+    return (-1);
 
   if (buflen == 0)
-    return 0;
+    return (0);
 
   if (version == IPMI_PING_VERSION_1_5)
     tmpl_cmd_get_channel_authentication_capabilities_ptr = (fiid_field_t *)&tmpl_cmd_get_channel_authentication_capabilities_rq[0];
@@ -208,10 +208,10 @@ parsepacket (char *destination,
   assert (version == IPMI_PING_VERSION_1_5 || version == IPMI_PING_VERSION_2_0);
 
   if (buflen < 0)
-    return -1;
+    return (-1);
 
   if (buflen == 0)
-    return 0;
+    return (0);
 
   if (version == IPMI_PING_VERSION_1_5)
     tmpl_cmd_get_channel_authentication_capabilities_ptr = (fiid_field_t *)&tmpl_cmd_get_channel_authentication_capabilities_rs[0];

@@ -214,7 +214,7 @@ k_r_validate (const char *section_name,
 {
   if (strlen (value) <= IPMI_MAX_K_R_LENGTH)
     return (CONFIG_VALIDATE_VALID_VALUE);
-  return CONFIG_VALIDATE_INVALID_VALUE;
+  return (CONFIG_VALIDATE_INVALID_VALUE);
 }
 
 static config_err_t
@@ -301,7 +301,7 @@ k_g_validate (const char *section_name,
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
 
   if (parse_kg (k_g, IPMI_MAX_K_G_LENGTH + 1, value) < 0)
-    return CONFIG_VALIDATE_INVALID_VALUE;
+    return (CONFIG_VALIDATE_INVALID_VALUE);
   return (CONFIG_VALIDATE_VALID_VALUE);
 }
 

@@ -48,7 +48,7 @@ config_yes_no_validate (const char *section_name,
 
   if (!strcasecmp (value, "yes") || !strcasecmp (value, "no"))
     return (CONFIG_VALIDATE_VALID_VALUE);
-  return CONFIG_VALIDATE_INVALID_VALUE;
+  return (CONFIG_VALIDATE_INVALID_VALUE);
 }
 
 config_validate_t
@@ -64,7 +64,7 @@ config_check_number_range (const char *value,
   conv = strtol (value, &endptr, 0);
 
   if (*endptr)
-    return CONFIG_VALIDATE_INVALID_VALUE;
+    return (CONFIG_VALIDATE_INVALID_VALUE);
 
   if (conv < min || conv > max)
     return CONFIG_VALIDATE_OUT_OF_RANGE_VALUE;
@@ -177,7 +177,7 @@ config_ip_address_validate (const char *section_name,
 
   if (inet_aton (value, &a))
     return (CONFIG_VALIDATE_VALID_VALUE);
-  return CONFIG_VALIDATE_INVALID_VALUE;
+  return (CONFIG_VALIDATE_INVALID_VALUE);
 }
 
 config_validate_t
@@ -201,7 +201,7 @@ config_mac_address_validate (const char *section_name,
               &foo,
               &foo) == 6)
     return (CONFIG_VALIDATE_VALID_VALUE);
-  return CONFIG_VALIDATE_INVALID_VALUE;
+  return (CONFIG_VALIDATE_INVALID_VALUE);
 }
 
 

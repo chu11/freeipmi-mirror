@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.14 2009-03-03 23:56:40 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.15 2009-03-04 19:41:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -499,7 +499,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       return ret;
     }
 
-  return 0;
+  return (0);
 }
 
 static void

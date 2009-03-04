@@ -96,7 +96,7 @@ _list (void)
       oem_id++;
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -312,7 +312,7 @@ _ipmi_oem (pstdout_state_t pstate,
       ipmi_ctx_close (state_data.ipmi_ctx);
       ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
-  return exit_code;
+  return (exit_code);
 }
 
 int

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.87 2009-03-03 23:56:53 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.88 2009-03-04 19:41:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -145,7 +145,7 @@ _list_groups (ipmimonitoring_state_data_t *state_data)
   _display_group (state_data, IPMI_SENSOR_TYPE_BUTTON_SWITCH);
   _display_group (state_data, IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE);
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -158,9 +158,9 @@ _flush_cache (ipmimonitoring_state_data_t *state_data)
                              state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
                              state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
-    return -1;
+    return (-1);
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -178,20 +178,20 @@ _setup_ipmimonitoring_lib (struct ipmimonitoring_arguments *args)
    */
 
   if (sdr_cache_create_directory (NULL, args->sdr.sdr_cache_directory) < 0)
-    return -1;
+    return (-1);
 
   if (sdr_cache_get_cache_directory (NULL,
                                      args->sdr.sdr_cache_directory,
                                      sdr_cache_directory,
                                      MAXPATHLEN) < 0)
-    return -1;
+    return (-1);
 
   if (ipmi_monitoring_sdr_cache_directory (sdr_cache_directory, &errnum) < 0)
     {
       fprintf (stderr,
                "ipmi_monitoring_sdr_cache_directory: %s\n",
                ipmi_monitoring_ctx_strerror (errnum));
-      return -1;
+      return (-1);
     }
 
   /* Force use of same filename format used for other FreeIPMI tools.
@@ -201,7 +201,7 @@ _setup_ipmimonitoring_lib (struct ipmimonitoring_arguments *args)
       fprintf (stderr,
                "ipmi_monitoring_sdr_cache_filename: %s\n",
                ipmi_monitoring_ctx_strerror (errnum));
-      return -1;
+      return (-1);
     }
 
   if (args->sensor_config_file)
@@ -211,7 +211,7 @@ _setup_ipmimonitoring_lib (struct ipmimonitoring_arguments *args)
           fprintf (stderr,
                    "ipmi_monitoring_sensor_config_file: %s\n",
                    ipmi_monitoring_ctx_strerror (errnum));
-          return -1;
+          return (-1);
         }
     }
 
@@ -220,10 +220,10 @@ _setup_ipmimonitoring_lib (struct ipmimonitoring_arguments *args)
       fprintf (stderr,
                "ipmi_monitoring_init: %s\n",
                ipmi_monitoring_ctx_strerror (errnum));
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 static const char *
@@ -232,59 +232,59 @@ _get_sensor_group (ipmimonitoring_state_data_t *state_data, int sensor_group)
   assert (state_data);
 
   if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_TEMPERATURE];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_TEMPERATURE]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_VOLTAGE)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_VOLTAGE];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_VOLTAGE]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_CURRENT)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_CURRENT];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_CURRENT]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_FAN)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_FAN];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_FAN]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_PHYSICAL_SECURITY)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_PHYSICAL_SECURITY];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_PHYSICAL_SECURITY]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_PROCESSOR)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_PROCESSOR];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_PROCESSOR]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_POWER_SUPPLY)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_POWER_SUPPLY];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_POWER_SUPPLY]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_POWER_UNIT)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_POWER_UNIT];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_POWER_UNIT]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_MEMORY)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_MEMORY];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_MEMORY]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_DRIVE_SLOT)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_DRIVE_SLOT];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_DRIVE_SLOT]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SYSTEM_FIRMWARE_PROGRESS)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_EVENT_LOGGING_DISABLED)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SYSTEM_EVENT)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_EVENT];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_EVENT]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_CRITICAL_INTERRUPT)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_MODULE_BOARD)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_MODULE_BOARD];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_MODULE_BOARD]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_SLOT_CONNECTOR];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_SLOT_CONNECTOR]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_WATCHDOG2];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_WATCHDOG2]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_ENTITY_PRESENCE)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_ENTITY_PRESENCE];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_ENTITY_PRESENCE]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_MANAGEMENT_SUBSYSTEM_HEALTH)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_BATTERY)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_BATTERY];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_BATTERY]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_FRU_STATE)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_FRU_STATE];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_FRU_STATE]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_CABLE_INTERCONNECT];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_CABLE_INTERCONNECT]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_BOOT_ERROR];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_BOOT_ERROR]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_BUTTON_SWITCH)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_BUTTON_SWITCH];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_BUTTON_SWITCH]);
   else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE)
-    return ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE];
+    return (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE]);
 
-  return IPMIMONITORING_NA_STRING;
+  return (IPMIMONITORING_NA_STRING);
 }
 
 static const char *
@@ -698,7 +698,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                  args->sdr.sdr_cache_recreate,
                                  state_data->hostname,
                                  args->sdr.sdr_cache_directory) < 0)
-    return -1;
+    return (-1);
 
   /* At this point in time we no longer need sdr_cache b/c
    * libipmimonitoring will open its own copy.
@@ -743,7 +743,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                            stderr,
                            "ipmi_monitoring_sensor_readings_by_record_id: %s\n",
                            ipmi_monitoring_ctx_errormsg (state_data->ctx));
-          return -1;
+          return (-1);
         }
     }
   else if (args->sensors_length)
@@ -767,7 +767,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                              stderr,
                              "ipmi_monitoring_sensor_readings_by_record_id: %s\n",
                              ipmi_monitoring_ctx_errormsg (state_data->ctx));
-          return -1;
+          return (-1);
         }
     }
   else
@@ -785,11 +785,11 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                            stderr,
                            "ipmi_monitoring_sensor_readings_by_sensor_group: %s\n",
                            ipmi_monitoring_ctx_errormsg (state_data->ctx));
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -877,7 +877,7 @@ _ipmimonitoring (pstdout_state_t pstate,
       ipmi_ctx_close (state_data.ipmi_ctx);
       ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
-  return exit_code;
+  return (exit_code);
 }
 
 static int

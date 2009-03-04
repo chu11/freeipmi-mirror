@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.79 2009-03-04 18:07:31 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.80 2009-03-04 19:41:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1274,7 +1274,7 @@ _close_session (ipmiconsole_ctx_t c)
       if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return (-1);
       c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
-      return 1;
+      return (1);
     }
   /* else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT)
    *
@@ -1290,7 +1290,7 @@ _close_session (ipmiconsole_ctx_t c)
       if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return (-1);
       c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-      return 1;
+      return (1);
     }
   /* else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT
    *          || c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT)
@@ -1483,7 +1483,7 @@ _ipmi_retransmission_timeout (ipmiconsole_ctx_t c)
       return (-1);
     }
 
-  return 1;
+  return (1);
 }
 
 /*
@@ -1538,7 +1538,7 @@ _sol_retransmission_timeout (ipmiconsole_ctx_t c)
         return (-1);
     }
 
-  return 1;
+  return (1);
 }
 
 /*
@@ -1565,7 +1565,7 @@ _keepalive_is_necessary (ipmiconsole_ctx_t c)
     }
 
   if (timeval_gt (&current, &timeout))
-    return 1;
+    return (1);
   else
     return (0);
 }
@@ -1611,7 +1611,7 @@ _keepalive_timeout (ipmiconsole_ctx_t c)
           /* Note that the protocol_state stays in SOL_SESSION */
           if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ) < 0)
             return (-1);
-          return 1;
+          return (1);
         }
     }
 
@@ -1655,7 +1655,7 @@ _check_for_ipmi_2_0_support (ipmiconsole_ctx_t c)
       return (0);
     }
 
-  return 1;
+  return (1);
 }
 
 /*
@@ -1988,7 +1988,7 @@ _check_sol_activated2 (ipmiconsole_ctx_t c)
           return (-1);
         }
 
-      return 1;
+      return (1);
     }
 
   if (comp_code == IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED)
@@ -2081,14 +2081,14 @@ _check_payload_sizes_legitimate (ipmiconsole_ctx_t c)
           && max_outbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len)
         {
           c->session.max_sol_character_send_size = max_outbound_payload_size - sol_hdr_len;
-          return 1;
+          return (1);
         }
     }
   else
     {
       /* Lets try 32, seems like a decent power of two number */
       c->session.max_sol_character_send_size = 32;
-      return 1;
+      return (1);
     }
 
   IPMICONSOLE_CTX_DEBUG (c, ("payload sizes invalid: max_inbound_payload_size=%d max_outbound_payload_size=%d", max_inbound_payload_size, max_outbound_payload_size));
@@ -2134,7 +2134,7 @@ _check_try_new_port (ipmiconsole_ctx_t c)
           if (!(c->config.workaround_flags & IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT))
             {
               c->session.console_port = console_port;
-              return 1;
+              return (1);
             }
         }
     }
@@ -2579,9 +2579,9 @@ _send_sol_character_data_or_break (ipmiconsole_ctx_t c)
           if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             return (-1);
           c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-          return 1;
+          return (1);
         }
-      return 1;
+      return (1);
     }
 
   if (c->session.break_requested)
@@ -2593,9 +2593,9 @@ _send_sol_character_data_or_break (ipmiconsole_ctx_t c)
           if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             return (-1);
           c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-          return 1;
+          return (1);
         }
-      return 1;
+      return (1);
     }
 
   return (0);
@@ -3196,18 +3196,18 @@ _process_protocol_state_sol_session_send (ipmiconsole_ctx_t c)
           if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             return (-1);
           c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-          return 1;
+          return (1);
         }
 
       if (ret)
-        return 1;
+        return (1);
     }
   else
     {
       if ((ret = _send_sol_character_data_or_break (c)) < 0)
         return (-1);
       if (ret)
-        return 1;
+        return (1);
     }
 
   /* Will handle keepalive retransmits too */
@@ -3218,11 +3218,11 @@ _process_protocol_state_sol_session_send (ipmiconsole_ctx_t c)
       if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return (-1);
       c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-      return 1;
+      return (1);
     }
 
   if (ret)
-    return 1;
+    return (1);
 
   return (0);
 }

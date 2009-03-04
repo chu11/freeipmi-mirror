@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.115 2009-03-04 18:07:29 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.116 2009-03-04 19:41:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -76,25 +76,25 @@
 #define BMC_WATCHDOG_RETRY_WAIT_TIME         1
 #define BMC_WATCHDOG_RETRY_ATTEMPT           5
 
-#define _FIID_OBJ_GET(__obj, __field, __val, __func)              \
-  do {                                                            \
-    uint64_t __temp;                                              \
-    if (fiid_obj_get ((__obj), (__field), &__temp) < 0)           \
-      {                                                           \
-    _bmclog ("%s: fiid_obj_get: %s",                              \
-         (__func),                                                \
-         fiid_obj_errormsg ((__obj)));                            \
-    if (fiid_obj_errnum ((__obj)) == FIID_ERR_SUCCESS)            \
-      errno = 0;                                                  \
-    else if (fiid_obj_errnum ((__obj)) == FIID_ERR_OUT_OF_MEMORY) \
-      errno = ENOMEM;                                             \
-    else if (fiid_obj_errnum ((__obj)) == FIID_ERR_OVERFLOW)      \
-      errno = ENOSPC;                                             \
-    else                                                          \
-      errno = EINVAL;                                             \
-    goto cleanup;                                                 \
-      }                                                           \
-    *(__val) = __temp;                                            \
+#define _FIID_OBJ_GET(__obj, __field, __val, __func)                    \
+  do {                                                                  \
+    uint64_t __temp;                                                    \
+    if (fiid_obj_get ((__obj), (__field), &__temp) < 0)                 \
+      {                                                                 \
+        _bmclog ("%s: fiid_obj_get: %s",                                \
+                 (__func),                                              \
+                 fiid_obj_errormsg ((__obj)));                          \
+        if (fiid_obj_errnum ((__obj)) == FIID_ERR_SUCCESS)              \
+          errno = 0;                                                    \
+        else if (fiid_obj_errnum ((__obj)) == FIID_ERR_OUT_OF_MEMORY)   \
+          errno = ENOMEM;                                               \
+        else if (fiid_obj_errnum ((__obj)) == FIID_ERR_OVERFLOW)        \
+          errno = ENOSPC;                                               \
+        else                                                            \
+          errno = EINVAL;                                               \
+        goto cleanup;                                                   \
+      }                                                                 \
+    *(__val) = __temp;                                                  \
   } while (0)
 
 struct bmc_watchdog_arguments cmd_args;
@@ -292,7 +292,7 @@ _init_kcs_ipmi (void)
  cleanup:
   if (locate_ctx)
     ipmi_locate_ctx_destroy (locate_ctx);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -371,7 +371,7 @@ _init_ssif_ipmi (void)
  cleanup:
   if (locate_ctx)
     ipmi_locate_ctx_destroy (locate_ctx);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -380,7 +380,7 @@ _init_openipmi_ipmi (void)
   if (!(openipmi_ctx = ipmi_openipmi_ctx_create ()))
     {
       _bmclog ("ipmi_openipmi_ctx_create: %s", strerror (errno));
-      return -1;
+      return (-1);
     }
 
   if (cmd_args.common.driver_device)
@@ -390,7 +390,7 @@ _init_openipmi_ipmi (void)
         {
           _bmclog ("ipmi_openipmi_ctx_set_driver_device: %s",
                    ipmi_openipmi_ctx_strerror (ipmi_openipmi_ctx_errnum (openipmi_ctx)));
-          return -1;
+          return (-1);
         }
     }
 
@@ -398,10 +398,10 @@ _init_openipmi_ipmi (void)
     {
       _bmclog ("ipmi_openipmi_ctx_io_init: %s",
                ipmi_openipmi_ctx_strerror (ipmi_openipmi_ctx_errnum (openipmi_ctx)));
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -410,7 +410,7 @@ _init_sunbmc_ipmi (void)
   if (!(sunbmc_ctx = ipmi_sunbmc_ctx_create ()))
     {
       _bmclog ("ipmi_sunbmc_ctx_create: %s", strerror (errno));
-      return -1;
+      return (-1);
     }
 
   if (cmd_args.common.driver_device)
@@ -420,7 +420,7 @@ _init_sunbmc_ipmi (void)
         {
           _bmclog ("ipmi_sunbmc_ctx_set_driver_device: %s",
                    ipmi_sunbmc_ctx_strerror (ipmi_sunbmc_ctx_errnum (sunbmc_ctx)));
-          return -1;
+          return (-1);
         }
     }
 
@@ -428,10 +428,10 @@ _init_sunbmc_ipmi (void)
     {
       _bmclog ("ipmi_sunbmc_ctx_io_init: %s",
                ipmi_sunbmc_ctx_strerror (ipmi_sunbmc_ctx_errnum (sunbmc_ctx)));
-      return -1;
+      return (-1);
     }
 
-  return 0;
+  return (0);
 }
 
 /* Must be called after cmdline parsed b/c user may pass in io port */
@@ -538,7 +538,7 @@ _init_ipmi (void)
  out:
   if (locate_ctx)
     ipmi_locate_ctx_destroy (locate_ctx);
-  return 0;
+  return (0);
 }
 
 /* Must be called after cmdline parsed */
@@ -611,7 +611,7 @@ _sleep (unsigned int sleep_len)
   struct timeval tv;
 
   if (!sleep_len)
-    return 0;
+    return (0);
 
   tv.tv_sec = sleep_len;
   tv.tv_usec = 0;
@@ -620,7 +620,7 @@ _sleep (unsigned int sleep_len)
       if (errno != EINTR)
         _err_exit ("select: %s", strerror (errno));
     }
-  return 0;
+  return (0);
 }
 
 static int
@@ -685,7 +685,7 @@ _cmd (char *str,
                     errno = ENOSPC;
                   else
                     errno = EINVAL;
-                  return -1;
+                  return (-1);
                 }
             }
         }
@@ -714,7 +714,7 @@ _cmd (char *str,
                     errno = ENOSPC;
                   else
                     errno = EINVAL;
-                  return -1;
+                  return (-1);
                 }
             }
         }
@@ -739,7 +739,7 @@ _cmd (char *str,
                 errno = EIO;
               else
                 errno = EINVAL;
-              return -1;
+              return (-1);
             }
         }
       else if (driver_type_used == IPMI_DEVICE_SUNBMC)
@@ -763,7 +763,7 @@ _cmd (char *str,
                 errno = EIO;
               else
                 errno = EINVAL;
-              return -1;
+              return (-1);
             }
         }
 
@@ -776,7 +776,7 @@ _cmd (char *str,
                        retry_wait_time,
                        retry_attempt);
               errno = EBUSY;
-              return -1;
+              return (-1);
             }
 
           if (cmd_args.common.debug)
@@ -812,10 +812,10 @@ _cmd (char *str,
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
     _bmclog ("%s: cmd error: %Xh", str, comp_code);
 
-  return (int)comp_code;
+  return ((int)comp_code);
 
  cleanup:
-  return -1;
+  return (-1);
 }
 
 static int
@@ -857,7 +857,7 @@ _reset_watchdog_timer_cmd (int retry_wait_time, int retry_attempt)
  cleanup:
   fiid_obj_destroy (cmd_rq);
   fiid_obj_destroy (cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -928,7 +928,7 @@ _set_watchdog_timer_cmd (int retry_wait_time,
  cleanup:
   fiid_obj_destroy (cmd_rq);
   fiid_obj_destroy (cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1072,7 +1072,7 @@ _get_watchdog_timer_cmd (int retry_wait_time,
  cleanup:
   fiid_obj_destroy (cmd_rq);
   fiid_obj_destroy (cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static int
@@ -1242,7 +1242,7 @@ _suspend_bmc_arps_cmd (int retry_wait_time,
  cleanup:
   fiid_obj_destroy (cmd_rq);
   fiid_obj_destroy (cmd_rs);
-  return rv;
+  return (rv);
 }
 
 static void

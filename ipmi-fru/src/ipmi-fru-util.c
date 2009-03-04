@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.32 2009-03-03 23:56:46 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.33 2009-03-04 19:41:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -163,7 +163,7 @@ ipmi_fru_read_fru_data (ipmi_fru_state_data_t *state_data,
   rv = FRU_ERR_SUCCESS;
  cleanup:
   TOOL_FIID_OBJ_DESTROY (fru_read_data_rs);
-  return rv;
+  return (rv);
 }
 
 static fru_err_t
@@ -258,7 +258,7 @@ _get_type_length_bytes (ipmi_fru_state_data_t *state_data,
   *len_parsed = bytes_parsed;
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static fru_err_t
@@ -308,7 +308,7 @@ _sixbitascii_to_ascii (ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 static fru_err_t
@@ -360,7 +360,7 @@ _bcd_to_ascii (ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 fru_err_t
@@ -504,7 +504,7 @@ ipmi_fru_output_type_length_field (ipmi_fru_state_data_t *state_data,
   *len_parsed = bytes_parsed + 1;          /* +1 for type/length field */
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  return rv;
+  return (rv);
 }
 
 fru_err_t

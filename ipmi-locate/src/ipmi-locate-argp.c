@@ -73,7 +73,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       return ARGP_ERR_UNKNOWN;
     }
 
-  return 0;
+  return (0);
 }
 
 void

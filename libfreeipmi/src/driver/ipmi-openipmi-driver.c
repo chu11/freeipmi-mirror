@@ -213,7 +213,7 @@ ipmi_openipmi_ctx_create (void)
   ctx->io_init = 0;
 
   ctx->errnum = IPMI_OPENIPMI_ERR_SUCCESS;
-  return ctx;
+  return (ctx);
 }
 
 void

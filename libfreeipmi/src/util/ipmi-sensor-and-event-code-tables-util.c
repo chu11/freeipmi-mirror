@@ -43,18 +43,18 @@ int
 ipmi_event_reading_type_code_class (uint8_t event_reading_type_code)
 {
   if (IPMI_EVENT_READING_TYPE_CODE_IS_THRESHOLD (event_reading_type_code))
-    return IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD;
+    return (IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD);
 
   if (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code))
-    return IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE;
+    return (IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE);
 
   if (IPMI_EVENT_READING_TYPE_CODE_IS_SENSOR_SPECIFIC (event_reading_type_code))
-    return IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE;
+    return (IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE);
 
   if (IPMI_EVENT_READING_TYPE_CODE_IS_OEM (event_reading_type_code))
-    return IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM;
+    return (IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM);
 
-  return IPMI_EVENT_READING_TYPE_CODE_CLASS_UNKNOWN;
+  return (IPMI_EVENT_READING_TYPE_CODE_CLASS_UNKNOWN);
 }
 
 /************************************************
@@ -2502,18 +2502,18 @@ ipmi_get_generic_event_message (uint8_t event_reading_type_code,
 
   switch (event_reading_type_code)
     {
-    case 0x01: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_01_desc_max, ipmi_generic_event_reading_type_code_01_desc);
-    case 0x02: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_02_desc_max, ipmi_generic_event_reading_type_code_02_desc);
-    case 0x03: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_03_desc_max, ipmi_generic_event_reading_type_code_03_desc);
-    case 0x04: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_04_desc_max, ipmi_generic_event_reading_type_code_04_desc);
-    case 0x05: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_05_desc_max, ipmi_generic_event_reading_type_code_05_desc);
-    case 0x06: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_06_desc_max, ipmi_generic_event_reading_type_code_06_desc);
-    case 0x07: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_07_desc_max, ipmi_generic_event_reading_type_code_07_desc);
-    case 0x08: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_08_desc_max, ipmi_generic_event_reading_type_code_08_desc);
-    case 0x09: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_09_desc_max, ipmi_generic_event_reading_type_code_09_desc);
-    case 0x0A: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0A_desc_max, ipmi_generic_event_reading_type_code_0A_desc);
-    case 0x0B: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0B_desc_max, ipmi_generic_event_reading_type_code_0B_desc);
-    case 0x0C: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0C_desc_max, ipmi_generic_event_reading_type_code_0C_desc);
+    case 0x01: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_01_desc_max, ipmi_generic_event_reading_type_code_01_desc));
+    case 0x02: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_02_desc_max, ipmi_generic_event_reading_type_code_02_desc));
+    case 0x03: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_03_desc_max, ipmi_generic_event_reading_type_code_03_desc));
+    case 0x04: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_04_desc_max, ipmi_generic_event_reading_type_code_04_desc));
+    case 0x05: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_05_desc_max, ipmi_generic_event_reading_type_code_05_desc));
+    case 0x06: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_06_desc_max, ipmi_generic_event_reading_type_code_06_desc));
+    case 0x07: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_07_desc_max, ipmi_generic_event_reading_type_code_07_desc));
+    case 0x08: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_08_desc_max, ipmi_generic_event_reading_type_code_08_desc));
+    case 0x09: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_09_desc_max, ipmi_generic_event_reading_type_code_09_desc));
+    case 0x0A: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0A_desc_max, ipmi_generic_event_reading_type_code_0A_desc));
+    case 0x0B: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0B_desc_max, ipmi_generic_event_reading_type_code_0B_desc));
+    case 0x0C: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0C_desc_max, ipmi_generic_event_reading_type_code_0C_desc));
     }
 
   return (-1);
@@ -2534,40 +2534,40 @@ ipmi_get_sensor_type_code_message (int sensor_type_code,
 
   switch (sensor_type_code)
     {
-    case 0x01: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_01_desc_max, ipmi_sensor_type_code_01_desc);
-    case 0x02: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_02_desc_max, ipmi_sensor_type_code_02_desc);
-    case 0x03: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_03_desc_max, ipmi_sensor_type_code_03_desc);
-    case 0x04: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_04_desc_max, ipmi_sensor_type_code_04_desc);
-    case 0x05: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_05_desc_max, ipmi_sensor_type_code_05_desc);
-    case 0x06: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_06_desc_max, ipmi_sensor_type_code_06_desc);
-    case 0x07: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_07_desc_max, ipmi_sensor_type_code_07_desc);
-    case 0x08: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_08_desc_max, ipmi_sensor_type_code_08_desc);
-    case 0x09: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_09_desc_max, ipmi_sensor_type_code_09_desc);
-    case 0x0C: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0C_desc_max, ipmi_sensor_type_code_0C_desc);
-    case 0x0D: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0D_desc_max, ipmi_sensor_type_code_0D_desc);
-    case 0x0F: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0F_desc_max, ipmi_sensor_type_code_0F_desc);
-    case 0x10: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_10_desc_max, ipmi_sensor_type_code_10_desc);
-    case 0x11: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_11_desc_max, ipmi_sensor_type_code_11_desc);
-    case 0x12: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_12_desc_max, ipmi_sensor_type_code_12_desc);
-    case 0x13: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_13_desc_max, ipmi_sensor_type_code_13_desc);
-    case 0x14: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_14_desc_max, ipmi_sensor_type_code_14_desc);
-    case 0x19: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_19_desc_max, ipmi_sensor_type_code_19_desc);
-    case 0x1B: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1B_desc_max, ipmi_sensor_type_code_1B_desc);
-    case 0x1D: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1D_desc_max, ipmi_sensor_type_code_1D_desc);
-    case 0x1E: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1E_desc_max, ipmi_sensor_type_code_1E_desc);
-    case 0x1F: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1F_desc_max, ipmi_sensor_type_code_1F_desc);
-    case 0x20: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_20_desc_max, ipmi_sensor_type_code_20_desc);
-    case 0x21: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_21_desc_max, ipmi_sensor_type_code_21_desc);
-    case 0x22: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_22_desc_max, ipmi_sensor_type_code_22_desc);
-    case 0x23: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_23_desc_max, ipmi_sensor_type_code_23_desc);
-    case 0x24: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_24_desc_max, ipmi_sensor_type_code_24_desc);
-    case 0x25: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_25_desc_max, ipmi_sensor_type_code_25_desc);
-    case 0x27: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_27_desc_max, ipmi_sensor_type_code_27_desc);
-    case 0x28: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_28_desc_max, ipmi_sensor_type_code_28_desc);
-    case 0x29: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_29_desc_max, ipmi_sensor_type_code_29_desc);
-    case 0x2A: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2A_desc_max, ipmi_sensor_type_code_2A_desc);
-    case 0x2B: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2B_desc_max, ipmi_sensor_type_code_2B_desc);
-    case 0x2C: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2C_desc_max, ipmi_sensor_type_code_2C_desc);
+    case 0x01: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_01_desc_max, ipmi_sensor_type_code_01_desc));
+    case 0x02: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_02_desc_max, ipmi_sensor_type_code_02_desc));
+    case 0x03: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_03_desc_max, ipmi_sensor_type_code_03_desc));
+    case 0x04: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_04_desc_max, ipmi_sensor_type_code_04_desc));
+    case 0x05: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_05_desc_max, ipmi_sensor_type_code_05_desc));
+    case 0x06: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_06_desc_max, ipmi_sensor_type_code_06_desc));
+    case 0x07: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_07_desc_max, ipmi_sensor_type_code_07_desc));
+    case 0x08: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_08_desc_max, ipmi_sensor_type_code_08_desc));
+    case 0x09: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_09_desc_max, ipmi_sensor_type_code_09_desc));
+    case 0x0C: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0C_desc_max, ipmi_sensor_type_code_0C_desc));
+    case 0x0D: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0D_desc_max, ipmi_sensor_type_code_0D_desc));
+    case 0x0F: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0F_desc_max, ipmi_sensor_type_code_0F_desc));
+    case 0x10: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_10_desc_max, ipmi_sensor_type_code_10_desc));
+    case 0x11: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_11_desc_max, ipmi_sensor_type_code_11_desc));
+    case 0x12: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_12_desc_max, ipmi_sensor_type_code_12_desc));
+    case 0x13: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_13_desc_max, ipmi_sensor_type_code_13_desc));
+    case 0x14: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_14_desc_max, ipmi_sensor_type_code_14_desc));
+    case 0x19: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_19_desc_max, ipmi_sensor_type_code_19_desc));
+    case 0x1B: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1B_desc_max, ipmi_sensor_type_code_1B_desc));
+    case 0x1D: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1D_desc_max, ipmi_sensor_type_code_1D_desc));
+    case 0x1E: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1E_desc_max, ipmi_sensor_type_code_1E_desc));
+    case 0x1F: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1F_desc_max, ipmi_sensor_type_code_1F_desc));
+    case 0x20: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_20_desc_max, ipmi_sensor_type_code_20_desc));
+    case 0x21: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_21_desc_max, ipmi_sensor_type_code_21_desc));
+    case 0x22: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_22_desc_max, ipmi_sensor_type_code_22_desc));
+    case 0x23: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_23_desc_max, ipmi_sensor_type_code_23_desc));
+    case 0x24: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_24_desc_max, ipmi_sensor_type_code_24_desc));
+    case 0x25: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_25_desc_max, ipmi_sensor_type_code_25_desc));
+    case 0x27: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_27_desc_max, ipmi_sensor_type_code_27_desc));
+    case 0x28: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_28_desc_max, ipmi_sensor_type_code_28_desc));
+    case 0x29: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_29_desc_max, ipmi_sensor_type_code_29_desc));
+    case 0x2A: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2A_desc_max, ipmi_sensor_type_code_2A_desc));
+    case 0x2B: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2B_desc_max, ipmi_sensor_type_code_2B_desc));
+    case 0x2C: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2C_desc_max, ipmi_sensor_type_code_2C_desc));
     }
 
   SET_ERRNO (EINVAL);
@@ -2588,18 +2588,18 @@ ipmi_get_generic_event_message_short (uint8_t event_reading_type_code,
 
   switch (event_reading_type_code)
     {
-    case 0x01: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_01_short_desc_max, ipmi_generic_event_reading_type_code_01_short_desc);
-    case 0x02: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_02_short_desc_max, ipmi_generic_event_reading_type_code_02_short_desc);
-    case 0x03: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_03_short_desc_max, ipmi_generic_event_reading_type_code_03_short_desc);
-    case 0x04: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_04_short_desc_max, ipmi_generic_event_reading_type_code_04_short_desc);
-    case 0x05: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_05_short_desc_max, ipmi_generic_event_reading_type_code_05_short_desc);
-    case 0x06: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_06_short_desc_max, ipmi_generic_event_reading_type_code_06_short_desc);
-    case 0x07: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_07_short_desc_max, ipmi_generic_event_reading_type_code_07_short_desc);
-    case 0x08: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_08_short_desc_max, ipmi_generic_event_reading_type_code_08_short_desc);
-    case 0x09: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_09_short_desc_max, ipmi_generic_event_reading_type_code_09_short_desc);
-    case 0x0A: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0A_short_desc_max, ipmi_generic_event_reading_type_code_0A_short_desc);
-    case 0x0B: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0B_short_desc_max, ipmi_generic_event_reading_type_code_0B_short_desc);
-    case 0x0C: return _get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0C_short_desc_max, ipmi_generic_event_reading_type_code_0C_short_desc);
+    case 0x01: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_01_short_desc_max, ipmi_generic_event_reading_type_code_01_short_desc));
+    case 0x02: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_02_short_desc_max, ipmi_generic_event_reading_type_code_02_short_desc));
+    case 0x03: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_03_short_desc_max, ipmi_generic_event_reading_type_code_03_short_desc));
+    case 0x04: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_04_short_desc_max, ipmi_generic_event_reading_type_code_04_short_desc));
+    case 0x05: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_05_short_desc_max, ipmi_generic_event_reading_type_code_05_short_desc));
+    case 0x06: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_06_short_desc_max, ipmi_generic_event_reading_type_code_06_short_desc));
+    case 0x07: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_07_short_desc_max, ipmi_generic_event_reading_type_code_07_short_desc));
+    case 0x08: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_08_short_desc_max, ipmi_generic_event_reading_type_code_08_short_desc));
+    case 0x09: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_09_short_desc_max, ipmi_generic_event_reading_type_code_09_short_desc));
+    case 0x0A: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0A_short_desc_max, ipmi_generic_event_reading_type_code_0A_short_desc));
+    case 0x0B: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0B_short_desc_max, ipmi_generic_event_reading_type_code_0B_short_desc));
+    case 0x0C: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0C_short_desc_max, ipmi_generic_event_reading_type_code_0C_short_desc));
     }
 
   return (-1);
@@ -2619,40 +2619,40 @@ ipmi_get_sensor_type_code_message_short (int sensor_type_code,
 
   switch (sensor_type_code)
     {
-    case 0x01: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_01_short_desc_max, ipmi_sensor_type_code_01_short_desc);
-    case 0x02: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_02_short_desc_max, ipmi_sensor_type_code_02_short_desc);
-    case 0x03: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_03_short_desc_max, ipmi_sensor_type_code_03_short_desc);
-    case 0x04: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_04_short_desc_max, ipmi_sensor_type_code_04_short_desc);
-    case 0x05: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_05_short_desc_max, ipmi_sensor_type_code_05_short_desc);
-    case 0x06: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_06_short_desc_max, ipmi_sensor_type_code_06_short_desc);
-    case 0x07: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_07_short_desc_max, ipmi_sensor_type_code_07_short_desc);
-    case 0x08: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_08_short_desc_max, ipmi_sensor_type_code_08_short_desc);
-    case 0x09: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_09_short_desc_max, ipmi_sensor_type_code_09_short_desc);
-    case 0x0C: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0C_short_desc_max, ipmi_sensor_type_code_0C_short_desc);
-    case 0x0D: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0D_short_desc_max, ipmi_sensor_type_code_0D_short_desc);
-    case 0x0F: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0F_short_desc_max, ipmi_sensor_type_code_0F_short_desc);
-    case 0x10: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_10_short_desc_max, ipmi_sensor_type_code_10_short_desc);
-    case 0x11: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_11_short_desc_max, ipmi_sensor_type_code_11_short_desc);
-    case 0x12: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_12_short_desc_max, ipmi_sensor_type_code_12_short_desc);
-    case 0x13: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_13_short_desc_max, ipmi_sensor_type_code_13_short_desc);
-    case 0x14: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_14_short_desc_max, ipmi_sensor_type_code_14_short_desc);
-    case 0x19: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_19_short_desc_max, ipmi_sensor_type_code_19_short_desc);
-    case 0x1B: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1B_short_desc_max, ipmi_sensor_type_code_1B_short_desc);
-    case 0x1D: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1D_short_desc_max, ipmi_sensor_type_code_1D_short_desc);
-    case 0x1E: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1E_short_desc_max, ipmi_sensor_type_code_1E_short_desc);
-    case 0x1F: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1F_short_desc_max, ipmi_sensor_type_code_1F_short_desc);
-    case 0x20: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_20_short_desc_max, ipmi_sensor_type_code_20_short_desc);
-    case 0x21: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_21_short_desc_max, ipmi_sensor_type_code_21_short_desc);
-    case 0x22: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_22_short_desc_max, ipmi_sensor_type_code_22_short_desc);
-    case 0x23: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_23_short_desc_max, ipmi_sensor_type_code_23_short_desc);
-    case 0x24: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_24_short_desc_max, ipmi_sensor_type_code_24_short_desc);
-    case 0x25: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_25_short_desc_max, ipmi_sensor_type_code_25_short_desc);
-    case 0x27: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_27_short_desc_max, ipmi_sensor_type_code_27_short_desc);
-    case 0x28: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_28_short_desc_max, ipmi_sensor_type_code_28_short_desc);
-    case 0x29: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_29_short_desc_max, ipmi_sensor_type_code_29_short_desc);
-    case 0x2A: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2A_short_desc_max, ipmi_sensor_type_code_2A_short_desc);
-    case 0x2B: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2B_short_desc_max, ipmi_sensor_type_code_2B_short_desc);
-    case 0x2C: return _get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2C_short_desc_max, ipmi_sensor_type_code_2C_short_desc);
+    case 0x01: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_01_short_desc_max, ipmi_sensor_type_code_01_short_desc));
+    case 0x02: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_02_short_desc_max, ipmi_sensor_type_code_02_short_desc));
+    case 0x03: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_03_short_desc_max, ipmi_sensor_type_code_03_short_desc));
+    case 0x04: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_04_short_desc_max, ipmi_sensor_type_code_04_short_desc));
+    case 0x05: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_05_short_desc_max, ipmi_sensor_type_code_05_short_desc));
+    case 0x06: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_06_short_desc_max, ipmi_sensor_type_code_06_short_desc));
+    case 0x07: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_07_short_desc_max, ipmi_sensor_type_code_07_short_desc));
+    case 0x08: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_08_short_desc_max, ipmi_sensor_type_code_08_short_desc));
+    case 0x09: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_09_short_desc_max, ipmi_sensor_type_code_09_short_desc));
+    case 0x0C: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0C_short_desc_max, ipmi_sensor_type_code_0C_short_desc));
+    case 0x0D: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0D_short_desc_max, ipmi_sensor_type_code_0D_short_desc));
+    case 0x0F: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0F_short_desc_max, ipmi_sensor_type_code_0F_short_desc));
+    case 0x10: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_10_short_desc_max, ipmi_sensor_type_code_10_short_desc));
+    case 0x11: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_11_short_desc_max, ipmi_sensor_type_code_11_short_desc));
+    case 0x12: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_12_short_desc_max, ipmi_sensor_type_code_12_short_desc));
+    case 0x13: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_13_short_desc_max, ipmi_sensor_type_code_13_short_desc));
+    case 0x14: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_14_short_desc_max, ipmi_sensor_type_code_14_short_desc));
+    case 0x19: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_19_short_desc_max, ipmi_sensor_type_code_19_short_desc));
+    case 0x1B: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1B_short_desc_max, ipmi_sensor_type_code_1B_short_desc));
+    case 0x1D: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1D_short_desc_max, ipmi_sensor_type_code_1D_short_desc));
+    case 0x1E: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1E_short_desc_max, ipmi_sensor_type_code_1E_short_desc));
+    case 0x1F: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1F_short_desc_max, ipmi_sensor_type_code_1F_short_desc));
+    case 0x20: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_20_short_desc_max, ipmi_sensor_type_code_20_short_desc));
+    case 0x21: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_21_short_desc_max, ipmi_sensor_type_code_21_short_desc));
+    case 0x22: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_22_short_desc_max, ipmi_sensor_type_code_22_short_desc));
+    case 0x23: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_23_short_desc_max, ipmi_sensor_type_code_23_short_desc));
+    case 0x24: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_24_short_desc_max, ipmi_sensor_type_code_24_short_desc));
+    case 0x25: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_25_short_desc_max, ipmi_sensor_type_code_25_short_desc));
+    case 0x27: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_27_short_desc_max, ipmi_sensor_type_code_27_short_desc));
+    case 0x28: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_28_short_desc_max, ipmi_sensor_type_code_28_short_desc));
+    case 0x29: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_29_short_desc_max, ipmi_sensor_type_code_29_short_desc));
+    case 0x2A: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2A_short_desc_max, ipmi_sensor_type_code_2A_short_desc));
+    case 0x2B: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2B_short_desc_max, ipmi_sensor_type_code_2B_short_desc));
+    case 0x2C: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2C_short_desc_max, ipmi_sensor_type_code_2C_short_desc));
     }
 
   SET_ERRNO (EINVAL);
@@ -2674,18 +2674,18 @@ ipmi_get_event_data2_message (int sensor_type_code,
 
   switch (sensor_type_code)
     {
-    case 0x05: return get_05_event_data2_message (offset, event_data2, buf, buflen);
-    case 0x0F: return get_0F_event_data2_message (offset, event_data2, buf, buflen);
-    case 0x10: return get_10_event_data2_message (offset, event_data2, buf, buflen);
-    case 0x12: return get_12_event_data2_message (offset, event_data2, buf, buflen);
-    case 0x19: return get_19_event_data2_message (offset, event_data2, buf, buflen);
-    case 0x1D: return get_1D_event_data2_message (offset, event_data2, buf, buflen);
-    case 0x21: return get_21_event_data2_message (offset, event_data2, buf, buflen);
-    case 0x23: return get_23_event_data2_message (offset, event_data2, buf, buflen);
-    case 0x28: return get_28_event_data2_message (offset, event_data2, buf, buflen);
-    case 0x2A: return get_2A_event_data2_message (offset, event_data2, buf, buflen);
-    case 0x2B: return get_2B_event_data2_message (offset, event_data2, buf, buflen);
-    case 0x2C: return get_2C_event_data2_message (offset, event_data2, buf, buflen);
+    case 0x05: return (get_05_event_data2_message (offset, event_data2, buf, buflen));
+    case 0x0F: return (get_0F_event_data2_message (offset, event_data2, buf, buflen));
+    case 0x10: return (get_10_event_data2_message (offset, event_data2, buf, buflen));
+    case 0x12: return (get_12_event_data2_message (offset, event_data2, buf, buflen));
+    case 0x19: return (get_19_event_data2_message (offset, event_data2, buf, buflen));
+    case 0x1D: return (get_1D_event_data2_message (offset, event_data2, buf, buflen));
+    case 0x21: return (get_21_event_data2_message (offset, event_data2, buf, buflen));
+    case 0x23: return (get_23_event_data2_message (offset, event_data2, buf, buflen));
+    case 0x28: return (get_28_event_data2_message (offset, event_data2, buf, buflen));
+    case 0x2A: return (get_2A_event_data2_message (offset, event_data2, buf, buflen));
+    case 0x2B: return (get_2B_event_data2_message (offset, event_data2, buf, buflen));
+    case 0x2C: return (get_2C_event_data2_message (offset, event_data2, buf, buflen));
     }
 
   SET_ERRNO (EINVAL);
@@ -2708,14 +2708,14 @@ ipmi_get_event_data3_message (int sensor_type_code,
 
   switch (sensor_type_code)
     {
-    case 0x08: return get_08_event_data3_message (offset, event_data2, event_data3, buf, buflen);
-    case 0x0C: return get_0C_event_data3_message (offset, event_data2, event_data3, buf, buflen);
-    case 0x10: return get_10_event_data3_message (offset, event_data2, event_data3, buf, buflen);
-    case 0x19: return get_19_event_data3_message (offset, event_data2, event_data3, buf, buflen);
-    case 0x1D: return get_1D_event_data3_message (offset, event_data2, event_data3, buf, buflen);
-    case 0x21: return get_21_event_data3_message (offset, event_data2, event_data3, buf, buflen);
-    case 0x28: return get_28_event_data3_message (offset, event_data2, event_data3, buf, buflen);
-    case 0x2A: return get_2A_event_data3_message (offset, event_data2, event_data3, buf, buflen);
+    case 0x08: return (get_08_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case 0x0C: return (get_0C_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case 0x10: return (get_10_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case 0x19: return (get_19_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case 0x1D: return (get_1D_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case 0x21: return (get_21_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case 0x28: return (get_28_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case 0x2A: return (get_2A_event_data3_message (offset, event_data2, event_data3, buf, buflen));
     }
 
   SET_ERRNO (EINVAL);

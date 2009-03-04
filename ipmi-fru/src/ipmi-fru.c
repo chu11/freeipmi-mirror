@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.44 2009-03-03 23:56:46 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.45 2009-03-04 19:41:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -64,9 +64,9 @@ _flush_cache (ipmi_fru_state_data_t *state_data)
                              state_data->prog_data->args->sdr.quiet_cache,
                              state_data->hostname,
                              state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
-    return -1;
+    return (-1);
 
-  return 0;
+  return (0);
 }
 
 static fru_err_t
@@ -341,8 +341,8 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                        &output_count,
                        IPMI_FRU_DEVICE_ID_DEFAULT,
                        IPMI_FRU_DEFAULT_DEVICE_ID_STRING) != FRU_ERR_SUCCESS)
-        return -1;
-      return 0;
+        return (-1);
+      return (0);
     }
 
   if (!args->sdr.ignore_sdr_cache)
@@ -354,7 +354,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                                      args->sdr.sdr_cache_recreate,
                                      state_data->hostname,
                                      args->sdr.sdr_cache_directory) < 0)
-        return -1;
+        return (-1);
 
       if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
         {
@@ -362,7 +362,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                            stderr,
                            "ipmi_sdr_cache_record_count: %s\n",
                            ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-          return -1;
+          return (-1);
         }
     }
 
@@ -372,7 +372,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                        &output_count,
                        IPMI_FRU_DEVICE_ID_DEFAULT,
                        IPMI_FRU_DEFAULT_DEVICE_ID_STRING) != FRU_ERR_SUCCESS)
-        return -1;
+        return (-1);
     }
   else
     {
@@ -386,7 +386,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                              IPMI_FRU_DEVICE_ID_DEFAULT,
                              IPMI_FRU_DEFAULT_DEVICE_ID_STRING);
           if (ret == FRU_ERR_FATAL_ERROR)
-            return -1;
+            return (-1);
         }
 
       for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
@@ -404,7 +404,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                                stderr,
                                "ipmi_sdr_cache_record_read: %s\n",
                                ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-              return -1;
+              return (-1);
             }
 
           if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
@@ -417,7 +417,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                                stderr,
                                "ipmi_sdr_parse_record_id_and_type: %s\n",
                                ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-              return -1;
+              return (-1);
             }
 
           if (record_type != IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
@@ -437,7 +437,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                                stderr,
                                "ipmi_sdr_parse_fru_device_locator_parameters: %s\n",
                                ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-              return -1;
+              return (-1);
             }
 
           if (logical_physical_fru_device
@@ -457,7 +457,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                                    stderr,
                                    "ipmi_sdr_parse_device_id_string: %s\n",
                                    ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-                  return -1;
+                  return (-1);
                 }
 
               ret = _output_fru (state_data,
@@ -465,9 +465,9 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                                  logical_fru_device_device_slave_address,
                                  device_id_string);
               if (args->device_id_set && ret != FRU_ERR_SUCCESS)
-                return -1;
+                return (-1);
               if (ret == FRU_ERR_FATAL_ERROR)
-                return -1;
+                return (-1);
               found++;
             }
         }
@@ -477,11 +477,11 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "device id not found\n");
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -569,7 +569,7 @@ _ipmi_fru (pstdout_state_t pstate,
       ipmi_ctx_close (state_data.ipmi_ctx);
       ipmi_ctx_destroy (state_data.ipmi_ctx);
     }
-  return exit_code;
+  return (exit_code);
 }
 
 int

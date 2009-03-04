@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_config.c,v 1.13 2009-03-03 23:56:52 chu11 Exp $
+ *  $Id: ipmidetectd_config.c,v 1.14 2009-03-04 19:41:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -163,7 +163,7 @@ _cb_host (conffile_t cf,
 {
   if (!hostlist_push (conf.hosts, data->string))
     IPMIDETECTD_EXIT (("hostlist_push: %s", strerror (errno)));
-  return 0;
+  return (0);
 }
 
 static void

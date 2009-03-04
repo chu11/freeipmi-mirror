@@ -275,7 +275,7 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
   rv = len;
  cleanup:
   FIID_OBJ_DESTROY (obj_ipmb_msg_trlr);
-  return rv;
+  return (rv);
 }
 
 int8_t

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.48 2009-03-03 23:56:53 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.49 2009-03-04 19:41:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -153,13 +153,13 @@ ipmi_monitoring_ctx_create (void)
   if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_LOCK_MEMORY)
     {
       if (!(c = (ipmi_monitoring_ctx_t)secure_malloc (sizeof(struct ipmi_monitoring_ctx))))
-        return NULL;
+        return (NULL);
       /* secure_memset called in secure_malloc()*/
     }
   else
     {
       if (!(c = (ipmi_monitoring_ctx_t)malloc (sizeof(struct ipmi_monitoring_ctx))))
-        return NULL;
+        return (NULL);
       secure_memset (c, '\0', sizeof(struct ipmi_monitoring_ctx));
     }
   c->magic = IPMI_MONITORING_MAGIC;
@@ -170,7 +170,7 @@ ipmi_monitoring_ctx_create (void)
         secure_free (c, sizeof(struct ipmi_monitoring_ctx));
       else
         free (c);
-      return NULL;
+      return (NULL);
     }
 
   _init_ctx (c);
@@ -190,26 +190,26 @@ int
 ipmi_monitoring_ctx_errnum (ipmi_monitoring_ctx_t c)
 {
   if (!c)
-    return IPMI_MONITORING_ERR_CTX_NULL;
+    return (IPMI_MONITORING_ERR_CTX_NULL);
   else if (c->magic != IPMI_MONITORING_MAGIC)
-    return IPMI_MONITORING_ERR_CTX_INVALID;
+    return (IPMI_MONITORING_ERR_CTX_INVALID);
   else
-    return c->errnum;
+    return (c->errnum);
 }
 
 char *
 ipmi_monitoring_ctx_strerror (int errnum)
 {
   if (errnum >= IPMI_MONITORING_ERR_SUCCESS && errnum <= IPMI_MONITORING_ERR_ERRNUMRANGE)
-    return ipmi_monitoring_errmsgs[errnum];
+    return (ipmi_monitoring_errmsgs[errnum]);
   else
-    return ipmi_monitoring_errmsgs[IPMI_MONITORING_ERR_ERRNUMRANGE];
+    return (ipmi_monitoring_errmsgs[IPMI_MONITORING_ERR_ERRNUMRANGE]);
 }
 
 char *
 ipmi_monitoring_ctx_errormsg (ipmi_monitoring_ctx_t c)
 {
-  return ipmi_monitoring_ctx_strerror (ipmi_monitoring_ctx_errnum (c));
+  return (ipmi_monitoring_ctx_strerror (ipmi_monitoring_ctx_errnum (c)));
 }
 
 int
@@ -219,22 +219,22 @@ ipmi_monitoring_init (unsigned int flags, int *errnum)
     {
       if (errnum)
         *errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   if (_ipmi_monitoring_initialized)
-    return 0;
+    return (0);
 
   /* before ipmi_monitoring_sensor_config() for debugging */
   _ipmi_monitoring_flags = flags;
 
   if (ipmi_monitoring_sensor_config (errnum) < 0)
-    return -1;
+    return (-1);
 
   _ipmi_monitoring_initialized++;
   if (errnum)
     *errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return 0;
+  return (0);
 }
 
 int
@@ -246,7 +246,7 @@ ipmi_monitoring_sensor_config_file (char *file, int *errnum)
     {
       if (errnum)
         *errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   if (stat (file, &buf) < 0)
@@ -258,7 +258,7 @@ ipmi_monitoring_sensor_config_file (char *file, int *errnum)
           else
             *errnum = IPMI_MONITORING_ERR_PARAMETERS;
         }
-      return -1;
+      return (-1);
     }
 
   strncpy (sensor_config_file, file, MAXPATHLEN);
@@ -266,7 +266,7 @@ ipmi_monitoring_sensor_config_file (char *file, int *errnum)
 
   if (errnum)
     *errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return 0;
+  return (0);
 }
 
 int
@@ -278,7 +278,7 @@ ipmi_monitoring_sdr_cache_directory (char *dir, int *errnum)
     {
       if (errnum)
         *errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   if (stat (dir, &buf) < 0)
@@ -290,7 +290,7 @@ ipmi_monitoring_sdr_cache_directory (char *dir, int *errnum)
           else
             *errnum = IPMI_MONITORING_ERR_PARAMETERS;
         }
-      return -1;
+      return (-1);
     }
 
   strncpy (sdr_cache_directory, dir, MAXPATHLEN);
@@ -298,7 +298,7 @@ ipmi_monitoring_sdr_cache_directory (char *dir, int *errnum)
 
   if (errnum)
     *errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return 0;
+  return (0);
 }
 
 int
@@ -308,21 +308,21 @@ ipmi_monitoring_sdr_cache_filenames (char *format, int *errnum)
     {
       if (errnum)
         *errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   if (strchr (format, '/'))
     {
       if (errnum)
         *errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   if (!strstr (format, "%H"))
     {
       if (errnum)
         *errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   strncpy (sdr_cache_filename_format, format, MAXPATHLEN);
@@ -330,7 +330,7 @@ ipmi_monitoring_sdr_cache_filenames (char *format, int *errnum)
 
   if (errnum)
     *errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return 0;
+  return (0);
 }
 
 static int
@@ -463,14 +463,14 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
   ipmi_monitoring_ipmi_communication_cleanup (c);
   ipmi_monitoring_sensor_reading_cleanup (c);
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return rv;
+  return (rv);
 
  cleanup:
   ipmi_monitoring_sdr_cache_unload (c);
   ipmi_monitoring_iterator_destroy (c);
   ipmi_monitoring_ipmi_communication_cleanup (c);
   ipmi_monitoring_sensor_reading_cleanup (c);
-  return -1;
+  return (-1);
 }
 
 int
@@ -486,18 +486,18 @@ ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
   int rv;
 
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
-    return -1;
+    return (-1);
 
   if (!_ipmi_monitoring_initialized)
     {
       c->errnum = IPMI_MONITORING_ERR_LIBRARY_UNINITIALIZED;
-      return -1;
+      return (-1);
     }
 
   if (sensor_reading_flags & ~IPMI_MONITORING_SENSOR_READING_FLAGS_MASK)
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   c->callback = callback;
@@ -513,7 +513,7 @@ ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
 
   c->callback_sensor_reading = NULL;
 
-  return rv;
+  return (rv);
 }
 
 static int
@@ -606,14 +606,14 @@ _ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
   ipmi_monitoring_ipmi_communication_cleanup (c);
   ipmi_monitoring_sensor_reading_cleanup (c);
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return rv;
+  return (rv);
 
  cleanup:
   ipmi_monitoring_sdr_cache_unload (c);
   ipmi_monitoring_iterator_destroy (c);
   ipmi_monitoring_ipmi_communication_cleanup (c);
   ipmi_monitoring_sensor_reading_cleanup (c);
-  return -1;
+  return (-1);
 }
 
 int
@@ -629,19 +629,19 @@ ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
   int rv;
 
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
-    return -1;
+    return (-1);
 
   if (!_ipmi_monitoring_initialized)
     {
       c->errnum = IPMI_MONITORING_ERR_LIBRARY_UNINITIALIZED;
-      return -1;
+      return (-1);
     }
 
   if ((sensor_reading_flags & ~IPMI_MONITORING_SENSOR_READING_FLAGS_MASK)
       || (sensor_groups && !sensor_groups_len))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   c->callback = callback;
@@ -657,37 +657,37 @@ ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
 
   c->callback_sensor_reading = NULL;
 
-  return rv;
+  return (rv);
 }
 
 int
 ipmi_monitoring_iterator_first (ipmi_monitoring_ctx_t c)
 {
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
-    return -1;
+    return (-1);
 
   if (!c->sensor_readings_itr)
     {
       c->errnum = IPMI_MONITORING_ERR_NO_SENSOR_READINGS;
-      return -1;
+      return (-1);
     }
 
   list_iterator_reset (c->sensor_readings_itr);
   c->current_sensor_reading = list_next (c->sensor_readings_itr);
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return 0;
+  return (0);
 }
 
 int
 ipmi_monitoring_iterator_next (ipmi_monitoring_ctx_t c)
 {
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
-    return -1;
+    return (-1);
 
   if (!c->sensor_readings_itr)
     {
       c->errnum = IPMI_MONITORING_ERR_NO_SENSOR_READINGS;
-      return -1;
+      return (-1);
     }
 
   c->current_sensor_reading = list_next (c->sensor_readings_itr);
@@ -698,7 +698,7 @@ ipmi_monitoring_iterator_next (ipmi_monitoring_ctx_t c)
 static int
 _sensor_readings_delete_all (void *x, void *y)
 {
-  return 1;
+  return (1);
 }
 
 void
@@ -725,28 +725,28 @@ _ipmi_monitoring_read_common (ipmi_monitoring_ctx_t c,
   assert (sensor_reading);
 
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
-    return -1;
+    return (-1);
 
   if (c->callback_sensor_reading)
     {
       (*sensor_reading) = c->callback_sensor_reading;
-      return 0;
+      return (0);
     }
 
   if (!c->sensor_readings_itr)
     {
       c->errnum = IPMI_MONITORING_ERR_NO_SENSOR_READINGS;
-      return -1;
+      return (-1);
     }
 
   if (!c->current_sensor_reading)
     {
       c->errnum = IPMI_MONITORING_ERR_SENSOR_READINGS_LIST_END;
-      return -1;
+      return (-1);
     }
 
   (*sensor_reading) = c->current_sensor_reading;
-  return 0;
+  return (0);
 }
 
 int
@@ -755,7 +755,7 @@ ipmi_monitoring_read_record_id (ipmi_monitoring_ctx_t c)
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
   if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
-    return -1;
+    return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->record_id;
@@ -767,7 +767,7 @@ ipmi_monitoring_read_sensor_group (ipmi_monitoring_ctx_t c)
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
   if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
-    return -1;
+    return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_group;
@@ -779,7 +779,7 @@ ipmi_monitoring_read_sensor_name (ipmi_monitoring_ctx_t c)
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
   if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
-    return NULL;
+    return (NULL);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_name;
@@ -792,7 +792,7 @@ ipmi_monitoring_read_sensor_state (ipmi_monitoring_ctx_t c)
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
   if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
-    return -1;
+    return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_state;
@@ -804,7 +804,7 @@ ipmi_monitoring_read_sensor_units (ipmi_monitoring_ctx_t c)
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
   if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
-    return -1;
+    return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_units;
@@ -816,7 +816,7 @@ ipmi_monitoring_read_sensor_reading_type (ipmi_monitoring_ctx_t c)
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
   if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
-    return -1;
+    return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_reading_type;
@@ -828,7 +828,7 @@ ipmi_monitoring_read_sensor_bitmask_type (ipmi_monitoring_ctx_t c)
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
   if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
-    return -1;
+    return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_bitmask_type;
@@ -840,7 +840,7 @@ ipmi_monitoring_read_sensor_bitmask (ipmi_monitoring_ctx_t c)
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
   if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
-    return -1;
+    return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return sensor_reading->sensor_bitmask;
@@ -853,7 +853,7 @@ ipmi_monitoring_read_sensor_reading (ipmi_monitoring_ctx_t c)
   void *rv = NULL;
 
   if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
-    return NULL;
+    return (NULL);
 
   if (sensor_reading->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
     rv = &(sensor_reading->sensor_reading.bool_val);
@@ -863,7 +863,7 @@ ipmi_monitoring_read_sensor_reading (ipmi_monitoring_ctx_t c)
     rv = &(sensor_reading->sensor_reading.double_val);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return rv;
+  return (rv);
 }
 
 int
@@ -877,21 +877,21 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
   int i;
 
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
-    return -1;
+    return (-1);
 
   if (!IPMI_MONITORING_SENSOR_BITMASK_TYPE_VALID (bitmask_type)
       || !buffer
       || !buflen)
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
-      return -1;
+      return (-1);
     }
 
   memset (buffer, '\0', buflen);
 
   /* No value in bitmask - no string */
   if (!bitmask)
-    return 0;
+    return (0);
 
   if (bitmask_type == IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD)
     {
@@ -917,7 +917,7 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
           else
             c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          return -1;
+          return (-1);
         }
     }
   else if (bitmask_type >= IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION
@@ -970,7 +970,7 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
           break;
         default:
           c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          return -1;
+          return (-1);
         }
 
       /* IPMI spec has bitmasks as the offset bit number, not the
@@ -996,7 +996,7 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
           else
             c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          return -1;
+          return (-1);
         }
     }
   else
@@ -1073,7 +1073,7 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
           break;
         default:
           c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          return -1;
+          return (-1);
         }
 
       /* IPMI spec has bitmasks as the offset bit number, not the
@@ -1099,9 +1099,9 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
           else
             c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          return -1;
+          return (-1);
         }
     }
 
-  return 0;
+  return (0);
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.91 2009-03-04 18:07:31 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.92 2009-03-04 19:41:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -499,7 +499,7 @@ ipmiconsole_ctx_create (char *hostname,
     {
       IPMICONSOLE_DEBUG (("invalid input parameters"));
       errno = EINVAL;
-      return NULL;
+      return (NULL);
     }
 
   if (engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
@@ -507,7 +507,7 @@ ipmiconsole_ctx_create (char *hostname,
       if (!(c = (ipmiconsole_ctx_t)secure_malloc (sizeof(struct ipmiconsole_ctx))))
         {
           errno = ENOMEM;
-          return NULL;
+          return (NULL);
         }
     }
   else
@@ -515,7 +515,7 @@ ipmiconsole_ctx_create (char *hostname,
       if (!(c = (ipmiconsole_ctx_t)malloc (sizeof(struct ipmiconsole_ctx))))
         {
           errno = ENOMEM;
-          return NULL;
+          return (NULL);
         }
     }
 
@@ -564,34 +564,34 @@ ipmiconsole_ctx_create (char *hostname,
     secure_free (c, sizeof(struct ipmiconsole_ctx));
   else
     free (c);
-  return NULL;
+  return (NULL);
 }
 
 int
 ipmiconsole_ctx_errnum (ipmiconsole_ctx_t c)
 {
   if (!c)
-    return IPMICONSOLE_ERR_CTX_NULL;
+    return (IPMICONSOLE_ERR_CTX_NULL);
   else if (c->magic != IPMICONSOLE_CTX_MAGIC
            || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
-    return IPMICONSOLE_ERR_CTX_INVALID;
+    return (IPMICONSOLE_ERR_CTX_INVALID);
   else
-    return ipmiconsole_ctx_get_errnum (c);
+    return (ipmiconsole_ctx_get_errnum (c));
 }
 
 char *
 ipmiconsole_ctx_strerror (int errnum)
 {
   if (errnum >= IPMICONSOLE_ERR_SUCCESS && errnum <= IPMICONSOLE_ERR_ERRNUMRANGE)
-    return ipmiconsole_errmsgs[errnum];
+    return (ipmiconsole_errmsgs[errnum]);
   else
-    return ipmiconsole_errmsgs[IPMICONSOLE_ERR_ERRNUMRANGE];
+    return (ipmiconsole_errmsgs[IPMICONSOLE_ERR_ERRNUMRANGE]);
 }
 
 char *
 ipmiconsole_ctx_errormsg (ipmiconsole_ctx_t c)
 {
-  return ipmiconsole_ctx_strerror (ipmiconsole_ctx_errnum (c));
+  return (ipmiconsole_ctx_strerror (ipmiconsole_ctx_errnum (c)));
 }
 
 ipmiconsole_ctx_status_t

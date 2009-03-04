@@ -79,7 +79,7 @@ config_file_bool (conffile_t cf,
 
   bool = (int *)option_ptr;
   *bool = data->boolval;
-  return 0;
+  return (0);
 }
 
 int
@@ -105,7 +105,7 @@ config_file_non_negative_int (conffile_t cf,
     }
 
   *value = data->intval;
-  return 0;
+  return (0);
 }
 
 int
@@ -131,7 +131,7 @@ config_file_positive_int (conffile_t cf,
     }
 
   *value = data->intval;
-  return 0;
+  return (0);
 }
 
 int
@@ -156,7 +156,7 @@ config_file_string (conffile_t cf,
       exit (1);
     }
 
-  return 0;
+  return (0);
 }
 
 int
@@ -190,7 +190,7 @@ config_file_driver_type (conffile_t cf,
   else
     cmd_args->driver_type = tmp;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -210,7 +210,7 @@ config_file_username (conffile_t cf,
   cmd_args_config = (struct cmd_args_config *)option_ptr;
 
   if (cmd_args_config->tool_specific_username_set)
-    return 0;
+    return (0);
 
   if (strlen (data->string) > IPMI_MAX_USER_NAME_LENGTH)
     {
@@ -226,7 +226,7 @@ config_file_username (conffile_t cf,
 
   cmd_args_config->username_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -246,7 +246,7 @@ config_file_password (conffile_t cf,
   cmd_args_config = (struct cmd_args_config *)option_ptr;
 
   if (cmd_args_config->tool_specific_password_set)
-    return 0;
+    return (0);
 
   if (strlen (data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
     {
@@ -262,7 +262,7 @@ config_file_password (conffile_t cf,
 
   cmd_args_config->password_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -283,7 +283,7 @@ config_file_k_g (conffile_t cf,
   cmd_args_config = (struct cmd_args_config *)option_ptr;
 
   if (cmd_args_config->tool_specific_k_g_set)
-    return 0;
+    return (0);
 
   if ((rv = parse_kg (cmd_args_config->k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
     {
@@ -296,7 +296,7 @@ config_file_k_g (conffile_t cf,
 
   cmd_args_config->k_g_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -317,7 +317,7 @@ config_file_authentication_type (conffile_t cf,
   cmd_args_config = (struct cmd_args_config *)option_ptr;
 
   if (cmd_args_config->tool_specific_authentication_type_set)
-    return 0;
+    return (0);
 
   if ((tmp = parse_authentication_type (data->string)) < 0)
     {
@@ -329,7 +329,7 @@ config_file_authentication_type (conffile_t cf,
 
   cmd_args_config->authentication_type_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -349,7 +349,7 @@ config_file_cipher_suite_id (conffile_t cf,
   cmd_args_config = (struct cmd_args_config *)option_ptr;
 
   if (cmd_args_config->tool_specific_cipher_suite_id_set)
-    return 0;
+    return (0);
 
   if (data->intval < IPMI_CIPHER_SUITE_ID_MIN
       || data->intval > IPMI_CIPHER_SUITE_ID_MAX
@@ -363,7 +363,7 @@ config_file_cipher_suite_id (conffile_t cf,
 
   cmd_args_config->cipher_suite_id_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -384,7 +384,7 @@ config_file_privilege_level (conffile_t cf,
   cmd_args_config = (struct cmd_args_config *)option_ptr;
 
   if (cmd_args_config->tool_specific_privilege_level_set)
-    return 0;
+    return (0);
 
   if ((tmp = parse_privilege_level (data->string)) < 0)
     {
@@ -396,7 +396,7 @@ config_file_privilege_level (conffile_t cf,
 
   cmd_args_config->privilege_level_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -417,7 +417,7 @@ config_file_workaround_flags (conffile_t cf,
   cmd_args_config = (struct cmd_args_config *)option_ptr;
 
   if (cmd_args_config->tool_specific_workaround_flags_set)
-    return 0;
+    return (0);
 
   cmd_args_config->workaround_flags = 0;
 
@@ -432,7 +432,7 @@ config_file_workaround_flags (conffile_t cf,
     }
   cmd_args_config->workaround_flags_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -469,7 +469,7 @@ config_file_tool_specific_username (conffile_t cf,
   cmd_args_config->username_set++;
   cmd_args_config->tool_specific_username_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -506,7 +506,7 @@ config_file_tool_specific_password (conffile_t cf,
   cmd_args_config->password_set++;
   cmd_args_config->tool_specific_password_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -541,7 +541,7 @@ config_file_tool_specific_k_g (conffile_t cf,
   cmd_args_config->k_g_set++;
   cmd_args_config->tool_specific_k_g_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -572,7 +572,7 @@ config_file_tool_specific_authentication_type (conffile_t cf,
   cmd_args_config->authentication_type_set++;
   cmd_args_config->tool_specific_authentication_type_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -604,7 +604,7 @@ config_file_tool_specific_cipher_suite_id (conffile_t cf,
   cmd_args_config->cipher_suite_id_set++;
   cmd_args_config->tool_specific_cipher_suite_id_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -635,7 +635,7 @@ config_file_tool_specific_privilege_level (conffile_t cf,
   cmd_args_config->privilege_level_set++;
   cmd_args_config->tool_specific_privilege_level_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -669,7 +669,7 @@ config_file_tool_specific_workaround_flags (conffile_t cf,
   cmd_args_config->workaround_flags_set++;
   cmd_args_config->tool_specific_workaround_flags_set++;
 
-  return 0;
+  return (0);
 }
 
 int
@@ -696,7 +696,7 @@ config_file_fanout (conffile_t cf,
     }
 
   hostrange_args->fanout = data->intval;
-  return 0;
+  return (0);
 }
 
 int
@@ -739,7 +739,7 @@ config_file_ipmi_sensors_groups (conffile_t cf,
       config_file_data->groups_length++;
     }
 
-  return 0;
+  return (0);
 }
 
 static int
@@ -759,7 +759,7 @@ config_file_ipmiconsole_escape_char (conffile_t cf,
   chr = (char *)option_ptr;
 
   *chr = data->string[0];
-  return 0;
+  return (0);
 }
 
 int
@@ -802,7 +802,7 @@ config_file_ipmimonitoring_groups (conffile_t cf,
       config_file_data->groups_length++;
     }
 
-  return 0;
+  return (0);
 }
 
 int
@@ -833,7 +833,7 @@ config_file_ipmipower_ipmi_version (conffile_t cf,
     }
 
   cmd_args->driver_type = tmp;
-  return 0;
+  return (0);
 }
 
 static void
@@ -3372,7 +3372,7 @@ config_file_parse (const char *filename,
     {
       char buf[CONFFILE_MAX_ERRMSGLEN];
 
-      /* don't exit, but return -1 */
+      /* don't exit, but return (-1) */
       if (conffile_errnum (cf) == CONFFILE_ERR_EXIST
           && no_error_if_not_found)
         goto cleanup;

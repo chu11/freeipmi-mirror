@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.81 2009-03-04 18:07:31 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.82 2009-03-04 19:41:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1046,7 +1046,7 @@ _ipmiconsole_engine (void *arg)
   if ((perr = pthread_mutex_unlock (&console_engine_thread_count_mutex)))
     IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
 
-  return NULL;
+  return (NULL);
 }
 
 /* Notes: On an error, it is the responsibility of the caller to call

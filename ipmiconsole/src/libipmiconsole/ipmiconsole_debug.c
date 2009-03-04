@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.c,v 1.16 2009-03-04 18:07:31 chu11 Exp $
+ *  $Id: ipmiconsole_debug.c,v 1.17 2009-03-04 19:41:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -290,7 +290,7 @@ __debug_msg_create (const char *fmt, ...)
   assert (fmt);
 
   if (!(buffer = malloc (IPMICONSOLE_DEBUG_ERROR_BUFLEN)))
-    return NULL;
+    return (NULL);
 
   va_start (ap, fmt);
   vsnprintf (buffer, IPMICONSOLE_DEBUG_ERROR_BUFLEN, fmt, ap);

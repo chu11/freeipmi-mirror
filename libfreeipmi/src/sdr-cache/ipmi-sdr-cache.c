@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.13 2009-03-04 18:07:37 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.14 2009-03-04 19:41:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -95,7 +95,7 @@ ipmi_sdr_cache_ctx_create (void)
   ctx->flags = IPMI_SDR_CACHE_FLAGS_DEFAULT;
   ctx->debug_prefix = NULL;
   ipmi_sdr_cache_init_ctx (ctx);
-  return ctx;
+  return (ctx);
 }
 
 void
@@ -189,7 +189,7 @@ ipmi_sdr_cache_ctx_get_debug_prefix (ipmi_sdr_cache_ctx_t ctx)
       return (NULL);
     }
 
-  return ctx->debug_prefix;
+  return (ctx)->debug_prefix;
 }
 
 int
