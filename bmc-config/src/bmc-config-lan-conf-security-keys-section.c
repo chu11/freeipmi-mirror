@@ -109,7 +109,7 @@ _get_key (bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -162,7 +162,7 @@ _set_key (bmc_config_state_data_t *state_data,
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 

@@ -128,7 +128,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
   *number_of_lan_alert_destinations = state_data->number_of_lan_alert_destinations;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -188,7 +188,7 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *
   *number_of_alert_strings = state_data->number_of_alert_strings;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -248,7 +248,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
   *number_of_alert_policy_entries = state_data->number_of_alert_policy_entries;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -308,7 +308,7 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *
   *number_of_event_filters = state_data->number_of_event_filters;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 

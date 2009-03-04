@@ -46,13 +46,4 @@
     *__localval_ptr = __localval;                                       \
   } while (0)
 
-#define TOOL_FIID_OBJ_DESTROY(__obj)            \
-  do {                                          \
-    if ((__obj))                                \
-      {                                         \
-        fiid_obj_destroy ((__obj));             \
-        (__obj) = NULL;                         \
-      }                                         \
-  } while (0)
-
 #endif

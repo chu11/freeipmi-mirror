@@ -78,7 +78,7 @@ cold_reset (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -110,7 +110,7 @@ warm_reset (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -226,7 +226,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -386,7 +386,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -428,7 +428,7 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -538,7 +538,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -584,7 +584,7 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -628,7 +628,7 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
                   str);
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -687,7 +687,7 @@ set_sdr_repository_time (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -731,7 +731,7 @@ get_sel_time (bmc_device_state_data_t *state_data)
                   str);
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -790,7 +790,7 @@ set_sel_time (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -870,8 +870,8 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
-  TOOL_FIID_OBJ_DESTROY (mca_obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
+  fiid_obj_destroy (mca_obj_cmd_rs);
   return (rv);
 }
 
@@ -964,7 +964,7 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -1014,7 +1014,7 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -1078,7 +1078,7 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 

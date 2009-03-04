@@ -135,7 +135,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -463,7 +463,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -498,7 +498,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -534,7 +534,7 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -592,7 +592,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -627,7 +627,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -719,7 +719,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -768,7 +768,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   rv = 0;
 
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -1068,7 +1068,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   pstdout_printf (state_data->pstate, "%s\n", tmp);
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -1267,9 +1267,9 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (get_boot_flags_rs);
-  TOOL_FIID_OBJ_DESTROY (boot_info_ack_obj_cmd_rs);
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (get_boot_flags_rs);
+  fiid_obj_destroy (boot_info_ack_obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 

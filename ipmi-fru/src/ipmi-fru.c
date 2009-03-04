@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.46 2009-03-04 22:39:36 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.47 2009-03-04 22:53:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -314,8 +314,8 @@ _output_fru (ipmi_fru_state_data_t *state_data,
 
   rv = FRU_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (fru_get_inventory_rs);
-  TOOL_FIID_OBJ_DESTROY (fru_common_header);
+  fiid_obj_destroy (fru_get_inventory_rs);
+  fiid_obj_destroy (fru_common_header);
   return (rv);
 }
 

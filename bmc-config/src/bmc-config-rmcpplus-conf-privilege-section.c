@@ -245,9 +245,9 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_count_rs);
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_id_rs);
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_priv_rs);
+  fiid_obj_destroy (obj_cmd_count_rs);
+  fiid_obj_destroy (obj_cmd_id_rs);
+  fiid_obj_destroy (obj_cmd_priv_rs);
   return (rv);
 }
 
@@ -358,7 +358,7 @@ id_commit (const char *section_name,
   rv = CONFIG_ERR_SUCCESS;
 
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 

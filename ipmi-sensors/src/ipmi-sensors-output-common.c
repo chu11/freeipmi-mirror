@@ -800,7 +800,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   if (rv < 0)
     {
       if (tmp_lower_non_critical_threshold)

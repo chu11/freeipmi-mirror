@@ -116,7 +116,7 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
                   guidbuf[0]);
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -159,7 +159,7 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (intel_rs);
+  fiid_obj_destroy (intel_rs);
   return (rv);
 }
 
@@ -342,7 +342,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -394,7 +394,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
 
   rv = 0;
  cleanup:
-  TOOL_FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
