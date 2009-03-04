@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include <freeipmi/freeipmi.h>
 
 #include "pstdout.h"
 

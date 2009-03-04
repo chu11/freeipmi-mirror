@@ -19,7 +19,7 @@
 #ifndef _TOOL_FIID_UTIL_H
 #define _TOOL_FIID_UTIL_H
 
-#include "freeipmi/fiid/fiid.h"
+#include <freeipmi/freeipmi.h>
 
 #define TOOL_FIID_OBJ_GET(__obj, __field, __val)                        \
   do {                                                                  \

@@ -35,10 +35,9 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "tool-common.h"
+#include <freeipmi/freeipmi.h>
 
-#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
-#include "freeipmi/locate/ipmi-locate.h"
+#include "tool-common.h"
 
 #include "freeipmi-portability.h"
 
@@ -63,7 +62,7 @@ ipmi_disable_coredump (void)
   if (!getrlimit (RLIMIT_CORE, &resource_limit))
     {
       resource_limit.rlim_cur = 0;
-      if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
+      if (setrlimit (RLIMIT_CORE, &resource_limit) < 0)
         perror ("warning: setrlimit()");
     }
 #endif /* NDEBUG */

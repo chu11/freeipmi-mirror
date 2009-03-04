@@ -37,8 +37,7 @@
 #endif /* !TIME_WITH_SYS_TIME */
 #include <assert.h>
 
-#include "freeipmi/api/ipmi-sel-cmds-api.h"
-#include "freeipmi/cmds/ipmi-sel-cmds.h"
+#include <freeipmi/freeipmi.h>
 
 #include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"

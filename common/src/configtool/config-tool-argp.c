@@ -188,7 +188,7 @@ config_args_validate (struct config_arguments *config_args)
         {
         case CONFIG_ACTION_COMMIT:
         case CONFIG_ACTION_DIFF:
-          if (access (config_args->filename, R_OK) != 0)
+          if (access (config_args->filename, R_OK) < 0)
             {
               fprintf (stderr,
                        "Cannot read '%s': %s\n",
@@ -200,7 +200,7 @@ config_args_validate (struct config_arguments *config_args)
         case CONFIG_ACTION_CHECKOUT:
           if (access (config_args->filename, F_OK) == 0)
             {
-              if (access (config_args->filename, W_OK) != 0)
+              if (access (config_args->filename, W_OK) < 0)
                 {
                   fprintf (stderr,
                            "Cannot write to '%s': %s\n",

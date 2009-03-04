@@ -29,8 +29,7 @@
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
 
-#include "freeipmi/api/ipmi-api.h"
-#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
+#include <freeipmi/freeipmi.h>
 
 enum argp_common_option_keys
   {

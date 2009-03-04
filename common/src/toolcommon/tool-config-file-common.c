@@ -28,10 +28,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "freeipmi/api/ipmi-api.h"
-#include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
-#include "freeipmi/interface/ipmi-rmcpplus-interface.h"
-#include "freeipmi/util/ipmi-cipher-suite-util.h"
+#include <freeipmi/freeipmi.h>
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

@@ -19,7 +19,8 @@
 #ifndef _TOOL_COMMON_H
 #define _TOOL_COMMON_H
 
-#include "freeipmi/api/ipmi-api.h"
+#include <freeipmi/freeipmi.h>
+
 #include "tool-cmdline-common.h"
 
 #define IPMI_OPEN_ERRMSGLEN 1024

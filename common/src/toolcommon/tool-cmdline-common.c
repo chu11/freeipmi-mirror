@@ -33,10 +33,7 @@
 #endif /* HAVE_ERROR_H */
 #include <assert.h>
 
-#include "freeipmi/interface/ipmi-rmcpplus-interface.h"
-#include "freeipmi/spec/ipmi-authentication-type-spec.h"
-#include "freeipmi/spec/ipmi-privilege-level-spec.h"
-#include "freeipmi/util/ipmi-cipher-suite-util.h"
+#include <freeipmi/freeipmi.h>
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -668,7 +665,7 @@ verify_common_cmd_args (struct common_cmd_args *cmd_args)
 
   if (cmd_args->driver_device)
     {
-      if (access (cmd_args->driver_device, R_OK|W_OK|X_OK) != 0)
+      if (access (cmd_args->driver_device, R_OK|W_OK|X_OK) < 0)
         {
           fprintf (stderr, "insufficient permission on driver device '%s'\n",
                    cmd_args->driver_device);
@@ -722,7 +719,7 @@ verify_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
 {
   if (cmd_args->sdr_cache_directory)
     {
-      if (access (cmd_args->sdr_cache_directory, R_OK|W_OK|X_OK) != 0)
+      if (access (cmd_args->sdr_cache_directory, R_OK|W_OK|X_OK) < 0)
         {
           fprintf (stderr, "insufficient permission on sensor cache directory '%s'\n",
                    cmd_args->sdr_cache_directory);

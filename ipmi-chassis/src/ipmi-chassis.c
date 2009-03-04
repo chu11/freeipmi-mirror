@@ -55,7 +55,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_chassis_capabilities (state_data->ipmi_ctx, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_chassis_capabilities (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -157,7 +157,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -487,7 +487,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
 
   if (ipmi_cmd_chassis_control (state_data->ipmi_ctx,
                                 args->args.chassis_control,
-                                obj_cmd_rs) != 0)
+                                obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -523,7 +523,7 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
   if (ipmi_cmd_chassis_identify (state_data->ipmi_ctx,
                                  (args->args.identify_args.identify_interval_set) ? &args->args.identify_args.identify_interval : NULL,
                                  (args->args.identify_args.force_identify_set) ? &args->args.identify_args.force_identify : NULL,
-                                 obj_cmd_rs) != 0)
+                                 obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -559,7 +559,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
 
   if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
                                          args->args.power_restore_policy,
-                                         obj_cmd_rs) != 0)
+                                         obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -616,7 +616,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
 
   if (ipmi_cmd_set_power_cycle_interval (state_data->ipmi_ctx,
                                          args->args.power_cycle_interval,
-                                         obj_cmd_rs) != 0)
+                                         obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -648,7 +648,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_system_restart_cause (state_data->ipmi_ctx, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_system_restart_cause (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -742,7 +742,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_power_on_hours_counter (state_data->ipmi_ctx, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_power_on_hours_counter (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -792,7 +792,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   if (ipmi_cmd_get_system_boot_options_boot_flags (state_data->ipmi_ctx,
                                                    IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR,
                                                    IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
-                                                   obj_cmd_rs) != 0)
+                                                   obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1120,7 +1120,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   if (ipmi_cmd_get_system_boot_options_boot_flags (state_data->ipmi_ctx,
                                                    IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR,
                                                    IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
-                                                   get_boot_flags_rs) != 0)
+                                                   get_boot_flags_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1241,7 +1241,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
                                                    lock_out_via_power_button,
                                                    bios_mux_control_override,
                                                    bios_shared_mode_override,
-                                                   obj_cmd_rs) != 0)
+                                                   obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1256,7 +1256,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
                                                               &boot_info_acknowledge,
                                                               &boot_info_acknowledge,
                                                               &boot_info_acknowledge,
-                                                              boot_info_ack_obj_cmd_rs) != 0)
+                                                              boot_info_ack_obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,

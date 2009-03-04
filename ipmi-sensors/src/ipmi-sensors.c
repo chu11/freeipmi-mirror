@@ -37,6 +37,8 @@
 #endif /* !TIME_WITH_SYS_TIME */
 #include <assert.h>
 
+#include <freeipmi/freeipmi.h>
+
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-simple-output.h"
@@ -73,7 +75,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sdr_repository_info (state_data->ipmi_ctx, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_sdr_repository_info (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
