@@ -35,6 +35,7 @@
 #include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
 
 #include "freeipmi/debug/ipmi-debug.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
@@ -220,12 +221,11 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_parse_ctx_t ctx,
 
   if (record_id)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_header,
-                                  "record_id",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_header,
+                        "record_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_header);
           goto cleanup;
         }
       *record_id = val;
@@ -233,12 +233,11 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_parse_ctx_t ctx,
 
   if (record_type)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_header,
-                                  "record_type",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_header,
+                        "record_type",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_header);
           goto cleanup;
         }
       *record_type = val;
@@ -442,12 +441,11 @@ ipmi_sdr_parse_sensor_owner_id (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_owner_id_type)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_owner_id.type",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_owner_id.type",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *sensor_owner_id_type = val;
@@ -455,12 +453,11 @@ ipmi_sdr_parse_sensor_owner_id (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_owner_id)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_owner_id",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_owner_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *sensor_owner_id = val;
@@ -509,12 +506,11 @@ ipmi_sdr_parse_sensor_owner_lun (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_owner_lun)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_owner_lun",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_owner_lun",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *sensor_owner_lun = val;
@@ -522,12 +518,11 @@ ipmi_sdr_parse_sensor_owner_lun (ipmi_sdr_parse_ctx_t ctx,
 
   if (channel_number)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "channel_number",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "channel_number",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *channel_number = val;
@@ -575,12 +570,11 @@ ipmi_sdr_parse_sensor_number (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_number)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_number",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_number",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *sensor_number = val;
@@ -630,36 +624,33 @@ ipmi_sdr_parse_entity_id_instance_type (ipmi_sdr_parse_ctx_t ctx,
 
   if (entity_id)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "entity_id",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "entity_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *entity_id = val;
     }
   if (entity_instance)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "entity_instance",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "entity_instance",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *entity_instance = val;
     }
   if (entity_instance_type)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "entity_instance.type",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "entity_instance.type",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *entity_instance_type = val;
@@ -707,12 +698,11 @@ ipmi_sdr_parse_sensor_type (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_type)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_type",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_type",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *sensor_type = val;
@@ -760,12 +750,11 @@ ipmi_sdr_parse_event_reading_type_code (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_reading_type_code)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "event_reading_type_code",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "event_reading_type_code",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *event_reading_type_code = val;
@@ -868,12 +857,11 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_units_modifier)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_unit1.modifier_unit",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_unit1.modifier_unit",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *sensor_units_modifier = val;
@@ -881,12 +869,11 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_units_rate)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_unit1.rate_unit",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_unit1.rate_unit",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -895,12 +882,11 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_base_unit_type)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_unit2.base_unit",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_unit2.base_unit",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -912,12 +898,11 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
 
   if (sensor_modifier_unit_type)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_unit3.modifier_unit",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_unit3.modifier_unit",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -972,60 +957,55 @@ ipmi_sdr_parse_sensor_capabilities (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_message_control_support)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_capabilities.event_message_control_support",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_capabilities.event_message_control_support",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *event_message_control_support = val;
     }
   if (threshold_access_support)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_capabilities.threshold_access_support",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_capabilities.threshold_access_support",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *threshold_access_support = val;
     }
   if (hysteresis_support)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_capabilities.hysteresis_support",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_capabilities.hysteresis_support",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *hysteresis_support = val;
     }
   if (auto_re_arm_support)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_capabilities.auto_re_arm_support",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_capabilities.auto_re_arm_support",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *auto_re_arm_support = val;
     }
   if (entity_ignore_support)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_capabilities.entity_ignore_support",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_capabilities.entity_ignore_support",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *entity_ignore_support = val;
@@ -1129,12 +1109,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_0)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_0",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_0",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_0 = val;
@@ -1142,12 +1121,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_1)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_1",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_1",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_1 = val;
@@ -1155,12 +1133,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_2)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_2",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_2",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_2 = val;
@@ -1168,12 +1145,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_3)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_3",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_3",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_3 = val;
@@ -1181,12 +1157,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_4)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_4",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_4",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_4 = val;
@@ -1194,12 +1169,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_5)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_5",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_5",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_5 = val;
@@ -1207,12 +1181,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_6)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_6",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_6",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_6 = val;
@@ -1220,12 +1193,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_7)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_7",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_7",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_7 = val;
@@ -1233,12 +1205,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_8)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_8",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_8",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_8 = val;
@@ -1246,12 +1217,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_9)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_9",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_9",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_9 = val;
@@ -1259,12 +1229,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_10)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_10",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_10",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_10 = val;
@@ -1272,12 +1241,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_11)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_11",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_11",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_11 = val;
@@ -1285,12 +1253,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_12)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_12",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_12",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_12 = val;
@@ -1298,12 +1265,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_13)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_13",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_13",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_13 = val;
@@ -1311,12 +1277,11 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_14)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "assertion_event_mask.event_offset_14",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "assertion_event_mask.event_offset_14",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_14 = val;
@@ -1421,12 +1386,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_0)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_0",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_0",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_0 = val;
@@ -1434,12 +1398,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_1)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_1",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_1",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_1 = val;
@@ -1447,12 +1410,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_2)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_2",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_2",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_2 = val;
@@ -1460,12 +1422,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_3)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_3",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_3",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_3 = val;
@@ -1473,12 +1434,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_4)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_4",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_4",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_4 = val;
@@ -1486,12 +1446,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_5)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_5",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_5",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_5 = val;
@@ -1499,12 +1458,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_6)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_6",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_6",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_6 = val;
@@ -1512,12 +1470,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_7)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_7",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_7",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_7 = val;
@@ -1525,12 +1482,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_8)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_8",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_8",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_8 = val;
@@ -1538,12 +1494,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_9)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_9",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_9",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_9 = val;
@@ -1551,12 +1506,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_10)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_10",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_10",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_10 = val;
@@ -1564,12 +1518,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_11)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_11",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_11",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_11 = val;
@@ -1577,12 +1530,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_12)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_12",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_12",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_12 = val;
@@ -1590,12 +1542,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_13)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_13",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_13",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_13 = val;
@@ -1603,12 +1554,11 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (event_state_14)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_discrete,
-                                  "deassertion_event_mask.event_offset_14",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_discrete,
+                        "deassertion_event_mask.event_offset_14",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_discrete);
           goto cleanup;
         }
       *event_state_14 = val;
@@ -1705,12 +1655,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_critical_going_low)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_assertion_event_mask.lower_non_critical_going_low_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.lower_non_critical_going_low_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_critical_going_low = val;
@@ -1718,12 +1667,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_critical_going_high)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_assertion_event_mask.lower_non_critical_going_high_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.lower_non_critical_going_high_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_critical_going_high = val;
@@ -1731,12 +1679,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_critical_going_low)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_assertion_event_mask.lower_critical_going_low_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.lower_critical_going_low_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_critical_going_low = val;
@@ -1744,12 +1691,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_critical_going_high)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_assertion_event_mask.lower_critical_going_high_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.lower_critical_going_high_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_critical_going_high = val;
@@ -1757,12 +1703,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_recoverable_going_low)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_assertion_event_mask.lower_non_recoverable_going_low_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.lower_non_recoverable_going_low_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_recoverable_going_low = val;
@@ -1770,12 +1715,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_recoverable_going_high)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_assertion_event_mask.lower_non_recoverable_going_high_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.lower_non_recoverable_going_high_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_recoverable_going_high = val;
@@ -1783,12 +1727,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_critical_going_low)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_assertion_event_mask.upper_non_critical_going_low_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.upper_non_critical_going_low_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_critical_going_low = val;
@@ -1796,12 +1739,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_critical_going_high)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_assertion_event_mask.upper_non_critical_going_high_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.upper_non_critical_going_high_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_critical_going_high = val;
@@ -1809,12 +1751,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_critical_going_low)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_assertion_event_mask.upper_critical_going_low_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.upper_critical_going_low_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_critical_going_low = val;
@@ -1822,12 +1763,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_critical_going_high)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_assertion_event_mask.upper_critical_going_high_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.upper_critical_going_high_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_critical_going_high = val;
@@ -1835,12 +1775,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_recoverable_going_low)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_assertion_event_mask.upper_non_recoverable_going_low_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.upper_non_recoverable_going_low_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_recoverable_going_low = val;
@@ -1848,12 +1787,11 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_recoverable_going_high)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_assertion_event_mask.upper_non_recoverable_going_high_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_assertion_event_mask.upper_non_recoverable_going_high_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_recoverable_going_high = val;
@@ -1950,12 +1888,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_critical_going_low)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_deassertion_event_mask.lower_non_critical_going_low_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.lower_non_critical_going_low_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_critical_going_low = val;
@@ -1963,12 +1900,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_critical_going_high)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_deassertion_event_mask.lower_non_critical_going_high_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.lower_non_critical_going_high_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_critical_going_high = val;
@@ -1976,12 +1912,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_critical_going_low)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_deassertion_event_mask.lower_critical_going_low_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.lower_critical_going_low_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_critical_going_low = val;
@@ -1989,12 +1924,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_critical_going_high)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_deassertion_event_mask.lower_critical_going_high_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.lower_critical_going_high_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_critical_going_high = val;
@@ -2002,12 +1936,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_recoverable_going_low)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_deassertion_event_mask.lower_non_recoverable_going_low_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.lower_non_recoverable_going_low_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_recoverable_going_low = val;
@@ -2015,12 +1948,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_recoverable_going_high)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_deassertion_event_mask.lower_non_recoverable_going_high_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.lower_non_recoverable_going_high_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_recoverable_going_high = val;
@@ -2028,12 +1960,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_critical_going_low)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_deassertion_event_mask.upper_non_critical_going_low_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.upper_non_critical_going_low_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_critical_going_low = val;
@@ -2041,12 +1972,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_critical_going_high)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_deassertion_event_mask.upper_non_critical_going_high_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.upper_non_critical_going_high_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_critical_going_high = val;
@@ -2054,12 +1984,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_critical_going_low)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_deassertion_event_mask.upper_critical_going_low_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.upper_critical_going_low_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_critical_going_low = val;
@@ -2067,12 +1996,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_critical_going_high)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_deassertion_event_mask.upper_critical_going_high_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.upper_critical_going_high_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_critical_going_high = val;
@@ -2080,12 +2008,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_recoverable_going_low)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_deassertion_event_mask.upper_non_recoverable_going_low_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.upper_non_recoverable_going_low_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_recoverable_going_low = val;
@@ -2093,12 +2020,11 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_recoverable_going_high)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "threshold_deassertion_event_mask.upper_non_recoverable_going_high_supported",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "threshold_deassertion_event_mask.upper_non_recoverable_going_high_supported",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_recoverable_going_high = val;
@@ -2189,12 +2115,11 @@ ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "readable_threshold_mask.lower_non_critical_threshold_is_readable",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "readable_threshold_mask.lower_non_critical_threshold_is_readable",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_critical_threshold = val;
@@ -2202,12 +2127,11 @@ ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "readable_threshold_mask.lower_critical_threshold_is_readable",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "readable_threshold_mask.lower_critical_threshold_is_readable",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_critical_threshold = val;
@@ -2215,12 +2139,11 @@ ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_recoverable_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "readable_threshold_mask.lower_non_recoverable_threshold_is_readable",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "readable_threshold_mask.lower_non_recoverable_threshold_is_readable",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_recoverable_threshold = val;
@@ -2228,12 +2151,11 @@ ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "readable_threshold_mask.upper_non_critical_threshold_is_readable",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "readable_threshold_mask.upper_non_critical_threshold_is_readable",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_critical_threshold = val;
@@ -2241,12 +2163,11 @@ ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "readable_threshold_mask.upper_critical_threshold_is_readable",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "readable_threshold_mask.upper_critical_threshold_is_readable",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_critical_threshold = val;
@@ -2254,12 +2175,11 @@ ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_recoverable_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "readable_threshold_mask.upper_non_recoverable_threshold_is_readable",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "readable_threshold_mask.upper_non_recoverable_threshold_is_readable",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_recoverable_threshold = val;
@@ -2350,12 +2270,11 @@ ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "settable_threshold_mask.lower_non_critical_threshold_is_settable",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "settable_threshold_mask.lower_non_critical_threshold_is_settable",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_critical_threshold = val;
@@ -2363,12 +2282,11 @@ ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "settable_threshold_mask.lower_critical_threshold_is_settable",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "settable_threshold_mask.lower_critical_threshold_is_settable",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_critical_threshold = val;
@@ -2376,12 +2294,11 @@ ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_recoverable_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "settable_threshold_mask.lower_non_recoverable_threshold_is_settable",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "settable_threshold_mask.lower_non_recoverable_threshold_is_settable",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_recoverable_threshold = val;
@@ -2389,12 +2306,11 @@ ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "settable_threshold_mask.upper_non_critical_threshold_is_settable",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "settable_threshold_mask.upper_non_critical_threshold_is_settable",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_critical_threshold = val;
@@ -2402,12 +2318,11 @@ ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "settable_threshold_mask.upper_critical_threshold_is_settable",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "settable_threshold_mask.upper_critical_threshold_is_settable",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_critical_threshold = val;
@@ -2415,12 +2330,11 @@ ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_recoverable_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "settable_threshold_mask.upper_non_recoverable_threshold_is_settable",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "settable_threshold_mask.upper_non_recoverable_threshold_is_settable",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_recoverable_threshold = val;
@@ -2472,12 +2386,11 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 
   if (r_exponent)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "r_exponent",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "r_exponent",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *r_exponent = (int8_t) val;
@@ -2487,12 +2400,11 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 
   if (b_exponent)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "b_exponent",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "b_exponent",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *b_exponent = (int8_t) val;
@@ -2502,20 +2414,18 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 
   if (m)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "m_ls",
-                                  &val1) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "m_ls",
+                        &val1) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "m_ms",
-                                  &val2) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "m_ms",
+                        &val2) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *m = (int16_t)val1;
@@ -2526,20 +2436,18 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 
   if (b)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "b_ls",
-                                  &val1) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "b_ls",
+                        &val1) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "b_ms",
-                                  &val2) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "b_ms",
+                        &val2) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *b = (int16_t)val1;
@@ -2550,12 +2458,11 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 
   if (linearization)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "linearization",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "linearization",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *linearization = (uint8_t)val;
@@ -2563,12 +2470,11 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 
   if (analog_data_format)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_unit1.analog_data_format",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_unit1.analog_data_format",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *analog_data_format = (uint8_t) val;
@@ -2708,12 +2614,11 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
 
   if (nominal_reading)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "nominal_reading",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "nominal_reading",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -2730,12 +2635,11 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
     }
   if (normal_maximum)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "normal_maximum",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "normal_maximum",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -2752,12 +2656,11 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
     }
   if (normal_minimum)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "normal_minimum",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "normal_minimum",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -2774,12 +2677,11 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
     }
   if (sensor_maximum_reading)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_maximum_reading",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_maximum_reading",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -2796,12 +2698,11 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
     }
   if (sensor_minimum_reading)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "sensor_minimum_reading",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_minimum_reading",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -2931,12 +2832,11 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "lower_non_critical_threshold",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "lower_non_critical_threshold",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -2953,12 +2853,11 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
     }
   if (lower_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "lower_critical_threshold",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "lower_critical_threshold",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -2975,12 +2874,11 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
     }
   if (lower_non_recoverable_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "lower_non_recoverable_threshold",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "lower_non_recoverable_threshold",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -2997,12 +2895,11 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
     }
   if (upper_non_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "upper_non_critical_threshold",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "upper_non_critical_threshold",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -3019,12 +2916,11 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
     }
   if (upper_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "upper_critical_threshold",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "upper_critical_threshold",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -3041,12 +2937,11 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
     }
   if (upper_non_recoverable_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "upper_non_recoverable_threshold",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "upper_non_recoverable_threshold",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
 
@@ -3160,12 +3055,11 @@ ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "lower_non_critical_threshold",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "lower_non_critical_threshold",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_critical_threshold = val;
@@ -3173,12 +3067,11 @@ ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "lower_critical_threshold",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "lower_critical_threshold",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_critical_threshold = val;
@@ -3186,12 +3079,11 @@ ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
 
   if (lower_non_recoverable_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "lower_non_recoverable_threshold",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "lower_non_recoverable_threshold",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *lower_non_recoverable_threshold = val;
@@ -3199,12 +3091,11 @@ ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "upper_non_critical_threshold",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "upper_non_critical_threshold",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_critical_threshold = val;
@@ -3212,12 +3103,11 @@ ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_critical_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "upper_critical_threshold",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "upper_critical_threshold",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_critical_threshold = val;
@@ -3225,12 +3115,11 @@ ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
 
   if (upper_non_recoverable_threshold)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record_threshold,
-                                  "upper_non_recoverable_threshold",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_threshold,
+                        "upper_non_recoverable_threshold",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record_threshold);
           goto cleanup;
         }
       *upper_non_recoverable_threshold = val;
@@ -3279,24 +3168,22 @@ ipmi_sdr_parse_hysteresis (ipmi_sdr_parse_ctx_t ctx,
 
   if (positive_going_threshold_hysteresis)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "positive_going_threshold_hysteresis",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "positive_going_threshold_hysteresis",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *positive_going_threshold_hysteresis = val;
     }
   if (negative_going_threshold_hysteresis)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "negative_going_threshold_hysteresis",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "negative_going_threshold_hysteresis",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *negative_going_threshold_hysteresis = val;
@@ -3343,12 +3230,11 @@ ipmi_sdr_parse_container_entity (ipmi_sdr_parse_ctx_t ctx,
 
   if (container_entity_id)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "container_entity_id",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "container_entity_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *container_entity_id = val;
@@ -3356,12 +3242,11 @@ ipmi_sdr_parse_container_entity (ipmi_sdr_parse_ctx_t ctx,
 
   if (container_entity_instance)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "container_entity_instance",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "container_entity_instance",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *container_entity_instance = val;
@@ -3462,24 +3347,22 @@ ipmi_sdr_parse_device_type (ipmi_sdr_parse_ctx_t ctx,
 
   if (device_type)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "device_type",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "device_type",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *device_type = val;
     }
   if (device_type_modifier)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "device_type_modifier",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "device_type_modifier",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *device_type_modifier = val;
@@ -3527,24 +3410,22 @@ ipmi_sdr_parse_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
 
   if (entity_id)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "entity_id",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "entity_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *entity_id = val;
     }
   if (entity_instance)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "entity_instance",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "entity_instance",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *entity_instance = val;
@@ -3596,80 +3477,73 @@ ipmi_sdr_parse_general_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
 
   if (direct_access_address)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "direct_access_address",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "direct_access_address",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *direct_access_address = val;
     }
   if (channel_number)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "channel_number_ls",
-                                  &val1) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "channel_number_ls",
+                        &val1) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "channel_number_ms",
-                                  &val2) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "channel_number_ms",
+                        &val2) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *channel_number = (val1 << 3) | val2;
     }
   if (device_slave_address)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "device_slave_address",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "device_slave_address",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *device_slave_address = val;
     }
   if (private_bus_id)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "private_bus_id",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "private_bus_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *private_bus_id = val;
     }
   if (lun_for_master_write_read_command)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "lun_for_master_write_read_command",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "lun_for_master_write_read_command",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *lun_for_master_write_read_command = val;
     }
   if (address_span)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "address_span",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "address_span",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *address_span = val;
@@ -3720,72 +3594,66 @@ ipmi_sdr_parse_fru_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
 
   if (direct_access_address)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "direct_access_address",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "direct_access_address",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *direct_access_address = val;
     }
   if (logical_fru_device_device_slave_address)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "logical_fru_device_device_slave_address",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "logical_fru_device_device_slave_address",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *logical_fru_device_device_slave_address = val;
     }
   if (private_bus_id)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "private_bus_id",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "private_bus_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *private_bus_id = val;
     }
   if (lun_for_master_write_read_fru_command)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "lun_for_master_write_read_fru_command",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "lun_for_master_write_read_fru_command",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *lun_for_master_write_read_fru_command = val;
     }
   if (logical_physical_fru_device)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "logical_physical_fru_device",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "logical_physical_fru_device",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *logical_physical_fru_device = val;
     }
   if (channel_number)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "channel_number",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "channel_number",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *channel_number = val;
@@ -3832,24 +3700,22 @@ ipmi_sdr_parse_fru_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
 
   if (fru_entity_id)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "fru_entity_id",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "fru_entity_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *fru_entity_id = val;
     }
   if (fru_entity_instance)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "fru_entity_instance",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "fru_entity_instance",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *fru_entity_instance = val;
@@ -3896,24 +3762,22 @@ ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_parse_c
 
   if (device_slave_address)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "device_slave_address",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "device_slave_address",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *device_slave_address = val;
     }
   if (channel_number)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "channel_number",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "channel_number",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *channel_number = val;
@@ -3960,12 +3824,11 @@ ipmi_sdr_parse_manufacturer_id (ipmi_sdr_parse_ctx_t ctx,
 
   if (manufacturer_id)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "manufacturer_id",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "manufacturer_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *manufacturer_id = val;
@@ -4011,12 +3874,11 @@ ipmi_sdr_parse_product_id (ipmi_sdr_parse_ctx_t ctx,
 
   if (product_id)
     {
-      if (sdr_parse_fiid_obj_get (ctx,
-                                  obj_sdr_record,
-                                  "product_id",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "product_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
       *product_id = val;

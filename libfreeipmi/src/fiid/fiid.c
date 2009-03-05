@@ -1720,7 +1720,7 @@ fiid_obj_get (fiid_obj_t obj,
 }
 
 int8_t
-Fiid_obj_get (fiid_obj_t obj,
+FIID_OBJ_GET (fiid_obj_t obj,
               char *field,
               uint64_t *val)
 {

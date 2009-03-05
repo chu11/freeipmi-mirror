@@ -54,6 +54,7 @@
 #include "freeipmi/driver/ipmi-openipmi-driver.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 #include "freeipmi/driver/ipmi-sunbmc-driver.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
@@ -1047,11 +1048,10 @@ ipmi_cmd (ipmi_ctx_t ctx,
           uint64_t cmd = 0;
 
           /* ignore error, continue on */
-          if (api_fiid_obj_get (ctx,
-                                obj_cmd_rq,
-                                "cmd",
-                                &cmd) < 0)
-            ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          if (FIID_OBJ_GET (obj_cmd_rq,
+                            "cmd",
+                            &cmd) < 0)
+            API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
 
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_REQUEST,
@@ -1105,11 +1105,10 @@ ipmi_cmd (ipmi_ctx_t ctx,
           uint64_t cmd = 0;
 
           /* ignore error, continue on */
-          if (api_fiid_obj_get (ctx,
-                                obj_cmd_rq,
-                                "cmd",
-                                &cmd) < 0)
-            ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          if (FIID_OBJ_GET (obj_cmd_rq,
+                            "cmd",
+                            &cmd) < 0)
+            API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
 
           /* its ok to use the "request" net_fn */
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,

@@ -472,7 +472,7 @@ int8_t fiid_obj_set (fiid_obj_t obj, char *field, uint64_t val);
 int8_t fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
 
 /*
- * Fiid_obj_get
+ * FIID_OBJ_GET
  *
  * Get data stored in the object for the specified field.  Returns 1
  * if data was available and returned, -1 on error.  Identical to
@@ -480,7 +480,7 @@ int8_t fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
  * available, -1 is returned and FIID_ERR_DATA_NOT_AVAILABLE is the
  * error code set.
  */
-int8_t Fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
+int8_t FIID_OBJ_GET (fiid_obj_t obj, char *field, uint64_t *val);
 
 /*
  * fiid_obj_set_data

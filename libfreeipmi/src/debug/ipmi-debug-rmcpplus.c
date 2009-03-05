@@ -93,7 +93,7 @@ _dump_rmcpplus_session_hdr (int fd,
   if (pkt_len <= indx)
     goto output;
 
-  if (Fiid_obj_get (obj_rmcpplus_session_hdr,
+  if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "payload_type",
                     payload_type) < 0)
     {
@@ -138,7 +138,7 @@ _dump_rmcpplus_session_hdr (int fd,
   if (pkt_len <= indx)
     goto output;
 
-  if (Fiid_obj_get (obj_rmcpplus_session_hdr,
+  if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "payload_type.authenticated",
                     payload_authenticated) < 0)
     {
@@ -146,7 +146,7 @@ _dump_rmcpplus_session_hdr (int fd,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_rmcpplus_session_hdr,
+  if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "payload_type.encrypted",
                     payload_encrypted) < 0)
     {
@@ -154,7 +154,7 @@ _dump_rmcpplus_session_hdr (int fd,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_rmcpplus_session_hdr,
+  if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "session_id",
                     session_id) < 0)
     {
@@ -162,7 +162,7 @@ _dump_rmcpplus_session_hdr (int fd,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_rmcpplus_session_hdr,
+  if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "ipmi_payload_len",
                     ipmi_payload_len) < 0)
     {

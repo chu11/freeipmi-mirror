@@ -41,7 +41,5 @@ void sel_parse_set_sel_parse_errnum_by_errno (ipmi_sel_parse_ctx_t ctx, int __er
 
 void sel_parse_set_sel_parse_errnum_by_fiid_object (ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj);
 
-int sel_parse_fiid_obj_get (ipmi_sel_parse_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
 #endif /* ipmi-sel-parse-util.h */
 

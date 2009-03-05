@@ -68,6 +68,8 @@ api_set_api_errnum_by_fiid_object (ipmi_ctx_t ctx, fiid_obj_t obj)
     ctx->errnum = IPMI_ERR_SUCCESS;
   else if (fiid_obj_errnum (obj) == FIID_ERR_OUT_OF_MEMORY)
     ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
+  else if (fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE)
+    ctx->errnum = IPMI_ERR_IPMI_ERROR;
   else
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
 }
@@ -269,31 +271,6 @@ api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t t
       return (-1);
     }
 
-  return (1);                   /* return 1 like real call */
-}
-
-int
-api_fiid_obj_get (ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val)
-{
-  uint64_t lval;
-  int ret;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return (-1);
-
-  if ((ret = fiid_obj_get (obj, field, &lval)) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj);
-      return (-1);
-    }
-
-  if (!ret)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_IPMI_ERROR);
-      return (-1);
-    }
-
-  *val = lval;
   return (1);                   /* return 1 like real call */
 }
 

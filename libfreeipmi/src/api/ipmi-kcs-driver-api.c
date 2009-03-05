@@ -38,6 +38,7 @@
 #include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/driver/ipmi-kcs-driver.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
 #include "freeipmi/util/ipmi-ipmb-util.h"
@@ -248,8 +249,8 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
       /* ignore error, continue on */
-      if (api_fiid_obj_get (ctx, obj_cmd_rq, "cmd", &cmd) < 0)
-        ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      if (FIID_OBJ_GET (obj_cmd_rq, "cmd", &cmd) < 0)
+        API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
     }
 
   {

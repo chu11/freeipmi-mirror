@@ -37,6 +37,7 @@
 #include "freeipmi/api/ipmi-sensor-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sensor-cmds.h"
 #include "freeipmi/debug/ipmi-debug.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
@@ -197,25 +198,25 @@ ipmi_sensor_read_ctx_set_flags (ipmi_sensor_read_ctx_t ctx, unsigned int flags)
 
 int
 _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
-                                    fiid_obj_t obj_get_sensor_reading_rs)
+                                    fiid_obj_t obj_cmd_rs)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SENSOR_READ_CTX_MAGIC);
-  assert (obj_get_sensor_reading_rs);
+  assert (obj_cmd_rs);
 
-  if (ipmi_check_completion_code (obj_get_sensor_reading_rs,
+  if (ipmi_check_completion_code (obj_cmd_rs,
                                   IPMI_COMP_CODE_NODE_BUSY) == 1)
     {
       SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_NODE_BUSY);
       return (-1);
     }
-  else if ((ipmi_check_completion_code (obj_get_sensor_reading_rs,
+  else if ((ipmi_check_completion_code (obj_cmd_rs,
                                         IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-           || (ipmi_check_completion_code (obj_get_sensor_reading_rs,
+           || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
-           || (ipmi_check_completion_code (obj_get_sensor_reading_rs,
+           || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
-           || (ipmi_check_completion_code (obj_get_sensor_reading_rs,
+           || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
     {
       /* A sensor listed by the SDR is not present or cannot be obtained for some reason */
@@ -229,20 +230,19 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
 int
 _get_sensor_reading (ipmi_sensor_read_ctx_t ctx,
                      uint8_t sensor_number,
-                     fiid_obj_t obj_get_sensor_reading_rs)
+                     fiid_obj_t obj_cmd_rs)
 {
   int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SENSOR_READ_CTX_MAGIC);
-  assert (obj_get_sensor_reading_rs);
+  assert (obj_cmd_rs);
 
   if (ipmi_cmd_get_sensor_reading (ctx->ipmi_ctx,
                                    sensor_number,
-                                   obj_get_sensor_reading_rs) < 0)
+                                   obj_cmd_rs) < 0)
     {
-      if (_sensor_reading_corner_case_checks (ctx,
-                                              obj_get_sensor_reading_rs) < 0)
+      if (_sensor_reading_corner_case_checks (ctx, obj_cmd_rs) < 0)
         goto cleanup;
       SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_IPMI_ERROR);
       goto cleanup;
@@ -259,13 +259,13 @@ _get_sensor_reading_ipmb (ipmi_sensor_read_ctx_t ctx,
                           uint8_t lun,
                           uint8_t channel_number,
                           uint8_t sensor_number,
-                          fiid_obj_t obj_get_sensor_reading_rs)
+                          fiid_obj_t obj_cmd_rs)
 {
   int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SENSOR_READ_CTX_MAGIC);
-  assert (obj_get_sensor_reading_rs);
+  assert (obj_cmd_rs);
 
   if (ctx->flags & IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS
       && channel_number == IPMI_CHANNEL_NUMBER_PRIMARY_IPMB)
@@ -274,7 +274,7 @@ _get_sensor_reading_ipmb (ipmi_sensor_read_ctx_t ctx,
                                             slave_address,
                                             lun,
                                             sensor_number,
-                                            obj_get_sensor_reading_rs) < 0)
+                                            obj_cmd_rs) < 0)
         {
           if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE)
             {
@@ -286,8 +286,7 @@ _get_sensor_reading_ipmb (ipmi_sensor_read_ctx_t ctx,
               SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_NODE_BUSY);
               goto cleanup;
             }
-          else if (_sensor_reading_corner_case_checks (ctx,
-                                                       obj_get_sensor_reading_rs) < 0)
+          else if (_sensor_reading_corner_case_checks (ctx, obj_cmd_rs) < 0)
             goto cleanup;
           else
             SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_IPMI_ERROR);
@@ -315,7 +314,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
   double *tmp_sensor_reading = NULL;
   uint64_t val;
   int rv = -1;
-  fiid_obj_t obj_get_sensor_reading_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t sensor_event_bitmask1 = 0;
   uint64_t sensor_event_bitmask2 = 0;
   int8_t sensor_event_bitmask1_len = 0;
@@ -412,7 +411,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
 
   slave_address = (sensor_owner_id << 1) | sensor_owner_id_type;
 
-  if (!(obj_get_sensor_reading_rs = fiid_obj_create (tmpl_cmd_get_sensor_reading_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sensor_reading_rs)))
     {
       SENSOR_READ_ERRNO_TO_SENSOR_READ_ERRNUM (ctx, errno);
       goto cleanup;
@@ -422,7 +421,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
     {
       if (_get_sensor_reading (ctx,
                                sensor_number,
-                               obj_get_sensor_reading_rs) < 0)
+                               obj_cmd_rs) < 0)
         goto cleanup;
     }
   else
@@ -432,16 +431,15 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
                                     sensor_owner_lun,
                                     channel_number,
                                     sensor_number,
-                                    obj_get_sensor_reading_rs) < 0)
+                                    obj_cmd_rs) < 0)
         goto cleanup;
     }
 
-  if (sensor_read_fiid_obj_get (ctx,
-                                obj_get_sensor_reading_rs,
-                                "reading_state",
-                                &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "reading_state",
+                    &val) < 0)
     {
-      ERR_TRACE (ipmi_sensor_read_ctx_errormsg (ctx), ipmi_sensor_read_ctx_errnum (ctx));
+      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
 
@@ -451,12 +449,11 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
-  if (sensor_read_fiid_obj_get (ctx,
-                                obj_get_sensor_reading_rs,
-                                "sensor_scanning",
-                                &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "sensor_scanning",
+                    &val) < 0)
     {
-      ERR_TRACE (ipmi_sensor_read_ctx_errormsg (ctx), ipmi_sensor_read_ctx_errnum (ctx));
+      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
 
@@ -478,19 +475,19 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
    * isn't set, we want to know and not error out.
    */
 
-  if ((sensor_event_bitmask1_len = fiid_obj_get (obj_get_sensor_reading_rs,
+  if ((sensor_event_bitmask1_len = fiid_obj_get (obj_cmd_rs,
                                                  "sensor_event_bitmask1",
                                                  &sensor_event_bitmask1)) < 0)
     {
-      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_get_sensor_reading_rs);
+      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
 
-  if ((sensor_event_bitmask2_len = fiid_obj_get (obj_get_sensor_reading_rs,
+  if ((sensor_event_bitmask2_len = fiid_obj_get (obj_cmd_rs,
                                                  "sensor_event_bitmask2",
                                                  &sensor_event_bitmask2)) < 0)
     {
-      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_get_sensor_reading_rs);
+      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
 
@@ -522,12 +519,11 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
 
   if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
     {
-      if (sensor_read_fiid_obj_get (ctx,
-                                    obj_get_sensor_reading_rs,
-                                    "sensor_reading",
-                                    &val) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "sensor_reading",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sensor_read_ctx_errormsg (ctx), ipmi_sensor_read_ctx_errnum (ctx));
+          SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
 
@@ -603,7 +599,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
     rv = 0;
 
  cleanup:
-  fiid_obj_destroy (obj_get_sensor_reading_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   if (rv <= 0)
     {
       if (tmp_sensor_reading)

@@ -570,12 +570,12 @@ ipmi_completion_code_strerror_cmd_r (fiid_obj_t obj_cmd,
       return (-1);
     }
 
-  if (Fiid_obj_get (obj_cmd, "cmd", &cmd) < 0)
+  if (FIID_OBJ_GET (obj_cmd, "cmd", &cmd) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
-  if (Fiid_obj_get (obj_cmd, "comp_code", &comp_code) < 0)
+  if (FIID_OBJ_GET (obj_cmd, "comp_code", &comp_code) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);

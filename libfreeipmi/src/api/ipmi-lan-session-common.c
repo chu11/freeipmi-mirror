@@ -51,6 +51,7 @@
 
 #include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
 #include "freeipmi/debug/ipmi-debug.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/interface/ipmi-lan-interface.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
@@ -699,12 +700,11 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
           && !(password && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
           && fiid_obj_valid (obj_cmd_rs));
 
-  if (api_fiid_obj_get (ctx,
-                        ctx->io.outofband.rs.obj_lan_session_hdr,
-                        "session_id",
-                        &rs_session_id) < 0)
+  if (FIID_OBJ_GET (ctx->io.outofband.rs.obj_lan_session_hdr,
+                    "session_id",
+                    &rs_session_id) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_lan_session_hdr);
       goto cleanup;
     }
 
@@ -791,12 +791,11 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 
   if (session_sequence_number)
     {
-      if (api_fiid_obj_get (ctx,
-                            ctx->io.outofband.rs.obj_lan_session_hdr,
-                            "session_sequence_number",
-                            &rs_session_sequence_number) < 0)
+      if (FIID_OBJ_GET (ctx->io.outofband.rs.obj_lan_session_hdr,
+                        "session_sequence_number",
+                        &rs_session_sequence_number) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_lan_session_hdr);
           goto cleanup;
         }
 
@@ -880,11 +879,10 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
       /* ignore error, continue on */
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rq,
-                            "cmd",
-                            &cmd) < 0)
-        ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      if (FIID_OBJ_GET (obj_cmd_rq,
+                        "cmd",
+                        &cmd) < 0)
+        API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
     }
 
   if (_ipmi_lan_cmd_send (ctx,
@@ -1169,11 +1167,10 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
       /* ignore error, continue on */
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rq,
-                            "cmd",
-                            &cmd) < 0)
-        ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      if (FIID_OBJ_GET (obj_cmd_rq,
+                        "cmd",
+                        &cmd) < 0)
+        API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
     }
 
   /* for debugging */
@@ -1366,28 +1363,25 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 
   if (!(ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "authentication_status.anonymous_login",
-                            &authentication_status_anonymous_login) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "authentication_status.anonymous_login",
+                        &authentication_status_anonymous_login) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "authentication_status.null_username",
-                            &authentication_status_null_username) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "authentication_status.null_username",
+                        &authentication_status_null_username) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "authentication_status.non_null_username",
-                            &authentication_status_non_null_username) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "authentication_status.non_null_username",
+                        &authentication_status_non_null_username) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
 
@@ -1413,12 +1407,11 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
    */
   if (!(ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION))
     {
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "authentication_status.per_message_authentication",
-                            &val) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "authentication_status.per_message_authentication",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
       ctx->io.outofband.per_msg_auth_disabled = val;
@@ -1429,52 +1422,47 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   switch (ctx->io.outofband.authentication_type)
     {
     case IPMI_AUTHENTICATION_TYPE_NONE:
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "authentication_type.none",
-                            &supported_authentication_type) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "authentication_type.none",
+                        &supported_authentication_type) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
       break;
     case IPMI_AUTHENTICATION_TYPE_MD2:
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "authentication_type.md2",
-                            &supported_authentication_type) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "authentication_type.md2",
+                        &supported_authentication_type) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
       break;
     case IPMI_AUTHENTICATION_TYPE_MD5:
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "authentication_type.md5",
-                            &supported_authentication_type) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "authentication_type.md5",
+                        &supported_authentication_type) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
       break;
     case IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY:
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "authentication_type.straight_password_key",
-                            &supported_authentication_type) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "authentication_type.straight_password_key",
+                        &supported_authentication_type) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
       break;
     case IPMI_AUTHENTICATION_TYPE_OEM_PROP:
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "authentication_type.oem_prop",
-                            &supported_authentication_type) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "authentication_type.oem_prop",
+                        &supported_authentication_type) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
       break;
@@ -1539,12 +1527,11 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
 
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "temp_session_id",
-                        &temp_session_id) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "temp_session_id",
+                    &temp_session_id) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
 
@@ -1621,12 +1608,11 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
 
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "session_id",
-                        &session_id) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "session_id",
+                    &session_id) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
 
@@ -1637,12 +1623,11 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
    * whatever sequence number they give us even if it isn't the
    * initial outbound sequence number.
    */
-  if (api_fiid_obj_get (ctx,
-                        ctx->io.outofband.rs.obj_lan_session_hdr,
-                        "session_sequence_number",
-                        &val) < 0)
+  if (FIID_OBJ_GET (ctx->io.outofband.rs.obj_lan_session_hdr,
+                    "session_sequence_number",
+                    &val) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_lan_session_hdr);
       goto cleanup;
     }
   ctx->io.outofband.highest_received_sequence_number = val;
@@ -1665,23 +1650,21 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
         | ((tmp_session_sequence_number & 0x000000FF) << 24);
     }
 
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "initial_inbound_sequence_number",
-                        &session_sequence_number) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "initial_inbound_sequence_number",
+                    &session_sequence_number) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
 
   ctx->io.outofband.session_sequence_number = session_sequence_number;
 
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "authentication_type",
-                        &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "authentication_type",
+                    &val) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
 
@@ -2280,12 +2263,11 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
     {
       uint64_t payload_type;
 
-      if (api_fiid_obj_get (ctx,
-                            ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
-                            "payload_type",
-                            &payload_type) < 0)
+      if (FIID_OBJ_GET (ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
+                        "payload_type",
+                        &payload_type) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_rmcpplus_session_hdr);
           goto cleanup;
         }
       if (payload_type != IPMI_PAYLOAD_TYPE_IPMI)
@@ -2294,12 +2276,11 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
           goto cleanup;
         }
 
-      if (api_fiid_obj_get (ctx,
-                            ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
-                            "session_id",
-                            &val) < 0)
+      if (FIID_OBJ_GET (ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
+                        "session_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_rmcpplus_session_hdr);
           goto cleanup;
         }
 
@@ -2344,12 +2325,11 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 
       if (session_sequence_number)
         {
-          if (api_fiid_obj_get (ctx,
-                                ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
-                                "session_sequence_number",
-                                &rs_session_sequence_number) < 0)
+          if (FIID_OBJ_GET (ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
+                            "session_sequence_number",
+                            &rs_session_sequence_number) < 0)
             {
-              ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+              API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_rmcpplus_session_hdr);
               goto cleanup;
             }
 
@@ -2384,12 +2364,11 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
     {
       uint64_t val;
 
-      if (api_fiid_obj_get (ctx,
-                            ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
-                            "payload_type",
-                            &val) < 0)
+      if (FIID_OBJ_GET (ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
+                        "payload_type",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_rmcpplus_session_hdr);
           goto cleanup;
         }
       if (val != IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
@@ -2398,12 +2377,11 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
           goto cleanup;
         }
 
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "remote_console_session_id",
-                            &val) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "remote_console_session_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
 
@@ -2415,12 +2393,11 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 
       if (message_tag)
         {
-          if (api_fiid_obj_get (ctx,
-                                obj_cmd_rs,
-                                "message_tag",
-                                &val) < 0)
+          if (FIID_OBJ_GET (obj_cmd_rs,
+                            "message_tag",
+                            &val) < 0)
             {
-              ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+              API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
               goto cleanup;
             }
           if (val != *message_tag)
@@ -2435,12 +2412,11 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
       uint64_t rmcpplus_status_code;
       uint64_t val;
 
-      if (api_fiid_obj_get (ctx,
-                            ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
-                            "payload_type",
-                            &val) < 0)
+      if (FIID_OBJ_GET (ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
+                        "payload_type",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_rmcpplus_session_hdr);
           goto cleanup;
         }
       if (val != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)
@@ -2451,12 +2427,11 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 
       if (message_tag)
         {
-          if (api_fiid_obj_get (ctx,
-                                obj_cmd_rs,
-                                "message_tag",
-                                &val) < 0)
+          if (FIID_OBJ_GET (obj_cmd_rs,
+                            "message_tag",
+                            &val) < 0)
             {
-              ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+              API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
               goto cleanup;
             }
           if (val != *message_tag)
@@ -2472,21 +2447,19 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
        * code along with this stuff.
        */
 
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "rmcpplus_status_code",
-                            &rmcpplus_status_code) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "rmcpplus_status_code",
+                        &rmcpplus_status_code) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
 
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "remote_console_session_id",
-                            &val) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "remote_console_session_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
 
@@ -2502,12 +2475,11 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
       uint64_t rmcpplus_status_code;
       uint64_t val;
 
-      if (api_fiid_obj_get (ctx,
-                            ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
-                            "payload_type",
-                            &val) < 0)
+      if (FIID_OBJ_GET (ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
+                        "payload_type",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_rmcpplus_session_hdr);
           goto cleanup;
         }
       if (val != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
@@ -2518,12 +2490,11 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 
       if (message_tag)
         {
-          if (api_fiid_obj_get (ctx,
-                                obj_cmd_rs,
-                                "message_tag",
-                                &val) < 0)
+          if (FIID_OBJ_GET (obj_cmd_rs,
+                            "message_tag",
+                            &val) < 0)
             {
-              ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+              API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
               goto cleanup;
             }
           if (val != *message_tag)
@@ -2539,21 +2510,19 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
        * code along with this stuff.
        */
 
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "rmcpplus_status_code",
-                            &rmcpplus_status_code) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "rmcpplus_status_code",
+                        &rmcpplus_status_code) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
 
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rs,
-                            "remote_console_session_id",
-                            &val) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "remote_console_session_id",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
 
@@ -2633,11 +2602,10 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
       /* ignore error, continue on */
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rq,
-                            "cmd",
-                            &cmd) < 0)
-        ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      if (FIID_OBJ_GET (obj_cmd_rq,
+                        "cmd",
+                        &cmd) < 0)
+        API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
     }
 
   if (_ipmi_lan_2_0_cmd_send (ctx,
@@ -2818,11 +2786,10 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
       /* ignore error, continue on */
-      if (api_fiid_obj_get (ctx,
-                            obj_cmd_rq,
-                            "cmd",
-                            &cmd) < 0)
-        ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      if (FIID_OBJ_GET (obj_cmd_rq,
+                        "cmd",
+                        &cmd) < 0)
+        API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
     }
 
   /* for debugging */
@@ -3045,52 +3012,46 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
 
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "authentication_status.anonymous_login",
-                        &authentication_status_anonymous_login) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "authentication_status.anonymous_login",
+                    &authentication_status_anonymous_login) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "authentication_status.null_username",
-                        &authentication_status_null_username) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "authentication_status.null_username",
+                    &authentication_status_null_username) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "authentication_status.non_null_username",
-                        &authentication_status_non_null_username) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "authentication_status.non_null_username",
+                    &authentication_status_non_null_username) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "authentication_status.k_g",
-                        &authentication_status_k_g) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "authentication_status.k_g",
+                    &authentication_status_k_g) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "authentication_type.ipmi_v2.0_extended_capabilities_available",
-                        &ipmi_v20_extended_capabilities_available) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "authentication_type.ipmi_v2.0_extended_capabilities_available",
+                    &ipmi_v20_extended_capabilities_available) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "channel_supports_ipmi_v2.0_connections",
-                        &channel_supports_ipmi_v20_connections) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "channel_supports_ipmi_v2.0_connections",
+                    &channel_supports_ipmi_v20_connections) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
 
@@ -3220,12 +3181,11 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                 obj_cmd_rs) < 0)
     goto cleanup;
 
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "rmcpplus_status_code",
-                        &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "rmcpplus_status_code",
+                    &val) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
   rmcpplus_status_code = val;
@@ -3243,12 +3203,11 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     }
 
   /* Check if we can eventually authentication at the privilege we want */
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "maximum_privilege_level",
-                        &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "maximum_privilege_level",
+                    &val) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
   maximum_privilege_level = val;
@@ -3282,12 +3241,11 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
 
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "managed_system_session_id",
-                        &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "managed_system_session_id",
+                    &val) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
   ctx->io.outofband.managed_system_session_id = val;
@@ -3382,12 +3340,11 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                 obj_cmd_rs) < 0)
     goto cleanup;
 
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "rmcpplus_status_code",
-                        &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "rmcpplus_status_code",
+                    &val) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
   rmcpplus_status_code = val;
@@ -3710,12 +3667,11 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                                 obj_cmd_rs) < 0)
     goto cleanup;
 
-  if (api_fiid_obj_get (ctx,
-                        obj_cmd_rs,
-                        "rmcpplus_status_code",
-                        &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "rmcpplus_status_code",
+                    &val) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
   rmcpplus_status_code = val;

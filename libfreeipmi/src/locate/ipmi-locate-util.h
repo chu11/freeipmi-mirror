@@ -40,7 +40,5 @@ void locate_set_locate_errnum_by_errno (ipmi_locate_ctx_t ctx, int __errno);
 
 void locate_set_locate_errnum_by_fiid_object (ipmi_locate_ctx_t ctx, fiid_obj_t obj);
 
-int locate_fiid_obj_get (ipmi_locate_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
 #endif /* ipmi-locate-util.h */
 

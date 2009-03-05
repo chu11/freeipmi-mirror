@@ -57,8 +57,6 @@ int api_fiid_obj_packet_valid (ipmi_ctx_t ctx, fiid_obj_t obj);
 
 int api_fiid_obj_template_compare (ipmi_ctx_t ctx, fiid_obj_t obj, fiid_template_t tmpl);
 
-int api_fiid_obj_get (ipmi_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
 int api_ipmi_cmd (ipmi_ctx_t ctx,
                   uint8_t lun,
                   uint8_t net_fn,

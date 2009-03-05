@@ -59,31 +59,8 @@ sensor_read_set_sensor_read_errnum_by_fiid_object (ipmi_sensor_read_ctx_t ctx, f
     ctx->errnum = IPMI_SENSOR_READ_ERR_SUCCESS;
   else if (fiid_obj_errnum (obj) == FIID_ERR_OUT_OF_MEMORY)
     ctx->errnum = IPMI_SENSOR_READ_ERR_OUT_OF_MEMORY;
+  else if (fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE)
+    ctx->errnum = IPMI_SENSOR_READ_ERR_IPMI_ERROR;
   else
     ctx->errnum = IPMI_SENSOR_READ_ERR_INTERNAL_ERROR;
-}
-
-int
-sensor_read_fiid_obj_get (ipmi_sensor_read_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val)
-{
-  uint64_t lval;
-  int ret;
-
-  if (!ctx || ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
-    return (-1);
-
-  if ((ret = fiid_obj_get (obj, field, &lval)) < 0)
-    {
-      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj);
-      return (-1);
-    }
-
-  if (!ret)
-    {
-      SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_IPMI_ERROR);
-      return (-1);
-    }
-
-  *val = lval;
-  return (1);                   /* return (1) like real call */
 }

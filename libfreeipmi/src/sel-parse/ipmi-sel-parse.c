@@ -37,6 +37,7 @@
 #include "freeipmi/api/ipmi-sel-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
 #include "freeipmi/debug/ipmi-debug.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
@@ -546,9 +547,9 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
                 }
             }
 
-          if (sel_parse_fiid_obj_get (ctx, obj_cmd_rs, "next_record_id", &val) < 0)
+          if (FIID_OBJ_GET (obj_cmd_rs, "next_record_id", &val) < 0)
             {
-              ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+              SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_cmd_rs);
               goto cleanup;
             }
           next_record_id = val;

@@ -41,6 +41,7 @@
 #include "freeipmi/api/ipmi-device-global-cmds-api.h"
 #include "freeipmi/cmds/ipmi-device-global-cmds.h"
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
@@ -1722,7 +1723,7 @@ ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
 int8_t
 ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
 {
-  fiid_obj_t obj_data_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t manufacturer_id, product_id;
   int8_t rv = -1;
   uint64_t val;
@@ -1737,30 +1738,28 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
 
   if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
     {
-      if (!(obj_data_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
+      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
         }
 
-      if (ipmi_cmd_get_device_id (ctx, obj_data_rs) < 0)
+      if (ipmi_cmd_get_device_id (ctx, obj_cmd_rs) < 0)
         goto cleanup;
 
-      if (api_fiid_obj_get (ctx,
-                            obj_data_rs,
-                            "manufacturer_id.id",
-                            &manufacturer_id) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "manufacturer_id.id",
+                        &manufacturer_id) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
 
-      if (api_fiid_obj_get (ctx,
-                            obj_data_rs,
-                            "product_id",
-                            &product_id) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "product_id",
+                        &product_id) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
 
@@ -1776,10 +1775,10 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
             }
         }
 
-      fiid_obj_destroy (obj_data_rs);
+      fiid_obj_destroy (obj_cmd_rs);
     }
 
-  if (!(obj_data_rs = fiid_obj_create (tmpl_cmd_get_channel_info_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_channel_info_rs)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -1788,26 +1787,24 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
   /* Channel numbers range from 0 - 7 */
   for (i = 0; i < 8; i++)
     {
-      if (ipmi_cmd_get_channel_info (ctx, i, obj_data_rs) != 0)
+      if (ipmi_cmd_get_channel_info (ctx, i, obj_cmd_rs) != 0)
         continue;
 
-      if (api_fiid_obj_get (ctx,
-                            obj_data_rs,
-                            "channel_medium_type",
-                            &val) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "channel_medium_type",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
 
       if ((uint8_t) val == channel_medium_type)
         {
-          if (api_fiid_obj_get (ctx,
-                                obj_data_rs,
-                                "actual_channel_number",
-                                &val) < 0)
+          if (FIID_OBJ_GET (obj_cmd_rs,
+                            "actual_channel_number",
+                            &val) < 0)
             {
-              ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+              API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
               goto cleanup;
             }
 
@@ -1819,7 +1816,7 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
   if (rv < 0)
     API_SET_ERRNUM (ctx, IPMI_ERR_NOT_FOUND);
  cleanup:
-  fiid_obj_destroy (obj_data_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 

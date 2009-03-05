@@ -41,7 +41,5 @@ void sdr_parse_set_sdr_parse_errnum_by_errno (ipmi_sdr_parse_ctx_t ctx, int __er
 
 void sdr_parse_set_sdr_parse_errnum_by_fiid_object (ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj);
 
-int sdr_parse_fiid_obj_get (ipmi_sdr_parse_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
 #endif /* ipmi-sdr-parse-util.h */
 

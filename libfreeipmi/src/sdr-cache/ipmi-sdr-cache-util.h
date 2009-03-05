@@ -40,7 +40,5 @@ void sdr_cache_set_sdr_cache_errnum_by_errno (ipmi_sdr_cache_ctx_t ctx, int __er
 
 void sdr_cache_set_sdr_cache_errnum_by_fiid_object (ipmi_sdr_cache_ctx_t ctx, fiid_obj_t obj);
 
-int sdr_cache_fiid_obj_get (ipmi_sdr_cache_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
 #endif /* ipmi-sdr-cache-util.h */
 

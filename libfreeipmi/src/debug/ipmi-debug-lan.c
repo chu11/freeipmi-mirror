@@ -188,7 +188,7 @@ _ipmi_dump_lan_packet (int fd,
       goto cleanup;
     }
 
-  if (Fiid_obj_get (obj_session_hdr,
+  if (FIID_OBJ_GET (obj_session_hdr,
                     "authentication_type",
                     &authentication_type) < 0)
     {

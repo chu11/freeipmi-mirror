@@ -41,7 +41,5 @@ void sensor_read_set_sensor_read_errnum_by_errno (ipmi_sensor_read_ctx_t ctx, in
 
 void sensor_read_set_sensor_read_errnum_by_fiid_object (ipmi_sensor_read_ctx_t ctx, fiid_obj_t obj);
 
-int sensor_read_fiid_obj_get (ipmi_sensor_read_ctx_t ctx, fiid_obj_t obj, char *field, uint64_t *val);
-
 #endif /* ipmi-sensor-read-util.h */
 

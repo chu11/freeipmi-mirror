@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.26 2009-03-05 00:39:56 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.27 2009-03-05 21:47:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -47,6 +47,7 @@
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
 #include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
@@ -219,12 +220,11 @@ _sdr_cache_reservation_id (ipmi_sdr_cache_ctx_t ctx,
     }
 
   *reservation_id = 0;
-  if (sdr_cache_fiid_obj_get (ctx,
-                              obj_cmd_rs,
-                              "reservation_id",
-                              &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "reservation_id",
+                    &val) < 0)
     {
-      ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
+      SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
   *reservation_id = val;
@@ -300,12 +300,11 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
             }
           else
             {
-              if (sdr_cache_fiid_obj_get (ctx,
-                                          obj_cmd_rs,
-                                          "comp_code",
-                                          &val) < 0)
+              if (FIID_OBJ_GET (obj_cmd_rs,
+                                "comp_code",
+                                &val) < 0)
                 {
-                  ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
+                  SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM (ctx, obj_cmd_rs);
                   goto cleanup;
                 }
 
@@ -348,12 +347,11 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
           goto cleanup;
         }
 
-      if (sdr_cache_fiid_obj_get (ctx,
-                                  obj_sdr_record_header,
-                                  "record_length",
-                                  &val) < 0)
+      if (FIID_OBJ_GET (obj_sdr_record_header,
+                        "record_length",
+                        &val) < 0)
         {
-          ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
+          SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM (ctx, obj_sdr_record_header);
           goto cleanup;
         }
 
@@ -366,12 +364,11 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
       goto cleanup;
     }
 
-  if (sdr_cache_fiid_obj_get (ctx,
-                              obj_cmd_rs,
-                              "next_record_id",
-                              &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "next_record_id",
+                    &val) < 0)
     {
-      ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
+      SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
   *next_record_id = val;
@@ -398,12 +395,11 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
             }
           else
             {
-              if (sdr_cache_fiid_obj_get (ctx,
-                                          obj_cmd_rs,
-                                          "comp_code",
-                                          &val) < 0)
+              if (FIID_OBJ_GET (obj_cmd_rs,
+                                "comp_code",
+                                &val) < 0)
                 {
-                  ERR_TRACE (ipmi_sdr_cache_ctx_errormsg (ctx), ipmi_sdr_cache_ctx_errnum (ctx));
+                  SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM (ctx, obj_cmd_rs);
                   goto cleanup;
                 }
 

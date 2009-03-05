@@ -5,7 +5,7 @@
 	* common/src/toolcommon/tool-fiid-util.c: New file.
 
 	* libfreeipmi/include/freeipmi/fiid/fiid.h,
-	libfreeipmi/src/fiid/fiid.c (Fiid_obj_get): New function.
+	libfreeipmi/src/fiid/fiid.c (FIID_OBJ_GET): New function.
 
 	* Adjust tools to use new fiid functions/macros appropriately.
 

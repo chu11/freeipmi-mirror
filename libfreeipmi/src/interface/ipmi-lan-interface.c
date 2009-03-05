@@ -717,7 +717,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
     }
   indx += len;
 
-  if (Fiid_obj_get (obj_lan_session_hdr,
+  if (FIID_OBJ_GET (obj_lan_session_hdr,
                     "authentication_type",
                     &authentication_type) < 0)
     {
