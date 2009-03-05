@@ -14,7 +14,6 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software Foundation,
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-
 */
 
 #ifndef _IPMI_OPENIPMI_DRIVER_H
@@ -44,34 +43,34 @@ extern "C" {
 
 #define IPMI_OPENIPMI_FLAGS_DEFAULT              0x00000000
 
-  typedef struct ipmi_openipmi_ctx *ipmi_openipmi_ctx_t;
+typedef struct ipmi_openipmi_ctx *ipmi_openipmi_ctx_t;
 
-  ipmi_openipmi_ctx_t ipmi_openipmi_ctx_create (void);
-  void ipmi_openipmi_ctx_destroy (ipmi_openipmi_ctx_t ctx);
-  int ipmi_openipmi_ctx_errnum (ipmi_openipmi_ctx_t ctx);
-  char *ipmi_openipmi_ctx_strerror (int errnum);
-  char *ipmi_openipmi_ctx_errormsg (ipmi_openipmi_ctx_t ctx);
+ipmi_openipmi_ctx_t ipmi_openipmi_ctx_create (void);
+void ipmi_openipmi_ctx_destroy (ipmi_openipmi_ctx_t ctx);
+int ipmi_openipmi_ctx_errnum (ipmi_openipmi_ctx_t ctx);
+char *ipmi_openipmi_ctx_strerror (int errnum);
+char *ipmi_openipmi_ctx_errormsg (ipmi_openipmi_ctx_t ctx);
 
-  int8_t ipmi_openipmi_ctx_get_driver_device (ipmi_openipmi_ctx_t ctx, char **driver_device);
-  int8_t ipmi_openipmi_ctx_get_flags (ipmi_openipmi_ctx_t ctx, unsigned int *flags);
+int8_t ipmi_openipmi_ctx_get_driver_device (ipmi_openipmi_ctx_t ctx, char **driver_device);
+int8_t ipmi_openipmi_ctx_get_flags (ipmi_openipmi_ctx_t ctx, unsigned int *flags);
 
-  int8_t ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, char *driver_device);
-  int8_t ipmi_openipmi_ctx_set_flags (ipmi_openipmi_ctx_t ctx, unsigned int flags);
+int8_t ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, char *driver_device);
+int8_t ipmi_openipmi_ctx_set_flags (ipmi_openipmi_ctx_t ctx, unsigned int flags);
 
-  int8_t ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx);
+int8_t ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx);
 
-  int8_t ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
-                uint8_t lun,
-                uint8_t net_fn,
-                fiid_obj_t obj_cmd_rq,
-                fiid_obj_t obj_cmd_rs);
+int8_t ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
+                          uint8_t lun,
+                          uint8_t net_fn,
+                          fiid_obj_t obj_cmd_rq,
+                          fiid_obj_t obj_cmd_rs);
 
-  int8_t ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
-                 uint8_t rs_addr,
-                 uint8_t lun,
-                 uint8_t net_fn,
-                 fiid_obj_t obj_cmd_rq,
-                 fiid_obj_t obj_cmd_rs);
+int8_t ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
+                               uint8_t rs_addr,
+                               uint8_t lun,
+                               uint8_t net_fn,
+                               fiid_obj_t obj_cmd_rq,
+                               fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

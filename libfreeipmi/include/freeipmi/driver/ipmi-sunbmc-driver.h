@@ -14,7 +14,6 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software Foundation,
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-
 */
 
 #ifndef _IPMI_SUNBMC_DRIVER_H
@@ -44,27 +43,27 @@ extern "C" {
 
 #define IPMI_SUNBMC_FLAGS_DEFAULT              0x00000000
 
-  typedef struct ipmi_sunbmc_ctx *ipmi_sunbmc_ctx_t;
+typedef struct ipmi_sunbmc_ctx *ipmi_sunbmc_ctx_t;
 
-  ipmi_sunbmc_ctx_t ipmi_sunbmc_ctx_create (void);
-  void ipmi_sunbmc_ctx_destroy (ipmi_sunbmc_ctx_t ctx);
-  int ipmi_sunbmc_ctx_errnum (ipmi_sunbmc_ctx_t ctx);
-  char *ipmi_sunbmc_ctx_strerror (int errnum);
-  char *ipmi_sunbmc_ctx_errormsg (ipmi_sunbmc_ctx_t ctx);
+ipmi_sunbmc_ctx_t ipmi_sunbmc_ctx_create (void);
+void ipmi_sunbmc_ctx_destroy (ipmi_sunbmc_ctx_t ctx);
+int ipmi_sunbmc_ctx_errnum (ipmi_sunbmc_ctx_t ctx);
+char *ipmi_sunbmc_ctx_strerror (int errnum);
+char *ipmi_sunbmc_ctx_errormsg (ipmi_sunbmc_ctx_t ctx);
 
-  int8_t ipmi_sunbmc_ctx_get_driver_device (ipmi_sunbmc_ctx_t ctx, char **driver_device);
-  int8_t ipmi_sunbmc_ctx_get_flags (ipmi_sunbmc_ctx_t ctx, unsigned int *flags);
+int8_t ipmi_sunbmc_ctx_get_driver_device (ipmi_sunbmc_ctx_t ctx, char **driver_device);
+int8_t ipmi_sunbmc_ctx_get_flags (ipmi_sunbmc_ctx_t ctx, unsigned int *flags);
 
-  int8_t ipmi_sunbmc_ctx_set_driver_device (ipmi_sunbmc_ctx_t ctx, char *driver_device);
-  int8_t ipmi_sunbmc_ctx_set_flags (ipmi_sunbmc_ctx_t ctx, unsigned int flags);
+int8_t ipmi_sunbmc_ctx_set_driver_device (ipmi_sunbmc_ctx_t ctx, char *driver_device);
+int8_t ipmi_sunbmc_ctx_set_flags (ipmi_sunbmc_ctx_t ctx, unsigned int flags);
 
-  int8_t ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx);
+int8_t ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx);
 
-  int8_t ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
-              uint8_t lun,
-              uint8_t net_fn,
-              fiid_obj_t obj_cmd_rq,
-              fiid_obj_t obj_cmd_rs);
+int8_t ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
+                        uint8_t lun,
+                        uint8_t net_fn,
+                        fiid_obj_t obj_cmd_rq,
+                        fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

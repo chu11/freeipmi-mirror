@@ -19,7 +19,6 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software Foundation,
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-
 */
 
 #ifndef IPMI_SSIF_DRIVER_H
@@ -53,42 +52,42 @@ extern "C" {
 #define IPMI_SSIF_FLAGS_DEFAULT       0x00000000
 #define IPMI_SSIF_FLAGS_NONBLOCKING   0x00000001
 
-  typedef struct ipmi_ssif_ctx *ipmi_ssif_ctx_t;
+typedef struct ipmi_ssif_ctx *ipmi_ssif_ctx_t;
 
-  /* Notes:
-   *
-   * IPMBAddress - slave address of the BMC on the SMBus (usually 0x42)
-   *
-   */
-  ipmi_ssif_ctx_t ipmi_ssif_ctx_create (void);
-  void ipmi_ssif_ctx_destroy (ipmi_ssif_ctx_t ctx);
-  int ipmi_ssif_ctx_errnum (ipmi_ssif_ctx_t ctx);
-  char *ipmi_ssif_ctx_strerror (int errnum);
-  char *ipmi_ssif_ctx_errormsg (ipmi_ssif_ctx_t ctx);
+/* Notes:
+ *
+ * IPMBAddress - slave address of the BMC on the SMBus (usually 0x42)
+ *
+ */
+ipmi_ssif_ctx_t ipmi_ssif_ctx_create (void);
+void ipmi_ssif_ctx_destroy (ipmi_ssif_ctx_t ctx);
+int ipmi_ssif_ctx_errnum (ipmi_ssif_ctx_t ctx);
+char *ipmi_ssif_ctx_strerror (int errnum);
+char *ipmi_ssif_ctx_errormsg (ipmi_ssif_ctx_t ctx);
 
-  int8_t ipmi_ssif_ctx_get_driver_device (ipmi_ssif_ctx_t ctx, char **driver_device);
-  int8_t ipmi_ssif_ctx_get_driver_address (ipmi_ssif_ctx_t ctx, uint8_t *driver_address);
-  int8_t ipmi_ssif_ctx_get_flags (ipmi_ssif_ctx_t ctx, unsigned int *flags);
+int8_t ipmi_ssif_ctx_get_driver_device (ipmi_ssif_ctx_t ctx, char **driver_device);
+int8_t ipmi_ssif_ctx_get_driver_address (ipmi_ssif_ctx_t ctx, uint8_t *driver_address);
+int8_t ipmi_ssif_ctx_get_flags (ipmi_ssif_ctx_t ctx, unsigned int *flags);
 
-  int8_t ipmi_ssif_ctx_set_driver_device (ipmi_ssif_ctx_t ctx, char *driver_device);
-  int8_t ipmi_ssif_ctx_set_driver_address (ipmi_ssif_ctx_t ctx, uint8_t driver_address);
-  int8_t ipmi_ssif_ctx_set_flags (ipmi_ssif_ctx_t ctx, unsigned int flags);
+int8_t ipmi_ssif_ctx_set_driver_device (ipmi_ssif_ctx_t ctx, char *driver_device);
+int8_t ipmi_ssif_ctx_set_driver_address (ipmi_ssif_ctx_t ctx, uint8_t driver_address);
+int8_t ipmi_ssif_ctx_set_flags (ipmi_ssif_ctx_t ctx, unsigned int flags);
 
-  int8_t ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx);
+int8_t ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx);
 
-  int32_t ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
-               uint8_t *buf,
-               unsigned int buf_len);
+int32_t ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
+                         uint8_t *buf,
+                         unsigned int buf_len);
 
-  int32_t ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
-              uint8_t* buf,
-              unsigned int buf_len);
+int32_t ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
+                        uint8_t* buf,
+                        unsigned int buf_len);
 
-  int8_t ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
-            uint8_t lun,
-            uint8_t net_fn,
-            fiid_obj_t obj_cmd_rq,
-            fiid_obj_t obj_cmd_rs);
+int8_t ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
+                      uint8_t lun,
+                      uint8_t net_fn,
+                      fiid_obj_t obj_cmd_rq,
+                      fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }
