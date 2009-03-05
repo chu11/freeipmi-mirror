@@ -20,4 +20,5 @@ libtoolcommon_la_SOURCES = \
 	tool-common.c \
 	tool-config-file-common.c \
 	tool-cmdline-common.c \
+	tool-fiid-util.c \
 	tool-sdr-cache-common.c

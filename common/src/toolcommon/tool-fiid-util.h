@@ -21,6 +21,8 @@
 
 #include <freeipmi/freeipmi.h>
 
+#include "pstdout.h"
+
 #define TOOL_FIID_OBJ_GET(__obj, __field, __val)                        \
   do {                                                                  \
     uint64_t __localval = 0, *__localval_ptr;                           \
@@ -47,3 +49,8 @@
   } while (0)
 
 #endif
+
+int tool_fiid_obj_get (pstdout_state_t pstate,
+                       fiid_obj_t obj,
+                       char *field,
+                       uint64_t *val);
