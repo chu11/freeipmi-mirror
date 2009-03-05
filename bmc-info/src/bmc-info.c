@@ -124,12 +124,12 @@ static int
 display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 {
   uint64_t bc_maj, bc_min, pia_maj, pia_min;
-  fiid_obj_t intel_rs = NULL;
+  fiid_obj_t obj_intel_rs = NULL;
   int rv = -1;
 
   assert (state_data);
 
-  if (!(intel_rs = fiid_obj_copy (device_id_rs, tmpl_cmd_get_device_id_sr870bn4_rs)))
+  if (!(obj_intel_rs = fiid_obj_copy (device_id_rs, tmpl_cmd_get_device_id_sr870bn4_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -138,18 +138,50 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (intel_rs,
-                     "auxiliary_firmware_revision_info.boot_code.major",
-                     &bc_maj);
-  TOOL_FIID_OBJ_GET (intel_rs,
-                     "auxiliary_firmware_revision_info.boot_code.minor",
-                     &bc_min);
-  TOOL_FIID_OBJ_GET (intel_rs,
-                     "auxiliary_firmware_revision_info.pia.major",
-                     &pia_maj);
-  TOOL_FIID_OBJ_GET (intel_rs,
-                     "auxiliary_firmware_revision_info.pia.minor",
-                     &pia_min);
+  if (Fiid_obj_get (obj_intel_rs,
+                    "auxiliary_firmware_revision_info.boot_code.major",
+                    &bc_maj) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'auxiliary_firmware_revision_info.boot_code.major': %s\n",
+                       fiid_obj_errormsg (obj_intel_rs));
+      goto cleanup;
+    }
+
+  if (Fiid_obj_get (obj_intel_rs,
+                    "auxiliary_firmware_revision_info.boot_code.minor",
+                    &bc_min) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'auxiliary_firmware_revision_info.boot_code.minor': %s\n",
+                       fiid_obj_errormsg (obj_intel_rs));
+      goto cleanup;
+    }
+
+  if (Fiid_obj_get (obj_intel_rs,
+                    "auxiliary_firmware_revision_info.pia.major",
+                    &pia_maj) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'auxiliary_firmware_revision_info.pia.major': %s\n",
+                       fiid_obj_errormsg (obj_intel_rs));
+      goto cleanup;
+    }
+
+  if (Fiid_obj_get (obj_intel_rs,
+                    "auxiliary_firmware_revision_info.pia.minor",
+                    &pia_min) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'auxiliary_firmware_revision_info.pia.minor': %s\n",
+                       fiid_obj_errormsg (obj_intel_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Aux Firmware Revision Info: Boot Code v%02x.%2x, PIA v%02x.%2x\n",
                   (unsigned int) bc_maj,
@@ -159,7 +191,7 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 
   rv = 0;
  cleanup:
-  fiid_obj_destroy (intel_rs);
+  fiid_obj_destroy (obj_intel_rs);
   return (rv);
 }
 
@@ -190,23 +222,64 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "device_id", &val);
+  if (Fiid_obj_get (obj_cmd_rs, "device_id", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'device_id': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Device ID:         %X\n", (unsigned int) val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "device_revision.revision", &val);
+  if (Fiid_obj_get (obj_cmd_rs, "device_revision.revision", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'device_revision.revision': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Device Revision:   %d\n", (unsigned int) val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "device_revision.sdr_support", &val);
+  if (Fiid_obj_get (obj_cmd_rs, "device_revision.sdr_support", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'device_revision.sdr_support': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   if (val)
     pstdout_printf (state_data->pstate,
                     "                   [SDR Support]\n");
 
   {
     uint64_t maj, min;
-    TOOL_FIID_OBJ_GET (obj_cmd_rs, "firmware_revision1.major_revision", &maj);
-    TOOL_FIID_OBJ_GET (obj_cmd_rs, "firmware_revision2.minor_revision", &min);
+
+    if (Fiid_obj_get (obj_cmd_rs, "firmware_revision1.major_revision", &maj) < 0)
+      {
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "fiid_obj_get_data: 'firmware_revision1.major_revision': %s\n",
+                         fiid_obj_errormsg (obj_cmd_rs));
+        goto cleanup;
+      }
+
+    if (Fiid_obj_get (obj_cmd_rs, "firmware_revision2.minor_revision", &min) < 0)
+      {
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "fiid_obj_get_data: 'firmware_revision2.minor_revision': %s\n",
+                         fiid_obj_errormsg (obj_cmd_rs));
+        goto cleanup;
+      }
+
     /* achu: minor revision is BCD encoded and is > 4 bits, output w/ %x */
     pstdout_printf (state_data->pstate,
                     "Firmware Revision: %d.%x\n",
@@ -214,9 +287,17 @@ display_get_device_id (bmc_info_state_data_t *state_data)
                     (unsigned int) min);
   }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "firmware_revision1.device_available",
-                     &val);
+  if (Fiid_obj_get (obj_cmd_rs,
+                    "firmware_revision1.device_available",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'firmware_revision1.device_available': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   if (val == 0)
     pstdout_printf (state_data->pstate,
                     "                   [Device Available (normal operation)]\n");
@@ -230,8 +311,25 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 
   {
     uint64_t maj, min;
-    TOOL_FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_major", &maj);
-    TOOL_FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_minor", &min);
+
+    if (Fiid_obj_get (obj_cmd_rs, "ipmi_version_major", &maj) < 0)
+      {
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "fiid_obj_get_data: 'ipmi_version_major': %s\n",
+                         fiid_obj_errormsg (obj_cmd_rs));
+        goto cleanup;
+      }
+
+    if (Fiid_obj_get (obj_cmd_rs, "ipmi_version_minor", &min) < 0)
+      {
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "fiid_obj_get_data: 'ipmi_version_minor': %s\n",
+                         fiid_obj_errormsg (obj_cmd_rs));
+        goto cleanup;
+      }
+
     /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
     pstdout_printf (state_data->pstate,
                     "IPMI Version:      %d.%d\n",
@@ -242,43 +340,107 @@ display_get_device_id (bmc_info_state_data_t *state_data)
   pstdout_printf (state_data->pstate,
                   "Additional Device Support:\n");
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.sensor_device", &val);
-  if(val)
+  if (Fiid_obj_get (obj_cmd_rs, "additional_device_support.sensor_device", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'additional_device_support.sensor_device': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (val)
     pstdout_printf (state_data->pstate,
                     "                   [Sensor Device]\n");
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.sdr_repository_device", &val);
-  if(val)
+  if (Fiid_obj_get (obj_cmd_rs, "additional_device_support.sdr_repository_device", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'additional_device_support.sdr_repository_device': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (val)
     pstdout_printf (state_data->pstate,
                     "                   [SDR Repository Device]\n");
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.sel_device", &val);
-  if(val)
+  if (Fiid_obj_get (obj_cmd_rs, "additional_device_support.sel_device", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'additional_device_support.sel_device': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (val)
     pstdout_printf (state_data->pstate,
                     "                   [SEL Device]\n");
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.fru_inventory_device", &val);
-  if(val)
+  if (Fiid_obj_get (obj_cmd_rs, "additional_device_support.fru_inventory_device", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'additional_device_support.fru_inventory_device': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (val)
     pstdout_printf (state_data->pstate,
                     "                   [FRU Inventory Device]\n");
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.ipmb_event_receiver", &val);
-  if(val)
+  if (Fiid_obj_get (obj_cmd_rs, "additional_device_support.ipmb_event_receiver", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'additional_device_support.ipmb_event_receiver': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (val)
     pstdout_printf (state_data->pstate,
                     "                   [IPMB Event Receiver]\n");
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.ipmb_event_generator", &val);
-  if(val)
+  if (Fiid_obj_get (obj_cmd_rs, "additional_device_support.ipmb_event_generator", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'additional_device_support.ipmb_event_generator': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (val)
     pstdout_printf (state_data->pstate,
                     "                   [IPMB Event Generator]\n");
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.bridge", &val);
-  if(val)
+  if (Fiid_obj_get (obj_cmd_rs, "additional_device_support.bridge", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'additional_device_support.bridge': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (val)
     pstdout_printf (state_data->pstate,
                     "                   [Bridge]\n");
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.chassis_device", &val);
-  if(val)
+  if (Fiid_obj_get (obj_cmd_rs, "additional_device_support.chassis_device", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'additional_device_support.chassis_device': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (val)
     pstdout_printf (state_data->pstate,
                     "                   [Chassis Device]\n");
 
@@ -286,7 +448,14 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     uint64_t manufacturer_id, product_id;
     int8_t flag;
 
-    TOOL_FIID_OBJ_GET (obj_cmd_rs, "manufacturer_id.id", &manufacturer_id);
+    if (Fiid_obj_get (obj_cmd_rs, "manufacturer_id.id", &manufacturer_id) < 0)
+      {
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "fiid_obj_get_data: 'manufacturer_id.id': %s\n",
+                         fiid_obj_errormsg (obj_cmd_rs));
+        goto cleanup;
+      }
 
     if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
         && ipmi_iana_enterprise_numbers[manufacturer_id])
@@ -299,7 +468,14 @@ display_get_device_id (bmc_info_state_data_t *state_data)
                       "Manufacturer ID:   %Xh\n",
                       (unsigned int) manufacturer_id);
 
-    TOOL_FIID_OBJ_GET (obj_cmd_rs, "product_id", &product_id);
+    if (Fiid_obj_get (obj_cmd_rs, "product_id", &product_id) < 0)
+      {
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "fiid_obj_get_data: 'product_id': %s\n",
+                         fiid_obj_errormsg (obj_cmd_rs));
+        goto cleanup;
+      }
     pstdout_printf (state_data->pstate,
                     "Product ID:        %Xh\n",
                     (unsigned int) product_id);
@@ -323,8 +499,8 @@ display_get_device_id (bmc_info_state_data_t *state_data)
           case IPMI_MANUFACTURER_ID_INTEL:
             switch (product_id)
               {
-        /* I am assuming all Intel products will decode alike.
-           -- Anand Babu <ab@gnu.org.in>  */
+                /* I am assuming all Intel products will decode alike.
+                   -- Anand Babu <ab@gnu.org.in>  */
               case IPMI_PRODUCT_ID_SR870BN4:
               default:
                 if (display_intel (state_data, obj_cmd_rs) < 0)
@@ -374,19 +550,43 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
                                      obj_cmd_rs) < 0)
         continue;
 
-      TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                         "actual_channel_number",
-                         &val);
+      if (Fiid_obj_get (obj_cmd_rs
+                        "actual_channel_number",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: 'actual_channel_number': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
       channel_info_list[ci].channel_number = (uint8_t) val;
 
-      TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                         "channel_medium_type",
-                         &val);
+      if (Fiid_obj_get (obj_cmd_rs,
+                        "channel_medium_type",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: 'channel_medium_type': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
       channel_info_list[ci].medium_type = (uint8_t) val;
 
-      TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                         "channel_protocol_type",
-                         &val);
+      if (Fiid_obj_get (obj_cmd_rs,
+                        "channel_protocol_type",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: 'channel_protocol_type': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
       channel_info_list[ci].protocol_type = (uint8_t) val;
 
       ci++;
