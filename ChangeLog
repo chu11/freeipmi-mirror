@@ -1,6 +1,9 @@
 2009-03-04  Albert Chu <chu11@llnl.gov>
 
 	* Various code consistency style cleanup.
+
+	* common/src/toolcommon/tool-common.c (ipmi_open): Check for
+	IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED for nice output.
 	
 2009-03-03  Albert Chu <chu11@llnl.gov>
 

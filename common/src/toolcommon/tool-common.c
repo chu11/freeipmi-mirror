@@ -138,6 +138,7 @@ ipmi_open (const char *progname,
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_K_G_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
+                  || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
@@ -173,6 +174,7 @@ ipmi_open (const char *progname,
               if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
+                  || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID
