@@ -370,7 +370,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
     rv = 0;
   cleanup:
-    FIID_TEMPLATE_FREE (tmpl);
+    fiid_template_free (tmpl);
     if (rv < 0)
       return (rv);
   }
@@ -657,9 +657,9 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
   ctx->io.inband.rq_seq = ((ctx->io.inband.rq_seq) + 1) % (IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
   fiid_obj_destroy (obj_ipmb_msg_hdr_rs);
   fiid_obj_destroy (obj_ipmb_msg_trlr);
-  FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
+  fiid_template_free (ctx->tmpl_ipmb_cmd_rq);
   ctx->tmpl_ipmb_cmd_rq = NULL;
-  FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);
+  fiid_template_free (ctx->tmpl_ipmb_cmd_rs);
   ctx->tmpl_ipmb_cmd_rs = NULL;
   return (rv);
 }

@@ -187,7 +187,7 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 
     rv = 0;
   cleanup:
-    FIID_TEMPLATE_FREE (tmpl);
+    fiid_template_free (tmpl);
     if (rv < 0)
       return (rv);
   }

@@ -33,15 +33,6 @@
 
 #include "freeipmi/fiid/fiid.h"
 
-#define FIID_TEMPLATE_FREE(__tmpl)              \
-  do {                                          \
-    if ((__tmpl))                               \
-      {                                         \
-        fiid_template_free ((__tmpl));          \
-        (__tmpl) = NULL;                        \
-      }                                         \
-  } while (0)
-
 void set_errno_by_fiid_object (fiid_obj_t obj);
 
 void set_errno_by_fiid_iterator (fiid_iterator_t iter);

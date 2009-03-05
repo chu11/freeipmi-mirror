@@ -1040,7 +1040,7 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_TEMPLATE_FREE (tmpl);
+  fiid_template_free (tmpl);
   fiid_obj_destroy (obj_hdr);
   if (pkt)
     free (pkt);
