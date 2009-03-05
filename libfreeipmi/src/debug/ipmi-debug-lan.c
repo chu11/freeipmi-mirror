@@ -192,7 +192,7 @@ _ipmi_dump_lan_packet (int fd,
                     "authentication_type",
                     &authentication_type) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_session_hdr);
       goto cleanup;
     }
 

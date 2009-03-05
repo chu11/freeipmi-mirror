@@ -721,7 +721,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
                     "authentication_type",
                     &authentication_type) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_session_hdr);
       return (-1);
     }
 

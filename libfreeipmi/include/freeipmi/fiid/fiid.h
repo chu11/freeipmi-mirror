@@ -53,9 +53,10 @@ enum fiid_err
     FIID_ERR_DATA_NOT_BYTE_ALIGNED           = 18,
     FIID_ERR_REQUIRED_FIELD_MISSING          = 19,
     FIID_ERR_FIXED_LENGTH_FIELD_INVALID      = 20,
-    FIID_ERR_OUT_OF_MEMORY                   = 21,
-    FIID_ERR_INTERNAL_ERROR                  = 22,
-    FIID_ERR_ERRNUMRANGE                     = 23
+    FIID_ERR_DATA_NOT_AVAILABLE              = 21,
+    FIID_ERR_OUT_OF_MEMORY                   = 22,
+    FIID_ERR_INTERNAL_ERROR                  = 23,
+    FIID_ERR_ERRNUMRANGE                     = 24
   };
   
 typedef enum fiid_err fiid_err_t;
@@ -466,9 +467,20 @@ int8_t fiid_obj_set (fiid_obj_t obj, char *field, uint64_t val);
  *
  * Get data stored in the object for the specified field.  Returns 1
  * if data was available and returned, 0 if no data was available, -1
- * one error.
+ * on error.
  */
 int8_t fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
+
+/*
+ * Fiid_obj_get
+ *
+ * Get data stored in the object for the specified field.  Returns 1
+ * if data was available and returned, -1 on error.  Identical to
+ * fiid_obj_get() except a return of 0 is not possible.  If no data is
+ * available, -1 is returned and FIID_ERR_DATA_NOT_AVAILABLE is the
+ * error code set.
+ */
+int8_t Fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
 
 /*
  * fiid_obj_set_data
@@ -624,7 +636,7 @@ char *fiid_iterator_key (fiid_iterator_t iter);
  *
  * Get data stored in the object for the current field.  Returns 1
  * if data was available and returned, 0 if no data was available, -1
- * one error.
+ * on error.
  */
 int32_t fiid_iterator_get (fiid_iterator_t iter, uint64_t *val);
 

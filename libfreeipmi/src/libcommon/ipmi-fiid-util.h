@@ -43,7 +43,5 @@ int Fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl);
 
 int Fiid_obj_field_lookup (fiid_obj_t obj, char *field);
 
-int Fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
-
 #endif /* ipmi-fiid-util.h */
 

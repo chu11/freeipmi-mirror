@@ -127,25 +127,3 @@ Fiid_obj_field_lookup (fiid_obj_t obj, char *field)
     }
   return (1);                   /* return (1) like real call */
 }
-
-int
-Fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val)
-{
-  uint64_t lval;
-  int ret;
-
-  if ((ret = fiid_obj_get (obj, field, &lval)) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj);
-      return (-1);
-    }
-
-  if (!ret)
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  *val = lval;
-  return (1);                   /* return (1) like real call */
-}

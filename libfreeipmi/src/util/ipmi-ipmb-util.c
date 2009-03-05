@@ -72,7 +72,7 @@ ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq)
 
   if (Fiid_obj_get (obj_ipmb_msg_hdr, "rq_seq", &rq_seq_recv) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_hdr);
       return (-1);
     }
 
@@ -155,7 +155,7 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
 
   if (Fiid_obj_get (obj_ipmb_msg_hdr, "checksum1", &val) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_hdr);
       return (-1);
     }
 
@@ -189,7 +189,7 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
 
   if (Fiid_obj_get (obj_ipmb_msg_trlr, "checksum2", &val) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_trlr);
       return (-1);
     }
 

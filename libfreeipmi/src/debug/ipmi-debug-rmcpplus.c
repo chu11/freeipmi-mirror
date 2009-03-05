@@ -97,7 +97,7 @@ _dump_rmcpplus_session_hdr (int fd,
                     "payload_type",
                     payload_type) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       goto cleanup;
     }
 
@@ -142,7 +142,7 @@ _dump_rmcpplus_session_hdr (int fd,
                     "payload_type.authenticated",
                     payload_authenticated) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       goto cleanup;
     }
 
@@ -150,7 +150,7 @@ _dump_rmcpplus_session_hdr (int fd,
                     "payload_type.encrypted",
                     payload_encrypted) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       goto cleanup;
     }
 
@@ -158,7 +158,7 @@ _dump_rmcpplus_session_hdr (int fd,
                     "session_id",
                     session_id) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       goto cleanup;
     }
 
@@ -166,7 +166,7 @@ _dump_rmcpplus_session_hdr (int fd,
                     "ipmi_payload_len",
                     ipmi_payload_len) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       goto cleanup;
     }
 

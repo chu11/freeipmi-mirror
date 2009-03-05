@@ -112,7 +112,7 @@ ipmi_dump_sdr_record (int fd,
 
   if (Fiid_obj_get (obj_sdr_record_header, "record_type", &val) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_sdr_record_header);
       goto cleanup;
     }
   record_type = val;
@@ -232,7 +232,7 @@ ipmi_dump_sdr_record (int fd,
                         "event_reading_type_code",
                         &val) < 0)
         {
-          ERRNO_TRACE (errno);
+          FIID_OBJECT_ERROR_TO_ERRNO (obj_sdr_record);
           goto cleanup;
         }
       event_reading_type_code = val;
@@ -272,7 +272,7 @@ ipmi_dump_sdr_record (int fd,
                         "event_reading_type_code",
                         &val) < 0)
         {
-          ERRNO_TRACE (errno);
+          FIID_OBJECT_ERROR_TO_ERRNO (obj_sdr_record);
           goto cleanup;
         }
       event_reading_type_code = val;

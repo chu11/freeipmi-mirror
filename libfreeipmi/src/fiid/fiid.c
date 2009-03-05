@@ -92,6 +92,7 @@ static char * fiid_errmsg[] =
     "data not byte aligned",
     "required field missing",
     "fixed length field invalid",
+    "data not available",
     "out of memory",
     "internal error",
     "errnum out of range",
@@ -1715,6 +1716,27 @@ fiid_obj_get (fiid_obj_t obj,
     }
 
   obj->errnum = FIID_ERR_SUCCESS;
+  return (1);
+}
+
+int8_t
+Fiid_obj_get (fiid_obj_t obj,
+              char *field,
+              uint64_t *val)
+{
+  uint64_t lval;
+  int ret;
+
+  if ((ret = fiid_obj_get (obj, field, &lval)) < 0)
+    return (-1);
+
+  if (!ret)
+    {
+      obj->errnum = FIID_ERR_DATA_NOT_AVAILABLE;
+      return (-1);
+    }
+
+  *val = lval;
   return (1);
 }
 

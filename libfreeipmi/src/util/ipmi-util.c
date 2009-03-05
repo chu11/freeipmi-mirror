@@ -106,7 +106,7 @@ ipmi_check_cmd (fiid_obj_t obj_cmd, uint8_t cmd)
 
   if (Fiid_obj_get (obj_cmd, "cmd", &cmd_recv) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 
@@ -145,7 +145,7 @@ ipmi_check_completion_code (fiid_obj_t obj_cmd, uint8_t completion_code)
 
   if (Fiid_obj_get (obj_cmd, "comp_code", &completion_code_recv) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 

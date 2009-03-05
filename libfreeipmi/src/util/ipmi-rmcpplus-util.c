@@ -842,7 +842,7 @@ ipmi_rmcpplus_check_integrity_pad (fiid_obj_t obj_rmcpplus_session_trlr)
 
   if (Fiid_obj_get (obj_rmcpplus_session_trlr, "pad_length", &pad_length) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_trlr);
       return (-1);
     }
 
@@ -1371,7 +1371,7 @@ ipmi_rmcpplus_check_payload_type (fiid_obj_t obj_rmcpplus_session_hdr, uint8_t p
 
   if (Fiid_obj_get (obj_rmcpplus_session_hdr, "payload_type", &val) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 
@@ -1409,7 +1409,7 @@ ipmi_rmcpplus_check_status_code (fiid_obj_t obj_cmd,
 
   if (Fiid_obj_get (obj_cmd, "rmcpplus_status_code", &val) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 
@@ -1447,7 +1447,7 @@ ipmi_rmcpplus_check_message_tag (fiid_obj_t obj_cmd, uint8_t message_tag)
 
   if (Fiid_obj_get (obj_cmd, "message_tag", &val) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 
@@ -1483,7 +1483,7 @@ ipmi_rmcpplus_check_remote_console_session_id (fiid_obj_t obj_cmd, uint32_t remo
 
   if (Fiid_obj_get (obj_cmd, "remote_console_session_id", &val) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 
@@ -1523,7 +1523,7 @@ ipmi_rmcpplus_check_session_id (fiid_obj_t obj_rmcpplus_session_hdr,
 
   if (Fiid_obj_get (obj_rmcpplus_session_hdr, "session_id", &val) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 

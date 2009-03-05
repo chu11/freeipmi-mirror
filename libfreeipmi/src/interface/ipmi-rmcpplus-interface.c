@@ -1433,7 +1433,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                     "payload_type",
                     &payload_type) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 
@@ -1441,7 +1441,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                     "payload_type.authenticated",
                     &payload_authenticated) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 
@@ -1449,7 +1449,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                     "payload_type.encrypted",
                     &payload_encrypted) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 
@@ -1457,7 +1457,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                     "session_id",
                     &session_id) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 
@@ -1465,7 +1465,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                     "session_sequence_number",
                     &session_sequence_number) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 
@@ -2416,7 +2416,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                     "payload_type",
                     &payload_type) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 
@@ -2475,7 +2475,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                     "payload_type.authenticated",
                     &payload_authenticated) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 
@@ -2483,7 +2483,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                     "payload_type.encrypted",
                     &payload_encrypted) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 
@@ -2491,7 +2491,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                     "session_id",
                     &session_id) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 
@@ -2499,7 +2499,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                     "session_sequence_number",
                     &session_sequence_number) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 
@@ -2507,7 +2507,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                     "ipmi_payload_len",
                     &ipmi_payload_len) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
 
@@ -2696,7 +2696,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                         "pad_length",
                         &pad_length) < 0)
         {
-          ERRNO_TRACE (errno);
+          FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_trlr);
           return (-1);
         }
 
