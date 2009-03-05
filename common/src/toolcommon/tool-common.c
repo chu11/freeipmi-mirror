@@ -195,7 +195,6 @@ ipmi_open (const char *progname,
     }
   else
     {
-#if 0
       if (!ipmi_is_root ())
         {
           snprintf (errmsg,
@@ -205,7 +204,6 @@ ipmi_open (const char *progname,
                     ipmi_ctx_strerror (IPMI_ERR_PERMISSION));
           goto cleanup;
         }
-#endif
 
       if (cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
         {
