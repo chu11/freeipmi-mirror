@@ -259,7 +259,7 @@ ipmi_dump_sdr_record (int fd,
 
       if (obj_temp)
         {
-          FIID_OBJ_DESTROY (obj_sdr_record);
+          fiid_obj_destroy (obj_sdr_record);
           obj_sdr_record = obj_temp;
         }
     }
@@ -303,7 +303,7 @@ ipmi_dump_sdr_record (int fd,
 
       if (obj_temp)
         {
-          FIID_OBJ_DESTROY (obj_sdr_record);
+          fiid_obj_destroy (obj_sdr_record);
           obj_sdr_record = obj_temp;
         }
     }
@@ -326,8 +326,8 @@ ipmi_dump_sdr_record (int fd,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record_header);
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record_header);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 

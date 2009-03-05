@@ -327,12 +327,12 @@ _ipmi_dump_kcs_packet (int fd,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_kcs_hdr);
-  FIID_OBJ_DESTROY (obj_cmd);
-  FIID_OBJ_DESTROY (obj_ipmb_msg_hdr);
-  FIID_OBJ_DESTROY (obj_ipmb_cmd);
-  FIID_OBJ_DESTROY (obj_ipmb_msg_trlr);
-  FIID_OBJ_DESTROY (obj_unexpected_data);
+  fiid_obj_destroy (obj_kcs_hdr);
+  fiid_obj_destroy (obj_cmd);
+  fiid_obj_destroy (obj_ipmb_msg_hdr);
+  fiid_obj_destroy (obj_ipmb_cmd);
+  fiid_obj_destroy (obj_ipmb_msg_trlr);
+  fiid_obj_destroy (obj_unexpected_data);
   return (rv);
 }
 

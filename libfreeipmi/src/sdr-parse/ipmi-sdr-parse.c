@@ -247,7 +247,7 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record_header);
+  fiid_obj_destroy (obj_sdr_record_header);
   return (rv);
 }
 
@@ -402,7 +402,7 @@ _sdr_record_get_common (ipmi_sdr_parse_ctx_t ctx,
   return (obj_sdr_record);
 
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (NULL);
 }
 
@@ -469,7 +469,7 @@ ipmi_sdr_parse_sensor_owner_id (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -536,7 +536,7 @@ ipmi_sdr_parse_sensor_owner_lun (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -589,7 +589,7 @@ ipmi_sdr_parse_sensor_number (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -668,7 +668,7 @@ ipmi_sdr_parse_entity_id_instance_type (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -721,7 +721,7 @@ ipmi_sdr_parse_sensor_type (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -774,7 +774,7 @@ ipmi_sdr_parse_event_reading_type_code (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -827,7 +827,7 @@ ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
   rv = len;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -930,7 +930,7 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -1034,7 +1034,7 @@ ipmi_sdr_parse_sensor_capabilities (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -1325,8 +1325,8 @@ ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
-  FIID_OBJ_DESTROY (obj_sdr_record_discrete);
+  fiid_obj_destroy (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record_discrete);
   return (rv);
 }
 
@@ -1617,8 +1617,8 @@ ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
-  FIID_OBJ_DESTROY (obj_sdr_record_discrete);
+  fiid_obj_destroy (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record_discrete);
   return (rv);
 }
 
@@ -1862,8 +1862,8 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
-  FIID_OBJ_DESTROY (obj_sdr_record_threshold);
+  fiid_obj_destroy (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record_threshold);
   return (rv);
 }
 
@@ -2107,8 +2107,8 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
-  FIID_OBJ_DESTROY (obj_sdr_record_threshold);
+  fiid_obj_destroy (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record_threshold);
   return (rv);
 }
 
@@ -2268,8 +2268,8 @@ ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
-  FIID_OBJ_DESTROY (obj_sdr_record_threshold);
+  fiid_obj_destroy (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record_threshold);
   return (rv);
 }
 
@@ -2429,8 +2429,8 @@ ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
-  FIID_OBJ_DESTROY (obj_sdr_record_threshold);
+  fiid_obj_destroy (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record_threshold);
   return (rv);
 }
 
@@ -2577,7 +2577,7 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -2831,7 +2831,7 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   if (rv < 0)
     {
       if (tmp_nominal_reading)
@@ -3078,7 +3078,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   if (rv < 0)
     {
       if (tmp_lower_non_critical_threshold)
@@ -3239,8 +3239,8 @@ ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
-  FIID_OBJ_DESTROY (obj_sdr_record_threshold);
+  fiid_obj_destroy (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record_threshold);
   return (rv);
 }
 
@@ -3304,7 +3304,7 @@ ipmi_sdr_parse_hysteresis (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -3370,7 +3370,7 @@ ipmi_sdr_parse_container_entity (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -3423,7 +3423,7 @@ ipmi_sdr_parse_device_id_string (ipmi_sdr_parse_ctx_t ctx,
   rv = len;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -3488,7 +3488,7 @@ ipmi_sdr_parse_device_type (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -3553,7 +3553,7 @@ ipmi_sdr_parse_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -3678,7 +3678,7 @@ ipmi_sdr_parse_general_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -3794,7 +3794,7 @@ ipmi_sdr_parse_fru_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -3858,7 +3858,7 @@ ipmi_sdr_parse_fru_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -3922,7 +3922,7 @@ ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_parse_c
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -3974,7 +3974,7 @@ ipmi_sdr_parse_manufacturer_id (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -4025,7 +4025,7 @@ ipmi_sdr_parse_product_id (ipmi_sdr_parse_ctx_t ctx,
   rv = 0;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }
 
@@ -4076,6 +4076,6 @@ ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
   rv = len;
   ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_sdr_record);
+  fiid_obj_destroy (obj_sdr_record);
   return (rv);
 }

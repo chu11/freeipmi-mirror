@@ -375,9 +375,9 @@ ipmi_obj_dump_ipmb (int fd,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd);
-  FIID_OBJ_DESTROY (obj_ipmb_msg_hdr);
-  FIID_OBJ_DESTROY (obj_ipmb_cmd);
-  FIID_OBJ_DESTROY (obj_ipmb_msg_trlr);
+  fiid_obj_destroy (obj_cmd);
+  fiid_obj_destroy (obj_ipmb_msg_hdr);
+  fiid_obj_destroy (obj_ipmb_cmd);
+  fiid_obj_destroy (obj_ipmb_msg_trlr);
   return (rv);
 }

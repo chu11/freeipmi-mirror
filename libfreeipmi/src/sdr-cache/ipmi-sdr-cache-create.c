@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.25 2009-03-04 18:07:37 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.26 2009-03-05 00:39:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -231,7 +231,7 @@ _sdr_cache_reservation_id (ipmi_sdr_cache_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -445,8 +445,8 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
 
   rv = offset_into_record;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rs);
-  FIID_OBJ_DESTROY (obj_sdr_record_header);
+  fiid_obj_destroy (obj_cmd_rs);
+  fiid_obj_destroy (obj_sdr_record_header);
   return (rv);
 }
 
