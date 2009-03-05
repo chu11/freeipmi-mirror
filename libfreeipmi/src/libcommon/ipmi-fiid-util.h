@@ -42,15 +42,6 @@
       }                                         \
   } while (0)
 
-#define FIID_OBJ_DESTROY(__obj)                 \
-  do {                                          \
-    if ((__obj))                                \
-      {                                         \
-        fiid_obj_destroy ((__obj));             \
-        (__obj) = NULL;                         \
-      }                                         \
-  } while (0)
-
 void set_errno_by_fiid_object (fiid_obj_t obj);
 
 void set_errno_by_fiid_iterator (fiid_iterator_t iter);

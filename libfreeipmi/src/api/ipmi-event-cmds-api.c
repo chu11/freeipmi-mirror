@@ -96,7 +96,7 @@ ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -157,7 +157,7 @@ ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -211,6 +211,6 @@ ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }

@@ -92,7 +92,7 @@ ipmi_cmd_get_pef_capabilities (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -149,7 +149,7 @@ ipmi_cmd_arm_pef_postpone_timer (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -215,7 +215,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -287,7 +287,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -344,7 +344,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -401,7 +401,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -522,7 +522,7 @@ ipmi_cmd_set_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -585,7 +585,7 @@ ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -659,7 +659,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -721,7 +721,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -787,7 +787,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -850,7 +850,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -913,7 +913,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -976,7 +976,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1039,7 +1039,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1102,7 +1102,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1165,7 +1165,7 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1228,7 +1228,7 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1291,7 +1291,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_c
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1354,7 +1354,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1417,7 +1417,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1480,7 +1480,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1543,7 +1543,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1604,7 +1604,7 @@ ipmi_cmd_set_last_processed_event_id (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1658,7 +1658,7 @@ ipmi_cmd_get_last_processed_event_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1724,7 +1724,7 @@ ipmi_cmd_alert_immediate (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1791,7 +1791,7 @@ ipmi_cmd_pet_acknowledge (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 

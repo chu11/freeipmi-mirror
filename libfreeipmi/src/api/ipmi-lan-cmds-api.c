@@ -172,7 +172,7 @@ ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -232,7 +232,7 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -292,7 +292,7 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -352,7 +352,7 @@ ipmi_cmd_set_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -412,7 +412,7 @@ ipmi_cmd_set_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -476,7 +476,7 @@ ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -536,7 +536,7 @@ ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -596,7 +596,7 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -656,7 +656,7 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -716,7 +716,7 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -776,7 +776,7 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -840,7 +840,7 @@ ipmi_cmd_set_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -912,7 +912,7 @@ ipmi_cmd_set_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -978,7 +978,7 @@ ipmi_cmd_set_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1043,7 +1043,7 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1103,7 +1103,7 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1225,7 +1225,7 @@ ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 
 
@@ -1293,7 +1293,7 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (ipmi_ctx_
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1359,7 +1359,7 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1425,7 +1425,7 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1491,7 +1491,7 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1557,7 +1557,7 @@ ipmi_cmd_get_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1623,7 +1623,7 @@ ipmi_cmd_get_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1689,7 +1689,7 @@ ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1755,7 +1755,7 @@ ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1821,7 +1821,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1887,7 +1887,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1953,7 +1953,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -2019,7 +2019,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -2085,7 +2085,7 @@ ipmi_cmd_get_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -2151,7 +2151,7 @@ ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (ipmi_ctx_t ctx
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -2218,7 +2218,7 @@ ipmi_cmd_get_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -2285,7 +2285,7 @@ ipmi_cmd_get_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -2351,7 +2351,7 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -2417,7 +2417,7 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -2483,7 +2483,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -2549,7 +2549,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entrie
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -2615,7 +2615,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -2679,7 +2679,7 @@ ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -2740,6 +2740,6 @@ ipmi_cmd_get_ip_udp_rmcp_statistics (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }

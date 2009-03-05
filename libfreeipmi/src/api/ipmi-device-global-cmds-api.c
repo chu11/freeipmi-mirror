@@ -90,7 +90,7 @@ ipmi_cmd_get_device_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -144,7 +144,7 @@ ipmi_cmd_cold_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -198,7 +198,7 @@ ipmi_cmd_warm_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -267,7 +267,7 @@ ipmi_cmd_set_acpi_power_state (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -321,7 +321,7 @@ ipmi_cmd_get_acpi_power_state (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -375,7 +375,7 @@ ipmi_cmd_get_self_test_results (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -432,7 +432,7 @@ ipmi_cmd_get_device_guid (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 

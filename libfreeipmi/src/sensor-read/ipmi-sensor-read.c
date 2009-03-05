@@ -603,7 +603,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
     rv = 0;
 
  cleanup:
-  FIID_OBJ_DESTROY (obj_get_sensor_reading_rs);
+  fiid_obj_destroy (obj_get_sensor_reading_rs);
   if (rv <= 0)
     {
       if (tmp_sensor_reading)

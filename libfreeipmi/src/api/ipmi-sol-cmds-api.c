@@ -100,7 +100,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -167,7 +167,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -229,7 +229,7 @@ ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -291,7 +291,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -352,7 +352,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -413,7 +413,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -473,7 +473,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -539,7 +539,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -605,7 +605,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -671,7 +671,7 @@ ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -737,7 +737,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -803,7 +803,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -869,7 +869,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -935,7 +935,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
 
@@ -1001,6 +1001,6 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }

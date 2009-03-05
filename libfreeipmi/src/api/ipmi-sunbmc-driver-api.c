@@ -161,7 +161,7 @@ ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
 
   rv = len;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
-  FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }

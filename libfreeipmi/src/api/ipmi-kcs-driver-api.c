@@ -455,9 +455,9 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_ipmb_msg_hdr_rq);
-  FIID_OBJ_DESTROY (obj_ipmb_msg_rq);
-  FIID_OBJ_DESTROY (obj_send_cmd_rs);
+  fiid_obj_destroy (obj_ipmb_msg_hdr_rq);
+  fiid_obj_destroy (obj_ipmb_msg_rq);
+  fiid_obj_destroy (obj_send_cmd_rs);
   return (rv);
 }
 
@@ -528,8 +528,8 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_ipmb_msg_rs);
-  FIID_OBJ_DESTROY (obj_get_cmd_rs);
+  fiid_obj_destroy (obj_ipmb_msg_rs);
+  fiid_obj_destroy (obj_get_cmd_rs);
   return (rv);
 }
 
@@ -655,8 +655,8 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
   rv = 0;
  cleanup:
   ctx->io.inband.rq_seq = ((ctx->io.inband.rq_seq) + 1) % (IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
-  FIID_OBJ_DESTROY (obj_ipmb_msg_hdr_rs);
-  FIID_OBJ_DESTROY (obj_ipmb_msg_trlr);
+  fiid_obj_destroy (obj_ipmb_msg_hdr_rs);
+  fiid_obj_destroy (obj_ipmb_msg_trlr);
   FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rq);
   ctx->tmpl_ipmb_cmd_rq = NULL;
   FIID_TEMPLATE_FREE (ctx->tmpl_ipmb_cmd_rs);

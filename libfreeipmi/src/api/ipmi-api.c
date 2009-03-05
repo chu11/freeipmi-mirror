@@ -195,19 +195,31 @@ _ipmi_outofband_free (ipmi_ctx_t ctx)
   assert (ctx);
   assert (ctx->magic == IPMI_CTX_MAGIC);
 
-  FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_rmcp_hdr);
-  FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_lan_session_hdr);
-  FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_rmcpplus_session_hdr);
-  FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_lan_msg_hdr);
-  FIID_OBJ_DESTROY (ctx->io.outofband.rq.obj_rmcpplus_session_trlr);
+  fiid_obj_destroy (ctx->io.outofband.rq.obj_rmcp_hdr);
+  ctx->io.outofband.rq.obj_rmcp_hdr = NULL;
+  fiid_obj_destroy (ctx->io.outofband.rq.obj_lan_session_hdr);
+  ctx->io.outofband.rq.obj_lan_session_hdr = NULL;
+  fiid_obj_destroy (ctx->io.outofband.rq.obj_rmcpplus_session_hdr);
+  ctx->io.outofband.rq.obj_rmcpplus_session_hdr = NULL;
+  fiid_obj_destroy (ctx->io.outofband.rq.obj_lan_msg_hdr);
+  ctx->io.outofband.rq.obj_lan_msg_hdr = NULL;
+  fiid_obj_destroy (ctx->io.outofband.rq.obj_rmcpplus_session_trlr);
+  ctx->io.outofband.rq.obj_rmcpplus_session_trlr = NULL;
 
-  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_rmcp_hdr);
-  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_lan_session_hdr);
-  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_rmcpplus_session_hdr);
-  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_lan_msg_hdr);
-  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_rmcpplus_payload);
-  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_lan_msg_trlr);
-  FIID_OBJ_DESTROY (ctx->io.outofband.rs.obj_rmcpplus_session_trlr);
+  fiid_obj_destroy (ctx->io.outofband.rs.obj_rmcp_hdr);
+  ctx->io.outofband.rs.obj_rmcp_hdr = NULL;
+  fiid_obj_destroy (ctx->io.outofband.rs.obj_lan_session_hdr);
+  ctx->io.outofband.rs.obj_lan_session_hdr = NULL;
+  fiid_obj_destroy (ctx->io.outofband.rs.obj_rmcpplus_session_hdr);
+  ctx->io.outofband.rs.obj_rmcpplus_session_hdr = NULL;
+  fiid_obj_destroy (ctx->io.outofband.rs.obj_lan_msg_hdr);
+  ctx->io.outofband.rs.obj_lan_msg_hdr = NULL;
+  fiid_obj_destroy (ctx->io.outofband.rs.obj_rmcpplus_payload);
+  ctx->io.outofband.rs.obj_rmcpplus_payload = NULL;
+  fiid_obj_destroy (ctx->io.outofband.rs.obj_lan_msg_trlr);
+  ctx->io.outofband.rs.obj_lan_msg_trlr = NULL;
+  fiid_obj_destroy (ctx->io.outofband.rs.obj_rmcpplus_session_trlr);
+  ctx->io.outofband.rs.obj_rmcpplus_session_trlr = NULL;
 }
 
 static void
@@ -226,8 +238,10 @@ _ipmi_inband_free (ipmi_ctx_t ctx)
   if (ctx->type == IPMI_DEVICE_SUNBMC && ctx->io.inband.sunbmc_ctx)
     ipmi_sunbmc_ctx_destroy (ctx->io.inband.sunbmc_ctx);
 
-  FIID_OBJ_DESTROY (ctx->io.inband.rq.obj_hdr);
-  FIID_OBJ_DESTROY (ctx->io.inband.rs.obj_hdr);
+  fiid_obj_destroy (ctx->io.inband.rq.obj_hdr);
+  ctx->io.inband.rq.obj_hdr = NULL;
+  fiid_obj_destroy (ctx->io.inband.rs.obj_hdr);
+  ctx->io.inband.rs.obj_hdr = NULL;
 }
 
 static int

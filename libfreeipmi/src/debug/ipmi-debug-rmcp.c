@@ -168,9 +168,9 @@ ipmi_dump_rmcp_packet (int fd,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY (obj_rmcp_hdr);
-  FIID_OBJ_DESTROY (obj_cmd);
-  FIID_OBJ_DESTROY (obj_unexpected_data);
+  fiid_obj_destroy (obj_rmcp_hdr);
+  fiid_obj_destroy (obj_cmd);
+  fiid_obj_destroy (obj_unexpected_data);
   return (rv);
 }
 

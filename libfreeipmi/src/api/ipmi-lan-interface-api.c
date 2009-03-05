@@ -213,8 +213,8 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
   rv = len;
 
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
-  FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -393,7 +393,7 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
   rv = len;
 
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rq);
-  FIID_OBJ_DESTROY (obj_cmd_rs);
+  fiid_obj_destroy (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
