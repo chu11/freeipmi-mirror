@@ -33,6 +33,7 @@
 #include <errno.h>
 
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"

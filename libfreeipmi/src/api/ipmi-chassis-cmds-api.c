@@ -29,6 +29,7 @@
 
 #include "freeipmi/api/ipmi-chassis-cmds-api.h"
 #include "freeipmi/cmds/ipmi-chassis-cmds.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"

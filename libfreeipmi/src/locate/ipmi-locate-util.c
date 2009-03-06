@@ -28,6 +28,7 @@
 #include <errno.h>
 
 #include "freeipmi/locate/ipmi-locate.h"
+#include "freeipmi/fiid/fiid.h"
 
 #include "ipmi-locate-defs.h"
 #include "ipmi-locate-trace.h"

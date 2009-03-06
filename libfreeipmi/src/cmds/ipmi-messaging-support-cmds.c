@@ -28,6 +28,7 @@
 #include <errno.h>
 
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"

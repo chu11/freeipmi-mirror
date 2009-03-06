@@ -25,6 +25,7 @@
 #include <errno.h>
 
 #include "freeipmi/cmds/ipmi-event-cmds.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 

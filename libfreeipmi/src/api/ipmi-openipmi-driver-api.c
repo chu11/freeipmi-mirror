@@ -29,6 +29,7 @@
 #include <errno.h>
 
 #include "freeipmi/driver/ipmi-openipmi-driver.h"
+#include "freeipmi/fiid/fiid.h"
 
 #include "ipmi-api-defs.h"
 #include "ipmi-api-trace.h"

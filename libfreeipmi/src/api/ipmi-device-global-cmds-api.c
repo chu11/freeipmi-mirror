@@ -29,6 +29,7 @@
 
 #include "freeipmi/api/ipmi-device-global-cmds-api.h"
 #include "freeipmi/cmds/ipmi-device-global-cmds.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 

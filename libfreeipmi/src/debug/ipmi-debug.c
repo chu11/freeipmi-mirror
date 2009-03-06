@@ -34,9 +34,9 @@
 #include <errno.h>
 
 #include "freeipmi/debug/ipmi-debug.h"
-
-#include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
+#include "freeipmi/fiid/fiid.h"
+#include "freeipmi/interface/ipmi-ipmb-interface.h"
 
 #include "libcommon/ipmi-bit-ops.h"
 #include "libcommon/ipmi-fiid-util.h"

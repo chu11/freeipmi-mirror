@@ -26,6 +26,7 @@
 #include <errno.h>
 
 #include "freeipmi/cmds/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 
 #include "libcommon/ipmi-fiid-util.h"

@@ -28,6 +28,7 @@
 #include <errno.h>
 
 #include "freeipmi/sdr-parse/ipmi-sdr-parse.h"
+#include "freeipmi/fiid/fiid.h"
 
 #include "ipmi-sdr-parse-defs.h"
 #include "ipmi-sdr-parse-trace.h"

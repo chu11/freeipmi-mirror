@@ -32,6 +32,7 @@
 #include <errno.h>
 
 #include "freeipmi/util/ipmi-ipmb-util.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/util/ipmi-util.h"
 

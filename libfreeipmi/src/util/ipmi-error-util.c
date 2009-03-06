@@ -29,6 +29,7 @@
 #include <errno.h>
 
 #include "freeipmi/util/ipmi-error-util.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"

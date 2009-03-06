@@ -40,8 +40,8 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/locate/ipmi-locate.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
 
 #include "ipmi-locate-defs.h"

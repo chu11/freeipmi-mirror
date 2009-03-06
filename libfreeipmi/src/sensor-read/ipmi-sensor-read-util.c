@@ -28,6 +28,7 @@
 #include <errno.h>
 
 #include "freeipmi/sensor-read/ipmi-sensor-read.h"
+#include "freeipmi/fiid/fiid.h"
 
 #include "ipmi-sensor-read-defs.h"
 #include "ipmi-sensor-read-trace.h"

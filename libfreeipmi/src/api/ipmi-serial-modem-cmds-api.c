@@ -29,6 +29,7 @@
 
 #include "freeipmi/api/ipmi-serial-modem-cmds-api.h"
 #include "freeipmi/cmds/ipmi-serial-modem-cmds.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"

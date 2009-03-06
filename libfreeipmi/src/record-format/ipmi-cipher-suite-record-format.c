@@ -24,6 +24,7 @@
 #include <stdlib.h>
 
 #include "freeipmi/record-format/ipmi-cipher-suite-record-format.h"
+#include "freeipmi/fiid/fiid.h"
 
 #include "freeipmi-portability.h"
 

@@ -28,6 +28,7 @@
 #include <errno.h>
 
 #include "freeipmi/sel-parse/ipmi-sel-parse.h"
+#include "freeipmi/fiid/fiid.h"
 
 #include "ipmi-sel-parse-defs.h"
 #include "ipmi-sel-parse-trace.h"

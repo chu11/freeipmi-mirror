@@ -25,6 +25,7 @@
 #include <errno.h>
 
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 
 #include "libcommon/ipmi-fiid-util.h"

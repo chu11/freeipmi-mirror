@@ -37,6 +37,7 @@
 #include <errno.h>
 
 #include "freeipmi/driver/ipmi-ssif-driver.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
 
 #include "ipmi-api-defs.h"

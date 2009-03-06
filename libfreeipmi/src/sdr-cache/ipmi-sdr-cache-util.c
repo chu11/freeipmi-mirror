@@ -28,6 +28,7 @@
 #include <errno.h>
 
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
+#include "freeipmi/fiid/fiid.h"
 
 #include "ipmi-sdr-cache-defs.h"
 #include "ipmi-sdr-cache-trace.h"

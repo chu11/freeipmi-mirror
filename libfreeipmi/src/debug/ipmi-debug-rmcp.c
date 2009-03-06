@@ -32,6 +32,7 @@
 #include <errno.h>
 
 #include "freeipmi/debug/ipmi-debug.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/rmcp-interface.h"
 
 #include "ipmi-debug-common.h"

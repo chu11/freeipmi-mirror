@@ -28,6 +28,7 @@
 #include <errno.h>
 
 #include "freeipmi/cmds/rmcp-cmds.h"
+#include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/rmcp-interface.h"
 
 #include "libcommon/ipmi-fiid-util.h"
