@@ -143,22 +143,57 @@ _get_user_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_ipmi_messaging", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "user_ipmi_messaging", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'user_ipmi_messaging': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ua->user_ipmi_messaging = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_link_authentication", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "user_link_authentication", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'user_link_authentication': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ua->user_link_authentication = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_restricted_to_callback", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "user_restricted_to_callback", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'user_restricted_to_callback': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ua->user_restricted_to_callback = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_privilege_level_limit", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "user_privilege_level_limit", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'user_privilege_level_limit': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ua->privilege_limit = val;
 
   /* XXX: no way to retrieve */
   ua->session_limit = 0;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_id_enable_status", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "user_id_enable_status", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'user_id_enable_status': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ua->user_id_enable_status = val;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -1306,7 +1341,14 @@ sol_payload_access_checkout (const char *section_name,
     }
 
   /* standard_payload_1 is the SOL payload type */
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "standard_payload_1", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "standard_payload_1", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'standard_payload_1': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,

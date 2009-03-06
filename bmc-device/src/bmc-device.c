@@ -141,9 +141,16 @@ get_self_test_results (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "self_test_result",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "self_test_result",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'self_test_result': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Self Test Result: ");
@@ -166,58 +173,121 @@ get_self_test_results (bmc_device_state_data_t *state_data)
 
   if (val == IPMI_SELF_TEST_RESULT_CORRUPTED_OR_INACCESSIBLE_DATA_OR_DEVICES)
     {
-      TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                         "controller_operation_firmware_corrupted",
-                         &val);
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "controller_operation_firmware_corrupted",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'controller_operation_firmware_corrupted': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
       if (val)
         pstdout_printf (state_data->pstate,
                         "                  [Controller operation firmware corrupted]\n");
 
-      TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                         "controller_update_boot_block_firmware_corrupted",
-                         &val);
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "controller_update_boot_block_firmware_corrupted",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'controller_update_boot_block_firmware_corrupted': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
       if (val)
         pstdout_printf (state_data->pstate,
                         "                  [Controller update 'boot block' firmware corrupted]\n");
 
-      TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                         "internal_use_area_of_bmc_fru_corrupted",
-                         &val);
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "internal_use_area_of_bmc_fru_corrupted",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'internal_use_area_of_bmc_fru_corrupted': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
       if (val)
         pstdout_printf (state_data->pstate,
                         "                  [Internal Use Area of BMC FRU corrupted]\n");
 
-      TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                         "sdr_repository_empty",
-                         &val);
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "sdr_repository_empty",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'sdr_repository_empty': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
       if (val)
         pstdout_printf (state_data->pstate,
                         "                  [SDR Repository empty]\n");
 
-      TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                         "ipmb_signal_lines_do_not_respond",
-                         &val);
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "ipmb_signal_lines_do_not_respond",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'ipmb_signal_lines_do_not_respond': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
       if (val)
         pstdout_printf (state_data->pstate,
                         "                  [IPMB signal lines do not respond]\n");
 
-      TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                         "cannot_access_bmc_fru_device",
-                         &val);
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "cannot_access_bmc_fru_device",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'cannot_access_bmc_fru_device': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
       if (val)
         pstdout_printf (state_data->pstate,
                         "                  [Cannot access BMC FRU device]\n");
 
-      TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                         "cannot_access_sdr_repository",
-                         &val);
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "cannot_access_sdr_repository",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'cannot_access_sdr_repository': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
       if (val)
         pstdout_printf (state_data->pstate,
                         "                  [Cannot access SDR Repository]\n");
 
-      TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                         "cannot_access_sel_device",
-                         &val);
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "cannot_access_sel_device",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'cannot_access_sel_device': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
       if (val)
         pstdout_printf (state_data->pstate,
                         "                  [Cannot access SEL device]\n");
@@ -261,9 +331,16 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "system_power_state_enumeration",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "system_power_state_enumeration",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'system_power_state_enumeration': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   switch (val)
     {
@@ -345,9 +422,17 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
   statestr = NULL;
   verbosestr = NULL;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "device_power_state_enumeration",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "device_power_state_enumeration",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'device_power_state_enumeration': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   switch (val)
     {
     case IPMI_ACPI_DEVICE_POWER_STATE_D0:
@@ -473,65 +558,137 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "ip_packets_received",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "ip_packets_received",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'ip_packets_received': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "IP Packets Received: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "received_ip_header_errors",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "received_ip_header_errors",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'received_ip_header_errors': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Received IP Header Errors: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "received_ip_address_errors",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "received_ip_address_errors",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'received_ip_address_errors': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Received IP Address Errors: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "fragmented_ip_packets_received",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "fragmented_ip_packets_received",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'fragmented_ip_packets_received': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Fragmented IP Packets Received: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "ip_packets_transmitted",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "ip_packets_transmitted",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'ip_packets_transmitted': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "IP Packets Transmitted: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "udp_packets_received",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "udp_packets_received",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'udp_packets_received': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "UDP Packets Received: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "valid_rmcp_packets_received",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "valid_rmcp_packets_received",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'valid_rmcp_packets_received': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Valid RMCP Packets Received: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "udp_proxy_packets_received",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "udp_proxy_packets_received",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'udp_proxy_packets_received': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "UDP Proxy Packets Received: %u\n",
                   (uint16_t)val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "udp_proxy_packets_dropped",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "udp_proxy_packets_dropped",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'udp_proxy_packets_dropped': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "UDP Proxy Packets Dropped: %u\n",
                   (uint16_t)val);
@@ -618,7 +775,14 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "time", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "time", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'time': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   t = val;
   localtime_r (&t, &tm);
@@ -721,7 +885,14 @@ get_sel_time (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "time", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "time", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'time': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   t = val;
   localtime_r (&t, &tm);
@@ -827,9 +998,16 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "log_type",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "log_type",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'log_type': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (val != IPMI_AUXILIARY_LOG_TYPE_MCA)
     {
@@ -849,9 +1027,16 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (mca_obj_cmd_rs,
-                     "timestamp",
-                     &val);
+  if (FIID_OBJ_GET (mca_obj_cmd_rs,
+                    "timestamp",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'timestamp': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   t = val;
   localtime_r (&t, &tm);
@@ -860,9 +1045,16 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
                   "Last Entry Added to MCA Log: %s\n",
                   str);
 
-  TOOL_FIID_OBJ_GET (mca_obj_cmd_rs,
-                     "mca_log_entry_count",
-                     &val);
+  if (FIID_OBJ_GET (mca_obj_cmd_rs,
+                    "mca_log_entry_count",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'mca_log_entry_count': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Number of entries in MCA log: %u\n",
@@ -903,7 +1095,14 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "ssif_version", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "ssif_version", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'ssif_version': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   /* achu: for some stupid reason 000b == "version 1" */
   if (val == IPMI_SSIF_SYSTEM_INTERFACE_VERSION_1)
@@ -913,7 +1112,14 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "SSIF Version:                     %X\n", (unsigned int) val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "pec_support", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "pec_support", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'pec_support': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "SSIF PEC Support:                 ");
@@ -930,7 +1136,14 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
       break;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "transaction_support", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "transaction_support", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'transaction_support': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "SSIF Transaction Support:         ");
@@ -950,13 +1163,27 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
       break;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "input_message_size", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "input_message_size", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'input_message_size': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "SSIF Maximum Input Message Size:  %u bytes\n",
                   val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "output_message_size", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "output_message_size", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'output_message_size': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "SSIF Maximum Output Message Size: %u bytes\n",
@@ -996,7 +1223,14 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "system_interface_version", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "system_interface_version", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'system_interface_version': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   /* achu: for some stupid reason 000b == "version 1" */
   if (val == IPMI_KCS_SYSTEM_INTERFACE_VERSION_1)
@@ -1006,7 +1240,14 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "KCS Version:                    %X\n", (unsigned int) val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "input_maximum_message_size", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "input_maximum_message_size", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'input_maximum_message_size': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "KCS Maximum Input Message Size: %u bytes\n",
@@ -1046,31 +1287,66 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "number_of_outstanding_requests_supported", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "number_of_outstanding_requests_supported", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'number_of_outstanding_requests_supported': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "BT Number of Outstanding Requests Supported: %u\n",
                   val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "input_buffer_size", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "input_buffer_size", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'input_buffer_size': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "BT Input Buffer Size:                        %u bytes\n",
                   val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "output_buffer_size", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "output_buffer_size", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'output_buffer_size': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "BT Output Buffer Size:                       %u bytes\n",
                   val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bmc_request_to_response_time", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "bmc_request_to_response_time", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'bmc_request_to_response_time': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "BT Request to Response Time:                 %u seconds\n",
                   val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "recommended_retries", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "recommended_retries", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'recommended_retries': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "BT Recommended Retries:                      %u\n",

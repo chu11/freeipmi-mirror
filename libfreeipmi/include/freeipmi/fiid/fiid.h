@@ -478,7 +478,8 @@ int8_t fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
  * if data was available and returned, -1 on error.  Identical to
  * fiid_obj_get() except a return of 0 is not possible.  If no data is
  * available, -1 is returned and FIID_ERR_DATA_NOT_AVAILABLE is the
- * error code set.
+ * error code set.  Useful when working with fiid objects when packets
+ * are supposed to have data set.
  */
 int8_t FIID_OBJ_GET (fiid_obj_t obj, char *field, uint64_t *val);
 

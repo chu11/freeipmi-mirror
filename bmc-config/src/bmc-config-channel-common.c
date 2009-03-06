@@ -183,22 +183,57 @@ _get_channel_access (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "ipmi_messaging_access_mode", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_messaging_access_mode", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'ipmi_messaging_access_mode': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ch->access_mode = val;
 
   /* yes/no is backwards here, see ipmi spec */
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_level_authentication", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "user_level_authentication", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'user_level_authentication': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ch->user_level_authentication = (val ? 0 : 1);
 
   /* yes/no is backwards here, see ipmi spec */
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "per_message_authentication", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "per_message_authentication", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'per_message_authentication': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ch->per_message_authentication = (val ? 0 : 1);
 
   /* yes/no is backwards here, see ipmi spec */
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "pef_alerting", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "pef_alerting", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'pef_alerting': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ch->pef_alerting = (val ? 0 : 1);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "channel_privilege_level_limit", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "channel_privilege_level_limit", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'channel_privilege_level_limit': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ch->channel_privilege_limit = val;
 
   rv = CONFIG_ERR_SUCCESS;

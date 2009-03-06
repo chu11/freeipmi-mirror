@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.116 2009-03-04 19:41:24 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.117 2009-03-06 01:19:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -76,13 +76,14 @@
 #define BMC_WATCHDOG_RETRY_WAIT_TIME         1
 #define BMC_WATCHDOG_RETRY_ATTEMPT           5
 
-#define _FIID_OBJ_GET(__obj, __field, __val, __func)                    \
+#define BMC_WATCHDOG_FIID_OBJ_GET(__obj, __field, __val, __func)        \
   do {                                                                  \
     uint64_t __temp;                                                    \
-    if (fiid_obj_get ((__obj), (__field), &__temp) < 0)                 \
+    if (FIID_OBJ_GET ((__obj), (__field), &__temp) < 0)                 \
       {                                                                 \
-        _bmclog ("%s: fiid_obj_get: %s",                                \
+        _bmclog ("%s: fiid_obj_get: '%s': %s",                          \
                  (__func),                                              \
+                 (__field),                                             \
                  fiid_obj_errormsg ((__obj)));                          \
         if (fiid_obj_errnum ((__obj)) == FIID_ERR_SUCCESS)              \
           errno = 0;                                                    \
@@ -807,7 +808,7 @@ _cmd (char *str,
         _bmclog ("%s: ipmi_obj_dump: %s", str, strerror (errno));
     }
 
-  _FIID_OBJ_GET (cmd_rs, "comp_code", &comp_code, str);
+  BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs, "comp_code", &comp_code, str);
 
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
     _bmclog ("%s: cmd error: %Xh", str, comp_code);
@@ -984,88 +985,88 @@ _get_watchdog_timer_cmd (int retry_wait_time,
     goto cleanup;
 
   if (timer_use)
-    _FIID_OBJ_GET (cmd_rs,
-                   "timer_use",
-                   timer_use,
-                   "_get_watchdog_timer_cmd");
+    BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                               "timer_use",
+                               timer_use,
+                               "_get_watchdog_timer_cmd");
 
   if (timer_state)
-    _FIID_OBJ_GET (cmd_rs,
-                   "timer_state",
-                   timer_state,
-                   "_get_watchdog_timer_cmd");
+    BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                               "timer_state",
+                               timer_state,
+                               "_get_watchdog_timer_cmd");
 
   if (log)
-    _FIID_OBJ_GET (cmd_rs,
-                   "log",
-                   log,
-                   "_get_watchdog_timer_cmd");
+    BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                               "log",
+                               log,
+                               "_get_watchdog_timer_cmd");
 
   if (timeout_action)
-    _FIID_OBJ_GET (cmd_rs,
-                   "timeout_action",
-                   timeout_action,
-                   "_get_watchdog_timer_cmd");
+    BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                               "timeout_action",
+                               timeout_action,
+                               "_get_watchdog_timer_cmd");
 
   if (pre_timeout_interrupt)
-    _FIID_OBJ_GET (cmd_rs,
-                   "pre_timeout_interrupt",
-                   pre_timeout_interrupt,
-                   "_get_watchdog_timer_cmd");
+    BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                               "pre_timeout_interrupt",
+                               pre_timeout_interrupt,
+                               "_get_watchdog_timer_cmd");
 
   if (pre_timeout_interval)
-    _FIID_OBJ_GET (cmd_rs,
-                   "pre_timeout_interval",
-                   pre_timeout_interval,
-                   "_get_watchdog_timer_cmd");
+    BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                               "pre_timeout_interval",
+                               pre_timeout_interval,
+                               "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_bios_frb2)
-    _FIID_OBJ_GET (cmd_rs,
-                   "timer_use_expiration_flag.bios_frb2",
-                   timer_use_expiration_flag_bios_frb2,
-                   "_get_watchdog_timer_cmd");
+    BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                               "timer_use_expiration_flag.bios_frb2",
+                               timer_use_expiration_flag_bios_frb2,
+                               "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_bios_post)
-    _FIID_OBJ_GET (cmd_rs,
-                   "timer_use_expiration_flag.bios_post",
-                   timer_use_expiration_flag_bios_post,
-                   "_get_watchdog_timer_cmd");
+    BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                               "timer_use_expiration_flag.bios_post",
+                               timer_use_expiration_flag_bios_post,
+                               "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_os_load)
-    _FIID_OBJ_GET (cmd_rs,
-                   "timer_use_expiration_flag.os_load",
-                   timer_use_expiration_flag_os_load,
-                   "_get_watchdog_timer_cmd");
+    BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                               "timer_use_expiration_flag.os_load",
+                               timer_use_expiration_flag_os_load,
+                               "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_sms_os)
-    _FIID_OBJ_GET (cmd_rs,
-                   "timer_use_expiration_flag.sms_os",
-                   timer_use_expiration_flag_sms_os,
-                   "_get_watchdog_timer_cmd");
+    BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                               "timer_use_expiration_flag.sms_os",
+                               timer_use_expiration_flag_sms_os,
+                               "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_oem)
-    _FIID_OBJ_GET (cmd_rs,
-                   "timer_use_expiration_flag.oem",
-                   timer_use_expiration_flag_oem,
-                   "_get_watchdog_timer_cmd");
+    BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                               "timer_use_expiration_flag.oem",
+                               timer_use_expiration_flag_oem,
+                               "_get_watchdog_timer_cmd");
 
   if (initial_countdown_seconds)
     {
       valptr = &val;
-      _FIID_OBJ_GET (cmd_rs,
-                     "initial_countdown_value",
-                     valptr,
-                     "_get_watchdog_timer_cmd");
+      BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                                 "initial_countdown_value",
+                                 valptr,
+                                 "_get_watchdog_timer_cmd");
       *initial_countdown_seconds = val / 10;
     }
 
   if (present_countdown_seconds)
     {
       valptr = &val;
-      _FIID_OBJ_GET (cmd_rs,
-                     "present_countdown_value",
-                     valptr,
-                     "_get_watchdog_timer_cmd");
+      BMC_WATCHDOG_FIID_OBJ_GET (cmd_rs,
+                                 "present_countdown_value",
+                                 valptr,
+                                 "_get_watchdog_timer_cmd");
       *present_countdown_seconds = val / 10;
     }
 
@@ -1116,14 +1117,14 @@ _get_channel_number (int retry_wait_time, int retry_attempt)
                     ret,
                     "Get Device Id Error");
 
-  _FIID_OBJ_GET (dev_id_cmd_rs,
-                 "manufacturer_id.id",
-                 &manufacturer_id,
-                 "_get_channel_number");
-  _FIID_OBJ_GET (dev_id_cmd_rs,
-                 "product_id",
-                 &product_id,
-                 "_get_channel_number");
+  BMC_WATCHDOG_FIID_OBJ_GET (dev_id_cmd_rs,
+                             "manufacturer_id.id",
+                             &manufacturer_id,
+                             "_get_channel_number");
+  BMC_WATCHDOG_FIID_OBJ_GET (dev_id_cmd_rs,
+                             "product_id",
+                             &product_id,
+                             "_get_channel_number");
 
   switch (manufacturer_id)
     {
@@ -1167,17 +1168,17 @@ _get_channel_number (int retry_wait_time, int retry_attempt)
                 channel_info_cmd_rs))
         continue;
 
-      _FIID_OBJ_GET (channel_info_cmd_rs,
-                     "channel_medium_type",
-                     &val,
-                     "_get_channel_number");
+      BMC_WATCHDOG_FIID_OBJ_GET (channel_info_cmd_rs,
+                                 "channel_medium_type",
+                                 &val,
+                                 "_get_channel_number");
 
       if ((uint8_t)val == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
         {
-          _FIID_OBJ_GET (channel_info_cmd_rs,
-                         "actual_channel_number",
-                         &val,
-                         "_get_channel_number");
+          BMC_WATCHDOG_FIID_OBJ_GET (channel_info_cmd_rs,
+                                     "actual_channel_number",
+                                     &val,
+                                     "_get_channel_number");
           rv = (int)val;
           goto cleanup;
         }

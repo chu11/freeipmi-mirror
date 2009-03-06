@@ -99,7 +99,14 @@ enable_sol_checkout (const char *section_name,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "sol_enable", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "sol_enable", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'sol_enable': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -204,13 +211,34 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "sol_privilege_level", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "sol_privilege_level", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'sol_privilege_level': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   sa->sol_privilege_level = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "force_sol_payload_authentication", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "force_sol_payload_authentication", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'force_sol_payload_authentication': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   sa->force_sol_payload_authentication = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "force_sol_payload_encryption", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "force_sol_payload_encryption", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'force_sol_payload_encryption': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   sa->force_sol_payload_encryption = val;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -425,10 +453,24 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "character_accumulate_interval", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "character_accumulate_interval", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'character_accumulate_interval': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   it->character_accumulate_interval = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "character_send_threshold", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "character_send_threshold", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'character_send_threshold': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   it->character_send_threshold = val;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -605,10 +647,24 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "retry_count", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "retry_count", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'retry_count': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   sr->retry_count = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "retry_interval", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "retry_interval", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'retry_interval': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   sr->retry_interval = val;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -782,7 +838,14 @@ non_volatile_bit_rate_checkout (const char *section_name,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bit_rate", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "bit_rate", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'bit_rate': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -886,7 +949,14 @@ volatile_bit_rate_checkout (const char *section_name,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bit_rate", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "bit_rate", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'bit_rate': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -990,7 +1060,14 @@ sol_payload_port_checkout (const char *section_name,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "port_number", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "port_number", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'port_number': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,

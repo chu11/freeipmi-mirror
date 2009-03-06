@@ -226,7 +226,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'device_id': %s\n",
+                       "fiid_obj_get: 'device_id': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -238,7 +238,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'device_revision.revision': %s\n",
+                       "fiid_obj_get: 'device_revision.revision': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -250,7 +250,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'device_revision.sdr_support': %s\n",
+                       "fiid_obj_get: 'device_revision.sdr_support': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -266,7 +266,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       {
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "fiid_obj_get_data: 'firmware_revision1.major_revision': %s\n",
+                         "fiid_obj_get: 'firmware_revision1.major_revision': %s\n",
                          fiid_obj_errormsg (obj_cmd_rs));
         goto cleanup;
       }
@@ -275,7 +275,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       {
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "fiid_obj_get_data: 'firmware_revision2.minor_revision': %s\n",
+                         "fiid_obj_get: 'firmware_revision2.minor_revision': %s\n",
                          fiid_obj_errormsg (obj_cmd_rs));
         goto cleanup;
       }
@@ -293,7 +293,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'firmware_revision1.device_available': %s\n",
+                       "fiid_obj_get: 'firmware_revision1.device_available': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -316,7 +316,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       {
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "fiid_obj_get_data: 'ipmi_version_major': %s\n",
+                         "fiid_obj_get: 'ipmi_version_major': %s\n",
                          fiid_obj_errormsg (obj_cmd_rs));
         goto cleanup;
       }
@@ -325,7 +325,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       {
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "fiid_obj_get_data: 'ipmi_version_minor': %s\n",
+                         "fiid_obj_get: 'ipmi_version_minor': %s\n",
                          fiid_obj_errormsg (obj_cmd_rs));
         goto cleanup;
       }
@@ -344,7 +344,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'additional_device_support.sensor_device': %s\n",
+                       "fiid_obj_get: 'additional_device_support.sensor_device': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -357,7 +357,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'additional_device_support.sdr_repository_device': %s\n",
+                       "fiid_obj_get: 'additional_device_support.sdr_repository_device': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -370,7 +370,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'additional_device_support.sel_device': %s\n",
+                       "fiid_obj_get: 'additional_device_support.sel_device': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -383,7 +383,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'additional_device_support.fru_inventory_device': %s\n",
+                       "fiid_obj_get: 'additional_device_support.fru_inventory_device': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -396,7 +396,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'additional_device_support.ipmb_event_receiver': %s\n",
+                       "fiid_obj_get: 'additional_device_support.ipmb_event_receiver': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -409,7 +409,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'additional_device_support.ipmb_event_generator': %s\n",
+                       "fiid_obj_get: 'additional_device_support.ipmb_event_generator': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -422,7 +422,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'additional_device_support.bridge': %s\n",
+                       "fiid_obj_get: 'additional_device_support.bridge': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -435,7 +435,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'additional_device_support.chassis_device': %s\n",
+                       "fiid_obj_get: 'additional_device_support.chassis_device': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -452,7 +452,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       {
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "fiid_obj_get_data: 'manufacturer_id.id': %s\n",
+                         "fiid_obj_get: 'manufacturer_id.id': %s\n",
                          fiid_obj_errormsg (obj_cmd_rs));
         goto cleanup;
       }
@@ -472,7 +472,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       {
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "fiid_obj_get_data: 'product_id': %s\n",
+                         "fiid_obj_get: 'product_id': %s\n",
                          fiid_obj_errormsg (obj_cmd_rs));
         goto cleanup;
       }
@@ -556,7 +556,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get_data: 'actual_channel_number': %s\n",
+                           "fiid_obj_get: 'actual_channel_number': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -569,7 +569,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get_data: 'channel_medium_type': %s\n",
+                           "fiid_obj_get: 'channel_medium_type': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -582,7 +582,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get_data: 'channel_protocol_type': %s\n",
+                           "fiid_obj_get: 'channel_protocol_type': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }

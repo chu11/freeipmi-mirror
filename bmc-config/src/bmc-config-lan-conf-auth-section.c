@@ -107,19 +107,54 @@ _get_authentication_type_support (bmc_config_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "none", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "none", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'none': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   state_data->authentication_type_none = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "md2", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "md2", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'md2': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   state_data->authentication_type_md2 = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "md5", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "md5", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'md5': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   state_data->authentication_type_md5 = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "straight_password", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "straight_password", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'straight_password': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   state_data->authentication_type_straight_password = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "oem_proprietary", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "oem_proprietary", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'oem_proprietary': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   state_data->authentication_type_oem_proprietary = val;
 
   state_data->authentication_type_initialized++;
@@ -174,79 +209,254 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "callback_level.none", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "callback_level.none", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'callback_level.none': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->callback_level_none = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "callback_level.md2", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "callback_level.md2", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'callback_level.md2': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->callback_level_md2 = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "callback_level.md5", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "callback_level.md5", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'callback_level.md5': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->callback_level_md5 = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "callback_level.straight_password", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "callback_level.straight_password", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'callback_level.straight_password': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->callback_level_straight_password = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "callback_level.oem_proprietary", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "callback_level.oem_proprietary", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'callback_level.oem_proprietary': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->callback_level_oem_proprietary = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_level.none", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "user_level.none", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'user_level.none': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->user_level_none = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_level.md2", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "user_level.md2", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'user_level.md2': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->user_level_md2 = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_level.md5", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "user_level.md5", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'user_level.md5': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->user_level_md5 = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_level.straight_password", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "user_level.straight_password", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'user_level.straight_password': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->user_level_straight_password = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_level.oem_proprietary", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "user_level.oem_proprietary", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'user_level.oem_proprietary': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->user_level_oem_proprietary = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "operator_level.none", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "operator_level.none", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'operator_level.none': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->operator_level_none = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "operator_level.md2", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "operator_level.md2", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'operator_level.md2': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->operator_level_md2 = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "operator_level.md5", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "operator_level.md5", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'operator_level.md5': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->operator_level_md5 = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "operator_level.straight_password", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "operator_level.straight_password", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'operator_level.straight_password': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->operator_level_straight_password = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "operator_level.oem_proprietary", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "operator_level.oem_proprietary", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'operator_level.oem_proprietary': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->operator_level_oem_proprietary = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "admin_level.none", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "admin_level.none", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'admin_level.none': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->admin_level_none = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "admin_level.md2", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "admin_level.md2", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'admin_level.md2': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->admin_level_md2 = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "admin_level.md5", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "admin_level.md5", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'admin_level.md5': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->admin_level_md5 = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "admin_level.straight_password", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "admin_level.straight_password", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'admin_level.straight_password': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->admin_level_straight_password = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "admin_level.oem_proprietary", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "admin_level.oem_proprietary", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'admin_level.oem_proprietary': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->admin_level_oem_proprietary = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "oem_level.none", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "oem_level.none", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'oem_level.none': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->oem_level_none = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "oem_level.md2", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "oem_level.md2", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'oem_level.md2': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->oem_level_md2 = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "oem_level.md5", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "oem_level.md5", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'oem_level.md5': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->oem_level_md5 = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "oem_level.straight_password", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "oem_level.straight_password", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'oem_level.straight_password': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->oem_level_straight_password = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "oem_level.oem_proprietary", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "oem_level.oem_proprietary", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'oem_level.oem_proprietary': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   al->oem_level_oem_proprietary = val;
 
   rv = CONFIG_ERR_SUCCESS;
