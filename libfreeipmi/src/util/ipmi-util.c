@@ -78,7 +78,6 @@ int8_t
 ipmi_check_cmd (fiid_obj_t obj_cmd, uint8_t cmd)
 {
   uint64_t cmd_recv;
-  int32_t len;
 
   if (!fiid_obj_valid (obj_cmd))
     {
@@ -86,21 +85,9 @@ ipmi_check_cmd (fiid_obj_t obj_cmd, uint8_t cmd)
       return (-1);
     }
 
-  if (Fiid_obj_field_lookup (obj_cmd, "cmd") < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_cmd, "cmd")) < 0)
+  if (FIID_OBJ_FIELD_LOOKUP (obj_cmd, "cmd") < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-      return (-1);
-    }
-
-  if (!len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -117,7 +104,6 @@ int8_t
 ipmi_check_completion_code (fiid_obj_t obj_cmd, uint8_t completion_code)
 {
   uint64_t completion_code_recv;
-  int32_t len;
 
   if (!fiid_obj_valid (obj_cmd))
     {
@@ -125,21 +111,9 @@ ipmi_check_completion_code (fiid_obj_t obj_cmd, uint8_t completion_code)
       return (-1);
     }
 
-  if (Fiid_obj_field_lookup (obj_cmd, "comp_code") < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_cmd, "comp_code")) < 0)
+  if (FIID_OBJ_FIELD_LOOKUP (obj_cmd, "comp_code") < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-      return (-1);
-    }
-
-  if (!len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 

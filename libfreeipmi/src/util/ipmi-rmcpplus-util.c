@@ -1343,7 +1343,6 @@ int8_t
 ipmi_rmcpplus_check_payload_type (fiid_obj_t obj_rmcpplus_session_hdr, uint8_t payload_type)
 {
   uint64_t val;
-  int32_t len;
 
   if (!IPMI_PAYLOAD_TYPE_VALID (payload_type)
       || !fiid_obj_valid (obj_rmcpplus_session_hdr))
@@ -1355,18 +1354,6 @@ ipmi_rmcpplus_check_payload_type (fiid_obj_t obj_rmcpplus_session_hdr, uint8_t p
   if (Fiid_obj_template_compare (obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr) < 0)
     {
       ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_rmcpplus_session_hdr, "payload_type")) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
-      return (-1);
-    }
-
-  if (!len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -1384,7 +1371,6 @@ ipmi_rmcpplus_check_status_code (fiid_obj_t obj_cmd,
                                  uint8_t status_code)
 {
   uint64_t val;
-  int32_t len;
 
   if (!fiid_obj_valid (obj_cmd)
       || !RMCPPLUS_STATUS_VALID (status_code)
@@ -1394,17 +1380,6 @@ ipmi_rmcpplus_check_status_code (fiid_obj_t obj_cmd,
           && Fiid_obj_template_compare (obj_cmd, tmpl_rmcpplus_rakp_message_4) < 0))
     {
       ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_cmd, "rmcpplus_status_code")) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-      return (-1);
-    }
-  if (!len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -1421,7 +1396,6 @@ int8_t
 ipmi_rmcpplus_check_message_tag (fiid_obj_t obj_cmd, uint8_t message_tag)
 {
   uint64_t val;
-  int32_t len;
 
   if (!fiid_obj_valid (obj_cmd)
       || (Fiid_obj_template_compare (obj_cmd, tmpl_rmcpplus_open_session_request) < 0
@@ -1432,17 +1406,6 @@ ipmi_rmcpplus_check_message_tag (fiid_obj_t obj_cmd, uint8_t message_tag)
           && Fiid_obj_template_compare (obj_cmd, tmpl_rmcpplus_rakp_message_4) < 0))
     {
       ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_cmd, "message_tag")) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-      return (-1);
-    }
-  if (!len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -1459,7 +1422,6 @@ int8_t
 ipmi_rmcpplus_check_remote_console_session_id (fiid_obj_t obj_cmd, uint32_t remote_console_session_id)
 {
   uint64_t val;
-  int32_t len;
 
   if (!fiid_obj_valid (obj_cmd)
       || (Fiid_obj_template_compare (obj_cmd, tmpl_rmcpplus_open_session_request) < 0
@@ -1468,17 +1430,6 @@ ipmi_rmcpplus_check_remote_console_session_id (fiid_obj_t obj_cmd, uint32_t remo
           && Fiid_obj_template_compare (obj_cmd, tmpl_rmcpplus_rakp_message_4) < 0))
     {
       ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_cmd, "remote_console_session_id")) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-      return (-1);
-    }
-  if (!len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -1496,7 +1447,6 @@ ipmi_rmcpplus_check_session_id (fiid_obj_t obj_rmcpplus_session_hdr,
                                 uint32_t session_id)
 {
   uint64_t val;
-  int32_t len;
 
   if (!fiid_obj_valid (obj_rmcpplus_session_hdr))
     {
@@ -1507,18 +1457,6 @@ ipmi_rmcpplus_check_session_id (fiid_obj_t obj_rmcpplus_session_hdr,
   if (Fiid_obj_template_compare (obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr) < 0)
     {
       ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_rmcpplus_session_hdr, "session_id")) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
-      return (-1);
-    }
-
-  if (!len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 

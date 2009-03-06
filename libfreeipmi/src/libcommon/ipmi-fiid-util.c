@@ -109,21 +109,3 @@ Fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl)
     }
   return (1);                   /* return (1) like real call */
 }
-
-int
-Fiid_obj_field_lookup (fiid_obj_t obj, char *field)
-{
-  int ret;
-
-  if ((ret = fiid_obj_field_lookup (obj, field)) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj);
-      return (-1);
-    }
-  if (!ret)
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-  return (1);                   /* return (1) like real call */
-}

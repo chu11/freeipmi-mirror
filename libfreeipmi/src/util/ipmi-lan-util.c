@@ -53,7 +53,6 @@ int8_t
 ipmi_lan_check_session_sequence_number (fiid_obj_t obj_lan_session_hdr, uint32_t session_sequence_number)
 {
   uint64_t session_sequence_number_recv;
-  int32_t len;
 
   if (!fiid_obj_valid (obj_lan_session_hdr))
     {
@@ -61,20 +60,9 @@ ipmi_lan_check_session_sequence_number (fiid_obj_t obj_lan_session_hdr, uint32_t
       return (-1);
     }
 
-  if (Fiid_obj_field_lookup (obj_lan_session_hdr, "session_sequence_number") < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_lan_session_hdr, "session_sequence_number")) < 0)
+  if (FIID_OBJ_FIELD_LOOKUP (obj_lan_session_hdr, "session_sequence_number") < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_session_hdr);
-      return (-1);
-    }
-  if (!len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -91,7 +79,6 @@ int8_t
 ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_id)
 {
   uint64_t session_id_recv;
-  int32_t len;
 
   if (fiid_obj_valid (obj_lan_session_hdr))
     {
@@ -99,20 +86,9 @@ ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_id)
       return (-1);
     }
 
-  if (Fiid_obj_field_lookup (obj_lan_session_hdr, "session_id") < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_lan_session_hdr, "session_id")) < 0)
+  if (FIID_OBJ_FIELD_LOOKUP (obj_lan_session_hdr, "session_id") < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_session_hdr);
-      return (-1);
-    }
-  if (!len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -530,7 +506,6 @@ int8_t
 ipmi_lan_check_net_fn (fiid_obj_t obj_lan_msg_hdr, uint8_t net_fn)
 {
   uint64_t net_fn_recv;
-  int32_t len;
 
   if (!fiid_obj_valid (obj_lan_msg_hdr)
       || !IPMI_NET_FN_VALID (net_fn))
@@ -539,20 +514,9 @@ ipmi_lan_check_net_fn (fiid_obj_t obj_lan_msg_hdr, uint8_t net_fn)
       return (-1);
     }
 
-  if (Fiid_obj_field_lookup (obj_lan_msg_hdr, "net_fn") < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_lan_msg_hdr, "net_fn")) < 0)
+  if (FIID_OBJ_FIELD_LOOKUP (obj_lan_msg_hdr, "net_fn") < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
-      return (-1);
-    }
-  if (!len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -569,7 +533,6 @@ int8_t
 ipmi_lan_check_rq_seq (fiid_obj_t obj_lan_msg_hdr, uint8_t rq_seq)
 {
   uint64_t rq_seq_recv;
-  int32_t len;
 
   if (!fiid_obj_valid (obj_lan_msg_hdr))
     {
@@ -577,20 +540,9 @@ ipmi_lan_check_rq_seq (fiid_obj_t obj_lan_msg_hdr, uint8_t rq_seq)
       return (-1);
     }
 
-  if (Fiid_obj_field_lookup (obj_lan_msg_hdr, "rq_seq") < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_lan_msg_hdr, "rq_seq")) < 0)
+  if (FIID_OBJ_FIELD_LOOKUP (obj_lan_msg_hdr, "rq_seq") < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
-      return (-1);
-    }
-  if (!len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -608,7 +560,7 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
                          fiid_obj_t obj_cmd,
                          fiid_obj_t obj_lan_msg_trlr)
 {
-  int32_t obj_lan_msg_hdr_len, obj_cmd_len, obj_len, len, req_len;
+  int32_t obj_lan_msg_hdr_len, obj_cmd_len, obj_len, len;
   uint8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;
   uint8_t *buf = NULL;
   uint32_t buflen;
@@ -630,38 +582,6 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
   if (Fiid_obj_template_compare (obj_lan_msg_trlr, tmpl_lan_msg_trlr) < 0)
     {
       ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_lan_msg_hdr, "checksum1")) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
-      return (-1);
-    }
-  if ((req_len = fiid_template_field_len (tmpl_lan_msg_hdr_rs, "checksum1")) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-  if (len != req_len)
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_lan_msg_trlr, "checksum2")) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_trlr);
-      return (-1);
-    }
-  if ((req_len = fiid_template_field_len (tmpl_lan_msg_trlr, "checksum2")) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-  if (len != req_len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 

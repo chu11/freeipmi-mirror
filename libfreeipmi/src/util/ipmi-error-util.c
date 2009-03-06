@@ -528,7 +528,6 @@ ipmi_completion_code_strerror_cmd_r (fiid_obj_t obj_cmd,
                                      size_t len)
 {
   uint64_t cmd, comp_code;
-  int32_t _len;
 
   /* The netfn need not be valid */
   if (!fiid_obj_valid (obj_cmd)
@@ -538,36 +537,15 @@ ipmi_completion_code_strerror_cmd_r (fiid_obj_t obj_cmd,
       return (-1);
     }
 
-  if (Fiid_obj_field_lookup (obj_cmd, "cmd") < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-  if (Fiid_obj_field_lookup (obj_cmd, "comp_code") < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((_len = fiid_obj_field_len (obj_cmd, "cmd")) < 0)
+  if (FIID_OBJ_FIELD_LOOKUP (obj_cmd, "cmd") < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
-  if (!_len)
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
 
-  if ((_len = fiid_obj_field_len (obj_cmd, "comp_code")) < 0)
+  if (FIID_OBJ_FIELD_LOOKUP (obj_cmd, "comp_code") < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-      return (-1);
-    }
-  if (!_len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 

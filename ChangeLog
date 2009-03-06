@@ -10,6 +10,10 @@
 	FIID_TEMPLATE_COMPARE, FIID_OBJ_TEMPLATE_COMPARE,
 	FIID_OBJ_FIELD_LOOKUP): New functions.
 
+	* Use new macros as needed.
+
+	* Remove pointless use of fiid_obj_field_len in certain functions.
+
 2009-03-05  Albert Chu <chu11@llnl.gov>
 	
 	* common/src/toolcommon/tool-fiid-util.h: Remove some macros.

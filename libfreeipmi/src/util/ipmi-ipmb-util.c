@@ -46,7 +46,6 @@ int8_t
 ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq)
 {
   uint64_t rq_seq_recv;
-  int32_t len;
 
   if (!fiid_obj_valid (obj_ipmb_msg_hdr))
     {
@@ -54,20 +53,9 @@ ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq)
       return (-1);
     }
 
-  if (Fiid_obj_field_lookup (obj_ipmb_msg_hdr, "rq_seq") < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_ipmb_msg_hdr, "rq_seq")) < 0)
+  if (FIID_OBJ_FIELD_LOOKUP (obj_ipmb_msg_hdr, "rq_seq") < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_hdr);
-      return (-1);
-    }
-  if (!len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -86,7 +74,7 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
                           fiid_obj_t obj_cmd,
                           fiid_obj_t obj_ipmb_msg_trlr)
 {
-  int32_t obj_ipmb_msg_hdr_len, obj_cmd_len, obj_len, len, req_len;
+  int32_t obj_ipmb_msg_hdr_len, obj_cmd_len, obj_len, len;
   uint8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;
   uint8_t *buf = NULL;
   uint32_t buflen;
@@ -108,38 +96,6 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
   if (Fiid_obj_template_compare (obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr) < 0)
     {
       ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_ipmb_msg_hdr, "checksum1")) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_hdr);
-      return (-1);
-    }
-  if ((req_len = fiid_template_field_len (tmpl_ipmb_msg_hdr_rs, "checksum1")) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-  if (len != req_len)
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_ipmb_msg_trlr, "checksum2")) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_trlr);
-      return (-1);
-    }
-  if ((req_len = fiid_template_field_len (tmpl_ipmb_msg_trlr, "checksum2")) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-  if (len != req_len)
-    {
-      SET_ERRNO (EINVAL);
       return (-1);
     }
 
