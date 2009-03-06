@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.40 2009-03-03 23:56:53 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.41 2009-03-06 22:51:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -741,7 +741,7 @@ typedef int (*Ipmi_Monitoring_Sensor_Readings_Callback)(ipmi_monitoring_ctx_t c,
  *
  * Returns 0 on success, -1 on error
  */
-int ipmi_monitoring_sensor_config_file (char *file, int *errnum);
+int ipmi_monitoring_sensor_config_file (const char *file, int *errnum);
 
 /*
  * ipmi_monitoring_sdr_cache_directory
@@ -753,7 +753,7 @@ int ipmi_monitoring_sensor_config_file (char *file, int *errnum);
  *
  * Returns 0 on success, -1 on error
  */
-int ipmi_monitoring_sdr_cache_directory (char *dir, int *errnum);
+int ipmi_monitoring_sdr_cache_directory (const char *dir, int *errnum);
 
 /*
  * ipmi_monitoring_sdr_cache_filenames
@@ -772,7 +772,7 @@ int ipmi_monitoring_sdr_cache_directory (char *dir, int *errnum);
  *
  * Returns 0 on success, -1 on error
  */
-int ipmi_monitoring_sdr_cache_filenames (char *format, int *errnum);
+int ipmi_monitoring_sdr_cache_filenames (const char *format, int *errnum);
 
 /*
  * ipmi_monitoring_init

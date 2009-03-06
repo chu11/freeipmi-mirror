@@ -300,7 +300,7 @@ ipmi_openipmi_ctx_get_flags (ipmi_openipmi_ctx_t ctx, unsigned int *flags)
 }
 
 int8_t
-ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, char *device)
+ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, const char *driver_device)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     {
@@ -308,7 +308,7 @@ ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, char *device)
       return (-1);
     }
 
-  if (!device)
+  if (!driver_device)
     {
       OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
       return (-1);
@@ -318,7 +318,7 @@ ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, char *device)
     free (ctx->driver_device);
   ctx->driver_device = NULL;
 
-  if (!(ctx->driver_device = strdup (device)))
+  if (!(ctx->driver_device = strdup (driver_device)))
     {
       OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_OUT_OF_MEMORY);
       return (-1);
@@ -352,7 +352,7 @@ int8_t
 ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx)
 {
   unsigned int addr = IPMI_SLAVE_ADDRESS_BMC;
-  char *device;
+  char *driver_device;
 
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     {
@@ -364,11 +364,11 @@ ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx)
     goto out;
 
   if (ctx->driver_device)
-    device = ctx->driver_device;
+    driver_device = ctx->driver_device;
   else
-    device = IPMI_OPENIPMI_DRIVER_DEVICE_DEFAULT;
+    driver_device = IPMI_OPENIPMI_DRIVER_DEVICE_DEFAULT;
 
-  if ((ctx->device_fd = open (device,
+  if ((ctx->device_fd = open (driver_device,
                               O_RDWR)) < 0)
     {
       OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);

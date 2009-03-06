@@ -54,7 +54,7 @@ char *ipmi_sunbmc_ctx_errormsg (ipmi_sunbmc_ctx_t ctx);
 int8_t ipmi_sunbmc_ctx_get_driver_device (ipmi_sunbmc_ctx_t ctx, char **driver_device);
 int8_t ipmi_sunbmc_ctx_get_flags (ipmi_sunbmc_ctx_t ctx, unsigned int *flags);
 
-int8_t ipmi_sunbmc_ctx_set_driver_device (ipmi_sunbmc_ctx_t ctx, char *driver_device);
+int8_t ipmi_sunbmc_ctx_set_driver_device (ipmi_sunbmc_ctx_t ctx, const char *driver_device);
 int8_t ipmi_sunbmc_ctx_set_flags (ipmi_sunbmc_ctx_t ctx, unsigned int flags);
 
 int8_t ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx);

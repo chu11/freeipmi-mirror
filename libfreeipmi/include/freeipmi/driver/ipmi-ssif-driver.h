@@ -69,7 +69,7 @@ int8_t ipmi_ssif_ctx_get_driver_device (ipmi_ssif_ctx_t ctx, char **driver_devic
 int8_t ipmi_ssif_ctx_get_driver_address (ipmi_ssif_ctx_t ctx, uint8_t *driver_address);
 int8_t ipmi_ssif_ctx_get_flags (ipmi_ssif_ctx_t ctx, unsigned int *flags);
 
-int8_t ipmi_ssif_ctx_set_driver_device (ipmi_ssif_ctx_t ctx, char *driver_device);
+int8_t ipmi_ssif_ctx_set_driver_device (ipmi_ssif_ctx_t ctx, const char *driver_device);
 int8_t ipmi_ssif_ctx_set_driver_address (ipmi_ssif_ctx_t ctx, uint8_t driver_address);
 int8_t ipmi_ssif_ctx_set_flags (ipmi_ssif_ctx_t ctx, unsigned int flags);
 

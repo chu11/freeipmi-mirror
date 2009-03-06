@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.50 2009-03-04 22:39:38 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.51 2009-03-06 22:51:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -238,7 +238,7 @@ ipmi_monitoring_init (unsigned int flags, int *errnum)
 }
 
 int
-ipmi_monitoring_sensor_config_file (char *file, int *errnum)
+ipmi_monitoring_sensor_config_file (const char *file, int *errnum)
 {
   struct stat buf;
 
@@ -270,7 +270,7 @@ ipmi_monitoring_sensor_config_file (char *file, int *errnum)
 }
 
 int
-ipmi_monitoring_sdr_cache_directory (char *dir, int *errnum)
+ipmi_monitoring_sdr_cache_directory (const char *dir, int *errnum)
 {
   struct stat buf;
 
@@ -302,7 +302,7 @@ ipmi_monitoring_sdr_cache_directory (char *dir, int *errnum)
 }
 
 int
-ipmi_monitoring_sdr_cache_filenames (char *format, int *errnum)
+ipmi_monitoring_sdr_cache_filenames (const char *format, int *errnum)
 {
   if (!format)
     {

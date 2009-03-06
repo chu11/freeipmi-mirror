@@ -20,7 +20,6 @@ libfreeipmi
     system I can test on?
 * document templates in .h files or something
   - split up and make '-template" .h files"
-const char *
 
 units
 -----

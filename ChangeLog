@@ -14,6 +14,9 @@
 
 	* Remove pointless use of fiid_obj_field_len in certain functions.
 
+	* Make parameters const char * instead of char * when appropriate
+	for API functions.
+
 2009-03-05  Albert Chu <chu11@llnl.gov>
 	
 	* common/src/toolcommon/tool-fiid-util.h: Remove some macros.

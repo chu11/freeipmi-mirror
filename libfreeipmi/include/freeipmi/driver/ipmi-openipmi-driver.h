@@ -54,7 +54,7 @@ char *ipmi_openipmi_ctx_errormsg (ipmi_openipmi_ctx_t ctx);
 int8_t ipmi_openipmi_ctx_get_driver_device (ipmi_openipmi_ctx_t ctx, char **driver_device);
 int8_t ipmi_openipmi_ctx_get_flags (ipmi_openipmi_ctx_t ctx, unsigned int *flags);
 
-int8_t ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, char *driver_device);
+int8_t ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, const char *driver_device);
 int8_t ipmi_openipmi_ctx_set_flags (ipmi_openipmi_ctx_t ctx, unsigned int flags);
 
 int8_t ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx);

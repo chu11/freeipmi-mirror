@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.44 2009-03-04 22:39:37 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.45 2009-03-06 22:51:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -138,7 +138,7 @@ ipmiconsole_ctx_list_cleanup (ipmiconsole_ctx_t c)
 
 int
 ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
-                              char *hostname,
+                              const char *hostname,
                               struct ipmiconsole_ipmi_config *ipmi_config,
                               struct ipmiconsole_protocol_config *protocol_config,
                               struct ipmiconsole_engine_config *engine_config)

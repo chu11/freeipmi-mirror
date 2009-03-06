@@ -250,7 +250,7 @@ ipmi_sunbmc_ctx_get_flags (ipmi_sunbmc_ctx_t ctx, unsigned int *flags)
 }
 
 int8_t
-ipmi_sunbmc_ctx_set_driver_device (ipmi_sunbmc_ctx_t ctx, char *device)
+ipmi_sunbmc_ctx_set_driver_device (ipmi_sunbmc_ctx_t ctx, const char *driver_device)
 {
   if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
     {
@@ -258,7 +258,7 @@ ipmi_sunbmc_ctx_set_driver_device (ipmi_sunbmc_ctx_t ctx, char *device)
       return (-1);
     }
 
-  if (!device)
+  if (!driver_device)
     {
       SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_PARAMETERS);
       return (-1);
@@ -268,7 +268,7 @@ ipmi_sunbmc_ctx_set_driver_device (ipmi_sunbmc_ctx_t ctx, char *device)
     free (ctx->driver_device);
   ctx->driver_device = NULL;
 
-  if (!(ctx->driver_device = strdup (device)))
+  if (!(ctx->driver_device = strdup (driver_device)))
     {
       SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_OUT_OF_MEMORY);
       return (-1);
@@ -305,7 +305,7 @@ ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx)
   struct strioctl istr;
   uint8_t method;
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H) && defined(IOCTL_IPMI_INTERFACE_METHOD)) */
-  char *device;
+  char *driver_device;
 
   if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
     {
@@ -317,11 +317,11 @@ ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx)
     goto out;
 
   if (ctx->driver_device)
-    device = ctx->driver_device;
+    driver_device = ctx->driver_device;
   else
-    device = IPMI_SUNBMC_DRIVER_DEVICE_DEFAULT;
+    driver_device = IPMI_SUNBMC_DRIVER_DEVICE_DEFAULT;
 
-  if ((ctx->device_fd = open (device,
+  if ((ctx->device_fd = open (driver_device,
                               O_RDWR)) < 0)
     {
       SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);

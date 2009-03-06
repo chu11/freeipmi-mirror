@@ -165,7 +165,7 @@ typedef struct fiid_iterator *fiid_iterator_t;
  * error.
  */
 int8_t fiid_template_field_lookup (fiid_template_t tmpl,
-                                   char *field);
+                                   const char *field);
 
 /*
  * FIID_TEMPLATE_FIELD_LOOKUP
@@ -176,7 +176,7 @@ int8_t fiid_template_field_lookup (fiid_template_t tmpl,
  * errno EINVAL is the error code set.
  */
 int8_t FIID_TEMPLATE_FIELD_LOOKUP (fiid_template_t tmpl,
-                                   char *field);
+                                   const char *field);
 
 /*
  * fiid_template_len
@@ -202,7 +202,7 @@ int32_t fiid_template_len_bytes (fiid_template_t tmpl);
  * this template, -1 on error.
  */
 int32_t fiid_template_field_start (fiid_template_t tmpl,
-                                   char *field);
+                                   const char *field);
 
 /*
  * fiid_template_field_start_bytes
@@ -212,7 +212,7 @@ int32_t fiid_template_field_start (fiid_template_t tmpl,
  * offset is not a multiple of 8.
  */
 int32_t fiid_template_field_start_bytes (fiid_template_t tmpl,
-                                         char *field);
+                                         const char *field);
 
 /*
  * fiid_template_field_end
@@ -221,7 +221,7 @@ int32_t fiid_template_field_start_bytes (fiid_template_t tmpl,
  * template, -1 on error.
  */
 int32_t fiid_template_field_end (fiid_template_t tmpl,
-                                 char *field);
+                                 const char *field);
 
 /*
  * fiid_template_field_end_bytes
@@ -231,7 +231,7 @@ int32_t fiid_template_field_end (fiid_template_t tmpl,
  * offset is not a multiple of 8.
  */
 int32_t fiid_template_field_end_bytes (fiid_template_t tmpl,
-                                       char *field);
+                                       const char *field);
 
 /*
  * fiid_template_field_len
@@ -240,7 +240,7 @@ int32_t fiid_template_field_end_bytes (fiid_template_t tmpl,
  * error.
  */
 int32_t fiid_template_field_len (fiid_template_t tmpl,
-                                 char *field);
+                                 const char *field);
 
 /*
  * fiid_template_field_len_bytes
@@ -250,7 +250,7 @@ int32_t fiid_template_field_len (fiid_template_t tmpl,
  * a multiple of 8.
  */
 int32_t fiid_template_field_len_bytes (fiid_template_t tmpl,
-                                       char *field);
+                                       const char *field);
 
 /*
  * fiid_template_block_len
@@ -260,8 +260,8 @@ int32_t fiid_template_field_len_bytes (fiid_template_t tmpl,
  * on error.
  */
 int32_t fiid_template_block_len (fiid_template_t tmpl,
-                                 char *field_start,
-                                 char *field_end);
+                                 const char *field_start,
+                                 const char *field_end);
 
 /*
  * fiid_template_block_len_bytes
@@ -272,8 +272,8 @@ int32_t fiid_template_block_len (fiid_template_t tmpl,
  * a multiple of 8.
  */
 int32_t fiid_template_block_len_bytes (fiid_template_t tmpl,
-                                       char *field_start,
-                                       char *field_end);
+                                       const char *field_start,
+                                       const char *field_end);
 
 /*
  * fiid_template_compare
@@ -440,7 +440,7 @@ int32_t fiid_obj_len_bytes (fiid_obj_t obj);
  * Returns the length (in bits) of data stored within the
  * specified field, -1 on error.
  */
-int32_t fiid_obj_field_len (fiid_obj_t obj, char *field);
+int32_t fiid_obj_field_len (fiid_obj_t obj, const char *field);
 
 /*
  * fiid_obj_field_len_bytes
@@ -449,7 +449,7 @@ int32_t fiid_obj_field_len (fiid_obj_t obj, char *field);
  * field, -1 on error.  Will return an error if the bit length of data
  * is not a multiple of 8.
  */
-int32_t fiid_obj_field_len_bytes (fiid_obj_t obj, char *field);
+int32_t fiid_obj_field_len_bytes (fiid_obj_t obj, const char *field);
 
 /*
  * fiid_obj_block_len
@@ -459,8 +459,8 @@ int32_t fiid_obj_field_len_bytes (fiid_obj_t obj, char *field);
  * Returns -1 on error.
  */
 int32_t fiid_obj_block_len (fiid_obj_t obj,
-                            char *field_start,
-                            char *field_end);
+                            const char *field_start,
+                            const char *field_end);
 
 /*
  * fiid_obj_block_len_bytes
@@ -471,8 +471,8 @@ int32_t fiid_obj_block_len (fiid_obj_t obj,
  * length is not a multiple of 8.
  */
 int32_t fiid_obj_block_len_bytes (fiid_obj_t obj,
-                                  char *field_start,
-                                  char *field_end);
+                                  const char *field_start,
+                                  const char *field_end);
 
 /*
  * fiid_obj_clear
@@ -488,7 +488,7 @@ int8_t fiid_obj_clear (fiid_obj_t obj);
  * Clear all data stored in a specified field in the object.  Return 0
  * on success, -1 on error.
  */
-int8_t fiid_obj_clear_field (fiid_obj_t obj, char *field);
+int8_t fiid_obj_clear_field (fiid_obj_t obj, const char *field);
 
 /*
  * fiid_obj_field_lookup
@@ -496,7 +496,7 @@ int8_t fiid_obj_clear_field (fiid_obj_t obj, char *field);
  * Returns 1 if the field is found in the object, 0 if not, -1 on
  * error.
  */
-int8_t fiid_obj_field_lookup (fiid_obj_t obj, char *field);
+int8_t fiid_obj_field_lookup (fiid_obj_t obj, const char *field);
 
 /*
  * FIID_OBJ_FIELD_LOOKUP
@@ -506,7 +506,7 @@ int8_t fiid_obj_field_lookup (fiid_obj_t obj, char *field);
  * possible.  If the field is not found, -1 is returned and
  * FIID_ERR_FIELD_NOT_FOUND is the error code set.
  */
-int8_t FIID_OBJ_FIELD_LOOKUP (fiid_obj_t obj, char *field);
+int8_t FIID_OBJ_FIELD_LOOKUP (fiid_obj_t obj, const char *field);
 
 /*
  * fiid_obj_set
@@ -514,7 +514,7 @@ int8_t FIID_OBJ_FIELD_LOOKUP (fiid_obj_t obj, char *field);
  * Set data in the object for the specified field.  Returns 0 on
  * success, -1 on error.
  */
-int8_t fiid_obj_set (fiid_obj_t obj, char *field, uint64_t val);
+int8_t fiid_obj_set (fiid_obj_t obj, const char *field, uint64_t val);
 
 /*
  * fiid_obj_get
@@ -523,7 +523,7 @@ int8_t fiid_obj_set (fiid_obj_t obj, char *field, uint64_t val);
  * if data was available and returned, 0 if no data was available, -1
  * on error.
  */
-int8_t fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
+int8_t fiid_obj_get (fiid_obj_t obj, const char *field, uint64_t *val);
 
 /*
  * FIID_OBJ_GET
@@ -534,7 +534,7 @@ int8_t fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
  * available, -1 is returned and FIID_ERR_DATA_NOT_AVAILABLE is the
  * error code set.
  */
-int8_t FIID_OBJ_GET (fiid_obj_t obj, char *field, uint64_t *val);
+int8_t FIID_OBJ_GET (fiid_obj_t obj, const char *field, uint64_t *val);
 
 /*
  * fiid_obj_set_data
@@ -546,7 +546,7 @@ int8_t FIID_OBJ_GET (fiid_obj_t obj, char *field, uint64_t *val);
  * if the field maximum length is smaller than the data given.
  */
 int32_t fiid_obj_set_data (fiid_obj_t obj,
-                           char *field,
+                           const char *field,
                            uint8_t *data,
                            uint32_t data_len);
 
@@ -559,7 +559,7 @@ int32_t fiid_obj_set_data (fiid_obj_t obj,
  * that is a multiple of 8.
  */
 int32_t fiid_obj_get_data (fiid_obj_t obj,
-                           char *field,
+                           const char *field,
                            uint8_t *data,
                            uint32_t data_len);
 
@@ -595,8 +595,8 @@ int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
  * entire block.
  */
 int8_t fiid_obj_set_block (fiid_obj_t obj,
-                           char *field_start,
-                           char *field_end,
+                           const char *field_start,
+                           const char *field_end,
                            uint8_t *data,
                            uint32_t data_len);
 
@@ -608,8 +608,8 @@ int8_t fiid_obj_set_block (fiid_obj_t obj,
  * -1 on error.  Data being read must fall on a byte boundary.
  */
 int8_t fiid_obj_get_block (fiid_obj_t obj,
-                           char *field_start,
-                           char *field_end,
+                           const char *field_start,
+                           const char *field_end,
                            uint8_t *data,
                            uint32_t data_len);
 

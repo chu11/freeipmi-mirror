@@ -591,7 +591,7 @@ ipmi_ssif_ctx_get_flags (ipmi_ssif_ctx_t ctx, unsigned int *flags)
 }
 
 int8_t
-ipmi_ssif_ctx_set_driver_device (ipmi_ssif_ctx_t ctx, char* driver_device)
+ipmi_ssif_ctx_set_driver_device (ipmi_ssif_ctx_t ctx, const char *driver_device)
 {
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
     {
