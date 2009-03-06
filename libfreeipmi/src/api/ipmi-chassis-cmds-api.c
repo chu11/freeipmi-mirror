@@ -63,11 +63,10 @@ ipmi_cmd_get_chassis_capabilities (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_chassis_capabilities_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_chassis_capabilities_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -118,11 +117,10 @@ ipmi_cmd_get_chassis_status (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_chassis_status_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_chassis_status_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -175,11 +173,10 @@ ipmi_cmd_chassis_control (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_chassis_control_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_chassis_control_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -234,11 +231,10 @@ ipmi_cmd_chassis_identify (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_chassis_identify_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_chassis_identify_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -299,11 +295,10 @@ ipmi_cmd_set_front_panel_enables (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_front_panel_enables_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_front_panel_enables_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -360,11 +355,10 @@ ipmi_cmd_set_power_restore_policy (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_power_restore_policy_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_power_restore_policy_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -417,11 +411,10 @@ ipmi_cmd_set_power_cycle_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_power_cycle_interval_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_power_cycle_interval_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -472,11 +465,10 @@ ipmi_cmd_get_system_restart_cause (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_system_restart_cause_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_system_restart_cause_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -530,11 +522,10 @@ ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_system_boot_options_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_boot_options_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -589,11 +580,10 @@ ipmi_cmd_set_system_boot_options_set_in_progress (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_system_boot_options_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_boot_options_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -659,11 +649,10 @@ ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_system_boot_options_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_boot_options_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -729,11 +718,10 @@ ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_system_boot_options_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_boot_options_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -821,11 +809,10 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_system_boot_options_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_boot_options_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -895,11 +882,10 @@ ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_system_boot_options_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_system_boot_options_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -955,11 +941,10 @@ ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1015,11 +1000,10 @@ ipmi_cmd_get_system_boot_options_boot_flags (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_system_boot_options_boot_flags_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_system_boot_options_boot_flags_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1073,11 +1057,10 @@ ipmi_cmd_get_power_on_hours_counter (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_power_on_hours_counter_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_power_on_hours_counter_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 

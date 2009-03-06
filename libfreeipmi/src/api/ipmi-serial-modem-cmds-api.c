@@ -72,11 +72,10 @@ ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_serial_modem_configuration_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_serial_modem_configuration_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -140,11 +139,10 @@ ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_serial_modem_configuration_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_serial_modem_configuration_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -202,11 +200,10 @@ ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_serial_modem_configuration_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_serial_modem_configuration_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -262,11 +259,10 @@ ipmi_cmd_set_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_serial_modem_configuration_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_serial_modem_configuration_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -325,11 +321,10 @@ ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_serial_modem_configuration_connection_mode_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_serial_modem_configuration_connection_mode_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -391,11 +386,10 @@ ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -457,11 +451,10 @@ ipmi_cmd_get_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_serial_modem_configuration_call_retry_interval_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_serial_modem_configuration_call_retry_interval_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -523,11 +516,10 @@ ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_serial_modem_configuration_page_blackout_interval_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_serial_modem_configuration_page_blackout_interval_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 

@@ -61,11 +61,10 @@ ipmi_cmd_get_sdr_repository_info (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_sdr_repository_info_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_sdr_repository_info_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -116,11 +115,10 @@ ipmi_cmd_get_sdr_repository_allocation_info (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_sdr_repository_allocation_info_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_sdr_repository_allocation_info_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -171,11 +169,10 @@ ipmi_cmd_reserve_sdr_repository (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_reserve_sdr_repository_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_reserve_sdr_repository_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -230,11 +227,10 @@ ipmi_cmd_get_sdr (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_sdr_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_sdr_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -289,11 +285,10 @@ ipmi_cmd_get_sdr_repository_time (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_sdr_repository_time_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_sdr_repository_time_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -345,11 +340,10 @@ ipmi_cmd_set_sdr_repository_time (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_sdr_repository_time_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_sdr_repository_time_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 

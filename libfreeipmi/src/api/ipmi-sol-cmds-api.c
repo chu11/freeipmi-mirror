@@ -67,11 +67,10 @@ ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -132,11 +131,10 @@ ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -195,11 +193,10 @@ ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -257,11 +254,10 @@ ipmi_cmd_set_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -319,11 +315,10 @@ ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -380,11 +375,10 @@ ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -440,11 +434,10 @@ ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_sol_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -503,11 +496,10 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -569,11 +561,10 @@ ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -635,11 +626,10 @@ ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -701,11 +691,10 @@ ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -767,11 +756,10 @@ ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_ctx_t 
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -833,11 +821,10 @@ ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -899,11 +886,10 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -965,11 +951,10 @@ ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 

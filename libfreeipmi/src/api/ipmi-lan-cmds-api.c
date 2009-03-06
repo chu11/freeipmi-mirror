@@ -115,11 +115,10 @@ ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -199,11 +198,10 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -259,11 +257,10 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -319,11 +316,10 @@ ipmi_cmd_set_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -379,11 +375,10 @@ ipmi_cmd_set_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -442,11 +437,10 @@ ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -503,11 +497,10 @@ ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -563,11 +556,10 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -623,11 +615,10 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -683,11 +674,10 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -743,11 +733,10 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -806,11 +795,10 @@ ipmi_cmd_set_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -875,11 +863,10 @@ ipmi_cmd_set_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -942,11 +929,10 @@ ipmi_cmd_set_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1009,11 +995,10 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1070,11 +1055,10 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1177,11 +1161,10 @@ ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1257,11 +1240,10 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (ipmi_ctx_
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1323,11 +1305,10 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1389,11 +1370,10 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_ip_address_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_ip_address_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1455,11 +1435,10 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1521,11 +1500,10 @@ ipmi_cmd_get_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_mac_address_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_mac_address_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1587,11 +1565,10 @@ ipmi_cmd_get_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1653,11 +1630,10 @@ ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1719,11 +1695,10 @@ ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1785,11 +1760,10 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1851,11 +1825,10 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_mac_address_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_mac_address_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1917,11 +1890,10 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -1983,11 +1955,10 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_mac_address_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_mac_address_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -2049,11 +2020,10 @@ ipmi_cmd_get_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_community_string_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_community_string_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -2115,11 +2085,10 @@ ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (ipmi_ctx_t ctx
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -2182,11 +2151,10 @@ ipmi_cmd_get_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_destination_type_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_destination_type_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -2249,11 +2217,10 @@ ipmi_cmd_get_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -2315,11 +2282,10 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -2381,11 +2347,10 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -2447,11 +2412,10 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -2513,11 +2477,10 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entrie
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -2579,11 +2542,10 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -2645,11 +2607,10 @@ ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_suspend_bmc_arps_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_suspend_bmc_arps_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
@@ -2707,11 +2668,10 @@ ipmi_cmd_get_ip_udp_rmcp_statistics (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_template_compare (ctx,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_get_ip_udp_rmcp_statistics_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_get_ip_udp_rmcp_statistics_rs) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
