@@ -187,7 +187,7 @@ fill_cmd_set_serial_modem_configuration (uint8_t channel_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -226,7 +226,7 @@ fill_cmd_set_serial_modem_configuration_connection_mode (uint8_t channel_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_connection_mode_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_connection_mode_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -263,7 +263,7 @@ fill_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (uint8_t ch
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -295,7 +295,7 @@ fill_cmd_set_serial_modem_configuration_page_blackout_interval (uint8_t channel_
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_page_blackout_interval_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_page_blackout_interval_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -323,7 +323,7 @@ fill_cmd_set_serial_modem_configuration_call_retry_interval (uint8_t channel_num
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_call_retry_interval_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_serial_modem_configuration_call_retry_interval_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -355,7 +355,7 @@ fill_cmd_get_serial_modem_configuration (uint8_t channel_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_serial_modem_configuration_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_serial_modem_configuration_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);

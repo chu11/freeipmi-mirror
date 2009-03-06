@@ -56,7 +56,7 @@ fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -98,7 +98,7 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -164,7 +164,7 @@ unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fi
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);

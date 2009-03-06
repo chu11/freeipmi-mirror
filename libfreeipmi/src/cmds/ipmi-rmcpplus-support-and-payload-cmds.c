@@ -377,7 +377,7 @@ fill_cmd_activate_payload (uint8_t payload_type,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_activate_payload_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_activate_payload_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -419,7 +419,7 @@ fill_cmd_activate_payload_sol (uint8_t payload_type,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_activate_payload_sol_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_activate_payload_sol_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -456,7 +456,7 @@ fill_cmd_deactivate_payload (uint8_t payload_type,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_deactivate_payload_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_deactivate_payload_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -487,7 +487,7 @@ fill_cmd_suspend_resume_payload_encryption (uint8_t payload_type,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_suspend_resume_payload_encryption_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_suspend_resume_payload_encryption_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -516,7 +516,7 @@ fill_cmd_get_payload_activation_status (uint8_t payload_type,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_payload_activation_status_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_payload_activation_status_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -541,7 +541,7 @@ fill_cmd_get_payload_instance_info (uint8_t payload_type,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_payload_instance_info_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_payload_instance_info_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -599,7 +599,7 @@ fill_cmd_set_user_payload_access (uint8_t channel_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_user_payload_access_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_user_payload_access_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -646,7 +646,7 @@ fill_cmd_get_user_payload_access (uint8_t channel_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_user_payload_access_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_user_payload_access_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -673,7 +673,7 @@ fill_cmd_get_channel_payload_support (uint8_t channel_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_channel_payload_support_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_channel_payload_support_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -700,7 +700,7 @@ fill_cmd_get_channel_payload_version (uint8_t channel_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_channel_payload_version_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_channel_payload_version_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -732,7 +732,7 @@ fill_cmd_get_channel_oem_payload_info (uint8_t channel_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_channel_oem_payload_info_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_channel_oem_payload_info_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);

@@ -74,7 +74,7 @@ fill_cmd_asf_presence_ping (uint8_t message_tag, fiid_obj_t obj_cmd)
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd, tmpl_cmd_asf_presence_ping) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_cmd_asf_presence_ping) < 0)
     {
       SET_ERRNO (EINVAL);
       return (-1);

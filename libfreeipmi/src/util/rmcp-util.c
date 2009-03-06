@@ -42,7 +42,7 @@ ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag)
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (pong, tmpl_cmd_asf_presence_pong) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (pong, tmpl_cmd_asf_presence_pong) < 0)
     {
       SET_ERRNO (EINVAL);
       return (-1);

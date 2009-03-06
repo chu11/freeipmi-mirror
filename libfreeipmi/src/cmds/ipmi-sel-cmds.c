@@ -239,7 +239,7 @@ fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_sel_info_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_sel_info_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -259,7 +259,7 @@ fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_sel_allocation_info_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_sel_allocation_info_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -279,7 +279,7 @@ fill_cmd_reserve_sel (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_reserve_sel_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_reserve_sel_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -303,7 +303,7 @@ fill_cmd_get_sel_entry (uint16_t reservation_id,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_sel_entry_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_sel_entry_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -330,7 +330,7 @@ fill_cmd_delete_sel_entry (uint16_t reservation_id,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_delete_sel_entry_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_delete_sel_entry_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -356,7 +356,7 @@ fill_cmd_clear_sel (uint16_t reservation_id,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_clear_sel_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_clear_sel_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -383,7 +383,7 @@ fill_cmd_get_sel_time (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_sel_time_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_sel_time_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -404,7 +404,7 @@ fill_cmd_set_sel_time (uint32_t time, fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_sel_time_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sel_time_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -428,7 +428,7 @@ fill_cmd_get_auxiliary_log_status (uint8_t log_type,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_auxiliary_log_status_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_auxiliary_log_status_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -457,7 +457,7 @@ fill_cmd_set_auxiliary_log_status (uint8_t log_type,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_auxiliary_log_status_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_auxiliary_log_status_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);

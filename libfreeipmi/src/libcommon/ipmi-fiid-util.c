@@ -91,21 +91,3 @@ Fiid_obj_packet_valid (fiid_obj_t obj)
 
   return (1);                   /* return (1) like real call */
 }
-
-int
-Fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl)
-{
-  int ret;
-
-  if ((ret = fiid_obj_template_compare (obj, tmpl)) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj);
-      return (-1);
-    }
-  if (!ret)
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-  return (1);                   /* return (1) like real call */
-}

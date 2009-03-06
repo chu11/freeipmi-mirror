@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.9 2009-03-06 06:30:45 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.10 2009-03-06 19:42:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -108,7 +108,7 @@ fill_cmd_get_fru_inventory_area_info (uint8_t fru_device_id,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_fru_inventory_area_info_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_fru_inventory_area_info_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -132,7 +132,7 @@ fill_cmd_read_fru_data (uint8_t fru_device_id,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_read_fru_data_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_read_fru_data_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -161,7 +161,7 @@ fill_cmd_write_fru_data (uint8_t fru_device_id,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_write_fru_data_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_write_fru_data_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);

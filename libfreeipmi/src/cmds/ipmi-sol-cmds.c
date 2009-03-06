@@ -318,7 +318,7 @@ fill_sol_payload_data (uint8_t packet_sequence_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_sol_payload, tmpl_sol_payload_data) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_sol_payload, tmpl_sol_payload_data) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -368,7 +368,7 @@ fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_sol_payload, tmpl_sol_payload_data_remote_console_to_bmc) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_sol_payload, tmpl_sol_payload_data_remote_console_to_bmc) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -413,7 +413,7 @@ fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -446,7 +446,7 @@ fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -480,7 +480,7 @@ fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_nu
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -512,7 +512,7 @@ fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -542,7 +542,7 @@ fill_cmd_set_sol_configuration_parameters_sol_retry (uint8_t channel_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_retry_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_retry_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -573,7 +573,7 @@ fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (uint8_t cha
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -603,7 +603,7 @@ fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (uint8_t channel
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -632,7 +632,7 @@ fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t chann
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -665,7 +665,7 @@ fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);

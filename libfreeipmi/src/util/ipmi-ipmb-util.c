@@ -88,12 +88,12 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rs) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-  if (Fiid_obj_template_compare (obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);

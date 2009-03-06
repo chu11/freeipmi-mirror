@@ -119,7 +119,7 @@ fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_reset_watchdog_timer_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_reset_watchdog_timer_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -161,7 +161,7 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_set_watchdog_timer_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_watchdog_timer_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -200,7 +200,7 @@ fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_cmd_rq, tmpl_cmd_get_watchdog_timer_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_watchdog_timer_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);

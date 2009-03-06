@@ -108,7 +108,7 @@ fill_lan_session_hdr (uint8_t authentication_type,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_lan_session_hdr, tmpl_lan_session_hdr) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_session_hdr, tmpl_lan_session_hdr) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -145,7 +145,7 @@ fill_lan_msg_hdr (uint8_t rs_addr,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -285,17 +285,17 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-  if (Fiid_obj_template_compare (obj_lan_session_hdr, tmpl_lan_session_hdr) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_session_hdr, tmpl_lan_session_hdr) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-  if (Fiid_obj_template_compare (obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -617,22 +617,22 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
       return (-1);
     }
 
-  if (Fiid_obj_template_compare (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_rmcp_hdr, tmpl_rmcp_hdr) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-  if (Fiid_obj_template_compare (obj_lan_session_hdr, tmpl_lan_session_hdr) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_session_hdr, tmpl_lan_session_hdr) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-  if (Fiid_obj_template_compare (obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-  if (Fiid_obj_template_compare (obj_lan_msg_trlr, tmpl_lan_msg_trlr) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_msg_trlr, tmpl_lan_msg_trlr) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
