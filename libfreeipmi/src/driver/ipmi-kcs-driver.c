@@ -241,6 +241,11 @@ _set_kcs_errnum_by_fiid_object (ipmi_kcs_ctx_t ctx, fiid_obj_t obj)
     ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   else if (fiid_obj_errnum (obj) == FIID_ERR_OUT_OF_MEMORY)
     ctx->errnum = IPMI_KCS_ERR_OUT_OF_MEMORY;
+  else if (fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE)
+    ctx->errnum = IPMI_KCS_ERR_SYSTEM_ERROR;
+  else if (fiid_obj_errnum (obj) == FIID_ERR_NOT_IDENTICAL
+           || fiid_obj_errnum (obj) == FIID_ERR_FIELD_NOT_FOUND)
+    ctx->errnum = IPMI_KCS_ERR_PARAMETERS;
   else
     ctx->errnum = IPMI_KCS_ERR_INTERNAL_ERROR;
 }

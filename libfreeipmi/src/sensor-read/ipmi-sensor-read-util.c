@@ -62,6 +62,9 @@ sensor_read_set_sensor_read_errnum_by_fiid_object (ipmi_sensor_read_ctx_t ctx, f
     ctx->errnum = IPMI_SENSOR_READ_ERR_OUT_OF_MEMORY;
   else if (fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE)
     ctx->errnum = IPMI_SENSOR_READ_ERR_IPMI_ERROR;
+  else if (fiid_obj_errnum (obj) == FIID_ERR_NOT_IDENTICAL
+           || fiid_obj_errnum (obj) == FIID_ERR_FIELD_NOT_FOUND)
+    ctx->errnum = IPMI_SENSOR_READ_ERR_PARAMETERS;
   else
     ctx->errnum = IPMI_SENSOR_READ_ERR_INTERNAL_ERROR;
 }

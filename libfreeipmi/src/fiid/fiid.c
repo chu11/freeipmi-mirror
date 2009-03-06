@@ -93,6 +93,7 @@ static char * fiid_errmsg[] =
     "required field missing",
     "fixed length field invalid",
     "data not available",
+    "not identical",
     "out of memory",
     "internal error",
     "errnum out of range",
@@ -211,6 +212,24 @@ fiid_template_field_lookup (fiid_template_t tmpl,
     }
 
   return (0);
+}
+
+int8_t
+FIID_TEMPLATE_FIELD_LOOKUP (fiid_template_t tmpl,
+                            char *field)
+{
+  int8_t ret;
+
+  if ((ret = fiid_template_field_lookup (tmpl, field)) < 0)
+    return (ret);
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (ret);
 }
 
 int32_t
@@ -602,6 +621,24 @@ fiid_template_compare (fiid_template_t tmpl1,
     return (0);
 
   return (1);
+}
+
+int8_t
+FIID_TEMPLATE_COMPARE (fiid_template_t tmpl1,
+                       fiid_template_t tmpl2)
+{
+  int8_t ret;
+
+  if ((ret = fiid_template_compare (tmpl1, tmpl2)) < 0)
+    return (ret);
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (ret);
 }
 
 void
@@ -1130,6 +1167,23 @@ fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl)
   return (1);
 }
 
+int8_t
+FIID_OBJ_TEMPLATE_COMPARE (fiid_obj_t obj, fiid_template_t tmpl)
+{
+  int8_t ret;
+
+  if ((ret = fiid_obj_template_compare (obj, tmpl)) < 0)
+    return (ret);
+
+  if (!ret)
+    {
+      obj->errnum = FIID_ERR_NOT_IDENTICAL;
+      return (-1);
+    }
+
+  return (ret);
+}
+
 fiid_err_t
 fiid_obj_errnum (fiid_obj_t obj)
 {
@@ -1420,6 +1474,23 @@ fiid_obj_field_lookup (fiid_obj_t obj, char *field)
       obj->errnum = FIID_ERR_FIELD_NOT_FOUND;
       return (0);
     }
+}
+
+int8_t
+FIID_OBJ_FIELD_LOOKUP (fiid_obj_t obj, char *field)
+{
+  int8_t ret;
+
+  if ((ret = fiid_obj_field_lookup (obj, field)) < 0)
+    return (ret);
+
+  if (!ret)
+    {
+      obj->errnum = FIID_ERR_FIELD_NOT_FOUND;
+      return (-1);
+    }
+
+  return (ret);
 }
 
 int8_t
@@ -1725,10 +1796,10 @@ FIID_OBJ_GET (fiid_obj_t obj,
               uint64_t *val)
 {
   uint64_t lval;
-  int ret;
+  int8_t ret;
 
   if ((ret = fiid_obj_get (obj, field, &lval)) < 0)
-    return (-1);
+    return (ret);
 
   if (!ret)
     {
@@ -1737,7 +1808,7 @@ FIID_OBJ_GET (fiid_obj_t obj,
     }
 
   *val = lval;
-  return (1);
+  return (ret);
 }
 
 int32_t

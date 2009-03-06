@@ -5,6 +5,11 @@
 
 	* Adjust tools to use new fiid functions/macros appropriately.
 
+	* libfreeipmi/include/freeipmi/fiid/fiid.h,
+	libfreeipmi/src/fiid/fiid.c (FIID_TEMPLATE_FIELD_LOOKUP,
+	FIID_TEMPLATE_COMPARE, FIID_OBJ_TEMPLATE_COMPARE,
+	FIID_OBJ_FIELD_LOOKUP): New functions.
+
 2009-03-05  Albert Chu <chu11@llnl.gov>
 	
 	* common/src/toolcommon/tool-fiid-util.h: Remove some macros.

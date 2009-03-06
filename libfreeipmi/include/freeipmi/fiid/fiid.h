@@ -54,9 +54,10 @@ enum fiid_err
     FIID_ERR_REQUIRED_FIELD_MISSING          = 19,
     FIID_ERR_FIXED_LENGTH_FIELD_INVALID      = 20,
     FIID_ERR_DATA_NOT_AVAILABLE              = 21,
-    FIID_ERR_OUT_OF_MEMORY                   = 22,
-    FIID_ERR_INTERNAL_ERROR                  = 23,
-    FIID_ERR_ERRNUMRANGE                     = 24
+    FIID_ERR_NOT_IDENTICAL                   = 22,
+    FIID_ERR_OUT_OF_MEMORY                   = 23,
+    FIID_ERR_INTERNAL_ERROR                  = 24,
+    FIID_ERR_ERRNUMRANGE                     = 25
   };
   
 typedef enum fiid_err fiid_err_t;
@@ -167,6 +168,17 @@ int8_t fiid_template_field_lookup (fiid_template_t tmpl,
                                    char *field);
 
 /*
+ * FIID_TEMPLATE_FIELD_LOOKUP
+ *
+ * Returns 1 if the field is found in the template, -1 on error.
+ * Identical to fiid_template_field_lookup() except a return of 0 is
+ * not possible.  If the field is not found, -1 is returned and
+ * errno EINVAL is the error code set.
+ */
+int8_t FIID_TEMPLATE_FIELD_LOOKUP (fiid_template_t tmpl,
+                                   char *field);
+
+/*
  * fiid_template_len
  *
  * Returns the total length (in bits) of the all the fields in the
@@ -273,6 +285,17 @@ int8_t fiid_template_compare (fiid_template_t tmpl1,
                               fiid_template_t tmpl2);
 
 /*
+ * FIID_TEMPLATE_COMPARE
+ *
+ * Returns 1 if the two specified templates are identical, -1 on
+ * error.  Identical to fiid_template_compare() except a return of 0
+ * is not possible.  If templates are not identical, -1 is returned and
+ * errno EINVAL is the error code set.
+ */
+int8_t FIID_TEMPLATE_COMPARE (fiid_template_t tmpl1,
+                              fiid_template_t tmpl2);
+
+/*
  * fiid_template_free
  *
  * Free's a template created by fiid_obj_template.
@@ -355,9 +378,20 @@ fiid_field_t *fiid_obj_template (fiid_obj_t obj);
  * fiid_obj_template_compare
  *
  * Returns 1 if the template specified is the one used to create the
- * object, 0 if not, -1 one rror.
+ * object, 0 if not, -1 one error.
  */
 int8_t fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl);
+
+/*
+ * FIID_OBJ_TEMPLATE_COMPARE
+ *
+ * Returns 1 if the template specified is the one used to create the
+ * object, -1 one error.  Identical to fiid_obj_template_compare()
+ * except a return of 0 is not possible.  If object template and input
+ * template are not identical, -1 is returned and
+ * FIID_ERR_NOT_IDENTICAL is the error code set.
+ */
+int8_t FIID_OBJ_TEMPLATE_COMPARE (fiid_obj_t obj, fiid_template_t tmpl);
 
 /*
  * fiid_obj_errnum
@@ -455,6 +489,16 @@ int8_t fiid_obj_clear_field (fiid_obj_t obj, char *field);
 int8_t fiid_obj_field_lookup (fiid_obj_t obj, char *field);
 
 /*
+ * FIID_OBJ_FIELD_LOOKUP
+ *
+ * Returns 1 if the field is found in the object, -1 on error.
+ * Identical to fiid_obj_field_lookup() except a return of 0 is not
+ * possible.  If the field is not found, -1 is returned and
+ * FIID_ERR_FIELD_NOT_FOUND is the error code set.
+ */
+int8_t FIID_OBJ_FIELD_LOOKUP (fiid_obj_t obj, char *field);
+
+/*
  * fiid_obj_set
  *
  * Set data in the object for the specified field.  Returns 0 on
@@ -478,8 +522,7 @@ int8_t fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
  * if data was available and returned, -1 on error.  Identical to
  * fiid_obj_get() except a return of 0 is not possible.  If no data is
  * available, -1 is returned and FIID_ERR_DATA_NOT_AVAILABLE is the
- * error code set.  Useful when working with fiid objects when packets
- * are supposed to have data set.
+ * error code set.
  */
 int8_t FIID_OBJ_GET (fiid_obj_t obj, char *field, uint64_t *val);
 
