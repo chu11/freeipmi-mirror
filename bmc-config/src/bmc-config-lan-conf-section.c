@@ -90,7 +90,14 @@ ip_address_source_checkout (const char *section_name,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "ip_address_source", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "ip_address_source", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'ip_address_source': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
@@ -1114,10 +1121,24 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "vlan_id", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "vlan_id", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'vlan_id': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   vi->vlan_id = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "vlan_id_enable", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "vlan_id_enable", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'vlan_id_enable': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   vi->vlan_id_enable = val;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -1302,7 +1323,14 @@ vlan_priority_checkout (const char *section_name,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "vlan_priority", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "vlan_priority", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'vlan_priority': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,

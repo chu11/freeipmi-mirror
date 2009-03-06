@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.26 2009-03-04 22:53:46 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.27 2009-03-06 18:11:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -144,72 +144,226 @@ output_power_supply_information (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "overall_capacity",
-                     &overall_capacity);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "peak_va",
-                     &peak_va);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "inrush_current",
-                     &inrush_current);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "inrush_interval",
-                     &inrush_interval);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "low_end_input_voltage_range_1",
-                     &low_end_input_voltage_range_1);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "high_end_input_voltage_range_1",
-                     &high_end_input_voltage_range_1);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "low_end_input_voltage_range_2",
-                     &low_end_input_voltage_range_2);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "high_end_input_voltage_range_2",
-                     &high_end_input_voltage_range_2);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "low_end_input_frequency_range",
-                     &low_end_input_frequency_range);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "high_end_input_frequency_range",
-                     &high_end_input_frequency_range);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "ac_dropout_tolerance",
-                     &ac_dropout_tolerance);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "predictive_fail_support",
-                     &predictive_fail_support);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "power_factor_correction",
-                     &power_factor_correction);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "autoswitch",
-                     &autoswitch);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "hot_swap_support",
-                     &hot_swap_support);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "tachometer_pulses_per_rotation_predictive_fail_polarity",
-                     &tachometer_pulses_per_rotation_predictive_fail_polarity);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "peak_capacity",
-                     &peak_capacity);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "hold_up_time",
-                     &hold_up_time);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "voltage_1",
-                     &voltage_1);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "voltage_2",
-                     &voltage_2);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "total_combined_wattage",
-                     &total_combined_wattage);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "predictive_fail_tachometer_lower_threshold",
-                     &predictive_fail_tachometer_lower_threshold);
+  if (FIID_OBJ_GET (obj_record,
+                    "overall_capacity",
+                    &overall_capacity) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'overall_capacity': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "peak_va",
+                    &peak_va) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'peak_va': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "inrush_current",
+                    &inrush_current) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'inrush_current': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "inrush_interval",
+                    &inrush_interval) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'inrush_interval': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "low_end_input_voltage_range_1",
+                    &low_end_input_voltage_range_1) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'low_end_input_voltage_range_1': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "high_end_input_voltage_range_1",
+                    &high_end_input_voltage_range_1) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'high_end_input_voltage_range_1': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "low_end_input_voltage_range_2",
+                    &low_end_input_voltage_range_2) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'low_end_input_voltage_range_2': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "high_end_input_voltage_range_2",
+                    &high_end_input_voltage_range_2) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'high_end_input_voltage_range_2': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "low_end_input_frequency_range",
+                    &low_end_input_frequency_range) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'low_end_input_frequency_range': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "high_end_input_frequency_range",
+                    &high_end_input_frequency_range) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'high_end_input_frequency_range': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "ac_dropout_tolerance",
+                    &ac_dropout_tolerance) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'ac_dropout_tolerance': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "predictive_fail_support",
+                    &predictive_fail_support) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'predictive_fail_support': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "power_factor_correction",
+                    &power_factor_correction) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'power_factor_correction': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "autoswitch",
+                    &autoswitch) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'autoswitch': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "hot_swap_support",
+                    &hot_swap_support) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'hot_swap_support': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "tachometer_pulses_per_rotation_predictive_fail_polarity",
+                    &tachometer_pulses_per_rotation_predictive_fail_polarity) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'tachometer_pulses_per_rotation_predictive_fail_polarity': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "peak_capacity",
+                    &peak_capacity) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'peak_capacity': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "hold_up_time",
+                    &hold_up_time) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'hold_up_time': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "voltage_1",
+                    &voltage_1) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'voltage_1': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "voltage_2",
+                    &voltage_2) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'voltage_2': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "total_combined_wattage",
+                    &total_combined_wattage) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'total_combined_wattage': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "predictive_fail_tachometer_lower_threshold",
+                    &predictive_fail_tachometer_lower_threshold) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'predictive_fail_tachometer_lower_threshold': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Overall Capacity: %u Watts\n",
@@ -372,30 +526,86 @@ output_dc_output (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "output_number",
-                     &output_number);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "standby",
-                     &standby);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "nominal_voltage",
-                     &nominal_voltage);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "maximum_negative_voltage_deviation",
-                     &maximum_negative_voltage_deviation);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "maximum_positive_voltage_deviation",
-                     &maximum_positive_voltage_deviation);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "ripple_and_noise_pk_pk",
-                     &ripple_and_noise_pk_pk);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "minimum_current_draw",
-                     &minimum_current_draw);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "maximum_current_draw",
-                     &maximum_current_draw);
+  if (FIID_OBJ_GET (obj_record,
+                    "output_number",
+                    &output_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'output_number': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "standby",
+                    &standby) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'standby': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "nominal_voltage",
+                    &nominal_voltage) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'nominal_voltage': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "maximum_negative_voltage_deviation",
+                    &maximum_negative_voltage_deviation) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'maximum_negative_voltage_deviation': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "maximum_positive_voltage_deviation",
+                    &maximum_positive_voltage_deviation) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'maximum_positive_voltage_deviation': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "ripple_and_noise_pk_pk",
+                    &ripple_and_noise_pk_pk) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'ripple_and_noise_pk_pk': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "minimum_current_draw",
+                    &minimum_current_draw) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'minimum_current_draw': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "maximum_current_draw",
+                    &maximum_current_draw) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'maximum_current_draw': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "  FRU DC Output Output Number: %u\n",
@@ -499,27 +709,76 @@ output_dc_load (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "output_number",
-                     &output_number);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "nominal_voltage",
-                     &nominal_voltage);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "specd_minimum_voltage",
-                     &specd_minimum_voltage);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "specd_maximum_voltage",
-                     &specd_maximum_voltage);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "specd_ripple_and_noise_pk_pk",
-                     &specd_ripple_and_noise_pk_pk);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "minimum_current_load",
-                     &minimum_current_load);
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "maximum_current_load",
-                     &maximum_current_load);
+  if (FIID_OBJ_GET (obj_record,
+                    "output_number",
+                    &output_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'output_number': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "nominal_voltage",
+                    &nominal_voltage) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'nominal_voltage': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "specd_minimum_voltage",
+                    &specd_minimum_voltage) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'specd_minimum_voltage': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "specd_maximum_voltage",
+                    &specd_maximum_voltage) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'specd_maximum_voltage': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "specd_ripple_and_noise_pk_pk",
+                    &specd_ripple_and_noise_pk_pk) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'specd_ripple_and_noise_pk_pk': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "minimum_current_load",
+                    &minimum_current_load) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'minimum_current_load': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  if (FIID_OBJ_GET (obj_record,
+                    "maximum_current_load",
+                    &maximum_current_load) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'maximum_current_load': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "  FRU DC Load Output Number: %u\n",
@@ -621,9 +880,16 @@ output_management_access_record (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "sub_record_type",
-                     &sub_record_type);
+  if (FIID_OBJ_GET (obj_record,
+                    "sub_record_type",
+                    &sub_record_type) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'sub_record_type': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
   if ((len = fiid_obj_get_data (obj_record,
                                 "record",
@@ -782,21 +1048,49 @@ output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "manufacturer_id",
-                     &manufacturer_id);
+  if (FIID_OBJ_GET (obj_record,
+                    "manufacturer_id",
+                    &manufacturer_id) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'manufacturer_id': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "entity_id_code",
-                     &entity_id_code);
+  if (FIID_OBJ_GET (obj_record,
+                    "entity_id_code",
+                    &entity_id_code) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'entity_id_code': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "compatibility_base",
-                     &compatibility_base);
+  if (FIID_OBJ_GET (obj_record,
+                    "compatibility_base",
+                    &compatibility_base) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'compatibility_base': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "compatibility_code_start_value",
-                     &compatibility_code_start_value);
+  if (FIID_OBJ_GET (obj_record,
+                    "compatibility_code_start_value",
+                    &compatibility_code_start_value) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'compatibility_code_start_value': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
   if ((len = fiid_obj_get_data (obj_record,
                                 "code_range_mask",
@@ -930,21 +1224,49 @@ output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "manufacturer_id",
-                     &manufacturer_id);
+  if (FIID_OBJ_GET (obj_record,
+                    "manufacturer_id",
+                    &manufacturer_id) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'manufacturer_id': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "entity_id_code",
-                     &entity_id_code);
+  if (FIID_OBJ_GET (obj_record,
+                    "entity_id_code",
+                    &entity_id_code) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'entity_id_code': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "compatibility_base",
-                     &compatibility_base);
+  if (FIID_OBJ_GET (obj_record,
+                    "compatibility_base",
+                    &compatibility_base) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'compatibility_base': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "compatibility_code_start_value",
-                     &compatibility_code_start_value);
+  if (FIID_OBJ_GET (obj_record,
+                    "compatibility_code_start_value",
+                    &compatibility_code_start_value) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'compatibility_code_start_value': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
   if ((len = fiid_obj_get_data (obj_record,
                                 "code_range_mask",
@@ -1068,9 +1390,16 @@ output_oem_record (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_record,
-                     "manufacturer_id",
-                     &manufacturer_id);
+  if (FIID_OBJ_GET (obj_record,
+                    "manufacturer_id",
+                    &manufacturer_id) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'manufacturer_id': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
 
   if ((len = fiid_obj_get_data (obj_record,
                                 "oem_data",
@@ -1216,21 +1545,56 @@ ipmi_fru_output_multirecord_info_area (ipmi_fru_state_data_t *state_data,
           goto cleanup;
         }
 
-      TOOL_FIID_OBJ_GET (fru_multirecord_header,
-                         "record_type_id",
-                         &record_type_id);
-      TOOL_FIID_OBJ_GET (fru_multirecord_header,
-                         "record_format_version",
-                         &record_format_version);
-      TOOL_FIID_OBJ_GET (fru_multirecord_header,
-                         "end_of_list",
-                         &end_of_list);
-      TOOL_FIID_OBJ_GET (fru_multirecord_header,
-                         "record_length",
-                         &record_length);
-      TOOL_FIID_OBJ_GET (fru_multirecord_header,
-                         "record_checksum",
-                         &record_checksum);
+      if (FIID_OBJ_GET (fru_multirecord_header,
+                        "record_type_id",
+                        &record_type_id) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'record_type_id': %s\n",
+                           fiid_obj_errormsg (fru_multirecord_header));
+          goto cleanup;
+        }
+      if (FIID_OBJ_GET (fru_multirecord_header,
+                        "record_format_version",
+                        &record_format_version) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'record_format_version': %s\n",
+                           fiid_obj_errormsg (fru_multirecord_header));
+          goto cleanup;
+        }
+      if (FIID_OBJ_GET (fru_multirecord_header,
+                        "end_of_list",
+                        &end_of_list) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'end_of_list': %s\n",
+                           fiid_obj_errormsg (fru_multirecord_header));
+          goto cleanup;
+        }
+      if (FIID_OBJ_GET (fru_multirecord_header,
+                        "record_length",
+                        &record_length) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'record_length': %s\n",
+                           fiid_obj_errormsg (fru_multirecord_header));
+          goto cleanup;
+        }
+      if (FIID_OBJ_GET (fru_multirecord_header,
+                        "record_checksum",
+                        &record_checksum) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'record_checksum': %s\n",
+                           fiid_obj_errormsg (fru_multirecord_header));
+          goto cleanup;
+        }
 
       if (state_data->prog_data->args->verbose_count >= 2)
         {

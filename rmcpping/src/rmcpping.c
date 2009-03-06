@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.44 2009-03-04 23:03:22 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.45 2009-03-06 18:11:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -47,38 +47,6 @@
 
 #define _supported(x)   (x) ? "supported" : "not-supported"
 
-static fiid_obj_t
-_fiid_obj_create (fiid_template_t tmpl)
-{
-  fiid_obj_t obj;
-
-  assert (tmpl);
-
-  if ((obj = fiid_obj_create (tmpl)) == NULL)
-    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
-
-  return (obj);
-}
-
-static void
-_fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val)
-{
-  int ret;
-
-  assert (obj);
-  assert (field);
-  assert (val);
-
-  if ((ret = fiid_obj_get (obj, field, val)) < 0)
-    ipmi_ping_err_exit ("fiid_obj_get: '%s': %s",
-                        field,
-                        fiid_obj_errormsg (obj));
-
-  if (!ret)
-    ipmi_ping_err_exit ("fiid_obj_get: '%s': no data",
-                        field);
-}
-
 int
 createpacket (char *destination,
               char *buffer,
@@ -100,8 +68,10 @@ createpacket (char *destination,
   if (buflen == 0)
     return (0);
 
-  obj_rmcp_hdr = _fiid_obj_create (tmpl_rmcp_hdr);
-  obj_rmcp_cmd = _fiid_obj_create (tmpl_cmd_asf_presence_ping);
+  if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(obj_rmcp_cmd = fiid_obj_create (tmpl_cmd_asf_presence_ping)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
 
   if (fill_rmcp_hdr_asf (obj_rmcp_hdr) < 0)
     ipmi_ping_err_exit ("fill_rmcp_hdr_asf: %s", strerror (errno));
@@ -166,8 +136,10 @@ parsepacket (char * destination,
   if (buflen == 0)
     return (0);
 
-  obj_rmcp_hdr = _fiid_obj_create (tmpl_rmcp_hdr);
-  obj_rmcp_cmd = _fiid_obj_create (tmpl_cmd_asf_presence_pong);
+  if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(obj_rmcp_cmd = fiid_obj_create (tmpl_cmd_asf_presence_pong)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
 
   if (debug)
     {
@@ -195,15 +167,20 @@ parsepacket (char * destination,
                            obj_rmcp_cmd) < 0)
     ipmi_ping_err_exit ("unassemble_rmcp_pkt: %s", strerror (errno));
 
-  _fiid_obj_get (obj_rmcp_cmd, "message_type", (uint64_t *)&message_type);
-
+  if (FIID_OBJ_GET (obj_rmcp_cmd, "message_type", (uint64_t *)&message_type) < 0)
+    ipmi_ping_err_exit ("fiid_obj_get: 'message_type': %s",
+                        fiid_obj_errormsg (obj_rmcp_cmd));
+  
   if (message_type != RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG)
     {
       rv = 0;
       goto cleanup;
     }
 
-  _fiid_obj_get (obj_rmcp_cmd, "message_tag", (uint64_t *)&message_tag);
+  if (FIID_OBJ_GET (obj_rmcp_cmd, "message_tag", (uint64_t *)&message_tag) < 0)
+    ipmi_ping_err_exit ("fiid_obj_get: 'message_tag': %s",
+                        fiid_obj_errormsg (obj_rmcp_cmd));
+  
   if (message_tag != (sequence_number % (RMCP_ASF_MESSAGE_TAG_MAX + 1)))
     {
       rv = 0;
@@ -213,9 +190,12 @@ parsepacket (char * destination,
   printf ("pong received from %s: message_tag=%u", from, (uint32_t)message_tag);
   if (verbose)
     {
-      _fiid_obj_get (obj_rmcp_cmd,
-                     "supported_entities.ipmi_supported",
-                     (uint64_t *)&ipmi_supported);
+      if (FIID_OBJ_GET (obj_rmcp_cmd,
+                        "supported_entities.ipmi_supported",
+                        (uint64_t *)&ipmi_supported) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'supported_entities.ipmi_supported': %s",
+                            fiid_obj_errormsg (obj_rmcp_cmd));
+      
       printf (", ipmi %s", _supported (ipmi_supported));
     }
   printf ("\n");

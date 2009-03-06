@@ -90,49 +90,154 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "boot_flags_persistent", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "boot_flags_persistent", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: '': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->boot_flags_persistent = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bios_boot_type", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "bios_boot_type", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'bios_boot_type': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->bios_boot_type = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "cmos_clear", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "cmos_clear", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'cmos_clear': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->cmos_clear = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "lock_keyboard", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "lock_keyboard", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'lock_keyboard': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->lock_keyboard = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "screen_blank", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "screen_blank", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'screen_blank': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->screen_blank = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "boot_device", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "boot_device", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'boot_device': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->boot_device = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "lock_out_reset_button", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "lock_out_reset_button", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'lock_out_reset_button': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->lock_out_reset_button = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "lock_out_via_power_button", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "lock_out_via_power_button", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'lock_out_via_power_button': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->lock_out_power_button = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "lock_out_sleep_button", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "lock_out_sleep_button", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'lock_out_sleep_button': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->lock_out_sleep_button = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "firmware_bios_verbosity", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "firmware_bios_verbosity", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'firmware_bios_verbosity': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->firmware_bios_verbosity = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "force_progress_event_traps", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "force_progress_event_traps", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'force_progress_event_traps': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->force_progress_event_traps = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "user_password_bypass", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "user_password_bypass", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'user_password_bypass': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->user_password_bypass = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "console_redirection", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "console_redirection", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'console_redirection': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->console_redirection = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bios_mux_control_override", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "bios_mux_control_override", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'bios_mux_control_override': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->bios_mux_control_override = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bios_shared_mode_override", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "bios_shared_mode_override", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'bios_shared_mode_override': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->bios_shared_mode_override = val;
 
   rv = CONFIG_ERR_SUCCESS;

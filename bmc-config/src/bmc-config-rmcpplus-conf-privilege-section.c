@@ -89,7 +89,14 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
           goto cleanup;
         }
 
-      TOOL_FIID_OBJ_GET (obj_cmd_count_rs, "cipher_suite_entry_count", &val);
+      if (FIID_OBJ_GET (obj_cmd_count_rs, "cipher_suite_entry_count", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'cipher_suite_entry_count': %s\n",
+                           fiid_obj_errormsg (obj_cmd_count_rs));
+          goto cleanup;
+        }
 
       state_data->cipher_suite_entry_count = val;
 
@@ -162,7 +169,15 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
           else if (i == 15)
             field = "cipher_suite_id_entry_P";
 
-          TOOL_FIID_OBJ_GET (obj_cmd_id_rs, field, &val);
+          if (FIID_OBJ_GET (obj_cmd_id_rs, field, &val) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "fiid_obj_get: '%s': %s\n",
+                               field,
+                               fiid_obj_errormsg (obj_cmd_id_rs));
+              goto cleanup;
+            }
 
           state_data->cipher_suite_id_supported[i] = val;
         }
@@ -235,7 +250,15 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
           else if (i == 15)
             field = "maximum_privilege_for_cipher_suite_16";
 
-          TOOL_FIID_OBJ_GET (obj_cmd_priv_rs, field, &val);
+          if (FIID_OBJ_GET (obj_cmd_priv_rs, field, &val) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "fiid_obj_get: '%s': %s\n",
+                               field,
+                               fiid_obj_errormsg (obj_cmd_priv_rs));
+              goto cleanup;
+            }
 
           state_data->cipher_suite_priv[i] = val;
         }

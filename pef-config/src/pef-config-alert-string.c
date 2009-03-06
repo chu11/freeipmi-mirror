@@ -88,10 +88,24 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "filter_number", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "filter_number", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'filter_number': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ask->event_filter_number = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "set_number_for_string", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "set_number_for_string", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'set_number_for_string': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ask->alert_string_set = val;
 
   rv = CONFIG_ERR_SUCCESS;

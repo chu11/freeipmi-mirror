@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.64 2009-03-04 23:03:21 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.65 2009-03-06 18:11:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -51,38 +51,6 @@
 /* IPMI has a 6 bit sequence number */
 #define IPMI_RQ_SEQ_MAX  0x3F
 
-static fiid_obj_t
-_fiid_obj_create (fiid_template_t tmpl)
-{
-  fiid_obj_t obj;
-
-  assert (tmpl);
-
-  if ((obj = fiid_obj_create (tmpl)) == NULL)
-    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
-
-  return (obj);
-}
-
-static void
-_fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val)
-{
-  int ret;
-
-  assert (obj);
-  assert (field);
-  assert (val);
-
-  if ((ret = fiid_obj_get (obj, field, val)) < 0)
-    ipmi_ping_err_exit ("fiid_obj_get: '%s': %s",
-                        field,
-                        fiid_obj_errormsg (obj));
-
-  if (!ret)
-    ipmi_ping_err_exit ("fiid_obj_get: '%s': no data",
-                        field);
-}
-
 int
 createpacket (char *destination,
               char *buffer,
@@ -113,10 +81,14 @@ createpacket (char *destination,
   else
     tmpl_cmd_get_channel_authentication_capabilities_ptr = (fiid_field_t *)&tmpl_cmd_get_channel_authentication_capabilities_v20_rq[0];
 
-  obj_rmcp_hdr = _fiid_obj_create (tmpl_rmcp_hdr);
-  obj_lan_session_hdr = _fiid_obj_create (tmpl_lan_session_hdr);
-  obj_lan_msg_hdr = _fiid_obj_create (tmpl_lan_msg_hdr_rq);
-  obj_cmd = _fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_ptr);
+  if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(obj_lan_session_hdr = fiid_obj_create (tmpl_lan_session_hdr)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(obj_lan_msg_hdr = fiid_obj_create (tmpl_lan_msg_hdr_rq)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(obj_cmd = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_ptr)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
 
   if (fill_rmcp_hdr_ipmi (obj_rmcp_hdr) < 0)
     ipmi_ping_err_exit ("fill_rmcp_hdr_ipmi: %s", strerror (errno));
@@ -228,11 +200,16 @@ parsepacket (char *destination,
   else
     tmpl_cmd_get_channel_authentication_capabilities_ptr = (fiid_field_t *)&tmpl_cmd_get_channel_authentication_capabilities_v20_rs[0];
 
-  obj_rmcp_hdr = _fiid_obj_create (tmpl_rmcp_hdr);
-  obj_lan_session_hdr = _fiid_obj_create (tmpl_lan_session_hdr);
-  obj_lan_msg_hdr = _fiid_obj_create (tmpl_lan_msg_hdr_rs);
-  obj_cmd = _fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_ptr);
-  obj_lan_msg_trlr = _fiid_obj_create (tmpl_lan_msg_trlr);
+  if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(obj_lan_session_hdr = fiid_obj_create (tmpl_lan_session_hdr)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(obj_lan_msg_hdr = fiid_obj_create (tmpl_lan_msg_hdr_rs)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(obj_cmd = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_ptr)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(obj_lan_msg_trlr = fiid_obj_create (tmpl_lan_msg_trlr)))
+    ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
 
   if (debug)
     {
@@ -309,7 +286,9 @@ parsepacket (char *destination,
       goto cleanup;
     }
 
-  _fiid_obj_get (obj_lan_msg_hdr, "rq_seq", (uint64_t *)&req_seq);
+  if (FIID_OBJ_GET (obj_lan_msg_hdr, "rq_seq", (uint64_t *)&req_seq) < 0)
+    ipmi_ping_err_exit ("fiid_obj_get: 'rq_seq': %s",
+                        fiid_obj_errormsg (obj_lan_msg_hdr));
 
   if (req_seq != sequence_number % (IPMI_RQ_SEQ_MAX + 1))
     {
@@ -322,39 +301,71 @@ parsepacket (char *destination,
   printf ("response received from %s: rq_seq=%u", from, (uint32_t)req_seq);
   if (verbose)
     {
-      _fiid_obj_get (obj_cmd,
-                     "authentication_type.none",
-                     &none);
-      _fiid_obj_get (obj_cmd,
-                     "authentication_type.md2",
-                     &md2);
-      _fiid_obj_get (obj_cmd,
-                     "authentication_type.md5",
-                     &md5);
-      _fiid_obj_get (obj_cmd,
-                     "authentication_type.straight_password_key",
-                     &straight_password_key);
-      _fiid_obj_get (obj_cmd,
-                     "authentication_type.oem_prop",
-                     &oem);
-      _fiid_obj_get (obj_cmd,
-                     "authentication_status.anonymous_login",
-                     &anonymous_login);
-      _fiid_obj_get (obj_cmd,
-                     "authentication_status.null_username",
-                     &null_username);
-      _fiid_obj_get (obj_cmd,
-                     "authentication_status.non_null_username",
-                     &non_null_username);
-      _fiid_obj_get (obj_cmd,
-                     "authentication_status.user_level_authentication",
-                     &user_level_authentication);
-      _fiid_obj_get (obj_cmd,
-                     "authentication_status.per_message_authentication",
-                     &per_message_authentication);
-      _fiid_obj_get (obj_cmd,
-                     "authentication_status.per_message_authentication",
-                     &per_message_authentication);
+      if (FIID_OBJ_GET (obj_cmd,
+                        "authentication_type.none",
+                        &none) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'authentication_type.none': %s",
+                            fiid_obj_errormsg (obj_cmd));
+
+      if (FIID_OBJ_GET (obj_cmd,
+                        "authentication_type.md2",
+                        &md2) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'authentication_type.md2': %s",
+                            fiid_obj_errormsg (obj_cmd));
+
+      if (FIID_OBJ_GET (obj_cmd,
+                        "authentication_type.md5",
+                        &md5) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'authentication_type.md5': %s",
+                            fiid_obj_errormsg (obj_cmd));
+
+      if (FIID_OBJ_GET (obj_cmd,
+                        "authentication_type.straight_password_key",
+                        &straight_password_key) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'authentication_type.straight_password_key': %s",
+                            fiid_obj_errormsg (obj_cmd));
+
+      if (FIID_OBJ_GET (obj_cmd,
+                        "authentication_type.oem_prop",
+                        &oem) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'authentication_type.oem_prop': %s",
+                            fiid_obj_errormsg (obj_cmd));
+
+      if (FIID_OBJ_GET (obj_cmd,
+                        "authentication_status.anonymous_login",
+                        &anonymous_login) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'authentication_status.anonymous_login': %s",
+                            fiid_obj_errormsg (obj_cmd));
+
+      if (FIID_OBJ_GET (obj_cmd,
+                        "authentication_status.null_username",
+                        &null_username) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'authentication_status.null_username': %s",
+                            fiid_obj_errormsg (obj_cmd));
+
+      if (FIID_OBJ_GET (obj_cmd,
+                        "authentication_status.non_null_username",
+                        &non_null_username) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'authentication_status.non_null_username': %s",
+                            fiid_obj_errormsg (obj_cmd));
+
+      if (FIID_OBJ_GET (obj_cmd,
+                        "authentication_status.user_level_authentication",
+                        &user_level_authentication) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'authentication_status.user_level_authentication': %s",
+                            fiid_obj_errormsg (obj_cmd));
+
+      if (FIID_OBJ_GET (obj_cmd,
+                        "authentication_status.per_message_authentication",
+                        &per_message_authentication) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'authentication_status.per_message_authentication': %s",
+                            fiid_obj_errormsg (obj_cmd));
+
+      if (FIID_OBJ_GET (obj_cmd,
+                        "authentication_status.per_message_authentication",
+                        &per_message_authentication) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'authentication_status.per_message_authentication': %s",
+                            fiid_obj_errormsg (obj_cmd));
 
       printf (", auth: none=%s md2=%s md5=%s password=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s ",
               _setstr (none), _setstr (md2), _setstr (md5),
@@ -365,13 +376,17 @@ parsepacket (char *destination,
 
       if (version == IPMI_PING_VERSION_2_0)
         {
-          _fiid_obj_get (obj_cmd,
-                         "authentication_type.ipmi_v2.0_extended_capabilities_available",
-                         &ipmi_v20_extended_capabilities_available);
+          if (FIID_OBJ_GET (obj_cmd,
+                            "authentication_type.ipmi_v2.0_extended_capabilities_available",
+                            &ipmi_v20_extended_capabilities_available) < 0)
+            ipmi_ping_err_exit ("fiid_obj_get: 'authentication_type.ipmi_v2.0_extended_capabilities_available': %s",
+                                fiid_obj_errormsg (obj_cmd));
 
-          _fiid_obj_get (obj_cmd,
-                         "authentication_status.k_g",
-                         &k_g);
+          if (FIID_OBJ_GET (obj_cmd,
+                            "authentication_status.k_g",
+                            &k_g) < 0)
+            ipmi_ping_err_exit ("fiid_obj_get: 'authentication_status.k_g': %s",
+                                fiid_obj_errormsg (obj_cmd));
 
           printf ("k_g=%s ipmi_v2.0_extended_capabilities_available=%s ",
                   _setstr (k_g),
@@ -379,12 +394,16 @@ parsepacket (char *destination,
 
           if (ipmi_v20_extended_capabilities_available)
             {
-              _fiid_obj_get (obj_cmd,
-                             "channel_supports_ipmi_v1.5_connections",
-                             (uint64_t *)&ipmi_v15);
-              _fiid_obj_get (obj_cmd,
-                             "channel_supports_ipmi_v2.0_connections",
-                             (uint64_t *)&ipmi_v20);
+              if (FIID_OBJ_GET (obj_cmd,
+                                "channel_supports_ipmi_v1.5_connections",
+                                (uint64_t *)&ipmi_v15) < 0)
+                ipmi_ping_err_exit ("fiid_obj_get: 'channel_supports_ipmi_v1.5_connections': %s",
+                                    fiid_obj_errormsg (obj_cmd));
+              if (FIID_OBJ_GET (obj_cmd,
+                                "channel_supports_ipmi_v2.0_connections",
+                                (uint64_t *)&ipmi_v20) < 0)
+                ipmi_ping_err_exit ("fiid_obj_get: 'channel_supports_ipmi_v2.0_connections': %s",
+                                    fiid_obj_errormsg (obj_cmd));
 
               printf ("ipmi_v1.5=%s ipmi_v2.0=%s ", _setstr (ipmi_v15), _setstr (ipmi_v20));
             }

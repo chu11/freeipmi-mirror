@@ -619,14 +619,28 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "positive_going_threshold_hysteresis_value",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "positive_going_threshold_hysteresis_value",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'positive_going_threshold_hysteresis_value': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   positive_going_threshold_hysteresis_raw = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "negative_going_threshold_hysteresis_value",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "negative_going_threshold_hysteresis_value",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'negative_going_threshold_hysteresis_value': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   negative_going_threshold_hysteresis_raw = val;
 
   /* achu: Well, compact records don't have the values to compute a
@@ -885,9 +899,16 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "all_event_messages",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "all_event_messages",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'all_event_messages': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (val == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE)
     {
@@ -917,9 +938,16 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs,
-                     "scanning_on_this_sensor",
-                     &val);
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "scanning_on_this_sensor",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'scanning_on_this_sensor': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
     {

@@ -84,24 +84,64 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "sdr_version_major", &val1);
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "sdr_version_minor", &val2);
+  if (FIID_OBJ_GET (obj_cmd_rs, "sdr_version_major", &val1) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'sdr_version_major': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "sdr_version_minor", &val2) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'sdr_version_minor': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "SDR version:                     %u.%u\n",
                   val1,
                   val2);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "record_count", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "record_count", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'record_count': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "SDR record count:                %u\n",
                   val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "free_space", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "free_space", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'free_space': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Free space remaining:            %u bytes\n",
                   val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'most_recent_addition_timestamp': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   t = val;
   localtime_r (&t, &tmp);
   strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tmp);
@@ -109,7 +149,15 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
                   "Most recent addition timestamp:  %s\n",
                   str);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'most_recent_erase_timestamp': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   t = val;
   localtime_r (&t, &tmp);
   strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tmp);
@@ -117,29 +165,70 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
                   "Most recent erase timestamp:     %s\n",
                   str);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "get_sdr_repository_allocation_info_command_supported", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "get_sdr_repository_allocation_info_command_supported", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'get_sdr_repository_allocation_info_command_supported': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Get SDR Repository Allocation Information Command supported:         %s\n",
                   (val ? "Yes" : "No"));
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "reserve_sdr_repository_command_supported", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "reserve_sdr_repository_command_supported", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'reserve_sdr_repository_command_supported': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Reserve SDR Repository Command supported:                            %s\n",
                   (val ? "Yes" : "No"));
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "partial_add_sdr_command_supported", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "partial_add_sdr_command_supported", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'partial_add_sdr_command_supported': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Partial Add SDR Command supported:                                   %s\n",
                   (val ? "Yes" : "No"));
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "delete_sdr_command_supported", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "delete_sdr_command_supported", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'delete_sdr_command_supported': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Delete SDR Command supported:                                        %s\n",
                   (val ? "Yes" : "No"));
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "modal_non_modal_sdr_repository_update_operation_supported", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "modal_non_modal_sdr_repository_update_operation_supported", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'modal_non_modal_sdr_repository_update_operation_supported': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "Modal/non-modal SDR Repository Update operation supported:           ");
+
   switch (val)
     {
     case IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_UNSPECIFIED:
@@ -158,7 +247,15 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
       pstdout_printf (state_data->pstate, "Unknown\n");
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "overflow_flag", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "overflow_flag", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'overflow_flag': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "SDR could not be written due to lack of space in the SDR Repository: %s\n",
                   (val ? "Yes" : "No"));

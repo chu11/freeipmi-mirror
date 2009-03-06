@@ -95,41 +95,41 @@ _get_pef_control (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (fiid_obj_get (obj_cmd_rs, "pef", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "pef", &val) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "fiid_obj_get: %s\n",
+                       "fiid_obj_get: 'pef': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   pc->enable_pef = val;
 
-  if (fiid_obj_get (obj_cmd_rs, "pef_event_messages", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "pef_event_messages", &val) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "fiid_obj_get: %s\n",
+                       "fiid_obj_get: 'pef_event_messages': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   pc->enable_pef_event_messages = val;
 
-  if (fiid_obj_get (obj_cmd_rs, "pef_startup_delay", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "pef_startup_delay", &val) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "fiid_obj_get: %s\n",
+                       "fiid_obj_get: 'pef_startup_delay': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   pc->enable_pef_startup_delay = val;
 
-  if (fiid_obj_get (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "fiid_obj_get: %s\n",
+                       "fiid_obj_get: 'pef_alert_startup_delay': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -400,61 +400,61 @@ _get_pef_action_global_control (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (fiid_obj_get (obj_cmd_rs, "alert_action", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "alert_action", &val) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "fiid_obj_get: %s\n",
+                       "fiid_obj_get: 'alert_action': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   gc->enable_alert_action = val;
 
-  if (fiid_obj_get (obj_cmd_rs, "power_down_action", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "power_down_action", &val) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "fiid_obj_get: %s\n",
+                       "fiid_obj_get: 'power_down_action': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   gc->enable_power_down_action = val;
 
-  if (fiid_obj_get (obj_cmd_rs, "reset_action", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "reset_action", &val) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "fiid_obj_get: %s\n",
+                       "fiid_obj_get: 'reset_action': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   gc->enable_reset_action = val;
 
-  if (fiid_obj_get (obj_cmd_rs, "power_cycle_action", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "power_cycle_action", &val) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "fiid_obj_get: %s\n",
+                       "fiid_obj_get: 'power_cycle_action': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   gc->enable_power_cycle_action = val;
 
-  if (fiid_obj_get (obj_cmd_rs, "oem_action", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "oem_action", &val) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "fiid_obj_get: %s\n",
+                       "fiid_obj_get: 'oem_action': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   gc->enable_oem_action = val;
 
-  if (fiid_obj_get (obj_cmd_rs, "diagnostic_interrupt", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "diagnostic_interrupt", &val) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "fiid_obj_get: %s\n",
+                       "fiid_obj_get: 'diagnostic_interrupt': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -812,11 +812,11 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (fiid_obj_get (obj_cmd_rs, "pef_startup_delay", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "pef_startup_delay", &val) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "fiid_obj_get: %s\n",
+                       "fiid_obj_get: 'pef_startup_delay': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -915,11 +915,11 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (fiid_obj_get (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "fiid_obj_get: %s\n",
+                       "fiid_obj_get: 'pef_alert_startup_delay': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
