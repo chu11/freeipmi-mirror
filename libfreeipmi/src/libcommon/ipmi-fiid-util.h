@@ -37,7 +37,5 @@ void set_errno_by_fiid_object (fiid_obj_t obj);
 
 void set_errno_by_fiid_iterator (fiid_iterator_t iter);
 
-int Fiid_obj_packet_valid (fiid_obj_t obj);
-
 #endif /* ipmi-fiid-util.h */
 

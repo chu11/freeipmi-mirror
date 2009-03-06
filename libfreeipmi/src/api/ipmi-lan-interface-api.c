@@ -86,9 +86,9 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_packet_valid (ctx, obj_cmd_rq) < 0)
+  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
       return (-1);
     }
 
@@ -251,9 +251,9 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (api_fiid_obj_packet_valid (ctx, obj_cmd_rq) < 0)
+  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
     {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
       return (-1);
     }
 

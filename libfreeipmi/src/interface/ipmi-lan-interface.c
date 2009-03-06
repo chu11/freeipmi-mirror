@@ -300,9 +300,10 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
       ERRNO_TRACE (errno);
       return (-1);
     }
-  if (Fiid_obj_packet_valid (obj_rmcp_hdr) < 0)
+
+  if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcp_hdr);
       return (-1);
     }
 
@@ -312,14 +313,14 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
    * is probably not set yet.
    */
 
-  if (Fiid_obj_packet_valid (obj_lan_msg_hdr) < 0)
+  if (FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
       return (-1);
     }
-  if (Fiid_obj_packet_valid (obj_cmd) < 0)
+  if (FIID_OBJ_PACKET_VALID (obj_cmd) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 

@@ -8,7 +8,7 @@
 	* libfreeipmi/include/freeipmi/fiid/fiid.h,
 	libfreeipmi/src/fiid/fiid.c (FIID_TEMPLATE_FIELD_LOOKUP,
 	FIID_TEMPLATE_COMPARE, FIID_OBJ_TEMPLATE_COMPARE,
-	FIID_OBJ_FIELD_LOOKUP): New functions.
+	FIID_OBJ_PACKET_VALID, FIID_OBJ_FIELD_LOOKUP): New functions.
 
 	* Use new macros as needed.
 

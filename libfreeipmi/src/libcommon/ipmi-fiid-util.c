@@ -49,6 +49,17 @@ set_errno_by_fiid_object (fiid_obj_t obj)
     errno = ENOMEM;
   else if (fiid_obj_errnum (obj) == FIID_ERR_OVERFLOW)
     errno = ENOSPC;
+#if 0
+  else if (fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE)
+    errno = EINVAL;
+  else if (fiid_obj_errnum (obj) == FIID_ERR_FIELD_NOT_FOUND
+           || fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_BYTE_ALIGNED
+           || fiid_obj_errnum (obj) == FIID_ERR_REQUIRED_FIELD_MISSING
+           || fiid_obj_errnum (obj) == FIID_ERR_FIXED_LENGTH_FIELD_INVALID
+           || fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE
+           || fiid_obj_errnum (obj) == FIID_ERR_NOT_IDENTICAL)
+    errno = EINVAL;
+#endif
   else
     errno = EINVAL;
 }
@@ -70,24 +81,4 @@ set_errno_by_fiid_iterator (fiid_iterator_t iter)
     errno = ENOSPC;
   else
     errno = EINVAL;
-}
-
-int
-Fiid_obj_packet_valid (fiid_obj_t obj)
-{
-  int ret;
-
-  if ((ret = fiid_obj_packet_valid (obj)) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj);
-      return (-1);
-    }
-
-  if (!ret)
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  return (1);                   /* return (1) like real call */
 }

@@ -68,8 +68,12 @@ locate_set_locate_errnum_by_fiid_object (ipmi_locate_ctx_t ctx, fiid_obj_t obj)
     ctx->errnum = IPMI_LOCATE_ERR_OUT_OF_MEMORY;
   else if (fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE)
     ctx->errnum = IPMI_LOCATE_ERR_SYSTEM_ERROR;
-  else if (fiid_obj_errnum (obj) == FIID_ERR_NOT_IDENTICAL
-           || fiid_obj_errnum (obj) == FIID_ERR_FIELD_NOT_FOUND)
+  else if (fiid_obj_errnum (obj) == FIID_ERR_FIELD_NOT_FOUND
+           || fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_BYTE_ALIGNED
+           || fiid_obj_errnum (obj) == FIID_ERR_REQUIRED_FIELD_MISSING
+           || fiid_obj_errnum (obj) == FIID_ERR_FIXED_LENGTH_FIELD_INVALID
+           || fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE
+           || fiid_obj_errnum (obj) == FIID_ERR_NOT_IDENTICAL)
     ctx->errnum = IPMI_LOCATE_ERR_PARAMETERS;
   else
     ctx->errnum = IPMI_LOCATE_ERR_INTERNAL_ERROR;

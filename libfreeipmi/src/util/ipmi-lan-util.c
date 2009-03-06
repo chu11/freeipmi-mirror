@@ -147,19 +147,19 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
       return (-1);
     }
 
-  if (Fiid_obj_packet_valid (obj_lan_session_hdr_rs) < 0)
+  if (FIID_OBJ_PACKET_VALID (obj_lan_session_hdr_rs) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_session_hdr_rs);
       return (-1);
     }
-  if (Fiid_obj_packet_valid (obj_lan_msg_hdr_rs) < 0)
+  if (FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr_rs) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr_rs);
       return (-1);
     }
-  if (Fiid_obj_packet_valid (obj_lan_msg_trlr_rs) < 0)
+  if (FIID_OBJ_PACKET_VALID (obj_lan_msg_trlr_rs) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_trlr_rs);
       return (-1);
     }
 

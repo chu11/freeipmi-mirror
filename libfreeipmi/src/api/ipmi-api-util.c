@@ -70,8 +70,12 @@ api_set_api_errnum_by_fiid_object (ipmi_ctx_t ctx, fiid_obj_t obj)
     ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
   else if (fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE)
     ctx->errnum = IPMI_ERR_IPMI_ERROR;
-  else if (fiid_obj_errnum (obj) == FIID_ERR_NOT_IDENTICAL
-           || fiid_obj_errnum (obj) == FIID_ERR_FIELD_NOT_FOUND)
+  else if (fiid_obj_errnum (obj) == FIID_ERR_FIELD_NOT_FOUND
+           || fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_BYTE_ALIGNED
+           || fiid_obj_errnum (obj) == FIID_ERR_REQUIRED_FIELD_MISSING
+           || fiid_obj_errnum (obj) == FIID_ERR_FIXED_LENGTH_FIELD_INVALID
+           || fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE
+           || fiid_obj_errnum (obj) == FIID_ERR_NOT_IDENTICAL)
     ctx->errnum = IPMI_ERR_PARAMETERS;
   else
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
@@ -217,29 +221,6 @@ api_set_api_errnum_by_sunbmc_errnum (ipmi_ctx_t ctx, int sunbmc_errnum)
     ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
   else
     ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
-}
-
-int
-api_fiid_obj_packet_valid (ipmi_ctx_t ctx, fiid_obj_t obj)
-{
-  int ret;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    return (-1);
-
-  if ((ret = fiid_obj_packet_valid (obj)) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj);
-      return (-1);
-    }
-
-  if (!ret)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  return (1);                   /* return 1 like real call */
 }
 
 int

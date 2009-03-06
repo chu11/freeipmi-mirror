@@ -1083,6 +1083,21 @@ fiid_obj_packet_valid (fiid_obj_t obj)
   return (1);
 }
 
+int8_t
+FIID_OBJ_PACKET_VALID (fiid_obj_t obj)
+{
+  int8_t ret;
+
+  if ((ret = fiid_obj_packet_valid (obj)) < 0)
+    return (ret);
+
+  /* errnum set in fiid_obj_packet_valid() */
+  if (!ret)
+    return (-1);
+
+  return (ret);
+}
+
 fiid_field_t *
 fiid_obj_template (fiid_obj_t obj)
 {

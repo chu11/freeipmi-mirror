@@ -1301,14 +1301,14 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       return (-1);
     }
 
-  if (Fiid_obj_packet_valid (obj_rmcp_hdr) < 0)
+  if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcp_hdr);
       return (-1);
     }
-  if (Fiid_obj_packet_valid (obj_cmd) < 0)
+  if (FIID_OBJ_PACKET_VALID (obj_cmd) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 
@@ -1397,7 +1397,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           ERRNO_TRACE (errno);
           return (-1);
         }
-      if (Fiid_obj_packet_valid (obj_lan_msg_hdr) < 0)
+      if (FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr) < 0)
         {
           ERRNO_TRACE (errno);
           return (-1);

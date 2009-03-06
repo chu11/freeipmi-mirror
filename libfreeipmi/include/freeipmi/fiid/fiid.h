@@ -366,6 +366,16 @@ int8_t fiid_obj_valid (fiid_obj_t obj);
 int8_t fiid_obj_packet_valid (fiid_obj_t obj);
 
 /*
+ * FIID_OBJ_PACKET_VALID
+ *
+ * Returns 1 if the object contains a all the data for a valid packet,
+ * -1 on error.  Identical to fiid_obj_packet_valid() except a return
+ * of 0 is not possible.  If object template and input template are
+ * not identical, -1 is returned and the appropriate error code set.
+ */
+int8_t FIID_OBJ_PACKET_VALID (fiid_obj_t obj);
+
+/*
  * fiid_obj_template
  *
  * Create a template based on what is stored internally within the

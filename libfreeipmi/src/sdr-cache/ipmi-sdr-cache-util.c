@@ -86,8 +86,12 @@ sdr_cache_set_sdr_cache_errnum_by_fiid_object (ipmi_sdr_cache_ctx_t ctx, fiid_ob
     ctx->errnum = IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY;
   else if (fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE)
     ctx->errnum = IPMI_SDR_CACHE_ERR_IPMI_ERROR;
-  else if (fiid_obj_errnum (obj) == FIID_ERR_NOT_IDENTICAL
-           || fiid_obj_errnum (obj) == FIID_ERR_FIELD_NOT_FOUND)
+  else if (fiid_obj_errnum (obj) == FIID_ERR_FIELD_NOT_FOUND
+           || fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_BYTE_ALIGNED
+           || fiid_obj_errnum (obj) == FIID_ERR_REQUIRED_FIELD_MISSING
+           || fiid_obj_errnum (obj) == FIID_ERR_FIXED_LENGTH_FIELD_INVALID
+           || fiid_obj_errnum (obj) == FIID_ERR_DATA_NOT_AVAILABLE
+           || fiid_obj_errnum (obj) == FIID_ERR_NOT_IDENTICAL)
     ctx->errnum = IPMI_SDR_CACHE_ERR_PARAMETERS;
   else
     ctx->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
