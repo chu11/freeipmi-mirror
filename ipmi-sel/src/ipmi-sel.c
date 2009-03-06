@@ -83,9 +83,23 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "sel_version_major", &val1);
+  if (FIID_OBJ_GET (obj_cmd_rs, "sel_version_major", &val1) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'sel_version_major': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "sel_version_minor", &val2);
+  if (FIID_OBJ_GET (obj_cmd_rs, "sel_version_minor", &val2) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'sel_version_minor': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
   pstdout_printf (state_data->pstate,
@@ -93,19 +107,40 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
                   val1,
                   val2);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "entries", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "entries", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'entries': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Number of log entries:                            %d\n",
                   val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "free_space", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "free_space", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'free_space': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Free space remaining:                             %d bytes\n",
                   val);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'most_recent_addition_timestamp': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   t = val;
   localtime_r (&t, &tm);
@@ -114,7 +149,14 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
                   "Recent addition timestamp:                        %s\n",
                   str);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'most_recent_erase_timestamp': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   t = val;
   localtime_r (&t, &tm);
@@ -123,31 +165,66 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
                   "Recent erase timestamp:                           %s\n",
                   str);
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "get_sel_allocation_info_command_supported", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "get_sel_allocation_info_command_supported", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'get_sel_allocation_info_command_supported': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Get SEL Allocation Information Command supported: %s\n",
                   (val ? "Yes" : "No"));
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "reserve_sel_command_supported", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "reserve_sel_command_supported", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'reserve_sel_command_supported': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Reserve SEL Command supported:                    %s\n",
                   (val ? "Yes" : "No"));
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "partial_add_sel_entry_command_supported", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "partial_add_sel_entry_command_supported", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'partial_add_sel_entry_command_supported': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Partial Add SEL Entry Command supported:          %s\n",
                   (val ? "Yes" : "No"));
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "delete_sel_command_supported", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "delete_sel_command_supported", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'delete_sel_command_supported': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Delete SEL Command supported:                     %s\n",
                   (val ? "Yes" : "No"));
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "overflow_flag", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "overflow_flag", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'overflow_flag': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Events drop due to lack of space in SEL:          %s\n",
