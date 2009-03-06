@@ -1,7 +1,3 @@
-cleanup
--------
-- make sure all SYSTEM_ERROR have errno tracing
-
 root
 ----
 autoconf - don't require root for tools
@@ -14,10 +10,10 @@ comma output - support in ipmi-sel, ipmi-sensors, ipmimonitoring
 libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
-* abstract FRU parsing into lib?
 * more detailed debug output for ssif interface like KCS interface
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
+* abstract FRU parsing into lib
 * document templates in .h files or something
   - split up and make '-template" .h files"
 
