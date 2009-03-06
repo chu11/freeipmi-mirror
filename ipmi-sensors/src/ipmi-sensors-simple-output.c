@@ -326,7 +326,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
     }
 
   pstdout_printf (state_data->pstate,
-                  "%-9u | %-16s | %-24s",
+                  "%-9u | %-16s | %-18s",
                   record_id,
                   id_string,
                   ipmi_sensors_get_sensor_type_string (sensor_type));
@@ -509,7 +509,7 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
       && !state_data->output_headers)
     {
       pstdout_printf (state_data->pstate,
-                      "Record ID | Sensor Name      | Sensor Group            ");
+                      "Record ID | Sensor Name      | Sensor Group      ");
       if (!state_data->prog_data->args->quiet_readings)
         pstdout_printf (state_data->pstate,
                         " | Sensor Reading | Sensor Units");
