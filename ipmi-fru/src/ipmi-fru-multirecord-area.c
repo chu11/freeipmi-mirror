@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.27 2009-03-06 18:11:03 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.28 2009-03-06 18:37:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -41,7 +41,6 @@
 #include "ipmi-fru-util.h"
 
 #include "freeipmi-portability.h"
-#include "tool-fiid-util.h"
 
 static char *
 voltage_str (uint8_t voltage)

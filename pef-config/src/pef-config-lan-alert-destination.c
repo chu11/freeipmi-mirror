@@ -34,7 +34,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 
 #define PEF_CONFIG_MAXIPADDRLEN 16
 #define PEF_CONFIG_MAXMACADDRLEN 24
@@ -103,16 +102,44 @@ _get_destination_type (pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "destination_type", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "destination_type", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'destination_type': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   dt->alert_destination_type = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "alert_acknowledge", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "alert_acknowledge", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'alert_acknowledge': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   dt->alert_acknowledge = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "alert_acknowledge_timeout", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "alert_acknowledge_timeout", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'alert_acknowledge_timeout': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   dt->alert_acknowledge_timeout = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "retries", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "retries", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'retries': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   dt->alert_retries = val;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -411,7 +438,14 @@ _get_destination_addresses (pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "gateway_selector", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "gateway_selector", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'gateway_selector': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   da->alert_gateway = val;
 
   if (fiid_obj_get_data (obj_cmd_rs,

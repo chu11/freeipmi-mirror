@@ -36,7 +36,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 #include "tool-sdr-cache-common.h"
 
 #define IPMI_SENSORS_SPACE_BUFFER 1024

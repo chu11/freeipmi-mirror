@@ -33,7 +33,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 #include "tool-sdr-cache-common.h"
 
 /* 3% range is what we'll go with right now */
@@ -348,7 +347,15 @@ threshold_checkout (const char *section_name,
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, readable_str, &readable);
+  if (FIID_OBJ_GET (obj_cmd_rs, readable_str, &readable) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: '%s': %s\n",
+                       readable_str,
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (!readable)
     {
@@ -363,7 +370,15 @@ threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, threshold_str, &threshold_raw);
+  if (FIID_OBJ_GET (obj_cmd_rs, threshold_str, &threshold_raw) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: '%s': %s\n",
+                       threshold_str,
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if ((ret = _decode_value (state_data,
                             sdr_record,
@@ -526,10 +541,24 @@ _get_hysteresis (ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "positive_going_threshold_hysteresis_value", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "positive_going_threshold_hysteresis_value", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'positive_going_threshold_hysteresis_value': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   *positive_going_threshold_hysteresis_value = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "negative_going_threshold_hysteresis_value", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "negative_going_threshold_hysteresis_value", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'negative_going_threshold_hysteresis_value': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   *negative_going_threshold_hysteresis_value = val;
 
   rv = CONFIG_ERR_SUCCESS;

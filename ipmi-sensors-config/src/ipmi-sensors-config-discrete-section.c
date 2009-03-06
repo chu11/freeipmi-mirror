@@ -33,7 +33,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 #include "tool-sdr-cache-common.h"
 
 config_err_t

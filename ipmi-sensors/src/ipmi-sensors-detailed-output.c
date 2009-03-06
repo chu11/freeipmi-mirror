@@ -36,7 +36,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 
 #define ALL_EVENT_MESSAGES_DISABLED "All Event Messages Disabled"
 #define SENSOR_SCANNING_DISABLED    "Sensor Scanning Disabled"

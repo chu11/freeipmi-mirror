@@ -34,7 +34,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 
 /* convenience struct */
 struct bmc_generated_arp_control
@@ -88,10 +87,24 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bmc_generated_gratuitous_arps", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "bmc_generated_gratuitous_arps", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'bmc_generated_gratuitous_arps': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ac->bmc_generated_gratuitous_arps = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "bmc_generated_arp_responses", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "bmc_generated_arp_responses", &val) < 0);
+  {
+    pstdout_fprintf (state_data->pstate,
+                     stderr,
+                     "fiid_obj_get: 'bmc_generated_arp_responses': %s\n",
+                     fiid_obj_errormsg (obj_cmd_rs));
+    goto cleanup;
+  }
   ac->bmc_generated_arp_responses = val;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -266,7 +279,14 @@ gratuitous_arp_interval_checkout (const char *section_name,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "gratuitous_arp_interval", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "gratuitous_arp_interval", &val) < 0);
+  {
+    pstdout_fprintf (state_data->pstate,
+                     stderr,
+                     "fiid_obj_get: 'gratuitous_arp_interval': %s\n",
+                     fiid_obj_errormsg (obj_cmd_rs));
+    goto cleanup;
+  }
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,

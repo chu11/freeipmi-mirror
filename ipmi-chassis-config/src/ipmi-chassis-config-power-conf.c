@@ -33,7 +33,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 
 static config_err_t
 power_restore_policy_checkout (const char *section_name,
@@ -66,7 +65,14 @@ power_restore_policy_checkout (const char *section_name,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_restore_policy", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_restore_policy", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'current_power_state.power_restore_policy': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,

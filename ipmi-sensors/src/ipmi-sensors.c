@@ -50,7 +50,6 @@
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
-#include "tool-fiid-util.h"
 #include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
 

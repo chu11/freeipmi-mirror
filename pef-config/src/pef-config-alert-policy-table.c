@@ -34,7 +34,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 
 /* convenience struct */
 struct alert_policy_table {
@@ -89,27 +88,83 @@ _get_alert_policy_table (struct pef_config_state_data *state_data,
     }
 
 #if 0
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "alert_policy_entry_number", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "alert_policy_entry_number", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'alert_policy_entry_number': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 #endif
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "policy_number.policy_type", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "policy_number.policy_type", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'policy_number.policy_type': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   apt->policy_type = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "policy_number.enabled", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "policy_number.enabled", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'policy_number.enabled': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   apt->policy_enabled = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "policy_number.policy_number", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "policy_number.policy_number", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'policy_number.policy_number': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   apt->policy_number = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "channel_destination.destination_selector", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "channel_destination.destination_selector", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'channel_destination.destination_selector': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   apt->destination_selector = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "channel_destination.channel_number", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "channel_destination.channel_number", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'channel_destination.channel_number': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   apt->channel_number = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "alert_string_key.alert_string_set_selector", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "alert_string_key.alert_string_set_selector", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'alert_string_key.alert_string_set_selector': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   apt->alert_string_set_selector = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "alert_string_key.event_specific_alert_string", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "alert_string_key.event_specific_alert_string", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'alert_string_key.event_specific_alert_string': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   apt->event_specific_alert_string = val;
 
   rv = CONFIG_ERR_SUCCESS;

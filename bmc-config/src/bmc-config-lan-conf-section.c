@@ -34,7 +34,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 
 #define BMC_MAXIPADDRLEN 16
 #define BMC_MAXMACADDRLEN 24

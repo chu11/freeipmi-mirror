@@ -34,7 +34,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 
 /* achu: presumably there is no maximum.  We could read/write blocks
    forever based on block numbers.  However, we need to have some

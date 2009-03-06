@@ -32,7 +32,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 
 static config_err_t
 community_string_checkout (const char *section_name,

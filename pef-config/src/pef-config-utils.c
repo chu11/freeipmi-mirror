@@ -33,7 +33,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 
 config_err_t
 get_lan_channel_number (struct pef_config_state_data *state_data, uint8_t *channel_number)

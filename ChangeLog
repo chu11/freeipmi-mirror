@@ -1,3 +1,10 @@
+2009-03-06  Albert Chu <chu11@llnl.gov>
+	
+	* common/src/toolcommon/tool-fiid-util.h,
+	common/src/toolcommon/tool-fiid-util.c: Removed files.
+
+	* Adjust tools to use new fiid functions/macros appropriately.
+
 2009-03-05  Albert Chu <chu11@llnl.gov>
 	
 	* common/src/toolcommon/tool-fiid-util.h: Remove some macros.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.47 2009-03-04 22:53:46 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.48 2009-03-06 18:37:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -48,7 +48,6 @@
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
-#include "tool-fiid-util.h"
 #include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
 
@@ -127,9 +126,16 @@ _output_fru (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (fru_get_inventory_rs,
-                     "fru_inventory_area_size",
-                     &state_data->fru_inventory_area_size);
+  if (FIID_OBJ_GET (fru_get_inventory_rs,
+                    "fru_inventory_area_size",
+                    &state_data->fru_inventory_area_size) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'fru_inventory_area_size': %s\n",
+                       fiid_obj_errormsg (fru_get_inventory_rs));
+      goto cleanup;
+    }
 
   if (state_data->prog_data->args->verbose_count >= 2)
     pstdout_printf (state_data->pstate,
@@ -205,24 +211,71 @@ _output_fru (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (fru_common_header,
-                     "format_version",
-                     &format_version);
-  TOOL_FIID_OBJ_GET (fru_common_header,
-                     "internal_use_area_starting_offset",
-                     &internal_use_area_starting_offset);
-  TOOL_FIID_OBJ_GET (fru_common_header,
-                     "chassis_info_area_starting_offset",
-                     &chassis_info_area_starting_offset);
-  TOOL_FIID_OBJ_GET (fru_common_header,
-                     "board_info_area_starting_offset",
-                     &board_info_area_starting_offset);
-  TOOL_FIID_OBJ_GET (fru_common_header,
-                     "product_info_area_starting_offset",
-                     &product_info_area_starting_offset);
-  TOOL_FIID_OBJ_GET (fru_common_header,
-                     "multirecord_area_starting_offset",
-                     &multirecord_area_starting_offset);
+  if (FIID_OBJ_GET (fru_common_header,
+                    "format_version",
+                    &format_version) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'format_version': %s\n",
+                       fiid_obj_errormsg (fru_common_header));
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (fru_common_header,
+                    "internal_use_area_starting_offset",
+                    &internal_use_area_starting_offset) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'internal_use_area_starting_offset': %s\n",
+                       fiid_obj_errormsg (fru_common_header));
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (fru_common_header,
+                    "chassis_info_area_starting_offset",
+                    &chassis_info_area_starting_offset) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'chassis_info_area_starting_offset': %s\n",
+                       fiid_obj_errormsg (fru_common_header));
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (fru_common_header,
+                    "board_info_area_starting_offset",
+                    &board_info_area_starting_offset) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'board_info_area_starting_offset': %s\n",
+                       fiid_obj_errormsg (fru_common_header));
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (fru_common_header,
+                    "product_info_area_starting_offset",
+                    &product_info_area_starting_offset) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'product_info_area_starting_offset': %s\n",
+                       fiid_obj_errormsg (fru_common_header));
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (fru_common_header,
+                    "multirecord_area_starting_offset",
+                    &multirecord_area_starting_offset) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'multirecord_area_starting_offset': %s\n",
+                       fiid_obj_errormsg (fru_common_header));
+      goto cleanup;
+    }
 
   if (state_data->prog_data->args->verbose_count >= 2)
     {

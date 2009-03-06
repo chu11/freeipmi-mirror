@@ -32,7 +32,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 #include "tool-sdr-cache-common.h"
 
 /* event field strings */
@@ -503,10 +502,24 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "all_event_messages", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "all_event_messages", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'all_event_messages': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->all_event_messages = val;
 
-  TOOL_FIID_OBJ_GET (obj_cmd_rs, "scanning_on_this_sensor", &val);
+  if (FIID_OBJ_GET (obj_cmd_rs, "scanning_on_this_sensor", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'scanning_on_this_sensor': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   data->scanning_on_this_sensor = val;
 
   if (data->all_event_messages == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE)

@@ -33,7 +33,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-fiid-util.h"
 
 /* convenience struct */
 struct boot_flags_data
