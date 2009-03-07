@@ -511,7 +511,11 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
   uint8_t positive_going_threshold_hysteresis_raw = 0;
   uint8_t negative_going_threshold_hysteresis_raw = 0;
   uint8_t sensor_number;
+  uint8_t sensor_units_percentage;
+  uint8_t sensor_units_modifier;
+  uint8_t sensor_units_rate;
   uint8_t sensor_base_unit_type;
+  uint8_t sensor_modifier_unit_type;
   uint8_t hysteresis_support;
   uint64_t val;
   int rv = -1;
@@ -570,10 +574,11 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
   if (ipmi_sdr_parse_sensor_units (state_data->sdr_parse_ctx,
                                    sdr_record,
                                    sdr_record_len,
-                                   NULL,
-                                   NULL,
+                                   &sensor_units_percentage,
+                                   &sensor_units_modifier,
+                                   &sensor_units_rate,
                                    &sensor_base_unit_type,
-                                   NULL) < 0)
+                                   &sensor_modifier_unit_type) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1146,7 +1151,11 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
 {
   uint8_t event_reading_type_code;
   int event_reading_type_code_class;
+  uint8_t sensor_units_percentage;
+  uint8_t sensor_units_modifier;
+  uint8_t sensor_units_rate;
   uint8_t sensor_base_unit_type;
+  uint8_t sensor_modifier_unit_type;
 
   assert (state_data);
   assert (sdr_record);
@@ -1175,10 +1184,11 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
   if (ipmi_sdr_parse_sensor_units (state_data->sdr_parse_ctx,
                                    sdr_record,
                                    sdr_record_len,
-                                   NULL,
-                                   NULL,
+                                   &sensor_units_percentage,
+                                   &sensor_units_modifier,
+                                   &sensor_units_rate,
                                    &sensor_base_unit_type,
-                                   NULL) < 0)
+                                   &sensor_modifier_unit_type) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,

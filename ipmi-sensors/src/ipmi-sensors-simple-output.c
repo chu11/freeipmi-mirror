@@ -153,17 +153,22 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD:
       if (!state_data->prog_data->args->quiet_readings)
         {
+          uint8_t sensor_units_percentage;
+          uint8_t sensor_units_modifier;
+          uint8_t sensor_units_rate;
           uint8_t sensor_base_unit_type;
+          uint8_t sensor_modifier_unit_type;
           double *lower_output_threshold = NULL;
           double *upper_output_threshold = NULL;
 
           if (ipmi_sdr_parse_sensor_units (state_data->sdr_parse_ctx,
                                            sdr_record,
                                            sdr_record_len,
-                                           NULL,
-                                           NULL,
+                                           &sensor_units_percentage,
+                                           &sensor_units_modifier,
+                                           &sensor_units_rate,
                                            &sensor_base_unit_type,
-                                           NULL) < 0)
+                                           &sensor_modifier_unit_type) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
@@ -326,7 +331,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
     }
 
   pstdout_printf (state_data->pstate,
-                  "%-9u | %-16s | %-18s",
+                  "%-9u | %-16s | %-24s",
                   record_id,
                   id_string,
                   ipmi_sensors_get_sensor_type_string (sensor_type));
@@ -373,15 +378,20 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD:
       if (!state_data->prog_data->args->quiet_readings)
         {
+          uint8_t sensor_units_percentage;
+          uint8_t sensor_units_modifier;
+          uint8_t sensor_units_rate;
           uint8_t sensor_base_unit_type;
+          uint8_t sensor_modifier_unit_type;
 
           if (ipmi_sdr_parse_sensor_units (state_data->sdr_parse_ctx,
                                            sdr_record,
                                            sdr_record_len,
-                                           NULL,
-                                           NULL,
+                                           &sensor_units_percentage,
+                                           &sensor_units_modifier,
+                                           &sensor_units_rate,
                                            &sensor_base_unit_type,
-                                           NULL) < 0)
+                                           &sensor_modifier_unit_type) < 0)
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
@@ -509,7 +519,7 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
       && !state_data->output_headers)
     {
       pstdout_printf (state_data->pstate,
-                      "Record ID | Sensor Name      | Sensor Group      ");
+                      "Record ID | Sensor Name      | Sensor Group            ");
       if (!state_data->prog_data->args->quiet_readings)
         pstdout_printf (state_data->pstate,
                         " | Sensor Reading | Sensor Units");

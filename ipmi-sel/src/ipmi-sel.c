@@ -713,7 +713,7 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
     }
 
   if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %-18s", outbuf);
+    pstdout_printf (state_data->pstate, " | %-24s", outbuf);
 
   return (1);
 }
@@ -818,6 +818,8 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
    * so some places where there could be two outputs
    * would be separated by a semi-colon
    */
+
+  memset (fmtbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
 
   if (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
       && event_data2_flag == IPMI_SEL_EVENT_DATA_TRIGGER_READING
@@ -949,7 +951,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   if (!state_data->output_headers)
     {
       pstdout_printf (state_data->pstate,
-                      "Record ID | Date        | Time     | Sensor Name      | Sensor Group      ");
+                      "Record ID | Date        | Time     | Sensor Name      | Sensor Group            ");
       if (state_data->prog_data->args->verbose_count >= 2)
         {
           pstdout_printf (state_data->pstate,

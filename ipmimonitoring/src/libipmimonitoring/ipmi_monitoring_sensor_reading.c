@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.67 2009-03-04 22:39:39 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.68 2009-03-07 00:51:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -528,6 +528,7 @@ _get_sensor_reading (ipmi_monitoring_ctx_t c,
 
 static int
 _get_sensor_units (ipmi_monitoring_ctx_t c,
+                   uint8_t sensor_units_percentage,
                    uint8_t sensor_units_modifier,
                    uint8_t sensor_units_rate,
                    uint8_t sensor_base_unit_type,
@@ -535,6 +536,12 @@ _get_sensor_units (ipmi_monitoring_ctx_t c,
 {
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
+
+  if (sensor_units_modifier != IPMI_SDR_PERCENTAGE_NO)
+    {
+      IPMI_MONITORING_DEBUG (("sensor_units_percentage 'yes' not supported"));
+      return (IPMI_MONITORING_SENSOR_UNITS_UNKNOWN);
+    }
 
   if (sensor_units_modifier != IPMI_SDR_MODIFIER_UNIT_NONE)
     {
@@ -580,6 +587,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
                            uint8_t *sdr_record,
                            unsigned int sdr_record_len)
 {
+  uint8_t sensor_units_percentage;
   uint8_t sensor_units_modifier;
   uint8_t sensor_units_rate;
   uint8_t sensor_base_unit_type;
@@ -601,6 +609,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
   if (ipmi_sdr_parse_sensor_units (c->sdr_parse_ctx,
                                    sdr_record,
                                    sdr_record_len,
+                                   &sensor_units_percentage,
                                    &sensor_units_modifier,
                                    &sensor_units_rate,
                                    &sensor_base_unit_type,
@@ -613,6 +622,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
     }
 
   if ((sensor_units = _get_sensor_units (c,
+                                         sensor_units_percentage,
                                          sensor_units_modifier,
                                          sensor_units_rate,
                                          sensor_base_unit_type,

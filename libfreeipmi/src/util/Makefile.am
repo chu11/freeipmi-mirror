@@ -13,8 +13,9 @@ libutil_la_SOURCES = \
 	ipmi-error-util.c \
 	ipmi-ipmb-util.c \
 	ipmi-lan-util.c \
+	ipmi-rmcpplus-util.c \
 	ipmi-sensor-and-event-code-tables-util.c \
 	ipmi-sensor-util.c \
-	ipmi-rmcpplus-util.c \
+	ipmi-sensor-units-util.c \
 	ipmi-util.c \
 	rmcp-util.c

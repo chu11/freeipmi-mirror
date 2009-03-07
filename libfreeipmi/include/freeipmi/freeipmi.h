@@ -100,6 +100,7 @@ extern "C" {
 #include <freeipmi/util/ipmi-rmcpplus-util.h>
 #include <freeipmi/util/ipmi-sensor-and-event-code-tables-util.h>
 #include <freeipmi/util/ipmi-sensor-util.h>
+#include <freeipmi/util/ipmi-sensor-units-util.h>
 #include <freeipmi/util/ipmi-util.h>
 #include <freeipmi/util/rmcp-util.h>
 

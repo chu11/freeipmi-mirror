@@ -2687,7 +2687,6 @@ ipmi_get_event_data2_message (int sensor_type_code,
     case 0x2B: return (get_2B_event_data2_message (offset, event_data2, buf, buflen));
     case 0x2C: return (get_2C_event_data2_message (offset, event_data2, buf, buflen));
     }
-
   SET_ERRNO (EINVAL);
   return (-1);
 }

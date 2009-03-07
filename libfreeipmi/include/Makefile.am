@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.31 2009-02-03 22:48:24 chu11 Exp $
+## $Id: Makefile.am,v 1.32 2009-03-07 00:51:13 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -81,5 +81,6 @@ nobase_include_HEADERS = \
 	freeipmi/util/ipmi-rmcpplus-util.h \
 	freeipmi/util/ipmi-sensor-and-event-code-tables-util.h \
 	freeipmi/util/ipmi-sensor-util.h \
+	freeipmi/util/ipmi-sensor-units-util.h \
 	freeipmi/util/ipmi-util.h \
 	freeipmi/util/rmcp-util.h

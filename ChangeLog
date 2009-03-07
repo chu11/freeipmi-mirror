@@ -1,5 +1,18 @@
 2009-03-06  Albert Chu <chu11@llnl.gov>
 	
+	* ipmi-sel/, ipmi-sensors/, ipmimontoring/: Make sensor group
+	size 24 columns.
+
+	* ipmi-sel/: Fix formatting bug due to non-memsetted buffer.
+
+	* libfreeipmi/src/sdr-parse/: Support sensor_units_percentage in
+	sensor_units parsing.
+
+	* libfreeipmi/include/freeipmi/util/ipmi-sensor-units-util.h,
+	libfreeipmi/src/util/ipmi-sensor-units-util.c: New files.
+
+2009-03-06  Albert Chu <chu11@llnl.gov>
+	
 	* common/src/toolcommon/tool-fiid-util.h,
 	common/src/toolcommon/tool-fiid-util.c: Removed files.
 

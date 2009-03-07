@@ -1270,7 +1270,12 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   uint8_t hysteresis_support = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  uint8_t sensor_type, sensor_base_unit_type;
+  uint8_t sensor_type;
+  uint8_t sensor_units_percentage;
+  uint8_t sensor_units_modifier;
+  uint8_t sensor_units_rate;
+  uint8_t sensor_base_unit_type;
+  uint8_t sensor_modifier_unit_type;
   char description[CONFIG_MAX_DESCRIPTION_LEN];
   const char *sensor_type_str = NULL;
 
@@ -1334,10 +1339,11 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   if (ipmi_sdr_parse_sensor_units (state_data->sdr_parse_ctx,
                                    sdr_record,
                                    sdr_record_len,
-                                   NULL,
-                                   NULL,
+                                   &sensor_units_percentage,
+                                   &sensor_units_modifier,
+                                   &sensor_units_rate,
                                    &sensor_base_unit_type,
-                                   NULL) < 0)
+                                   &sensor_modifier_unit_type) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,

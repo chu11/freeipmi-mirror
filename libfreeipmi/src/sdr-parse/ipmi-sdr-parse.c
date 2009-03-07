@@ -824,6 +824,7 @@ int
 ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
                              uint8_t *sdr_record,
                              unsigned int sdr_record_len,
+                             uint8_t *sensor_units_percentage,
                              uint8_t *sensor_units_modifier,
                              uint8_t *sensor_units_rate,
                              uint8_t *sensor_base_unit_type,
@@ -854,6 +855,18 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
                                                  sdr_record_len,
                                                  acceptable_record_types)))
     goto cleanup;
+
+  if (sensor_units_percentage)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "sensor_unit1.percentage",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *sensor_units_percentage = val;
+    }
 
   if (sensor_units_modifier)
     {

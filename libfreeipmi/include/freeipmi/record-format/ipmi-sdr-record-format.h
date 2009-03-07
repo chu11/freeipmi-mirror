@@ -140,9 +140,9 @@ extern "C" {
 #define IPMI_SDR_PERCENTAGE_NO  0
 #define IPMI_SDR_PERCENTAGE_YES 1
 
-#define IPMI_SDR_SDR_PERCENTAGE_VALID(__val) \
-  (((__val) == IPMI_SDR_SDR_PERCENTAGE_NO    \
-    || (__val) == IPMI_SDR_SDR_PERCENTAGE_YES) ? 1 : 0)
+#define IPMI_SDR_PERCENTAGE_VALID(__val) \
+  (((__val) == IPMI_SDR_PERCENTAGE_NO    \
+    || (__val) == IPMI_SDR_PERCENTAGE_YES) ? 1 : 0)
 
 #define IPMI_SDR_PHYSICAL_ENTITY          0x0
 #define IPMI_SDR_LOGICAL_CONTAINER_ENTITY 0x1
