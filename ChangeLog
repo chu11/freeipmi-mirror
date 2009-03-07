@@ -1,3 +1,8 @@
+2009-03-07  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-units-spec.h: Fix
+	macro checks for validity of fields.
+	
 2009-02-25  Albert Chu <chu11@llnl.gov>
 	
 	* configure.ac, NEWS: Update for release.
