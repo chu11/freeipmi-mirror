@@ -43,8 +43,8 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
                           unsigned int buflen,
                           unsigned int abbreviated_units_flag)
 {
-  char *sensor_units = NULL;
-  int rv;
+  const char **sensor_units = NULL;
+  int rv = -1;
 
   if (!IPMI_SDR_PERCENTAGE_VALID(sensor_units_percentage)
       || !IPMI_SDR_MODIFIER_UNIT_VALID(sensor_units_modifier)
@@ -74,9 +74,9 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
     }
 
   if (abbreviated_units_flag)
-    sensor_units = ipmi_sensor_units_abbreviated;
+    sensor_units = (const char **)ipmi_sensor_units_abbreviated;
   else
-    sensor_units = ipmi_sensor_units;
+    sensor_units = (const char **)ipmi_sensor_units;
 
   if (sensor_units_modifier == IPMI_SDR_MODIFIER_UNIT_NONE
       && sensor_units_rate == IPMI_SENSOR_RATE_UNIT_NONE)

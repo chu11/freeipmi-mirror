@@ -153,29 +153,18 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD:
       if (!state_data->prog_data->args->quiet_readings)
         {
-          uint8_t sensor_units_percentage;
-          uint8_t sensor_units_modifier;
-          uint8_t sensor_units_rate;
-          uint8_t sensor_base_unit_type;
-          uint8_t sensor_modifier_unit_type;
+          char sensor_units_buf[IPMI_SENSORS_UNITS_BUFLEN+1];
           double *lower_output_threshold = NULL;
           double *upper_output_threshold = NULL;
 
-          if (ipmi_sdr_parse_sensor_units (state_data->sdr_parse_ctx,
-                                           sdr_record,
-                                           sdr_record_len,
-                                           &sensor_units_percentage,
-                                           &sensor_units_modifier,
-                                           &sensor_units_rate,
-                                           &sensor_base_unit_type,
-                                           &sensor_modifier_unit_type) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "ipmi_sdr_parse_sensor_units: %s\n",
-                               ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-              goto cleanup;
-            }
+          memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
+          if (ipmi_sensors_get_units_string (state_data,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             sensor_units_buf,
+                                             IPMI_SENSORS_UNITS_BUFLEN,
+                                             1) < 0)
+            goto cleanup;
 
           if (ipmi_sensors_get_thresholds (state_data,
                                            sdr_record,
@@ -192,10 +181,12 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
             pstdout_printf (state_data->pstate,
                             "%.2f %s ",
                             _round_double2 (*reading),
-                            ipmi_sensor_units_abbreviated[sensor_base_unit_type]);
+                            sensor_units_buf);
           else
-            pstdout_printf (state_data->pstate, "%s ", IPMI_SENSORS_NA_STRING_LEGACY);
-
+            pstdout_printf (state_data->pstate,
+                            "%s ",
+                            IPMI_SENSORS_NA_STRING_LEGACY);
+          
           /* default output is critical thresholds, if those aren't
            * available, move to non-recoverable, and if those aren't
            * available, move on to non-critical.
@@ -378,39 +369,27 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD:
       if (!state_data->prog_data->args->quiet_readings)
         {
-          uint8_t sensor_units_percentage;
-          uint8_t sensor_units_modifier;
-          uint8_t sensor_units_rate;
-          uint8_t sensor_base_unit_type;
-          uint8_t sensor_modifier_unit_type;
+          char sensor_units_buf[IPMI_SENSORS_UNITS_BUFLEN+1];
 
-          if (ipmi_sdr_parse_sensor_units (state_data->sdr_parse_ctx,
-                                           sdr_record,
-                                           sdr_record_len,
-                                           &sensor_units_percentage,
-                                           &sensor_units_modifier,
-                                           &sensor_units_rate,
-                                           &sensor_base_unit_type,
-                                           &sensor_modifier_unit_type) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "ipmi_sdr_parse_sensor_units: %s\n",
-                               ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-              goto cleanup;
-            }
+          memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
+          if (ipmi_sensors_get_units_string (state_data,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             sensor_units_buf,
+                                             IPMI_SENSORS_UNITS_BUFLEN,
+                                             0) < 0)
+            goto cleanup;
 
           if (reading)
             pstdout_printf (state_data->pstate,
                             " | %-14.2f | %-12s",
                             _round_double2 (*reading),
-                            ipmi_sensor_units[sensor_base_unit_type]);
+                            sensor_units_buf);
           else
             pstdout_printf (state_data->pstate,
                             " | %-14s | %-12s",
                             IPMI_SENSORS_NA_STRING,
-                            ipmi_sensor_units[sensor_base_unit_type]);
-
+                            sensor_units_buf);
         }
 
       pstdout_printf (state_data->pstate,
