@@ -14,6 +14,8 @@ o ipmi-sel
   - Support --display and --display-range options.
   - Support --system-event-only and --oem-event-only options.
   - Output manufacturer name with "Manufacturer ID" if name available.
+  - Support sensor unit rates and modifiers (i.e. "gigabyte per
+    minute", "pounds / cu in").
   - Output OEM hex code in consistent format.
   - Output hex code more often if translation to string not available.
   - Re-work to use new libfreeipmi sel-parse sub library.

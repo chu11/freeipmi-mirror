@@ -49,6 +49,7 @@
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
+#include "freeipmi/util/ipmi-sensor-units-util.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
@@ -68,6 +69,8 @@
 #define SEL_PARSE_BUFFER_LENGTH 256
 #define SDR_RECORD_LENGTH       256
 #define ID_STRING_LENGTH        256
+
+#define UNITS_BUFFER_LENGTH     1024
 
 static int
 _SNPRINTF (char *buf,
@@ -264,7 +267,8 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
                      struct ipmi_sel_system_event_record_data *system_event_record_data,
                      uint8_t raw_data,
                      double *reading,
-                     uint8_t *sensor_unit)
+                     char *sensor_units_buf,
+                     unsigned int sensor_units_buflen)
 {
   uint8_t sdr_record[SDR_RECORD_LENGTH];
   unsigned int sdr_record_len = SDR_RECORD_LENGTH;
@@ -280,6 +284,7 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
   uint8_t sensor_units_rate;
   uint8_t sensor_base_unit_type;
   uint8_t sensor_modifier_unit_type;
+  int sensor_units_ret;
   int rv = -1;
   int ret;
 
@@ -288,7 +293,8 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
   assert (system_event_record_data);
   assert (ipmi_event_reading_type_code_class (system_event_record_data->event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD);
   assert (reading);
-  assert (sensor_unit);
+  assert (sensor_units_buf);
+  assert (sensor_units_buflen);
 
   if (!ctx->sdr_cache_ctx)
     return (0);
@@ -354,7 +360,21 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  *sensor_unit = sensor_base_unit_type;
+  memset (sensor_units_buf, '\0', sensor_units_buflen);
+  sensor_units_ret = ipmi_sensor_units_string (sensor_units_percentage,
+                                               sensor_units_modifier,
+                                               sensor_units_rate,
+                                               sensor_base_unit_type,
+                                               sensor_modifier_unit_type,
+                                               sensor_units_buf,
+                                               sensor_units_buflen,
+                                               1);
+
+  if (sensor_units_ret <= 0)
+    snprintf (sensor_units_buf,
+              sensor_units_buflen,
+              "%s",
+              ipmi_sensor_units[IPMI_SENSOR_UNIT_UNSPECIFIED]);
 
   /* if the sensor is not analog, this is most likely a bug in the
    * SDR
@@ -767,13 +787,15 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
         case IPMI_SEL_EVENT_DATA_TRIGGER_READING:
           {
             double reading;
-            uint8_t sensor_unit;
+            char sensor_units_buf[UNITS_BUFFER_LENGTH+1];
 
+            memset (sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
             if ((ret = _get_sensor_reading (ctx,
                                             &system_event_record_data,
                                             system_event_record_data.event_data2,
                                             &reading,
-                                            &sensor_unit)) < 0)
+                                            sensor_units_buf,
+                                            UNITS_BUFFER_LENGTH)) < 0)
               return (-1);
 
             if (ret)
@@ -783,13 +805,13 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
                             EVENT_BUFFER_LENGTH,
                             "Reading = %.2f %s",
                             _round_double2 (reading),
-                            ipmi_sensor_units_abbreviated[sensor_unit]);
+                            sensor_units_buf);
                 else
                   snprintf (tmpbuf,
                             EVENT_BUFFER_LENGTH,
                             "Sensor Reading = %.2f %s",
                             _round_double2 (reading),
-                            ipmi_sensor_units_abbreviated[sensor_unit]);
+                            sensor_units_buf);
               }
             else
               snprintf (tmpbuf,
@@ -1056,13 +1078,15 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
         case IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE:
           {
             double reading;
-            uint8_t sensor_unit;
+            char sensor_units_buf[UNITS_BUFFER_LENGTH+1];
             
+            memset (sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
             if ((ret = _get_sensor_reading (ctx,
                                             &system_event_record_data,
                                             system_event_record_data.event_data3,
                                             &reading,
-                                            &sensor_unit)) < 0)
+                                            sensor_units_buf,
+                                            UNITS_BUFFER_LENGTH)) < 0)
               return (-1);
             
             if (ret)
@@ -1070,7 +1094,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
                         EVENT_BUFFER_LENGTH,
                         "Threshold = %.2f %s",
                         _round_double2 (reading),
-                        ipmi_sensor_units_abbreviated[sensor_unit]);
+                        sensor_units_buf);
             else
               snprintf (tmpbuf,
                         EVENT_BUFFER_LENGTH,
@@ -1275,21 +1299,25 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
     {
       double trigger_reading;
       double threshold_reading;
-      uint8_t trigger_sensor_unit;
-      uint8_t threshold_sensor_unit;
-
+      char trigger_sensor_units_buf[UNITS_BUFFER_LENGTH+1];
+      char threshold_sensor_units_buf[UNITS_BUFFER_LENGTH+1];
+      
+      memset (trigger_sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
       if ((data2_ret = _get_sensor_reading (ctx,
                                             &system_event_record_data,
                                             system_event_record_data.event_data2,
                                             &trigger_reading,
-                                            &trigger_sensor_unit)) < 0)
+                                            trigger_sensor_units_buf,
+                                            UNITS_BUFFER_LENGTH)) < 0)
         return (-1);
-
+      
+      memset (threshold_sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
       if ((data3_ret = _get_sensor_reading (ctx,
                                             &system_event_record_data,
                                             system_event_record_data.event_data3,
                                             &threshold_reading,
-                                            &threshold_sensor_unit)) < 0)
+                                            threshold_sensor_units_buf,
+                                            UNITS_BUFFER_LENGTH)) < 0)
         return (-1);
 
       if (data2_ret && data3_ret)
@@ -1314,10 +1342,10 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                          wlen,
                          "Sensor Reading = %.2f %s %s Threshold %.2f %s",
                          _round_double2 (trigger_reading),
-                         ipmi_sensor_units_abbreviated[trigger_sensor_unit],
+                         trigger_sensor_units_buf,
                          _round_double2 (trigger_reading) < _round_double2 (threshold_reading) ? "<" : ">",
                          _round_double2 (threshold_reading),
-                         ipmi_sensor_units_abbreviated[threshold_sensor_unit]))
+                         threshold_sensor_units_buf))
             return (1);
           return (0);
         }

@@ -52,6 +52,8 @@
 #define IPMI_SEL_RECORD_SIZE   16
 #define IPMI_SEL_OUTPUT_BUFLEN 1024
 
+#define IPMI_SEL_NA_STRING     "N/A"
+
 static int
 _display_sel_info (ipmi_sel_state_data_t *state_data)
 {
@@ -622,6 +624,8 @@ _normal_output_record_id (ipmi_sel_state_data_t *state_data, unsigned int flags)
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, "%-9s", outbuf);
+  else
+    pstdout_printf (state_data->pstate, "%-9s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -653,6 +657,8 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %-11s", outbuf);
+  else
+    pstdout_printf (state_data->pstate, " | %-11s", IPMI_SEL_NA_STRING);
 
   memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
@@ -668,6 +674,8 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %-8s", outbuf);
+  else
+    pstdout_printf (state_data->pstate, " | %-8s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -699,6 +707,8 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %-16s", outbuf);
+  else
+    pstdout_printf (state_data->pstate, " | %-16s", IPMI_SEL_NA_STRING);
 
   memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
@@ -714,6 +724,8 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %-24s", outbuf);
+  else
+    pstdout_printf (state_data->pstate, " | %-24s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -746,6 +758,8 @@ _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int 
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %-15s", outbuf);
+  else
+    pstdout_printf (state_data->pstate, " | %-15s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -776,7 +790,9 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
     }
 
   if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %-33s", outbuf);
+    pstdout_printf (state_data->pstate, " | %-36s", outbuf);
+  else
+    pstdout_printf (state_data->pstate, " | %-36s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -871,6 +887,8 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %s", outbuf);
+  else
+    pstdout_printf (state_data->pstate, " | %s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -902,6 +920,8 @@ _normal_output_manufacturer_id (ipmi_sel_state_data_t *state_data, unsigned int 
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %-16s", outbuf);
+  else
+    pstdout_printf (state_data->pstate, " | %-16s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -933,6 +953,8 @@ _normal_output_oem_data (ipmi_sel_state_data_t *state_data, unsigned int flags)
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " | %s", outbuf);
+  else
+    pstdout_printf (state_data->pstate, " | %s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -958,7 +980,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
                           " | Event Direction");
         }
       pstdout_printf (state_data->pstate,
-                      " | Event                            ");
+                      " | Event                               ");
       if (state_data->prog_data->args->verbose_count)
         {
           pstdout_printf (state_data->pstate,

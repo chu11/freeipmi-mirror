@@ -3,8 +3,13 @@
 	* ipmi-sensors-config/, ipmi-sensors/: Support rates and modifiers
 	for units.
 
+	* libfreeipmi/src/sel-parse/: Support rates and modifiers for
+	units.
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-units-spec.h: Fix
 	field check macros.
+
+	* ipmi-sel/: Support output corner case.  Widen column width for event output.
 	
 2009-03-06  Albert Chu <chu11@llnl.gov>
 	
