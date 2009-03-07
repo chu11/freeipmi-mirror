@@ -17,7 +17,7 @@ libfreeipmi
 * document templates in .h files or something
   - split up and make '-template" .h files"
 
-units
+sel/sensors/sensors-config
 -----
 support modifier unit/rate unit in sensor output/monitoring/sel 
 
