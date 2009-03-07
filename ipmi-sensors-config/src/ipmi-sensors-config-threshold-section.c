@@ -41,6 +41,8 @@
 
 #define UNRECOGNIZED_SENSOR_TYPE "Unrecognized"
 
+#define IPMI_SENSORS_CONFIG_UNITS_BUFLEN 1024
+
 static config_err_t
 _get_sdr_decoding_data (ipmi_sensors_config_state_data_t *state_data,
                         uint8_t *sdr_record,
@@ -1277,6 +1279,8 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
   uint8_t sensor_base_unit_type;
   uint8_t sensor_modifier_unit_type;
   char description[CONFIG_MAX_DESCRIPTION_LEN];
+  char sensor_units_buf[IPMI_SENSORS_CONFIG_UNITS_BUFLEN+1];
+  int sensor_units_ret;
   const char *sensor_type_str = NULL;
 
   assert (state_data);
@@ -1352,22 +1356,31 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
       goto cleanup;
     }
 
+  memset (sensor_units_buf, '\0', IPMI_SENSORS_CONFIG_UNITS_BUFLEN);
+  sensor_units_ret = ipmi_sensor_units_string (sensor_units_percentage,
+                                               sensor_units_modifier,
+                                               sensor_units_rate,
+                                               sensor_base_unit_type,
+                                               sensor_modifier_unit_type,
+                                               sensor_units_buf,
+                                               IPMI_SENSORS_CONFIG_UNITS_BUFLEN,
+                                               0);
+
   sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
 
   memset (description, '\0', CONFIG_MAX_DESCRIPTION_LEN);
-  if (IPMI_SENSOR_UNIT_VALID (sensor_base_unit_type)
-      && sensor_base_unit_type != IPMI_SENSOR_UNIT_UNSPECIFIED)
+  if (sensor_units_ret > 0)
     snprintf (description,
               CONFIG_MAX_DESCRIPTION_LEN,
               "Give valid input for sensor type = %s; units = %s",
               sensor_type_str ? sensor_type_str : UNRECOGNIZED_SENSOR_TYPE,
-              ipmi_sensor_units[sensor_base_unit_type]);
+              sensor_units_buf);
   else
     snprintf (description,
               CONFIG_MAX_DESCRIPTION_LEN,
               "Give valid input for sensor type = %s",
               sensor_type_str ? sensor_type_str : UNRECOGNIZED_SENSOR_TYPE);
-
+  
   if (setup_sensor_event_enable_fields (state_data,
                                         sdr_record,
                                         sdr_record_len,

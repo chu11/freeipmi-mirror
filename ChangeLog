@@ -1,6 +1,7 @@
 2009-03-07  Albert Chu <chu11@llnl.gov>
 
-	* ipmi-sensors/: Support rates and modifiers for units.
+	* ipmi-sensors-config/, ipmi-sensors/: Support rates and modifiers
+	for units.
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-units-spec.h: Fix
 	field check macros.

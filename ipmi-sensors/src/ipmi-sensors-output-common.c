@@ -955,7 +955,7 @@ ipmi_sensors_get_units_string (ipmi_sensors_state_data_t *state_data,
                                                sensor_units_buflen,
                                                abbreviated_units_flag);
   
-  if (sensor_units_ret < 0)
+  if (sensor_units_ret <= 0)
     snprintf (sensor_units_buf,
               sensor_units_buflen,
               "%s",

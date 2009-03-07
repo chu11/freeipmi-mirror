@@ -51,6 +51,9 @@ o ipmi-sensors
   - Output hex code of group name in addition to group name in
     very-verbose output.
   - Re-work to use new libfreeipmi sensor-read sub library.
+o ipmi-sensors-config
+  - Support sensor unit rates and modifiers (i.e. "gigabyte per
+    minute", "pounds / cu in").
 o ipmimonitoring
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
