@@ -32,6 +32,8 @@ o ipmi-sensors
     mode (because the result is always "N/A").
   - Do not output SDR event records type under verbose output, only in very
     verbose output.
+  - Support sensor unit rates and modifiers (i.e. "gigabyte per
+    minute", "pounds / cu in").
   - Under very verbose output, "Sensor Status" is now "Sensor Event".
   - Under very verbose output, if multiple sensor states are
     triggered, always output a prefix of "Sensor Event".
@@ -81,8 +83,6 @@ o libfreeipmi
   - Add new sdr-parse sub library.
   - Add new sel-parse sub library.
   - Add new sensor-read sub library.
-  - The fiid sub library now includes wrapper functions for a number of
-    fiid library functions.
   - The locate sub library now uses a context style API for
     consistency to the rest of libfreeipmi.
   - More detailed KCS debug output with header information.
@@ -95,6 +95,11 @@ o libfreeipmi
   - Remove IPMI_ERR_LIBRARY_ERROR errnum.  Use IPMI_ERR_INTERNAL_ERROR
     errnum instead.
   - IPMI_*CTX_ERR* renamed to IPMI_*ERR* for consistency throughout.
+  - The fiid sub library now includes wrapper functions for a number of
+    fiid library functions.
+  - Support ipmi_sensor_units_string utility function to support
+    units, rates, and units modifiers (i.e. "gigabyte per minute",
+    "pounds / cu in").
 o libipmimonitoring
   - Support callback functions in API to monitor sensors as they
     are read/analyzed instead of after all sensors have been
