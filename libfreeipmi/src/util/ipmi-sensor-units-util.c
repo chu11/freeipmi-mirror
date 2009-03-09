@@ -74,7 +74,7 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
     {
       offset = snprintf (buf,
                          buflen,
-                         "% ");
+                         "%% ");
     }
 
 
