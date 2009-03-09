@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.45 2009-03-06 22:51:36 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.46 2009-03-09 16:54:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -918,17 +918,17 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
                        &h_errnop) != 0)
 #elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
     if (!gethostbyname_r (c->config.hostname,
-              &hent,
-              buf,
-              GETHOSTBYNAME_AUX_BUFLEN,
-              &h_errnop))
+                          &hent,
+                          buf,
+                          GETHOSTBYNAME_AUX_BUFLEN,
+                          &h_errnop))
 #else /* !HAVE_FUNC_GETHOSTBYNAME_R */
       if (freeipmi_gethostbyname_r (c->config.hostname,
-                    &hent,
-                    buf,
-                    GETHOSTBYNAME_AUX_BUFLEN,
-                    &hptr,
-                    &h_errnop) != 0)
+                                    &hent,
+                                    buf,
+                                    GETHOSTBYNAME_AUX_BUFLEN,
+                                    &hptr,
+                                    &h_errnop) != 0)
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
     {
       if (h_errnop == HOST_NOT_FOUND
