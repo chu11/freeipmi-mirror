@@ -44,6 +44,7 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
                           unsigned int abbreviated_units_flag)
 {
   const char **sensor_units = NULL;
+  int offset = 0;
   int rv = -1;
 
   if (!IPMI_SDR_PERCENTAGE_VALID(sensor_units_percentage)
@@ -58,13 +59,6 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
       return (-1);
     }
 
-  /* achu: I don't know what to do with this yet */
-  if (sensor_units_percentage == IPMI_SDR_PERCENTAGE_YES)
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
   /* achu: I assume this must be the case */
   if (sensor_units_modifier != IPMI_SDR_MODIFIER_UNIT_NONE
       && sensor_units_rate != IPMI_SENSOR_RATE_UNIT_NONE)
@@ -72,6 +66,17 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
       SET_ERRNO (EINVAL);
       return (-1);
     }
+
+  /* achu: I don't understand percentages exactly, I'll just
+   * assume it's a percent sign infront of everything else.
+   */
+  if (sensor_units_percentage == IPMI_SDR_PERCENTAGE_YES)
+    {
+      offset = snprintf (buf,
+                         buflen,
+                         "% ");
+    }
+
 
   if (abbreviated_units_flag)
     sensor_units = (const char **)ipmi_sensor_units_abbreviated;
@@ -81,7 +86,7 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
   if (sensor_units_modifier == IPMI_SDR_MODIFIER_UNIT_NONE
       && sensor_units_rate == IPMI_SENSOR_RATE_UNIT_NONE)
     {
-      rv = snprintf (buf,
+      rv = snprintf (buf + offset,
                      buflen,
                      "%s",
                      sensor_units[sensor_base_unit_type]);
@@ -90,7 +95,7 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
   
   if (sensor_units_rate != IPMI_SENSOR_RATE_UNIT_NONE)
     {
-      rv = snprintf (buf,
+      rv = snprintf (buf + offset,
                      buflen,
                      "%s %s",
                      sensor_units[sensor_base_unit_type],
@@ -101,13 +106,13 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
   /* else sensor_units_modifier != IPMI_SDR_MODIFIER_UNIT_NONE */
 
   if (sensor_units_modifier == IPMI_SDR_MODIFIER_UNIT_DIVIDE)
-    rv = snprintf (buf,
+    rv = snprintf (buf + offset,
                    buflen,
                    "%s / %s",
                    sensor_units[sensor_base_unit_type],
                    sensor_units[sensor_modifier_unit_type]);
   else
-    rv = snprintf (buf,
+    rv = snprintf (buf + offset,
                    buflen,
                    "%s * %s",
                    sensor_units[sensor_base_unit_type],
