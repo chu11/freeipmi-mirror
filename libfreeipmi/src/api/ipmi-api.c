@@ -280,11 +280,12 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
       return (-1);
     }
 #elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
-  if (gethostbyname_r (hostname,
-                       &hent,
-                       buf,
-                       GETHOSTBYNAME_AUX_BUFLEN,
-                       &h_errnop))
+  /* Jan Forch - Solaris gethostbyname_r returns ptr, not integer */
+  if (!gethostbyname_r (hostname,
+                        &hent,
+                        buf,
+                        GETHOSTBYNAME_AUX_BUFLEN,
+                        &h_errnop))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
       return (-1);

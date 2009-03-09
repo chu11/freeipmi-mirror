@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.47 2009-03-09 18:44:25 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.48 2009-03-09 20:52:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -915,8 +915,9 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
                        buf,
                        GETHOSTBYNAME_AUX_BUFLEN,
                        &hptr,
-                       &h_errnop) != 0)
+                       &h_errnop))
 #elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
+  /* Jan Forch - Solaris gethostbyname_r returns ptr, not integer */
   if (!gethostbyname_r (c->config.hostname,
                         &hent,
                         buf,
@@ -928,7 +929,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
                                 buf,
                                 GETHOSTBYNAME_AUX_BUFLEN,
                                 &hptr,
-                                &h_errnop) != 0)
+                                &h_errnop))
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
     {
       if (h_errnop == HOST_NOT_FOUND
