@@ -226,10 +226,11 @@ _get_home_directory (pstdout_state_t pstate,
       return -1;
     }
 #elif defined(HAVE_FUNC_GETPWUID_R_4)
-  if (getpwuid_r (user_id, 
-                  &pwd,
-                  tbuf,
-                  tbuf_len) != 0)
+  /* Jan Forch - Solaris getpwuid_r returns ptr, not integer */
+  if (!getpwuid_r (user_id, 
+                   &pwd,
+                   tbuf,
+                   tbuf_len)
     {
       PSTDOUT_PERROR(pstate, "getpwuid_r");
       return -1;

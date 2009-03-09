@@ -1,3 +1,10 @@
+2009-03-09  Jan Forch <Jan.Forch@sun.com>
+
+	* libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_outofband,
+	ipmi_ctx_open_outofband_2_0),
+	common/src/toolcommon/tool-sdr-cache-common.c
+        (_get_home_directory): Fix Solaris porting bugs.
+	
 2009-03-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-units-spec.h: Fix

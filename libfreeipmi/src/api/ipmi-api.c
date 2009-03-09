@@ -274,11 +274,12 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                                                     &h_errnop));
   API_ERR_HOSTNAME_INVALID_CLEANUP(hptr);
 #elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
-  API_ERR_HOSTNAME_INVALID_CLEANUP(!gethostbyname_r(hostname,
-                                                    &hent,
-                                                    buf,
-                                                    GETHOSTBYNAME_AUX_BUFLEN,
-                                                    &h_errnop));
+  /* Jan Forch - Solaris gethostbyname_r returns ptr, not integer */
+  API_ERR_HOSTNAME_INVALID_CLEANUP(gethostbyname_r(hostname,
+                                                   &hent,
+                                                   buf,
+                                                   GETHOSTBYNAME_AUX_BUFLEN,
+                                                   &h_errnop));
 #else  /* !HAVE_FUNC_GETHOSTBYNAME_R */
   API_ERR_HOSTNAME_INVALID_CLEANUP(!freeipmi_gethostbyname_r(hostname,
                                                              &hent,
@@ -419,11 +420,12 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                                                     &h_errnop));
   API_ERR_HOSTNAME_INVALID_CLEANUP(hptr);
 #elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
-  API_ERR_HOSTNAME_INVALID_CLEANUP(!gethostbyname_r(hostname,
-                                                    &hent,
-                                                    buf,
-                                                    GETHOSTBYNAME_AUX_BUFLEN,
-                                                    &h_errnop));
+  /* Jan Forch - Solaris gethostbyname_r returns ptr, not integer */
+  API_ERR_HOSTNAME_INVALID_CLEANUP(gethostbyname_r(hostname,
+                                                   &hent,
+                                                   buf,
+                                                   GETHOSTBYNAME_AUX_BUFLEN,
+                                                   &h_errnop));
 #else  /* !HAVE_FUNC_GETHOSTBYNAME_R */
   API_ERR_HOSTNAME_INVALID_CLEANUP(!freeipmi_gethostbyname_r(hostname,
                                                              &hent,
