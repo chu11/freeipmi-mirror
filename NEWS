@@ -14,8 +14,8 @@ o ipmi-sel
   - Support --display and --display-range options.
   - Support --system-event-only and --oem-event-only options.
   - Output manufacturer name with "Manufacturer ID" if name available.
-  - Support sensor unit rates and modifiers (i.e. "gigabyte per
-    minute", "pounds / cu in").
+  - Support sensor unit percentages, rates and modifiers (i.e. "%
+    hit", "gigabyte per minute", "pounds / cu in").
   - Output OEM hex code in consistent format.
   - Output hex code more often if translation to string not available.
   - Re-work to use new libfreeipmi sel-parse sub library.
@@ -34,8 +34,10 @@ o ipmi-sensors
     mode (because the result is always "N/A").
   - Do not output SDR event records type under verbose output, only in very
     verbose output.
-  - Support sensor unit rates and modifiers (i.e. "gigabyte per
-    minute", "pounds / cu in").
+  - Always output abbreviated units in verbose output (i.e. 'C'
+    instead of 'degrees C').
+  - Support sensor unit percentages, rates and modifiers (i.e. "%
+    hit", "gigabyte per minute", "pounds / cu in").
   - Under very verbose output, "Sensor Status" is now "Sensor Event".
   - Under very verbose output, if multiple sensor states are
     triggered, always output a prefix of "Sensor Event".
@@ -54,8 +56,8 @@ o ipmi-sensors
     very-verbose output.
   - Re-work to use new libfreeipmi sensor-read sub library.
 o ipmi-sensors-config
-  - Support sensor unit rates and modifiers (i.e. "gigabyte per
-    minute", "pounds / cu in").
+  - Support sensor unit percentages, rates and modifiers (i.e. "%
+    hit", "gigabyte per minute", "pounds / cu in").
 o ipmimonitoring
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
@@ -103,8 +105,8 @@ o libfreeipmi
   - The fiid sub library now includes wrapper functions for a number of
     fiid library functions.
   - Support ipmi_sensor_units_string utility function to support
-    units, rates, and units modifiers (i.e. "gigabyte per minute",
-    "pounds / cu in").
+    units, percentages, rates, and units modifiers (i.e. "% hit",
+    "gigabyte per minute", "pounds / cu in").
 o libipmimonitoring
   - Support callback functions in API to monitor sensors as they
     are read/analyzed instead of after all sensors have been
