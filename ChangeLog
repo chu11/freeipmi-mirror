@@ -1,3 +1,8 @@
+2009-03-09  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/util/ipmi-sensor-units-util.c: Support
+	percentage sign.
+	
 2009-03-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors-config/, ipmi-sensors/: Support rates and modifiers

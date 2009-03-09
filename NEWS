@@ -34,8 +34,6 @@ o ipmi-sensors
     mode (because the result is always "N/A").
   - Do not output SDR event records type under verbose output, only in very
     verbose output.
-  - Always output abbreviated units in verbose output (i.e. 'C'
-    instead of 'degrees C').
   - Support sensor unit percentages, rates and modifiers (i.e. "%
     hit", "gigabyte per minute", "pounds / cu in").
   - Under very verbose output, "Sensor Status" is now "Sensor Event".
