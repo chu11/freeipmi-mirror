@@ -97,14 +97,14 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
     }
   ac->bmc_generated_gratuitous_arps = val;
 
-  if (FIID_OBJ_GET (obj_cmd_rs, "bmc_generated_arp_responses", &val) < 0);
-  {
-    pstdout_fprintf (state_data->pstate,
-                     stderr,
-                     "fiid_obj_get: 'bmc_generated_arp_responses': %s\n",
-                     fiid_obj_errormsg (obj_cmd_rs));
-    goto cleanup;
-  }
+  if (FIID_OBJ_GET (obj_cmd_rs, "bmc_generated_arp_responses", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'bmc_generated_arp_responses': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
   ac->bmc_generated_arp_responses = val;
 
   rv = CONFIG_ERR_SUCCESS;
