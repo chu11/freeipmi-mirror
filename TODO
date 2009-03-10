@@ -1,7 +1,3 @@
-root
-----
-autoconf - don't require root for tools
-
 freeipmi tools
 --------------
 config via environment variables too - like config file
