@@ -1,3 +1,10 @@
+2009-03-10  Albert Chu <chu11@llnl.gov>
+
+	* config/ac_dont_check_for_root.m4: New file.
+
+	* configure.ac, common/src/tool-common.c (ipmi_is_root): Support
+	option to not check for root in FreeIPMI tools.
+	
 2009-03-09  Jan Forch <Jan.Forch@sun.com>
 
 	* libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_open_outofband,
