@@ -279,14 +279,14 @@ gratuitous_arp_interval_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs, "gratuitous_arp_interval", &val) < 0);
-  {
-    pstdout_fprintf (state_data->pstate,
-                     stderr,
-                     "fiid_obj_get: 'gratuitous_arp_interval': %s\n",
-                     fiid_obj_errormsg (obj_cmd_rs));
-    goto cleanup;
-  }
+  if (FIID_OBJ_GET (obj_cmd_rs, "gratuitous_arp_interval", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'gratuitous_arp_interval': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
 
   if (config_section_update_keyvalue_output_int (state_data->pstate,
                                                  kv,
