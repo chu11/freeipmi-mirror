@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.8.0.alpha0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.167 2009-02-03 22:48:20 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.168 2009-03-10 18:17:02 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -579,6 +579,7 @@ AC_IPMI_MONITORING_SDR_CACHE_DIR
 AC_IPMI_MONITORING_SENSOR_CONFIG_FILE
 AC_IPMIDETECT_CONFIG_FILE
 AC_IPMIDETECTD_CONFIG_FILE
+AC_DONT_CHECK_FOR_ROOT
 
 dnl Checks for things needed in lib argp
 AC_CHECK_DECLS([program_invocation_name, program_invocation_short_name],

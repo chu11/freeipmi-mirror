@@ -44,10 +44,14 @@
 int
 ipmi_is_root ()
 {
+#if IPMI_DONT_CHECK_FOR_ROOT
+  return (1);
+#else /* !IPMI_DONT_CHECK_FOR_ROOT */
   uid_t uid = getuid ();
   if (uid == 0)
     return (1);
   return (0);
+#endif /* !IPMI_DONT_CHECK_FOR_ROOT */
 }
 
 void
