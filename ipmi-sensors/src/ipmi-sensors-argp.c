@@ -43,6 +43,7 @@
 #include "freeipmi-portability.h"
 #include "tool-cmdline-common.h"
 #include "tool-config-file-common.h"
+#include "tool-sensor-common.h"
 
 const char *argp_program_version =
   "ipmi-sensors - " PACKAGE_VERSION "\n"
@@ -257,14 +258,13 @@ _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 
           while (ipmi_sensor_types[j])
             {
-              char sdr_group_name_subst[IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH];
+              char sensor_group_cmdline[IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH];
 
-              strcpy (sdr_group_name_subst, ipmi_sensor_types[j]);
-              str_replace_char (sdr_group_name_subst, ' ', '_');
-              str_replace_char (sdr_group_name_subst, '/', '_');
+              strcpy (sensor_group_cmdline, ipmi_sensor_types[j]);
+              get_sensor_group_cmdline_string (sensor_group_cmdline);
 
               if (!strcasecmp (cmd_args->groups[i], ipmi_sensor_types[j])
-                  || !strcasecmp (cmd_args->groups[i], sdr_group_name_subst))
+                  || !strcasecmp (cmd_args->groups[i], sensor_group_cmdline))
                 {
                   found++;
                   break;

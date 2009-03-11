@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.95 2009-03-11 21:54:13 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.96 2009-03-11 23:02:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -81,20 +81,6 @@
 #define IPMIMONITORING_FMT_BUFLEN             1024
 
 static void
-_str_replace_char (char *str, char chr, char with)
-{
-  char *p = NULL;
-  char *s = NULL;
-
-  assert (str);
-
-  for (s = str;
-       (p = strchr (s, chr));
-       s = p + 1)
-    *p = with;
-}
-
-static void
 _display_group (ipmimonitoring_state_data_t *state_data, uint8_t sensor_type)
 {
   char *group;
@@ -111,8 +97,7 @@ _display_group (ipmimonitoring_state_data_t *state_data, uint8_t sensor_type)
       exit (1);
     }
 
-  _str_replace_char (group, ' ', '_');
-  _str_replace_char (group, '/', '_');
+  get_sensor_group_cmdline_string (group);
   pstdout_printf (state_data->pstate, "%s\n", group);
 }
 
@@ -317,9 +302,7 @@ _group_strcmp (char *group_input,
       exit (1);
     }
 
-  _str_replace_char (group, ' ', '_');
-  _str_replace_char (group, '/', '_');
-
+  get_sensor_group_cmdline_string (group);
   return (!strcasecmp (group_input, group)) ? 1 : 0;
 }
 

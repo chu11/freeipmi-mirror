@@ -372,17 +372,3 @@ get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_da
     free (tmp_event_message_list);
   return (-1);
 }
-
-void
-str_replace_char (char *str, char chr, char with)
-{
-  char *p = NULL;
-  char *s = NULL;
-
-  assert (str);
-
-  for (s = str;
-       (p = strchr (s, chr));
-       s = p + 1)
-    *p = with;
-}

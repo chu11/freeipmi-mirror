@@ -46,6 +46,4 @@ int get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *stat
                                             uint16_t sensor_event_bitmask,
                                             char *no_event_msg);
 
-void str_replace_char (char *str, char chr, char with);
-
 #endif

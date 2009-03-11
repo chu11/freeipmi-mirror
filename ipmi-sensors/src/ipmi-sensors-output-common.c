@@ -37,6 +37,7 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "tool-sdr-cache-common.h"
+#include "tool-sensor-common.h"
 
 #define IPMI_SENSORS_SPACE_BUFFER 1024
 
@@ -45,7 +46,7 @@ ipmi_sensors_group_specified (ipmi_sensors_state_data_t *state_data,
                               uint8_t *sdr_record,
                               unsigned int sdr_record_len)
 {
-  const char *sdr_group_name = NULL;
+  const char *sensor_group = NULL;
   uint8_t record_type;
   uint8_t sensor_type;
   int i;
@@ -85,22 +86,21 @@ ipmi_sensors_group_specified (ipmi_sensors_state_data_t *state_data,
         }
 
       /* Don't use get_sensor_type_output_string() - want NULL if invalid */
-      sdr_group_name = ipmi_get_sensor_type_string (sensor_type);
+      sensor_group = ipmi_get_sensor_type_string (sensor_type);
     }
 
-  if (sdr_group_name)
+  if (sensor_group)
     {
-      char sdr_group_name_subst[IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH];
+      char sensor_group_cmdline[IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH];
 
-      strcpy (sdr_group_name_subst, sdr_group_name);
-      str_replace_char (sdr_group_name_subst, ' ', '_');
-      str_replace_char (sdr_group_name_subst, '/', '_');
+      strcpy (sensor_group_cmdline, sensor_group);
+      get_sensor_group_cmdline_string (sensor_group_cmdline);
 
       for (i = 0; i < state_data->prog_data->args->groups_length; i++)
         {
-          if ((strcasecmp (sdr_group_name,
+          if ((strcasecmp (sensor_group,
                            state_data->prog_data->args->groups[i]) == 0)
-              || (strcasecmp (sdr_group_name_subst,
+              || (strcasecmp (sensor_group_cmdline,
                               state_data->prog_data->args->groups[i]) == 0))
             return (1);
         }

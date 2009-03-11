@@ -52,6 +52,7 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
+#include "tool-sensor-common.h"
 
 static int
 _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
@@ -298,8 +299,7 @@ _display_group (ipmi_sensors_state_data_t *state_data)
                            strerror (errno));
           return (-1);
         }
-      str_replace_char (group, ' ', '_');
-      str_replace_char (group, '/', '_');
+      get_sensor_group_cmdline_string (group);
       pstdout_printf (state_data->pstate, "%s\n", group);
     }
   if (!(group = strdupa (ipmi_oem_sensor_type)))
@@ -310,8 +310,7 @@ _display_group (ipmi_sensors_state_data_t *state_data)
                        strerror (errno));
       return (-1);
     }
-  str_replace_char (group, ' ', '_');
-  str_replace_char (group, '/', '_');
+  get_sensor_group_cmdline_string (group);
   pstdout_printf (state_data->pstate, "%s\n", group);
 
   return (0);
