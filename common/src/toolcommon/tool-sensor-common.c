@@ -51,7 +51,7 @@ _str_replace_char (char *str, char chr, char with)
 }
 
 const char *
-get_sensor_type_output_string (unsigned int sensor_type)
+get_sensor_group_output_string (unsigned int sensor_type)
 {
   const char *sensor_group;
 
@@ -68,4 +68,51 @@ get_sensor_group_cmdline_string (char *sensor_group)
 
   _str_replace_char (sensor_group, ' ', '_');
   _str_replace_char (sensor_group, '/', '_');
+}
+
+int
+display_sensor_group_cmdline (pstdout_state_t pstate, 
+                              unsigned int sensor_type)
+{
+  const char *sensor_group;
+  char *tmpstr = NULL;
+
+  sensor_group = get_sensor_group_output_string (sensor_type);
+
+  if (!(tmpstr = strdupa (sensor_group)))
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "strdupa: %s\n",
+                       strerror (errno));
+      return (-1);
+    }
+
+  get_sensor_group_cmdline_string (tmpstr);
+
+  PSTDOUT_PRINTF (pstate, "%s\n", tmpstr);
+  return (0);
+}
+
+int
+display_string_cmdline (pstdout_state_t pstate, 
+                        const char *str)
+{
+  char *tmpstr;
+
+  assert (str);
+
+  if (!(tmpstr = strdupa (str)))
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "strdupa: %s\n",
+                       strerror (errno));
+      return (-1);
+    } 
+
+  get_sensor_group_cmdline_string (tmpstr);
+
+  PSTDOUT_PRINTF (pstate, "%s\n", tmpstr);
+  return (0);
 }

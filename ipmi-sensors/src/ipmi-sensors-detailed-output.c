@@ -239,7 +239,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                   id_string);
   pstdout_printf (state_data->pstate,
                   "Group Name: %s (%Xh)\n",
-                  get_sensor_type_output_string (sensor_type),
+                  get_sensor_group_output_string (sensor_type),
                   sensor_type);
   pstdout_printf (state_data->pstate,
                   "Sensor Number: %u\n",

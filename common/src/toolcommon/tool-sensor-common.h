@@ -28,8 +28,14 @@
 
 #define UNRECOGNIZED_SENSOR_GROUP "Unrecognized"
 
-const char * get_sensor_type_output_string (unsigned int sensor_type);
+const char * get_sensor_group_output_string (unsigned int sensor_type);
 
 void get_sensor_group_cmdline_string (char *sensor_group);
+
+int display_sensor_group_cmdline (pstdout_state_t pstate, 
+                                  unsigned int sensor_type);
+
+int display_string_cmdline (pstdout_state_t pstate, 
+                            const char *str);
 
 #endif

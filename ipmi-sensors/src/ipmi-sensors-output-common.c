@@ -85,7 +85,7 @@ ipmi_sensors_group_specified (ipmi_sensors_state_data_t *state_data,
           return (-1);
         }
 
-      /* Don't use get_sensor_type_output_string() - want NULL if invalid */
+      /* Don't use get_sensor_group_output_string() - want NULL if invalid */
       sensor_group = ipmi_get_sensor_type_string (sensor_type);
     }
 

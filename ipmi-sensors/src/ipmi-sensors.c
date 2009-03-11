@@ -285,33 +285,18 @@ static int
 _display_group (ipmi_sensors_state_data_t *state_data)
 {
   int i = 0;
-  char *group = NULL;
 
   assert (state_data);
 
-  for (i = 0; ipmi_sensor_types[i]; i++)
+  for (i = IPMI_SENSOR_TYPE_TEMPERATURE; i <= IPMI_SENSOR_TYPE_FRU_STATE; i++)
     {
-      if (!(group = strdupa (ipmi_sensor_types[i])))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "strdupa: %s\n",
-                           strerror (errno));
-          return (-1);
-        }
-      get_sensor_group_cmdline_string (group);
-      pstdout_printf (state_data->pstate, "%s\n", group);
+      if (display_sensor_group_cmdline (state_data->pstate, i) < 0)
+        return (-1);
     }
-  if (!(group = strdupa (ipmi_oem_sensor_type)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "strdupa: %s\n",
-                       strerror (errno));
-      return (-1);
-    }
-  get_sensor_group_cmdline_string (group);
-  pstdout_printf (state_data->pstate, "%s\n", group);
+  
+  if (display_string_cmdline (state_data->pstate,
+                              ipmi_oem_sensor_type) < 0)
+    return (-1);
 
   return (0);
 }

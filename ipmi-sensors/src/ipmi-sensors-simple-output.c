@@ -103,7 +103,7 @@ _store_column_widths (ipmi_sensors_state_data_t *state_data,
       return (-1);
     }
 
-  len = strlen (get_sensor_type_output_string (sensor_type));
+  len = strlen (get_sensor_group_output_string (sensor_type));
   if (len > state_data->sensor_group_column_width)
     state_data->sensor_group_column_width = len;
 
@@ -323,7 +323,7 @@ _legacy_simple_output_header (ipmi_sensors_state_data_t *state_data,
                       "%u: %s (%s): ",
                       record_id,
                       id_string,
-                      get_sensor_type_output_string (sensor_type));
+                      get_sensor_group_output_string (sensor_type));
     }
 
   return (0);
@@ -554,7 +554,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
                   fmt,
                   record_id,
                   id_string,
-                  get_sensor_type_output_string (sensor_type));
+                  get_sensor_group_output_string (sensor_type));
 
   return (0);
 }

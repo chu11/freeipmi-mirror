@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.96 2009-03-11 23:02:03 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.97 2009-03-11 23:27:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -80,58 +80,63 @@
 
 #define IPMIMONITORING_FMT_BUFLEN             1024
 
-static void
-_display_group (ipmimonitoring_state_data_t *state_data, uint8_t sensor_type)
-{
-  char *group;
-
-  assert (state_data);
-  assert (IPMI_SENSOR_TYPE_VALID (sensor_type));
-
-  if (!(group = strdupa (ipmi_sensor_types[sensor_type])))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "strdupa: %s\n",
-                       strerror (errno));
-      exit (1);
-    }
-
-  get_sensor_group_cmdline_string (group);
-  pstdout_printf (state_data->pstate, "%s\n", group);
-}
-
 static int
 _list_groups (ipmimonitoring_state_data_t *state_data)
 {
   assert (state_data);
 
-  _display_group (state_data, IPMI_SENSOR_TYPE_TEMPERATURE);
-  _display_group (state_data, IPMI_SENSOR_TYPE_VOLTAGE);
-  _display_group (state_data, IPMI_SENSOR_TYPE_CURRENT);
-  _display_group (state_data, IPMI_SENSOR_TYPE_FAN);
-  _display_group (state_data, IPMI_SENSOR_TYPE_PHYSICAL_SECURITY);
-  _display_group (state_data, IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT);
-  _display_group (state_data, IPMI_SENSOR_TYPE_PROCESSOR);
-  _display_group (state_data, IPMI_SENSOR_TYPE_POWER_SUPPLY);
-  _display_group (state_data, IPMI_SENSOR_TYPE_POWER_UNIT);
-  _display_group (state_data, IPMI_SENSOR_TYPE_MEMORY);
-  _display_group (state_data, IPMI_SENSOR_TYPE_DRIVE_SLOT);
-  _display_group (state_data, IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS);
-  _display_group (state_data, IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED);
-  _display_group (state_data, IPMI_SENSOR_TYPE_SYSTEM_EVENT);
-  _display_group (state_data, IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT);
-  _display_group (state_data, IPMI_SENSOR_TYPE_MODULE_BOARD);
-  _display_group (state_data, IPMI_SENSOR_TYPE_SLOT_CONNECTOR);
-  _display_group (state_data, IPMI_SENSOR_TYPE_WATCHDOG2);
-  _display_group (state_data, IPMI_SENSOR_TYPE_ENTITY_PRESENCE);
-  _display_group (state_data, IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH);
-  _display_group (state_data, IPMI_SENSOR_TYPE_BATTERY);
-  _display_group (state_data, IPMI_SENSOR_TYPE_FRU_STATE);
-  _display_group (state_data, IPMI_SENSOR_TYPE_CABLE_INTERCONNECT);
-  _display_group (state_data, IPMI_SENSOR_TYPE_BOOT_ERROR);
-  _display_group (state_data, IPMI_SENSOR_TYPE_BUTTON_SWITCH);
-  _display_group (state_data, IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_TEMPERATURE) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_VOLTAGE) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_CURRENT) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_FAN) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_PHYSICAL_SECURITY) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_PROCESSOR) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_POWER_SUPPLY) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_POWER_UNIT) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_MEMORY) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_DRIVE_SLOT) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_SYSTEM_EVENT) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_MODULE_BOARD) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_SLOT_CONNECTOR) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_WATCHDOG2) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_ENTITY_PRESENCE) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_BATTERY) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_FRU_STATE) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_CABLE_INTERCONNECT) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_BOOT_ERROR) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_BUTTON_SWITCH) < 0)
+    return (-1);
+  if (display_sensor_group_cmdline (state_data->pstate, IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE) < 0)
+    return (-1);
 
   return (0);
 }
@@ -276,7 +281,7 @@ _store_column_widths (ipmimonitoring_state_data_t *state_data,
       return (-1);
     }
     
-  len = strlen (get_sensor_type_output_string (sensor_type));
+  len = strlen (get_sensor_group_output_string (sensor_type));
   if (len > state_data->sensor_group_column_width)
     state_data->sensor_group_column_width = len;
 
