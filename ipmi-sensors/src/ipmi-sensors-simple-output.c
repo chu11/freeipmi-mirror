@@ -112,7 +112,7 @@ _store_column_widths (ipmi_sensors_state_data_t *state_data,
                                      sdr_record_len,
                                      sensor_units_buf,
                                      IPMI_SENSORS_UNITS_BUFLEN,
-                                     0) < 0)
+                                     1) < 0)
     return (-1);
 
   len = strlen (sensor_units_buf);
@@ -600,7 +600,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
                                              sdr_record_len,
                                              sensor_units_buf,
                                              IPMI_SENSORS_UNITS_BUFLEN,
-                                             0) < 0)
+                                             1) < 0)
             goto cleanup;
 
           memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);

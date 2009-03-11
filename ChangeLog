@@ -1,3 +1,10 @@
+2009-03-11  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/: Align columns more intelligently based on max
+	expected field sizes.
+
+	* ipmi-sensors/, ipmimonitoring/: Default to abbreviated units.
+	
 2009-03-10  Albert Chu <chu11@llnl.gov>
 
 	* config/ac_dont_check_for_root.m4: New file.
