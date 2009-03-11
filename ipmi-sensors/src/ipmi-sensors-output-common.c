@@ -32,12 +32,81 @@
 
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-output-common.h"
+#include "ipmi-sensors-util.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "tool-sdr-cache-common.h"
 
 #define IPMI_SENSORS_SPACE_BUFFER 1024
+
+int
+ipmi_sensors_group_specified (ipmi_sensors_state_data_t *state_data,
+                              uint8_t *sdr_record,
+                              unsigned int sdr_record_len)
+{
+  const char *sdr_group_name = NULL;
+  uint8_t record_type;
+  uint8_t sensor_type;
+  int i;
+
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->groups_wanted);
+
+  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         NULL,
+                                         &record_type) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_record_id_and_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      return (-1);
+    }
+
+  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+      || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+      || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
+    {
+      if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      &sensor_type) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_parse_sensor_type: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+          return (-1);
+        }
+
+      sdr_group_name = ipmi_get_sensor_type_string (sensor_type);
+    }
+
+  if (sdr_group_name)
+    {
+      char sdr_group_name_subst[IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH];
+
+      strcpy (sdr_group_name_subst, sdr_group_name);
+      str_replace_char (sdr_group_name_subst, ' ', '_');
+      str_replace_char (sdr_group_name_subst, '/', '_');
+
+      for (i = 0; i < state_data->prog_data->args->groups_length; i++)
+        {
+          if ((strcasecmp (sdr_group_name,
+                           state_data->prog_data->args->groups[i]) == 0)
+              || (strcasecmp (sdr_group_name_subst,
+                              state_data->prog_data->args->groups[i]) == 0))
+            return (1);
+        }
+    }
+
+  return (0);
+}
 
 int
 ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,

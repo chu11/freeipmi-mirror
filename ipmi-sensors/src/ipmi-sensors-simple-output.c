@@ -37,6 +37,220 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
+#define IPMI_SENSORS_FMT_BUFLEN 1024
+
+static int
+_store_column_widths (ipmi_sensors_state_data_t *state_data,
+                      uint8_t *sdr_record,
+                      unsigned int sdr_record_len)
+{
+  char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+  char sensor_units_buf[IPMI_SENSORS_UNITS_BUFLEN+1];
+  uint16_t record_id;
+  uint8_t record_type;
+  uint8_t sensor_type;
+  int len;
+
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+
+  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &record_id,
+                                         &record_type) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_record_id_and_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      return (-1);
+    }
+
+  if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+    return (0);
+
+  memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
+  if (ipmi_sdr_parse_id_string (state_data->sdr_parse_ctx,
+                                sdr_record,
+                                sdr_record_len,
+                                id_string,
+                                IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_id_string: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      return (-1);
+    }
+
+  len = strlen (id_string);
+  if (len > state_data->sensor_name_column_width)
+    state_data->sensor_name_column_width = len;
+
+  if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  &sensor_type) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      return (-1);
+    }
+
+  len = strlen (ipmi_sensors_get_sensor_type_string (sensor_type));
+  if (len > state_data->sensor_group_column_width)
+    state_data->sensor_group_column_width = len;
+
+  memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
+  if (ipmi_sensors_get_units_string (state_data,
+                                     sdr_record,
+                                     sdr_record_len,
+                                     sensor_units_buf,
+                                     IPMI_SENSORS_UNITS_BUFLEN,
+                                     0) < 0)
+    return (-1);
+
+  len = strlen (sensor_units_buf);
+  if (len > state_data->sensor_units_column_width)
+    state_data->sensor_units_column_width = len;
+
+  return (0);
+}
+
+static int
+_calculate_column_widths (ipmi_sensors_state_data_t *state_data)
+{
+  struct ipmi_sensors_arguments *args = NULL;
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+
+  args = state_data->prog_data->args;
+
+  state_data->sensor_name_column_width = 0;
+  state_data->sensor_group_column_width = 0;
+  state_data->sensor_units_column_width = 0;
+
+  if (args->sensors_wanted)
+    {
+      for (i = 0; i < state_data->prog_data->args->sensors_length; i++)
+        {
+          uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+          int sdr_record_len = 0;
+
+          if (ipmi_sdr_cache_search_record_id (state_data->sdr_cache_ctx,
+                                               state_data->prog_data->args->sensors[i]) < 0)
+            {
+              if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
+                continue;
+              else
+                {
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "ipmi_sdr_cache_search_record_id: %s\n",
+                                   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+                  goto cleanup;
+                }
+            }
+
+          if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+                                                            sdr_record,
+                                                            IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sdr_cache_record_read: %s\n",
+                               ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+              goto cleanup;
+            }
+
+          /* Shouldn't be possible */
+          if (!sdr_record_len)
+            continue;
+          
+          if (_store_column_widths (state_data,
+                                    sdr_record,
+                                    sdr_record_len) < 0)
+            goto cleanup;
+        }
+    }
+  else
+    {
+      uint16_t record_count;
+
+      if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
+        goto cleanup;
+
+      for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
+        {
+          uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+          int sdr_record_len = 0;
+          int ret;
+
+          if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+                                                            sdr_record,
+                                                            IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sdr_cache_record_read: %s\n",
+                               ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+              goto cleanup;
+            }
+
+          /* Shouldn't be possible */
+          if (!sdr_record_len)
+            continue;
+
+          if (args->groups_wanted)
+            {
+              if ((ret = ipmi_sensors_group_specified (state_data,
+                                                       sdr_record,
+                                                       sdr_record_len)) < 0)
+                goto cleanup;
+            }
+          else
+            ret = 1;            /* accept all */
+
+          if (ret)
+            {
+              if (_store_column_widths (state_data,
+                                        sdr_record,
+                                        sdr_record_len) < 0)
+                goto cleanup;
+            }
+        }
+    }
+
+  rv = 0;
+  if (state_data->sensor_name_column_width < strlen("Sensor Name"))
+    state_data->sensor_name_column_width = strlen("Sensor Name");
+  if (state_data->sensor_group_column_width < strlen("Sensor Group"))
+    state_data->sensor_group_column_width = strlen("Sensor Group");
+  if (state_data->sensor_units_column_width < strlen("Sensor Units"))
+    state_data->sensor_units_column_width = strlen("Sensor Units");
+ cleanup:
+  ipmi_sdr_cache_first (state_data->sdr_cache_ctx);
+  return (rv);
+}
+
+int
+ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data)
+{
+  assert (state_data);
+
+  if (_calculate_column_widths (state_data) < 0)
+    return (-1);
+  
+  return (0);
+}
+
 static double
 _round_double2 (double d)
 {
@@ -287,6 +501,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
                        unsigned int sdr_record_len,
                        uint16_t record_id)
 {
+  char fmt[IPMI_SENSORS_FMT_BUFLEN + 1];
   char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
   uint8_t sensor_type;
 
@@ -321,8 +536,15 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
       return (-1);
     }
 
+  memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
+  snprintf (fmt,
+            IPMI_SENSORS_FMT_BUFLEN,
+            "%%-9u | %%-%ds | %%-%ds",
+            state_data->sensor_name_column_width,
+            state_data->sensor_group_column_width);
+            
   pstdout_printf (state_data->pstate,
-                  "%-9u | %-16s | %-24s",
+                  fmt,
                   record_id,
                   id_string,
                   ipmi_sensors_get_sensor_type_string (sensor_type));
@@ -339,6 +561,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
                             char **event_message_list,
                             unsigned int event_message_list_len)
 {
+  char fmt[IPMI_SENSORS_FMT_BUFLEN + 1];
   uint8_t event_reading_type_code;
   int rv = -1;
 
@@ -380,14 +603,20 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
                                              0) < 0)
             goto cleanup;
 
+          memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
+          snprintf (fmt,
+                    IPMI_SENSORS_FMT_BUFLEN,
+                    " | %%-14f | %%-%ds",
+                    state_data->sensor_units_column_width);
+
           if (reading)
             pstdout_printf (state_data->pstate,
-                            " | %-14.2f | %-12s",
+                            fmt,
                             _round_double2 (*reading),
                             sensor_units_buf);
           else
             pstdout_printf (state_data->pstate,
-                            " | %-14s | %-12s",
+                            fmt,
                             IPMI_SENSORS_NA_STRING,
                             sensor_units_buf);
         }
@@ -408,9 +637,15 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
     default:
 
+      memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
+      snprintf (fmt,
+                IPMI_SENSORS_FMT_BUFLEN,
+                " | %%-14s | %%-%ds | ",
+                state_data->sensor_units_column_width);
+
       if (!state_data->prog_data->args->quiet_readings)
         pstdout_printf (state_data->pstate,
-                        " | %-14s | %-12s | ",
+                        fmt,
                         IPMI_SENSORS_NA_STRING,
                         IPMI_SENSORS_NA_STRING);
       else
@@ -449,10 +684,20 @@ _simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
     return (-1);
 
   if (!state_data->prog_data->args->quiet_readings)
-    pstdout_printf (state_data->pstate,
-                    " | %-14s | %-12s | ",
-                    IPMI_SENSORS_NA_STRING,
-                    IPMI_SENSORS_NA_STRING);
+    {
+      char fmt[IPMI_SENSORS_FMT_BUFLEN + 1];
+  
+      memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
+      snprintf (fmt,
+                IPMI_SENSORS_FMT_BUFLEN,
+                " | %%-14s | %%-%ds | ",
+                state_data->sensor_units_column_width);
+
+      pstdout_printf (state_data->pstate,
+                      fmt,
+                      IPMI_SENSORS_NA_STRING,
+                      IPMI_SENSORS_NA_STRING);
+    }
   else
     pstdout_printf (state_data->pstate, " | ");
 
@@ -497,15 +742,44 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
   if (!state_data->prog_data->args->legacy_output
       && !state_data->output_headers)
     {
+      char fmt[IPMI_SENSORS_FMT_BUFLEN + 1];
+
       pstdout_printf (state_data->pstate,
-                      "Record ID | Sensor Name      | Sensor Group            ");
+                      "Record ID");
+      
+      memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
+      snprintf (fmt,
+                IPMI_SENSORS_FMT_BUFLEN,
+                " | %%-%ds | %%-%ds",
+                state_data->sensor_name_column_width,
+                state_data->sensor_group_column_width);
+      
+      pstdout_printf (state_data->pstate,
+                      fmt,
+                      "Sensor Name", "Sensor Group");
+
       if (!state_data->prog_data->args->quiet_readings)
-        pstdout_printf (state_data->pstate,
-                        " | Sensor Reading | Sensor Units");
+        {
+          pstdout_printf (state_data->pstate,
+                          " | Sensor Reading");
+
+          memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
+          snprintf (fmt,
+                    IPMI_SENSORS_FMT_BUFLEN,
+                    " | %%-%ds",
+                    state_data->sensor_units_column_width);
+
+          pstdout_printf (state_data->pstate,
+                          fmt,
+                          "Sensor Units");
+        }
+
       pstdout_printf (state_data->pstate,
                       " | Sensor Event");
+      
       pstdout_printf (state_data->pstate,
                       "\n");
+
       state_data->output_headers++;
     }
 
