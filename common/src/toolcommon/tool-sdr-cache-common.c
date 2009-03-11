@@ -40,9 +40,6 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi-portability.h"
-#include "pstdout.h"
-
 #define SDR_CACHE_DIR                     "sdr-cache"
 #define SDR_CACHE_FILENAME_PREFIX         "sdr-cache"
 #define FREEIPMI_CONFIG_DIRECTORY_MODE    0700
@@ -58,6 +55,7 @@
 #include "tool-sdr-cache-common.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 
 static int
 _get_home_directory (pstdout_state_t pstate,

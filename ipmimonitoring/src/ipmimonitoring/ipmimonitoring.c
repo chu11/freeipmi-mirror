@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.94 2009-03-11 21:03:36 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.95 2009-03-11 21:54:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -64,6 +64,7 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
+#include "tool-sensor-common.h"
 
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
@@ -76,8 +77,6 @@
 #define IPMIMONITORING_NO_EVENT_STRING        "OK"
 
 #define IPMIMONITORING_UNRECOGNIZED_STATE     "Unrecognized State"
-
-#define IPMIMONITORING_UNRECOGNIZED_GROUP     "Unrecognized"
 
 #define IPMIMONITORING_FMT_BUFLEN             1024
 
@@ -239,7 +238,6 @@ _store_column_widths (ipmimonitoring_state_data_t *state_data,
   uint16_t record_id;
   uint8_t record_type;
   uint8_t sensor_type;
-  const char *sensor_group_str;
   int len;
 
   assert (state_data);
@@ -292,13 +290,8 @@ _store_column_widths (ipmimonitoring_state_data_t *state_data,
                        ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return (-1);
     }
-
-  if (IPMI_SENSOR_TYPE_VALID (sensor_type))
-    sensor_group_str = ipmi_sensor_types[sensor_type];
-  else
-    sensor_group_str = IPMIMONITORING_UNRECOGNIZED_GROUP;
     
-  len = strlen (sensor_group_str);
+  len = strlen (get_sensor_type_output_string (sensor_type));
   if (len > state_data->sensor_group_column_width)
     state_data->sensor_group_column_width = len;
 

@@ -38,7 +38,6 @@
 #define IPMI_SENSORS_MAX_LIST   32
 
 #define UNRECOGNIZED_STATE "Unrecognized State"
-#define UNRECOGNIZED_GROUP "Unrecognized"
 
 int
 get_msg_message_list (struct ipmi_sensors_state_data *state_data,
@@ -386,15 +385,4 @@ str_replace_char (char *str, char chr, char with)
        (p = strchr (s, chr));
        s = p + 1)
     *p = with;
-}
-
-const char *
-ipmi_sensors_get_sensor_type_string (unsigned int sensor_type)
-{
-  const char *sensor_group;
-
-  if ((sensor_group = ipmi_get_sensor_type_string (sensor_type)))
-    return (sensor_group);
-
-  return (UNRECOGNIZED_GROUP);
 }

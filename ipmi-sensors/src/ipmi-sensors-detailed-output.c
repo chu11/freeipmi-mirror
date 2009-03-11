@@ -36,6 +36,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+#include "tool-sensor-common.h"
 
 #define ALL_EVENT_MESSAGES_DISABLED "All Event Messages Disabled"
 #define SENSOR_SCANNING_DISABLED    "Sensor Scanning Disabled"
@@ -238,7 +239,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                   id_string);
   pstdout_printf (state_data->pstate,
                   "Group Name: %s (%Xh)\n",
-                  ipmi_sensors_get_sensor_type_string (sensor_type),
+                  get_sensor_type_output_string (sensor_type),
                   sensor_type);
   pstdout_printf (state_data->pstate,
                   "Sensor Number: %u\n",

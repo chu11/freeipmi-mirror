@@ -36,6 +36,7 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+#include "tool-sensor-common.h"
 
 #define IPMI_SENSORS_FMT_BUFLEN 1024
 
@@ -102,7 +103,7 @@ _store_column_widths (ipmi_sensors_state_data_t *state_data,
       return (-1);
     }
 
-  len = strlen (ipmi_sensors_get_sensor_type_string (sensor_type));
+  len = strlen (get_sensor_type_output_string (sensor_type));
   if (len > state_data->sensor_group_column_width)
     state_data->sensor_group_column_width = len;
 
@@ -322,7 +323,7 @@ _legacy_simple_output_header (ipmi_sensors_state_data_t *state_data,
                       "%u: %s (%s): ",
                       record_id,
                       id_string,
-                      ipmi_sensors_get_sensor_type_string (sensor_type));
+                      get_sensor_type_output_string (sensor_type));
     }
 
   return (0);
@@ -553,7 +554,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
                   fmt,
                   record_id,
                   id_string,
-                  ipmi_sensors_get_sensor_type_string (sensor_type));
+                  get_sensor_type_output_string (sensor_type));
 
   return (0);
 }

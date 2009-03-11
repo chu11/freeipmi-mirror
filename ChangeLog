@@ -4,6 +4,12 @@
 	more intelligently based on max expected field sizes.
 
 	* ipmi-sensors/, ipmimonitoring/: Default to abbreviated units.
+
+	* common/src/toolcommon/tool-sensor-common.h,
+	common/src/toolcommon/tool-sensor-common.c: New files.
+
+	* ipmi-sensors/, ipmimonitoring/: Collapse some code using common
+	sensor code.
 	
 2009-03-10  Albert Chu <chu11@llnl.gov>
 
