@@ -230,7 +230,7 @@ _get_home_directory (pstdout_state_t pstate,
   if (!getpwuid_r (user_id, 
                    &pwd,
                    tbuf,
-                   tbuf_len)
+                   tbuf_len))
     {
       PSTDOUT_PERROR(pstate, "getpwuid_r");
       return -1;
