@@ -799,6 +799,8 @@ _ipmi_sensors (pstdout_state_t pstate,
  cleanup:
   if (state_data.sdr_cache_ctx)
     ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
+  if (state_data.sdr_parse_ctx)
+    ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   if (state_data.sensor_read_ctx)
     ipmi_sensor_read_ctx_destroy (state_data.sensor_read_ctx);
   if (state_data.ipmi_ctx)

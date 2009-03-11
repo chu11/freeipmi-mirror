@@ -1,7 +1,7 @@
 2009-03-11  Albert Chu <chu11@llnl.gov>
 
-	* ipmi-sensors/: Align columns more intelligently based on max
-	expected field sizes.
+	* ipmi-sensors/, ipmimonitoring/src/ipmimonitoring/: Align columns
+	more intelligently based on max expected field sizes.
 
 	* ipmi-sensors/, ipmimonitoring/: Default to abbreviated units.
 	

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.48 2009-03-06 18:37:31 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.49 2009-03-11 21:03:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -617,6 +617,8 @@ _ipmi_fru (pstdout_state_t pstate,
  cleanup:
   if (state_data.sdr_cache_ctx)
     ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
+  if (state_data.sdr_parse_ctx)
+    ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   if (state_data.ipmi_ctx)
     {
       ipmi_ctx_close (state_data.ipmi_ctx);

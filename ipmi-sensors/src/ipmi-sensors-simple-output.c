@@ -185,7 +185,13 @@ _calculate_column_widths (ipmi_sensors_state_data_t *state_data)
       uint16_t record_count;
 
       if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
-        goto cleanup;
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_cache_record_count: %s\n",
+                           ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+          goto cleanup;
+        }
 
       for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
         {
