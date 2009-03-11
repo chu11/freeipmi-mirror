@@ -98,10 +98,10 @@ ipmi_sensors_group_specified (ipmi_sensors_state_data_t *state_data,
 
       for (i = 0; i < state_data->prog_data->args->groups_length; i++)
         {
-          if ((strcasecmp (sensor_group,
-                           state_data->prog_data->args->groups[i]) == 0)
-              || (strcasecmp (sensor_group_cmdline,
-                              state_data->prog_data->args->groups[i]) == 0))
+          if (!strcasecmp (sensor_group,
+                           state_data->prog_data->args->groups[i])
+              || !strcasecmp (sensor_group_cmdline,
+                              state_data->prog_data->args->groups[i]))
             return (1);
         }
     }
