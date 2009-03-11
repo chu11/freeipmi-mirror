@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.92 2009-03-11 17:27:38 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.93 2009-03-11 17:30:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -618,10 +618,12 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
         {
           if (args->legacy_output)
             pstdout_printf (state_data->pstate,
-                            " | %s", IPMIMONITORING_NA_STRING);
+                            " | %s",
+                            IPMIMONITORING_NA_STRING);
           else
             pstdout_printf (state_data->pstate,
-                            " | %-14s", IPMIMONITORING_NA_STRING);
+                            " | %-14s",
+                            IPMIMONITORING_NA_STRING);
         }
 
       if (!args->legacy_output)
@@ -638,10 +640,13 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
     {
       if (args->legacy_output)
         pstdout_printf (state_data->pstate,
-                        " | %s", IPMIMONITORING_NA_STRING);
+                        " | %s",
+                        IPMIMONITORING_NA_STRING);
       else
         pstdout_printf (state_data->pstate,
-                        " | %-14s | %-12s", IPMIMONITORING_NA_STRING, IPMIMONITORING_NA_STRING);
+                        " | %-14s | %-12s",
+                        IPMIMONITORING_NA_STRING,
+                        IPMIMONITORING_NA_STRING);
 
       if (_output_sensor_bitmask (state_data,
                                   sensor_bitmask,
