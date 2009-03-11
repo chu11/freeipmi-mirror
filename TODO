@@ -3,6 +3,7 @@ freeipmi tools
 config via environment variables too - like config file
 comma output - support in ipmi-sel, ipmi-sensors, ipmimonitoring
 monitoring/sensors - put sensor reading into one column instead of reading + units columns?
+option to output "long units" instead of short ones
 
 libfreeipmi
 -----------
