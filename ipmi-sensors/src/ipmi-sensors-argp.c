@@ -268,6 +268,19 @@ _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 
           if (!found)
             {
+              char sdr_group_name_subst[IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH];
+              
+              strcpy(sdr_group_name_subst, ipmi_oem_sensor_type);
+              str_replace_char (sdr_group_name_subst, ' ', '_');
+              str_replace_char (sdr_group_name_subst, '/', '_');
+              
+              if (!strcasecmp (cmd_args->groups[i], ipmi_oem_sensor_type)
+                  || !strcasecmp (cmd_args->groups[i], sdr_group_name_subst))
+                found++;
+            }
+
+          if (!found)
+            {
               fprintf(stderr, "invalid sensor group '%s'\n", cmd_args->groups[i]);
               exit(1);
             }

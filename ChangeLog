@@ -1,3 +1,9 @@
+2009-03-11  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors-argp.c
+	(_ipmi_sensors_args_validate): Check for "oem_reserved" sensor
+	group.
+	
 2009-03-10  Albert Chu <chu11@llnl.gov>
 
 	* config/ac_dont_check_for_root.m4: New file.
