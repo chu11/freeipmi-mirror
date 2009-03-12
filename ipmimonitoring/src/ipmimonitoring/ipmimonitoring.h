@@ -24,11 +24,8 @@
 #include "ipmi_monitoring.h"
 
 #include "tool-cmdline-common.h"
+#include "tool-sensor-common.h"
 #include "pstdout.h"
-
-#define IPMIMONITORING_MAX_RECORD_IDS           256
-#define IPMIMONITORING_MAX_GROUPS               256
-#define IPMIMONITORING_MAX_GROUPS_STRING_LENGTH 256
 
 enum ipmimonitoring_argp_option_keys
   {
@@ -54,10 +51,10 @@ struct ipmimonitoring_arguments
   int quiet_readings;
   int list_groups;
   int groups_wanted;
-  char groups[IPMIMONITORING_MAX_GROUPS][IPMIMONITORING_MAX_GROUPS_STRING_LENGTH+1];
+  char groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
   int sensors_wanted;
-  unsigned int sensors[IPMIMONITORING_MAX_RECORD_IDS];
+  unsigned int sensors[MAX_SENSOR_RECORD_IDS];
   unsigned int sensors_length;
   int bridge_sensors;
   char *sensor_config_file;
@@ -65,7 +62,7 @@ struct ipmimonitoring_arguments
 
   struct ipmi_monitoring_ipmi_config conf;
   int ipmimonitoring_flags;
-  unsigned int ipmimonitoring_groups[IPMIMONITORING_MAX_GROUPS];
+  unsigned int ipmimonitoring_groups[MAX_SENSOR_GROUPS];
   unsigned int ipmimonitoring_groups_length;
 };
 

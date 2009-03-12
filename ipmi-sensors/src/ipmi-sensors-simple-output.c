@@ -217,9 +217,12 @@ _calculate_column_widths (ipmi_sensors_state_data_t *state_data)
 
           if (args->groups_wanted)
             {
-              if ((ret = ipmi_sensors_group_specified (state_data,
-                                                       sdr_record,
-                                                       sdr_record_len)) < 0)
+              if ((ret = is_sdr_sensor_group_listed (state_data->pstate,
+                                                     state_data->sdr_parse_ctx,
+                                                     sdr_record,
+                                                     sdr_record_len,
+                                                     state_data->prog_data->args->groups,
+                                                     state_data->prog_data->args->groups_length)) < 0)
                 goto cleanup;
             }
           else

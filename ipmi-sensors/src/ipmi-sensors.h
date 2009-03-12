@@ -23,11 +23,8 @@
 
 #include "tool-cmdline-common.h"
 #include "tool-sdr-cache-common.h"
+#include "tool-sensor-common.h"
 #include "pstdout.h"
-
-#define IPMI_SENSORS_MAX_RECORD_IDS           256
-#define IPMI_SENSORS_MAX_GROUPS               256
-#define IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH 256
 
 enum ipmi_sensors_argp_option_keys
   {
@@ -53,10 +50,10 @@ struct ipmi_sensors_arguments
   int sdr_info;
   int list_groups;
   int groups_wanted;
-  char groups[IPMI_SENSORS_MAX_GROUPS][IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH+1];
+  char groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
   int sensors_wanted;
-  unsigned int sensors[IPMI_SENSORS_MAX_RECORD_IDS];
+  unsigned int sensors[MAX_SENSOR_RECORD_IDS];
   unsigned int sensors_length;
   int bridge_sensors;
   int legacy_output;

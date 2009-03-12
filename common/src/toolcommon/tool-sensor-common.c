@@ -36,6 +36,8 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
+#define SENSOR_GROUP_BUFLEN 1024
+
 static void
 _str_replace_char (char *str, char chr, char with)
 {
@@ -114,5 +116,104 @@ display_string_cmdline (pstdout_state_t pstate,
   get_sensor_group_cmdline_string (tmpstr);
 
   PSTDOUT_PRINTF (pstate, "%s\n", tmpstr);
+  return (0);
+}
+
+int
+sensor_group_strcmp (pstdout_state_t pstate,
+                     const char *sensor_group_str_input,
+                     unsigned int sensor_type)
+{
+  const char *sensor_group_str;
+  char *tmpstr;
+
+  assert (sensor_group_str_input);
+
+  /* Don't use get_sensor_group_output_string() - want NULL if invalid */
+  sensor_group_str = ipmi_get_sensor_type_string (sensor_type);
+
+  if (!sensor_group_str)
+    return (0);
+
+  if (!(tmpstr = strdupa (sensor_group_str)))
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "strdupa: %s\n",
+                       strerror (errno));
+      return (-1);
+    }
+
+  get_sensor_group_cmdline_string (tmpstr);
+
+  if (!strcasecmp (sensor_group_str_input, sensor_group_str)
+      || !strcasecmp (sensor_group_str_input, tmpstr))
+    return (1);
+  
+  return (0);
+}
+
+int
+is_sdr_sensor_group_listed (pstdout_state_t pstate,
+                            ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                            uint8_t *sdr_record,
+                            unsigned int sdr_record_len,
+                            char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
+                            unsigned int groups_len)
+{
+  uint16_t record_id;
+  uint8_t record_type;
+  uint8_t sensor_type;
+  int i;
+
+  assert (sdr_parse_ctx);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (groups);
+  assert (groups_len);
+
+  if (ipmi_sdr_parse_record_id_and_type (sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &record_id,
+                                         &record_type) < 0)
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "ipmi_sdr_parse_record_id_and_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+      return (-1);
+    }
+
+  if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
+    return (0);
+
+  if (ipmi_sdr_parse_sensor_type (sdr_parse_ctx,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  &sensor_type) < 0)
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+      return (-1);
+    }
+
+  for (i = 0; i < groups_len; i++)
+    {
+      int ret;
+
+      if ((ret = sensor_group_strcmp (pstate,
+                                      groups[i],
+                                      sensor_type)) < 0)
+        return (-1);
+
+      if (ret)
+        return (1);
+    }
+
   return (0);
 }

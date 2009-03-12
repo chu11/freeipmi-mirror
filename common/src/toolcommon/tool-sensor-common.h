@@ -28,6 +28,10 @@
 
 #define UNRECOGNIZED_SENSOR_GROUP "Unrecognized"
 
+#define MAX_SENSOR_RECORD_IDS           256
+#define MAX_SENSOR_GROUPS               256
+#define MAX_SENSOR_GROUPS_STRING_LENGTH 256
+
 const char * get_sensor_group_output_string (unsigned int sensor_type);
 
 void get_sensor_group_cmdline_string (char *sensor_group);
@@ -37,5 +41,16 @@ int display_sensor_group_cmdline (pstdout_state_t pstate,
 
 int display_string_cmdline (pstdout_state_t pstate, 
                             const char *str);
+
+int sensor_group_strcmp (pstdout_state_t pstate,
+                         const char *sensor_group_str_input,
+                         unsigned int sensor_type);
+
+int is_sdr_sensor_group_listed (pstdout_state_t pstate,
+                                ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                                uint8_t *sdr_record,
+                                unsigned int sdr_record_len,
+                                char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
+                                unsigned int groups_len);
 
 #endif

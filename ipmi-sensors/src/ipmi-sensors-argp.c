@@ -135,17 +135,17 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->groups_wanted = 1;
       strncpy (cmd_args->groups[cmd_args->groups_length],
                arg,
-               IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
+               MAX_SENSOR_GROUPS_STRING_LENGTH);
       cmd_args->groups_length++;
       break;
     case GROUPS_KEY:
       cmd_args->groups_wanted = 1;
       tok = strtok (arg, " ,");
-      while (tok && cmd_args->groups_length < IPMI_SENSORS_MAX_GROUPS)
+      while (tok && cmd_args->groups_length < MAX_SENSOR_GROUPS)
         {
           strncpy (cmd_args->groups[cmd_args->groups_length],
                    tok,
-                   IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
+                   MAX_SENSOR_GROUPS_STRING_LENGTH);
           cmd_args->groups_length++;
           tok = strtok (NULL, " ,");
         }
@@ -153,7 +153,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case SENSORS_KEY:
       cmd_args->sensors_wanted = 1;
       tok = strtok (arg, " ,");
-      while (tok && cmd_args->sensors_length < IPMI_SENSORS_MAX_RECORD_IDS)
+      while (tok && cmd_args->sensors_length < MAX_SENSOR_RECORD_IDS)
         {
           value = 0;
           ptr = NULL;
@@ -228,13 +228,13 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     {
       int i;
 
-      assert (IPMI_SENSORS_MAX_GROUPS == CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS);
-      assert (IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH == CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
+      assert (MAX_SENSOR_GROUPS == CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS);
+      assert (MAX_SENSOR_GROUPS_STRING_LENGTH == CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
 
       for (i = 0; i < config_file_data.groups_length; i++)
         strncpy (cmd_args->groups[i],
                  config_file_data.groups[i],
-                 IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
+                 MAX_SENSOR_GROUPS_STRING_LENGTH);
       cmd_args->groups_wanted++;
       cmd_args->groups_length = config_file_data.groups_length;
     }
@@ -258,7 +258,7 @@ _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 
           while (ipmi_sensor_types[j])
             {
-              char sensor_group_cmdline[IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH];
+              char sensor_group_cmdline[MAX_SENSOR_GROUPS_STRING_LENGTH];
 
               strcpy (sensor_group_cmdline, ipmi_sensor_types[j]);
               get_sensor_group_cmdline_string (sensor_group_cmdline);
@@ -274,10 +274,21 @@ _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 
           if (!found)
             {
+              char sensor_group_cmdline[MAX_SENSOR_GROUPS_STRING_LENGTH];
+
+              strcpy (sensor_group_cmdline, ipmi_oem_sensor_type);
+              get_sensor_group_cmdline_string (sensor_group_cmdline);
+
+              if (!strcasecmp (cmd_args->groups[i], ipmi_oem_sensor_type)
+                  || !strcasecmp (cmd_args->groups[i], sensor_group_cmdline))
+                found++;
+            }
+
+          if (!found)
+            {
               fprintf (stderr, "invalid sensor group '%s'\n", cmd_args->groups[i]);
               exit (1);
             }
-
         }
     }
 }
@@ -296,15 +307,15 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->sdr_info = 0;
   cmd_args->list_groups = 0;
   cmd_args->groups_wanted = 0;
-  for (i = 0; i < IPMI_SENSORS_MAX_GROUPS; i++)
+  for (i = 0; i < MAX_SENSOR_GROUPS; i++)
     memset (cmd_args->groups[i],
             '\0',
-            IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH+1);
+            MAX_SENSOR_GROUPS_STRING_LENGTH+1);
   cmd_args->groups_length = 0;
   cmd_args->sensors_wanted = 0;
   memset (cmd_args->sensors,
           '\0',
-          sizeof(unsigned int)*IPMI_SENSORS_MAX_RECORD_IDS);
+          sizeof(unsigned int)*MAX_SENSOR_RECORD_IDS);
   cmd_args->sensors_length = 0;
   cmd_args->bridge_sensors = 0;
   cmd_args->legacy_output = 0;

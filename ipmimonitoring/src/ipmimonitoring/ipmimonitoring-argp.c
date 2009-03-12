@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.31 2009-03-04 22:39:38 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.32 2009-03-12 00:59:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -150,11 +150,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case GROUPS_KEY:
       cmd_args->groups_wanted = 1;
       tok = strtok (arg, " ,");
-      while (tok && cmd_args->groups_length < IPMIMONITORING_MAX_GROUPS)
+      while (tok && cmd_args->groups_length < MAX_SENSOR_GROUPS)
         {
           strncpy (cmd_args->groups[cmd_args->groups_length],
                    tok,
-                   IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
+                   MAX_SENSOR_GROUPS_STRING_LENGTH);
           cmd_args->groups_length++;
           tok = strtok (NULL, " ,");
         }
@@ -162,7 +162,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case SENSORS_KEY:
       cmd_args->sensors_wanted = 1;
       tok = strtok (arg, " ,");
-      while (tok && cmd_args->sensors_length < IPMIMONITORING_MAX_RECORD_IDS)
+      while (tok && cmd_args->sensors_length < MAX_SENSOR_RECORD_IDS)
         {
           value = 0;
           ptr = NULL;
@@ -225,7 +225,7 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
 
   memset (&config_file_data,
           '\0',
-          sizeof(struct config_file_data_ipmimonitoring));
+          sizeof (struct config_file_data_ipmimonitoring));
 
   if (config_file_parse (cmd_args->common.config_file,
                          0,
@@ -246,13 +246,13 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     {
       int i;
 
-      assert (IPMIMONITORING_MAX_GROUPS == CONFIG_FILE_IPMIMONITORING_MAX_GROUPS);
-      assert (IPMIMONITORING_MAX_GROUPS_STRING_LENGTH == CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
+      assert (MAX_SENSOR_GROUPS == CONFIG_FILE_IPMIMONITORING_MAX_GROUPS);
+      assert (MAX_SENSOR_GROUPS_STRING_LENGTH == CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
 
       for (i = 0; i < config_file_data.groups_length; i++)
         strncpy (cmd_args->groups[i],
                  config_file_data.groups[i],
-                 IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
+                 MAX_SENSOR_GROUPS_STRING_LENGTH);
       cmd_args->groups_wanted++;
       cmd_args->groups_length = config_file_data.groups_length;
     }
@@ -277,25 +277,25 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   cmd_args->quiet_readings = 0;
   cmd_args->list_groups = 0;
   cmd_args->groups_wanted = 0;
-  for (i = 0; i < IPMIMONITORING_MAX_GROUPS; i++)
+  for (i = 0; i < MAX_SENSOR_GROUPS; i++)
     memset (cmd_args->groups[i],
             '\0',
-            IPMIMONITORING_MAX_GROUPS_STRING_LENGTH+1);
+            MAX_SENSOR_GROUPS_STRING_LENGTH+1);
   cmd_args->groups_length = 0;
   cmd_args->sensors_wanted = 0;
   memset (cmd_args->sensors,
           '\0',
-          sizeof(unsigned int)*IPMIMONITORING_MAX_RECORD_IDS);
+          sizeof (unsigned int)*MAX_SENSOR_RECORD_IDS);
   cmd_args->sensors_length = 0;
   cmd_args->bridge_sensors = 0;
   cmd_args->sensor_config_file = NULL;
   cmd_args->legacy_output = 0;
 
-  memset (&(cmd_args->conf), '\0', sizeof(struct ipmi_monitoring_ipmi_config));
+  memset (&(cmd_args->conf), '\0', sizeof (struct ipmi_monitoring_ipmi_config));
   cmd_args->ipmimonitoring_flags = 0;
   memset (cmd_args->ipmimonitoring_groups,
           '\0',
-          sizeof(unsigned int)*IPMIMONITORING_MAX_GROUPS);
+          sizeof (unsigned int)*MAX_SENSOR_GROUPS);
 
   cmd_args->ipmimonitoring_groups_length = 0;
 

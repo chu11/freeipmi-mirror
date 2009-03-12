@@ -50,10 +50,6 @@
 
 #define IPMI_SENSORS_UNITS_BUFLEN    1024
 
-int ipmi_sensors_group_specified (ipmi_sensors_state_data_t *state_data,
-                                  uint8_t *sdr_record,
-                                  unsigned int sdr_record_len);
-
 int ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                                             char **event_message_list,
                                             unsigned int event_message_list_len,
