@@ -255,12 +255,12 @@ ipmi_kcs_ctx_create (void)
 {
   ipmi_kcs_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_kcs_ctx_t)malloc (sizeof(struct ipmi_kcs_ctx))))
+  if (!(ctx = (ipmi_kcs_ctx_t)malloc (sizeof (struct ipmi_kcs_ctx))))
     {
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof(struct ipmi_kcs_ctx));
+  memset (ctx, '\0', sizeof (struct ipmi_kcs_ctx));
 
   ctx->magic = IPMI_KCS_CTX_MAGIC;
   ctx->driver_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;

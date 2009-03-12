@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.68 2009-03-07 00:51:13 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.69 2009-03-12 17:57:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -112,12 +112,12 @@ _allocate_sensor_reading (ipmi_monitoring_ctx_t c)
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
-  if (!(s = (struct ipmi_monitoring_sensor_reading *)malloc (sizeof(struct ipmi_monitoring_sensor_reading))))
+  if (!(s = (struct ipmi_monitoring_sensor_reading *)malloc (sizeof (struct ipmi_monitoring_sensor_reading))))
     {
       c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
-  memset (s, '\0', sizeof(struct ipmi_monitoring_sensor_reading));
+  memset (s, '\0', sizeof (struct ipmi_monitoring_sensor_reading));
 
   return (s);
 

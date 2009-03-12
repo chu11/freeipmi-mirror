@@ -476,7 +476,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
       return (-1);
     }
 
-  memset (&locate_info, '\0', sizeof(struct ipmi_locate_info));
+  memset (&locate_info, '\0', sizeof (struct ipmi_locate_info));
 #ifdef USE_EFI
   /*
    * Linux up to 2.6.6-rc2: /proc/efi/systab
@@ -551,7 +551,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
 
   if (found)
     {
-      memcpy (info, &locate_info, sizeof(struct ipmi_locate_info));
+      memcpy (info, &locate_info, sizeof (struct ipmi_locate_info));
       rv = 0;
     }
   else

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.94 2009-03-06 22:51:36 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.95 2009-03-12 17:57:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -504,7 +504,7 @@ ipmiconsole_ctx_create (const char *hostname,
 
   if (engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
     {
-      if (!(c = (ipmiconsole_ctx_t)secure_malloc (sizeof(struct ipmiconsole_ctx))))
+      if (!(c = (ipmiconsole_ctx_t)secure_malloc (sizeof (struct ipmiconsole_ctx))))
         {
           errno = ENOMEM;
           return (NULL);
@@ -512,7 +512,7 @@ ipmiconsole_ctx_create (const char *hostname,
     }
   else
     {
-      if (!(c = (ipmiconsole_ctx_t)malloc (sizeof(struct ipmiconsole_ctx))))
+      if (!(c = (ipmiconsole_ctx_t)malloc (sizeof (struct ipmiconsole_ctx))))
         {
           errno = ENOMEM;
           return (NULL);
@@ -561,7 +561,7 @@ ipmiconsole_ctx_create (const char *hostname,
    * b/c we don't know where we failed earlier.
    */
   if (engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
-    secure_free (c, sizeof(struct ipmiconsole_ctx));
+    secure_free (c, sizeof (struct ipmiconsole_ctx));
   else
     free (c);
   return (NULL);

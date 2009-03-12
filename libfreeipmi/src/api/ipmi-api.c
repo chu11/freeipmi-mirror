@@ -141,7 +141,7 @@ _ipmi_ctx_init (struct ipmi_ctx *ctx)
 {
   assert (ctx);
 
-  memset (ctx, '\0', sizeof(struct ipmi_ctx));
+  memset (ctx, '\0', sizeof (struct ipmi_ctx));
   ctx->magic = IPMI_CTX_MAGIC;
   ctx->type = IPMI_DEVICE_UNKNOWN;
 }
@@ -151,7 +151,7 @@ ipmi_ctx_create (void)
 {
   struct ipmi_ctx *ctx;
 
-  if (!(ctx = (struct ipmi_ctx *)malloc (sizeof(struct ipmi_ctx))))
+  if (!(ctx = (struct ipmi_ctx *)malloc (sizeof (struct ipmi_ctx))))
     {
       ERRNO_TRACE (errno);
       return (NULL);
@@ -262,7 +262,7 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
   assert (ctx->magic == IPMI_CTX_MAGIC);
   assert (hostname);
 
-  memset (&hent, '\0', sizeof(struct hostent));
+  memset (&hent, '\0', sizeof (struct hostent));
 #if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
   if (gethostbyname_r (hostname,
                        &hent,
@@ -345,7 +345,7 @@ _setup_socket (ipmi_ctx_t ctx)
 
   if (bind (ctx->io.outofband.sockfd,
             (struct sockaddr *)&addr,
-            sizeof(struct sockaddr_in)) < 0)
+            sizeof (struct sockaddr_in)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
@@ -424,8 +424,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  memset (&ctx->io.outofband.last_send, '\0', sizeof(struct timeval));
-  memset (&ctx->io.outofband.last_received, '\0', sizeof(struct timeval));
+  memset (&ctx->io.outofband.last_send, '\0', sizeof (struct timeval));
+  memset (&ctx->io.outofband.last_received, '\0', sizeof (struct timeval));
 
   ctx->io.outofband.highest_received_sequence_number = 0;
   ctx->io.outofband.previously_received_list = 0xFF;
@@ -586,8 +586,8 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   memset (ctx->io.outofband.confidentiality_key, '\0', IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH);
   ctx->io.outofband.confidentiality_key_ptr = ctx->io.outofband.confidentiality_key;
   ctx->io.outofband.confidentiality_key_len = IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH;
-  memset (&ctx->io.outofband.last_send, '\0', sizeof(struct timeval));
-  memset (&ctx->io.outofband.last_received, '\0', sizeof(struct timeval));
+  memset (&ctx->io.outofband.last_send, '\0', sizeof (struct timeval));
+  memset (&ctx->io.outofband.last_received, '\0', sizeof (struct timeval));
 
   ctx->io.outofband.highest_received_sequence_number = 0;
   ctx->io.outofband.previously_received_list = 0xFF;
@@ -737,7 +737,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
     case IPMI_DEVICE_KCS:
       if (disable_auto_probe)
         {
-          memset (&locate_info, '\0', sizeof(struct ipmi_locate_info));
+          memset (&locate_info, '\0', sizeof (struct ipmi_locate_info));
 
           locate_info.ipmi_version_major = 1;
           locate_info.ipmi_version_minor = 5;
@@ -835,7 +835,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
     case IPMI_DEVICE_SSIF:
       if (disable_auto_probe)
         {
-          memset (&locate_info, '\0', sizeof(struct ipmi_locate_info));
+          memset (&locate_info, '\0', sizeof (struct ipmi_locate_info));
 
           locate_info.ipmi_version_major = 1;
           locate_info.ipmi_version_minor = 5;
@@ -1370,6 +1370,6 @@ ipmi_ctx_destroy (ipmi_ctx_t ctx)
   if (ctx->type != IPMI_DEVICE_UNKNOWN)
     ipmi_ctx_close (ctx);
 
-  secure_memset (ctx, '\0', sizeof(ipmi_ctx_t));
+  secure_memset (ctx, '\0', sizeof (ipmi_ctx_t));
   free (ctx);
 }

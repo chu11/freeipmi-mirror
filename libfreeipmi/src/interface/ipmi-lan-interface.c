@@ -437,7 +437,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 
   checksum = ipmi_checksum (checksum_data_ptr, checksum_data_count);
 
-  if (fiid_obj_set_all (obj_lan_msg_trlr, &checksum, sizeof(checksum)) < 0)
+  if (fiid_obj_set_all (obj_lan_msg_trlr, &checksum, sizeof (checksum)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_trlr);
       goto cleanup;
@@ -455,7 +455,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   ipmi_msg_len = msg_data_count;
   memcpy (ipmi_msg_len_ptr,
           &ipmi_msg_len,
-          sizeof(ipmi_msg_len));
+          sizeof (ipmi_msg_len));
 
   /* Auth code must be done last, some authentication like md2 and md5
    * require all fields, including checksums, to be calculated

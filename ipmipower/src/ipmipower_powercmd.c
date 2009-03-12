@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.167 2009-03-04 22:39:39 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.168 2009-03-12 17:57:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -158,8 +158,8 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
 
   ipmipower_connection_clear (ic);
 
-  ip = (ipmipower_powercmd_t)Malloc (sizeof(struct ipmipower_powercmd));
-  memset (ip, '\0', sizeof(struct ipmipower_powercmd));
+  ip = (ipmipower_powercmd_t)Malloc (sizeof (struct ipmipower_powercmd));
+  memset (ip, '\0', sizeof (struct ipmipower_powercmd));
 
   ip->cmd = cmd;
   ip->protocol_state = PROTOCOL_STATE_START;
@@ -843,14 +843,14 @@ _retry_packets (ipmipower_powercmd_t ip)
           return (-1);
         }
 
-      bzero (&srcaddr, sizeof(struct sockaddr_in));
+      bzero (&srcaddr, sizeof (struct sockaddr_in));
       srcaddr.sin_family = AF_INET;
       srcaddr.sin_port = htons (0);
       srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
 
-      Bind (new_fd, &srcaddr, sizeof(struct sockaddr_in));
+      Bind (new_fd, &srcaddr, sizeof (struct sockaddr_in));
 
-      old_fd = (int *)Malloc (sizeof(int));
+      old_fd = (int *)Malloc (sizeof (int));
       *old_fd = ip->ic->ipmi_fd;
       list_push (ip->sockets_to_close, old_fd);
 

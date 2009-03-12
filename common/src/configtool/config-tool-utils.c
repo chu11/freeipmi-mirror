@@ -195,12 +195,12 @@ config_keypair_create (const char *section_name,
   assert (section_name);
   assert (key_name);
 
-  if (!(keypair = (struct config_keypair *)malloc (sizeof(struct config_keypair))))
+  if (!(keypair = (struct config_keypair *)malloc (sizeof (struct config_keypair))))
     {
       perror ("malloc");
       goto cleanup;
     }
-  memset (keypair, '\0', sizeof(struct config_keypair));
+  memset (keypair, '\0', sizeof (struct config_keypair));
 
   if (!(keypair->section_name = strdup (section_name)))
     {
@@ -251,7 +251,7 @@ config_section_str_create (char *section_name)
 {
   struct config_section_str *sstr = NULL;
 
-  if (!(sstr = (struct config_section_str *)malloc (sizeof(struct config_section_str))))
+  if (!(sstr = (struct config_section_str *)malloc (sizeof (struct config_section_str))))
     {
       perror ("malloc");
       goto cleanup;

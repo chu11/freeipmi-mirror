@@ -3,6 +3,11 @@
 	* ipmi-sensors/, ipmimonitoring/: Collapse some code using common
 	sensor code in common/src/toolcommon.
 
+	* Reorganization common/src/ with new convenience libs stored int
+	toolsdr/ and toolsensor/.
+
+	* Various code cleanup.
+
 2009-03-11  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, ipmimonitoring/src/ipmimonitoring/: Align columns

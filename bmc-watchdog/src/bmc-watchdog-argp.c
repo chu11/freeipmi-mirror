@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.16 2009-03-04 22:39:34 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.17 2009-03-12 17:57:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -509,7 +509,7 @@ _bmc_watchdog_config_file_parse (struct bmc_watchdog_arguments *cmd_args)
 
   memset (&config_file_data,
           '\0',
-          sizeof(struct config_file_data_bmc_watchdog));
+          sizeof (struct config_file_data_bmc_watchdog));
 
   if (config_file_parse (cmd_args->common.config_file,
                          0,

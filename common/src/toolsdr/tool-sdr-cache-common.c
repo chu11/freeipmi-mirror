@@ -88,7 +88,7 @@ _get_home_directory (pstdout_state_t pstate,
     }
 
   user_id = getuid ();
-  memset (&pwd, '\0', sizeof(struct passwd));
+  memset (&pwd, '\0', sizeof (struct passwd));
 #if defined(HAVE_FUNC_GETPWUID_R_5)
   if (getpwuid_r (user_id,
                   &pwd,

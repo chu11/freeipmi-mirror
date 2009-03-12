@@ -59,12 +59,12 @@ ipmi_locate_ctx_create (void)
 {
   ipmi_locate_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_locate_ctx_t)malloc (sizeof(struct ipmi_locate_ctx))))
+  if (!(ctx = (ipmi_locate_ctx_t)malloc (sizeof (struct ipmi_locate_ctx))))
     {
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof(struct ipmi_locate_ctx));
+  memset (ctx, '\0', sizeof (struct ipmi_locate_ctx));
 
   ctx->magic = IPMI_LOCATE_CTX_MAGIC;
 
@@ -151,7 +151,7 @@ _ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
       rv = (*things_to_try[i])(ctx, type, &linfo);
       if (!rv)
         {
-          memcpy (info, &linfo, sizeof(struct ipmi_locate_info));
+          memcpy (info, &linfo, sizeof (struct ipmi_locate_info));
           /* reset errnum if set previously */
           ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
           return (0);

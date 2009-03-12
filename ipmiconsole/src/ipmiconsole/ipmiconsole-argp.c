@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.28 2009-03-04 22:39:37 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.29 2009-03-12 17:57:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -169,7 +169,7 @@ _ipmiconsole_config_file_parse (struct ipmiconsole_arguments *cmd_args)
 
   memset (&config_file_data,
           '\0',
-          sizeof(struct config_file_data_ipmiconsole));
+          sizeof (struct config_file_data_ipmiconsole));
 
   if (!cmd_args->common.config_file)
     {

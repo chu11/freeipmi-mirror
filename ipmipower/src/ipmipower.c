@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.74 2009-03-03 23:56:54 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.75 2009-03-12 17:57:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -162,7 +162,7 @@ _sendto (cbuf_t buf, int fd, struct sockaddr_in *destaddr)
     ierr_exit ("_sendto: Buffer full");
 
   rv = ipmi_lan_sendto (fd, buffer, n, 0, (struct sockaddr *)destaddr,
-                        sizeof(struct sockaddr_in));
+                        sizeof (struct sockaddr_in));
   if (rv < 0)
     ierr_exit ("_sendto: ipmi_lan_sendto %s", strerror (errno));
   if (rv != n)
@@ -179,7 +179,7 @@ _recvfrom (cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
   int n, rv, dropped = 0;
   char buffer[IPMIPOWER_PACKET_BUFLEN];
   struct sockaddr_in from;
-  unsigned int fromlen = sizeof(struct sockaddr_in);
+  unsigned int fromlen = sizeof (struct sockaddr_in);
 
   rv = ipmi_lan_recvfrom (fd, buffer, IPMIPOWER_PACKET_BUFLEN, 0,
                           (struct sockaddr *)&from, &fromlen);
@@ -271,7 +271,7 @@ _poll_loop (int non_interactive)
            */
           nfds = (ics_len*2) + 3;
           Free (pfds);
-          pfds = (struct pollfd *)Malloc (nfds * sizeof(struct pollfd));
+          pfds = (struct pollfd *)Malloc (nfds * sizeof (struct pollfd));
         }
 
       for (i = 0; i < ics_len; i++)

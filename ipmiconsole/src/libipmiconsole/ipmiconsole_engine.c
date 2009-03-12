@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.83 2009-03-04 22:39:37 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.84 2009-03-12 17:57:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -184,9 +184,9 @@ ipmiconsole_engine_setup (unsigned int thread_count)
       return (-1);
     }
 
-  memset (console_engine_ctxs, '\0', IPMICONSOLE_THREAD_COUNT_MAX * sizeof(List));
-  memset (console_engine_ctxs_count, '\0', IPMICONSOLE_THREAD_COUNT_MAX * sizeof(unsigned int));
-  memset (console_engine_ctxs_mutex, '\0', IPMICONSOLE_THREAD_COUNT_MAX * sizeof(pthread_mutex_t));
+  memset (console_engine_ctxs, '\0', IPMICONSOLE_THREAD_COUNT_MAX * sizeof (List));
+  memset (console_engine_ctxs_count, '\0', IPMICONSOLE_THREAD_COUNT_MAX * sizeof (unsigned int));
+  memset (console_engine_ctxs_mutex, '\0', IPMICONSOLE_THREAD_COUNT_MAX * sizeof (pthread_mutex_t));
   for (i = 0; i < IPMICONSOLE_THREAD_COUNT_MAX; i++)
     {
       console_engine_ctxs_notifier[i][0] = -1;
@@ -440,7 +440,7 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
 {
   char buffer[IPMICONSOLE_PACKET_BUFLEN];
   struct sockaddr_in from;
-  unsigned int fromlen = sizeof(struct sockaddr_in);
+  unsigned int fromlen = sizeof (struct sockaddr_in);
   ssize_t len;
   int n, dropped = 0;
   int secure_malloc_flag;
@@ -542,7 +542,7 @@ _ipmi_sendto (ipmiconsole_ctx_t c)
                               n,
                               0,
                               (struct sockaddr *)&(c->session.addr),
-                              sizeof(struct sockaddr_in))) < 0)
+                              sizeof (struct sockaddr_in))) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_lan_sendto: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
@@ -796,7 +796,7 @@ _ipmiconsole_engine (void *arg)
           teardown_flag = 1;
         }
 
-      memset (&poll_data, '\0', sizeof(struct _ipmiconsole_poll_data));
+      memset (&poll_data, '\0', sizeof (struct _ipmiconsole_poll_data));
 
       /* Notes:
        *
@@ -861,13 +861,13 @@ _ipmiconsole_engine (void *arg)
        * There is + 1 pfds for the "console_engine_ctxs_notifier".
        * This will be set up manually here, and not in _poll_setup().
        */
-      if (!(poll_data.pfds = (struct pollfd *)malloc (((poll_data.ctxs_len * 3) + 1) * sizeof(struct pollfd))))
+      if (!(poll_data.pfds = (struct pollfd *)malloc (((poll_data.ctxs_len * 3) + 1) * sizeof (struct pollfd))))
         {
           IPMICONSOLE_DEBUG (("malloc: %s", strerror (errno)));
           goto continue_loop;
         }
 
-      if (!(poll_data.pfds_ctxs = (ipmiconsole_ctx_t *)malloc (poll_data.ctxs_len * sizeof(ipmiconsole_ctx_t))))
+      if (!(poll_data.pfds_ctxs = (ipmiconsole_ctx_t *)malloc (poll_data.ctxs_len * sizeof (ipmiconsole_ctx_t))))
         {
           IPMICONSOLE_DEBUG (("malloc: %s", strerror (errno)));
           goto continue_loop;
@@ -1093,7 +1093,7 @@ ipmiconsole_engine_thread_create (void)
       goto cleanup;
     }
 
-  if (!(index = (unsigned int *)malloc (sizeof(unsigned int))))
+  if (!(index = (unsigned int *)malloc (sizeof (unsigned int))))
     {
       IPMICONSOLE_DEBUG (("malloc: %s", strerror (errno)));
       goto cleanup;

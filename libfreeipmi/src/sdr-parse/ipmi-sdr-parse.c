@@ -83,12 +83,12 @@ ipmi_sdr_parse_ctx_create (void)
 {
   struct ipmi_sdr_parse_ctx *ctx = NULL;
 
-  if (!(ctx = (ipmi_sdr_parse_ctx_t)malloc (sizeof(struct ipmi_sdr_parse_ctx))))
+  if (!(ctx = (ipmi_sdr_parse_ctx_t)malloc (sizeof (struct ipmi_sdr_parse_ctx))))
     {
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof(struct ipmi_sdr_parse_ctx));
+  memset (ctx, '\0', sizeof (struct ipmi_sdr_parse_ctx));
   ctx->magic = IPMI_SDR_PARSE_CTX_MAGIC;
   ctx->flags = IPMI_SDR_PARSE_FLAGS_DEFAULT;
 
@@ -2536,7 +2536,7 @@ _sensor_decode_value (ipmi_sdr_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if (!((*value_ptr) = (double *)malloc (sizeof(double))))
+  if (!((*value_ptr) = (double *)malloc (sizeof (double))))
     {
       SDR_PARSE_SET_ERRNUM (ctx, IPMI_SDR_PARSE_ERR_OUT_OF_MEMORY);
       goto cleanup;

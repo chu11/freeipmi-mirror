@@ -1473,7 +1473,7 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
       return (-1);
     }
 
-  memset (&linfo, '\0', sizeof(struct ipmi_locate_info));
+  memset (&linfo, '\0', sizeof (struct ipmi_locate_info));
   linfo.interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
     {
@@ -1621,7 +1621,7 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
     linfo.register_spacing = (reg_bit_width / 8);
   }
 
-  memcpy (info, &linfo, sizeof(struct ipmi_locate_info));
+  memcpy (info, &linfo, sizeof (struct ipmi_locate_info));
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_acpi_table_hdr);

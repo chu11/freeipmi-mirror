@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.48 2009-03-09 20:52:36 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.49 2009-03-12 17:57:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -90,7 +90,7 @@ ipmiconsole_ctx_setup (ipmiconsole_ctx_t c)
 
   /* magic may not be set yet, no assert */
 
-  memset (c, '\0', sizeof(struct ipmiconsole_ctx));
+  memset (c, '\0', sizeof (struct ipmiconsole_ctx));
   c->magic = IPMICONSOLE_CTX_MAGIC;
   c->api_magic = IPMICONSOLE_CTX_API_MAGIC;
 
@@ -117,7 +117,7 @@ ipmiconsole_ctx_cleanup (ipmiconsole_ctx_t c)
   c->magic = ~IPMICONSOLE_CTX_MAGIC;
   c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
   if (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
-    secure_free (c, sizeof(struct ipmiconsole_ctx));
+    secure_free (c, sizeof (struct ipmiconsole_ctx));
   else
     free (c);
 }
@@ -415,7 +415,7 @@ _ipmiconsole_ctx_connection_init (ipmiconsole_ctx_t c)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  memset (&(c->connection), '\0', sizeof(struct ipmiconsole_ctx_connection));
+  memset (&(c->connection), '\0', sizeof (struct ipmiconsole_ctx_connection));
   c->connection.user_fd = -1;
   c->connection.ipmiconsole_fd = -1;
   c->connection.ipmi_fd = -1;
@@ -498,12 +498,12 @@ ipmiconsole_ctx_connection_setup (ipmiconsole_ctx_t c)
       goto cleanup;
     }
 
-  memset (&srcaddr, '\0', sizeof(struct sockaddr_in));
+  memset (&srcaddr, '\0', sizeof (struct sockaddr_in));
   srcaddr.sin_family = AF_INET;
   srcaddr.sin_port = htons (0);
   srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
 
-  if (bind (c->connection.ipmi_fd, (struct sockaddr *)&srcaddr, sizeof(struct sockaddr_in)) < 0)
+  if (bind (c->connection.ipmi_fd, (struct sockaddr *)&srcaddr, sizeof (struct sockaddr_in)) < 0)
     {
       IPMICONSOLE_DEBUG (("bind: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
@@ -892,7 +892,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
 
   c->session.console_port = RMCP_PRIMARY_RMCP_PORT;
 
-  memset (&(c->session.addr), '\0', sizeof(struct sockaddr_in));
+  memset (&(c->session.addr), '\0', sizeof (struct sockaddr_in));
   c->session.addr.sin_family = AF_INET;
   c->session.addr.sin_port = htons (c->session.console_port);
 
@@ -908,7 +908,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
       return (-1);
     }
 
-  memset (&hent, '\0', sizeof(struct hostent));
+  memset (&hent, '\0', sizeof (struct hostent));
 #if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
   if (gethostbyname_r (c->config.hostname,
                        &hent,
@@ -981,14 +981,14 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   c->session.previously_received_list = IPMI_SESSION_SEQUENCE_NUMBER_PREVIOUSLY_RECEIVED_LIST_INIT;
 
   if (ipmi_get_random (&(c->session.message_tag),
-                       sizeof(c->session.message_tag)) < 0)
+                       sizeof (c->session.message_tag)) < 0)
     {
       IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
     }
   if (ipmi_get_random (&(c->session.requester_sequence_number),
-                       sizeof(c->session.requester_sequence_number)) < 0)
+                       sizeof (c->session.requester_sequence_number)) < 0)
     {
       IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1003,7 +1003,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   do
     {
       if (ipmi_get_random ((uint8_t *)&(c->session.remote_console_session_id),
-                           sizeof(c->session.remote_console_session_id)) < 0)
+                           sizeof (c->session.remote_console_session_id)) < 0)
         {
           IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);

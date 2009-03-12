@@ -605,7 +605,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
 
   assert (state_data);
 
-  memset (channel_info_list, '\0', sizeof(channel_info_t) * NUM_CHANNELS);
+  memset (channel_info_list, '\0', sizeof (channel_info_t) * NUM_CHANNELS);
   if (get_channel_info_list (state_data, channel_info_list) < 0)
     return (-1);
 
@@ -721,7 +721,7 @@ _bmc_info (pstdout_state_t pstate,
   int exit_code = -1;
 
   prog_data = (bmc_info_prog_data_t *)arg;
-  memset (&state_data, '\0', sizeof(bmc_info_state_data_t));
+  memset (&state_data, '\0', sizeof (bmc_info_state_data_t));
 
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
@@ -766,7 +766,7 @@ main (int argc, char **argv)
 
   ipmi_disable_coredump ();
 
-  memset (&prog_data, '\0', sizeof(bmc_info_prog_data_t));
+  memset (&prog_data, '\0', sizeof (bmc_info_prog_data_t));
   prog_data.progname = argv[0];
   bmc_info_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;

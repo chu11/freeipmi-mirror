@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.10 2009-03-04 19:41:30 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.11 2009-03-12 17:57:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -292,7 +292,7 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
 
   memset (&config_file_data,
           '\0',
-          sizeof(struct config_file_data_ipmipower));
+          sizeof (struct config_file_data_ipmipower));
 
   /* try legacy file first */
   if (!cmd_args->common.config_file)

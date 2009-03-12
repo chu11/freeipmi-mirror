@@ -1284,7 +1284,7 @@ _ipmi_sel (pstdout_state_t pstate,
   int exit_code = -1;
 
   prog_data = (ipmi_sel_prog_data_t *)arg;
-  memset (&state_data, '\0', sizeof(ipmi_sel_state_data_t));
+  memset (&state_data, '\0', sizeof (ipmi_sel_state_data_t));
 
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
@@ -1399,7 +1399,7 @@ main (int argc, char **argv)
 
   ipmi_disable_coredump ();
 
-  memset (&prog_data, '\0', sizeof(ipmi_sel_prog_data_t));
+  memset (&prog_data, '\0', sizeof (ipmi_sel_prog_data_t));
   prog_data.progname = argv[0];
   ipmi_sel_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;

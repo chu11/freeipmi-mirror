@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.16 2009-03-04 22:39:38 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.17 2009-03-12 17:57:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -226,7 +226,7 @@ ipmidetect_handle_create ()
 {
   ipmidetect_t handle;
 
-  if (!(handle = (ipmidetect_t)malloc (sizeof(struct ipmidetect))))
+  if (!(handle = (ipmidetect_t)malloc (sizeof (struct ipmidetect))))
     return (NULL);
 
   _initialize_handle (handle);
@@ -328,7 +328,7 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
     }
 
   /* IPMIDETECT_CONFIG_FILE_DEFAULT defined in config.h */
-  num = sizeof(options)/sizeof(struct conffile_option);
+  num = sizeof (options)/sizeof (struct conffile_option);
   if (conffile_parse (cf, IPMIDETECT_CONFIG_FILE_DEFAULT, options, num, NULL, 0, 0) < 0)
     {
       /* Not an error if the configuration file does not exist */
@@ -373,7 +373,7 @@ _low_timeout_connect (ipmidetect_t handle,
       handle->errnum = IPMIDETECT_ERR_INTERNAL;
       goto cleanup;
     }
-  bzero (&servaddr, sizeof(servaddr));
+  bzero (&servaddr, sizeof (servaddr));
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons (port);
   servaddr.sin_addr = *((struct in_addr *)hptr->h_addr);
@@ -390,7 +390,7 @@ _low_timeout_connect (ipmidetect_t handle,
       goto cleanup;
     }
 
-  rv = connect (fd, (struct sockaddr *)&servaddr, sizeof(struct sockaddr_in));
+  rv = connect (fd, (struct sockaddr *)&servaddr, sizeof (struct sockaddr_in));
   if (rv < 0 && errno != EINPROGRESS)
     {
       handle->errnum = IPMIDETECT_ERR_CONNECT;
@@ -426,7 +426,7 @@ _low_timeout_connect (ipmidetect_t handle,
               int error;
               socklen_t len;
 
-              len = sizeof(int);
+              len = sizeof (int);
 
               if (getsockopt (fd, SOL_SOCKET, SO_ERROR, &error, &len) < 0)
                 {
@@ -543,7 +543,7 @@ ipmidetect_load_data (ipmidetect_t handle,
   if (_unloaded_handle_error_check (handle) < 0)
     goto cleanup;
 
-  memset (&conffile_config, '\0', sizeof(struct ipmidetect_config));
+  memset (&conffile_config, '\0', sizeof (struct ipmidetect_config));
 
   if (_read_conffile (handle, &conffile_config) < 0)
     goto cleanup;

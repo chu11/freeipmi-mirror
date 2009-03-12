@@ -658,7 +658,7 @@ _construct_payload_buf (uint8_t payload_type,
         }
       checksum = ipmi_checksum (payload_buf + checksum_start_offset, indx - checksum_start_offset);
 
-      if (fiid_obj_set_all (obj_lan_msg_trlr, &checksum, sizeof(checksum)) < 0)
+      if (fiid_obj_set_all (obj_lan_msg_trlr, &checksum, sizeof (checksum)) < 0)
         {
           FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_trlr);
           goto cleanup;

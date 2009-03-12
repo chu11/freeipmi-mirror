@@ -274,7 +274,7 @@ front_panel_buttons_checkout (const char *section_name,
   uint8_t enabled = 0;
   char *enabled_str = NULL;
 
-  memset (&data, '\0', sizeof(struct front_panel_buttons));
+  memset (&data, '\0', sizeof (struct front_panel_buttons));
   if ((ret = _get_front_panel_buttons (state_data, &data)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
@@ -329,7 +329,7 @@ front_panel_buttons_commit (const char *section_name,
   uint8_t enable_or_disable;
   uint8_t disable_allowed;
 
-  memset (&data, '\0', sizeof(struct front_panel_buttons));
+  memset (&data, '\0', sizeof (struct front_panel_buttons));
   if ((ret = _get_front_panel_buttons (state_data, &data)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;

@@ -443,7 +443,7 @@ ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
       return (-1);
     }
 
-  memset (&linfo, '\0', sizeof(struct ipmi_locate_info));
+  memset (&linfo, '\0', sizeof (struct ipmi_locate_info));
   linfo.interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
     {
@@ -504,7 +504,7 @@ ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
     }
 
   free (bufp);
-  memcpy (info, &linfo, sizeof(struct ipmi_locate_info));
+  memcpy (info, &linfo, sizeof (struct ipmi_locate_info));
   return (0);
 
  cleanup:

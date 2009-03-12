@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.15 2009-03-04 22:39:38 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.16 2009-03-12 17:57:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -119,7 +119,7 @@ _fds_setup (void)
   if (nodes_count % IPMIDETECTD_NODES_PER_SOCKET)
     fds_count++;
 
-  if (!(fds = (int *)malloc (fds_count * sizeof(int))))
+  if (!(fds = (int *)malloc (fds_count * sizeof (int))))
     IPMIDETECTD_EXIT (("malloc: %s", strerror (errno)));
 
   for (i = 0; i < fds_count; i++)
@@ -127,24 +127,24 @@ _fds_setup (void)
       if ((fds[i] = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
         IPMIDETECTD_EXIT (("socket: %s", strerror (errno)));
 
-      memset (&addr, '\0', sizeof(struct sockaddr_in));
+      memset (&addr, '\0', sizeof (struct sockaddr_in));
       addr.sin_family = AF_INET;
       addr.sin_port = htons (0);
       addr.sin_addr.s_addr = htonl (INADDR_ANY);
 
-      if (bind (fds[i], (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) < 0)
+      if (bind (fds[i], (struct sockaddr *)&addr, sizeof (struct sockaddr_in)) < 0)
         IPMIDETECTD_EXIT (("bind: %s", strerror (errno)));
     }
 
   if ((server_fd = socket (AF_INET, SOCK_STREAM, 0)) < 0)
     IPMIDETECTD_EXIT (("socket: %s", strerror (errno)));
 
-  memset (&addr, '\0', sizeof(struct sockaddr_in));
+  memset (&addr, '\0', sizeof (struct sockaddr_in));
   addr.sin_family = AF_INET;
   addr.sin_port = htons (conf.ipmidetectd_server_port);
   addr.sin_addr.s_addr = htonl (INADDR_ANY);
 
-  if (bind (server_fd, (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) < 0)
+  if (bind (server_fd, (struct sockaddr *)&addr, sizeof (struct sockaddr_in)) < 0)
     IPMIDETECTD_EXIT (("bind: %s", strerror (errno)));
 
   if (listen (server_fd, IPMIDETECTD_SERVER_BACKLOG) < 0)
@@ -184,9 +184,9 @@ _nodes_setup (void)
       char *ip;
       int len;
 
-      if (!(info = (struct ipmidetectd_info *)malloc (sizeof(struct ipmidetectd_info))))
+      if (!(info = (struct ipmidetectd_info *)malloc (sizeof (struct ipmidetectd_info))))
         IPMIDETECTD_EXIT (("malloc: %s", strerror (errno)));
-      memset (info, '\0', sizeof(struct ipmidetectd_info));
+      memset (info, '\0', sizeof (struct ipmidetectd_info));
 
       if (!(info->hostname = strdup (host)))
         IPMIDETECTD_EXIT (("strdup: %s", strerror (errno)));
@@ -195,9 +195,9 @@ _nodes_setup (void)
        * duplicates and "hanging" BMC issue.
        */
       if ((len = ipmi_get_random ((uint8_t *)&(info->sequence_number),
-                                  sizeof(info->sequence_number))) < 0)
+                                  sizeof (info->sequence_number))) < 0)
         IPMIDETECTD_EXIT (("ipmi_get_random: %s", strerror (errno)));
-      if (len != sizeof(info->sequence_number))
+      if (len != sizeof (info->sequence_number))
         IPMIDETECTD_EXIT (("ipmi_get_random: invalid len returned"));
 
       info->fd = fds[i/IPMIDETECTD_NODES_PER_SOCKET];
@@ -241,7 +241,7 @@ static void
 _ipmidetectd_setup (void)
 {
   /* Initialize ipmidetectd_next_send to 0 so there is a sweep of pings in the beginning */
-  memset (&ipmidetectd_next_send, '\0', sizeof(struct timeval));
+  memset (&ipmidetectd_next_send, '\0', sizeof (struct timeval));
 
   _fds_setup ();
   _nodes_setup ();
@@ -355,7 +355,7 @@ _ipmidetectd_send_pings (void)
                   len,
                   0,
                   (struct sockaddr *)&(info->destaddr),
-                  sizeof(struct sockaddr_in)) < 0)
+                  sizeof (struct sockaddr_in)) < 0)
         IPMIDETECTD_EXIT (("sendto: %s", strerror (errno)));
 
 #ifndef NDEBUG
@@ -393,7 +393,7 @@ _receive_ping (int fd)
   struct ipmidetectd_info *info;
   char buf[IPMIDETECTD_BUFLEN];
   int len;
-  socklen_t fromlen = sizeof(struct sockaddr_in);
+  socklen_t fromlen = sizeof (struct sockaddr_in);
   char *tmpstr;
 
   /* We're happy as long as we receive something.  We don't bother
@@ -429,7 +429,7 @@ _send_ping_data (void)
   ListIterator itr;
   struct sockaddr_in rhost;
   struct ipmidetectd_info *info;
-  socklen_t rhost_len = sizeof(struct sockaddr_in);
+  socklen_t rhost_len = sizeof (struct sockaddr_in);
   int rhost_fd;
 
   assert (nodes);
@@ -482,7 +482,7 @@ ipmidetectd_loop (void)
   assert (nodes_count);
 
   /* +1 fd for the server fd */
-  if (!(pfds = (struct pollfd *)malloc ((fds_count + 1)*sizeof(struct pollfd))))
+  if (!(pfds = (struct pollfd *)malloc ((fds_count + 1)*sizeof (struct pollfd))))
     IPMIDETECTD_EXIT (("malloc: %s", strerror (errno)));
 
   while (1)

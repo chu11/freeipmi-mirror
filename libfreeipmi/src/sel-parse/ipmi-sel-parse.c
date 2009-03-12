@@ -87,12 +87,12 @@ ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_c
       return (NULL);
     }
 
-  if (!(ctx = (ipmi_sel_parse_ctx_t)malloc (sizeof(struct ipmi_sel_parse_ctx))))
+  if (!(ctx = (ipmi_sel_parse_ctx_t)malloc (sizeof (struct ipmi_sel_parse_ctx))))
     {
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof(struct ipmi_sel_parse_ctx));
+  memset (ctx, '\0', sizeof (struct ipmi_sel_parse_ctx));
   ctx->magic = IPMI_SEL_PARSE_CTX_MAGIC;
   ctx->flags = IPMI_SEL_PARSE_FLAGS_DEFAULT;
   ctx->debug_prefix = NULL;
@@ -554,7 +554,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
             }
           next_record_id = val;
 
-          if (!(sel_parse_entry = (struct ipmi_sel_parse_entry *)malloc (sizeof(struct ipmi_sel_parse_entry))))
+          if (!(sel_parse_entry = (struct ipmi_sel_parse_entry *)malloc (sizeof (struct ipmi_sel_parse_entry))))
             {
               SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_OUT_OF_MEMORY);
               goto cleanup;

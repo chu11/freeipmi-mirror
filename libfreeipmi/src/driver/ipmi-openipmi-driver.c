@@ -199,12 +199,12 @@ ipmi_openipmi_ctx_create (void)
 {
   ipmi_openipmi_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_openipmi_ctx_t)malloc (sizeof(struct ipmi_openipmi_ctx))))
+  if (!(ctx = (ipmi_openipmi_ctx_t)malloc (sizeof (struct ipmi_openipmi_ctx))))
     {
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof(struct ipmi_openipmi_ctx));
+  memset (ctx, '\0', sizeof (struct ipmi_openipmi_ctx));
 
   ctx->magic = IPMI_OPENIPMI_CTX_MAGIC;
   ctx->flags = IPMI_OPENIPMI_FLAGS_DEFAULT;
@@ -448,7 +448,7 @@ _openipmi_write (ipmi_openipmi_ctx_t ctx,
       system_interface_addr.lun = lun;
 
       rq_packet.addr = (unsigned char *)&system_interface_addr;
-      rq_packet.addr_len = sizeof(struct ipmi_system_interface_addr);
+      rq_packet.addr_len = sizeof (struct ipmi_system_interface_addr);
     }
   else
     {
@@ -458,7 +458,7 @@ _openipmi_write (ipmi_openipmi_ctx_t ctx,
       ipmb_addr.lun = lun;
 
       rq_packet.addr = (unsigned char *)&ipmb_addr;
-      rq_packet.addr_len = sizeof(struct ipmi_ipmb_addr);
+      rq_packet.addr_len = sizeof (struct ipmi_ipmb_addr);
     }
 
   rq_packet.msgid = 0;
@@ -495,7 +495,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   assert (fiid_obj_valid (obj_cmd_rs));
 
   rs_packet.addr = (unsigned char *)&rs_addr;
-  rs_packet.addr_len = sizeof(struct ipmi_system_interface_addr);
+  rs_packet.addr_len = sizeof (struct ipmi_system_interface_addr);
   rs_packet.msg.data = rs_buf_temp;
   rs_packet.msg.data_len = IPMI_OPENIPMI_BUFLEN;
 

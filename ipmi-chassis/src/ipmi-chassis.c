@@ -1857,7 +1857,7 @@ _ipmi_chassis (pstdout_state_t pstate,
   int exit_code = -1;
 
   prog_data = (ipmi_chassis_prog_data_t *)arg;
-  memset (&state_data, '\0', sizeof(ipmi_chassis_state_data_t));
+  memset (&state_data, '\0', sizeof (ipmi_chassis_state_data_t));
 
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
@@ -1902,7 +1902,7 @@ main (int argc, char **argv)
 
   ipmi_disable_coredump ();
 
-  memset (&prog_data, '\0', sizeof(ipmi_chassis_prog_data_t));
+  memset (&prog_data, '\0', sizeof (ipmi_chassis_prog_data_t));
   prog_data.progname = argv[0];
   ipmi_chassis_argp_parse (argc, argv, &cmd_args);
 

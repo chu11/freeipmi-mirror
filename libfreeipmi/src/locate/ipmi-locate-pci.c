@@ -107,7 +107,7 @@ _pci_get_regs (ipmi_locate_ctx_t ctx,
   assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
   assert (pregs);
 
-  snprintf (fname, sizeof(fname), "/proc/bus/pci/%02x/%02x.%d", bus, dev, func);
+  snprintf (fname, sizeof (fname), "/proc/bus/pci/%02x/%02x.%d", bus, dev, func);
 
   if (!(fp = fopen (fname, "r")))
     {
@@ -209,7 +209,7 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
       return (-1);
     }
 
-  memset (&linfo, '\0', sizeof(struct ipmi_locate_info));
+  memset (&linfo, '\0', sizeof (struct ipmi_locate_info));
   linfo.interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
     {
@@ -223,7 +223,7 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
       goto cleanup;
     }
 
-  while (fgets (buf, sizeof(buf), fp_devices) != NULL) {
+  while (fgets (buf, sizeof (buf), fp_devices) != NULL) {
     pci_class_regs_t regs;
 
     items = sscanf (buf, "%x %x %x " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64,
@@ -258,14 +258,14 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
       case past_io:
         linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
         linfo.driver_address = base_address[i] & ~PCI_BASE_ADDRESS_IO_MASK;
-        memcpy (info, &linfo, sizeof(struct ipmi_locate_info));
+        memcpy (info, &linfo, sizeof (struct ipmi_locate_info));
         rv = 0;
         goto cleanup;
 
       case past_memory:
         linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
         linfo.driver_address = base_address[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
-        memcpy (info, &linfo, sizeof(struct ipmi_locate_info));
+        memcpy (info, &linfo, sizeof (struct ipmi_locate_info));
         rv = 0;
         goto cleanup;
       }

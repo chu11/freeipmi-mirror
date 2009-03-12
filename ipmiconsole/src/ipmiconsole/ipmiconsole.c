@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.60 2009-03-04 19:41:28 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.61 2009-03-12 17:57:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -79,7 +79,7 @@ _set_mode_raw (void)
       return (-1);
     }
 
-  memcpy (&tty, &saved_tty, sizeof(struct termios));
+  memcpy (&tty, &saved_tty, sizeof (struct termios));
   tty.c_iflag = 0;
   tty.c_oflag = 0;
   tty.c_cflag &= ~CSIZE;
@@ -298,7 +298,7 @@ main (int argc, char **argv)
 
   /* convert config information to ipmiconsole configuration */
 
-  memset (&ipmi_config, '\0', sizeof(struct ipmiconsole_ipmi_config));
+  memset (&ipmi_config, '\0', sizeof (struct ipmiconsole_ipmi_config));
   ipmi_config.username = cmd_args.common.username;
   ipmi_config.password = cmd_args.common.password;
   ipmi_config.k_g = cmd_args.common.k_g;
@@ -328,7 +328,7 @@ main (int argc, char **argv)
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION;
 
-  memset (&protocol_config, '\0', sizeof(struct ipmiconsole_protocol_config));
+  memset (&protocol_config, '\0', sizeof (struct ipmiconsole_protocol_config));
   protocol_config.session_timeout_len = cmd_args.common.session_timeout;
   protocol_config.retransmission_timeout_len = cmd_args.common.retransmission_timeout;
   protocol_config.retransmission_backoff_count = -1;
@@ -337,7 +337,7 @@ main (int argc, char **argv)
   protocol_config.acceptable_packet_errors_count = -1;
   protocol_config.maximum_retransmission_count = -1;
 
-  memset (&engine_config, '\0', sizeof(struct ipmiconsole_engine_config));
+  memset (&engine_config, '\0', sizeof (struct ipmiconsole_engine_config));
   engine_config.engine_flags = 0;
   if (cmd_args.lock_memory)
     engine_config.engine_flags |= IPMICONSOLE_ENGINE_LOCK_MEMORY;

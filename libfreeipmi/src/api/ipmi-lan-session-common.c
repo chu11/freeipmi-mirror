@@ -554,7 +554,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                        send_len,
                        0,
                        (struct sockaddr *)&(ctx->io.outofband.remote_host),
-                       sizeof(struct sockaddr_in)) < 0)
+                       sizeof (struct sockaddr_in)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
@@ -956,7 +956,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
               struct socket_to_close *s;
               struct sockaddr_in addr;
 
-              if (!(s = (struct socket_to_close *)malloc (sizeof(struct socket_to_close))))
+              if (!(s = (struct socket_to_close *)malloc (sizeof (struct socket_to_close))))
                 {
                   API_SET_ERRNUM (ctx, IPMI_ERR_OUT_OF_MEMORY);
                   goto cleanup;
@@ -980,7 +980,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 
               if (bind (ctx->io.outofband.sockfd,
                         (struct sockaddr *)&addr,
-                        sizeof(struct sockaddr_in)) < 0)
+                        sizeof (struct sockaddr_in)) < 0)
                 {
                   API_ERRNO_TO_API_ERRNUM (ctx, errno);
                   goto cleanup;
@@ -2067,7 +2067,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                        send_len,
                        0,
                        (struct sockaddr *)&(ctx->io.outofband.remote_host),
-                       sizeof(struct sockaddr_in)) < 0)
+                       sizeof (struct sockaddr_in)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
@@ -3116,7 +3116,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   do
     {
       if (ipmi_get_random ((uint8_t *)&(ctx->io.outofband.remote_console_session_id),
-                           sizeof(ctx->io.outofband.remote_console_session_id)) < 0)
+                           sizeof (ctx->io.outofband.remote_console_session_id)) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;

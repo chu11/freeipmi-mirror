@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.23 2009-03-04 22:39:35 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.24 2009-03-12 17:57:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -149,7 +149,7 @@ _ipmi_fru_config_file_parse (struct ipmi_fru_arguments *cmd_args)
 
   memset (&config_file_data,
           '\0',
-          sizeof(struct config_file_data_ipmi_fru));
+          sizeof (struct config_file_data_ipmi_fru));
 
   if (config_file_parse (cmd_args->common.config_file,
                          0,

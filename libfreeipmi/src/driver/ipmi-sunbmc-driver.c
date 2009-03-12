@@ -147,12 +147,12 @@ ipmi_sunbmc_ctx_create (void)
 {
   ipmi_sunbmc_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_sunbmc_ctx_t)malloc (sizeof(struct ipmi_sunbmc_ctx))))
+  if (!(ctx = (ipmi_sunbmc_ctx_t)malloc (sizeof (struct ipmi_sunbmc_ctx))))
     {
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof(struct ipmi_sunbmc_ctx));
+  memset (ctx, '\0', sizeof (struct ipmi_sunbmc_ctx));
 
   ctx->magic = IPMI_SUNBMC_CTX_MAGIC;
   ctx->flags = IPMI_SUNBMC_FLAGS_DEFAULT;
@@ -408,7 +408,7 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
   assert (ctx->putmsg_intf);
 
 #if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
-  memset (&sbuf, '\0', sizeof(struct strbuf));
+  memset (&sbuf, '\0', sizeof (struct strbuf));
 
   /* Due to API differences, we need to extract the cmd out of the
    * request.
@@ -434,7 +434,7 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
 
   /* achu: see header for for how this is calculated */
   msg_len = offsetof (bmc_msg_t, msg);
-  msg_len += sizeof(bmc_req_t);
+  msg_len += sizeof (bmc_req_t);
   msg_len += (rq_buf_len > SEND_MAX_PAYLOAD_SIZE) ? (rq_buf_len - SEND_MAX_PAYLOAD_SIZE) : 0;
 
   if (!(msg = (bmc_msg_t *)malloc (msg_len)))
@@ -501,7 +501,7 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   assert (fiid_obj_valid (obj_cmd_rs));
 
 #if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)
-  memset (&sbuf, '\0', sizeof(struct strbuf));
+  memset (&sbuf, '\0', sizeof (struct strbuf));
 
   sbuf.maxlen = IPMI_SUNBMC_BUFLEN;
   sbuf.buf = (char *)rs_buf_temp;
@@ -641,8 +641,8 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
       uint8_t rs_buf[IPMI_SUNBMC_BUFLEN];
       int32_t len;
 
-      memset (&istr, '\0', sizeof(struct strioctl));
-      memset (&reqrsp, '\0', sizeof(bmc_reqrsp_t));
+      memset (&istr, '\0', sizeof (struct strioctl));
+      memset (&reqrsp, '\0', sizeof (bmc_reqrsp_t));
 
       /* Due to API differences, we need to extract the cmd out of the
        * request.
@@ -673,7 +673,7 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
 
       istr.ic_cmd = IOCTL_IPMI_KCS_ACTION;
       istr.ic_timout = 0;       /* spelled 'timout', not a typo */
-      istr.ic_len = sizeof(struct bmc_reqrsp);
+      istr.ic_len = sizeof (struct bmc_reqrsp);
       istr.ic_dp = (char *)&reqrsp;
 
       if (ioctl (ctx->device_fd,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.27 2009-03-05 21:47:29 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.28 2009-03-12 17:57:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -657,7 +657,7 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
 
   if (validation_flags & IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_RECORD_ID)
     {
-      if (!(record_ids = (uint16_t *)malloc (ctx->record_count * sizeof(uint16_t))))
+      if (!(record_ids = (uint16_t *)malloc (ctx->record_count * sizeof (uint16_t))))
         {
           SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY);
           goto cleanup;
@@ -667,7 +667,7 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
 
   if (validation_flags & IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_SENSOR_NUMBER)
     {
-      if (!(sensor_numbers = (uint8_t *)malloc (ctx->record_count * sizeof(uint8_t))))
+      if (!(sensor_numbers = (uint8_t *)malloc (ctx->record_count * sizeof (uint8_t))))
         {
           SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY);
           goto cleanup;

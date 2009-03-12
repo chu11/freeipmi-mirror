@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.14 2009-03-04 19:41:32 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.15 2009-03-12 17:57:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -85,12 +85,12 @@ ipmi_sdr_cache_ctx_create (void)
 {
   struct ipmi_sdr_cache_ctx *ctx = NULL;
 
-  if (!(ctx = (ipmi_sdr_cache_ctx_t)malloc (sizeof(struct ipmi_sdr_cache_ctx))))
+  if (!(ctx = (ipmi_sdr_cache_ctx_t)malloc (sizeof (struct ipmi_sdr_cache_ctx))))
     {
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof(struct ipmi_sdr_cache_ctx));
+  memset (ctx, '\0', sizeof (struct ipmi_sdr_cache_ctx));
   ctx->magic = IPMI_SDR_CACHE_CTX_MAGIC;
   ctx->flags = IPMI_SDR_CACHE_FLAGS_DEFAULT;
   ctx->debug_prefix = NULL;

@@ -456,7 +456,7 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
   assert (section_name);
   assert (data);
 
-  memset (data, '\0', sizeof(struct sensor_event_enable_data));
+  memset (data, '\0', sizeof (struct sensor_event_enable_data));
 
   if ((ret = get_sdr_record (state_data,
                              section_name,

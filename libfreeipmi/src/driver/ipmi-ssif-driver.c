@@ -453,12 +453,12 @@ ipmi_ssif_ctx_create (void)
 {
   ipmi_ssif_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_ssif_ctx_t)malloc (sizeof(struct ipmi_ssif_ctx))))
+  if (!(ctx = (ipmi_ssif_ctx_t)malloc (sizeof (struct ipmi_ssif_ctx))))
     {
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof(struct ipmi_ssif_ctx));
+  memset (ctx, '\0', sizeof (struct ipmi_ssif_ctx));
 
   ctx->magic = IPMI_SSIF_CTX_MAGIC;
   if (!(ctx->driver_device = strdup (IPMI_DEFAULT_I2C_DEVICE)))

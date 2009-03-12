@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_config.c,v 1.14 2009-03-04 19:41:29 chu11 Exp $
+ *  $Id: ipmidetectd_config.c,v 1.15 2009-03-12 17:57:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -58,7 +58,7 @@ struct ipmidetectd_config conf;
 static void
 _config_default (void)
 {
-  memset (&conf, '\0', sizeof(struct ipmidetectd_config));
+  memset (&conf, '\0', sizeof (struct ipmidetectd_config));
 
 #ifndef NDEBUG
   conf.debug = IPMIDETECTD_DEBUG_DEFAULT;
@@ -112,7 +112,7 @@ _cmdline_parse (int argc, char **argv)
 
   assert (argv);
 
-  memset (options, '\0', sizeof(options));
+  memset (options, '\0', sizeof (options));
   strcat (options, "hv");
 #ifndef NDEBUG
   strcat (options, "c:d");
@@ -218,7 +218,7 @@ _config_file_parse (void)
       goto cleanup;
     }
 
-  num = sizeof(options)/sizeof(struct conffile_option);
+  num = sizeof (options)/sizeof (struct conffile_option);
   if (conffile_parse (cf, conf.config_file, options, num, NULL, 0, 0) < 0)
     {
       char buf[CONFFILE_MAX_ERRMSGLEN];

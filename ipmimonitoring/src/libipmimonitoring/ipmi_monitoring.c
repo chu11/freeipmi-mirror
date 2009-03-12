@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.51 2009-03-06 22:51:37 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.52 2009-03-12 17:57:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -140,7 +140,7 @@ _destroy_ctx (ipmi_monitoring_ctx_t c)
 
   c->magic = ~IPMI_MONITORING_MAGIC;
   if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_LOCK_MEMORY)
-    secure_free (c, sizeof(struct ipmi_monitoring_ctx));
+    secure_free (c, sizeof (struct ipmi_monitoring_ctx));
   else
     free (c);
 }
@@ -152,22 +152,22 @@ ipmi_monitoring_ctx_create (void)
 
   if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_LOCK_MEMORY)
     {
-      if (!(c = (ipmi_monitoring_ctx_t)secure_malloc (sizeof(struct ipmi_monitoring_ctx))))
+      if (!(c = (ipmi_monitoring_ctx_t)secure_malloc (sizeof (struct ipmi_monitoring_ctx))))
         return (NULL);
       /* secure_memset called in secure_malloc()*/
     }
   else
     {
-      if (!(c = (ipmi_monitoring_ctx_t)malloc (sizeof(struct ipmi_monitoring_ctx))))
+      if (!(c = (ipmi_monitoring_ctx_t)malloc (sizeof (struct ipmi_monitoring_ctx))))
         return (NULL);
-      secure_memset (c, '\0', sizeof(struct ipmi_monitoring_ctx));
+      secure_memset (c, '\0', sizeof (struct ipmi_monitoring_ctx));
     }
   c->magic = IPMI_MONITORING_MAGIC;
 
   if (!(c->sensor_readings = list_create ((ListDelF)free)))
     {
       if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_LOCK_MEMORY)
-        secure_free (c, sizeof(struct ipmi_monitoring_ctx));
+        secure_free (c, sizeof (struct ipmi_monitoring_ctx));
       else
         free (c);
       return (NULL);

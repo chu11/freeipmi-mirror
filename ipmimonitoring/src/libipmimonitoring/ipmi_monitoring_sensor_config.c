@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.35 2009-03-04 22:39:39 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.36 2009-03-12 17:57:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -3112,7 +3112,7 @@ ipmi_monitoring_sensor_config (int *errnum)
   else
     config_file = IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT;
 
-  num = sizeof(options)/sizeof(struct conffile_option);
+  num = sizeof (options)/sizeof (struct conffile_option);
   if (conffile_parse (cf,
                       config_file,
                       options,

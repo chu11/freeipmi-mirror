@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.10 2009-03-04 23:02:38 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.11 2009-03-12 17:57:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -323,7 +323,7 @@ _setup (void)
   if ((_sockfd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
     ipmi_ping_err_exit ("socket: %s", strerror (errno));
 
-  memset (&_srcaddr, '\0', sizeof(_srcaddr));
+  memset (&_srcaddr, '\0', sizeof (_srcaddr));
   _srcaddr.sin_family = AF_INET;
   _srcaddr.sin_port = htons (0);
 
@@ -355,14 +355,14 @@ _setup (void)
 
           temp_sockaddr = *((struct sockaddr_in *)&ifr.ifr_addr);
           memcpy (&_srcaddr.sin_addr.s_addr, &temp_sockaddr.sin_addr.s_addr,
-                  sizeof(_srcaddr.sin_addr.s_addr));
+                  sizeof (_srcaddr.sin_addr.s_addr));
         }
     }
 
-  if (bind (_sockfd, (struct sockaddr *)&_srcaddr, sizeof(_srcaddr)) < 0)
+  if (bind (_sockfd, (struct sockaddr *)&_srcaddr, sizeof (_srcaddr)) < 0)
     ipmi_ping_err_exit ("bind: %s", strerror (errno));
 
-  memset (&_destaddr, '\0', sizeof(_destaddr));
+  memset (&_destaddr, '\0', sizeof (_destaddr));
   _destaddr.sin_family = AF_INET;
   _destaddr.sin_port = htons (RMCP_PRIMARY_RMCP_PORT);
 
@@ -401,9 +401,9 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
       int len;
 
       if ((len = ipmi_get_random ((uint8_t *)&_initial_sequence_number,
-                                  sizeof(_initial_sequence_number))) < 0)
+                                  sizeof (_initial_sequence_number))) < 0)
         ipmi_ping_err_exit ("ipmi_get_random: %s", strerror (errno));
-      if (len != sizeof(_initial_sequence_number))
+      if (len != sizeof (_initial_sequence_number))
         ipmi_ping_err_exit ("ipmi_get_random: invalid len returned");
     }
 
@@ -430,7 +430,7 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
         ipmi_ping_err_exit ("_create failed: %s", strerror (errno));
 
       rv = ipmi_lan_sendto (_sockfd, buffer, len, 0,
-                            (struct sockaddr *)&_destaddr, sizeof(_destaddr));
+                            (struct sockaddr *)&_destaddr, sizeof (_destaddr));
       if (rv < 0)
         ipmi_ping_err_exit ("ipmi_sendto: %s", strerror (errno));
 
@@ -460,7 +460,7 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
               struct sockaddr_in from;
               socklen_t fromlen;
 
-              fromlen = sizeof(from);
+              fromlen = sizeof (from);
               len = ipmi_lan_recvfrom (_sockfd, buffer, IPMI_PING_MAX_PKT_LEN, 0,
                                        (struct sockaddr *)&from, &fromlen);
               if (len < 0)

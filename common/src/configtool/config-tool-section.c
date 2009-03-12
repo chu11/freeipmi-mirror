@@ -82,13 +82,13 @@ config_section_create (pstdout_state_t pstate,
 
   assert (section_name);
 
-  if (!(section = (struct config_section *)malloc (sizeof(struct config_section))))
+  if (!(section = (struct config_section *)malloc (sizeof (struct config_section))))
     {
       PSTDOUT_PERROR (pstate,
                       "malloc");
       goto cleanup;
     }
-  memset (section, '\0', sizeof(struct config_section));
+  memset (section, '\0', sizeof (struct config_section));
 
   if (!(section->section_name = strdup (section_name)))
     {
@@ -202,13 +202,13 @@ config_section_add_key (pstdout_state_t pstate,
   assert (commit);
   assert (validate);
 
-  if (!(k = (struct config_key *)malloc (sizeof(struct config_key))))
+  if (!(k = (struct config_key *)malloc (sizeof (struct config_key))))
     {
       PSTDOUT_PERROR (pstate,
                       "malloc");
       goto cleanup;
     }
-  memset (k, '\0', sizeof(struct config_key));
+  memset (k, '\0', sizeof (struct config_key));
 
   if (!(k->key_name = strdup (key_name)))
     {
@@ -255,13 +255,13 @@ config_section_add_keyvalue (pstdout_state_t pstate,
   assert (section);
   assert (key);
 
-  if (!(kv = malloc (sizeof(struct config_keyvalue))))
+  if (!(kv = malloc (sizeof (struct config_keyvalue))))
     {
       PSTDOUT_PERROR (pstate,
                       "malloc");
       goto cleanup;
     }
-  memset (kv, '\0', sizeof(struct config_keyvalue));
+  memset (kv, '\0', sizeof (struct config_keyvalue));
 
   /* back pointer */
   kv->key = key;

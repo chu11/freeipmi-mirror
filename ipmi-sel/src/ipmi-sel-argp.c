@@ -308,7 +308,7 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
 
   memset (&config_file_data,
           '\0',
-          sizeof(struct config_file_data_ipmi_sel));
+          sizeof (struct config_file_data_ipmi_sel));
 
   if (config_file_parse (cmd_args->common.config_file,
                          0,
@@ -340,7 +340,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->display = 0;
   memset (cmd_args->display_record_list,
           '\0',
-          sizeof(int)*IPMI_SEL_MAX_RECORD);
+          sizeof (int) * IPMI_SEL_MAX_RECORD);
   cmd_args->display_record_list_length = 0;
   cmd_args->display_range = 0;
   cmd_args->display_range1 = 0;
@@ -349,7 +349,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->delete = 0;
   memset (cmd_args->delete_record_list,
           '\0',
-          sizeof(int)*IPMI_SEL_MAX_RECORD);
+          sizeof (int) * IPMI_SEL_MAX_RECORD);
   cmd_args->delete_record_list_length = 0;
   cmd_args->delete_range = 0;
   cmd_args->delete_range1 = 0;

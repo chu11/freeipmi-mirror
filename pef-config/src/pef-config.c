@@ -43,7 +43,7 @@ _pef_config_state_data_init (pef_config_state_data_t *state_data)
 {
   assert (state_data);
 
-  memset (state_data, '\0', sizeof(pef_config_state_data_t));
+  memset (state_data, '\0', sizeof (pef_config_state_data_t));
   state_data->prog_data = NULL;
   state_data->ipmi_ctx = NULL;
 
@@ -342,7 +342,7 @@ main (int argc, char **argv)
 
   ipmi_disable_coredump ();
 
-  memset (&prog_data, '\0', sizeof(pef_config_prog_data_t));
+  memset (&prog_data, '\0', sizeof (pef_config_prog_data_t));
   prog_data.progname = argv[0];
   pef_config_argp_parse (argc, argv, &cmd_args);
 

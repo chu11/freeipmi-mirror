@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.99 2009-03-12 16:40:26 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.100 2009-03-12 17:57:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1074,7 +1074,7 @@ _ipmimonitoring (pstdout_state_t pstate,
   int exit_code;
 
   prog_data = (ipmimonitoring_prog_data_t *)arg;
-  memset (&state_data, '\0', sizeof(ipmimonitoring_state_data_t));
+  memset (&state_data, '\0', sizeof (ipmimonitoring_state_data_t));
 
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
@@ -1382,7 +1382,7 @@ main (int argc, char **argv)
 
   ipmi_disable_coredump ();
 
-  memset (&prog_data, '\0', sizeof(ipmimonitoring_prog_data_t));
+  memset (&prog_data, '\0', sizeof (ipmimonitoring_prog_data_t));
   prog_data.progname = argv[0];
   ipmimonitoring_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;

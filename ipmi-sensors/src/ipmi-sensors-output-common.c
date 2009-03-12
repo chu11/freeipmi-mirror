@@ -616,7 +616,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
               goto cleanup;
             }
 
-          if (!(tmp_lower_non_critical_threshold = (double *)malloc (sizeof(double))))
+          if (!(tmp_lower_non_critical_threshold = (double *)malloc (sizeof (double))))
             {
               pstdout_perror (state_data->pstate, "malloc");
               goto cleanup;
@@ -666,7 +666,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
               goto cleanup;
             }
 
-          if (!(tmp_lower_critical_threshold = (double *)malloc (sizeof(double))))
+          if (!(tmp_lower_critical_threshold = (double *)malloc (sizeof (double))))
             {
               pstdout_perror (state_data->pstate, "malloc");
               goto cleanup;
@@ -716,7 +716,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
               goto cleanup;
             }
 
-          if (!(tmp_lower_non_recoverable_threshold = (double *)malloc (sizeof(double))))
+          if (!(tmp_lower_non_recoverable_threshold = (double *)malloc (sizeof (double))))
             {
               pstdout_perror (state_data->pstate, "malloc");
               goto cleanup;
@@ -766,7 +766,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
               goto cleanup;
             }
 
-          if (!(tmp_upper_non_critical_threshold = (double *)malloc (sizeof(double))))
+          if (!(tmp_upper_non_critical_threshold = (double *)malloc (sizeof (double))))
             {
               pstdout_perror (state_data->pstate, "malloc");
               goto cleanup;
@@ -816,7 +816,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
               goto cleanup;
             }
 
-          if (!(tmp_upper_critical_threshold = (double *)malloc (sizeof(double))))
+          if (!(tmp_upper_critical_threshold = (double *)malloc (sizeof (double))))
             {
               pstdout_perror (state_data->pstate, "malloc");
               goto cleanup;
@@ -866,7 +866,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
               goto cleanup;
             }
 
-          if (!(tmp_upper_non_recoverable_threshold = (double *)malloc (sizeof(double))))
+          if (!(tmp_upper_non_recoverable_threshold = (double *)malloc (sizeof (double))))
             {
               pstdout_perror (state_data->pstate, "malloc");
               goto cleanup;

@@ -183,7 +183,7 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
         }
       arg_max = LONG_MAX;
     }
-  if (!(cmd_args->oem_options = (char **)calloc (arg_max, sizeof(char *))))
+  if (!(cmd_args->oem_options = (char **)calloc (arg_max, sizeof (char *))))
     {
       perror ("calloc");
       exit (1);

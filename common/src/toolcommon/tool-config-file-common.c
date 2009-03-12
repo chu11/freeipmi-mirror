@@ -717,7 +717,7 @@ config_file_ipmi_sensors_groups (conffile_t cf,
 
   config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
 
-  if (data->stringlist_len > MAX_SENSOR_GROUPS)
+  if (data->stringlist_len > CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS)
     {
       fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
       exit (1);
@@ -725,7 +725,7 @@ config_file_ipmi_sensors_groups (conffile_t cf,
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      if (strlen (data->stringlist[i]) > MAX_SENSOR_GROUPS_STRING_LENGTH)
+      if (strlen (data->stringlist[i]) > CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH)
         {
           fprintf (stderr, "Config File Error: invalid value '%s' for %s\n",
                    data->stringlist[i],
@@ -735,7 +735,7 @@ config_file_ipmi_sensors_groups (conffile_t cf,
 
       strncpy (config_file_data->groups[i],
                data->stringlist[i],
-               MAX_SENSOR_GROUPS_STRING_LENGTH);
+               CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
 
       config_file_data->groups_length++;
     }
@@ -780,7 +780,7 @@ config_file_ipmimonitoring_groups (conffile_t cf,
 
   config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
 
-  if (data->stringlist_len > MAX_SENSOR_GROUPS)
+  if (data->stringlist_len > CONFIG_FILE_IPMIMONITORING_MAX_GROUPS)
     {
       fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
       exit (1);
@@ -788,7 +788,7 @@ config_file_ipmimonitoring_groups (conffile_t cf,
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      if (strlen (data->stringlist[i]) > MAX_SENSOR_GROUPS_STRING_LENGTH)
+      if (strlen (data->stringlist[i]) > CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH)
         {
           fprintf (stderr, "Config File Error: invalid value '%s' for %s\n",
                    data->stringlist[i],
@@ -798,7 +798,7 @@ config_file_ipmimonitoring_groups (conffile_t cf,
 
       strncpy (config_file_data->groups[i],
                data->stringlist[i],
-               MAX_SENSOR_GROUPS_STRING_LENGTH);
+               CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
 
       config_file_data->groups_length++;
     }
@@ -3101,9 +3101,9 @@ config_file_parse (const char *filename,
               || ((tool_support & CONFIG_FILE_TOOL_IPMIPOWER) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_PEF_CONFIG) && !tool_data)));
 
-  memset (config_file_options, '\0', sizeof(struct conffile_option));
+  memset (config_file_options, '\0', sizeof (struct conffile_option));
 
-  memset (&cmd_args_config, '\0', sizeof(struct cmd_args_config));
+  memset (&cmd_args_config, '\0', sizeof (struct cmd_args_config));
 
   /* set ignore options the tool doesn't care about */
 
@@ -3112,7 +3112,7 @@ config_file_parse (const char *filename,
    */
 
   /* driver-type is for both inband and outofband */
-  options_len = sizeof(inband_and_outofband_options)/sizeof(struct conffile_option);
+  options_len = sizeof (inband_and_outofband_options)/sizeof (struct conffile_option);
   if (!(support & CONFIG_FILE_INBAND)
       && !(support & CONFIG_FILE_OUTOFBAND))
     _ignore_options (inband_and_outofband_options, options_len);
@@ -3124,7 +3124,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(inband_options)/sizeof(struct conffile_option);
+  options_len = sizeof (inband_options)/sizeof (struct conffile_option);
   if (!(support & CONFIG_FILE_INBAND))
     _ignore_options (inband_options, options_len);
 
@@ -3135,7 +3135,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(outofband_options)/sizeof(struct conffile_option);
+  options_len = sizeof (outofband_options)/sizeof (struct conffile_option);
   if (!(support & CONFIG_FILE_OUTOFBAND))
     _ignore_options (outofband_options, options_len);
 
@@ -3146,7 +3146,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(sdr_options)/sizeof(struct conffile_option);
+  options_len = sizeof (sdr_options)/sizeof (struct conffile_option);
   if (!(support & CONFIG_FILE_SDR))
     _ignore_options (sdr_options, options_len);
 
@@ -3157,7 +3157,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(hostrange_options)/sizeof(struct conffile_option);
+  options_len = sizeof (hostrange_options)/sizeof (struct conffile_option);
   if (!(support & CONFIG_FILE_HOSTRANGE))
     _ignore_options (hostrange_options, options_len);
 
@@ -3172,7 +3172,7 @@ config_file_parse (const char *filename,
    * tool flags
    */
 
-  options_len = sizeof(bmc_config_options)/sizeof(struct conffile_option);
+  options_len = sizeof (bmc_config_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_BMC_CONFIG))
     _ignore_options (bmc_config_options, options_len);
 
@@ -3183,7 +3183,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(bmc_device_options)/sizeof(struct conffile_option);
+  options_len = sizeof (bmc_device_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_BMC_DEVICE))
     _ignore_options (bmc_device_options, options_len);
 
@@ -3194,7 +3194,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(bmc_info_options)/sizeof(struct conffile_option);
+  options_len = sizeof (bmc_info_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_BMC_INFO))
     _ignore_options (bmc_info_options, options_len);
 
@@ -3205,7 +3205,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(bmc_watchdog_options)/sizeof(struct conffile_option);
+  options_len = sizeof (bmc_watchdog_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_BMC_WATCHDOG))
     _ignore_options (bmc_watchdog_options, options_len);
 
@@ -3216,7 +3216,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(ipmi_chassis_options)/sizeof(struct conffile_option);
+  options_len = sizeof (ipmi_chassis_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS))
     _ignore_options (ipmi_chassis_options, options_len);
 
@@ -3227,7 +3227,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(ipmi_chassis_config_options)/sizeof(struct conffile_option);
+  options_len = sizeof (ipmi_chassis_config_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG))
     _ignore_options (ipmi_chassis_config_options, options_len);
 
@@ -3238,7 +3238,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(ipmi_fru_options)/sizeof(struct conffile_option);
+  options_len = sizeof (ipmi_fru_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_FRU))
     _ignore_options (ipmi_fru_options, options_len);
 
@@ -3249,7 +3249,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(ipmi_oem_options)/sizeof(struct conffile_option);
+  options_len = sizeof (ipmi_oem_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_OEM))
     _ignore_options (ipmi_oem_options, options_len);
 
@@ -3260,7 +3260,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(ipmi_raw_options)/sizeof(struct conffile_option);
+  options_len = sizeof (ipmi_raw_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_RAW))
     _ignore_options (ipmi_raw_options, options_len);
 
@@ -3271,7 +3271,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(ipmi_sel_options)/sizeof(struct conffile_option);
+  options_len = sizeof (ipmi_sel_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_SEL))
     _ignore_options (ipmi_sel_options, options_len);
 
@@ -3282,7 +3282,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(ipmi_sensors_options)/sizeof(struct conffile_option);
+  options_len = sizeof (ipmi_sensors_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS))
     _ignore_options (ipmi_sensors_options, options_len);
 
@@ -3293,7 +3293,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(ipmi_sensors_config_options)/sizeof(struct conffile_option);
+  options_len = sizeof (ipmi_sensors_config_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG))
     _ignore_options (ipmi_sensors_config_options, options_len);
 
@@ -3304,7 +3304,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(ipmiconsole_options)/sizeof(struct conffile_option);
+  options_len = sizeof (ipmiconsole_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMICONSOLE))
     _ignore_options (ipmiconsole_options, options_len);
 
@@ -3315,7 +3315,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(ipmimonitoring_options)/sizeof(struct conffile_option);
+  options_len = sizeof (ipmimonitoring_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMIMONITORING))
     _ignore_options (ipmimonitoring_options, options_len);
 
@@ -3326,7 +3326,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(ipmipower_options)/sizeof(struct conffile_option);
+  options_len = sizeof (ipmipower_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMIPOWER))
     _ignore_options (ipmipower_options, options_len);
 
@@ -3337,7 +3337,7 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof(pef_config_options)/sizeof(struct conffile_option);
+  options_len = sizeof (pef_config_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_PEF_CONFIG))
     _ignore_options (pef_config_options, options_len);
 
@@ -3350,8 +3350,8 @@ config_file_parse (const char *filename,
 
   /* clear out config file data */
 
-  memset (&ipmiconsole_data, '\0', sizeof(struct config_file_data_ipmiconsole));
-  memset (&ipmipower_data, '\0', sizeof(struct config_file_data_ipmipower));
+  memset (&ipmiconsole_data, '\0', sizeof (struct config_file_data_ipmiconsole));
+  memset (&ipmipower_data, '\0', sizeof (struct config_file_data_ipmipower));
 
   if (!(cf = conffile_handle_create ()))
     {
@@ -3434,49 +3434,49 @@ config_file_parse (const char *filename,
       bmc_watchdog_data_ptr = (struct config_file_data_bmc_watchdog *)tool_data;
       memcpy (bmc_watchdog_data_ptr,
               &bmc_watchdog_data,
-              sizeof(struct config_file_data_bmc_watchdog));
+              sizeof (struct config_file_data_bmc_watchdog));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMI_FRU)
     {
       ipmi_fru_data_ptr = (struct config_file_data_ipmi_fru *)tool_data;
       memcpy (ipmi_fru_data_ptr,
               &ipmi_fru_data,
-              sizeof(struct config_file_data_ipmi_fru));
+              sizeof (struct config_file_data_ipmi_fru));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMI_SEL)
     {
       ipmi_sel_data_ptr = (struct config_file_data_ipmi_sel *)tool_data;
       memcpy (ipmi_sel_data_ptr,
               &ipmi_sel_data,
-              sizeof(struct config_file_data_ipmi_sel));
+              sizeof (struct config_file_data_ipmi_sel));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS)
     {
       ipmi_sensors_data_ptr = (struct config_file_data_ipmi_sensors *)tool_data;
       memcpy (ipmi_sensors_data_ptr,
               &ipmi_sensors_data,
-              sizeof(struct config_file_data_ipmi_sensors));
+              sizeof (struct config_file_data_ipmi_sensors));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMICONSOLE)
     {
       ipmiconsole_data_ptr = (struct config_file_data_ipmiconsole *)tool_data;
       memcpy (ipmiconsole_data_ptr,
               &ipmiconsole_data,
-              sizeof(struct config_file_data_ipmiconsole));
+              sizeof (struct config_file_data_ipmiconsole));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMIMONITORING)
     {
       ipmimonitoring_data_ptr = (struct config_file_data_ipmimonitoring *)tool_data;
       memcpy (ipmimonitoring_data_ptr,
               &ipmimonitoring_data,
-              sizeof(struct config_file_data_ipmimonitoring));
+              sizeof (struct config_file_data_ipmimonitoring));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMIPOWER)
     {
       ipmipower_data_ptr = (struct config_file_data_ipmipower *)tool_data;
       memcpy (ipmipower_data_ptr,
               &ipmipower_data,
-              sizeof(struct config_file_data_ipmipower));
+              sizeof (struct config_file_data_ipmipower));
     }
 
  out:

@@ -207,7 +207,7 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
 
   memset (&config_file_data,
           '\0',
-          sizeof(struct config_file_data_ipmi_sensors));
+          sizeof (struct config_file_data_ipmi_sensors));
 
   if (config_file_parse (cmd_args->common.config_file,
                          0,
@@ -227,6 +227,9 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
   if (config_file_data.groups_count && config_file_data.groups_length)
     {
       int i;
+
+      assert(MAX_SENSOR_GROUPS == CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS);
+      assert(MAX_SENSOR_GROUPS_STRING_LENGTH == CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
 
       for (i = 0; i < config_file_data.groups_length; i++)
         strncpy (cmd_args->groups[i],
@@ -312,7 +315,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->sensors_wanted = 0;
   memset (cmd_args->sensors,
           '\0',
-          sizeof(unsigned int)*MAX_SENSOR_RECORD_IDS);
+          sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
   cmd_args->sensors_length = 0;
   cmd_args->bridge_sensors = 0;
   cmd_args->legacy_output = 0;

@@ -43,7 +43,7 @@ _bmc_config_state_data_init (bmc_config_state_data_t *state_data)
 {
   assert (state_data);
 
-  memset (state_data, '\0', sizeof(bmc_config_state_data_t));
+  memset (state_data, '\0', sizeof (bmc_config_state_data_t));
   state_data->prog_data = NULL;
   state_data->ipmi_ctx = NULL;
 
@@ -261,7 +261,7 @@ _bmc_config (pstdout_state_t pstate,
       /* Second, make the arrays of stored values */
       if (user_count)
         {
-          unsigned int datasize = sizeof(uint8_t) * user_count;
+          unsigned int datasize = sizeof (uint8_t) * user_count;
 
           if (!(state_data.lan_user_session_limit = (uint8_t *)malloc (datasize)))
             {
@@ -459,7 +459,7 @@ main (int argc, char *argv[])
 
   ipmi_disable_coredump ();
 
-  memset (&prog_data, '\0', sizeof(bmc_config_prog_data_t));
+  memset (&prog_data, '\0', sizeof (bmc_config_prog_data_t));
   prog_data.progname = argv[0];
   bmc_config_argp_parse (argc, argv, &cmd_args);
 

@@ -24,7 +24,6 @@
 #endif
 
 #include "tool-cmdline-common.h"
-#include "tool-sensor-common.h"
 #include "conffile.h"
 
 #define CONFIG_FILE_NONE        0x00
@@ -51,6 +50,12 @@
 #define CONFIG_FILE_TOOL_IPMIPOWER           0x00004000
 #define CONFIG_FILE_TOOL_PEF_CONFIG          0x00008000
 
+#define CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS               256
+#define CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH 256
+
+#define CONFIG_FILE_IPMIMONITORING_MAX_GROUPS               256
+#define CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH 256
+
 struct config_file_data_bmc_watchdog
 {
   char *logfile;
@@ -75,7 +80,7 @@ struct config_file_data_ipmi_sensors
 {
   int quiet_readings;
   int quiet_readings_count;
-  char groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
+  char groups[CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS][CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
   int groups_count;
   int bridge_sensors;
@@ -98,7 +103,7 @@ struct config_file_data_ipmimonitoring
 {
   int quiet_readings;
   int quiet_readings_count;
-  char groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
+  char groups[CONFIG_FILE_IPMIMONITORING_MAX_GROUPS][CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
   int groups_count;
   int bridge_sensors;

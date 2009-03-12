@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.41 2009-03-04 22:39:39 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.42 2009-03-12 17:57:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -135,13 +135,13 @@ _connection_setup (struct ipmipower_connection *ic, char *hostname)
     }
 
   /* Secure ephemeral ports */
-  bzero (&srcaddr, sizeof(struct sockaddr_in));
+  bzero (&srcaddr, sizeof (struct sockaddr_in));
   srcaddr.sin_family = AF_INET;
   srcaddr.sin_port = htons (0);
   srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
 
-  Bind (ic->ipmi_fd, &srcaddr, sizeof(struct sockaddr_in));
-  Bind (ic->ping_fd, &srcaddr, sizeof(struct sockaddr_in));
+  Bind (ic->ipmi_fd, &srcaddr, sizeof (struct sockaddr_in));
+  Bind (ic->ping_fd, &srcaddr, sizeof (struct sockaddr_in));
 
   ic->ipmi_in  = Cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
                               IPMIPOWER_MAX_CONNECTION_BUF);
@@ -154,10 +154,10 @@ _connection_setup (struct ipmipower_connection *ic, char *hostname)
 
   ic->ipmi_requester_sequence_number_counter = get_rand ();
   ic->ping_sequence_number_counter = get_rand ();
-  memset (&ic->last_ipmi_send, '\0', sizeof(struct timeval));
-  memset (&ic->last_ping_send, '\0', sizeof(struct timeval));
-  memset (&ic->last_ipmi_recv, '\0', sizeof(struct timeval));
-  memset (&ic->last_ping_recv, '\0', sizeof(struct timeval));
+  memset (&ic->last_ipmi_send, '\0', sizeof (struct timeval));
+  memset (&ic->last_ping_send, '\0', sizeof (struct timeval));
+  memset (&ic->last_ipmi_recv, '\0', sizeof (struct timeval));
+  memset (&ic->last_ping_recv, '\0', sizeof (struct timeval));
 
   ic->link_state = LINK_GOOD; /* assumed good to begin with */
   ic->ping_last_packet_recv_flag = 0;
@@ -171,7 +171,7 @@ _connection_setup (struct ipmipower_connection *ic, char *hostname)
   ic->hostname[MAXHOSTNAMELEN] = '\0';
 
   /* Determine the destination address */
-  bzero (&(ic->destaddr), sizeof(struct sockaddr_in));
+  bzero (&(ic->destaddr), sizeof (struct sockaddr_in));
   ic->destaddr.sin_family = AF_INET;
   ic->destaddr.sin_port = htons (RMCP_PRIMARY_RMCP_PORT);
 
@@ -204,7 +204,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
   hostlist_t hl = NULL;
   hostlist_iterator_t itr = NULL;
   struct ipmipower_connection *ics;
-  int size = sizeof(struct ipmipower_connection);
+  int size = sizeof (struct ipmipower_connection);
   int hl_count;
   int errcount = 0;
   int emfilecount = 0;

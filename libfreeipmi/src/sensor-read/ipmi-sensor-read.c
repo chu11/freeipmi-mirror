@@ -92,12 +92,12 @@ ipmi_sensor_read_ctx_create (ipmi_ctx_t ipmi_ctx)
       return (NULL);
     }
 
-  if (!(ctx = (ipmi_sensor_read_ctx_t)malloc (sizeof(struct ipmi_sensor_read_ctx))))
+  if (!(ctx = (ipmi_sensor_read_ctx_t)malloc (sizeof (struct ipmi_sensor_read_ctx))))
     {
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof(struct ipmi_sensor_read_ctx));
+  memset (ctx, '\0', sizeof (struct ipmi_sensor_read_ctx));
   ctx->magic = IPMI_SENSOR_READ_CTX_MAGIC;
   ctx->flags = IPMI_SENSOR_READ_FLAGS_DEFAULT;
 
@@ -567,7 +567,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
               goto cleanup;
             }
 
-          if (!(tmp_sensor_reading = (double *)malloc (sizeof(double))))
+          if (!(tmp_sensor_reading = (double *)malloc (sizeof (double))))
             {
               SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_OUT_OF_MEMORY);
               goto cleanup;
