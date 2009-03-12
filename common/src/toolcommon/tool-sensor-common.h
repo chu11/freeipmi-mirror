@@ -28,9 +28,24 @@
 
 #define UNRECOGNIZED_SENSOR_GROUP "Unrecognized"
 
-#define MAX_SENSOR_RECORD_IDS           256
-#define MAX_SENSOR_GROUPS               256
-#define MAX_SENSOR_GROUPS_STRING_LENGTH 256
+#define SENSORS_HEADER_RECORD_ID_STR        "Record ID"
+#define SENSORS_HEADER_NAME_STR             "Sensor Name"
+#define SENSORS_HEADER_GROUP_STR            "Sensor Group"
+#define SENSORS_HEADER_STATE_STR            "Sensor State"
+#define SENSORS_HEADER_READING_STR          "Sensor Reading"
+#define SENSORS_HEADER_UNITS_STR            "Sensor Units"
+#define SENSORS_HEADER_EVENT_STR            "Sensor Event"
+
+#define MAX_SENSOR_RECORD_IDS               256
+#define MAX_SENSOR_GROUPS                   256
+#define MAX_SENSOR_GROUPS_STRING_LENGTH     256
+
+struct sensor_column_width
+{
+  int sensor_name;
+  int sensor_group;
+  int sensor_units;
+};
 
 const char * get_sensor_group_output_string (unsigned int sensor_type);
 
@@ -52,5 +67,14 @@ int is_sdr_sensor_group_listed (pstdout_state_t pstate,
                                 unsigned int sdr_record_len,
                                 char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
                                 unsigned int groups_len);
+
+void sensor_column_width_init (struct sensor_column_width *column_width);
+
+void sensor_column_width_finish (struct sensor_column_width *column_width);
+
+void output_sensor_headers (pstdout_state_t pstate,
+                            int quiet_readings,
+                            int output_sensor_state,
+                            struct sensor_column_width *column_width);
 
 #endif

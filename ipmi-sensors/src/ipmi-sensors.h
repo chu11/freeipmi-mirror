@@ -75,9 +75,7 @@ typedef struct ipmi_sensors_state_data
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
   ipmi_sensor_read_ctx_t sensor_read_ctx;
   int output_headers;
-  int sensor_name_column_width;
-  int sensor_group_column_width;
-  int sensor_units_column_width;
+  struct sensor_column_width column_width;
 } ipmi_sensors_state_data_t;
 
 #endif

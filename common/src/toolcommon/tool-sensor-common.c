@@ -38,6 +38,8 @@
 
 #define SENSOR_GROUP_BUFLEN 1024
 
+#define SENSOR_FMT_BUFLEN   1024
+
 static void
 _str_replace_char (char *str, char chr, char with)
 {
@@ -216,4 +218,80 @@ is_sdr_sensor_group_listed (pstdout_state_t pstate,
     }
 
   return (0);
+}
+
+void
+sensor_column_width_init (struct sensor_column_width *column_width)
+{
+  assert (column_width);
+
+  column_width->sensor_name = 0;
+  column_width->sensor_group = 0;
+  column_width->sensor_units = 0;
+}
+
+void
+sensor_column_width_finish (struct sensor_column_width *column_width)
+{
+  assert (column_width);
+
+  if (column_width->sensor_name < strlen(SENSORS_HEADER_NAME_STR))
+    column_width->sensor_name = strlen(SENSORS_HEADER_NAME_STR);
+  if (column_width->sensor_group < strlen(SENSORS_HEADER_GROUP_STR))
+    column_width->sensor_group = strlen(SENSORS_HEADER_GROUP_STR);
+  if (column_width->sensor_units < strlen(SENSORS_HEADER_UNITS_STR))
+    column_width->sensor_units = strlen(SENSORS_HEADER_UNITS_STR);
+}
+
+void
+output_sensor_headers (pstdout_state_t pstate,
+                       int quiet_readings,
+                       int output_sensor_state,
+                       struct sensor_column_width *column_width)
+{
+  char fmt[SENSOR_FMT_BUFLEN + 1];
+
+  assert (column_width);
+
+  pstdout_printf (pstate,
+                  "%s",
+                  SENSORS_HEADER_RECORD_ID_STR);
+
+  memset (fmt, '\0', SENSOR_FMT_BUFLEN + 1);
+  snprintf (fmt,
+            SENSOR_FMT_BUFLEN,
+            " | %%-%ds | %%-%ds",
+            column_width->sensor_name,
+            column_width->sensor_group);
+
+  pstdout_printf (pstate,
+                  fmt,
+                  SENSORS_HEADER_NAME_STR,
+                  SENSORS_HEADER_GROUP_STR);
+
+  if (output_sensor_state)
+    pstdout_printf (pstate,
+                    " | %s",
+                    SENSORS_HEADER_STATE_STR);
+  
+  if (!quiet_readings)
+    {
+      pstdout_printf (pstate,
+                      " | %s",
+                      SENSORS_HEADER_READING_STR);
+      
+      memset (fmt, '\0', SENSOR_FMT_BUFLEN + 1);
+      snprintf (fmt,
+                SENSOR_FMT_BUFLEN,
+                " | %%-%ds",
+                column_width->sensor_units);
+      
+      pstdout_printf (pstate,
+                      fmt,
+                      SENSORS_HEADER_UNITS_STR);
+    }
+
+  pstdout_printf (pstate,
+                  " | %s\n",
+                  SENSORS_HEADER_EVENT_STR);
 }
