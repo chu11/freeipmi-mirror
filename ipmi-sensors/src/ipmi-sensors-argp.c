@@ -228,9 +228,6 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     {
       int i;
 
-      assert (MAX_SENSOR_GROUPS == CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS);
-      assert (MAX_SENSOR_GROUPS_STRING_LENGTH == CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
-
       for (i = 0; i < config_file_data.groups_length; i++)
         strncpy (cmd_args->groups[i],
                  config_file_data.groups[i],

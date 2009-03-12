@@ -34,6 +34,7 @@
 #include "pstdout.h"
 #include "tool-config-file-common.h"
 #include "tool-common.h"
+#include "tool-sensor-common.h"
 
 #define CONFIG_FILE_OPTIONS_MAX 1024
 
@@ -716,7 +717,7 @@ config_file_ipmi_sensors_groups (conffile_t cf,
 
   config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
 
-  if (data->stringlist_len > CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS)
+  if (data->stringlist_len > MAX_SENSOR_GROUPS)
     {
       fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
       exit (1);
@@ -724,7 +725,7 @@ config_file_ipmi_sensors_groups (conffile_t cf,
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      if (strlen (data->stringlist[i]) > CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH)
+      if (strlen (data->stringlist[i]) > MAX_SENSOR_GROUPS_STRING_LENGTH)
         {
           fprintf (stderr, "Config File Error: invalid value '%s' for %s\n",
                    data->stringlist[i],
@@ -734,7 +735,7 @@ config_file_ipmi_sensors_groups (conffile_t cf,
 
       strncpy (config_file_data->groups[i],
                data->stringlist[i],
-               CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
+               MAX_SENSOR_GROUPS_STRING_LENGTH);
 
       config_file_data->groups_length++;
     }
@@ -779,7 +780,7 @@ config_file_ipmimonitoring_groups (conffile_t cf,
 
   config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
 
-  if (data->stringlist_len > CONFIG_FILE_IPMIMONITORING_MAX_GROUPS)
+  if (data->stringlist_len > MAX_SENSOR_GROUPS)
     {
       fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
       exit (1);
@@ -787,7 +788,7 @@ config_file_ipmimonitoring_groups (conffile_t cf,
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      if (strlen (data->stringlist[i]) > CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH)
+      if (strlen (data->stringlist[i]) > MAX_SENSOR_GROUPS_STRING_LENGTH)
         {
           fprintf (stderr, "Config File Error: invalid value '%s' for %s\n",
                    data->stringlist[i],
@@ -797,7 +798,7 @@ config_file_ipmimonitoring_groups (conffile_t cf,
 
       strncpy (config_file_data->groups[i],
                data->stringlist[i],
-               CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
+               MAX_SENSOR_GROUPS_STRING_LENGTH);
 
       config_file_data->groups_length++;
     }
