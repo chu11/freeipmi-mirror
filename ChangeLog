@@ -1,3 +1,7 @@
+2009-03-13  Albert Chu <chu11@llnl.gov>
+
+	* Change __PRETTY_FUNCTION__ -> __FUNCTION__ for portability.
+	
 2009-03-12  Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-sensors/, ipmimonitoring/: Collapse some code using common

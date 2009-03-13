@@ -328,7 +328,7 @@ _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
                "(network function codes 2Ch:3Fh) in your "
                "BMC implementation.  Please report to "
                "FreeIPMI mailing list <freeipmi-devel@gnu.org>\n",
-               __FILE__, __PRETTY_FUNCTION__,
+               __FILE__, __FUNCTION__,
                IPMI_I2C_SMBUS_BLOCK_MAX);
 #endif
       errno = EINVAL;
