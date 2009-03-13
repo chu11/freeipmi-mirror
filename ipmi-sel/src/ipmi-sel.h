@@ -23,6 +23,7 @@
 
 #include "tool-cmdline-common.h"
 #include "tool-sdr-cache-common.h"
+#include "tool-sensor-common.h"
 #include "pstdout.h"
 
 #define IPMI_SEL_MAX_RECORD 4096
@@ -82,8 +83,10 @@ typedef struct ipmi_sel_state_data
   pstdout_state_t pstate;
   char *hostname;
   ipmi_sdr_cache_ctx_t sdr_cache_ctx;
+  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
   ipmi_sel_parse_ctx_t sel_parse_ctx;
   int output_headers;
+  struct sensor_column_width column_width;
 } ipmi_sel_state_data_t;
 
 #endif

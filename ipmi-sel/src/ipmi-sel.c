@@ -48,11 +48,16 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
+#include "tool-sensor-common.h"
 
 #define IPMI_SEL_RECORD_SIZE   16
 #define IPMI_SEL_OUTPUT_BUFLEN 1024
 
 #define IPMI_SEL_NA_STRING     "N/A"
+
+#define IPMI_SEL_FMT_BUFLEN    1024
+
+#define IPMI_SEL_EVENT_SEPARATOR " ; "
 
 static int
 _display_sel_info (ipmi_sel_state_data_t *state_data)
@@ -687,6 +692,7 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
 static int
 _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
+  char fmt[IPMI_SEL_FMT_BUFLEN + 1];
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
   int outbuf_len;
 
@@ -705,10 +711,19 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
       return (0);
     }
 
+  if (outbuf_len > state_data->column_width.sensor_name)
+    state_data->column_width.sensor_name = outbuf_len;
+
+  memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
+  snprintf (fmt,
+            IPMI_SEL_FMT_BUFLEN,
+            " | %%-%ds",
+            state_data->column_width.sensor_name);
+
   if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %-16s", outbuf);
+    pstdout_printf (state_data->pstate, fmt, outbuf);
   else
-    pstdout_printf (state_data->pstate, " | %-16s", IPMI_SEL_NA_STRING);
+    pstdout_printf (state_data->pstate, fmt, IPMI_SEL_NA_STRING);
 
   memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
@@ -722,10 +737,19 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
       return (0);
     }
 
+  if (outbuf_len > state_data->column_width.sensor_group)
+    state_data->column_width.sensor_group = outbuf_len;
+
+  memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
+  snprintf (fmt,
+            IPMI_SEL_FMT_BUFLEN,
+            " | %%-%ds",
+            state_data->column_width.sensor_group);
+
   if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %-24s", outbuf);
+    pstdout_printf (state_data->pstate, fmt, outbuf);
   else
-    pstdout_printf (state_data->pstate, " | %-24s", IPMI_SEL_NA_STRING);
+    pstdout_printf (state_data->pstate, fmt, IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -757,9 +781,9 @@ _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int 
     }
 
   if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %-15s", outbuf);
+    pstdout_printf (state_data->pstate, " | %-17s", outbuf);
   else
-    pstdout_printf (state_data->pstate, " | %-15s", IPMI_SEL_NA_STRING);
+    pstdout_printf (state_data->pstate, " | %-17s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -813,6 +837,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
   uint8_t event_data3_flag;
   uint8_t event_data2;
   uint8_t event_data3;
+  int check_for_na = 0;
   int ret;
 
   assert (state_data);
@@ -844,7 +869,6 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
   else if ((ipmi_event_reading_type_code_class (event_type_code) != IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
             && event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
             && event_data2_flag != IPMI_SEL_EVENT_DATA_OEM_CODE
-            && ipmi_event_reading_type_code_class (event_type_code) != IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
             && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
             && event_data3_flag != IPMI_SEL_EVENT_DATA_OEM_CODE)
            || (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
@@ -853,7 +877,10 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
            || (state_data->prog_data->args->verbose_count >= 2
                && event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
                && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE))
-    strcat (fmtbuf, "%f ; %h");
+    {
+      strcat (fmtbuf, "%f ; %h");
+      check_for_na++;
+    }
   else if ((ipmi_event_reading_type_code_class (event_type_code) != IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
             && event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
             && event_data2_flag != IPMI_SEL_EVENT_DATA_OEM_CODE)
@@ -883,6 +910,46 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
       if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
         return (-1);
       return (0);
+    }
+
+  /* Special case:
+   * 
+   * It's possible the SEL record event_data2_flag and
+   * event_data3_flag are bad, and you get a N/A output anyways
+   * (perhaps b/c the event_data2 or event_data3 data is unspecified).
+   * If this is the case you can get a strange: "N/A ; text" or "text
+   * ; N/A" instead of just "text".  Deal with it appropriately.
+   * 
+   */
+  if (outbuf_len && check_for_na)
+    {
+      char *na_ptr;
+      char *semicolon_ptr;
+
+      if ((na_ptr = strstr (outbuf, IPMI_SEL_NA_STRING))
+          && (semicolon_ptr = strstr (outbuf, IPMI_SEL_EVENT_SEPARATOR)))
+        {
+          memset (fmtbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
+
+          if (na_ptr < semicolon_ptr)
+            strcat (fmtbuf, "%h");
+          else
+            strcat (fmtbuf, "%f");
+
+          fmt = fmtbuf;
+          
+          memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
+          if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
+                                                               fmt,
+                                                               outbuf,
+                                                               IPMI_SEL_OUTPUT_BUFLEN,
+                                                               flags)) < 0)
+            {
+              if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
+                return (-1);
+              return (0);
+            }
+        }
     }
 
   if (outbuf_len)
@@ -962,6 +1029,7 @@ _normal_output_oem_data (ipmi_sel_state_data_t *state_data, unsigned int flags)
 static int
 _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 {
+  char fmt[IPMI_SEL_FMT_BUFLEN + 1];
   unsigned int flags;
   int record_type_class;
   int rv = -1;
@@ -973,19 +1041,36 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   if (!state_data->output_headers)
     {
       pstdout_printf (state_data->pstate,
-                      "Record ID | Date        | Time     | Sensor Name      | Sensor Group            ");
+                      "%s | Date        | Time    ",
+                      SENSORS_HEADER_RECORD_ID_STR);
+
+      memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
+      snprintf (fmt,
+                IPMI_SEL_FMT_BUFLEN,
+                " | %%-%ds | %%-%ds",
+                state_data->column_width.sensor_name,
+                state_data->column_width.sensor_group);
+
+      pstdout_printf (state_data->pstate,
+                      fmt,
+                      SENSORS_HEADER_NAME_STR,
+                      SENSORS_HEADER_GROUP_STR);
+
       if (state_data->prog_data->args->verbose_count >= 2)
         {
           pstdout_printf (state_data->pstate,
-                          " | Event Direction");
+                          " | Event Direction  ");
         }
+
       pstdout_printf (state_data->pstate,
                       " | Event                               ");
+
       if (state_data->prog_data->args->verbose_count)
         {
           pstdout_printf (state_data->pstate,
                           " | Event Detail");
         }
+
       pstdout_printf (state_data->pstate,
                       "\n");
       state_data->output_headers++;
@@ -994,7 +1079,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   flags = IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING;
-  if (state_data->prog_data->args->verbose_count >= 2)
+  if (state_data->prog_data->args->verbose_count >= 3)
     flags|= IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
@@ -1217,7 +1302,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
   if (!args->legacy_output)
     {
-      if (ipmi_sel_parse_ctx_set_separator (state_data->sel_parse_ctx, " ; ") < 0)
+      if (ipmi_sel_parse_ctx_set_separator (state_data->sel_parse_ctx, IPMI_SEL_EVENT_SEPARATOR) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -1225,6 +1310,20 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                            ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
           return (-1);
         }
+
+    }
+
+  if (!args->sdr.ignore_sdr_cache && !args->legacy_output)
+    {
+      if (calculate_column_widths (state_data->pstate,
+                                   state_data->sdr_cache_ctx,
+                                   state_data->sdr_parse_ctx,
+                                   NULL,
+                                   0,
+                                   NULL,
+                                   0,
+                                   &(state_data->column_width)) < 0)
+        return (-1);
     }
 
   if (ipmi_sel_parse (state_data->sel_parse_ctx,
@@ -1336,6 +1435,13 @@ _ipmi_sel (pstdout_state_t pstate,
         }
     }
 
+  if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
+    {
+      pstdout_perror (pstate, "ipmi_sdr_parse_ctx_create()");
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
   /* Special case, just flush, don't do SEL stuff */
   if (!prog_data->args->sdr.flush_cache)
     {
@@ -1378,6 +1484,8 @@ _ipmi_sel (pstdout_state_t pstate,
  cleanup:
   if (state_data.sdr_cache_ctx)
     ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
+  if (state_data.sdr_parse_ctx)
+    ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   if (state_data.sel_parse_ctx)
     ipmi_sel_parse_ctx_destroy (state_data.sel_parse_ctx);
   if (state_data.ipmi_ctx)

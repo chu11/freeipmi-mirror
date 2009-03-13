@@ -45,7 +45,14 @@ information such additional event details.
 \fB\-vv\fR
 Output very verbose sensor output.  This option will output more
 additional information than the verbose option such as 
-event direction, additional sensor hex codes, and extra OEM codes.
+event direction and extra OEM codes.
+.TP
+\fB\-vvv\fR
+Output very very verbose sensor output.  This option will output more
+additional information than the very verbose option.  Most notably it
+will output additional hex codes to given information on ambiguous SEL
+entries.  For example, it will output Generator ID hex codes for
+sensors without names.
 .TP
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about the SEL.

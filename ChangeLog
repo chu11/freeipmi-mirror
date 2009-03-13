@@ -5,6 +5,13 @@
 	* ipmi-sensors/, ipmimonitoring/: Collapse some code using common
 	sensor code in common/src/toolcommon.
 
+	* ipmi-sel/, libfreeipmi/src/sel-parse/: Fix output corner case
+	where "N/A ; text" could show up.
+
+	* ipmi-sel/: Apply column alignment code to ipmi-sel for cleaner output.
+
+	* ipmi-sel/: Support -vvv option.
+
 2009-03-12  Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-sensors/, ipmimonitoring/: Collapse some code using common

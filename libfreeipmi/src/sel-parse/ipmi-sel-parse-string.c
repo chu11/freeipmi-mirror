@@ -1352,7 +1352,6 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       /* else fall through to normal output */
     }
 
-  printf("sel-parse tmpbufdata2_wlen = %d\n", tmpbufdata2_wlen);
   if ((data2_ret = _output_event_data2 (ctx,
                                         sel_parse_entry,
                                         sel_record_type,
@@ -1377,7 +1376,12 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (strlen (tmpbufdata2) && strlen (tmpbufdata3))
+  if ((strlen (tmpbufdata2) 
+       && (!(flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+           || strcasecmp (tmpbufdata2, NA_STRING)))
+      && (strlen (tmpbufdata3)
+          && (!(flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+              || strcasecmp (tmpbufdata3, NA_STRING))))
     {
       if (_SNPRINTF (buf,
                      buflen,
@@ -1388,7 +1392,9 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                      tmpbufdata3))
         return (1);
     }
-  else if (strlen (tmpbufdata2))
+  else if (strlen (tmpbufdata2)
+          && (!(flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+              || strcasecmp (tmpbufdata2, NA_STRING)))
     {
       if (_SNPRINTF (buf,
                      buflen,
@@ -1397,13 +1403,24 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                      tmpbufdata2))
         return (1);
     }
-  else if (strlen (tmpbufdata3))
+  else if (strlen (tmpbufdata3)
+          && (!(flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+              || strcasecmp (tmpbufdata3, NA_STRING)))
     {
       if (_SNPRINTF (buf,
                      buflen,
                      wlen,
                      "%s",
                      tmpbufdata3))
+        return (1);
+    }
+  else if (flags & IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
+    {
+      if (_SNPRINTF (buf,
+                     buflen,
+                     wlen,
+                     "%s",
+                     NA_STRING))
         return (1);
     }
 

@@ -463,13 +463,11 @@ calculate_column_widths (pstdout_state_t pstate,
 
   assert (sdr_cache_ctx);
   assert (sdr_parse_ctx);
-  assert (groups);
-  assert (sensors);
   assert (column_width);
 
   _sensor_column_width_init (column_width);
 
-  if (sensors_length)
+  if (sensors && sensors_length)
     {
       for (i = 0; i < sensors_length; i++)
         {
@@ -542,7 +540,7 @@ calculate_column_widths (pstdout_state_t pstate,
           if (!sdr_record_len)
             continue;
 
-          if (groups_length)
+          if (groups && groups_length)
             {
               if ((ret = is_sdr_sensor_group_listed (pstate,
                                                      sdr_parse_ctx,

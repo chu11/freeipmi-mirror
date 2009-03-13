@@ -9,8 +9,8 @@ o ipmi-sel
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
   - Support --legacy-output option.
-  - Support --verbose option to offer verbose and very verbose
-    additional SEL event information.
+  - Support --verbose option to offer verbose, very verbose, and very
+    very verbose additional SEL event information.
   - Support --display and --display-range options.
   - Support --system-event-only and --oem-event-only options.
   - Output manufacturer name with "Manufacturer ID" if name available.
