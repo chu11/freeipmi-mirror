@@ -573,17 +573,19 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
     default:
 
-      memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
-      snprintf (fmt,
-                IPMI_SENSORS_FMT_BUFLEN,
-                " | %%-14s | %%-%ds | ",
-                state_data->column_width.sensor_units);
-
       if (!state_data->prog_data->args->quiet_readings)
-        pstdout_printf (state_data->pstate,
-                        fmt,
-                        IPMI_SENSORS_NA_STRING,
-                        IPMI_SENSORS_NA_STRING);
+        {
+          memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
+          snprintf (fmt,
+                    IPMI_SENSORS_FMT_BUFLEN,
+                    " | %%-14s | %%-%ds | ",
+                    state_data->column_width.sensor_units);
+
+          pstdout_printf (state_data->pstate,
+                          fmt,
+                          IPMI_SENSORS_NA_STRING,
+                          IPMI_SENSORS_NA_STRING);
+        }
       else
         pstdout_printf (state_data->pstate, " | ");
 
