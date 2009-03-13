@@ -1,3 +1,8 @@
+2009-03-12  Albert Chu <chu11@llnl.gov>
+
+	* Globally change __PRETTY_FUNCTION__ to __FUNCTION__ for
+	portability.
+	
 2009-03-11  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/src/ipmi-sensors-argp.c

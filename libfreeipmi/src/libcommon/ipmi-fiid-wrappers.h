@@ -46,7 +46,7 @@ do {                                                                 \
   strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);     \
   fprintf (stderr,                                                   \
            "%s: %d: %s: errno %s (%d)\n",                            \
-           __FILE__, __LINE__, __PRETTY_FUNCTION__,                  \
+           __FILE__, __LINE__, __FUNCTION__,                         \
            __errnostr, __save_errno);                                \
   fflush (stderr);                                                   \
   errno = __save_errno;                                              \
@@ -56,7 +56,7 @@ do {                                                                 \
 do {                                                               \
   fprintf (stderr,                                                 \
 	   "%s: %d: %s: error = %s (%d)\n",                        \
-           __FILE__, __LINE__, __PRETTY_FUNCTION__,                \
+           __FILE__, __LINE__, __FUNCTION__,                       \
 	   fiid_strerror(___errnum),                               \
            ___errnum);                                             \
   fflush (stderr);                                                 \
@@ -78,7 +78,7 @@ do {                                                               \
 do {                                                               \
   fprintf (stderr,                                                 \
 	   "%s: %d: %s: %s: no data\n",                            \
-           __FILE__, __LINE__, __PRETTY_FUNCTION__,                \
+           __FILE__, __LINE__, __FUNCTION__,                       \
            __field);                                               \
   fflush (stderr);                                                 \
 } while (0)

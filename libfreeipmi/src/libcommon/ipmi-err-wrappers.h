@@ -50,7 +50,7 @@ do {                                                                    \
   strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
   fprintf (stderr,                                                      \
            "%s: %d: %s: errno %s (%d)\n",                               \
-           __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
+           __FILE__, __LINE__, __FUNCTION__,                            \
            __errnostr, __save_errno);                                   \
   fflush (stderr);                                                      \
   errno = __save_errno;                                                 \
@@ -65,7 +65,7 @@ do {                                                                    \
   strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
   fprintf (stderr,                                                      \
            "%s: %d: %s: errno %s (%d), error %s (%d)\n",                \
-           __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
+           __FILE__, __LINE__, __FUNCTION__,                            \
            __errnostr, __save_errno,                                    \
            __ctxerrstr, __ctxerrnum);                                   \
   fflush (stderr);                                                      \
