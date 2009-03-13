@@ -124,6 +124,24 @@ Contributions
 o Update Ganglia and Nagios plugins for changes in ipmi-sensors and
 ipmimonitoring.
 
+0.7.6 - 02/25/09
+----------------
+o In ipmimonitoring, output sensor group names consistently to other
+  tools:
+  "Cable Interconnect" -> "Cable/Interconnect"
+  "Slot Connector" -> "Slot/Connector"
+  "Module Board" -> "Module/Board"
+o In ipmi-sensors, don't output threshold related fields for
+  non-threshold sensors in verbose modes.
+o In bmc-config, ipmi-chassis-config, ipmi-sensors,
+  ipmi-sensors-config, ipmimonitoring, and pef-config, support
+  --config-file option.
+o In ipmi-chassis-config, fix typo of "FLOOPY" to "FLOPPY".
+o In ipmi-sensors-config, fix event bit bug in which assertion events
+  were configured for deassertion events.
+o Fix bmc-watchdog init script portability to Suse.
+o Update ipmi-sel manpage.
+
 0.7.5 - 01/12/09
 ----------------
 o In ipmi-fru, do not output error messages for FRU entries that do
