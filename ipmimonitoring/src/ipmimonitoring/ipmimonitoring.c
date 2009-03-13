@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.102 2009-03-13 21:07:23 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.103 2009-03-13 21:09:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -374,19 +374,22 @@ _output_setup (ipmimonitoring_state_data_t *state_data)
 {
   assert (state_data);
 
-  if (calculate_column_widths (state_data->pstate,
-                               state_data->sdr_cache_ctx,
-                               state_data->sdr_parse_ctx,
-                               state_data->prog_data->args->groups,
-                               state_data->prog_data->args->groups_length,
-                               state_data->prog_data->args->sensors,
-                               state_data->prog_data->args->sensors_length,
-                               &(state_data->column_width)) < 0)
-    return (-1);
+  if (!state_data->prog_data->args->legacy_output)
+    {
+      if (calculate_column_widths (state_data->pstate,
+                                   state_data->sdr_cache_ctx,
+                                   state_data->sdr_parse_ctx,
+                                   state_data->prog_data->args->groups,
+                                   state_data->prog_data->args->groups_length,
+                                   state_data->prog_data->args->sensors,
+                                   state_data->prog_data->args->sensors_length,
+                                   &(state_data->column_width)) < 0)
+        return (-1);
       
-  /* Calculate units column width special since it's a limited bunch */
-  if (_store_sensor_units_column_width (state_data) < 0)
-    return (-1);
+      /* Calculate units column width special since it's a limited bunch */
+      if (_store_sensor_units_column_width (state_data) < 0)
+        return (-1);
+    }
   
   return (0);
 }

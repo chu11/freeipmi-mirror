@@ -44,16 +44,19 @@ int
 ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data)
 {
   assert (state_data);
-
-  if (calculate_column_widths (state_data->pstate,
-                               state_data->sdr_cache_ctx,
-                               state_data->sdr_parse_ctx,
-                               state_data->prog_data->args->groups,
-                               state_data->prog_data->args->groups_length,
-                               state_data->prog_data->args->sensors,
-                               state_data->prog_data->args->sensors_length,
-                               &(state_data->column_width)) < 0)
-    return (-1);
+  
+  if (!state_data->prog_data->args->legacy_output)
+    {
+      if (calculate_column_widths (state_data->pstate,
+                                   state_data->sdr_cache_ctx,
+                                   state_data->sdr_parse_ctx,
+                                   state_data->prog_data->args->groups,
+                                   state_data->prog_data->args->groups_length,
+                                   state_data->prog_data->args->sensors,
+                                   state_data->prog_data->args->sensors_length,
+                                   &(state_data->column_width)) < 0)
+        return (-1);
+    }
   
   return (0);
 }
