@@ -74,11 +74,7 @@ int is_sdr_sensor_group_listed (pstdout_state_t pstate,
                                 uint8_t *sdr_record,
                                 unsigned int sdr_record_len,
                                 char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                                unsigned int groups_len);
-
-void sensor_column_width_init (struct sensor_column_width *column_width);
-
-void sensor_column_width_finish (struct sensor_column_width *column_width);
+                                unsigned int groups_length);
 
 void output_sensor_headers (pstdout_state_t pstate,
                             int quiet_readings,
@@ -86,8 +82,12 @@ void output_sensor_headers (pstdout_state_t pstate,
                             struct sensor_column_width *column_width);
 
 int calculate_column_widths (pstdout_state_t pstate,
+                             ipmi_sdr_cache_ctx_t sdr_cache_ctx,
                              ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                             uint8_t *sdr_record,
-                             unsigned int sdr_record_len,
+                             char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
+                             unsigned int groups_length,
+                             unsigned int sensors[],
+                             unsigned int sensors_length,
                              struct sensor_column_width *column_width);
+
 #endif

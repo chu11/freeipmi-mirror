@@ -49,10 +49,8 @@ struct ipmi_sensors_arguments
   int quiet_readings;
   int sdr_info;
   int list_groups;
-  int groups_wanted;
   char groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
-  int sensors_wanted;
   unsigned int sensors[MAX_SENSOR_RECORD_IDS];
   unsigned int sensors_length;
   int bridge_sensors;

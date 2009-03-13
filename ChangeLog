@@ -2,6 +2,9 @@
 
 	* Change __PRETTY_FUNCTION__ -> __FUNCTION__ for portability.
 	
+	* ipmi-sensors/, ipmimonitoring/: Collapse some code using common
+	sensor code in common/src/toolcommon.
+
 2009-03-12  Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-sensors/, ipmimonitoring/: Collapse some code using common

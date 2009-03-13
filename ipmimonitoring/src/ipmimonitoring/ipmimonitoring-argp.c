@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.34 2009-03-12 17:57:52 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.35 2009-03-13 21:07:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -148,7 +148,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->list_groups = 1;
       break;
     case GROUPS_KEY:
-      cmd_args->groups_wanted = 1;
       tok = strtok (arg, " ,");
       while (tok && cmd_args->groups_length < MAX_SENSOR_GROUPS)
         {
@@ -160,7 +159,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         }
       break;
     case SENSORS_KEY:
-      cmd_args->sensors_wanted = 1;
       tok = strtok (arg, " ,");
       while (tok && cmd_args->sensors_length < MAX_SENSOR_RECORD_IDS)
         {
@@ -253,7 +251,6 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
         strncpy (cmd_args->groups[i],
                  config_file_data.groups[i],
                  MAX_SENSOR_GROUPS_STRING_LENGTH);
-      cmd_args->groups_wanted++;
       cmd_args->groups_length = config_file_data.groups_length;
     }
   if (config_file_data.bridge_sensors_count)
@@ -276,13 +273,11 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   cmd_args->regenerate_sdr_cache = 0;
   cmd_args->quiet_readings = 0;
   cmd_args->list_groups = 0;
-  cmd_args->groups_wanted = 0;
   for (i = 0; i < MAX_SENSOR_GROUPS; i++)
     memset (cmd_args->groups[i],
             '\0',
             MAX_SENSOR_GROUPS_STRING_LENGTH+1);
   cmd_args->groups_length = 0;
-  cmd_args->sensors_wanted = 0;
   memset (cmd_args->sensors,
           '\0',
           sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);

@@ -132,14 +132,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
       /* maintain "group" for backwards compatability */
     case GROUP_KEY:
-      cmd_args->groups_wanted = 1;
       strncpy (cmd_args->groups[cmd_args->groups_length],
                arg,
                MAX_SENSOR_GROUPS_STRING_LENGTH);
       cmd_args->groups_length++;
       break;
     case GROUPS_KEY:
-      cmd_args->groups_wanted = 1;
       tok = strtok (arg, " ,");
       while (tok && cmd_args->groups_length < MAX_SENSOR_GROUPS)
         {
@@ -151,7 +149,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         }
       break;
     case SENSORS_KEY:
-      cmd_args->sensors_wanted = 1;
       tok = strtok (arg, " ,");
       while (tok && cmd_args->sensors_length < MAX_SENSOR_RECORD_IDS)
         {
@@ -235,7 +232,6 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
         strncpy (cmd_args->groups[i],
                  config_file_data.groups[i],
                  MAX_SENSOR_GROUPS_STRING_LENGTH);
-      cmd_args->groups_wanted++;
       cmd_args->groups_length = config_file_data.groups_length;
     }
   if (config_file_data.bridge_sensors_count)
@@ -306,13 +302,11 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->quiet_readings = 0;
   cmd_args->sdr_info = 0;
   cmd_args->list_groups = 0;
-  cmd_args->groups_wanted = 0;
   for (i = 0; i < MAX_SENSOR_GROUPS; i++)
     memset (cmd_args->groups[i],
             '\0',
             MAX_SENSOR_GROUPS_STRING_LENGTH+1);
   cmd_args->groups_length = 0;
-  cmd_args->sensors_wanted = 0;
   memset (cmd_args->sensors,
           '\0',
           sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);

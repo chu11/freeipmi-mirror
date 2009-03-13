@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.101 2009-03-13 00:15:37 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.102 2009-03-13 21:07:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -363,131 +363,32 @@ _store_sensor_units_column_width (ipmimonitoring_state_data_t *state_data)
   if (len > state_data->column_width.sensor_units)
     state_data->column_width.sensor_units = len;
 
+  if (state_data->column_width.sensor_units < strlen(SENSORS_HEADER_UNITS_STR))
+    state_data->column_width.sensor_units = strlen(SENSORS_HEADER_UNITS_STR);
+
   return (0);
 }
 
 static int 
 _output_setup (ipmimonitoring_state_data_t *state_data)
 {
-  struct ipmimonitoring_arguments *args = NULL;
-  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
-  int sdr_record_len = 0;
-  uint16_t record_count;
-  int rv = -1;
-  int i;
-
   assert (state_data);
 
-  args = state_data->prog_data->args;
-
-  sensor_column_width_init (&(state_data->column_width));
-
-  if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_sdr_cache_record_count: %s\n",
-                       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-      goto cleanup;
-    }
-
-  if (args->sensors_length)
-    {
-      for (i = 0; i < state_data->prog_data->args->sensors_length; i++)
-        {
-          if (ipmi_sdr_cache_search_record_id (state_data->sdr_cache_ctx,
-                                               args->sensors[i]) < 0)
-            {
-              if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
-                continue;
-              else
-                {
-                  pstdout_fprintf (state_data->pstate,
-                                   stderr,
-                                   "ipmi_sdr_cache_search_record_id: %s\n",
-                                   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-                  goto cleanup;
-                }
-            }
-          
-          if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
-                                                            sdr_record,
-                                                            IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "ipmi_sdr_cache_record_read: %s\n",
-                               ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-              goto cleanup;
-            }
-
-          /* Shouldn't be possible */
-          if (!sdr_record_len)
-            continue;
-          
-          if (calculate_column_widths (state_data->pstate,
-                                       state_data->sdr_parse_ctx,
-                                       sdr_record,
-                                       sdr_record_len,
-                                       &(state_data->column_width)) < 0)
-            goto cleanup;
-        }
-    }
-  else
-    {
-      for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
-        {
-          int ret;
-
-          if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
-                                                            sdr_record,
-                                                            IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "ipmi_sdr_cache_record_read: %s\n",
-                               ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-              goto cleanup;
-            }
-          
-          /* Shouldn't be possible */
-          if (!sdr_record_len)
-            continue;
-
-          if (args->ipmimonitoring_groups_length)
-            {
-              if ((ret = is_sdr_sensor_group_listed (state_data->pstate,
-                                                     state_data->sdr_parse_ctx,
-                                                     sdr_record,
-                                                     sdr_record_len,
-                                                     state_data->prog_data->args->groups,
-                                                     state_data->prog_data->args->groups_length)) < 0)
-                goto cleanup;
-            }
-          else
-            ret  = 1;
-          
-          if (ret)
-            {
-              if (calculate_column_widths (state_data->pstate,
-                                           state_data->sdr_parse_ctx,
-                                           sdr_record,
-                                           sdr_record_len,
-                                           &(state_data->column_width)) < 0)
-                goto cleanup;
-            }
-        }
-    }
-
+  if (calculate_column_widths (state_data->pstate,
+                               state_data->sdr_cache_ctx,
+                               state_data->sdr_parse_ctx,
+                               state_data->prog_data->args->groups,
+                               state_data->prog_data->args->groups_length,
+                               state_data->prog_data->args->sensors,
+                               state_data->prog_data->args->sensors_length,
+                               &(state_data->column_width)) < 0)
+    return (-1);
+      
   /* Calculate units column width special since it's a limited bunch */
   if (_store_sensor_units_column_width (state_data) < 0)
-    goto cleanup;
-
-  rv = 0;
-  sensor_column_width_finish (&(state_data->column_width));
- cleanup:
-  ipmi_sdr_cache_first (state_data->sdr_cache_ctx);
-  return (rv);
+    return (-1);
+  
+  return (0);
 }
 
 static void

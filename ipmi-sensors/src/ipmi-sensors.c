@@ -541,7 +541,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
   if (_output_setup (state_data) < 0)
     return (-1);
 
-  if (args->sensors_wanted)
+  if (args->sensors_length)
     {
       for (i = 0; i < state_data->prog_data->args->sensors_length; i++)
         {
@@ -623,7 +623,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
           if (!sdr_record_len)
             continue;
 
-          if (args->groups_wanted)
+          if (args->groups_length)
             {
               if ((ret = is_sdr_sensor_group_listed (state_data->pstate,
                                                      state_data->sdr_parse_ctx,
