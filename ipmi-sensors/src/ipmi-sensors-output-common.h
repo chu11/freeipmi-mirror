@@ -66,10 +66,4 @@ int ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                  double **upper_critical_threshold,
                                  double **upper_non_recoverable_threshold);
 
-int ipmi_sensors_get_units_string (ipmi_sensors_state_data_t *state_data,
-                                   uint8_t *sdr_record,
-                                   unsigned int sdr_record_len,
-                                   char *sensor_units_buf,
-                                   unsigned int sensor_units_buflen,
-                                   unsigned int abbreviated_units_flag);
 #endif

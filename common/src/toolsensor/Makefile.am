@@ -10,6 +10,7 @@ libtoolsensor_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/miscutil \
 	-I$(top_srcdir)/common/src/portability \
 	-I$(top_srcdir)/common/src/toolhostrange \
+	-I$(top_srcdir)/common/src/toolsdr \
 	-I$(top_srcdir)/libfreeipmi/include 
 
 libtoolsensor_la_SOURCES = \

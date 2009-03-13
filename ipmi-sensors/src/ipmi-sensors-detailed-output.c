@@ -582,12 +582,13 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
     }
 
   memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
-  if (ipmi_sensors_get_units_string (state_data,
-                                     sdr_record,
-                                     sdr_record_len,
-                                     sensor_units_buf,
-                                     IPMI_SENSORS_UNITS_BUFLEN,
-                                     _abbreviated_units_flag (state_data)) < 0)
+  if (get_sensor_units_output_string (state_data->pstate,
+                                      state_data->sdr_parse_ctx,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      sensor_units_buf,
+                                      IPMI_SENSORS_UNITS_BUFLEN,
+                                      _abbreviated_units_flag (state_data)) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sensor_hysteresis_rs)))
@@ -1181,12 +1182,13 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
     }
 
   memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
-  if (ipmi_sensors_get_units_string (state_data,
-                                     sdr_record,
-                                     sdr_record_len,
-                                     sensor_units_buf,
-                                     IPMI_SENSORS_UNITS_BUFLEN,
-                                     _abbreviated_units_flag (state_data)) < 0)
+  if (get_sensor_units_output_string (state_data->pstate,
+                                      state_data->sdr_parse_ctx,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      sensor_units_buf,
+                                      IPMI_SENSORS_UNITS_BUFLEN,
+                                      _abbreviated_units_flag (state_data)) < 0)
     return (-1);
 
   event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
