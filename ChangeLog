@@ -12,6 +12,9 @@
 
 	* ipmi-sel/: Support -vvv option.
 
+	* common/src/toolsensor/, ipmimonitoring/, ipmi-sel/,
+	ipmi-sensors/: Support --non-abbreviated-units option.
+
 2009-03-12  Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-sensors/, ipmimonitoring/: Collapse some code using common

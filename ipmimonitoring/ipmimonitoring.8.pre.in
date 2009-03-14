@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.49 2009-01-22 00:10:21 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.50 2009-03-14 00:35:21 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -119,6 +119,9 @@ Bridging may not work on some interfaces/driver types.
 .TP
 \fB\-\-sensor\-config\-file\fR=\fIFILE\fR
 Specify an alternate sensor configuration file.
+.TP
+\fB\-\-non-abbreviated-units\fR
+Output non-abbreviated units (i.e. 'Amps' instead of 'A').
 .TP
 \fB\-\-legacy-output\fR
 Output in legacy format.

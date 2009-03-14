@@ -91,8 +91,10 @@ static struct argp_option cmdline_options[] =
       "Output only oem event records.", 38},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
       "Hex-dump SEL records.", 39},
+    { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 40},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 40},
+      "Output in legacy format.", 41},
     { 0 }
   };
 
@@ -280,6 +282,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case HEX_DUMP_KEY:
       cmd_args->hex_dump = 1;
       break;
+    case NON_ABBREVIATED_UNITS_KEY:
+      cmd_args->non_abbreviated_units = 1;
+      break;
     case LEGACY_OUTPUT_KEY:
       cmd_args->legacy_output = 1;
       break;
@@ -323,6 +328,8 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
       exit (1);
     }
 
+  if (config_file_data.non_abbreviated_units_count)
+    cmd_args->non_abbreviated_units = config_file_data.non_abbreviated_units;
   if (config_file_data.legacy_output_count)
     cmd_args->legacy_output = config_file_data.legacy_output;
 }
@@ -357,6 +364,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->system_event_only = 0;
   cmd_args->oem_event_only = 0;
   cmd_args->hex_dump = 0;
+  cmd_args->non_abbreviated_units = 0;
   cmd_args->legacy_output = 0;
 
   argp_parse (&cmdline_config_file_argp,

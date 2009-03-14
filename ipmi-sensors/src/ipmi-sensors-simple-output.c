@@ -54,6 +54,7 @@ ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data)
                                    state_data->prog_data->args->groups_length,
                                    state_data->prog_data->args->sensors,
                                    state_data->prog_data->args->sensors_length,
+                                   !state_data->prog_data->args->non_abbreviated_units,
                                    &(state_data->column_width)) < 0)
         return (-1);
     }
@@ -412,7 +413,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
                                               sdr_record_len,
                                               sensor_units_buf,
                                               IPMI_SENSORS_UNITS_BUFLEN,
-                                              1) < 0)
+                                              !state_data->prog_data->args->non_abbreviated_units) < 0)
             goto cleanup;
 
           memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);

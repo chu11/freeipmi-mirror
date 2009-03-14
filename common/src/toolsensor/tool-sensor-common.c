@@ -364,6 +364,7 @@ _store_column_widths (pstdout_state_t pstate,
                       ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                       uint8_t *sdr_record,
                       unsigned int sdr_record_len,
+                      unsigned int abbreviated_units,
                       struct sensor_column_width *column_width)
 {
   char sensor_units_buf[SENSOR_UNITS_BUFLEN + 1];
@@ -436,7 +437,7 @@ _store_column_widths (pstdout_state_t pstate,
                                       sdr_record_len,
                                       sensor_units_buf,
                                       SENSOR_UNITS_BUFLEN,
-                                      1) < 0)
+                                      abbreviated_units) < 0)
     return (-1);
 
   len = strlen (sensor_units_buf);
@@ -454,6 +455,7 @@ calculate_column_widths (pstdout_state_t pstate,
                          unsigned int groups_length,
                          unsigned int sensors[],
                          unsigned int sensors_length,
+                         unsigned int abbreviated_units,
                          struct sensor_column_width *column_width)
 {
   uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
@@ -504,6 +506,7 @@ calculate_column_widths (pstdout_state_t pstate,
                                     sdr_parse_ctx,
                                     sdr_record,
                                     sdr_record_len,
+                                    abbreviated_units,
                                     column_width) < 0)
             goto cleanup;
         }
@@ -559,6 +562,7 @@ calculate_column_widths (pstdout_state_t pstate,
                                         sdr_parse_ctx,
                                         sdr_record,
                                         sdr_record_len,
+                                        abbreviated_units,
                                         column_width) < 0)
                 goto cleanup;
             }

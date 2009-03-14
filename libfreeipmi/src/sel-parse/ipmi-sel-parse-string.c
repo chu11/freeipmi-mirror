@@ -265,6 +265,7 @@ _get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
 static int
 _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
                      struct ipmi_sel_system_event_record_data *system_event_record_data,
+                     unsigned int flags,
                      uint8_t raw_data,
                      double *reading,
                      char *sensor_units_buf,
@@ -284,6 +285,7 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
   uint8_t sensor_units_rate;
   uint8_t sensor_base_unit_type;
   uint8_t sensor_modifier_unit_type;
+  int abbreviated_units;
   int sensor_units_ret;
   int rv = -1;
   int ret;
@@ -360,6 +362,11 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
       goto cleanup;
     }
 
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_NON_ABBREVIATED_UNITS)
+    abbreviated_units = 0;
+  else
+    abbreviated_units = 1;
+
   memset (sensor_units_buf, '\0', sensor_units_buflen);
   sensor_units_ret = ipmi_sensor_units_string (sensor_units_percentage,
                                                sensor_units_modifier,
@@ -368,7 +375,7 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
                                                sensor_modifier_unit_type,
                                                sensor_units_buf,
                                                sensor_units_buflen,
-                                               1);
+                                               abbreviated_units);
 
   if (sensor_units_ret <= 0)
     snprintf (sensor_units_buf,
@@ -792,6 +799,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
             memset (sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
             if ((ret = _get_sensor_reading (ctx,
                                             &system_event_record_data,
+                                            flags,
                                             system_event_record_data.event_data2,
                                             &reading,
                                             sensor_units_buf,
@@ -1083,6 +1091,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
             memset (sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
             if ((ret = _get_sensor_reading (ctx,
                                             &system_event_record_data,
+                                            flags,
                                             system_event_record_data.event_data3,
                                             &reading,
                                             sensor_units_buf,
@@ -1305,6 +1314,7 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       memset (trigger_sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
       if ((data2_ret = _get_sensor_reading (ctx,
                                             &system_event_record_data,
+                                            flags,
                                             system_event_record_data.event_data2,
                                             &trigger_reading,
                                             trigger_sensor_units_buf,
@@ -1314,6 +1324,7 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       memset (threshold_sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
       if ((data3_ret = _get_sensor_reading (ctx,
                                             &system_event_record_data,
+                                            flags,
                                             system_event_record_data.event_data3,
                                             &threshold_reading,
                                             threshold_sensor_units_buf,

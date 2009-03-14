@@ -90,6 +90,9 @@ _abbreviated_units_flag (ipmi_sensors_state_data_t *state_data)
   if (state_data->prog_data->args->legacy_output)
     return (0);
 
+  if (state_data->prog_data->args->non_abbreviated_units)
+    return (0);
+
   return (1);
 }
 

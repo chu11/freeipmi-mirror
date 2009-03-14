@@ -88,6 +88,7 @@ int calculate_column_widths (pstdout_state_t pstate,
                              unsigned int groups_length,
                              unsigned int sensors[],
                              unsigned int sensors_length,
+                             unsigned int abbreviated_units,
                              struct sensor_column_width *column_width);
 
 #endif

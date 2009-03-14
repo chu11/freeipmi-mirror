@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.35 2009-03-13 21:07:23 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.36 2009-03-14 00:35:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -99,8 +99,10 @@ static struct argp_option cmdline_options[] =
       "Bridge addresses to read non-BMC owned sensors.", 37},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
       "Specify an alternate sensor configuration file.", 38},
+    { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 39},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 39},
+      "Output in legacy format.", 40},
     { 0 }
   };
 
@@ -195,6 +197,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           exit (1);
         }
       break;
+    case NON_ABBREVIATED_UNITS_KEY:
+      cmd_args->non_abbreviated_units = 1;
+      break;
     case LEGACY_OUTPUT_KEY:
       cmd_args->legacy_output = 1;
       break;
@@ -257,6 +262,8 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
   if (config_file_data.sensor_config_file_count)
     cmd_args->sensor_config_file = config_file_data.sensor_config_file;
+  if (config_file_data.non_abbreviated_units_count)
+    cmd_args->non_abbreviated_units = config_file_data.non_abbreviated_units;
   if (config_file_data.legacy_output_count)
     cmd_args->legacy_output = config_file_data.legacy_output;
 }
@@ -284,6 +291,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   cmd_args->sensors_length = 0;
   cmd_args->bridge_sensors = 0;
   cmd_args->sensor_config_file = NULL;
+  cmd_args->non_abbreviated_units = 0;
   cmd_args->legacy_output = 0;
 
   memset (&(cmd_args->conf), '\0', sizeof (struct ipmi_monitoring_ipmi_config));

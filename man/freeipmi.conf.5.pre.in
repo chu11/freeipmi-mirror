@@ -710,6 +710,9 @@ Please see
 .B ipmi-sel(8) 
 manpage for available workarounds.
 .TP
+\fBipmi-sel-non-abbreviated-units\fR \fIENABLE|DISABLE\fR
+Specify if output should have units abbreviated or not.
+.TP
 \fBipmi-sel-legacy-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be in legacy format or not.
 
@@ -786,6 +789,9 @@ option to see possible groups.
 .TP
 \fBipmi-sensors-bridge-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.
+.TP
+\fBipmi-sensors-non-abbreviated-units\fR \fIENABLE|DISABLE\fR
+Specify if output should have units abbreviated or not.
 .TP
 \fBipmi-sensors-legacy-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be in legacy format or not.
@@ -995,6 +1001,9 @@ Specify if non-BMC sensors should be bridged by default or not.
 .TP
 \fBipmimonitoring-sensor-config-file\fR \fIFILE\fR
 Specify the default sensor configuration file.
+.TP
+\fBipmimonitoring-non-abbreviated-units\fR \fIENABLE|DISABLE\fR
+Specify if output should have units abbreviated or not.
 .TP
 \fBipmimonitoring-legacy-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be in legacy format or not.

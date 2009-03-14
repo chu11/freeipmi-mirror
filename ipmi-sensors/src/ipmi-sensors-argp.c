@@ -89,8 +89,10 @@ static struct argp_option cmdline_options[] =
       "Show sensors by record id.  Accepts space or comma separated lists", 36},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
       "Bridge addresses to read non-BMC owned sensors.", 37},
+    { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 38},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 38},
+      "Output in legacy format.", 39},
     { 0 }
   };
 
@@ -176,6 +178,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
       break;
+    case NON_ABBREVIATED_UNITS_KEY:
+      cmd_args->non_abbreviated_units = 1;
+      break;
     case LEGACY_OUTPUT_KEY:
       cmd_args->legacy_output = 1;
       break;
@@ -236,6 +241,8 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
+  if (config_file_data.non_abbreviated_units_count)
+    cmd_args->non_abbreviated_units = config_file_data.non_abbreviated_units;
   if (config_file_data.legacy_output_count)
     cmd_args->legacy_output = config_file_data.legacy_output;
 }
@@ -312,6 +319,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
           sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
   cmd_args->sensors_length = 0;
   cmd_args->bridge_sensors = 0;
+  cmd_args->non_abbreviated_units = 0;
   cmd_args->legacy_output = 0;
 
   argp_parse (&cmdline_config_file_argp,

@@ -94,6 +94,9 @@ will make
 attempt to bridge sensor commands to alternate owners (experimental). 
 Bridging may not work on some interfaces/driver types.
 .TP
+\fB\-\-non-abbreviated-units\fR
+Output non-abbreviated units (i.e. 'Amps' instead of 'A').
+.TP
 \fB\-\-legacy-output\fR
 Output in legacy format.
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>

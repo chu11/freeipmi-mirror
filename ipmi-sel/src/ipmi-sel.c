@@ -1080,7 +1080,9 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING;
   if (state_data->prog_data->args->verbose_count >= 3)
-    flags|= IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE;
+    flags |= IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE;
+  if (state_data->prog_data->args->non_abbreviated_units)
+    flags |= IPMI_SEL_PARSE_STRING_FLAGS_NON_ABBREVIATED_UNITS;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
   if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
@@ -1322,6 +1324,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                    0,
                                    NULL,
                                    0,
+                                   !state_data->prog_data->args->non_abbreviated_units,
                                    &(state_data->column_width)) < 0)
         return (-1);
     }

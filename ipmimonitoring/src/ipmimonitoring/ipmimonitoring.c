@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.103 2009-03-13 21:09:52 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.104 2009-03-14 00:35:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -300,21 +300,27 @@ _get_sensor_units_string (ipmimonitoring_state_data_t *state_data,
                           uint8_t sensor_units)
 {
   const char *sensor_units_str;
+  char **sensor_units_ptr;
 
   assert (state_data);
 
+  if (state_data->prog_data->args->non_abbreviated_units)
+    sensor_units_ptr = (char **)ipmi_sensor_units;
+  else
+    sensor_units_ptr = (char **)ipmi_sensor_units_abbreviated;
+
   if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
-    sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_DEGREES_C];
+    sensor_units_str = sensor_units_ptr[IPMI_SENSOR_UNIT_DEGREES_C];
   else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT)
-    sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_DEGREES_F];
+    sensor_units_str = sensor_units_ptr[IPMI_SENSOR_UNIT_DEGREES_F];
   else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_VOLTS)
-    sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_VOLTS];
+    sensor_units_str = sensor_units_ptr[IPMI_SENSOR_UNIT_VOLTS];
   else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_AMPS)
-    sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_AMPS];
+    sensor_units_str = sensor_units_ptr[IPMI_SENSOR_UNIT_AMPS];
   else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_RPM)
-    sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_RPM];
+    sensor_units_str = sensor_units_ptr[IPMI_SENSOR_UNIT_RPM];
   else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_WATTS)
-    sensor_units_str = ipmi_sensor_units_abbreviated[IPMI_SENSOR_UNIT_WATTS];
+    sensor_units_str = sensor_units_ptr[IPMI_SENSOR_UNIT_WATTS];
   else
     sensor_units_str = IPMIMONITORING_NA_STRING;
 
@@ -383,6 +389,7 @@ _output_setup (ipmimonitoring_state_data_t *state_data)
                                    state_data->prog_data->args->groups_length,
                                    state_data->prog_data->args->sensors,
                                    state_data->prog_data->args->sensors_length,
+                                   !state_data->prog_data->args->non_abbreviated_units,
                                    &(state_data->column_width)) < 0)
         return (-1);
       
