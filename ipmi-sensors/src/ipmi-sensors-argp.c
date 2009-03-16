@@ -74,10 +74,10 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     { "verbose",        VERBOSE_KEY,        0, 0,
       "Increase verbosity in output.  May be specified multiple times.", 30},
-    { "quiet-readings", QUIET_READINGS_KEY,  0, 0,
-      "Do not output sensor readings or thresholds on simple output.", 31},
     { "sdr-info",       SDR_INFO_KEY,       0, 0,
-      "Show sendor data repository (SDR) information.", 32},
+      "Show sendor data repository (SDR) information.", 31},
+    { "quiet-readings", QUIET_READINGS_KEY,  0, 0,
+      "Do not output sensor readings or thresholds on simple output.", 32},
     { "list-groups",    LIST_GROUPS_KEY,    0, 0,
       "List sensor groups.", 33},
     /* maintain "group" for backwards compatability */

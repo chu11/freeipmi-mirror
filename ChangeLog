@@ -3,7 +3,11 @@
 	* libfreeipmi/src/spec/ipmi-sensor-units-spec.c: Fix some sensor
 	units abbreviations.
 
-	* Fix up manpages.
+	* common/man/manpage-common-sensor-common.man,
+	common/man/manpage-common-non-abbreviated-units.man,
+	common/man/manpage-common-legacy-output.man: New files.
+
+	* Cleanup up manpages.
 	
 2009-03-13  Albert Chu <chu11@llnl.gov>
 

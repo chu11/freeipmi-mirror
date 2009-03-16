@@ -1,0 +1,3 @@
+.TP
+\fB\-\-legacy-output\fR
+Output in legacy format.

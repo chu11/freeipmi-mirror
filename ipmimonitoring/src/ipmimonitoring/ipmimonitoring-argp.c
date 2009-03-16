@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.36 2009-03-14 00:35:22 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.37 2009-03-16 17:59:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -97,12 +97,12 @@ static struct argp_option cmdline_options[] =
       "Show sensors by record id.  Accepts space or comma separated lists", 36},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
       "Bridge addresses to read non-BMC owned sensors.", 37},
-    { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate sensor configuration file.", 38},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 39},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 38},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 40},
+      "Output in legacy format.", 39},
+    { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
+      "Specify an alternate sensor configuration file.", 40},
     { 0 }
   };
 

@@ -47,4 +47,7 @@ EXTRA_DIST = \
 	manpage-common-ping-options.man \
 	manpage-common-ping-origin.man \
 	manpage-common-table-of-contents.man \
-	manpage-common-homepage.man
+	manpage-common-homepage.man \
+	manpage-common-sensor-common.man \
+	manpage-common-non-abbreviated-units.man \
+	manpage-common-legacy-output.man

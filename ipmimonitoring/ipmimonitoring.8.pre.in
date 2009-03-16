@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.51 2009-03-16 17:24:21 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.52 2009-03-16 17:59:08 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -89,44 +89,12 @@ The following options are specific to
 \fB\-v\fR, \fB\-\-verbose\fR
 Increase verbosity in output.  This option will output additional
 sensors that are generally unreadable or uninterpretable.
-.TP
-\fB\-q\fR, \fB\-\-quiet-readings\fR
-Do not output sensor reading values, only NOMINAL, WARNING, or
-CRITICAL states.  This option is particularly useful if you want to
-use hostranged output across a cluster and want to consolidate the
-output.
-.TP
-\fB\-L\fR, \fB\-\-list\-groups\fR
-List sensor groups.
-.TP
-\fB\-g\fR GROUP-LIST, \fB\-\-groups\fR=\fIGROUP\-LIST\fR
-Specify groups to specifically monitor.  Multiple groups can
-be separated by commas or spaces.
-.TP
-.TP
-\fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"
-Specify sensors to monitor by record id.  Multiple record ids can be
-separated by commas or spaces.
-.TP
-\fB\-b\fR, \fB\-\-bridge\-sensors
-By default,
-.B ipmimonitoring
-will not read sensors from non-BMC owners.  Setting this option
-will make
-.B ipmimonitoring
-attempt to bridge sensor commands to alternate owners (experimental).
-Bridging may not work on some interfaces/driver types.
+#include <@top_srcdir@/common/man/manpage-common-sensor-common.man>
+#include <@top_srcdir@/common/man/manpage-common-non-abbreviated-units.man>
+#include <@top_srcdir@/common/man/manpage-common-legacy-output.man>
 .TP
 \fB\-\-sensor\-config\-file\fR=\fIFILE\fR
 Specify an alternate sensor configuration file.
-.TP
-\fB\-\-non-abbreviated-units\fR
-Output non-abbreviated units (i.e. 'Amps' instead of 'A').  May aid in 
-disambiguation of units (i.e. 'C' for Celsius or Coulombs).
-.TP
-\fB\-\-legacy-output\fR
-Output in legacy format.
-
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>

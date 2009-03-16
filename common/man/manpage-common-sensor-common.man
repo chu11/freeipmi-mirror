@@ -1,0 +1,22 @@
+.TP
+\fB\-q\fR, \fB\-\-quiet-readings\fR
+Do not output sensor reading values by default.  This option is
+particularly useful if you want to use hostranged output across a
+cluster and want to consolidate the output.
+.TP
+\fB\-L\fR, \fB\-\-list\-groups\fR
+List sensor groups.
+.TP
+\fB\-g\fR GROUP-LIST, \fB\-\-groups\fR=\fIGROUP\-LIST\fR
+Specify groups to show sensor outputs for.  Multiple groups can be
+separated by commas or spaces.
+.TP
+\fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"
+Specify sensors to show by record id.  Multiple record ids can be
+separated by commas or spaces.
+.TP
+\fB\-b\fR, \fB\-\-bridge\-sensors
+By default, sensors readings are not attempted for sensors on non-BMC
+owners.  By setting this option, sensor requests can be bridged to
+non-BMC owners to obtain sensor readings (experimental).  Bridging may
+not work on some interfaces/driver types.

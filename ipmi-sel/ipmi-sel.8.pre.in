@@ -81,13 +81,8 @@ Output only OEM event records.
 .TP
 \fB\-x\fR, \fB\-\-hex-dump\fR
 Hex-dump SEL entries.
-.TP
-\fB\-\-non-abbreviated-units\fR
-Output non-abbreviated units (i.e. 'Amps' instead of 'A').  May aid in 
-disambiguation of units (i.e. 'C' for Celsius or Coulombs).
-.TP
-\fB\-\-legacy-output\fR
-Output in legacy format.
+#include <@top_srcdir@/common/man/manpage-common-non-abbreviated-units.man>
+#include <@top_srcdir@/common/man/manpage-common-legacy-output.man>
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-ignore-sdr-cache.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
