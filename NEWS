@@ -110,6 +110,7 @@ o libfreeipmi
   - Support ipmi_sensor_units_string utility function to support
     units, percentages, rates, and units modifiers (i.e. "% hit",
     "gigabyte per minute", "pounds / cu in").
+  - Fix several sensor units abbreviations.
 o libipmimonitoring
   - Support callback functions in API to monitor sensors as they
     are read/analyzed instead of after all sensors have been

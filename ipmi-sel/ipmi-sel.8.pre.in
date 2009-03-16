@@ -83,7 +83,8 @@ Output only OEM event records.
 Hex-dump SEL entries.
 .TP
 \fB\-\-non-abbreviated-units\fR
-Output non-abbreviated units (i.e. 'Amps' instead of 'A').
+Output non-abbreviated units (i.e. 'Amps' instead of 'A').  May aid in 
+disambiguation of units (i.e. 'C' for Celsius or Coulombs).
 .TP
 \fB\-\-legacy-output\fR
 Output in legacy format.

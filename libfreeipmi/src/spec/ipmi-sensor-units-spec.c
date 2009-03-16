@@ -170,7 +170,7 @@ const char *const ipmi_sensor_units_abbreviated[] =
     "sr",
     "rev",
     "c",
-    "gravities",                  /* ? */
+    "g",
     "oz",
     "lb",
     "ft lB",
@@ -181,10 +181,10 @@ const char *const ipmi_sensor_units_abbreviated[] =
     "mH",
     "F",
     "uF",
-    "ohms",                       /* no abbreviation? */
+    "ohms",                       /* no abbreviation? only symbol? */
     "S",
     "mol",
-    "BecBquerel",
+    "Bq",
     "PPM",
     "Reserved",
     "dB",
@@ -209,7 +209,7 @@ const char *const ipmi_sensor_units_abbreviated[] =
     "miss",
     "retry",
     "reset",
-    "overrun /overflow",
+    "overrun / overflow",
     "underrun",
     "collision",
     "pkts",
