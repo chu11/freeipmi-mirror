@@ -68,6 +68,7 @@ about events, other sensor types, and oem sensors.
 \fB\-i\fR, \fB\-\-sdr\-info\fR
 Show sensor data repository (SDR) information
 #include <@top_srcdir@/common/man/manpage-common-sensor-common.man>
+#include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>
 #include <@top_srcdir@/common/man/manpage-common-non-abbreviated-units.man>
 #include <@top_srcdir@/common/man/manpage-common-legacy-output.man>
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>

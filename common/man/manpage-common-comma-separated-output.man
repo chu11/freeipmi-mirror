@@ -1,0 +1,3 @@
+.TP
+\fB\-\-comma\-separated\-output
+Output fields in comma separated format.

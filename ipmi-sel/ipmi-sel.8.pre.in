@@ -81,6 +81,7 @@ Output only OEM event records.
 .TP
 \fB\-x\fR, \fB\-\-hex-dump\fR
 Hex-dump SEL entries.
+#include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>
 #include <@top_srcdir@/common/man/manpage-common-non-abbreviated-units.man>
 #include <@top_srcdir@/common/man/manpage-common-legacy-output.man>
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
