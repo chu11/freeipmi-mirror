@@ -15,6 +15,7 @@ o ipmi-sel
   - Support --system-event-only and --oem-event-only options.
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
+  - Support --comma-separated-output option.
   - Output manufacturer name with "Manufacturer ID" if name available.
   - Support sensor unit percentages, rates and modifiers (i.e. "%
     hit", "gigabyte per minute", "pounds / cu in").
@@ -33,6 +34,7 @@ o ipmi-sensors
     now *not* surrounded by single quotes (') or square brackets ([]).
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
+  - Support --comma-separated-output option.
   - Do not output Sensor Reading for discrete sensors under verbose
     mode (because the result is always "N/A").
   - Do not output SDR event records type under verbose output, only in very
@@ -74,6 +76,7 @@ o ipmimonitoring
     sensor events are indicated.
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
+  - Support --comma-separated-output option.
   - Utilize libipmimonitoring callback routines to make sensors output
     as they are read, rather than just at the end.  This removes the
     impression that the tool "hangs" on start.

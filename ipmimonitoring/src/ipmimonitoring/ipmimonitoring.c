@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.104 2009-03-14 00:35:22 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.105 2009-03-16 21:09:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -380,7 +380,8 @@ _output_setup (ipmimonitoring_state_data_t *state_data)
 {
   assert (state_data);
 
-  if (!state_data->prog_data->args->legacy_output)
+  if (!state_data->prog_data->args->legacy_output
+      && !state_data->prog_data->args->comma_separated_output)
     {
       if (calculate_column_widths (state_data->pstate,
                                    state_data->sdr_cache_ctx,
@@ -420,11 +421,17 @@ _output_sensor_units (ipmimonitoring_state_data_t *state_data,
       char fmt[IPMIMONITORING_FMT_BUFLEN + 1];
 
       memset (fmt, '\0', IPMIMONITORING_FMT_BUFLEN + 1);
-      snprintf (fmt,
-                IPMIMONITORING_FMT_BUFLEN,
-                " | %%-%ds",
-                state_data->column_width.sensor_units);
-
+      
+      if (state_data->prog_data->args->comma_separated_output)
+        snprintf (fmt,
+                  IPMIMONITORING_FMT_BUFLEN,
+                  ",%%s");
+      else
+        snprintf (fmt,
+                  IPMIMONITORING_FMT_BUFLEN,
+                  " | %%-%ds",
+                  state_data->column_width.sensor_units);
+      
       pstdout_printf (state_data->pstate,
                       fmt,
                       sensor_units_str);
@@ -460,9 +467,11 @@ _output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
           j_decr_flag = 1;
         }
 
-      pstdout_printf (state_data->pstate,
-                      " |");
-
+      if (state_data->prog_data->args->comma_separated_output)
+        pstdout_printf (state_data->pstate, ",");
+      else
+        pstdout_printf (state_data->pstate, " |");
+      
       for (j = j_start; j_decr_flag ? j >= j_end : j < j_end; j_decr_flag ? j-- : j++)
         {
           if (sensor_bitmask_value & (0x1 << j))
@@ -496,17 +505,24 @@ _output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
                                      ipmi_monitoring_ctx_errormsg (state_data->ctx),
                                      (uint16_t)sensor_bitmask_value);
 
+                  if (!state_data->prog_data->args->comma_separated_output)
+                    pstdout_printf (state_data->pstate, " ");
+
                   snprintf (buffer, IPMIMONITORING_BUFLEN, "%s", IPMIMONITORING_UNRECOGNIZED_STATE);
                   pstdout_printf (state_data->pstate,
-                                  " '%s'",
+                                  "'%s'",
                                   buffer);
                   output_count++;
                   break;
                 }
 
+              if (!state_data->prog_data->args->comma_separated_output)
+                pstdout_printf (state_data->pstate, " ");
+
               pstdout_printf (state_data->pstate,
-                              " '%s'",
+                              "'%s'",
                               buffer);
+
               output_count++;
 
               /* output at max one message for thresholds*/
@@ -516,14 +532,26 @@ _output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
         }
 
       if (!output_count)
-        pstdout_printf (state_data->pstate,
-                        " '%s'",
-                        IPMIMONITORING_NO_EVENT_STRING);
+        {
+          if (!state_data->prog_data->args->comma_separated_output)
+            pstdout_printf (state_data->pstate, " ");
+
+          pstdout_printf (state_data->pstate,
+                          "'%s'",
+                          IPMIMONITORING_NO_EVENT_STRING);
+        }
     }
   else
-    pstdout_printf (state_data->pstate,
-                    " | %s",
-                    IPMIMONITORING_NA_STRING);
+    {
+      if (state_data->prog_data->args->comma_separated_output)
+        pstdout_printf (state_data->pstate,
+                        ",%s",
+                        IPMIMONITORING_NA_STRING);
+      else
+        pstdout_printf (state_data->pstate,
+                        " | %s",
+                        IPMIMONITORING_NA_STRING);
+    }
 
   rv = 0;
  cleanup:
@@ -574,6 +602,7 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
         output_sensor_headers (state_data->pstate,
                                args->quiet_readings,
                                1,
+                               state_data->prog_data->args->comma_separated_output,
                                &(state_data->column_width));
 
       state_data->output_headers++;
@@ -664,12 +693,18 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
   else
     {
       memset (fmt, '\0', IPMIMONITORING_FMT_BUFLEN + 1);
-      snprintf (fmt,
-                IPMIMONITORING_FMT_BUFLEN,
-                "%%-9u | %%-%ds | %%-%ds | %%-12s",
-                state_data->column_width.sensor_name,
-                state_data->column_width.sensor_group);
 
+      if (args->comma_separated_output)
+        snprintf (fmt,
+                  IPMIMONITORING_FMT_BUFLEN,
+                  "%%u,%%s,%%s,%%s");
+      else
+        snprintf (fmt,
+                  IPMIMONITORING_FMT_BUFLEN,
+                  "%%-9u | %%-%ds | %%-%ds | %%-12s",
+                  state_data->column_width.sensor_name,
+                  state_data->column_width.sensor_group);
+      
       pstdout_printf (state_data->pstate,
                       fmt,
                       record_id,
@@ -690,9 +725,16 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                             " | %s",
                             (*((uint8_t *)sensor_reading) ? "true" : "false"));
           else
-            pstdout_printf (state_data->pstate,
-                            " | %-14s",
-                            (*((uint8_t *)sensor_reading) ? "true" : "false"));
+            {
+              if (args->comma_separated_output)
+                pstdout_printf (state_data->pstate,
+                                ",%s",
+                                (*((uint8_t *)sensor_reading) ? "true" : "false"));
+              else
+                pstdout_printf (state_data->pstate,
+                                " | %-14s",
+                                (*((uint8_t *)sensor_reading) ? "true" : "false"));
+            }
         }
       else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32)
         {
@@ -701,9 +743,16 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                             " | %-14u",
                             *((uint32_t *)sensor_reading));
           else
-            pstdout_printf (state_data->pstate,
-                            " | %-14u",
-                            *((uint32_t *)sensor_reading));
+            {
+              if (args->comma_separated_output)
+                pstdout_printf (state_data->pstate,
+                                ",%u",
+                                *((uint32_t *)sensor_reading));
+              else
+                pstdout_printf (state_data->pstate,
+                                " | %-14u",
+                                *((uint32_t *)sensor_reading));
+            }
         }
       else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE)
         {
@@ -712,9 +761,16 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                             " | %f",
                             *((double *)sensor_reading));
           else
-            pstdout_printf (state_data->pstate,
-                            " | %-14.2f",
-                            *((double *)sensor_reading));
+            {
+              if (args->comma_separated_output)
+                pstdout_printf (state_data->pstate,
+                                ",%.2f",
+                                *((double *)sensor_reading));
+              else
+                pstdout_printf (state_data->pstate,
+                                " | %-14.2f",
+                                *((double *)sensor_reading));
+            }
         }
       else if (args->legacy_output)
         {
@@ -731,9 +787,16 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                             " | %s",
                             IPMIMONITORING_NA_STRING);
           else
-            pstdout_printf (state_data->pstate,
-                            " | %-14s",
-                            IPMIMONITORING_NA_STRING);
+            {
+              if (args->comma_separated_output)
+                pstdout_printf (state_data->pstate,
+                                ",%s",
+                                IPMIMONITORING_NA_STRING);
+              else
+                pstdout_printf (state_data->pstate,
+                                " | %-14s",
+                                IPMIMONITORING_NA_STRING);
+            }
         }
 
       if (!args->legacy_output)
@@ -757,11 +820,16 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
           char fmt[IPMIMONITORING_FMT_BUFLEN + 1];
           
           memset (fmt, '\0', IPMIMONITORING_FMT_BUFLEN + 1);
-          snprintf (fmt,
-                    IPMIMONITORING_FMT_BUFLEN,
-                    " | %%-14s | %%-%ds",
-                    state_data->column_width.sensor_units);
-
+          if (args->comma_separated_output)
+            snprintf (fmt,
+                      IPMIMONITORING_FMT_BUFLEN,
+                      ",%%s,%%s");
+          else
+            snprintf (fmt,
+                      IPMIMONITORING_FMT_BUFLEN,
+                      " | %%-14s | %%-%ds",
+                      state_data->column_width.sensor_units);
+          
           pstdout_printf (state_data->pstate,
                           fmt,
                           IPMIMONITORING_NA_STRING,

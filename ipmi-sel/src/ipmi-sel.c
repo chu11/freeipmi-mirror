@@ -627,10 +627,21 @@ _normal_output_record_id (ipmi_sel_state_data_t *state_data, unsigned int flags)
       return (0);
     }
 
-  if (outbuf_len)
-    pstdout_printf (state_data->pstate, "%-9s", outbuf);
+
+  if (state_data->prog_data->args->comma_separated_output)
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, "%s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, "%s", IPMI_SEL_NA_STRING);
+    }
   else
-    pstdout_printf (state_data->pstate, "%-9s", IPMI_SEL_NA_STRING);
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, "%-9s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, "%-9s", IPMI_SEL_NA_STRING);
+    }
 
   return (1);
 }
@@ -660,10 +671,20 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
       return (0);
     }
 
-  if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %-11s", outbuf);
+  if (state_data->prog_data->args->comma_separated_output)
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, ",%s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, ",%s", IPMI_SEL_NA_STRING);
+    }
   else
-    pstdout_printf (state_data->pstate, " | %-11s", IPMI_SEL_NA_STRING);
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, " | %-11s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, " | %-11s", IPMI_SEL_NA_STRING);
+    }
 
   memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
@@ -677,10 +698,20 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
       return (0);
     }
 
-  if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %-8s", outbuf);
+  if (state_data->prog_data->args->comma_separated_output)
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, ",%s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, ",%s", IPMI_SEL_NA_STRING);
+    }
   else
-    pstdout_printf (state_data->pstate, " | %-8s", IPMI_SEL_NA_STRING);
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, " | %-8s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, " | %-8s", IPMI_SEL_NA_STRING);
+    }
 
   return (1);
 }
@@ -715,10 +746,15 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
     state_data->column_width.sensor_name = outbuf_len;
 
   memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
-  snprintf (fmt,
-            IPMI_SEL_FMT_BUFLEN,
-            " | %%-%ds",
-            state_data->column_width.sensor_name);
+  if (state_data->prog_data->args->comma_separated_output)
+    snprintf (fmt,
+              IPMI_SEL_FMT_BUFLEN,
+              ",%%s");
+  else
+    snprintf (fmt,
+              IPMI_SEL_FMT_BUFLEN,
+              " | %%-%ds",
+              state_data->column_width.sensor_name);
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, fmt, outbuf);
@@ -741,10 +777,15 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
     state_data->column_width.sensor_group = outbuf_len;
 
   memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
-  snprintf (fmt,
-            IPMI_SEL_FMT_BUFLEN,
-            " | %%-%ds",
-            state_data->column_width.sensor_group);
+  if (state_data->prog_data->args->comma_separated_output)
+    snprintf (fmt,
+              IPMI_SEL_FMT_BUFLEN,
+              ",%%s");
+  else
+    snprintf (fmt,
+              IPMI_SEL_FMT_BUFLEN,
+              " | %%-%ds",
+              state_data->column_width.sensor_group);
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, fmt, outbuf);
@@ -780,10 +821,20 @@ _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int 
       return (0);
     }
 
-  if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %-17s", outbuf);
+  if (state_data->prog_data->args->comma_separated_output)
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, ",%s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, ",%s", IPMI_SEL_NA_STRING);
+    }
   else
-    pstdout_printf (state_data->pstate, " | %-17s", IPMI_SEL_NA_STRING);
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, " | %-17s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, " | %-17s", IPMI_SEL_NA_STRING);
+    }
 
   return (1);
 }
@@ -813,10 +864,20 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
       return (0);
     }
 
-  if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %-36s", outbuf);
+  if (state_data->prog_data->args->comma_separated_output)
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, ",%s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, ",%s", IPMI_SEL_NA_STRING);
+    }
   else
-    pstdout_printf (state_data->pstate, " | %-36s", IPMI_SEL_NA_STRING);
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, " | %-36s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, " | %-36s", IPMI_SEL_NA_STRING);
+    }
 
   return (1);
 }
@@ -952,10 +1013,20 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
         }
     }
 
-  if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %s", outbuf);
+  if (state_data->prog_data->args->comma_separated_output)
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, ",%s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, ",%s", IPMI_SEL_NA_STRING);
+    }
   else
-    pstdout_printf (state_data->pstate, " | %s", IPMI_SEL_NA_STRING);
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, " | %s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, " | %s", IPMI_SEL_NA_STRING);
+    }
 
   return (1);
 }
@@ -985,10 +1056,20 @@ _normal_output_manufacturer_id (ipmi_sel_state_data_t *state_data, unsigned int 
       return (0);
     }
 
-  if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %-16s", outbuf);
+  if (state_data->prog_data->args->comma_separated_output)
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, ",%s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, ",%s", IPMI_SEL_NA_STRING);
+    }
   else
-    pstdout_printf (state_data->pstate, " | %-16s", IPMI_SEL_NA_STRING);
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, " | %-16s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, " | %-16s", IPMI_SEL_NA_STRING);
+    }
 
   return (1);
 }
@@ -1018,10 +1099,20 @@ _normal_output_oem_data (ipmi_sel_state_data_t *state_data, unsigned int flags)
       return (0);
     }
 
-  if (outbuf_len)
-    pstdout_printf (state_data->pstate, " | %s", outbuf);
+  if (state_data->prog_data->args->comma_separated_output)
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, ",%s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, ",%s", IPMI_SEL_NA_STRING);
+    }
   else
-    pstdout_printf (state_data->pstate, " | %s", IPMI_SEL_NA_STRING);
+    {
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, " | %s", outbuf);
+      else
+        pstdout_printf (state_data->pstate, " | %s", IPMI_SEL_NA_STRING);
+    }
 
   return (1);
 }
@@ -1040,39 +1131,53 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 
   if (!state_data->output_headers)
     {
-      pstdout_printf (state_data->pstate,
-                      "%s | Date        | Time    ",
-                      SENSORS_HEADER_RECORD_ID_STR);
-
-      memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
-      snprintf (fmt,
-                IPMI_SEL_FMT_BUFLEN,
-                " | %%-%ds | %%-%ds",
-                state_data->column_width.sensor_name,
-                state_data->column_width.sensor_group);
-
-      pstdout_printf (state_data->pstate,
-                      fmt,
-                      SENSORS_HEADER_NAME_STR,
-                      SENSORS_HEADER_GROUP_STR);
-
-      if (state_data->prog_data->args->verbose_count >= 2)
+      if (state_data->prog_data->args->comma_separated_output)
         {
           pstdout_printf (state_data->pstate,
-                          " | Event Direction  ");
+                          "%s,Date,Time,%s,%s",
+                          SENSORS_HEADER_RECORD_ID_STR,
+                          SENSORS_HEADER_NAME_STR,
+                          SENSORS_HEADER_GROUP_STR);
+
+          if (state_data->prog_data->args->verbose_count >= 2)
+            pstdout_printf (state_data->pstate, ",Event Direction");
+          
+          pstdout_printf (state_data->pstate, ",Event");
+          
+          if (state_data->prog_data->args->verbose_count)
+            pstdout_printf (state_data->pstate, ",Event Detail");
+          
+          pstdout_printf (state_data->pstate, "\n");
         }
-
-      pstdout_printf (state_data->pstate,
-                      " | Event                               ");
-
-      if (state_data->prog_data->args->verbose_count)
+      else
         {
           pstdout_printf (state_data->pstate,
-                          " | Event Detail");
+                          "%s | Date        | Time    ",
+                          SENSORS_HEADER_RECORD_ID_STR);
+          
+          memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
+          snprintf (fmt,
+                    IPMI_SEL_FMT_BUFLEN,
+                    " | %%-%ds | %%-%ds",
+                    state_data->column_width.sensor_name,
+                    state_data->column_width.sensor_group);
+          
+          pstdout_printf (state_data->pstate,
+                          fmt,
+                          SENSORS_HEADER_NAME_STR,
+                          SENSORS_HEADER_GROUP_STR);
+          
+          if (state_data->prog_data->args->verbose_count >= 2)
+            pstdout_printf (state_data->pstate, " | Event Direction  ");
+          
+          pstdout_printf (state_data->pstate, " | Event                               ");
+          
+          if (state_data->prog_data->args->verbose_count)
+            pstdout_printf (state_data->pstate, " | Event Detail");
+          
+          pstdout_printf (state_data->pstate, "\n");
         }
 
-      pstdout_printf (state_data->pstate,
-                      "\n");
       state_data->output_headers++;
     }
 

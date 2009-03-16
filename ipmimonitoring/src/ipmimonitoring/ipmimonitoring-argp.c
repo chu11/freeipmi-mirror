@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.37 2009-03-16 17:59:08 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.38 2009-03-16 21:09:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -97,12 +97,14 @@ static struct argp_option cmdline_options[] =
       "Show sensors by record id.  Accepts space or comma separated lists", 36},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
       "Bridge addresses to read non-BMC owned sensors.", 37},
+    { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
+      "Output fields in comma separated format.", 38},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 38},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 39},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 39},
+      "Output in legacy format.", 40},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate sensor configuration file.", 40},
+      "Specify an alternate sensor configuration file.", 41},
     { 0 }
   };
 
@@ -188,6 +190,15 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
       break;
+    case COMMA_SEPARATED_OUTPUT_KEY:
+      cmd_args->comma_separated_output = 1;
+      break;
+    case NON_ABBREVIATED_UNITS_KEY:
+      cmd_args->non_abbreviated_units = 1;
+      break;
+    case LEGACY_OUTPUT_KEY:
+      cmd_args->legacy_output = 1;
+      break;
     case SENSOR_CONFIG_FILE_KEY:
       if (cmd_args->sensor_config_file)
         free (cmd_args->sensor_config_file);
@@ -196,12 +207,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           perror ("strdup");
           exit (1);
         }
-      break;
-    case NON_ABBREVIATED_UNITS_KEY:
-      cmd_args->non_abbreviated_units = 1;
-      break;
-    case LEGACY_OUTPUT_KEY:
-      cmd_args->legacy_output = 1;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -260,12 +265,14 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
-  if (config_file_data.sensor_config_file_count)
-    cmd_args->sensor_config_file = config_file_data.sensor_config_file;
+  if (config_file_data.comma_separated_output_count)
+    cmd_args->comma_separated_output = config_file_data.comma_separated_output;
   if (config_file_data.non_abbreviated_units_count)
     cmd_args->non_abbreviated_units = config_file_data.non_abbreviated_units;
   if (config_file_data.legacy_output_count)
     cmd_args->legacy_output = config_file_data.legacy_output;
+  if (config_file_data.sensor_config_file_count)
+    cmd_args->sensor_config_file = config_file_data.sensor_config_file;
 }
 
 void
@@ -290,9 +297,10 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
           sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
   cmd_args->sensors_length = 0;
   cmd_args->bridge_sensors = 0;
-  cmd_args->sensor_config_file = NULL;
+  cmd_args->comma_separated_output = 0;
   cmd_args->non_abbreviated_units = 0;
   cmd_args->legacy_output = 0;
+  cmd_args->sensor_config_file = NULL;
 
   memset (&(cmd_args->conf), '\0', sizeof (struct ipmi_monitoring_ipmi_config));
   cmd_args->ipmimonitoring_flags = 0;

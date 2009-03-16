@@ -36,8 +36,9 @@ enum ipmi_sensors_argp_option_keys
     GROUPS_KEY = 'g',
     SENSORS_KEY = 's',
     BRIDGE_SENSORS_KEY = 'b',
-    NON_ABBREVIATED_UNITS_KEY = 161,
-    LEGACY_OUTPUT_KEY = 162,
+    COMMA_SEPARATED_OUTPUT_KEY = 161,
+    NON_ABBREVIATED_UNITS_KEY = 162,
+    LEGACY_OUTPUT_KEY = 163,
   };
 
 struct ipmi_sensors_arguments
@@ -55,6 +56,7 @@ struct ipmi_sensors_arguments
   unsigned int sensors[MAX_SENSOR_RECORD_IDS];
   unsigned int sensors_length;
   int bridge_sensors;
+  int comma_separated_output;
   int non_abbreviated_units;
   int legacy_output;
 };

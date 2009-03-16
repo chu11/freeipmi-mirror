@@ -287,6 +287,7 @@ void
 output_sensor_headers (pstdout_state_t pstate,
                        int quiet_readings,
                        int output_sensor_state,
+                       int comma_separated_output,
                        struct sensor_column_width *column_width)
 {
   char fmt[SENSOR_FMT_BUFLEN + 1];
@@ -298,11 +299,16 @@ output_sensor_headers (pstdout_state_t pstate,
                   SENSORS_HEADER_RECORD_ID_STR);
 
   memset (fmt, '\0', SENSOR_FMT_BUFLEN + 1);
-  snprintf (fmt,
-            SENSOR_FMT_BUFLEN,
-            " | %%-%ds | %%-%ds",
-            column_width->sensor_name,
-            column_width->sensor_group);
+  if (comma_separated_output)
+    snprintf (fmt,
+              SENSOR_FMT_BUFLEN,
+              ",%%s,%%s");
+  else
+    snprintf (fmt,
+              SENSOR_FMT_BUFLEN,
+              " | %%-%ds | %%-%ds",
+              column_width->sensor_name,
+              column_width->sensor_group);
 
   PSTDOUT_PRINTF (pstate,
                   fmt,
@@ -310,30 +316,52 @@ output_sensor_headers (pstdout_state_t pstate,
                   SENSORS_HEADER_GROUP_STR);
 
   if (output_sensor_state)
-    PSTDOUT_PRINTF (pstate,
-                    " | %s",
-                    SENSORS_HEADER_STATE_STR);
+    {
+      if (comma_separated_output)
+        PSTDOUT_PRINTF (pstate,
+                        ",%s",
+                        SENSORS_HEADER_STATE_STR);
+      else
+        PSTDOUT_PRINTF (pstate,
+                        " | %s",
+                        SENSORS_HEADER_STATE_STR);
+    }
   
   if (!quiet_readings)
     {
-      PSTDOUT_PRINTF (pstate,
-                      " | %s",
-                      SENSORS_HEADER_READING_STR);
+      if (comma_separated_output)
+        PSTDOUT_PRINTF (pstate,
+                        ",%s",
+                        SENSORS_HEADER_READING_STR);
+      else
+        PSTDOUT_PRINTF (pstate,
+                        " | %s",
+                        SENSORS_HEADER_READING_STR);
       
       memset (fmt, '\0', SENSOR_FMT_BUFLEN + 1);
-      snprintf (fmt,
-                SENSOR_FMT_BUFLEN,
-                " | %%-%ds",
-                column_width->sensor_units);
+      if (comma_separated_output)
+        snprintf (fmt,
+                  SENSOR_FMT_BUFLEN,
+                  ",%%s");
+      else
+        snprintf (fmt,
+                  SENSOR_FMT_BUFLEN,
+                  " | %%-%ds",
+                  column_width->sensor_units);
       
       PSTDOUT_PRINTF (pstate,
                       fmt,
                       SENSORS_HEADER_UNITS_STR);
     }
 
-  PSTDOUT_PRINTF (pstate,
-                  " | %s\n",
-                  SENSORS_HEADER_EVENT_STR);
+  if (comma_separated_output)
+    PSTDOUT_PRINTF (pstate,
+                    ",%s\n",
+                    SENSORS_HEADER_EVENT_STR);
+  else
+    PSTDOUT_PRINTF (pstate,
+                    " | %s\n",
+                    SENSORS_HEADER_EVENT_STR);
 }
 
 static void

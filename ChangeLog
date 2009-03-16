@@ -8,6 +8,9 @@
 	common/man/manpage-common-legacy-output.man: New files.
 
 	* Cleanup up manpages.
+
+	* ipmi-sel/, ipmi-sensors/, ipmimonitoring/: Support
+	--comma-separated-output.
 	
 2009-03-13  Albert Chu <chu11@llnl.gov>
 

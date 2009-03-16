@@ -72,6 +72,8 @@ struct config_file_data_ipmi_fru
 
 struct config_file_data_ipmi_sel
 {
+  int comma_separated_output_count;
+  int comma_separated_output;
   int non_abbreviated_units;
   int non_abbreviated_units_count;
   int legacy_output;
@@ -87,6 +89,8 @@ struct config_file_data_ipmi_sensors
   int groups_count;
   int bridge_sensors;
   int bridge_sensors_count;
+  int comma_separated_output_count;
+  int comma_separated_output;
   int non_abbreviated_units;
   int non_abbreviated_units_count;
   int legacy_output;
@@ -112,12 +116,14 @@ struct config_file_data_ipmimonitoring
   int groups_count;
   int bridge_sensors;
   int bridge_sensors_count;
-  char *sensor_config_file;
-  int sensor_config_file_count;
+  int comma_separated_output_count;
+  int comma_separated_output;
   int non_abbreviated_units;
   int non_abbreviated_units_count;
   int legacy_output;
   int legacy_output_count;
+  char *sensor_config_file;
+  int sensor_config_file_count;
 };
 
 struct config_file_data_ipmipower

@@ -79,6 +79,7 @@ int is_sdr_sensor_group_listed (pstdout_state_t pstate,
 void output_sensor_headers (pstdout_state_t pstate,
                             int quiet_readings,
                             int output_sensor_state,
+                            int comma_separated_output,
                             struct sensor_column_width *column_width);
 
 int calculate_column_widths (pstdout_state_t pstate,

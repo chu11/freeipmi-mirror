@@ -710,6 +710,9 @@ Please see
 .B ipmi-sel(8) 
 manpage for available workarounds.
 .TP
+\Bipmi-sel-comma-separated-output\fR \fIENABLE|DISABLE\fR
+Specify if output should be comma separated or not.
+.TP
 \fBipmi-sel-non-abbreviated-units\fR \fIENABLE|DISABLE\fR
 Specify if output should have units abbreviated or not.
 .TP
@@ -789,6 +792,9 @@ option to see possible groups.
 .TP
 \fBipmi-sensors-bridge-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.
+.TP
+\Bipmi-sensors-comma-separated-output\fR \fIENABLE|DISABLE\fR
+Specify if output should be comma separated or not.
 .TP
 \fBipmi-sensors-non-abbreviated-units\fR \fIENABLE|DISABLE\fR
 Specify if output should have units abbreviated or not.
@@ -999,14 +1005,17 @@ option to see possible groups.
 \fBipmimonitoring-bridge-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.
 .TP
-\fBipmimonitoring-sensor-config-file\fR \fIFILE\fR
-Specify the default sensor configuration file.
+\Bipmimonitoring-comma-separated-output\fR \fIENABLE|DISABLE\fR
+Specify if output should be comma separated or not.
 .TP
 \fBipmimonitoring-non-abbreviated-units\fR \fIENABLE|DISABLE\fR
 Specify if output should have units abbreviated or not.
 .TP
 \fBipmimonitoring-legacy-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be in legacy format or not.
+.TP
+\fBipmimonitoring-sensor-config-file\fR \fIFILE\fR
+Specify the default sensor configuration file.
 
 .SH "IPMIPOWER OPTIONS"
 The following options are specific to
