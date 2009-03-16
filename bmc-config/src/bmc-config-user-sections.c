@@ -905,7 +905,7 @@ password20_checkout (const char *section_name,
       if (is_same)
         str = kv->value_input;
       else
-        str = "<S0m3th1ng el53>";
+        str = "<something else>";
     }
 
   if (config_section_update_keyvalue_output (state_data->pstate,
