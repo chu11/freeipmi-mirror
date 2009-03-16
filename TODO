@@ -5,6 +5,10 @@ comma output - support in ipmi-sel, ipmi-sensors, ipmimonitoring
 monitoring/sensors - put sensor reading into one column instead of reading + units columns?
 option to output "long units" instead of short ones
 
+config tools
+------------
+better err output (i.e. readonly, etc.);
+
 libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
