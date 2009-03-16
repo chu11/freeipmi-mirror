@@ -5,6 +5,7 @@
 
 	* common/man/manpage-common-sensor-common.man,
 	common/man/manpage-common-non-abbreviated-units.man,
+	common/man/manpage-common-comma-separated-output.man,
 	common/man/manpage-common-legacy-output.man: New files.
 
 	* Cleanup up manpages.
