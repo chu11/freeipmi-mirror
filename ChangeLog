@@ -16,6 +16,8 @@
 	* common/src/configtool/, bmc-config/, ipmi-chassis-config/,
 	ipmi-sensors-config/, pef-config/: Support ability to report Read
 	Only error on commit.
+
+	* bmc-config/bmc-config.8.pre.in: Add Dell issue.
 	
 2009-03-13  Albert Chu <chu11@llnl.gov>
 

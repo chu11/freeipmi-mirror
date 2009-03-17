@@ -78,27 +78,34 @@ The
 .B UserN:Password 
 and 
 .B UserN:Password20
-fields (where N is a number) cannot be checked out.  Therefore the
-checked out value will always be blank.
+fields (where N is a number) cannot be checked out on some systems,
+therefore the checked out value will always be blank.
+
+The
+.B UserN:Password20
+field (where N is a number) cannot be committed on some systems
+(confirmed on Dell 1950), therefore the
+.B UserN:Password
+(where N is a number) field should be used instead.
 
 The
 .B UserN:Enable_User
 field (where N is a number) cannot be checked out on older IPMI
-systems.  Therefore the checked out value will sometime be blank.
+systems, therefore the checked out value will sometime be blank.
 
 The 
 .B UserN:Lan_Session_Limit 
 and 
 .B UserN:Serial_Session_Limit
-fields (where N is a number) cannot be checked out.  Therefore the
-checked out value will always be blank.  If not specified in later
-commits of configurations, the field may be reset to 0 due to a
-requirement that other fields (configured along with the session
-limit) will require an input value for the session limit.  Under most
-conditions, it is not necessary to set this field and most users may
-choose to ignore it.  This field is considered optional by IPMI
-standards, and may result in errors when attempting to configure it
-to a non-zero value.  If errors to occur, setting the value back to
+fields (where N is a number) cannot be checked out on some systems,
+therefore the checked out value will always be blank.  If not
+specified in later commits of configurations, the field may be reset
+to 0 due to a requirement that other fields (configured along with the
+session limit) will require an input value for the session limit.
+Under most conditions, it is not necessary to set this field and most
+users may choose to ignore it.  This field is considered optional by
+IPMI standards, and may result in errors when attempting to configure
+it to a non-zero value.  If errors to occur, setting the value back to
 0 should resolve problems.
 
 The fields 
