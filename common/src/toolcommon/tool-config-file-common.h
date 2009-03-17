@@ -69,12 +69,12 @@ struct config_file_data_ipmi_fru
 
 struct config_file_data_ipmi_sel
 {
-  int system_event_only_count;
   int system_event_only;
-  int oem_event_only_count;
+  int system_event_only_count;
   int oem_event_only;
-  int comma_separated_output_count;
+  int oem_event_only_count;
   int comma_separated_output;
+  int comma_separated_output_count;
   int non_abbreviated_units;
   int non_abbreviated_units_count;
   int legacy_output;

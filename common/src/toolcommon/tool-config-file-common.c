@@ -700,22 +700,13 @@ config_file_fanout (conffile_t cf,
   return (0);
 }
 
-int
-config_file_ipmi_sensors_groups (conffile_t cf,
-                                 struct conffile_data *data,
-                                 char *optionname,
-                                 int option_type,
-                                 void *option_ptr,
-                                 int option_data,
-                                 void *app_ptr,
-                                 int app_data)
+static int
+_config_file_sensor_groups (struct conffile_data *data,
+                            char *optionname,
+                            char groups[][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1],
+                            unsigned int *groups_length)
 {
-  struct config_file_data_ipmi_sensors *config_file_data;
   int i;
-
-  assert (option_ptr);
-
-  config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
 
   if (data->stringlist_len > CONFIG_FILE_MAX_SENSOR_GROUPS)
     {
@@ -733,14 +724,36 @@ config_file_ipmi_sensors_groups (conffile_t cf,
           exit (1);
         }
 
-      strncpy (config_file_data->groups[i],
+      strncpy (groups[i],
                data->stringlist[i],
                CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH);
 
-      config_file_data->groups_length++;
+      (*groups_length)++;
     }
 
   return (0);
+}
+
+int
+config_file_ipmi_sensors_groups (conffile_t cf,
+                                 struct conffile_data *data,
+                                 char *optionname,
+                                 int option_type,
+                                 void *option_ptr,
+                                 int option_data,
+                                 void *app_ptr,
+                                 int app_data)
+{
+  struct config_file_data_ipmi_sensors *config_file_data;
+
+  assert (option_ptr);
+
+  config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
+
+  return (_config_file_sensor_groups (data,
+                                      optionname,
+                                      config_file_data->groups,
+                                      &(config_file_data->groups_length)));
 }
 
 static int
@@ -774,36 +787,15 @@ config_file_ipmimonitoring_groups (conffile_t cf,
                                    int app_data)
 {
   struct config_file_data_ipmimonitoring *config_file_data;
-  int i;
 
   assert (option_ptr);
 
   config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
 
-  if (data->stringlist_len > CONFIG_FILE_MAX_SENSOR_GROUPS)
-    {
-      fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
-      exit (1);
-    }
-
-  for (i = 0; i < data->stringlist_len; i++)
-    {
-      if (strlen (data->stringlist[i]) > CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH)
-        {
-          fprintf (stderr, "Config File Error: invalid value '%s' for %s\n",
-                   data->stringlist[i],
-                   optionname);
-          exit (1);
-        }
-
-      strncpy (config_file_data->groups[i],
-               data->stringlist[i],
-               CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH);
-
-      config_file_data->groups_length++;
-    }
-
-  return (0);
+  return (_config_file_sensor_groups (data,
+                                      optionname,
+                                      config_file_data->groups,
+                                      &(config_file_data->groups_length)));
 }
 
 int

@@ -2,6 +2,8 @@
 
 	* common/src/toolcommon/, etc/, man/, ipmi-sel/: Add forgotton
 	config file options.
+
+	* Config file code cleanup.
 	
 2009-03-14  Albert Chu <chu11@llnl.gov>
 
