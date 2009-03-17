@@ -55,7 +55,7 @@ config_commit_section (pstdout_state_t pstate,
                                                    arg)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
-      if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
+      if (CONFIG_IS_NON_FATAL_ERROR(this_ret))
         {
           PSTDOUT_FPRINTF (pstate,
                            stderr,
@@ -81,13 +81,20 @@ config_commit_section (pstdout_state_t pstate,
           if (this_ret == CONFIG_ERR_SUCCESS)
             commit_count++;
 
-          if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
+          if (CONFIG_IS_NON_FATAL_ERROR(this_ret))
             {
-              PSTDOUT_FPRINTF (pstate,
-                               stderr,
-                               "ERROR: Failed to commit `%s:%s'\n",
-                               section->section_name,
-                               kv->key->key_name);
+              if (this_ret == CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY)
+                PSTDOUT_FPRINTF (pstate,
+                                 stderr,
+                                 "ERROR: Failed to commit `%s:%s': Read Only Field\n",
+                                 section->section_name,
+                                 kv->key->key_name);
+              else
+                PSTDOUT_FPRINTF (pstate,
+                                 stderr,
+                                 "ERROR: Failed to commit `%s:%s'\n",
+                                 section->section_name,
+                                 kv->key->key_name);
               ret = CONFIG_ERR_NON_FATAL_ERROR;
             }
         }
@@ -116,7 +123,7 @@ config_commit_section (pstdout_state_t pstate,
                                                     arg)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
-      if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
+      if (CONFIG_IS_NON_FATAL_ERROR(this_ret))
         {
           PSTDOUT_FPRINTF (pstate,
                            stderr,

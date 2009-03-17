@@ -149,7 +149,14 @@ _set_alert_string_keys (pef_config_state_data_t *state_data,
                          "ipmi_cmd_set_pef_configuration_parameters_alert_string_keys: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+        {
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && (ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER)))
+            rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
+          else
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       goto cleanup;
     }
 
@@ -408,7 +415,14 @@ alert_string_commit (const char *section_name,
                              "ipmi_cmd_set_pef_configuration_parameters_alert_strings: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
           if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-            rv = CONFIG_ERR_NON_FATAL_ERROR;
+            {
+              if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                  && (ipmi_check_completion_code (obj_cmd_rs,
+                                                  IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER)))
+                rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
+              else
+                rv = CONFIG_ERR_NON_FATAL_ERROR;
+            }
           goto cleanup;
         }
     }

@@ -182,7 +182,14 @@ _set_connection_mode (bmc_config_state_data_t *state_data,
                          "ipmi_cmd_set_serial_modem_configuration_connection_mode: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+        {
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && (ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER)))
+            rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
+          else
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       goto cleanup;
     }
 
@@ -442,7 +449,14 @@ page_blackout_interval_commit (const char *section_name,
                          "ipmi_cmd_set_serial_modem_configuration_page_blackout_interval: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+        {
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && (ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER)))
+            rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
+          else
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       goto cleanup;
     }
 
@@ -553,7 +567,14 @@ call_retry_interval_commit (const char *section_name,
                          "ipmi_cmd_set_serial_modem_configuration_call_retry_interval: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+        {
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && (ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER)))
+            rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
+          else
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       goto cleanup;
     }
 
@@ -684,7 +705,14 @@ _set_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
                          "ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+        {
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && (ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER)))
+            rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
+          else
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       goto cleanup;
     }
 

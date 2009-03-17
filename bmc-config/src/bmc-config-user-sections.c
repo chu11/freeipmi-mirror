@@ -396,7 +396,7 @@ username_commit (const char *section_name,
           || same (kv->value_input, "anonymous"))
         return (CONFIG_ERR_SUCCESS);
       else
-        return (CONFIG_ERR_NON_FATAL_ERROR);
+        return (CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY);
     }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_user_name_rs)))
@@ -1825,7 +1825,7 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               section,
                               "Username",
                               "Give Username",
-                              (userid == 1) ? CONFIG_CHECKOUT_KEY_COMMENTED_OUT : 0 | CONFIG_USERNAME_NOT_SET_YET,
+                              (userid == 1) ? (CONFIG_CHECKOUT_KEY_COMMENTED_OUT | CONFIG_READABLE_ONLY) : 0 | CONFIG_USERNAME_NOT_SET_YET,
                               username_checkout,
                               username_commit,
                               username_validate) < 0)

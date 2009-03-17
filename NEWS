@@ -88,6 +88,14 @@ o ipmi-fru
   - Output manufacturer name with "Manufacturer ID" if name available.
 o bmc-info
   - Output manufacturer name with "Manufacturer ID" if name available.
+o bmc-config
+  - Support ability to report read only field error.
+o ipmi-chassis-config
+  - Support ability to report read only field error.
+o ipmi-sensors-config
+  - Support ability to report read only field error.
+o pef-config
+  - Support ability to report read only field error.
 o Various documentation updates.
 
 Libraries

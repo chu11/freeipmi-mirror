@@ -12,6 +12,10 @@
 
 	* ipmi-sel/, ipmi-sensors/, ipmimonitoring/: Support
 	--comma-separated-output.
+
+	* common/src/configtool/, bmc-config/, ipmi-chassis-config/,
+	ipmi-sensors-config/, pef-config/: Support ability to report Read
+	Only error on commit.
 	
 2009-03-13  Albert Chu <chu11@llnl.gov>
 

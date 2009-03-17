@@ -83,8 +83,9 @@ typedef enum
 
 typedef enum
   {
-    CONFIG_ERR_FATAL_ERROR = -2,
-    CONFIG_ERR_NON_FATAL_ERROR = -1,
+    CONFIG_ERR_FATAL_ERROR = -3,
+    CONFIG_ERR_NON_FATAL_ERROR = -2,
+    CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY = -1,
     CONFIG_ERR_SUCCESS = 0,
   } config_err_t;
 
@@ -96,6 +97,10 @@ typedef enum
     CONFIG_VALIDATE_INVALID_VALUE = -1,
     CONFIG_VALIDATE_VALID_VALUE = 0,
   } config_validate_t;
+
+#define CONFIG_IS_NON_FATAL_ERROR(__ret) \
+  (((__ret) == CONFIG_ERR_NON_FATAL_ERROR \
+    || (__ret) == CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY) ? 1 : 0)
 
 struct config_keypair
 {
