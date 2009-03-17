@@ -84,7 +84,7 @@ therefore the checked out value will always be blank.
 The
 .B UserN:Password20
 field (where N is a number) cannot be committed on some systems
-(confirmed on Dell 1950), therefore the
+(confirmed on Dell 1950 Server), therefore the
 .B UserN:Password
 (where N is a number) field should be used instead.
 
