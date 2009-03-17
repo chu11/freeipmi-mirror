@@ -1,11 +1,11 @@
-2009-03-15  Albert Chu <chu11@llnl.gov>
+2009-03-17  Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolcommon/, etc/, man/, ipmi-sel/: Add forgotton
 	config file options.
 
 	* Config file code cleanup.
 	
-2009-03-14  Albert Chu <chu11@llnl.gov>
+2009-03-16  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/spec/ipmi-sensor-units-spec.c: Fix some sensor
 	units abbreviations.
