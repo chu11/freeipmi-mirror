@@ -1,13 +1,6 @@
 freeipmi tools
 --------------
 config via environment variables too - like config file
-comma output - support in ipmi-sel, ipmi-sensors, ipmimonitoring
-monitoring/sensors - put sensor reading into one column instead of reading + units columns?
-option to output "long units" instead of short ones
-
-config tools
-------------
-better err output (i.e. readonly, etc.);
 
 libfreeipmi
 -----------
@@ -19,18 +12,10 @@ libfreeipmi
 * document templates in .h files or something
   - split up and make '-template" .h files"
 
-sensors/sel/monitoring
-----------------------
---compacted option? squeeze output together?
-
 sensors/monitoring
 ------------------
 make sure bridging still works w/ sensor-read lib
 make sure oem still outputs fine
-
-sunbmc driver
--------------
-untested - need solaris hardware
 
 ipmi-chassis-config
 -------------------
