@@ -1,3 +1,7 @@
+2009-03-16  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/bmc-config.8.pre.in: Add Dell issue.
+
 2009-03-12  Albert Chu <chu11@llnl.gov>
 
 	* Globally change __PRETTY_FUNCTION__ to __FUNCTION__ for

@@ -5,6 +5,7 @@ o Support "oem_reserved" group input to ipmi-sensors.
 o Fix Solaris porting bugs.
 o Support build option to not have tools check for root for in-band
   IPMI communication.
+o Update bmc-config manpage with Dell specific workaround.
 
 0.7.6 - 02/25/09
 ----------------
