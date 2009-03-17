@@ -1,9 +1,16 @@
 2009-03-17  Albert Chu <chu11@llnl.gov>
 
-	* common/src/toolcommon/, etc/, man/, ipmi-sel/: Add forgotton
-	config file options.
+	* common/man/manpage-common-sdr-options.man: Fix typo.
+	
+2009-03-17  Albert Chu <chu11@llnl.gov>
 
-	* Config file code cleanup.
+	* common/src/toolcommon/, etc/, man/, ipmi-sel/, ipmi-sensors/,
+	ipmimonitoring/: Add forgotton config file options.
+
+	* common/src/toolsensor/, ipmi-sensors/, ipmimonitoring/,
+	common/src/toolcommon/: Rename --sensor to --record-ids.
+
+	* Various code cleanup.
 	
 2009-03-16  Albert Chu <chu11@llnl.gov>
 

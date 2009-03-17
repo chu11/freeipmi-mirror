@@ -541,21 +541,21 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
   if (_output_setup (state_data) < 0)
     return (-1);
 
-  if (args->sensors_length)
+  if (args->record_ids_length)
     {
-      for (i = 0; i < state_data->prog_data->args->sensors_length; i++)
+      for (i = 0; i < state_data->prog_data->args->record_ids_length; i++)
         {
           uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
           int sdr_record_len = 0;
 
           if (ipmi_sdr_cache_search_record_id (state_data->sdr_cache_ctx,
-                                               state_data->prog_data->args->sensors[i]) < 0)
+                                               state_data->prog_data->args->record_ids[i]) < 0)
             {
               if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
                 {
                   pstdout_printf (state_data->pstate,
                                   "Sensor Record ID '%d' not found\n",
-                                  state_data->prog_data->args->sensors[i]);
+                                  state_data->prog_data->args->record_ids[i]);
                   continue;
                 }
               else

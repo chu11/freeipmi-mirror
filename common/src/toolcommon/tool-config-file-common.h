@@ -50,6 +50,7 @@
 #define CONFIG_FILE_TOOL_IPMIPOWER           0x00004000
 #define CONFIG_FILE_TOOL_PEF_CONFIG          0x00008000
 
+#define CONFIG_FILE_MAX_SENSOR_RECORD_IDS           256
 #define CONFIG_FILE_MAX_SENSOR_GROUPS               256
 #define CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH 256
 
@@ -88,6 +89,9 @@ struct config_file_data_ipmi_sensors
   char groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
   int groups_count;
+  unsigned int record_ids[CONFIG_FILE_MAX_SENSOR_RECORD_IDS];
+  unsigned int record_ids_length;
+  int record_ids_count;
   int bridge_sensors;
   int bridge_sensors_count;
   int comma_separated_output_count;
@@ -115,6 +119,9 @@ struct config_file_data_ipmimonitoring
   char groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
   int groups_count;
+  unsigned int record_ids[CONFIG_FILE_MAX_SENSOR_RECORD_IDS];
+  unsigned int record_ids_length;
+  int record_ids_count;
   int bridge_sensors;
   int bridge_sensors_count;
   int comma_separated_output_count;

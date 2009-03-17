@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.39 2009-03-17 16:39:34 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.40 2009-03-17 20:12:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -81,19 +81,19 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     { "verbose", VERBOSE_KEY, 0, 0,
       "Increase verbosity in output.", 30},
-    /* maintain "regenerate-sdr-cache" for backwards compatability */
-    { "regenerate-sdr-cache", REGENERATE_SDR_CACHE_KEY, 0, OPTION_HIDDEN,
-      "Regenerate the SDR cache.", 31},
     /* maintain "cache-dir" for backwards compatability */
     { "cache-dir", CACHE_DIR_KEY, "DIRECTORY", OPTION_HIDDEN,
-      "Specify an alternate directory to read and write SDR caches..", 32},
+      "Specify an alternate directory to read and write SDR caches..", 31},
     { "quiet-readings", QUIET_READINGS_KEY,  0, 0,
-      "Do not output sensor readings, only states.", 33},
+      "Do not output sensor readings, only states.", 32},
     { "list-groups",    LIST_GROUPS_KEY,    0, 0,
-      "List sensor groups.", 34},
+      "List sensor groups.", 33},
     { "groups",         GROUPS_KEY,       "GROUP-LIST", 0,
-      "Show sensors belonging to a specific group.", 35},
-    { "sensors",        SENSORS_KEY, "SENSORS-LIST", 0,
+      "Show sensors belonging to a specific group.", 34},
+    /* for backwards compatability */
+    { "sensors",        SENSORS_KEY, "SENSORS-LIST", OPTION_HIDDEN,
+      "Show sensors by record id.  Accepts space or comma separated lists", 35},
+    { "record-ids",     RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
       "Show sensors by record id.  Accepts space or comma separated lists", 36},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
       "Bridge addresses to read non-BMC owned sensors.", 37},
@@ -135,10 +135,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->verbose = 1;
       break;
       /* legacy option */
-    case REGENERATE_SDR_CACHE_KEY:
-      cmd_args->regenerate_sdr_cache = 1;
-      break;
-      /* legacy option */
     case CACHE_DIR_KEY:
       return (sdr_parse_opt (ARGP_SDR_CACHE_DIRECTORY_KEY,
                              arg,
@@ -163,8 +159,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         }
       break;
     case SENSORS_KEY:
+    case RECORD_IDS_KEY:
       tok = strtok (arg, " ,");
-      while (tok && cmd_args->sensors_length < MAX_SENSOR_RECORD_IDS)
+      while (tok && cmd_args->record_ids_length < MAX_SENSOR_RECORD_IDS)
         {
           value = 0;
           ptr = NULL;
@@ -182,8 +179,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               exit (1);
             }
 
-          cmd_args->sensors[cmd_args->sensors_length] = value;
-          cmd_args->sensors_length++;
+          cmd_args->record_ids[cmd_args->record_ids_length] = value;
+          cmd_args->record_ids_length++;
           tok = strtok (NULL, " ,");
         }
       break;
@@ -263,6 +260,16 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
                  MAX_SENSOR_GROUPS_STRING_LENGTH);
       cmd_args->groups_length = config_file_data.groups_length;
     }
+  if (config_file_data.record_ids_count && config_file_data.record_ids_count)
+    {
+      int i;
+
+      assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
+
+      for (i = 0; i < config_file_data.record_ids_length; i++)
+        cmd_args->record_ids[i] = config_file_data.record_ids[i];
+      cmd_args->record_ids_length = config_file_data.record_ids_length;
+    }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
   if (config_file_data.comma_separated_output_count)
@@ -284,7 +291,6 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->verbose = 0;
-  cmd_args->regenerate_sdr_cache = 0;
   cmd_args->quiet_readings = 0;
   cmd_args->list_groups = 0;
   for (i = 0; i < MAX_SENSOR_GROUPS; i++)
@@ -292,10 +298,10 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
             '\0',
             MAX_SENSOR_GROUPS_STRING_LENGTH+1);
   cmd_args->groups_length = 0;
-  memset (cmd_args->sensors,
+  memset (cmd_args->record_ids,
           '\0',
           sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
-  cmd_args->sensors_length = 0;
+  cmd_args->record_ids_length = 0;
   cmd_args->bridge_sensors = 0;
   cmd_args->comma_separated_output = 0;
   cmd_args->non_abbreviated_units = 0;

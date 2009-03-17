@@ -481,8 +481,8 @@ calculate_column_widths (pstdout_state_t pstate,
                          ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                          char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
                          unsigned int groups_length,
-                         unsigned int sensors[],
-                         unsigned int sensors_length,
+                         unsigned int record_ids[],
+                         unsigned int record_ids_length,
                          unsigned int abbreviated_units,
                          struct sensor_column_width *column_width)
 {
@@ -497,11 +497,11 @@ calculate_column_widths (pstdout_state_t pstate,
 
   _sensor_column_width_init (column_width);
 
-  if (sensors && sensors_length)
+  if (record_ids && record_ids_length)
     {
-      for (i = 0; i < sensors_length; i++)
+      for (i = 0; i < record_ids_length; i++)
         {
-          if (ipmi_sdr_cache_search_record_id (sdr_cache_ctx, sensors[i]) < 0)
+          if (ipmi_sdr_cache_search_record_id (sdr_cache_ctx, record_ids[i]) < 0)
             {
               if (ipmi_sdr_cache_ctx_errnum (sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
                 continue;

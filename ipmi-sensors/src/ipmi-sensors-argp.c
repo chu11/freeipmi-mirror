@@ -85,16 +85,19 @@ static struct argp_option cmdline_options[] =
       "Show sensors belonging to a specific group.", 34},
     { "groups",         GROUPS_KEY,       "GROUPS-LIST", 0,
       "Show sensors belonging to a specific group.", 35},
-    { "sensors",        SENSORS_KEY, "SENSORS-LIST", 0,
+    /* for backwards compatability */
+    { "sensors",        SENSORS_KEY, "SENSORS-LIST", OPTION_HIDDEN,
       "Show sensors by record id.  Accepts space or comma separated lists", 36},
+    { "record-ids",     RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
+      "Show sensors by record id.  Accepts space or comma separated lists", 37},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
-      "Bridge addresses to read non-BMC owned sensors.", 37},
+      "Bridge addresses to read non-BMC owned sensors.", 38},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 38},
+      "Output fields in comma separated format.", 39},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 39},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 40},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 40},
+      "Output in legacy format.", 41},
     { 0 }
   };
 
@@ -152,9 +155,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           tok = strtok (NULL, " ,");
         }
       break;
+      /* maintain -s and "--sensors" for backwards compatability */
     case SENSORS_KEY:
+    case RECORD_IDS_KEY:
       tok = strtok (arg, " ,");
-      while (tok && cmd_args->sensors_length < MAX_SENSOR_RECORD_IDS)
+      while (tok && cmd_args->record_ids_length < MAX_SENSOR_RECORD_IDS)
         {
           value = 0;
           ptr = NULL;
@@ -172,8 +177,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               exit (1);
             }
 
-          cmd_args->sensors[cmd_args->sensors_length] = value;
-          cmd_args->sensors_length++;
+          cmd_args->record_ids[cmd_args->record_ids_length] = value;
+          cmd_args->record_ids_length++;
           tok = strtok (NULL, " ,");
         }
       break;
@@ -243,6 +248,16 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
                  config_file_data.groups[i],
                  MAX_SENSOR_GROUPS_STRING_LENGTH);
       cmd_args->groups_length = config_file_data.groups_length;
+    }
+  if (config_file_data.record_ids_count && config_file_data.record_ids_count)
+    {
+      int i;
+
+      assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
+
+      for (i = 0; i < config_file_data.record_ids_length; i++)
+        cmd_args->record_ids[i] = config_file_data.record_ids[i];
+      cmd_args->record_ids_length = config_file_data.record_ids_length;
     }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
@@ -321,10 +336,10 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
             '\0',
             MAX_SENSOR_GROUPS_STRING_LENGTH+1);
   cmd_args->groups_length = 0;
-  memset (cmd_args->sensors,
+  memset (cmd_args->record_ids,
           '\0',
           sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
-  cmd_args->sensors_length = 0;
+  cmd_args->record_ids_length = 0;
   cmd_args->bridge_sensors = 0;
   cmd_args->comma_separated_output = 0;
   cmd_args->non_abbreviated_units = 0;

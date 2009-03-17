@@ -796,6 +796,10 @@ can be specified separated by whitespace.  Please run
 \fI--list-groups\fR
 option to see possible groups.
 .TP
+\fBipmi-sensors-record-ids\fR \fRECORD-IDS-LIST\fR
+Specify default record ids to show sensor outputs for.  Multiple record ids
+can be specified separated by whitespace.
+.TP
 \fBipmi-sensors-bridge-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.
 .TP
@@ -1007,6 +1011,10 @@ can be specified separated by whitespace.  Please run
 .B ipmimonitoring(8)'s
 \fI--list-groups\fR
 option to see possible groups.
+.TP
+\fBipmimonitoring-record-ids\fR \fRECORD-IDS-LIST\fR
+Specify default record ids to show sensor outputs for.  Multiple record ids
+can be specified separated by whitespace.
 .TP
 \fBipmimonitoring-bridge-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.

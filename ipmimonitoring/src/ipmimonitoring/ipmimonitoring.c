@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.105 2009-03-16 21:09:26 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.106 2009-03-17 20:12:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -388,8 +388,8 @@ _output_setup (ipmimonitoring_state_data_t *state_data)
                                    state_data->sdr_parse_ctx,
                                    state_data->prog_data->args->groups,
                                    state_data->prog_data->args->groups_length,
-                                   state_data->prog_data->args->sensors,
-                                   state_data->prog_data->args->sensors_length,
+                                   state_data->prog_data->args->record_ids,
+                                   state_data->prog_data->args->record_ids_length,
                                    !state_data->prog_data->args->non_abbreviated_units,
                                    &(state_data->column_width)) < 0)
         return (-1);
@@ -912,13 +912,10 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   else
     sensor_reading_flags = IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS;
 
-  if (args->regenerate_sdr_cache)
-    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;
-
   if (args->bridge_sensors)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS;
 
-  if (!args->sensors_length && !args->ipmimonitoring_groups_length)
+  if (!args->record_ids_length && !args->ipmimonitoring_groups_length)
     {
       if (ipmi_monitoring_sensor_readings_by_record_id (state_data->ctx,
                                                         state_data->hostname,
@@ -936,14 +933,14 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
           return (-1);
         }
     }
-  else if (args->sensors_length)
+  else if (args->record_ids_length)
     {
       if (ipmi_monitoring_sensor_readings_by_record_id (state_data->ctx,
                                                         state_data->hostname,
                                                         &(args->conf),
                                                         sensor_reading_flags,
-                                                        args->sensors,
-                                                        args->sensors_length,
+                                                        args->record_ids,
+                                                        args->record_ids_length,
                                                         _ipmimonitoring_callback,
                                                         (void *)state_data) < 0)
         {

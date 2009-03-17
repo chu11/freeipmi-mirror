@@ -87,8 +87,8 @@ int calculate_column_widths (pstdout_state_t pstate,
                              ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                              char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
                              unsigned int groups_length,
-                             unsigned int sensors[],
-                             unsigned int sensors_length,
+                             unsigned int record_ids[],
+                             unsigned int record_ids_length,
                              unsigned int abbreviated_units,
                              struct sensor_column_width *column_width);
 

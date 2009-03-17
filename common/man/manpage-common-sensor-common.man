@@ -11,7 +11,7 @@ List sensor groups.
 Specify groups to show sensor outputs for.  Multiple groups can be
 separated by commas or spaces.
 .TP
-\fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"
+\fB\-r\fR "RECORD-IDS-LIST", \fB\-\-sensors=\fR"RECORD-IDS-LIST"
 Specify sensors to show by record id.  Multiple record ids can be
 separated by commas or spaces.
 .TP

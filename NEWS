@@ -35,6 +35,8 @@ o ipmi-sensors
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
   - Support --comma-separated-output option.
+  - Rename --sensors option to --record-ids.  Maintain old options for
+    backwards compatability.
   - Do not output Sensor Reading for discrete sensors under verbose
     mode (because the result is always "N/A").
   - Do not output SDR event records type under verbose output, only in very
@@ -69,7 +71,11 @@ o ipmimonitoring
     consistency to libipmimonitoring library definition.
   - Sensor events are now output for all sensors.  Sensor readings are
     only output appropriately for non-discrete sensors.
+  - Rename --sensors option to --record-ids.  Maintain old options for
+    backwards compatability.
   - Support --legacy-output option.
+  - Remove --regenerate-sdr-cache legacy option due to conflict with
+    newer option.
   - Sensors that can't be read or don't exist (i.e. "N/A", "Unknown")
     are now *not* surrounded by single quotes (').
   - A sensor event of "NONE" is now output instead of "OK" if no
