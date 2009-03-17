@@ -710,6 +710,12 @@ Please see
 .B ipmi-sel(8) 
 manpage for available workarounds.
 .TP
+\Bipmi-sel-system-event-only\fR \fIENABLE|DISABLE\fR
+Specify if output should only include system event records.
+.TP
+\Bipmi-sel-oem-only\fR \fIENABLE|DISABLE\fR
+Specify if output should only include OEM event records.
+.TP
 \Bipmi-sel-comma-separated-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be comma separated or not.
 .TP

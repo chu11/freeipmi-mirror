@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.38 2009-03-16 21:09:25 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.39 2009-03-17 16:39:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -254,8 +254,8 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     {
       int i;
 
-      assert(MAX_SENSOR_GROUPS == CONFIG_FILE_IPMIMONITORING_MAX_GROUPS);
-      assert(MAX_SENSOR_GROUPS_STRING_LENGTH == CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
+      assert(MAX_SENSOR_GROUPS == CONFIG_FILE_MAX_SENSOR_GROUPS);
+      assert(MAX_SENSOR_GROUPS_STRING_LENGTH == CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH);
 
       for (i = 0; i < config_file_data.groups_length; i++)
         strncpy (cmd_args->groups[i],

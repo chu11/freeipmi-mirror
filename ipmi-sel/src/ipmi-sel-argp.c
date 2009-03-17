@@ -88,7 +88,7 @@ static struct argp_option cmdline_options[] =
     { "system-event-only", SYSTEM_EVENT_ONLY_KEY, 0, 0,
       "Output only system event records (i.e. don't output OEM records).", 37},
     { "oem-event-only", OEM_EVENT_ONLY_KEY, 0, 0,
-      "Output only oem event records.", 38},
+      "Output only OEM event records.", 38},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
       "Hex-dump SEL records.", 39},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
@@ -333,6 +333,10 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
       exit (1);
     }
 
+  if (config_file_data.system_event_only_count)
+    cmd_args->system_event_only = config_file_data.system_event_only;
+  if (config_file_data.oem_event_only_count)
+    cmd_args->oem_event_only = config_file_data.oem_event_only;
   if (config_file_data.comma_separated_output_count)
     cmd_args->comma_separated_output = config_file_data.comma_separated_output;
   if (config_file_data.non_abbreviated_units_count)

@@ -50,11 +50,8 @@
 #define CONFIG_FILE_TOOL_IPMIPOWER           0x00004000
 #define CONFIG_FILE_TOOL_PEF_CONFIG          0x00008000
 
-#define CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS               256
-#define CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH 256
-
-#define CONFIG_FILE_IPMIMONITORING_MAX_GROUPS               256
-#define CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH 256
+#define CONFIG_FILE_MAX_SENSOR_GROUPS               256
+#define CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH 256
 
 struct config_file_data_bmc_watchdog
 {
@@ -72,6 +69,10 @@ struct config_file_data_ipmi_fru
 
 struct config_file_data_ipmi_sel
 {
+  int system_event_only_count;
+  int system_event_only;
+  int oem_event_only_count;
+  int oem_event_only;
   int comma_separated_output_count;
   int comma_separated_output;
   int non_abbreviated_units;
@@ -84,7 +85,7 @@ struct config_file_data_ipmi_sensors
 {
   int quiet_readings;
   int quiet_readings_count;
-  char groups[CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS][CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH+1];
+  char groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
   int groups_count;
   int bridge_sensors;
@@ -111,7 +112,7 @@ struct config_file_data_ipmimonitoring
 {
   int quiet_readings;
   int quiet_readings_count;
-  char groups[CONFIG_FILE_IPMIMONITORING_MAX_GROUPS][CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH+1];
+  char groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
   int groups_count;
   int bridge_sensors;

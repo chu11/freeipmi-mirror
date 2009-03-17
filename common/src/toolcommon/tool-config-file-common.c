@@ -717,7 +717,7 @@ config_file_ipmi_sensors_groups (conffile_t cf,
 
   config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
 
-  if (data->stringlist_len > CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS)
+  if (data->stringlist_len > CONFIG_FILE_MAX_SENSOR_GROUPS)
     {
       fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
       exit (1);
@@ -725,7 +725,7 @@ config_file_ipmi_sensors_groups (conffile_t cf,
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      if (strlen (data->stringlist[i]) > CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH)
+      if (strlen (data->stringlist[i]) > CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH)
         {
           fprintf (stderr, "Config File Error: invalid value '%s' for %s\n",
                    data->stringlist[i],
@@ -735,7 +735,7 @@ config_file_ipmi_sensors_groups (conffile_t cf,
 
       strncpy (config_file_data->groups[i],
                data->stringlist[i],
-               CONFIG_FILE_IPMI_SENSORS_MAX_GROUPS_STRING_LENGTH);
+               CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH);
 
       config_file_data->groups_length++;
     }
@@ -780,7 +780,7 @@ config_file_ipmimonitoring_groups (conffile_t cf,
 
   config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
 
-  if (data->stringlist_len > CONFIG_FILE_IPMIMONITORING_MAX_GROUPS)
+  if (data->stringlist_len > CONFIG_FILE_MAX_SENSOR_GROUPS)
     {
       fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
       exit (1);
@@ -788,7 +788,7 @@ config_file_ipmimonitoring_groups (conffile_t cf,
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      if (strlen (data->stringlist[i]) > CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH)
+      if (strlen (data->stringlist[i]) > CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH)
         {
           fprintf (stderr, "Config File Error: invalid value '%s' for %s\n",
                    data->stringlist[i],
@@ -798,7 +798,7 @@ config_file_ipmimonitoring_groups (conffile_t cf,
 
       strncpy (config_file_data->groups[i],
                data->stringlist[i],
-               CONFIG_FILE_IPMIMONITORING_MAX_GROUPS_STRING_LENGTH);
+               CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH);
 
       config_file_data->groups_length++;
     }
@@ -2111,6 +2111,28 @@ config_file_parse (const char *filename,
         &ipmi_sel_workaround_flags_count,
         &cmd_args_config,
         0
+      },
+      {
+        "ipmi-sel-system-event-only",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sel_data.system_event_only_count),
+        &(ipmi_sel_data.system_event_only),
+        0,
+      },
+      {
+        "ipmi-sel-oem-event-only",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_sel_data.oem_event_only_count),
+        &(ipmi_sel_data.oem_event_only),
+        0,
       },
       {
         "ipmi-sel-comma-separated-output",
