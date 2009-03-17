@@ -1,5 +1,5 @@
 .SH "HOSTRANGED SUPPORT"
-Multiple hosts can be input either as an explicit comma seperated
+Multiple hosts can be input either as an explicit comma separated
 lists of hosts or a range of hostnames in the general form:
 prefix[n-m,l-k,...], where n < m and l < k, etc.  The later form
 should not be confused with regular expression character classes (also
