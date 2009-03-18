@@ -16,6 +16,7 @@ sensors/monitoring
 ------------------
 make sure bridging still works w/ sensor-read lib
 make sure oem still outputs fine
+ipmi_sensor_read - create ipmi_sensor_read_raw equivalent
 
 ipmi-chassis-config
 -------------------
