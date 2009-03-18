@@ -188,6 +188,10 @@ extern "C" {
     || (__bios_mux_control) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_SET_MUX_TO_BMC                    \
     || (__bios_mux_control) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_SET_MUX_TO_SYSTEM) ? 1 : 0)
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+ 
 extern fiid_template_t tmpl_cmd_get_chassis_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_chassis_capabilities_rs;
 extern fiid_template_t tmpl_cmd_get_chassis_status_rq;

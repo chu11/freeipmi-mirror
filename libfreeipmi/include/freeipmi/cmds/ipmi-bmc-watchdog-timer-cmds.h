@@ -85,6 +85,10 @@ extern "C" {
 #define IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_RUNNING                        0x1
 #define IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_STOPPED                        0x0
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_cmd_reset_watchdog_timer_rq;
 extern fiid_template_t tmpl_cmd_reset_watchdog_timer_rs;
 extern fiid_template_t tmpl_cmd_set_watchdog_timer_rq;

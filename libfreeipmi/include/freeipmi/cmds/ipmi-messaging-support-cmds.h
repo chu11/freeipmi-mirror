@@ -240,6 +240,10 @@ extern "C" {
 #define IPMI_USER_ID_ENABLE_STATUS_ENABLED     0x1
 #define IPMI_USER_ID_ENABLE_STATUS_DISABLED    0x2
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_cmd_clear_message_flags_rq;
 extern fiid_template_t tmpl_cmd_clear_message_flags_rs;
 extern fiid_template_t tmpl_cmd_get_message_flags_rq;

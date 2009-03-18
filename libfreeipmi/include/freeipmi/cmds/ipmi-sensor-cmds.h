@@ -77,6 +77,10 @@ extern "C" {
 #define IPMI_SENSOR_THRESHOLD_SET     0x1
 #define IPMI_SENSOR_THRESHOLD_NOT_SET 0x0
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_cmd_get_device_sdr_info_rq;
 extern fiid_template_t tmpl_cmd_get_device_sdr_info_rs;
 

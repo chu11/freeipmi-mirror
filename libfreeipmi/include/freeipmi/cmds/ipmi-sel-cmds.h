@@ -50,6 +50,10 @@ extern "C" {
     || (__val) == IPMI_AUXILIARY_LOG_TYPE_OEM1 \
     || (__val) == IPMI_AUXILIARY_LOG_TYPE_OEM2) ? 1 : 0)
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_cmd_get_sel_info_rq;
 extern fiid_template_t tmpl_cmd_get_sel_info_rs;
 

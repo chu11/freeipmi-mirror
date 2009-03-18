@@ -137,6 +137,10 @@ extern "C" {
   (((__val) == IPMI_CLEAR_ALL_STATISTICS       \
     || (__val) == IPMI_DONT_CLEAR_ALL_STATISTICS) ? 1 : 0)
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rs;
 

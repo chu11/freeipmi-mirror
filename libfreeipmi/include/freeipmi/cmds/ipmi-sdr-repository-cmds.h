@@ -40,6 +40,10 @@ extern "C" {
 
 #define IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ  0xFF
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_cmd_get_sdr_repository_info_rq;
 extern fiid_template_t tmpl_cmd_get_sdr_repository_info_rs;
 

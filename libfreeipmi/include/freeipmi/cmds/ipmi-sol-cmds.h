@@ -136,6 +136,10 @@ extern "C" {
   (((__val) == IPMI_GET_SOL_PARAMETER       \
     || (__val) == IPMI_GET_SOL_PARAMETER_REVISION_ONLY) ? 1 : 0)
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_sol_payload_data;
 extern fiid_template_t tmpl_sol_payload_data_remote_console_to_bmc;
 extern fiid_template_t tmpl_sol_payload_data_bmc_to_remote_console;

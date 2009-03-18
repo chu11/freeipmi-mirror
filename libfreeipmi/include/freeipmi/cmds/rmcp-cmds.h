@@ -28,6 +28,10 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_cmd_asf_presence_ping;
 extern fiid_template_t tmpl_cmd_asf_presence_pong;
 

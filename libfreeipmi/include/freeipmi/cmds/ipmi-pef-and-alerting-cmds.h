@@ -16,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
  */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.9 2009-03-03 23:57:00 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.10 2009-03-18 00:14:36 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H
@@ -190,7 +190,6 @@ extern "C" {
     || (__val) == IPMI_EVENT_SEVERITY_CRITICAL_CONDITION     \
     || (__val) == IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION) ? 1 : 0)
 
-
 #define IPMI_EVENT_SENSOR_TYPE_RESERVED                                 IPMI_SENSOR_TYPE_RESERVED
 #define IPMI_EVENT_SENSOR_TYPE_TEMPERATURE                              IPMI_SENSOR_TYPE_TEMPERATURE
 #define IPMI_EVENT_SENSOR_TYPE_VOLTAGE                                  IPMI_SENSOR_TYPE_VOLTAGE
@@ -306,6 +305,9 @@ extern "C" {
   (((__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_NO    \
     || (__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_YES) ? 1 : 0)
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
 
 extern fiid_template_t tmpl_cmd_get_pef_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_pef_capabilities_rs;

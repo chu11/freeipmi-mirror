@@ -26,6 +26,10 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_cmd_set_event_receiver_rq;
 extern fiid_template_t tmpl_cmd_set_event_receiver_rs;
 

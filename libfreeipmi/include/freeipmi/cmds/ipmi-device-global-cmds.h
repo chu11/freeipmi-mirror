@@ -104,6 +104,10 @@ extern "C" {
   (((__set_device_power_state) == IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE \
     || (__set_device_power_state) == IPMI_ACPI_SET_DEVICE_POWER_STATE_DONT_SET_DEVICE_POWER_STATE) ? 1 : 0)
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_cmd_get_device_id_rq;
 extern fiid_template_t tmpl_cmd_get_device_id_rs;
 extern fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs;

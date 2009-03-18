@@ -91,6 +91,10 @@ extern "C" {
   (((__flag) == IPMI_GET_SERIAL_MODEM_PARAMETER       \
     || (__flag) == IPMI_GET_SERIAL_MODEM_PARAMETER_REVISION_ONLY) ? 1 : 0)
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_rq;
 extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_rs;
 extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_connection_mode_rq;

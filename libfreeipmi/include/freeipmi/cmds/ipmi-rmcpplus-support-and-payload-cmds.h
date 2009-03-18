@@ -90,6 +90,10 @@ extern "C" {
   (((__val) == 0                         \
     || (__val) == 1) ? 1 : 0)
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_cmd_activate_payload_rq;
 extern fiid_template_t tmpl_cmd_activate_payload_sol_rq;
 extern fiid_template_t tmpl_cmd_activate_payload_rs;
