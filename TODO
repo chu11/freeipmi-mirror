@@ -9,8 +9,6 @@ libfreeipmi
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
 * abstract FRU parsing into lib
-* document templates in .h files or something
-  - split up and make '-template" .h files"
 
 sensors/monitoring
 ------------------

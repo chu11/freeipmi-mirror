@@ -12,7 +12,11 @@
 	freeipmi/templates/ipmi-kcs-interface-templates.h,
 	freeipmi/templates/ipmi-lan-interface-templates.h,
 	freeipmi/templates/ipmi-rmcpplus-interface-templates.h,
-	freeipmi/templates/rmcp-interface-templates.h: New files.
+	freeipmi/templates/rmcp-interface-templates.h,
+	freeipmi/templates/ipmi-cipher-suite-record-format-templates.h,
+	freeipmi/templates/ipmi-fru-information-record-format-templates.h,
+	freeipmi/templates/ipmi-sdr-record-format-templates.h,
+	freeipmi/templates/ipmi-sel-record-format-templates.h: New files.
 
 	* Various code cleanup.
 	
