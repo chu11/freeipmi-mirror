@@ -91,7 +91,6 @@ fiid_template_t tmpl_cmd_reserve_sel_rs =
     { 0,  "", 0}
   };
 
-
 fiid_template_t tmpl_cmd_get_sel_entry_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -111,7 +110,6 @@ fiid_template_t tmpl_cmd_get_sel_entry_rs =
     { 0,   "", 0}
   };
 
-
 fiid_template_t tmpl_cmd_delete_sel_entry_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -128,7 +126,6 @@ fiid_template_t tmpl_cmd_delete_sel_entry_rs =
     { 16,  "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
     { 0,   "", 0}
   };
-
 
 fiid_template_t tmpl_cmd_clear_sel_rq =
   {

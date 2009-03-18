@@ -1,38 +1,38 @@
 /*
-  Copyright (C) 2003-2009 FreeIPMI Core Team
+   Copyright (C) 2003-2009 FreeIPMI Core Team
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2, or (at your option)
-  any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software Foundation,
-  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif /* HAVE_CONFIG_H */
+#ifndef _IPMI_SENSOR_CMDS_TEMPLATES_H
+#define _IPMI_SENSOR_CMDS_TEMPLATES_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
+/* This header file is for documentation only */
 
-#include "freeipmi/cmds/ipmi-sensor-cmds.h"
-#include "freeipmi/fiid/fiid.h"
-#include "freeipmi/spec/ipmi-cmd-spec.h"
+#if 0
 
-#include "libcommon/ipmi-fiid-util.h"
-#include "libcommon/ipmi-fill-util.h"
-#include "libcommon/ipmi-trace.h"
+Format = { bits, "field name", field flags }
 
-#include "freeipmi-portability.h"
+FIID_FIELD_REQUIRED - field is required for the payload
+FIID_FIELD_OPTIONAL - field is optional for the payload
+
+FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
+FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+
+Get Device SDR Info Request
+---------------------------
 
 fiid_template_t tmpl_cmd_get_device_sdr_info_rq =
   {
@@ -41,6 +41,9 @@ fiid_template_t tmpl_cmd_get_device_sdr_info_rq =
     { 7, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
+
+Get Device SDR Info Response
+----------------------------
 
 fiid_template_t tmpl_cmd_get_device_sdr_info_rs =
   {
@@ -57,6 +60,9 @@ fiid_template_t tmpl_cmd_get_device_sdr_info_rs =
     { 0,  "", 0}
   };
 
+Get Device SDR Request
+----------------------
+
 fiid_template_t tmpl_cmd_get_device_sdr_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -67,6 +73,9 @@ fiid_template_t tmpl_cmd_get_device_sdr_rq =
     { 0,  "", 0}
   };
 
+Get Device SDR Response
+-----------------------
+
 fiid_template_t tmpl_cmd_get_device_sdr_rs =
   {
     { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -76,6 +85,9 @@ fiid_template_t tmpl_cmd_get_device_sdr_rs =
     { 0,  "", 0}
   };
 
+Get Sensor Reading Factors Request
+----------------------------------
+
 fiid_template_t tmpl_cmd_get_sensor_reading_factors_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -83,6 +95,9 @@ fiid_template_t tmpl_cmd_get_sensor_reading_factors_rq =
     { 8, "reading_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Get Sensor Reading Factors Response
+-----------------------------------
 
 fiid_template_t tmpl_cmd_get_sensor_reading_factors_rs =
   {
@@ -103,6 +118,9 @@ fiid_template_t tmpl_cmd_get_sensor_reading_factors_rs =
     { 0,  "", 0}
   };
 
+Set Sensor Hysteresis Request
+-----------------------------
+
 fiid_template_t tmpl_cmd_set_sensor_hysteresis_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -113,12 +131,18 @@ fiid_template_t tmpl_cmd_set_sensor_hysteresis_rq =
     { 0,  "", 0}
   };
 
+Set Sensor Hysteresis Response
+------------------------------
+
 fiid_template_t tmpl_cmd_set_sensor_hysteresis_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Get Sensor Hysteresis Request
+-----------------------------
 
 fiid_template_t tmpl_cmd_get_sensor_hysteresis_rq =
   {
@@ -128,6 +152,9 @@ fiid_template_t tmpl_cmd_get_sensor_hysteresis_rq =
     { 0,  "", 0}
   };
 
+Get Sensor Hysteresis Response
+------------------------------
+
 fiid_template_t tmpl_cmd_get_sensor_hysteresis_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -136,6 +163,9 @@ fiid_template_t tmpl_cmd_get_sensor_hysteresis_rs =
     { 8, "negative_going_threshold_hysteresis_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Set Sensor Thresholds Request
+-----------------------------
 
 fiid_template_t tmpl_cmd_set_sensor_thresholds_rq =
   {
@@ -157,6 +187,9 @@ fiid_template_t tmpl_cmd_set_sensor_thresholds_rq =
     { 0,  "", 0}
   };
 
+Set Sensor Thresholds Response
+------------------------------
+
 fiid_template_t tmpl_cmd_set_sensor_thresholds_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -164,12 +197,18 @@ fiid_template_t tmpl_cmd_set_sensor_thresholds_rs =
     { 0,  "", 0}
   };
 
+Get Sensor Thresholds Request
+-----------------------------
+
 fiid_template_t tmpl_cmd_get_sensor_thresholds_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Get Sensor Thresholds Response
+------------------------------
 
 fiid_template_t tmpl_cmd_get_sensor_thresholds_rs =
   {
@@ -191,6 +230,9 @@ fiid_template_t tmpl_cmd_get_sensor_thresholds_rs =
     { 0,  "", 0}
   };
 
+Set Sensor Event Enable Request
+-------------------------------
+
 fiid_template_t tmpl_cmd_set_sensor_event_enable_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -203,6 +245,9 @@ fiid_template_t tmpl_cmd_set_sensor_event_enable_rq =
     { 16, "deassertion_event_bitmask", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Set Sensor Event Enable (Threshold) Request
+-------------------------------------------
 
 fiid_template_t tmpl_cmd_set_sensor_event_enable_threshold_rq =
   {
@@ -246,6 +291,9 @@ fiid_template_t tmpl_cmd_set_sensor_event_enable_threshold_rq =
 
     { 0,  "", 0}
   };
+
+Set Sensor Event Enable (Discrete) Request
+------------------------------------------
 
 fiid_template_t tmpl_cmd_set_sensor_event_enable_discrete_rq =
   {
@@ -296,6 +344,9 @@ fiid_template_t tmpl_cmd_set_sensor_event_enable_discrete_rq =
     { 0,  "", 0}
   };
 
+Set Sensor Event Enable Response
+--------------------------------
+
 fiid_template_t tmpl_cmd_set_sensor_event_enable_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -303,12 +354,18 @@ fiid_template_t tmpl_cmd_set_sensor_event_enable_rs =
     { 0,  "", 0}
   };
 
+Get Sensor Event Enable Request
+-------------------------------
+
 fiid_template_t tmpl_cmd_get_sensor_event_enable_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Get Sensor Event Enable Response
+--------------------------------
 
 fiid_template_t tmpl_cmd_get_sensor_event_enable_rs =
   {
@@ -321,6 +378,9 @@ fiid_template_t tmpl_cmd_get_sensor_event_enable_rs =
     { 16, "deassertion_event_bitmask", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Get Sensor Event Enable (Threshold) Response
+--------------------------------------------
 
 fiid_template_t tmpl_cmd_get_sensor_event_enable_threshold_rs =
   {
@@ -363,6 +423,9 @@ fiid_template_t tmpl_cmd_get_sensor_event_enable_threshold_rs =
 
     { 0,  "", 0}
   };
+
+Get Sensor Event Enable (Discrete) Response
+-------------------------------------------
 
 fiid_template_t tmpl_cmd_get_sensor_event_enable_discrete_rs =
   {
@@ -412,6 +475,9 @@ fiid_template_t tmpl_cmd_get_sensor_event_enable_discrete_rs =
     { 0,  "", 0}
   };
 
+Re-arm Sensor Events Request
+----------------------------
+
 fiid_template_t tmpl_cmd_re_arm_sensor_events_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -422,6 +488,9 @@ fiid_template_t tmpl_cmd_re_arm_sensor_events_rq =
     { 16, "re_arm_deassertion_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Re-arm Sensor Events (Threshold) Request
+----------------------------------------
 
 fiid_template_t tmpl_cmd_re_arm_sensor_events_threshold_rq =
   {
@@ -457,6 +526,9 @@ fiid_template_t tmpl_cmd_re_arm_sensor_events_threshold_rq =
     { 4, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Re-arm Sensor Events (Discrete) Request
+---------------------------------------
 
 fiid_template_t tmpl_cmd_re_arm_sensor_events_discrete_rq =
   {
@@ -499,6 +571,9 @@ fiid_template_t tmpl_cmd_re_arm_sensor_events_discrete_rq =
     { 0,  "", 0}
   };
 
+Re-arm Sensor Events Response
+-----------------------------
+
 fiid_template_t tmpl_cmd_re_arm_sensor_events_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -506,12 +581,18 @@ fiid_template_t tmpl_cmd_re_arm_sensor_events_rs =
     { 0,  "", 0}
   };
 
+Get Sensor Event Status Request
+-------------------------------
+
 fiid_template_t tmpl_cmd_get_sensor_event_status_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Get Sensor Event Status Response
+--------------------------------
 
 fiid_template_t tmpl_cmd_get_sensor_event_status_rs =
   {
@@ -525,6 +606,9 @@ fiid_template_t tmpl_cmd_get_sensor_event_status_rs =
     { 16, "deassertion_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Get Sensor Event Status (Threshold) Response
+--------------------------------------------
 
 fiid_template_t tmpl_cmd_get_sensor_event_status_threshold_rs =
   {
@@ -569,6 +653,9 @@ fiid_template_t tmpl_cmd_get_sensor_event_status_threshold_rs =
     { 0,  "", 0}
   };
 
+Get Sensor Event Status (Discrete) Response
+--------------------------------------------
+
 fiid_template_t tmpl_cmd_get_sensor_event_status_discrete_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -612,12 +699,18 @@ fiid_template_t tmpl_cmd_get_sensor_event_status_discrete_rs =
     { 0,  "", 0}
   };
 
+Get Sensor Reading Request
+--------------------------
+
 fiid_template_t tmpl_cmd_get_sensor_reading_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Get Sensor Reading Response
+---------------------------
 
 fiid_template_t tmpl_cmd_get_sensor_reading_rs =
   {
@@ -633,6 +726,9 @@ fiid_template_t tmpl_cmd_get_sensor_reading_rs =
     { 1, "reserved2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Get Sensor Reading (Threshold) Response
+---------------------------------------
 
 fiid_template_t tmpl_cmd_get_sensor_reading_threshold_rs =
   {
@@ -653,6 +749,9 @@ fiid_template_t tmpl_cmd_get_sensor_reading_threshold_rs =
     { 8, "reserved3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Get Sensor Reading (Discrete) Response
+--------------------------------------
 
 fiid_template_t tmpl_cmd_get_sensor_reading_discrete_rs =
   {
@@ -682,6 +781,9 @@ fiid_template_t tmpl_cmd_get_sensor_reading_discrete_rs =
     { 0,  "", 0}
   };
 
+Set Sensor Type Request
+-----------------------
+
 fiid_template_t tmpl_cmd_set_sensor_type_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -692,6 +794,9 @@ fiid_template_t tmpl_cmd_set_sensor_type_rq =
     { 0,  "", 0}
   };
 
+Set Sensor Type Response
+------------------------
+
 fiid_template_t tmpl_cmd_set_sensor_type_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -699,12 +804,18 @@ fiid_template_t tmpl_cmd_set_sensor_type_rs =
     { 0,  "", 0}
   };
 
+Get Sensor Type Request
+-----------------------
+
 fiid_template_t tmpl_cmd_get_sensor_type_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
+
+Get Sensor Type Response
+------------------------
 
 fiid_template_t tmpl_cmd_get_sensor_type_rs =
   {
@@ -716,499 +827,6 @@ fiid_template_t tmpl_cmd_get_sensor_type_rs =
     { 0,  "", 0}
   };
 
-/* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
-int8_t
-fill_cmd_set_sensor_hysteresis (uint8_t sensor_number,
-                                uint8_t hysteresis_mask,
-                                uint8_t positive_going_threshold_hysteresis_value,
-                                uint8_t negative_going_threshold_hysteresis_value,
-                                fiid_obj_t obj_cmd_rq)
-{
-  if (hysteresis_mask != IPMI_SENSOR_HYSTERESIS_MASK
-      || !fiid_obj_valid (obj_cmd_rq))
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
+#endif  /* 0 */
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sensor_hysteresis_rq) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_HYSTERESIS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "hysteresis_mask", hysteresis_mask);
-  FILL_FIID_OBJ_SET (obj_cmd_rq,
-                     "positive_going_threshold_hysteresis_value",
-                     positive_going_threshold_hysteresis_value);
-  FILL_FIID_OBJ_SET (obj_cmd_rq,
-                     "negative_going_threshold_hysteresis_value",
-                     negative_going_threshold_hysteresis_value);
-
-  return (0);
-}
-
-/* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
-int8_t
-fill_cmd_get_sensor_hysteresis (uint8_t sensor_number,
-                                uint8_t hysteresis_mask,
-                                fiid_obj_t obj_cmd_rq)
-{
-  if (hysteresis_mask != IPMI_SENSOR_HYSTERESIS_MASK
-      || !fiid_obj_valid (obj_cmd_rq))
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_sensor_hysteresis_rq) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_HYSTERESIS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "hysteresis_mask", hysteresis_mask);
-
-  return (0);
-}
-
-int8_t
-fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
-                                uint8_t *lower_non_critical_threshold,
-                                uint8_t *lower_critical_threshold,
-                                uint8_t *lower_non_recoverable_threshold,
-                                uint8_t *upper_non_critical_threshold,
-                                uint8_t *upper_critical_threshold,
-                                uint8_t *upper_non_recoverable_threshold,
-                                fiid_obj_t obj_cmd_rq)
-{
-  if (!fiid_obj_valid (obj_cmd_rq))
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sensor_thresholds_rq) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_THRESHOLDS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-
-  if (lower_non_critical_threshold)
-    {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "lower_non_critical_threshold", *lower_non_critical_threshold);
-    }
-  else
-    {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_critical_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "lower_non_critical_threshold", 0);
-    }
-
-  if (lower_critical_threshold)
-    {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "set_lower_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "lower_critical_threshold", *lower_critical_threshold);
-    }
-  else
-    {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "set_lower_critical_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "lower_critical_threshold", 0);
-    }
-
-  if (lower_non_recoverable_threshold)
-    {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "lower_non_recoverable_threshold", *lower_non_recoverable_threshold);
-    }
-  else
-    {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "set_lower_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "lower_non_recoverable_threshold", 0);
-    }
-
-  if (upper_non_critical_threshold)
-    {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "upper_non_critical_threshold", *upper_non_critical_threshold);
-    }
-  else
-    {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_critical_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "upper_non_critical_threshold", 0);
-    }
-
-  if (upper_critical_threshold)
-    {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "set_upper_critical_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "upper_critical_threshold", *upper_critical_threshold);
-    }
-  else
-    {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "set_upper_critical_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "upper_critical_threshold", 0);
-    }
-
-  if (upper_non_recoverable_threshold)
-    {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_SET);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "upper_non_recoverable_threshold", *upper_non_recoverable_threshold);
-    }
-  else
-    {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "set_upper_non_recoverable_threshold", IPMI_SENSOR_THRESHOLD_NOT_SET);
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "upper_non_recoverable_threshold", 0);
-    }
-
-  return (0);
-}
-
-int8_t
-fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
-{
-  if (!fiid_obj_valid (obj_cmd_rq))
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_sensor_thresholds_rq) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_THRESHOLDS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-
-  return (0);
-}
-
-int8_t
-fill_cmd_set_sensor_event_enable (uint8_t sensor_number,
-                                  uint8_t event_message_action,
-                                  uint8_t scanning_on_this_sensor,
-                                  uint8_t all_event_messages,
-                                  uint16_t assertion_event_bitmask,
-                                  uint16_t deassertion_event_bitmask,
-                                  fiid_obj_t obj_cmd_rq)
-{
-  if (!IPMI_SENSOR_EVENT_MESSAGE_ACTION_VALID (event_message_action)
-      || !IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_VALID (scanning_on_this_sensor)
-      || !IPMI_SENSOR_ALL_EVENT_MESSAGES_VALID (all_event_messages)
-      || !fiid_obj_valid (obj_cmd_rq))
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_rq) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_EVENT_ENABLE);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "event_message_action", event_message_action);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "scanning_on_this_sensor", scanning_on_this_sensor);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "all_event_messages", all_event_messages);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_bitmask", assertion_event_bitmask);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_bitmask", deassertion_event_bitmask);
-
-  return (0);
-}
-
-int8_t
-fill_cmd_set_sensor_event_enable_threshold (uint8_t sensor_number,
-                                            uint8_t event_message_action,
-                                            uint8_t scanning_on_this_sensor,
-                                            uint8_t all_event_messages,
-                                            uint8_t assertion_event_lower_non_critical_going_low,
-                                            uint8_t assertion_event_lower_non_critical_going_high,
-                                            uint8_t assertion_event_lower_critical_going_low,
-                                            uint8_t assertion_event_lower_critical_going_high,
-                                            uint8_t assertion_event_lower_non_recoverable_going_low,
-                                            uint8_t assertion_event_lower_non_recoverable_going_high,
-                                            uint8_t assertion_event_upper_non_critical_going_low,
-                                            uint8_t assertion_event_upper_non_critical_going_high,
-                                            uint8_t assertion_event_upper_critical_going_low,
-                                            uint8_t assertion_event_upper_critical_going_high,
-                                            uint8_t assertion_event_upper_non_recoverable_going_low,
-                                            uint8_t assertion_event_upper_non_recoverable_going_high,
-                                            uint8_t deassertion_event_lower_non_critical_going_low,
-                                            uint8_t deassertion_event_lower_non_critical_going_high,
-                                            uint8_t deassertion_event_lower_critical_going_low,
-                                            uint8_t deassertion_event_lower_critical_going_high,
-                                            uint8_t deassertion_event_lower_non_recoverable_going_low,
-                                            uint8_t deassertion_event_lower_non_recoverable_going_high,
-                                            uint8_t deassertion_event_upper_non_critical_going_low,
-                                            uint8_t deassertion_event_upper_non_critical_going_high,
-                                            uint8_t deassertion_event_upper_critical_going_low,
-                                            uint8_t deassertion_event_upper_critical_going_high,
-                                            uint8_t deassertion_event_upper_non_recoverable_going_low,
-                                            uint8_t deassertion_event_upper_non_recoverable_going_high,
-                                            fiid_obj_t obj_cmd_rq)
-{
-  if (!IPMI_SENSOR_EVENT_MESSAGE_ACTION_VALID (event_message_action)
-      || !IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_VALID (scanning_on_this_sensor)
-      || !IPMI_SENSOR_ALL_EVENT_MESSAGES_VALID (all_event_messages)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_lower_non_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_lower_non_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_lower_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_lower_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_lower_non_recoverable_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_lower_non_recoverable_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_upper_non_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_upper_non_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_upper_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_upper_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_upper_non_recoverable_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_upper_non_recoverable_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_lower_non_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_lower_non_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_lower_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_lower_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_lower_non_recoverable_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_lower_non_recoverable_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_upper_non_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_upper_non_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_upper_critical_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_upper_critical_going_high)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_upper_non_recoverable_going_low)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_upper_non_recoverable_going_high)
-      || !fiid_obj_valid (obj_cmd_rq))
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_rq) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_EVENT_ENABLE);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "event_message_action", event_message_action);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "scanning_on_this_sensor", scanning_on_this_sensor);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "all_event_messages", all_event_messages);
-
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_non_critical_going_low", assertion_event_lower_non_critical_going_low);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_non_critical_going_high", assertion_event_lower_non_critical_going_high);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_critical_going_low", assertion_event_lower_critical_going_low);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_critical_going_high", assertion_event_lower_critical_going_high);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_non_recoverable_going_low", assertion_event_lower_non_recoverable_going_low);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_lower_non_recoverable_going_high", assertion_event_lower_non_recoverable_going_high);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_non_critical_going_low", assertion_event_upper_non_critical_going_low);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_non_critical_going_high", assertion_event_upper_non_critical_going_high);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_critical_going_low", assertion_event_upper_critical_going_low);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_critical_going_high", assertion_event_upper_critical_going_high);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_non_recoverable_going_low", assertion_event_upper_non_recoverable_going_low);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_upper_non_recoverable_going_high", assertion_event_upper_non_recoverable_going_high);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_non_critical_going_low", deassertion_event_lower_non_critical_going_low);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_non_critical_going_high", deassertion_event_lower_non_critical_going_high);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_critical_going_low", deassertion_event_lower_critical_going_low);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_critical_going_high", deassertion_event_lower_critical_going_high);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_non_recoverable_going_low", deassertion_event_lower_non_recoverable_going_low);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_lower_non_recoverable_going_high", deassertion_event_lower_non_recoverable_going_high);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_critical_going_low", deassertion_event_upper_non_critical_going_low);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_critical_going_high", deassertion_event_upper_non_critical_going_high);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_critical_going_low", deassertion_event_upper_critical_going_low);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_critical_going_high", deassertion_event_upper_critical_going_high);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_recoverable_going_low", deassertion_event_upper_non_recoverable_going_low);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_upper_non_recoverable_going_high", deassertion_event_upper_non_recoverable_going_high);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
-
-  return (0);
-}
-
-int8_t
-fill_cmd_set_sensor_event_enable_discrete (uint8_t sensor_number,
-                                           uint8_t event_message_action,
-                                           uint8_t scanning_on_this_sensor,
-                                           uint8_t all_event_messages,
-                                           uint8_t assertion_event_state_bit_0,
-                                           uint8_t assertion_event_state_bit_1,
-                                           uint8_t assertion_event_state_bit_2,
-                                           uint8_t assertion_event_state_bit_3,
-                                           uint8_t assertion_event_state_bit_4,
-                                           uint8_t assertion_event_state_bit_5,
-                                           uint8_t assertion_event_state_bit_6,
-                                           uint8_t assertion_event_state_bit_7,
-                                           uint8_t assertion_event_state_bit_8,
-                                           uint8_t assertion_event_state_bit_9,
-                                           uint8_t assertion_event_state_bit_10,
-                                           uint8_t assertion_event_state_bit_11,
-                                           uint8_t assertion_event_state_bit_12,
-                                           uint8_t assertion_event_state_bit_13,
-                                           uint8_t assertion_event_state_bit_14,
-                                           uint8_t deassertion_event_state_bit_0,
-                                           uint8_t deassertion_event_state_bit_1,
-                                           uint8_t deassertion_event_state_bit_2,
-                                           uint8_t deassertion_event_state_bit_3,
-                                           uint8_t deassertion_event_state_bit_4,
-                                           uint8_t deassertion_event_state_bit_5,
-                                           uint8_t deassertion_event_state_bit_6,
-                                           uint8_t deassertion_event_state_bit_7,
-                                           uint8_t deassertion_event_state_bit_8,
-                                           uint8_t deassertion_event_state_bit_9,
-                                           uint8_t deassertion_event_state_bit_10,
-                                           uint8_t deassertion_event_state_bit_11,
-                                           uint8_t deassertion_event_state_bit_12,
-                                           uint8_t deassertion_event_state_bit_13,
-                                           uint8_t deassertion_event_state_bit_14,
-                                           fiid_obj_t obj_cmd_rq)
-{
-  if (!IPMI_SENSOR_EVENT_MESSAGE_ACTION_VALID (event_message_action)
-      || !IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_VALID (scanning_on_this_sensor)
-      || !IPMI_SENSOR_ALL_EVENT_MESSAGES_VALID (all_event_messages)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_0)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_1)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_2)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_3)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_4)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_5)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_6)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_7)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_8)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_9)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_10)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_11)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_12)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_13)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (assertion_event_state_bit_14)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_0)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_1)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_2)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_3)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_4)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_5)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_6)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_7)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_8)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_9)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_10)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_11)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_12)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_13)
-      || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_14)
-      || !fiid_obj_valid (obj_cmd_rq))
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_rq) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SENSOR_EVENT_ENABLE);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "event_message_action", event_message_action);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "scanning_on_this_sensor", scanning_on_this_sensor);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "all_event_messages", all_event_messages);
-
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_0", assertion_event_state_bit_0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_1", assertion_event_state_bit_1);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_2", assertion_event_state_bit_2);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_3", assertion_event_state_bit_3);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_4", assertion_event_state_bit_4);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_5", assertion_event_state_bit_5);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_6", assertion_event_state_bit_6);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_7", assertion_event_state_bit_7);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_8", assertion_event_state_bit_8);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_9", assertion_event_state_bit_9);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_10", assertion_event_state_bit_10);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_11", assertion_event_state_bit_11);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_12", assertion_event_state_bit_12);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_13", assertion_event_state_bit_13);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "assertion_event_state_bit_14", assertion_event_state_bit_14);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_0", deassertion_event_state_bit_0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_1", deassertion_event_state_bit_1);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_2", deassertion_event_state_bit_2);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_3", deassertion_event_state_bit_3);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_4", deassertion_event_state_bit_4);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_5", deassertion_event_state_bit_5);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_6", deassertion_event_state_bit_6);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_7", deassertion_event_state_bit_7);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_8", deassertion_event_state_bit_8);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_9", deassertion_event_state_bit_9);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_10", deassertion_event_state_bit_10);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_11", deassertion_event_state_bit_11);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_12", deassertion_event_state_bit_12);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_13", deassertion_event_state_bit_13);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "deassertion_event_state_bit_14", deassertion_event_state_bit_14);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
-
-  return (0);
-}
-
-int8_t
-fill_cmd_get_sensor_event_enable (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
-{
-  if (!fiid_obj_valid (obj_cmd_rq))
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_sensor_event_enable_rq) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_EVENT_ENABLE);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-
-  return (0);
-}
-
-int8_t
-fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
-{
-  if (!fiid_obj_valid (obj_cmd_rq))
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_sensor_reading_rq) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_READING);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-
-  return (0);
-}
+#endif  /* _IPMI_SENSOR_CMDS_TEMPLATES_H */

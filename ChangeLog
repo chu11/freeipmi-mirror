@@ -1,3 +1,11 @@
+2009-03-18  Albert Chu <chu11@llnl.gov>
+
+        * freeipmi/templates/ipmi-pef-and-alerting-cmds-templates.h,
+        freeipmi/templates/ipmi-rmcpplus-support-and-payload-cmds-templates.h,
+        freeipmi/templates/ipmi-sdr-repository-cmds-templates.h,
+        freeipmi/templates/ipmi-sel-cmds-templates.h,
+        freeipmi/templates/ipmi-sensor-cmds-templates.h: New files.
+	
 2009-03-17  Albert Chu <chu11@llnl.gov>
 
 	* common/man/manpage-common-sdr-options.man: Fix typo.

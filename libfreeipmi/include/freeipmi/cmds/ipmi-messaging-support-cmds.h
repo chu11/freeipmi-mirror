@@ -265,8 +265,8 @@ extern fiid_template_t tmpl_cmd_get_bt_interface_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_bt_interface_capabilities_rs;
 
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq;
-extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rq;
+extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rs;
 
 extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_rq;
@@ -302,8 +302,8 @@ extern fiid_template_t tmpl_cmd_get_user_name_rq;
 extern fiid_template_t tmpl_cmd_get_user_name_rs;
 
 extern fiid_template_t tmpl_cmd_set_user_password_rq;
-extern fiid_template_t tmpl_cmd_set_user_password_rs;
 extern fiid_template_t tmpl_cmd_set_user_password_v20_rq;
+extern fiid_template_t tmpl_cmd_set_user_password_rs;
 
 int8_t fill_cmd_clear_message_flags (uint8_t receive_message_queue,
                                      uint8_t event_message_buffer,

@@ -225,6 +225,17 @@ fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq =
     { 0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "get_ipmi_v2.0_extended_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "maximum_privilege_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -246,17 +257,6 @@ fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs =
     { 8,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "oem_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "oem_auxiliary_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
-
-fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rq =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "get_ipmi_v2.0_extended_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "maximum_privilege_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -574,13 +574,6 @@ fiid_template_t tmpl_cmd_set_user_password_rq =
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_user_password_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
-
 /* achu: Note that the password is variable length, but it must be
  * fixed to 0, 16, or 20 bytes.  We may try and amend this situation
  * in fiid at a later time.
@@ -594,6 +587,13 @@ fiid_template_t tmpl_cmd_set_user_password_v20_rq =
     { 2,   "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 6,   "operation.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 160, "password", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_user_password_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
