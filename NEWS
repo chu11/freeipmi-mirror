@@ -112,6 +112,7 @@ o libfreeipmi
   - Add new sensor-read sub library.
   - The locate sub library now uses a context style API for
     consistency to the rest of libfreeipmi.
+  - New freeipmi/template/ files to document fiid fields.
   - More detailed KCS debug output with header information.
   - New error code IPMI_ERR_NOT_FOUND in libfreeipmi API sub library
     supported.
