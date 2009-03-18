@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.10 2009-03-06 19:42:08 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.11 2009-03-18 00:07:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -70,22 +70,22 @@ fiid_template_t tmpl_cmd_read_fru_data_rq =
     { 0, "", 0}
   };
 
+/* 2040 = 255 * 8, 255 b/c count_returned field in request is 1 byte long */
 fiid_template_t tmpl_cmd_read_fru_data_rs =
   {
     { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,    "count_returned", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* 2040 = 255 * 8, 255 b/c count_returned field in request is 1 byte long */
     { 2040, "requested_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 
+/* 2040 = 255 * 8, 255 b/c bytes_to_write field in request is 1 byte long */
 fiid_template_t tmpl_cmd_write_fru_data_rq =
   {
     { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,    "fru_device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16,   "fru_inventory_offset_to_write", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* 2040 = 255 * 8, 255 b/c bytes_to_write field in request is 1 byte long */
     { 2040, "data_to_write", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };

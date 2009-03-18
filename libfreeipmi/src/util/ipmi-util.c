@@ -471,7 +471,7 @@ ipmi_cmd_str (uint8_t net_fn, uint8_t cmd)
         case IPMI_CMD_GET_USER_ACCESS_COMMAND:
           return "Get User Access Command";
         case IPMI_CMD_SET_USER_NAME:
-          return "Set User Name";
+          return "Set User Name Command"; /* 'Set User Name' in table, added 'Command' for consistency */
         case IPMI_CMD_GET_USER_NAME_COMMAND:
           return "Get User Name Command";
         case IPMI_CMD_SET_USER_PASSWORD_COMMAND:

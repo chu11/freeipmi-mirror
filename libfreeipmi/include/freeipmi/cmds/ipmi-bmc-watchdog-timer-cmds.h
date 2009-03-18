@@ -16,8 +16,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
  */
 
-#ifndef _IPMI_BMC_WATCHDOG_TIMER_H
-#define _IPMI_BMC_WATCHDOG_TIMER_H
+#ifndef _IPMI_BMC_WATCHDOG_TIMER_CMDS_H
+#define _IPMI_BMC_WATCHDOG_TIMER_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {

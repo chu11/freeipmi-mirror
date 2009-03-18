@@ -283,7 +283,6 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cip
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-
     { 8, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "maximum_privilege_for_cipher_suite_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 4, "maximum_privilege_for_cipher_suite_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},

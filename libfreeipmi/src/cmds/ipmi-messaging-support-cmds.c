@@ -310,78 +310,6 @@ fiid_template_t tmpl_cmd_get_channel_cipher_suites_rs =
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_get_channel_cipher_suites_list_algorithms_by_cipher_suite_rs =
-  {
-    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,   "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "start_of_record_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,   "cipher_suite_id_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "start_of_record_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,   "cipher_suite_id_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "start_of_record_3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,   "cipher_suite_id_3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "start_of_record_4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,   "cipher_suite_id_4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "start_of_record_5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,   "cipher_suite_id_5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "start_of_record_6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,   "cipher_suite_id_6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "start_of_record_7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,   "cipher_suite_id_7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "start_of_record_8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 8,   "cipher_suite_id_8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
-
-fiid_template_t tmpl_cmd_get_channel_cipher_suites_list_supported_algorithms_rs =
-  {
-    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,   "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_9", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_9", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_10", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_10", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_11", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_11", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_12", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_12", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_13", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_13", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_14", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_14", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_15", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_15", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "algorithm_16", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "tag_bits_16", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
-
 fiid_template_t tmpl_cmd_get_session_challenge_rq =
   {
     { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -646,6 +574,13 @@ fiid_template_t tmpl_cmd_set_user_password_rq =
     { 0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_set_user_password_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 /* achu: Note that the password is variable length, but it must be
  * fixed to 0, 16, or 20 bytes.  We may try and amend this situation
  * in fiid at a later time.
@@ -659,13 +594,6 @@ fiid_template_t tmpl_cmd_set_user_password_v20_rq =
     { 2,   "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 6,   "operation.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 160, "password", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
-    { 0, "", 0}
-  };
-
-fiid_template_t tmpl_cmd_set_user_password_rs =
-  {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
