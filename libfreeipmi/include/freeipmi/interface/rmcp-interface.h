@@ -57,6 +57,10 @@ extern "C" {
 
 #define RMCP_ASF_MESSAGE_TAG_MAX 0xFE
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_rmcp_hdr;
 
 int8_t fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr);

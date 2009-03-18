@@ -27,6 +27,10 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_hdr_kcs;
 
 int8_t fill_hdr_ipmi_kcs (uint8_t lun,

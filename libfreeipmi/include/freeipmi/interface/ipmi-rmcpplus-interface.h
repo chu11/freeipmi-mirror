@@ -168,6 +168,10 @@ extern "C" {
 #define IPMI_CIPHER_SUITE_ID_MIN                          0
 #define IPMI_CIPHER_SUITE_ID_MAX                          14
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_rmcpplus_session_hdr;
 extern fiid_template_t tmpl_rmcpplus_session_trlr;
 

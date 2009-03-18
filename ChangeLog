@@ -7,7 +7,12 @@
         freeipmi/templates/ipmi-sensor-cmds-templates.h,
         freeipmi/templates/ipmi-serial-modem-cmds-templates.h,
         freeipmi/templates/ipmi-sol-cmds-templates.h,
-        freeipmi/templates/rmcp-cmds-templates.h: New files.
+        freeipmi/templates/rmcp-cmds-templates.h,
+	freeipmi/templates/ipmi-ipmb-interface-templates.h,
+	freeipmi/templates/ipmi-kcs-interface-templates.h,
+	freeipmi/templates/ipmi-lan-interface-templates.h,
+	freeipmi/templates/ipmi-rmcpplus-interface-templates.h,
+	freeipmi/templates/rmcp-interface-templates.h: New files.
 
 	* Various code cleanup.
 	

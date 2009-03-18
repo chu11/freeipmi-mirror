@@ -31,6 +31,10 @@ extern "C" {
 
 #define IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX    0x3F /* 111111b */
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_lan_session_hdr;
 extern fiid_template_t tmpl_lan_msg_hdr_rq;
 extern fiid_template_t tmpl_lan_msg_hdr_rs;

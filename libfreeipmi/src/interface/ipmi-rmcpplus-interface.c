@@ -194,7 +194,7 @@ fiid_template_t tmpl_rmcpplus_rakp_message_3 =
   };
 
 /* achu: The IPMI 2.0 Spec version 1.0 lists the 4th field as
- * "management_console_session_id", * not "managed_system_session_id"
+ * "management_console_session_id", not "managed_system_session_id"
  * or "remote_console_session_id".  I'm assuming this is a typo and
  * that "remote_console_session_id" is what is really meant.
  */
