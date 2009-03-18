@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.34 2009-03-18 21:30:59 chu11 Exp $
+## $Id: Makefile.am,v 1.35 2009-03-18 21:51:46 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -86,6 +86,9 @@ nobase_include_HEADERS = \
 	freeipmi/templates/ipmi-sdr-repository-cmds-templates.h \
 	freeipmi/templates/ipmi-sel-cmds-templates.h \
 	freeipmi/templates/ipmi-sensor-cmds-templates.h \
+	freeipmi/templates/ipmi-serial-modem-cmds-templates.h \
+	freeipmi/templates/ipmi-sol-cmds-templates.h \
+	freeipmi/templates/rmcp-cmds-templates.h \
 	freeipmi/util/ipmi-cipher-suite-util.h \
 	freeipmi/util/ipmi-error-util.h \
 	freeipmi/util/ipmi-ipmb-util.h \

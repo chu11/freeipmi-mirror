@@ -4,7 +4,10 @@
         freeipmi/templates/ipmi-rmcpplus-support-and-payload-cmds-templates.h,
         freeipmi/templates/ipmi-sdr-repository-cmds-templates.h,
         freeipmi/templates/ipmi-sel-cmds-templates.h,
-        freeipmi/templates/ipmi-sensor-cmds-templates.h: New files.
+        freeipmi/templates/ipmi-sensor-cmds-templates.h,
+        freeipmi/templates/ipmi-serial-modem-cmds-templates.h,
+        freeipmi/templates/ipmi-sol-cmds-templates.h,
+        freeipmi/templates/rmcp-cmds-templates.h: New files.
 
 	* Various code cleanup.
 	
