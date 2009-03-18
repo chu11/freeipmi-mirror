@@ -220,6 +220,10 @@ extern "C" {
 #define IPMI_SDR_ACPI_SYSTEM_POWER_STATE_NOTIFICATION_REQUIRED     0x0
 #define IPMI_SDR_NO_ACPI_SYSTEM_POWER_STATE_NOTIFICATION_REQUIRED  0x1
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_sdr_record_header;
 extern fiid_template_t tmpl_sdr_full_sensor_record;
 extern fiid_template_t tmpl_sdr_full_sensor_record_non_threshold_based_sensors;
@@ -232,7 +236,7 @@ extern fiid_template_t tmpl_sdr_entity_association_record;
 extern fiid_template_t tmpl_sdr_device_relative_entity_association_record;
 extern fiid_template_t tmpl_sdr_generic_device_locator_record;
 extern fiid_template_t tmpl_sdr_fru_device_locator_record;
-extern fiid_template_t tmpl_sdr_non_intelligent_fru_device_locator_record;
+extern fiid_template_t tmpl_sdr_fru_device_locator_record_non_intelligent;
 extern fiid_template_t tmpl_sdr_management_controller_device_locator_record;
 extern fiid_template_t tmpl_sdr_management_controller_confirmation_record;
 extern fiid_template_t tmpl_sdr_bmc_message_channel_info_record;

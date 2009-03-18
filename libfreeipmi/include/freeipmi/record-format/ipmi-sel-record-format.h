@@ -54,6 +54,10 @@ extern "C" {
 #define IPMI_SEL_RECORD_UNSPECIFIED_EVENT  0xFF
 #define IPMI_SEL_RECORD_UNSPECIFIED_OFFSET 0x0F
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_sel_record_header;
 
 extern fiid_template_t tmpl_sel_system_event_record;

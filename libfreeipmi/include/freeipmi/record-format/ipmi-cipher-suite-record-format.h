@@ -48,6 +48,10 @@ extern "C" {
     || (__val) == IPMI_CIPHER_SUITE_TAG_BITS_CONFIDENTIALITY_ALGORITHM \
     || (__val) == IPMI_CIPHER_SUITE_TAG_BITS_RECORD) ? 1 : 0)
 
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
 extern fiid_template_t tmpl_cipher_suite_record_header;
 extern fiid_template_t tmpl_cipher_suite_record;
 extern fiid_template_t tmpl_oem_cipher_suite_record;

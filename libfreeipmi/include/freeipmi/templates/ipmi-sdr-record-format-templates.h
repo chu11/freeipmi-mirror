@@ -1,33 +1,38 @@
 /*
-  Copyright (C) 2003-2009 FreeIPMI Core Team
+   Copyright (C) 2003-2009 FreeIPMI Core Team
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2, or (at your option)
-  any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software Foundation,
-  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif /* HAVE_CONFIG_H */
+#ifndef _IPMI_SDR_RECORD_FORMAT_TEMPLATES_H
+#define _IPMI_SDR_RECORD_FORMAT_TEMPLATES_H
 
-#include <stdio.h>
-#include <stdlib.h>
+/* This header file is for documentation only */
 
-#include "freeipmi/record-format/ipmi-sdr-record-format.h"
-#include "freeipmi/fiid/fiid.h"
+#if 0
 
-#include "freeipmi-portability.h"
+Format = { bits, "field name", field flags }
+
+FIID_FIELD_REQUIRED - field is required for the payload
+FIID_FIELD_OPTIONAL - field is optional for the payload
+
+FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
+FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
+
+SDR Record Header
+-----------------
 
 fiid_template_t tmpl_sdr_record_header =
   {
@@ -41,6 +46,9 @@ fiid_template_t tmpl_sdr_record_header =
     { 8,  "record_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
+
+SDR Full Sensor Record
+----------------------
 
 fiid_template_t tmpl_sdr_full_sensor_record =
   {
@@ -150,6 +158,9 @@ fiid_template_t tmpl_sdr_full_sensor_record =
     { 128, "id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
+
+SDR Full Sensor Record (Non-Threshold Base Sensors)
+---------------------------------------------------
 
 fiid_template_t tmpl_sdr_full_sensor_record_non_threshold_based_sensors =
   {
@@ -305,6 +316,9 @@ fiid_template_t tmpl_sdr_full_sensor_record_non_threshold_based_sensors =
     { 128, "id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
+
+SDR Full Sensor Record (Threshold Base Sensors)
+-----------------------------------------------
 
 fiid_template_t tmpl_sdr_full_sensor_record_threshold_based_sensors =
   {
@@ -462,6 +476,9 @@ fiid_template_t tmpl_sdr_full_sensor_record_threshold_based_sensors =
     { 0, "", 0}
   };
 
+SDR Compact Sensor Record
+-------------------------
+
 fiid_template_t tmpl_sdr_compact_sensor_record =
   {
     /*********************
@@ -540,6 +557,9 @@ fiid_template_t tmpl_sdr_compact_sensor_record =
     { 128, "id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
+
+SDR Compact Sensor Record (Non-Threshold Based Sensors)
+-------------------------------------------------------
 
 fiid_template_t tmpl_sdr_compact_sensor_record_non_threshold_based_sensors =
   {
@@ -667,6 +687,9 @@ fiid_template_t tmpl_sdr_compact_sensor_record_non_threshold_based_sensors =
     { 0, "", 0}
   };
 
+SDR Compact Sensor Record (Threshold Based Sensors)
+---------------------------------------------------
+
 fiid_template_t tmpl_sdr_compact_sensor_record_threshold_based_sensors =
   {
     /*********************
@@ -793,6 +816,9 @@ fiid_template_t tmpl_sdr_compact_sensor_record_threshold_based_sensors =
     { 0, "", 0}
   };
 
+SDR Event Only Record
+---------------------
+
 fiid_template_t tmpl_sdr_event_only_record =
   {
     /*********************
@@ -845,6 +871,9 @@ fiid_template_t tmpl_sdr_event_only_record =
     { 0, "", 0}
   };
 
+SDR Entity Association Record
+-----------------------------
+
 fiid_template_t tmpl_sdr_entity_association_record =
   {
     /*********************
@@ -886,6 +915,9 @@ fiid_template_t tmpl_sdr_entity_association_record =
     { 8, "instance_id_contained_entity_range_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
+
+SDR Device Relative Entity Association Record
+---------------------------------------------
 
 fiid_template_t tmpl_sdr_device_relative_entity_association_record =
   {
@@ -943,6 +975,9 @@ fiid_template_t tmpl_sdr_device_relative_entity_association_record =
     { 0, "", 0}
   };
 
+SDR Generic Device Locator Record
+---------------------------------
+
 fiid_template_t tmpl_sdr_generic_device_locator_record =
   {
     /*********************
@@ -979,6 +1014,9 @@ fiid_template_t tmpl_sdr_generic_device_locator_record =
     { 128, "device_id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
+
+SDR FRU Device Locator Record
+-----------------------------
 
 fiid_template_t tmpl_sdr_fru_device_locator_record =
   {
@@ -1026,6 +1064,9 @@ fiid_template_t tmpl_sdr_fru_device_locator_record =
     { 0, "", 0}
   };
 
+SDR FRU Device Locator Record (Non-Intelligent)
+-----------------------------------------------
+
 fiid_template_t tmpl_sdr_fru_device_locator_record_non_intelligent =
   {
     /*********************
@@ -1069,6 +1110,9 @@ fiid_template_t tmpl_sdr_fru_device_locator_record_non_intelligent =
     { 128, "device_id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
+
+SDR Management Controller Device Locator Record
+-----------------------------------------------
 
 fiid_template_t tmpl_sdr_management_controller_device_locator_record =
   {
@@ -1118,6 +1162,9 @@ fiid_template_t tmpl_sdr_management_controller_device_locator_record =
     { 0, "", 0}
   };
 
+SDR Management Controller Confirmation Record
+---------------------------------------------
+
 fiid_template_t tmpl_sdr_management_controller_confirmation_record =
   {
     /*********************
@@ -1149,6 +1196,9 @@ fiid_template_t tmpl_sdr_management_controller_confirmation_record =
     { 128, "device_guid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
+
+SDR BMC Message Channel Info
+----------------------------
 
 fiid_template_t tmpl_sdr_bmc_message_channel_info_record =
   {
@@ -1190,6 +1240,9 @@ fiid_template_t tmpl_sdr_bmc_message_channel_info_record =
     { 0, "", 0}
   };
 
+SDR OEM Record
+--------------
+
 fiid_template_t tmpl_sdr_oem_record =
   {
     /*********************
@@ -1208,3 +1261,6 @@ fiid_template_t tmpl_sdr_oem_record =
     { 0, "", 0}
   };
 
+#endif  /* 0 */
+
+#endif  /* _IPMI_SDR_RECORD_FORMAT_TEMPLATES_H */

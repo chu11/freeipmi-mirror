@@ -1,5 +1,5 @@
 /*****************************************************************************\
-*  $Id: ipmi-fru-information-record-format.h,v 1.6 2009-03-03 23:57:02 chu11 Exp $
+*  $Id: ipmi-fru-information-record-format.h,v 1.7 2009-03-18 22:54:56 chu11 Exp $
 *****************************************************************************
 *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 *  Copyright (C) 2007 The Regents of the University of California.
@@ -101,6 +101,10 @@ extern "C" {
 #define IPMI_FRU_BCD_PERIOD                            0xC
 
 #define IPMI_FRU_SENTINEL_VALUE                        0xC1
+
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
 
 extern fiid_template_t tmpl_fru_common_header;
 extern fiid_template_t tmpl_fru_info_area_header;
