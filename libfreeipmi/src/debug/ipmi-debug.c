@@ -146,7 +146,7 @@ ipmi_obj_dump (int fd,
               goto cleanup;
             }
 
-          if (ipmi_debug_dprintf (fd, "[%16" PRIX64 "h] = %s[%2db]\n", (uint64_t) val, key, field_len) < 0)
+          if (ipmi_debug_dprintf (fd, "[%16" PRIX64 "h] = %s[%2ub]\n", (uint64_t) val, key, field_len) < 0)
             {
               ERRNO_TRACE (errno);
               goto cleanup;
@@ -157,7 +157,7 @@ ipmi_obj_dump (int fd,
           uint8_t buf[IPMI_DEBUG_MAX_BUF_LEN];
           int len;
 
-          if (ipmi_debug_dprintf (fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES (field_len)) < 0)
+          if (ipmi_debug_dprintf (fd, "[  BYTE ARRAY ... ] = %s[%2uB]\n", key, BITS_ROUND_BYTES (field_len)) < 0)
             {
               ERRNO_TRACE (errno);
               goto cleanup;
