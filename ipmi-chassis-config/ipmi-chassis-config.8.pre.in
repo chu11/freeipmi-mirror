@@ -27,7 +27,8 @@ For configuration of general BMC parameters, platform event filtering
 .B pef-config(8),
 or
 .B ipmi-sensors-config(8)
-tools respectively.
+tools respectively.  For some OEM specific configurations, please see
+.B ipmi-oem(8).
 
 #include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 See GENERAL USE below for a description on how most will want to use

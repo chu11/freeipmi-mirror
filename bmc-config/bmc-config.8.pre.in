@@ -25,7 +25,8 @@ chassis, please see the
 .B ipmi-sensors-config(8),
 or
 .B ipmi-chassis-config(8)
-tools respectively.
+tools respectively.  For some OEM specific configurations, please see
+.B ipmi-oem(8).
 
 #include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 See GENERAL USE below for a description on how most will want to use
