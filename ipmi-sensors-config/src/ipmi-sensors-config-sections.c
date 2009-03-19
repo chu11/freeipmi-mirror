@@ -106,7 +106,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
       if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
           && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
         {
-          if (state_data->prog_data->args->config_args.verbose)
+          if (state_data->prog_data->args->config_args.verbose_count)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "## Cannot handle SDR record format '0x%X'\n",
@@ -132,7 +132,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
         {
           if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
             {
-              if (state_data->prog_data->args->config_args.verbose)
+              if (state_data->prog_data->args->config_args.verbose_count)
                 pstdout_printf (state_data->pstate,
                                 "## Unable to handle threshold sensor with compact SDR record\n");
               continue;

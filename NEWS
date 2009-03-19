@@ -23,6 +23,7 @@ o ipmi-sel
   - Output hex code more often if translation to string not available.
   - Re-work to use new libfreeipmi sel-parse sub library.
   - Remove legacy option to dump hex output to optional filename.
+  - Support additional options in config file.
 o ipmi-sensors
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
@@ -61,9 +62,7 @@ o ipmi-sensors
   - Output hex code of group name in addition to group name in
     very-verbose output.
   - Re-work to use new libfreeipmi sensor-read sub library.
-o ipmi-sensors-config
-  - Support sensor unit percentages, rates and modifiers (i.e. "%
-    hit", "gigabyte per minute", "pounds / cu in").
+  - Support additional options in config file.
 o ipmimonitoring
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
@@ -88,20 +87,28 @@ o ipmimonitoring
     impression that the tool "hangs" on start.
   - Fix inconsistency in output, header output of "Record_ID" now
     "Record ID".
+  - Support additional options in config file.
 o ipmi-fru
   - Output hex with 'h' suffix instead of '0x' prefix for consistency to
     other FreeIPMI tools.
   - Output manufacturer name with "Manufacturer ID" if name available.
+  - Support additional options in config file.
 o bmc-info
   - Output manufacturer name with "Manufacturer ID" if name available.
 o bmc-config
   - Support ability to report read only field error.
+  - Support additional options in config file.
 o ipmi-chassis-config
   - Support ability to report read only field error.
+  - Support additional options in config file.
 o ipmi-sensors-config
+  - Support sensor unit percentages, rates and modifiers (i.e. "%
+    hit", "gigabyte per minute", "pounds / cu in").
   - Support ability to report read only field error.
+  - Support additional options in config file.
 o pef-config
   - Support ability to report read only field error.
+  - Support additional options in config file.
 o Various documentation updates.
 
 Libraries

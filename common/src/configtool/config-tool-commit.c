@@ -111,7 +111,7 @@ config_commit_section (pstdout_state_t pstate,
       kv = kv->next;
     }
 
-  if (cmd_args->verbose)
+  if (cmd_args->verbose_count)
     PSTDOUT_FPRINTF (pstate,
                      stderr,
                      "Completed commit of Section: %s\n",

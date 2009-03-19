@@ -1056,8 +1056,14 @@ config_file_parse (const char *filename,
     pef_config_cipher_suite_id_count = 0, pef_config_privilege_level_count = 0,
     pef_config_workaround_flags_count = 0;
 
+  struct config_file_data_bmc_config bmc_config_data;
+  struct config_file_data_bmc_config *bmc_config_data_ptr;
+
   struct config_file_data_bmc_watchdog bmc_watchdog_data;
   struct config_file_data_bmc_watchdog *bmc_watchdog_data_ptr;
+
+  struct config_file_data_ipmi_chassis_config ipmi_chassis_config_data;
+  struct config_file_data_ipmi_chassis_config *ipmi_chassis_config_data_ptr;
 
   struct config_file_data_ipmi_fru ipmi_fru_data;
   struct config_file_data_ipmi_fru *ipmi_fru_data_ptr;
@@ -1068,6 +1074,9 @@ config_file_parse (const char *filename,
   struct config_file_data_ipmi_sensors ipmi_sensors_data;
   struct config_file_data_ipmi_sensors *ipmi_sensors_data_ptr;
 
+  struct config_file_data_ipmi_sensors_config ipmi_sensors_config_data;
+  struct config_file_data_ipmi_sensors_config *ipmi_sensors_config_data_ptr;
+
   struct config_file_data_ipmiconsole ipmiconsole_data;
   struct config_file_data_ipmiconsole *ipmiconsole_data_ptr;
 
@@ -1076,6 +1085,9 @@ config_file_parse (const char *filename,
 
   struct config_file_data_ipmipower ipmipower_data;
   struct config_file_data_ipmipower *ipmipower_data_ptr;
+
+  struct config_file_data_pef_config pef_config_data;
+  struct config_file_data_pef_config *pef_config_data_ptr;
 
   struct cmd_args_config cmd_args_config;
 
@@ -1464,6 +1476,17 @@ config_file_parse (const char *filename,
         &cmd_args_config,
         0
       },
+      {
+        "bmc-config-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_non_negative_int,
+        1,
+        0,
+        &(bmc_config_data.verbose_count_count),
+        &(bmc_config_data.verbose_count),
+        0,
+      },
     };
 
   /*
@@ -1841,6 +1864,17 @@ config_file_parse (const char *filename,
         &cmd_args_config,
         0
       },
+      {
+        "ipmi-chassis-config-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_non_negative_int,
+        1,
+        0,
+        &(ipmi_chassis_config_data.verbose_count_count),
+        &(ipmi_chassis_config_data.verbose_count),
+        0,
+      },
     };
 
   /*
@@ -1925,6 +1959,17 @@ config_file_parse (const char *filename,
         &ipmi_fru_workaround_flags_count,
         &cmd_args_config,
         0
+      },
+      {
+        "ipmi-fru-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_non_negative_int,
+        1,
+        0,
+        &(ipmi_fru_data.verbose_count_count),
+        &(ipmi_fru_data.verbose_count),
+        0,
       },
       {
         "ipmi-fru-skip-checks",
@@ -2190,6 +2235,17 @@ config_file_parse (const char *filename,
         0
       },
       {
+        "ipmi-sel-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_non_negative_int,
+        1,
+        0,
+        &(ipmi_sel_data.verbose_count_count),
+        &(ipmi_sel_data.verbose_count),
+        0,
+      },
+      {
         "ipmi-sel-system-event-only",
         CONFFILE_OPTION_BOOL,
         -1,
@@ -2328,6 +2384,17 @@ config_file_parse (const char *filename,
         &ipmi_sensors_workaround_flags_count,
         &cmd_args_config,
         0
+      },
+      {
+        "ipmi-sensors-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_non_negative_int,
+        1,
+        0,
+        &(ipmi_sensors_data.verbose_count_count),
+        &(ipmi_sensors_data.verbose_count),
+        0,
       },
       {
         "ipmi-sensors-quiet-readings",
@@ -2489,6 +2556,17 @@ config_file_parse (const char *filename,
         &ipmi_sensors_config_workaround_flags_count,
         &cmd_args_config,
         0
+      },
+      {
+        "ipmi-sensors-config-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_non_negative_int,
+        1,
+        0,
+        &(ipmi_sensors_config_data.verbose_count_count),
+        &(ipmi_sensors_config_data.verbose_count),
+        0,
       },
     };
 
@@ -2776,6 +2854,17 @@ config_file_parse (const char *filename,
         0,
         &(ipmimonitoring_data.bridge_sensors_count),
         &(ipmimonitoring_data.bridge_sensors),
+        0,
+      },
+      {
+        "ipmimonitoring-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_non_negative_int,
+        1,
+        0,
+        &(ipmimonitoring_data.verbose_count_count),
+        &(ipmimonitoring_data.verbose_count),
         0,
       },
       {
@@ -3257,6 +3346,17 @@ config_file_parse (const char *filename,
         &cmd_args_config,
         0
       },
+      {
+        "pef-config-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_non_negative_int,
+        1,
+        0,
+        &(pef_config_data.verbose_count_count),
+        &(pef_config_data.verbose_count),
+        0,
+      },
     };
 
   conffile_t cf = NULL;
@@ -3271,26 +3371,24 @@ config_file_parse (const char *filename,
               || ((support & CONFIG_FILE_SDR) && sdr_args))
           && (!(support & CONFIG_FILE_HOSTRANGE)
               || ((support & CONFIG_FILE_HOSTRANGE) && hostrange_args))
-          && (((tool_support & CONFIG_FILE_TOOL_BMC_CONFIG) && !tool_data)
+          && (((tool_support & CONFIG_FILE_TOOL_BMC_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_BMC_DEVICE) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_BMC_INFO) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_BMC_WATCHDOG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS) && !tool_data)
-              || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG) && !tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_FRU) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_OEM) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_RAW) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SEL) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS) && tool_data)
-              || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG) && !tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMICONSOLE) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMIMONITORING) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMIPOWER) && tool_data)
-              || ((tool_support & CONFIG_FILE_TOOL_PEF_CONFIG) && !tool_data)));
+              || ((tool_support & CONFIG_FILE_TOOL_PEF_CONFIG) && tool_data)));
 
   memset (config_file_options, '\0', sizeof (struct conffile_option));
-
-  memset (&cmd_args_config, '\0', sizeof (struct cmd_args_config));
 
   /* set ignore options the tool doesn't care about */
 
@@ -3537,8 +3635,18 @@ config_file_parse (const char *filename,
 
   /* clear out config file data */
 
+  memset (&bmc_config_data, '\0', sizeof (struct config_file_data_bmc_config));
+  memset (&bmc_watchdog_data, '\0', sizeof (struct config_file_data_bmc_watchdog));
+  memset (&ipmi_chassis_config_data, '\0', sizeof (struct config_file_data_ipmi_chassis_config));
+  memset (&ipmi_fru_data, '\0', sizeof (struct config_file_data_ipmi_fru));
+  memset (&ipmi_sel_data, '\0', sizeof (struct config_file_data_ipmi_sel));
+  memset (&ipmi_sensors_data, '\0', sizeof (struct config_file_data_ipmi_sensors));
+  memset (&ipmi_sensors_config_data, '\0', sizeof (struct config_file_data_ipmi_sensors_config));
   memset (&ipmiconsole_data, '\0', sizeof (struct config_file_data_ipmiconsole));
+  memset (&ipmimonitoring_data, '\0', sizeof (struct config_file_data_ipmimonitoring));
   memset (&ipmipower_data, '\0', sizeof (struct config_file_data_ipmipower));
+  memset (&pef_config_data, '\0', sizeof (struct config_file_data_pef_config));
+  memset (&cmd_args_config, '\0', sizeof (struct cmd_args_config));
 
   if (!(cf = conffile_handle_create ()))
     {
@@ -3616,12 +3724,26 @@ config_file_parse (const char *filename,
 
   /* copy tool specific stuff */
 
-  if (tool_support & CONFIG_FILE_TOOL_BMC_WATCHDOG)
+  if (tool_support & CONFIG_FILE_TOOL_BMC_CONFIG)
+    {
+      bmc_config_data_ptr = (struct config_file_data_bmc_config *)tool_data;
+      memcpy (bmc_config_data_ptr,
+              &bmc_config_data,
+              sizeof (struct config_file_data_bmc_config));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_BMC_WATCHDOG)
     {
       bmc_watchdog_data_ptr = (struct config_file_data_bmc_watchdog *)tool_data;
       memcpy (bmc_watchdog_data_ptr,
               &bmc_watchdog_data,
               sizeof (struct config_file_data_bmc_watchdog));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG)
+    {
+      ipmi_chassis_config_data_ptr = (struct config_file_data_ipmi_chassis_config *)tool_data;
+      memcpy (ipmi_chassis_config_data_ptr,
+              &ipmi_chassis_config_data,
+              sizeof (struct config_file_data_ipmi_chassis_config));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMI_FRU)
     {
@@ -3644,6 +3766,13 @@ config_file_parse (const char *filename,
               &ipmi_sensors_data,
               sizeof (struct config_file_data_ipmi_sensors));
     }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG)
+    {
+      ipmi_sensors_config_data_ptr = (struct config_file_data_ipmi_sensors_config *)tool_data;
+      memcpy (ipmi_sensors_config_data_ptr,
+              &ipmi_sensors_config_data,
+              sizeof (struct config_file_data_ipmi_sensors_config));
+    }
   else if (tool_support & CONFIG_FILE_TOOL_IPMICONSOLE)
     {
       ipmiconsole_data_ptr = (struct config_file_data_ipmiconsole *)tool_data;
@@ -3664,6 +3793,13 @@ config_file_parse (const char *filename,
       memcpy (ipmipower_data_ptr,
               &ipmipower_data,
               sizeof (struct config_file_data_ipmipower));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_PEF_CONFIG)
+    {
+      pef_config_data_ptr = (struct config_file_data_pef_config *)tool_data;
+      memcpy (pef_config_data_ptr,
+              &pef_config_data,
+              sizeof (struct config_file_data_pef_config));
     }
 
  out:

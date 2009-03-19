@@ -54,6 +54,12 @@
 #define CONFIG_FILE_MAX_SENSOR_GROUPS               256
 #define CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH 256
 
+struct config_file_data_bmc_config
+{
+  int verbose_count;
+  int verbose_count_count;
+};
+
 struct config_file_data_bmc_watchdog
 {
   char *logfile;
@@ -62,14 +68,24 @@ struct config_file_data_bmc_watchdog
   int no_logging_count;
 };
 
+struct config_file_data_ipmi_chassis_config
+{
+  int verbose_count;
+  int verbose_count_count;
+};
+
 struct config_file_data_ipmi_fru
 {
+  int verbose_count;
+  int verbose_count_count;
   int skip_checks;
   int skip_checks_count;
 };
 
 struct config_file_data_ipmi_sel
 {
+  int verbose_count;
+  int verbose_count_count;
   int system_event_only;
   int system_event_only_count;
   int oem_event_only;
@@ -84,6 +100,8 @@ struct config_file_data_ipmi_sel
 
 struct config_file_data_ipmi_sensors
 {
+  int verbose_count;
+  int verbose_count_count;
   int quiet_readings;
   int quiet_readings_count;
   char groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
@@ -102,6 +120,12 @@ struct config_file_data_ipmi_sensors
   int legacy_output_count;
 };
 
+struct config_file_data_ipmi_sensors_config
+{
+  int verbose_count;
+  int verbose_count_count;
+};
+
 struct config_file_data_ipmiconsole
 {
   char escape_char;
@@ -114,6 +138,8 @@ struct config_file_data_ipmiconsole
 
 struct config_file_data_ipmimonitoring
 {
+  int verbose_count;
+  int verbose_count_count;
   int quiet_readings;
   int quiet_readings_count;
   char groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
@@ -157,6 +183,12 @@ struct config_file_data_ipmipower
   int ping_percent_count;
   unsigned int ping_consec_count;
   int ping_consec_count_count;
+};
+
+struct config_file_data_pef_config
+{
+  int verbose_count;
+  int verbose_count_count;
 };
 
 int config_file_parse (const char *filename,

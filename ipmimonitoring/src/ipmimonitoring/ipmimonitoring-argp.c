@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.40 2009-03-17 20:12:59 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.41 2009-03-19 22:52:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -132,7 +132,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case VERBOSE_KEY:
-      cmd_args->verbose = 1;
+      cmd_args->verbose_count++;
       break;
       /* legacy option */
     case CACHE_DIR_KEY:
@@ -245,6 +245,8 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
       exit (1);
     }
 
+  if (config_file_data.verbose_count_count)
+    cmd_args->verbose_count = config_file_data.verbose_count;
   if (config_file_data.quiet_readings_count)
     cmd_args->quiet_readings = config_file_data.quiet_readings;
   if (config_file_data.groups_count && config_file_data.groups_length)
@@ -290,7 +292,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
-  cmd_args->verbose = 0;
+  cmd_args->verbose_count = 0;
   cmd_args->quiet_readings = 0;
   cmd_args->list_groups = 0;
   for (i = 0; i < MAX_SENSOR_GROUPS; i++)

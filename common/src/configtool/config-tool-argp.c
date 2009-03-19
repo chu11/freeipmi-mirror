@@ -46,7 +46,7 @@ init_config_args (struct config_arguments *config_args)
   assert (config_args);
 
   config_args->action = 0;
-  config_args->verbose = 0;
+  config_args->verbose_count = 0;
   config_args->filename = NULL;
   config_args->keypairs = NULL;
   config_args->section_strs = NULL;
@@ -149,7 +149,7 @@ config_parse_opt (int key,
         config_args->action = -1;
       break;
     case CONFIG_ARGP_VERBOSE_KEY:
-      config_args->verbose = 1;
+      config_args->verbose_count++;
       break;
     default:
       return (ARGP_ERR_UNKNOWN);

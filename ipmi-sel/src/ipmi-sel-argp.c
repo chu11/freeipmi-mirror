@@ -242,7 +242,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case VERBOSE_KEY:
-      cmd_args->verbose = 1;
       cmd_args->verbose_count++;
       break;
     case INFO_KEY:
@@ -333,6 +332,8 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
       exit (1);
     }
 
+  if (config_file_data.verbose_count_count)
+    cmd_args->verbose_count = config_file_data.verbose_count;
   if (config_file_data.system_event_only_count)
     cmd_args->system_event_only = config_file_data.system_event_only;
   if (config_file_data.oem_event_only_count)
@@ -352,7 +353,6 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
-  cmd_args->verbose = 0;
   cmd_args->verbose_count = 0;
   cmd_args->info = 0;
   cmd_args->display = 0;

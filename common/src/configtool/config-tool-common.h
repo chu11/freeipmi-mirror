@@ -123,7 +123,7 @@ struct config_arguments
 
   config_action_t action;
 
-  int verbose;
+  int verbose_count;
   char *filename;
   struct config_keypair *keypairs;
   struct config_section_str *section_strs;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.106 2009-03-17 20:12:59 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.107 2009-03-19 22:52:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -907,7 +907,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   ipmi_ctx_destroy (state_data->ipmi_ctx);
   state_data->ipmi_ctx = NULL;
 
-  if (args->verbose)
+  if (args->verbose_count)
     sensor_reading_flags = 0;
   else
     sensor_reading_flags = IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS;

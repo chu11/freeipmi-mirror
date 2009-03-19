@@ -631,7 +631,7 @@ _authentication_type_enable_available (bmc_config_state_data_t *state_data,
   *available = 1;
 
   /* always output under verbose mode */
-  if (state_data->prog_data->args->config_args.verbose)
+  if (state_data->prog_data->args->config_args.verbose_count)
     return (CONFIG_ERR_SUCCESS);
 
   if (!state_data->authentication_type_initialized)

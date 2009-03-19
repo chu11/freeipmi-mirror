@@ -47,7 +47,6 @@ struct ipmi_sensors_arguments
   struct common_cmd_args common;
   struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
-  int verbose;
   int verbose_count;
   int quiet_readings;
   int sdr_info;

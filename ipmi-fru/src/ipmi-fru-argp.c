@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.24 2009-03-12 17:57:50 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.25 2009-03-19 22:52:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -164,6 +164,8 @@ _ipmi_fru_config_file_parse (struct ipmi_fru_arguments *cmd_args)
       exit (1);
     }
 
+  if (config_file_data.verbose_count_count)
+    cmd_args->verbose_count = config_file_data.verbose_count;
   if (config_file_data.skip_checks_count)
     cmd_args->skip_checks = config_file_data.skip_checks;
 }

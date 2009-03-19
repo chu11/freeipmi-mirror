@@ -1815,7 +1815,7 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
         goto cleanup;
     }
 
-  if (state_data->prog_data->args->config_args.verbose)
+  if (state_data->prog_data->args->config_args.verbose_count)
     verbose_flags = 0;
   else
     verbose_flags = CONFIG_DO_NOT_CHECKOUT;

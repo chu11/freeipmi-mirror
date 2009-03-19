@@ -291,7 +291,7 @@ front_panel_buttons_checkout (const char *section_name,
     enabled = data.power_off;
   else
     {
-      if (state_data->prog_data->args->config_args.verbose)
+      if (state_data->prog_data->args->config_args.verbose_count)
         pstdout_printf (state_data->pstate,
                         "## Unrecognized section:key_name: %s:%s\n",
                         section_name,
@@ -362,7 +362,7 @@ front_panel_buttons_commit (const char *section_name,
     }
   else
     {
-      if (state_data->prog_data->args->config_args.verbose)
+      if (state_data->prog_data->args->config_args.verbose_count)
         pstdout_printf (state_data->pstate,
                         "## Unrecognized section:key_name: %s:%s\n",
                         section_name,
@@ -374,7 +374,7 @@ front_panel_buttons_commit (const char *section_name,
   if (enable_or_disable == BUTTON_DISABLED
       && disable_allowed == BUTTON_DISABLE_NOT_ALLOWED)
     {
-      if (state_data->prog_data->args->config_args.verbose)
+      if (state_data->prog_data->args->config_args.verbose_count)
         pstdout_printf (state_data->pstate,
                         "## Button disable on section:key_name '%s:%s' not allowed\n",
                         section_name,

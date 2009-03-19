@@ -134,7 +134,7 @@ config_checkout_section (pstdout_state_t pstate,
 
       if (CONFIG_IS_NON_FATAL_ERROR(this_ret))
         {
-          if (cmd_args->verbose)
+          if (cmd_args->verbose_count)
             PSTDOUT_FPRINTF (pstate,
                              fp,
                              "\t## Unable to checkout %s:%s\n",

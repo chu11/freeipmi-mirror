@@ -205,6 +205,10 @@ above.  Multiple workarounds can be specified separated by whitespace.
 Please see 
 .B bmc-config(8) 
 manpage for available workarounds.
+.TP
+\fBbmc-config-verbose-count\fR \fICOUNT\fR
+Specify default verbose count to use for
+.B bmc-config(8).
 
 .SH "BMC-DEVICE OPTIONS"
 The following options are specific to 
@@ -466,6 +470,10 @@ above.  Multiple workarounds can be specified separated by whitespace.
 Please see 
 .B ipmi-chassis-config(8) 
 manpage for available workarounds.
+.TP
+\fBipmi-chassis-config-verbose-count\fR \fICOUNT\fR
+Specify default verbose count to use for
+.B ipmi-chassis-config(8).
 
 .SH "IPMI-FRU OPTIONS"
 The following options are specific to 
@@ -526,6 +534,10 @@ above.  Multiple workarounds can be specified separated by whitespace.
 Please see 
 .B ipmi-fru(8) 
 manpage for available workarounds.
+.TP
+\fBipmi-fru-verbose-count\fR \fICOUNT\fR
+Specify default verbose count to use for
+.B ipmi-fru(8).
 .TP
 \fBipmi-fru-skip-checks\fR \fIENABLE|DISABLE\fR
 Specify if checksum checks will be skipped by default.
@@ -710,6 +722,10 @@ Please see
 .B ipmi-sel(8) 
 manpage for available workarounds.
 .TP
+\fBipmi-sel-verbose-count\fR \fICOUNT\fR
+Specify default verbose count to use for
+.B ipmi-sel(8).
+.TP
 \Bipmi-sel-system-event-only\fR \fIENABLE|DISABLE\fR
 Specify if output should only include system event records.
 .TP
@@ -784,6 +800,10 @@ above.  Multiple workarounds can be specified separated by whitespace.
 Please see 
 .B ipmi-sensors(8) 
 manpage for available workarounds.
+.TP
+\fBipmi-sensors-verbose-count\fR \fICOUNT\fR
+Specify default verbose count to use for
+.B ipmi-sensors(8).
 .TP
 \fBipmi-sensors-quiet-readings\fR \fIENABLE|DISABLE\fR
 Specify if sensor reading values and thresholds should not be
@@ -871,6 +891,10 @@ above.  Multiple workarounds can be specified separated by whitespace.
 Please see 
 .B ipmi-sensors-config(8) 
 manpage for available workarounds.
+.TP
+\fBipmi-sensors-config-verbose-count\fR \fICOUNT\fR
+Specify default verbose count to use for
+.B ipmi-sensors-config(8).
 
 .SH "IPMICONSOLE OPTIONS"
 The following options are specific to 
@@ -1000,6 +1024,10 @@ above.  Multiple workarounds can be specified separated by whitespace.
 Please see 
 .B ipmimonitoring(8) 
 manpage for available workarounds.
+.TP
+\fBipmimonitoring-verbose-count\fR \fICOUNT\fR
+Specify default verbose count to use for
+.B ipmimonitoring(8).
 .TP
 \fBipmimonitoring-quiet-readings\fR \fIENABLE|DISABLE\fR
 Specify if sensor reading values and thresholds should not be
@@ -1182,6 +1210,10 @@ above.  Multiple workarounds can be specified separated by whitespace.
 Please see 
 .B pef-config(8) 
 manpage for available workarounds.
+.TP
+\fBpef-config-verbose-count\fR \fICOUNT\fR
+Specify default verbose count to use for
+.B pef-config(8).
 
 .SH "FILES"
 @FREEIPMI_CONFIG_FILE_DEFAULT@

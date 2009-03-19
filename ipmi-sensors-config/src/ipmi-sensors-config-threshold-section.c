@@ -1026,7 +1026,7 @@ _setup_threshold_key (ipmi_sensors_config_state_data_t *state_data,
   assert (threshold_validate_ptr);
 
   if (threshold_readable
-      || state_data->prog_data->args->config_args.verbose)
+      || state_data->prog_data->args->config_args.verbose_count)
     {
       if (!threshold_readable)
         flags |= CONFIG_UNDEFINED;
@@ -1207,7 +1207,7 @@ _setup_threshold_hysteresis_fields (ipmi_sensors_config_state_data_t *state_data
   assert (description);
   assert (hysteresis_support == IPMI_SDR_READABLE_HYSTERESIS_SUPPORT
           || hysteresis_support == IPMI_SDR_READABLE_SETTABLE_HYSTERESIS_SUPPORT
-          || state_data->prog_data->args->config_args.verbose);
+          || state_data->prog_data->args->config_args.verbose_count);
 
   if (hysteresis_support == IPMI_SDR_READABLE_HYSTERESIS_SUPPORT)
     {
@@ -1216,7 +1216,7 @@ _setup_threshold_hysteresis_fields (ipmi_sensors_config_state_data_t *state_data
     }
   else if (hysteresis_support == IPMI_SDR_READABLE_SETTABLE_HYSTERESIS_SUPPORT)
     flags = 0;                  /* no change, can read/write */
-  else /* state_data->prog_data->args->config_args.verbose */
+  else /* state_data->prog_data->args->config_args.verbose_count */
     flags = CONFIG_UNDEFINED;
 
   memset (description_hysteresis, '\0', CONFIG_MAX_DESCRIPTION_LEN);
@@ -1389,7 +1389,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
 
   if (threshold_access_support == IPMI_SDR_READABLE_THRESHOLDS_SUPPORT
       || threshold_access_support == IPMI_SDR_READABLE_SETTABLE_THRESHOLDS_SUPPORT
-      || state_data->prog_data->args->config_args.verbose)
+      || state_data->prog_data->args->config_args.verbose_count)
     {
       if (_setup_threshold_fields (state_data,
                                    sdr_record,
@@ -1402,7 +1402,7 @@ ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_d
 
   if (hysteresis_support == IPMI_SDR_READABLE_HYSTERESIS_SUPPORT
       || hysteresis_support == IPMI_SDR_READABLE_SETTABLE_HYSTERESIS_SUPPORT
-      || state_data->prog_data->args->config_args.verbose)
+      || state_data->prog_data->args->config_args.verbose_count)
     {
       if (_setup_threshold_hysteresis_fields (state_data,
                                               sdr_record,

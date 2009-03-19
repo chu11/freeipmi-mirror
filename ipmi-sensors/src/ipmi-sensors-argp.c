@@ -125,7 +125,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case VERBOSE_KEY:
-      cmd_args->verbose = 1;
       cmd_args->verbose_count++;
       break;
     case QUIET_READINGS_KEY:
@@ -234,6 +233,8 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
       exit (1);
     }
 
+  if (config_file_data.verbose_count_count)
+    cmd_args->verbose_count = config_file_data.verbose_count;
   if (config_file_data.quiet_readings_count)
     cmd_args->quiet_readings = config_file_data.quiet_readings;
   if (config_file_data.groups_count && config_file_data.groups_length)
@@ -326,7 +327,6 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
-  cmd_args->verbose = 0;
   cmd_args->verbose_count = 0;
   cmd_args->quiet_readings = 0;
   cmd_args->sdr_info = 0;

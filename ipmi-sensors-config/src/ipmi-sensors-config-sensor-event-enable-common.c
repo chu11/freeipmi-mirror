@@ -790,7 +790,7 @@ _setup_event_enable_key (ipmi_sensors_config_state_data_t *state_data,
   assert (key_name);
 
   if (event_supported
-      || state_data->prog_data->args->config_args.verbose)
+      || state_data->prog_data->args->config_args.verbose_count)
     {
       if (!event_supported)
         flags |= CONFIG_UNDEFINED;
@@ -911,7 +911,7 @@ _threshold_event_enable_get_data (ipmi_sensors_config_state_data_t *state_data,
 
   if (!found)
     {
-      if (state_data->prog_data->args->config_args.verbose)
+      if (state_data->prog_data->args->config_args.verbose_count)
         pstdout_printf (state_data->pstate,
                         "## Unrecognized section:key_name: %s:%s\n",
                         section_name,
@@ -1353,7 +1353,7 @@ _generic_event_enable_get_data (ipmi_sensors_config_state_data_t *state_data,
                                                            event_reading_type_code);
   if (!event_strings)
     {
-      if (state_data->prog_data->args->config_args.verbose)
+      if (state_data->prog_data->args->config_args.verbose_count)
         pstdout_printf (state_data->pstate,
                         "## Unable to handle event flags for event reading type code 0x%X\n",
                         event_reading_type_code);
@@ -1375,7 +1375,7 @@ _generic_event_enable_get_data (ipmi_sensors_config_state_data_t *state_data,
 
   if (!found)
     {
-      if (state_data->prog_data->args->config_args.verbose)
+      if (state_data->prog_data->args->config_args.verbose_count)
         pstdout_printf (state_data->pstate,
                         "## Unrecognized section:key_name: %s:%s\n",
                         section_name,
@@ -1527,7 +1527,7 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
                                                            event_reading_type_code);
   if (!event_strings)
     {
-      if (state_data->prog_data->args->config_args.verbose)
+      if (state_data->prog_data->args->config_args.verbose_count)
         pstdout_printf (state_data->pstate,
                         "## Unable to handle event flags for event reading type code 0x%X\n",
                         event_reading_type_code);
@@ -1756,7 +1756,7 @@ _sensor_specific_event_enable_get_data (ipmi_sensors_config_state_data_t *state_
                                                                    sensor_type);
   if (!event_strings)
     {
-      if (state_data->prog_data->args->config_args.verbose)
+      if (state_data->prog_data->args->config_args.verbose_count)
         pstdout_printf (state_data->pstate,
                         "## Unable to handle event flags for sensor type 0x%X\n",
                         sensor_type);
@@ -1797,7 +1797,7 @@ _sensor_specific_event_enable_get_data (ipmi_sensors_config_state_data_t *state_
 
   if (!found)
     {
-      if (state_data->prog_data->args->config_args.verbose)
+      if (state_data->prog_data->args->config_args.verbose_count)
         pstdout_printf (state_data->pstate,
                         "## Unrecognized section:key_name: %s:%s\n",
                         section_name,
@@ -1961,7 +1961,7 @@ _setup_sensor_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *s
                                                                    sensor_type);
   if (!event_strings)
     {
-      if (state_data->prog_data->args->config_args.verbose)
+      if (state_data->prog_data->args->config_args.verbose_count)
         pstdout_printf (state_data->pstate,
                         "## Unable to handle event flags for sensor type 0x%X\n",
                         sensor_type);
