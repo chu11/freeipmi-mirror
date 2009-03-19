@@ -2,6 +2,9 @@
 
 	* libfreeipmi/src/debug/ipmi-debug.c (ipmi_obj_dump): Output w/ %u
 	instead of %d.
+
+	* libfreeipmi/src/debug/ipmi-debug-kcs.c (ipmi_kcs_cmd_raw_api):
+	Fix debug dump bug.
 	
 2009-03-18  Albert Chu <chu11@llnl.gov>
 
