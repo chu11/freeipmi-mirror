@@ -1,5 +1,10 @@
 2009-03-19  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Support inventec get-nic-status and set-nic-status
+	OEM commands.
+	
+2009-03-19  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/debug/ipmi-debug.c (ipmi_obj_dump): Output w/ %u
 	instead of %d.
 

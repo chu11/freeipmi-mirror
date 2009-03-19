@@ -57,7 +57,20 @@ struct ipmi_oem_id
   struct ipmi_oem_command *oem_commands;
 };
 
+static int _inventec_get_nic_status (ipmi_oem_state_data_t *);
+static int _inventec_set_nic_status (ipmi_oem_state_data_t *);
 static int _supermicro_reset_intrusion (ipmi_oem_state_data_t *);
+
+struct ipmi_oem_command oem_inventec[] =
+  {
+    { "get-nic-status",
+      "get NIC status.",
+      _inventec_get_nic_status},
+    { "set-nic-status",
+      "set NIC status.",
+      _inventec_set_nic_status},
+    { NULL, NULL, NULL},
+  };
 
 struct ipmi_oem_command oem_supermicro[] =
   {
@@ -69,6 +82,7 @@ struct ipmi_oem_command oem_supermicro[] =
 
 struct ipmi_oem_id oem_cb[] =
   {
+    { "inventec", oem_inventec},
     { "supermicro", oem_supermicro},
     { NULL, NULL},
   };
@@ -80,7 +94,7 @@ _list (void)
 
   while (oem_id && oem_id->oem_id)
     {
-      struct ipmi_oem_command *oem_cmd = oem_cb->oem_commands;
+      struct ipmi_oem_command *oem_cmd = oem_id->oem_commands;
 
       printf ("OEM ID: %s\n", oem_id->oem_id);
 
@@ -97,6 +111,306 @@ _list (void)
     }
 
   return (0);
+}
+
+static int
+_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
+                                     uint8_t *bytes_rs,
+                                     unsigned int bytes_rs_len,
+                                     unsigned int expected_bytes_rs_len,
+                                     uint8_t cmd,
+                                     uint8_t netfn)
+{
+  assert (state_data);
+  assert (bytes_rs);
+  assert (expected_bytes_rs_len >= 2); /* need atleast cmd and completion code */
+
+  if (bytes_rs_len < expected_bytes_rs_len)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid response length: %u, expected %u\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       bytes_rs_len,
+                       expected_bytes_rs_len);
+      return (-1);
+    }
+  
+  if (bytes_rs[1] != IPMI_COMP_CODE_COMMAND_SUCCESS)
+    {
+      char errbuf[IPMI_OEM_ERR_BUFLEN];
+      
+      memset (errbuf, '\0', IPMI_OEM_ERR_BUFLEN);
+      if (ipmi_completion_code_strerror_r (cmd, /* cmd */
+                                           netfn, /* network function */
+                                           bytes_rs[1], /* completion code */
+                                           errbuf,
+                                           IPMI_OEM_ERR_BUFLEN) < 0)
+        {
+          pstdout_perror (state_data->pstate, "ipmi_completion_code_strerror_r");
+          snprintf (errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs[1]);
+        }
+      
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s failed: %s\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       errbuf);
+      return (-1);
+    }
+
+  return (0);
+}
+
+static int
+_inventec_get_reservation (ipmi_oem_state_data_t *state_data,
+                           uint8_t *reservation_id)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int32_t rs_len;
+  int rv = -1;
+
+  /* Inventec OEM
+   *
+   * Get Reservation Request
+   *
+   * 0x30 - OEM network function
+   * 0x01 - OEM cmd
+   *
+   * Get Reservation Response 
+   *
+   * 0x01 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - Reservation ID
+   */
+
+  assert (state_data);
+  assert (reservation_id);
+
+  bytes_rq[0] = 0x01;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (_check_response_and_completion_code (state_data,
+                                           bytes_rs,
+                                           rs_len,
+                                           3,
+                                           0x01,
+                                           0x30) < 0)
+    goto cleanup;
+  
+  (*reservation_id) = bytes_rs[2];
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int32_t rs_len;
+  uint8_t reservation_id;
+  int rv = -1;
+
+  assert (state_data);
+
+  /* Inventec OEM
+   *
+   * Get NIC Status Request
+   *
+   * 0x30 - OEM network function
+   * 0x02 - OEM cmd
+   * 0x?? - Reservation ID
+   * 0x02 - ??
+   * 0x01 - ??
+   * 0x00 - ??
+   * 0x00 - ??
+   * 0x00 = ??
+   * 0xFF - ??
+   * 
+   * Get NIC Status Response
+   *
+   * 0x02 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x02 - ??
+   * 0x01 - ??
+   * 0x00 - ??
+   * 0x00 - ??
+   * 0x00 | 0x01 - 0x00 = shared, 0x01 = dedicated
+   */
+
+  if (_inventec_get_reservation (state_data,
+                                 &reservation_id) < 0)
+    goto cleanup;
+
+  bytes_rq[0] = 0x02;
+  bytes_rq[1] = reservation_id;
+  bytes_rq[2] = 0x02;
+  bytes_rq[3] = 0x01;
+  bytes_rq[4] = 0x00;
+  bytes_rq[5] = 0x00;
+  bytes_rq[6] = 0x00;
+  bytes_rq[7] = 0xFF;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              8, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (_check_response_and_completion_code (state_data,
+                                           bytes_rs,
+                                           rs_len,
+                                           7,
+                                           0x02,
+                                           0x30) < 0)
+    goto cleanup;
+
+  switch (bytes_rs[6])
+    {
+    case 0:
+      pstdout_printf (state_data->pstate, "shared\n");
+      break;
+    case 1:
+      pstdout_printf (state_data->pstate, "dedicated\n");
+      break;
+    default:
+      pstdout_printf (state_data->pstate, "unknown NIC status: %Xh\n", bytes_rs[7]);
+      break;
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int32_t rs_len;
+  uint8_t reservation_id;
+  int rv = -1;
+
+  assert (state_data);
+
+  if (state_data->prog_data->args->oem_options_count != 1)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid number of OEM option arguments\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command);
+      goto cleanup;
+    }
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "shared")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "dedicated"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  /* Inventec OEM
+   *
+   * Set NIC Status Request
+   *
+   * 0x30 - OEM network function
+   * 0x03 - OEM cmd
+   * 0x?? - Reservation ID
+   * 0x02 - ??
+   * 0x01 - ??
+   * 0x00 - ??
+   * 0x00 - ??
+   * 0x00 = ??
+   * 0x01 - ??
+   * 0x00 | 0x01 - 0x00 = shared, 0x01 = dedicated
+   * 
+   * Set NIC Status Response
+   *
+   * 0x03 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - ??
+   */
+
+  if (_inventec_get_reservation (state_data,
+                                 &reservation_id) < 0)
+    goto cleanup;
+
+  bytes_rq[0] = 0x03;
+  bytes_rq[1] = reservation_id;
+  bytes_rq[2] = 0x02;
+  bytes_rq[3] = 0x01;
+  bytes_rq[4] = 0x00;
+  bytes_rq[5] = 0x00;
+  bytes_rq[6] = 0x00;
+  bytes_rq[7] = 0x01;
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "shared"))
+    bytes_rq[8] = 0x00;
+  else
+    bytes_rq[8] = 0x01;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              9, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (_check_response_and_completion_code (state_data,
+                                           bytes_rs,
+                                           rs_len,
+                                           2, /* don't care about the 3rd byte, don't know what it is used for */
+                                           0x03,
+                                           0x30) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
 }
 
 static int
@@ -132,36 +446,13 @@ _supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (rs_len < 2)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "reset-intrusion invalid response length: %d\n",
-                       rs_len);
-      goto cleanup;
-    }
-
-  if (bytes_rs[1] != IPMI_COMP_CODE_COMMAND_SUCCESS)
-    {
-      char errbuf[IPMI_OEM_ERR_BUFLEN];
-
-      memset (errbuf, '\0', IPMI_OEM_ERR_BUFLEN);
-      if (ipmi_completion_code_strerror_r (0x3,
-                                           0x30,
-                                           bytes_rs[1],
-                                           errbuf,
-                                           IPMI_OEM_ERR_BUFLEN) < 0)
-        {
-          pstdout_perror (state_data->pstate, "ipmi_completion_code_strerror_r");
-          snprintf (errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs[1]);
-        }
-
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "reset-intrusion failed: %s\n",
-                       errbuf);
-      goto cleanup;
-    }
+  if (_check_response_and_completion_code (state_data,
+                                           bytes_rs,
+                                           rs_len,
+                                           2,
+                                           0x03,
+                                           0x30) < 0)
+    goto cleanup;
 
   rv = 0;
  cleanup:
@@ -184,7 +475,7 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
     {
       if (!strcasecmp (oem_id->oem_id, args->oem_id))
         {
-          struct ipmi_oem_command *oem_cmd = oem_cb->oem_commands;
+          struct ipmi_oem_command *oem_cmd = oem_id->oem_commands;
           int cmd_found = 0;
 
           id_found++;
@@ -198,6 +489,8 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
 
                   if (((*oem_cmd->func)(state_data)) < 0)
                     goto cleanup;
+
+                  break;
                 }
 
               oem_cmd++;
@@ -211,6 +504,8 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
                                args->oem_command);
               goto cleanup;
             }
+
+          break;
         }
 
       oem_id++;
