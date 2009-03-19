@@ -758,7 +758,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && bytes_read)
-    _ipmi_kcs_dump_raw_rs (ctx, pkt, bytes_read, cmd, ctx->net_fn);
+    _ipmi_kcs_dump_raw_rs (ctx, readbuf, bytes_read, cmd, ctx->net_fn);
 
   if (!bytes_read)
     {
