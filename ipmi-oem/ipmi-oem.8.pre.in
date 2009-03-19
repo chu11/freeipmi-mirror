@@ -48,12 +48,25 @@ List supported OEM IDs and Commands.
 .SH "SUPPORTED OEM IDS and COMMANDS"
 The currently supported OEM IDs and COMMANDs are:
 .TP
+.B inventec
+.RS
+.TP
+.B get-nic-status
+On some Inventec motherboards (confirmed on 5441), the NIC can be in
+a dedicated or shared status.  This command will determine the current
+status.
+.TP
+.B set-nic-status \fIdedicated|shared\fR
+On some Inventec motherboards (confirmed on 5441), the NIC can be in a
+dedicated or shared status.  This command will set the current status
+to the value indicated.  This command may internally reset the BMC.
+.RE
+.TP
 .B supermicro
 .RS
 .TP
 .B reset-intrusion 
-.RS
-On some Supermicro motherboards, the motherboard intrusion flag is not
+On some Supermicro motherboards (confirmed on H8QME), the motherboard intrusion flag is not
 reset after it has been triggered.  For example, in
 .B ipmi-sensors
 or
@@ -61,6 +74,7 @@ or
 you may notice a 'General Chassis Intrusion' if the motherboard
 chassis is not open, but was opened in the past.  This command will
 reset the flag back to an untriggered state.
+.RE
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-options.man>
