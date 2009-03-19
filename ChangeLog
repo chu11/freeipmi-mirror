@@ -2,6 +2,9 @@
 
 	* ipmi-oem/: Support inventec get-nic-status and set-nic-status
 	OEM commands.
+
+	* common/src/toolcommon/tool-config-file-common.c: Fix potential
+	config file bug by clearing stack data.
 	
 2009-03-17  Albert Chu <chu11@llnl.gov>
 

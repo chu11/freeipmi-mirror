@@ -3316,7 +3316,11 @@ config_file_parse(const char *filename,
 
   /* clear out config file data */
 
+  memset(&bmc_watchdog_data, '\0', sizeof(struct config_file_data_bmc_watchdog));
+  memset(&ipmi_fru_data, '\0', sizeof(struct config_file_data_ipmi_fru));
+  memset(&ipmi_sensors_data, '\0', sizeof(struct config_file_data_ipmi_sensors));
   memset(&ipmiconsole_data, '\0', sizeof(struct config_file_data_ipmiconsole));
+  memset(&ipmimonitoring_data, '\0', sizeof(struct config_file_data_ipmimonitoring));
   memset(&ipmipower_data, '\0', sizeof(struct config_file_data_ipmipower));
 
   if (!(cf = conffile_handle_create()))
