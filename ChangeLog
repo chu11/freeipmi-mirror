@@ -1,3 +1,8 @@
+2009-03-19  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/debug/ipmi-debug.c (ipmi_obj_dump): Output w/ %u
+	instead of %d.
+	
 2009-03-18  Albert Chu <chu11@llnl.gov>
 
         * freeipmi/templates/ipmi-pef-and-alerting-cmds-templates.h,
