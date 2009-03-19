@@ -1,6 +1,7 @@
 freeipmi tools
 --------------
 config via environment variables too - like config file
+new ipmi-oem-config - to deal with config OEM stuff config tool style
 
 libfreeipmi
 -----------
@@ -137,7 +138,6 @@ http://www.gnu.org/software/freeipmi/index.html
 
 Release X.X.X Changes
 ---------------------
-
 
 To do this:
 
