@@ -100,38 +100,38 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case ARGP_KEY_ARG:
       {
-    if (!cmd_args->oem_id)
-      {
-        if (!(cmd_args->oem_id = strdup (arg)))
+        if (!cmd_args->oem_id)
           {
-        perror ("strdup");
-        exit (1);
+            if (!(cmd_args->oem_id = strdup (arg)))
+              {
+                perror ("strdup");
+                exit (1);
+              }
+            break;
+          }
+        else if (!cmd_args->oem_command)
+          {
+            if (!(cmd_args->oem_command = strdup (arg)))
+              {
+                perror ("strdup");
+                exit (1);
+              }
+            break;
+          }
+        else
+          {
+            if (cmd_args->oem_options_count < ARG_MAX)
+              {
+                if (!(cmd_args->oem_options[cmd_args->oem_options_count] = strdup (arg)))
+                  {
+                    perror ("strdup");
+                    exit (1);
+                  }
+                cmd_args->oem_options_count++;
+                break;
+              }
           }
         break;
-      }
-    else if (!cmd_args->oem_command)
-      {
-        if (!(cmd_args->oem_command = strdup (arg)))
-          {
-        perror ("strdup");
-        exit (1);
-          }
-        break;
-      }
-    else
-      {
-        if (cmd_args->oem_options_count < ARG_MAX)
-          {
-        if (!(cmd_args->oem_options[cmd_args->oem_options_count] = strdup (arg)))
-          {
-            perror ("strdup");
-            exit (1);
-          }
-        cmd_args->oem_options_count++;
-        break;
-          }
-      }
-    break;
       }
     case ARGP_KEY_END:
       break;
