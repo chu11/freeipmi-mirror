@@ -417,7 +417,7 @@ The typical use of one of the above config tools is to run w/
 --checkout to checkout a configuration, modify that file with new
 configuration information, then run w/ --commit to write the new
 configuration.  I imagine most users will only run with hostrange
-support with the --commit option to configuration multiple machines in
+support with the --commit option to configure multiple machines in
 parallel.  Note that since a significant amount of configuration must
 be done in-band before out-of-band communication can occur
 (i.e. configuring IP addresses, MAC addresses), most may elect to not
