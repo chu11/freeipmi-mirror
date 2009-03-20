@@ -6,8 +6,9 @@ ipmi-oem \- IPMI OEM utility
 [\fIOPTION\fR...] <\fIOEMID\fR> <\fIOEMCOMMAND\fR> [\fIOEMOPTION\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-oem
-is used to execute OEM specific IPMI commands.  It is intended to provide
-a better user interface for OEM specific support IPMI commands better than
+is used to execute OEM specific IPMI commands.  It is intended to
+provide a better user interface for OEM specific IPMI commands rather
+than using
 .B ipmi-raw(8).
 
 #include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
