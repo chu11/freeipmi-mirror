@@ -65,7 +65,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
-    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
@@ -167,7 +167,7 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
 {
   long arg_max;
 
-  init_common_cmd_args_user (&(cmd_args->common));
+  init_common_cmd_args_admin (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->list = 0;
