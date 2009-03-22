@@ -28,7 +28,7 @@ required user privilege will depend on the oem commands executed.
 #include <@top_srcdir@/common/man/manpage-common-authentication-type.man>
 #include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-main.man>
 #include <@top_srcdir@/common/man/manpage-common-cipher-suite-id-details.man>
-#include <@top_srcdir@/common/man/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/man/manpage-common-privilege-level-admin.man>
 #include <@top_srcdir@/common/man/manpage-common-config-file.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/man/manpage-common-debug.man>
@@ -60,6 +60,22 @@ status.
 On some Inventec motherboards (confirmed on 5441), the NIC can be in a
 dedicated or shared status.  This command will set the current status
 to the value indicated.  This command may internally reset the BMC.
+.TP
+.B get-mac-address\fR
+Get the current BMC MAC address.  This is actually not an Inventec OEM
+command, but rather the normal IPMI MAC address command (identical to
+what is used in the
+.B bmc-config(8)
+tool).  This command is placed here for convenience.
+.TP
+.B set-mac-address \fIdedicated|shared\fR \fIMACADDR\fR
+On some Inventec motherboards (confirmed on 5441), the BMC MAC address
+cannot be set through the normal IPMI MAC address command (what is
+used in the 
+.B bmc-config(8)
+tool).  Instead the dedicated or shared MAC address must specifically
+be configured via OEM commands.  This command will allow the user to
+set either the dedicated or shared BMC MAC address.
 .RE
 .TP
 .B supermicro

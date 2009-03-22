@@ -39,8 +39,11 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 
-#define IPMI_OEM_MAX_BYTES   256
-#define IPMI_OEM_ERR_BUFLEN 1024
+#define IPMI_OEM_MAX_BYTES      256
+#define IPMI_OEM_ERR_BUFLEN     1024
+#define IPMI_OEM_MAX_MACADDRLEN 24
+#define IPMI_OEM_SET_SELECTOR   0x0
+#define IPMI_OEM_BLOCK_SELECTOR 0x0
 
 typedef int (*oem_callback)(ipmi_oem_state_data_t *);
 
@@ -48,6 +51,7 @@ struct ipmi_oem_command
 {
   char *oem_command;
   char *description;
+  int required_oem_options;
   oem_callback func;
 };
 
@@ -59,25 +63,38 @@ struct ipmi_oem_id
 
 static int _inventec_get_nic_status (ipmi_oem_state_data_t *);
 static int _inventec_set_nic_status (ipmi_oem_state_data_t *);
+static int _inventec_get_mac_address (ipmi_oem_state_data_t *);
+static int _inventec_set_mac_address (ipmi_oem_state_data_t *);
 static int _supermicro_reset_intrusion (ipmi_oem_state_data_t *);
 
 struct ipmi_oem_command oem_inventec[] =
   {
     { "get-nic-status",
       "get NIC status.",
+      0,
       _inventec_get_nic_status},
     { "set-nic-status",
       "set NIC status.",
+      1,
       _inventec_set_nic_status},
-    { NULL, NULL, NULL},
+    { "get-mac-address",
+      "get MAC address.",
+      0,
+      _inventec_get_mac_address},
+    { "set-mac-address",
+      "set MAC address.",
+      2,
+      _inventec_set_mac_address},
+    { NULL, NULL, 0, NULL},
   };
 
 struct ipmi_oem_command oem_supermicro[] =
   {
     { "reset-intrusion",
       "reset motherboard intrusion flag.",
+      0,
       _supermicro_reset_intrusion},
-    { NULL, NULL, NULL},
+    { NULL, NULL, 0, NULL},
   };
 
 struct ipmi_oem_id oem_cb[] =
@@ -232,6 +249,7 @@ _inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
   int rv = -1;
 
   assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
 
   /* Inventec OEM
    *
@@ -322,16 +340,7 @@ _inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
   int rv = -1;
 
   assert (state_data);
-
-  if (state_data->prog_data->args->oem_options_count != 1)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid number of OEM option arguments\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command);
-      goto cleanup;
-    }
+  assert (state_data->prog_data->args->oem_options_count == 1);
 
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "shared")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "dedicated"))
@@ -414,6 +423,186 @@ _inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
 }
 
 static int
+_inventec_get_mac_address (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  char mac_address_str[IPMI_OEM_MAX_MACADDRLEN+1];
+  uint8_t mac_address_bytes[6];
+  int8_t lan_channel_number;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Use normal IPMI to get the MAC address.  This is offered more as
+   * a convenience to the user rather, so there is always a "get" and
+   * a "set" command in ipmi-oem.
+   */
+
+  if ((lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
+                                                     IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_channel_number: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_mac_address_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+  
+  if (ipmi_cmd_get_lan_configuration_parameters_mac_address (state_data->ipmi_ctx,
+                                                             lan_channel_number,
+                                                             IPMI_GET_LAN_PARAMETER,
+                                                             IPMI_OEM_SET_SELECTOR,
+                                                             IPMI_OEM_BLOCK_SELECTOR,
+                                                             obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_lan_configuration_parameters_mac_address: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (fiid_obj_get_data (obj_cmd_rs,
+                         "mac_address",
+                         mac_address_bytes,
+                         6) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'mac_address': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  
+  memset (mac_address_str, '\0', IPMI_OEM_MAX_MACADDRLEN+1);
+  snprintf (mac_address_str,
+            IPMI_OEM_MAX_MACADDRLEN,
+            "%02X:%02X:%02X:%02X:%02X:%02X",
+            mac_address_bytes[0],
+            mac_address_bytes[1],
+            mac_address_bytes[2],
+            mac_address_bytes[3],
+            mac_address_bytes[4],
+            mac_address_bytes[5]);
+
+  pstdout_printf (state_data->pstate,
+                  "%s\n",
+                  mac_address_str);
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int32_t rs_len;
+  unsigned int tmp;
+  uint8_t cmd;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "shared")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "dedicated"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  if (sscanf (state_data->prog_data->args->oem_options[1],
+              "%02x:%02x:%02x:%02x:%02x:%02x",
+              &tmp,
+              &tmp,
+              &tmp,
+              &tmp,
+              &tmp,
+              &tmp) == 6)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+
+  /* Inventec OEM
+   *
+   * Set MAC Address Request
+   *
+   * 0x2E - OEM network function
+   * 0x21 | 0x23 - OEM cmd - 0x21 = dedicated, 0x23 = shared
+   * bytes 1-17: MAC address in ASCII (including semicolons)
+   * 0x00 - sentinel value 0x00
+   * 
+   * Set MAC Address Response
+   *
+   * 0x21 | 0x23 - OEM cmd - 0x21 = dedicated, 0x23 = shared
+   * 0x?? - Completion Code
+   */
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "dedicated"))
+    cmd = 0x21;
+  else
+    cmd = 0x23;
+  
+  bytes_rq[0] = cmd;
+  memcpy (&bytes_rq[1],
+          state_data->prog_data->args->oem_options[1],
+          17);
+  bytes_rq[18] = 0x00;
+  
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x2E, /* network function */
+                              bytes_rq, /* data */
+                              19, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (_check_response_and_completion_code (state_data,
+                                           bytes_rs,
+                                           rs_len,
+                                           2,
+                                           cmd,
+                                           0x2E) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
 _supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
@@ -422,6 +611,7 @@ _supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
   int rv = -1;
 
   assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
 
   /* Supermicro OEM
    *
@@ -486,6 +676,17 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
                                args->oem_command))
                 {
                   cmd_found++;
+
+                  if (state_data->prog_data->args->oem_options_count != oem_cmd->required_oem_options)
+                    {
+                      pstdout_fprintf (state_data->pstate,
+                                       stderr,
+                                       "%s:%s invalid number of OEM option arguments\n",
+                                       state_data->prog_data->args->oem_id,
+                                       state_data->prog_data->args->oem_command);
+                      goto cleanup;
+                    }
+                  
 
                   if (((*oem_cmd->func)(state_data)) < 0)
                     goto cleanup;
