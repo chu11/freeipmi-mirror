@@ -27,16 +27,16 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "pef-config.h"
-#include "pef-config-map.h"
-#include "pef-config-utils.h"
-#include "pef-config-validate.h"
+#include "ipmi-pef-config.h"
+#include "ipmi-pef-config-map.h"
+#include "ipmi-pef-config-utils.h"
+#include "ipmi-pef-config-validate.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
-#define PEF_CONFIG_MAXIPADDRLEN 16
-#define PEF_CONFIG_MAXMACADDRLEN 24
+#define IPMI_PEF_CONFIG_MAXIPADDRLEN 16
+#define IPMI_PEF_CONFIG_MAXMACADDRLEN 24
 
 /* convenience structs */
 struct destination_type {
@@ -48,12 +48,12 @@ struct destination_type {
 
 struct destination_addresses {
   uint8_t alert_gateway;
-  char alert_ip[PEF_CONFIG_MAXIPADDRLEN+1];
-  char alert_mac[PEF_CONFIG_MAXMACADDRLEN+1];
+  char alert_ip[IPMI_PEF_CONFIG_MAXIPADDRLEN+1];
+  char alert_mac[IPMI_PEF_CONFIG_MAXMACADDRLEN+1];
 };
 
 static config_err_t
-_get_destination_type (pef_config_state_data_t *state_data,
+_get_destination_type (ipmi_pef_config_state_data_t *state_data,
                        const char *section_name,
                        struct destination_type *dt)
 {
@@ -149,7 +149,7 @@ _get_destination_type (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-_set_destination_type (pef_config_state_data_t *state_data,
+_set_destination_type (ipmi_pef_config_state_data_t *state_data,
                        const char *section_name,
                        struct destination_type *dt)
 {
@@ -217,7 +217,7 @@ alert_destination_type_checkout (const char *section_name,
                                  struct config_keyvalue *kv,
                                  void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_type dt;
   config_err_t ret;
 
@@ -239,7 +239,7 @@ alert_destination_type_commit (const char *section_name,
                                const struct config_keyvalue *kv,
                                void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_type dt;
   config_err_t ret;
 
@@ -260,7 +260,7 @@ alert_acknowledge_checkout (const char *section_name,
                             struct config_keyvalue *kv,
                             void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_type dt;
   config_err_t ret;
 
@@ -282,7 +282,7 @@ alert_acknowledge_commit (const char *section_name,
                           const struct config_keyvalue *kv,
                           void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_type dt;
   config_err_t ret;
 
@@ -303,7 +303,7 @@ alert_acknowledge_timeout_checkout (const char *section_name,
                                     struct config_keyvalue *kv,
                                     void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_type dt;
   config_err_t ret;
 
@@ -325,7 +325,7 @@ alert_acknowledge_timeout_commit (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_type dt;
   config_err_t ret;
 
@@ -346,7 +346,7 @@ alert_retries_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_type dt;
   config_err_t ret;
 
@@ -368,7 +368,7 @@ alert_retries_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_type dt;
   config_err_t ret;
 
@@ -394,7 +394,7 @@ alert_retries_validate (const char *section_name,
 }
 
 static config_err_t
-_get_destination_addresses (pef_config_state_data_t *state_data,
+_get_destination_addresses (ipmi_pef_config_state_data_t *state_data,
                             const char *section_name,
                             struct destination_addresses *da)
 {
@@ -467,9 +467,9 @@ _get_destination_addresses (pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  memset (da->alert_ip, '\0', PEF_CONFIG_MAXIPADDRLEN+1);
+  memset (da->alert_ip, '\0', IPMI_PEF_CONFIG_MAXIPADDRLEN+1);
   snprintf (da->alert_ip,
-            PEF_CONFIG_MAXIPADDRLEN,
+            IPMI_PEF_CONFIG_MAXIPADDRLEN,
             "%u.%u.%u.%u",
             alert_ip_address_bytes[0],
             alert_ip_address_bytes[1],
@@ -488,9 +488,9 @@ _get_destination_addresses (pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  memset (da->alert_mac, '\0', PEF_CONFIG_MAXMACADDRLEN+1);
+  memset (da->alert_mac, '\0', IPMI_PEF_CONFIG_MAXMACADDRLEN+1);
   snprintf (da->alert_mac,
-            PEF_CONFIG_MAXMACADDRLEN,
+            IPMI_PEF_CONFIG_MAXMACADDRLEN,
             "%02X:%02X:%02X:%02X:%02X:%02X",
             alert_mac_address_bytes[0],
             alert_mac_address_bytes[1],
@@ -506,7 +506,7 @@ _get_destination_addresses (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-_set_destination_addresses (pef_config_state_data_t *state_data,
+_set_destination_addresses (ipmi_pef_config_state_data_t *state_data,
                             const char *section_name,
                             struct destination_addresses *da)
 {
@@ -578,7 +578,7 @@ alert_gateway_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_addresses da;
   config_err_t ret;
 
@@ -600,7 +600,7 @@ alert_gateway_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_addresses da;
   config_err_t ret;
 
@@ -621,7 +621,7 @@ alert_ip_address_checkout (const char *section_name,
                            struct config_keyvalue *kv,
                            void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_addresses da;
   config_err_t ret;
 
@@ -643,7 +643,7 @@ alert_ip_address_commit (const char *section_name,
                          const struct config_keyvalue *kv,
                          void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_addresses da;
   config_err_t ret;
 
@@ -665,7 +665,7 @@ alert_mac_address_checkout (const char *section_name,
                             struct config_keyvalue *kv,
                             void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_addresses da;
   config_err_t ret;
 
@@ -687,7 +687,7 @@ alert_mac_address_commit (const char *section_name,
                           const struct config_keyvalue *kv,
                           void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct destination_addresses da;
   config_err_t ret;
 
@@ -705,7 +705,7 @@ alert_mac_address_commit (const char *section_name,
 }
 
 struct config_section *
-pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_data, int num)
+ipmi_pef_config_lan_alert_destination_section_get (ipmi_pef_config_state_data_t *state_data, int num)
 {
   struct config_section *section = NULL;
   char buf[CONFIG_MAX_SECTION_NAME_LEN];

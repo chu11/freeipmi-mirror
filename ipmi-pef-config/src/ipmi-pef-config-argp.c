@@ -31,15 +31,15 @@
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
 
-#include "pef-config.h"
-#include "pef-config-argp.h"
+#include "ipmi-pef-config.h"
+#include "ipmi-pef-config-argp.h"
 
 #include "freeipmi-portability.h"
 #include "tool-cmdline-common.h"
 #include "tool-config-file-common.h"
 
 const char *argp_program_version =
-  "pef-config - " PACKAGE_VERSION "\n"
+  "ipmi-pef-config - " PACKAGE_VERSION "\n"
   "Copyright (C) 2007-2009 FreeIPMI Core Team\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
@@ -48,7 +48,7 @@ const char *argp_program_bug_address =
   "<" PACKAGE_BUGREPORT ">";
 
 static char cmdline_doc[] =
-  "pef-config - configure PEF values";
+  "ipmi-pef-config - configure PEF values";
 
 static char cmdline_args_doc[] = "";
 
@@ -85,7 +85,7 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  struct pef_config_arguments *cmd_args = state->input;
+  struct ipmi_pef_config_arguments *cmd_args = state->input;
   error_t ret;
 
   switch (key)
@@ -115,13 +115,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 }
 
 static void
-_pef_config_config_file_parse (struct pef_config_arguments *cmd_args)
+_ipmi_pef_config_config_file_parse (struct ipmi_pef_config_arguments *cmd_args)
 {
-  struct config_file_data_pef_config config_file_data;
+  struct config_file_data_ipmi_pef_config config_file_data;
   
   memset (&config_file_data,
           '\0',
-          sizeof (struct config_file_data_pef_config));
+          sizeof (struct config_file_data_ipmi_pef_config));
   
   if (config_file_parse (cmd_args->config_args.common.config_file,
                          0,
@@ -129,7 +129,7 @@ _pef_config_config_file_parse (struct pef_config_arguments *cmd_args)
                          NULL,
                          &(cmd_args->config_args.hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
-                         CONFIG_FILE_TOOL_PEF_CONFIG,
+                         CONFIG_FILE_TOOL_IPMI_PEF_CONFIG,
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
@@ -141,7 +141,7 @@ _pef_config_config_file_parse (struct pef_config_arguments *cmd_args)
 }
 
 static void
-_pef_config_args_validate (struct pef_config_arguments *cmd_args)
+_ipmi_pef_config_args_validate (struct ipmi_pef_config_arguments *cmd_args)
 {
   if ((!cmd_args->config_args.action && !cmd_args->info)
       || (cmd_args->config_args.action && cmd_args->info)
@@ -160,7 +160,7 @@ _pef_config_args_validate (struct pef_config_arguments *cmd_args)
 }
 
 void
-pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_args)
+ipmi_pef_config_argp_parse (int argc, char **argv, struct ipmi_pef_config_arguments *cmd_args)
 {
   init_config_args (&(cmd_args->config_args));
   init_common_cmd_args_admin (&(cmd_args->config_args.common));
@@ -174,7 +174,7 @@ pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_a
               NULL,
               &(cmd_args->config_args.common));
 
-  _pef_config_config_file_parse (cmd_args);
+  _ipmi_pef_config_config_file_parse (cmd_args);
 
   argp_parse (&cmdline_argp,
               argc,
@@ -184,6 +184,6 @@ pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_a
               cmd_args);
 
   verify_common_cmd_args (&(cmd_args->config_args.common));
-  _pef_config_args_validate (cmd_args);
+  _ipmi_pef_config_args_validate (cmd_args);
 }
 

@@ -16,10 +16,10 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _PEF_CONFIG_VALIDATE_H
-#define _PEF_CONFIG_VALIDATE_H
+#ifndef _IPMI_PEF_CONFIG_VALIDATE_H
+#define _IPMI_PEF_CONFIG_VALIDATE_H
 
-#include "pef-config.h"
+#include "ipmi-pef-config.h"
 
 config_validate_t alert_destination_type_validate (const char *section_name,
                                                    const char *key_name,

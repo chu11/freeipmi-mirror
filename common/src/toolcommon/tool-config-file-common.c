@@ -1016,6 +1016,11 @@ config_file_parse (const char *filename,
     ipmi_oem_cipher_suite_id_count = 0, ipmi_oem_privilege_level_count = 0,
     ipmi_oem_workaround_flags_count = 0;
 
+  int ipmi_pef_config_username_count = 0, ipmi_pef_config_password_count = 0,
+    ipmi_pef_config_k_g_count = 0, ipmi_pef_config_authentication_type_count = 0,
+    ipmi_pef_config_cipher_suite_id_count = 0, ipmi_pef_config_privilege_level_count = 0,
+    ipmi_pef_config_workaround_flags_count = 0;
+
   int ipmi_raw_username_count = 0, ipmi_raw_password_count = 0,
     ipmi_raw_k_g_count = 0, ipmi_raw_authentication_type_count = 0,
     ipmi_raw_cipher_suite_id_count = 0, ipmi_raw_privilege_level_count = 0,
@@ -1051,11 +1056,6 @@ config_file_parse (const char *filename,
     ipmipower_cipher_suite_id_count = 0, ipmipower_privilege_level_count = 0,
     ipmipower_workaround_flags_count = 0;
 
-  int pef_config_username_count = 0, pef_config_password_count = 0,
-    pef_config_k_g_count = 0, pef_config_authentication_type_count = 0,
-    pef_config_cipher_suite_id_count = 0, pef_config_privilege_level_count = 0,
-    pef_config_workaround_flags_count = 0;
-
   struct config_file_data_bmc_config bmc_config_data;
   struct config_file_data_bmc_config *bmc_config_data_ptr;
 
@@ -1067,6 +1067,9 @@ config_file_parse (const char *filename,
 
   struct config_file_data_ipmi_fru ipmi_fru_data;
   struct config_file_data_ipmi_fru *ipmi_fru_data_ptr;
+
+  struct config_file_data_ipmi_pef_config ipmi_pef_config_data;
+  struct config_file_data_ipmi_pef_config *ipmi_pef_config_data_ptr;
 
   struct config_file_data_ipmi_sel ipmi_sel_data;
   struct config_file_data_ipmi_sel *ipmi_sel_data_ptr;
@@ -1085,9 +1088,6 @@ config_file_parse (const char *filename,
 
   struct config_file_data_ipmipower ipmipower_data;
   struct config_file_data_ipmipower *ipmipower_data_ptr;
-
-  struct config_file_data_pef_config pef_config_data;
-  struct config_file_data_pef_config *pef_config_data_ptr;
 
   struct cmd_args_config cmd_args_config;
 
@@ -2065,6 +2065,197 @@ config_file_parse (const char *filename,
         &ipmi_oem_workaround_flags_count,
         &cmd_args_config,
         0
+      },
+    };
+
+  /*
+   * Ipmi-pef-config
+   */
+  struct conffile_option ipmi_pef_config_options[] =
+    {
+      /* maintained for backwards compatability */
+      {
+        "pef-config-username",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_username,
+        1,
+        0,
+        &ipmi_pef_config_username_count,
+        &cmd_args_config,
+        0,
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-password",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_password,
+        1,
+        0,
+        &ipmi_pef_config_password_count,
+        &cmd_args_config,
+        0,
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-k_g",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_k_g,
+        1,
+        0,
+        &ipmi_pef_config_k_g_count,
+        &cmd_args_config,
+        0,
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-authentication-type",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_authentication_type,
+        1,
+        0,
+        &ipmi_pef_config_authentication_type_count,
+        &cmd_args_config,
+        0,
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-cipher-suite-id",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_tool_specific_cipher_suite_id,
+        1,
+        0,
+        &ipmi_pef_config_cipher_suite_id_count,
+        &cmd_args_config,
+        0,
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-privilege-level",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_privilege_level,
+        1,
+        0,
+        &ipmi_pef_config_privilege_level_count,
+        &cmd_args_config,
+        0,
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-workaround-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_tool_specific_workaround_flags,
+        1,
+        0,
+        &ipmi_pef_config_workaround_flags_count,
+        &cmd_args_config,
+        0
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_non_negative_int,
+        1,
+        0,
+        &(ipmi_pef_config_data.verbose_count_count),
+        &(ipmi_pef_config_data.verbose_count),
+        0,
+      },
+      {
+        "ipmi-pef-config-username",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_username,
+        1,
+        0,
+        &ipmi_pef_config_username_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pef-config-password",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_password,
+        1,
+        0,
+        &ipmi_pef_config_password_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pef-config-k_g",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_k_g,
+        1,
+        0,
+        &ipmi_pef_config_k_g_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pef-config-authentication-type",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_authentication_type,
+        1,
+        0,
+        &ipmi_pef_config_authentication_type_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pef-config-cipher-suite-id",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_tool_specific_cipher_suite_id,
+        1,
+        0,
+        &ipmi_pef_config_cipher_suite_id_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pef-config-privilege-level",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_privilege_level,
+        1,
+        0,
+        &ipmi_pef_config_privilege_level_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pef-config-workaround-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_tool_specific_workaround_flags,
+        1,
+        0,
+        &ipmi_pef_config_workaround_flags_count,
+        &cmd_args_config,
+        0
+      },
+      {
+        "ipmi-pef-config-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_non_negative_int,
+        1,
+        0,
+        &(ipmi_pef_config_data.verbose_count_count),
+        &(ipmi_pef_config_data.verbose_count),
+        0,
       },
     };
 
@@ -3264,101 +3455,6 @@ config_file_parse (const char *filename,
       },
     };
 
-  /*
-   * Pef-config
-   */
-  struct conffile_option pef_config_options[] =
-    {
-      {
-        "pef-config-username",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_tool_specific_username,
-        1,
-        0,
-        &pef_config_username_count,
-        &cmd_args_config,
-        0,
-      },
-      {
-        "pef-config-password",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_tool_specific_password,
-        1,
-        0,
-        &pef_config_password_count,
-        &cmd_args_config,
-        0,
-      },
-      {
-        "pef-config-k_g",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_tool_specific_k_g,
-        1,
-        0,
-        &pef_config_k_g_count,
-        &cmd_args_config,
-        0,
-      },
-      {
-        "pef-config-authentication-type",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_tool_specific_authentication_type,
-        1,
-        0,
-        &pef_config_authentication_type_count,
-        &cmd_args_config,
-        0,
-      },
-      {
-        "pef-config-cipher-suite-id",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_tool_specific_cipher_suite_id,
-        1,
-        0,
-        &pef_config_cipher_suite_id_count,
-        &cmd_args_config,
-        0,
-      },
-      {
-        "pef-config-privilege-level",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_tool_specific_privilege_level,
-        1,
-        0,
-        &pef_config_privilege_level_count,
-        &cmd_args_config,
-        0,
-      },
-      {
-        "pef-config-workaround-flags",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        config_file_tool_specific_workaround_flags,
-        1,
-        0,
-        &pef_config_workaround_flags_count,
-        &cmd_args_config,
-        0
-      },
-      {
-        "pef-config-verbose-count",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_non_negative_int,
-        1,
-        0,
-        &(pef_config_data.verbose_count_count),
-        &(pef_config_data.verbose_count),
-        0,
-      },
-    };
-
   conffile_t cf = NULL;
   int rv = -1;
   int options_len;
@@ -3379,14 +3475,14 @@ config_file_parse (const char *filename,
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_FRU) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_OEM) && !tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_IPMI_PEF_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_RAW) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SEL) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMICONSOLE) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMIMONITORING) && tool_data)
-              || ((tool_support & CONFIG_FILE_TOOL_IPMIPOWER) && tool_data)
-              || ((tool_support & CONFIG_FILE_TOOL_PEF_CONFIG) && tool_data)));
+              || ((tool_support & CONFIG_FILE_TOOL_IPMIPOWER) && tool_data)));
 
   memset (config_file_options, '\0', sizeof (struct conffile_option));
 
@@ -3545,6 +3641,17 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
+  options_len = sizeof (ipmi_pef_config_options)/sizeof (struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_IPMI_PEF_CONFIG))
+    _ignore_options (ipmi_pef_config_options, options_len);
+
+  _copy_options (config_file_options,
+                 config_file_options_len,
+                 ipmi_pef_config_options,
+                 options_len);
+
+  config_file_options_len += options_len;
+
   options_len = sizeof (ipmi_raw_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_RAW))
     _ignore_options (ipmi_raw_options, options_len);
@@ -3622,30 +3729,19 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof (pef_config_options)/sizeof (struct conffile_option);
-  if (!(tool_support & CONFIG_FILE_TOOL_PEF_CONFIG))
-    _ignore_options (pef_config_options, options_len);
-
-  _copy_options (config_file_options,
-                 config_file_options_len,
-                 pef_config_options,
-                 options_len);
-
-  config_file_options_len += options_len;
-
   /* clear out config file data */
 
   memset (&bmc_config_data, '\0', sizeof (struct config_file_data_bmc_config));
   memset (&bmc_watchdog_data, '\0', sizeof (struct config_file_data_bmc_watchdog));
   memset (&ipmi_chassis_config_data, '\0', sizeof (struct config_file_data_ipmi_chassis_config));
   memset (&ipmi_fru_data, '\0', sizeof (struct config_file_data_ipmi_fru));
+  memset (&ipmi_pef_config_data, '\0', sizeof (struct config_file_data_ipmi_pef_config));
   memset (&ipmi_sel_data, '\0', sizeof (struct config_file_data_ipmi_sel));
   memset (&ipmi_sensors_data, '\0', sizeof (struct config_file_data_ipmi_sensors));
   memset (&ipmi_sensors_config_data, '\0', sizeof (struct config_file_data_ipmi_sensors_config));
   memset (&ipmiconsole_data, '\0', sizeof (struct config_file_data_ipmiconsole));
   memset (&ipmimonitoring_data, '\0', sizeof (struct config_file_data_ipmimonitoring));
   memset (&ipmipower_data, '\0', sizeof (struct config_file_data_ipmipower));
-  memset (&pef_config_data, '\0', sizeof (struct config_file_data_pef_config));
   memset (&cmd_args_config, '\0', sizeof (struct cmd_args_config));
 
   if (!(cf = conffile_handle_create ()))
@@ -3752,6 +3848,13 @@ config_file_parse (const char *filename,
               &ipmi_fru_data,
               sizeof (struct config_file_data_ipmi_fru));
     }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_PEF_CONFIG)
+    {
+      ipmi_pef_config_data_ptr = (struct config_file_data_ipmi_pef_config *)tool_data;
+      memcpy (ipmi_pef_config_data_ptr,
+              &ipmi_pef_config_data,
+              sizeof (struct config_file_data_ipmi_pef_config));
+    }
   else if (tool_support & CONFIG_FILE_TOOL_IPMI_SEL)
     {
       ipmi_sel_data_ptr = (struct config_file_data_ipmi_sel *)tool_data;
@@ -3793,13 +3896,6 @@ config_file_parse (const char *filename,
       memcpy (ipmipower_data_ptr,
               &ipmipower_data,
               sizeof (struct config_file_data_ipmipower));
-    }
-  else if (tool_support & CONFIG_FILE_TOOL_PEF_CONFIG)
-    {
-      pef_config_data_ptr = (struct config_file_data_pef_config *)tool_data;
-      memcpy (pef_config_data_ptr,
-              &pef_config_data,
-              sizeof (struct config_file_data_pef_config));
     }
 
  out:

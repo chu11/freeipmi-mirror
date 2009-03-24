@@ -106,7 +106,9 @@ o ipmi-sensors-config
     hit", "gigabyte per minute", "pounds / cu in").
   - Support ability to report read only field error.
   - Support additional options in FreeIPMI config file.
-o pef-config
+o ipmi-pef-config/pef-config
+  - Rename pef-config to ipmi-pef-config for consistency to other
+    tools.  Keep backwards compatability with symlinks and such.
   - Support ability to report read only field error.
   - Support additional options in FreeIPMI config file.
 o Various documentation updates.

@@ -35,7 +35,7 @@ bmc-device
 get auxiliary log status
 - not tested, don't have a machine with this support
 
-pef-config
+ipmi-pef-config
 -----------
 * conf.5 manpage
 

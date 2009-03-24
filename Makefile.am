@@ -12,6 +12,7 @@ SUBDIRS = \
 	ipmi-chassis-config \
 	ipmi-fru \
 	ipmi-oem \
+	ipmi-pef-config \
 	ipmi-raw \
 	ipmi-sel \
 	ipmi-sensors \
@@ -22,7 +23,6 @@ SUBDIRS = \
 	ipmimonitoring \
 	ipmiping \
 	ipmipower \
-	pef-config \
 	rmcpping \
 	contrib
 

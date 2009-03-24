@@ -41,14 +41,14 @@
 #define CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG 0x00000020
 #define CONFIG_FILE_TOOL_IPMI_FRU            0x00000040
 #define CONFIG_FILE_TOOL_IPMI_OEM            0x00000080
-#define CONFIG_FILE_TOOL_IPMI_RAW            0x00000100
-#define CONFIG_FILE_TOOL_IPMI_SEL            0x00000200
-#define CONFIG_FILE_TOOL_IPMI_SENSORS        0x00000400
-#define CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG 0x00000800
-#define CONFIG_FILE_TOOL_IPMICONSOLE         0x00001000
-#define CONFIG_FILE_TOOL_IPMIMONITORING      0x00002000
-#define CONFIG_FILE_TOOL_IPMIPOWER           0x00004000
-#define CONFIG_FILE_TOOL_PEF_CONFIG          0x00008000
+#define CONFIG_FILE_TOOL_IPMI_PEF_CONFIG     0x00000100
+#define CONFIG_FILE_TOOL_IPMI_RAW            0x00000200
+#define CONFIG_FILE_TOOL_IPMI_SEL            0x00000400
+#define CONFIG_FILE_TOOL_IPMI_SENSORS        0x00000800
+#define CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG 0x00001000
+#define CONFIG_FILE_TOOL_IPMICONSOLE         0x00002000
+#define CONFIG_FILE_TOOL_IPMIMONITORING      0x00004000
+#define CONFIG_FILE_TOOL_IPMIPOWER           0x00008000
 
 #define CONFIG_FILE_MAX_SENSOR_RECORD_IDS           256
 #define CONFIG_FILE_MAX_SENSOR_GROUPS               256
@@ -80,6 +80,12 @@ struct config_file_data_ipmi_fru
   int verbose_count_count;
   int skip_checks;
   int skip_checks_count;
+};
+
+struct config_file_data_ipmi_pef_config
+{
+  int verbose_count;
+  int verbose_count_count;
 };
 
 struct config_file_data_ipmi_sel
@@ -183,12 +189,6 @@ struct config_file_data_ipmipower
   int ping_percent_count;
   unsigned int ping_consec_count;
   int ping_consec_count_count;
-};
-
-struct config_file_data_pef_config
-{
-  int verbose_count;
-  int verbose_count_count;
 };
 
 int config_file_parse (const char *filename,

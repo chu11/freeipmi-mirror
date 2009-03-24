@@ -28,10 +28,10 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "pef-config.h"
-#include "pef-config-map.h"
-#include "pef-config-utils.h"
-#include "pef-config-validate.h"
+#include "ipmi-pef-config.h"
+#include "ipmi-pef-config-map.h"
+#include "ipmi-pef-config-utils.h"
+#include "ipmi-pef-config-validate.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -82,7 +82,7 @@ _config_section_update_keyvalue_output_hex (pstdout_state_t pstate,
 }
 
 static config_err_t
-_get_event_filter_table (struct pef_config_state_data *state_data,
+_get_event_filter_table (struct ipmi_pef_config_state_data *state_data,
                          const char *section_name,
                          struct event_filter_table *eft)
 {
@@ -410,7 +410,7 @@ _get_event_filter_table (struct pef_config_state_data *state_data,
 }
 
 static config_err_t
-_set_event_filter_table (struct pef_config_state_data *state_data,
+_set_event_filter_table (struct ipmi_pef_config_state_data *state_data,
                          const char *section_name,
                          struct event_filter_table *eft)
 {
@@ -492,7 +492,7 @@ filter_type_checkout (const char *section_name,
                       struct config_keyvalue *kv,
                       void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -514,7 +514,7 @@ filter_type_commit (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -535,7 +535,7 @@ enable_filter_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -557,7 +557,7 @@ enable_filter_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -578,7 +578,7 @@ event_filter_action_alert_checkout (const char *section_name,
                                     struct config_keyvalue *kv,
                                     void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -600,7 +600,7 @@ event_filter_action_alert_commit (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -621,7 +621,7 @@ event_filter_action_power_off_checkout (const char *section_name,
                                         struct config_keyvalue *kv,
                                         void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -643,7 +643,7 @@ event_filter_action_power_off_commit (const char *section_name,
                                       const struct config_keyvalue *kv,
                                       void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -664,7 +664,7 @@ event_filter_action_reset_checkout (const char *section_name,
                                     struct config_keyvalue *kv,
                                     void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -686,7 +686,7 @@ event_filter_action_reset_commit (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -707,7 +707,7 @@ event_filter_action_power_cycle_checkout (const char *section_name,
                                           struct config_keyvalue *kv,
                                           void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -729,7 +729,7 @@ event_filter_action_power_cycle_commit (const char *section_name,
                                         const struct config_keyvalue *kv,
                                         void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -750,7 +750,7 @@ event_filter_action_oem_checkout (const char *section_name,
                                   struct config_keyvalue *kv,
                                   void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -772,7 +772,7 @@ event_filter_action_oem_commit (const char *section_name,
                                 const struct config_keyvalue *kv,
                                 void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -793,7 +793,7 @@ event_filter_action_diagnostic_interrupt_checkout (const char *section_name,
                                                    struct config_keyvalue *kv,
                                                    void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -815,7 +815,7 @@ event_filter_action_diagnostic_interrupt_commit (const char *section_name,
                                                  const struct config_keyvalue *kv,
                                                  void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -836,7 +836,7 @@ event_filter_action_group_control_operation_checkout (const char *section_name,
                                                       struct config_keyvalue *kv,
                                                       void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -858,7 +858,7 @@ event_filter_action_group_control_operation_commit (const char *section_name,
                                                     const struct config_keyvalue *kv,
                                                     void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -879,7 +879,7 @@ alert_policy_number_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -901,7 +901,7 @@ alert_policy_number_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -922,7 +922,7 @@ group_control_selector_checkout (const char *section_name,
                                  struct config_keyvalue *kv,
                                  void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -944,7 +944,7 @@ group_control_selector_commit (const char *section_name,
                                const struct config_keyvalue *kv,
                                void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -965,7 +965,7 @@ event_severity_checkout (const char *section_name,
                          struct config_keyvalue *kv,
                          void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -987,7 +987,7 @@ event_severity_commit (const char *section_name,
                        const struct config_keyvalue *kv,
                        void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1008,7 +1008,7 @@ generator_id_byte_1_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1030,7 +1030,7 @@ generator_id_byte_1_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1052,7 +1052,7 @@ generator_id_byte_2_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1074,7 +1074,7 @@ generator_id_byte_2_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1095,7 +1095,7 @@ sensor_type_checkout (const char *section_name,
                       struct config_keyvalue *kv,
                       void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1117,7 +1117,7 @@ sensor_type_commit (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1138,7 +1138,7 @@ sensor_number_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1160,7 +1160,7 @@ sensor_number_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1181,7 +1181,7 @@ event_trigger_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1203,7 +1203,7 @@ event_trigger_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1224,7 +1224,7 @@ event_data1_offset_mask_checkout (const char *section_name,
                                   struct config_keyvalue *kv,
                                   void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1246,7 +1246,7 @@ event_data1_offset_mask_commit (const char *section_name,
                                 const struct config_keyvalue *kv,
                                 void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1267,7 +1267,7 @@ event_data1_and_mask_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1289,7 +1289,7 @@ event_data1_and_mask_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1310,7 +1310,7 @@ event_data1_compare1_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1332,7 +1332,7 @@ event_data1_compare1_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1353,7 +1353,7 @@ event_data1_compare2_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1375,7 +1375,7 @@ event_data1_compare2_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1396,7 +1396,7 @@ event_data2_and_mask_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1418,7 +1418,7 @@ event_data2_and_mask_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1439,7 +1439,7 @@ event_data2_compare1_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1461,7 +1461,7 @@ event_data2_compare1_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1482,7 +1482,7 @@ event_data2_compare2_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1504,7 +1504,7 @@ event_data2_compare2_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1525,7 +1525,7 @@ event_data3_and_mask_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1547,7 +1547,7 @@ event_data3_and_mask_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1568,7 +1568,7 @@ event_data3_compare1_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1590,7 +1590,7 @@ event_data3_compare1_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1611,7 +1611,7 @@ event_data3_compare2_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1633,7 +1633,7 @@ event_data3_compare2_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
 
@@ -1650,7 +1650,7 @@ event_data3_compare2_commit (const char *section_name,
 }
 
 struct config_section *
-pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, int num)
+ipmi_pef_config_event_filter_table_section_get (ipmi_pef_config_state_data_t *state_data, int num)
 {
   struct config_section *section = NULL;
   char buf[CONFIG_MAX_SECTION_NAME_LEN];

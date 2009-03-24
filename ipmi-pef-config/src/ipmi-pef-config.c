@@ -27,10 +27,10 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "pef-config.h"
-#include "pef-config-argp.h"
-#include "pef-config-info.h"
-#include "pef-config-sections.h"
+#include "ipmi-pef-config.h"
+#include "ipmi-pef-config-argp.h"
+#include "ipmi-pef-config-info.h"
+#include "ipmi-pef-config-sections.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -39,11 +39,11 @@
 #include "tool-hostrange-common.h"
 
 static void
-_pef_config_state_data_init (pef_config_state_data_t *state_data)
+_ipmi_pef_config_state_data_init (ipmi_pef_config_state_data_t *state_data)
 {
   assert (state_data);
 
-  memset (state_data, '\0', sizeof (pef_config_state_data_t));
+  memset (state_data, '\0', sizeof (ipmi_pef_config_state_data_t));
   state_data->prog_data = NULL;
   state_data->ipmi_ctx = NULL;
 
@@ -55,12 +55,12 @@ _pef_config_state_data_init (pef_config_state_data_t *state_data)
 }
 
 static int
-_pef_config (pstdout_state_t pstate,
-             const char *hostname,
-             void *arg)
+_ipmi_pef_config (pstdout_state_t pstate,
+                  const char *hostname,
+                  void *arg)
 {
-  pef_config_state_data_t state_data;
-  pef_config_prog_data_t *prog_data;
+  ipmi_pef_config_state_data_t state_data;
+  ipmi_pef_config_prog_data_t *prog_data;
   char errmsg[IPMI_OPEN_ERRMSGLEN];
   struct config_section *sections = NULL;
   int exit_code = -1;
@@ -68,9 +68,9 @@ _pef_config (pstdout_state_t pstate,
   int file_opened = 0;
   FILE *fp = NULL;              /* init NULL to remove warnings */
 
-  prog_data = (pef_config_prog_data_t *) arg;
+  prog_data = (ipmi_pef_config_prog_data_t *) arg;
 
-  _pef_config_state_data_init (&state_data);
+  _ipmi_pef_config_state_data_init (&state_data);
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
 
@@ -88,7 +88,7 @@ _pef_config (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  if (!(sections = pef_config_sections_create (&state_data)))
+  if (!(sections = ipmi_pef_config_sections_create (&state_data)))
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -334,17 +334,17 @@ _pef_config (pstdout_state_t pstate,
 int
 main (int argc, char **argv)
 {
-  pef_config_prog_data_t prog_data;
-  struct pef_config_arguments cmd_args;
+  ipmi_pef_config_prog_data_t prog_data;
+  struct ipmi_pef_config_arguments cmd_args;
   int exit_code;
   int hosts_count;
   int rv;
 
   ipmi_disable_coredump ();
 
-  memset (&prog_data, '\0', sizeof (pef_config_prog_data_t));
+  memset (&prog_data, '\0', sizeof (ipmi_pef_config_prog_data_t));
   prog_data.progname = argv[0];
-  pef_config_argp_parse (argc, argv, &cmd_args);
+  ipmi_pef_config_argp_parse (argc, argv, &cmd_args);
 
   prog_data.args = &cmd_args;
 
@@ -362,7 +362,7 @@ main (int argc, char **argv)
   prog_data.hosts_count = hosts_count;
 
   if ((rv = pstdout_launch (prog_data.args->config_args.common.hostname,
-                            _pef_config,
+                            _ipmi_pef_config,
                             &prog_data)) < 0)
     {
       fprintf (stderr,

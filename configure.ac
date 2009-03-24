@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.8.0.alpha0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.169 2009-03-12 17:57:47 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.170 2009-03-24 00:21:34 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -85,6 +85,9 @@ AC_CONFIG_FILES([
         ipmi-oem/Makefile 
 	ipmi-oem/ipmi-oem.8.pre
         ipmi-oem/src/Makefile 
+        ipmi-pef-config/Makefile
+	ipmi-pef-config/ipmi-pef-config.8.pre
+        ipmi-pef-config/src/Makefile 
         ipmi-raw/Makefile 
 	ipmi-raw/ipmi-raw.8.pre
         ipmi-raw/src/Makefile 
@@ -131,9 +134,6 @@ AC_CONFIG_FILES([
         ipmipower/ipmipower.8.pre
         ipmipower/ipmipower.conf.5.pre
         ipmipower/src/Makefile
-        pef-config/Makefile
-	pef-config/pef-config.8.pre
-        pef-config/src/Makefile 
         rmcpping/Makefile 
         rmcpping/rmcpping.8.pre
         rmcpping/src/Makefile
@@ -229,6 +229,7 @@ if test -z "${CPP}"; then
 fi
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 AC_PROG_MAKE_SET
+AC_PROG_LN_S
 
 dnl Enable error tracing. Lower level calls will spit error messages
 dnl on to the console
