@@ -1,6 +1,8 @@
 2009-03-23  Albert Chu <chu11@llnl.gov>
 
 	* Rename pef-config to ipmi-pef-config.
+
+	* freeipmi.spec.in: Fix build issues.
 	
 2009-03-21  Albert Chu <chu11@llnl.gov>
 
