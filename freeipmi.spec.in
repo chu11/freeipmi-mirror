@@ -286,7 +286,11 @@ fi
 %dir %{_includedir}/freeipmi/locate
 %dir %{_includedir}/freeipmi/record-format
 %dir %{_includedir}/freeipmi/sdr-cache
+%dir %{_includedir}/freeipmi/sdr-parse
+%dir %{_includedir}/freeipmi/sel-parse
+%dir %{_includedir}/freeipmi/sensor-read
 %dir %{_includedir}/freeipmi/spec
+%dir %{_includedir}/freeipmi/templates
 %dir %{_includedir}/freeipmi/util
 %{_includedir}/ipmiconsole.h
 %{_includedir}/ipmidetect.h
@@ -301,7 +305,11 @@ fi
 %{_includedir}/freeipmi/locate/*.h
 %{_includedir}/freeipmi/record-format/*.h
 %{_includedir}/freeipmi/sdr-cache/*.h
+%{_includedir}/freeipmi/sdr-parse/*.h
+%{_includedir}/freeipmi/sel-parse/*.h
+%{_includedir}/freeipmi/sensor-read/*.h
 %{_includedir}/freeipmi/spec/*.h
+%{_includedir}/freeipmi/templates/*.h
 %{_includedir}/freeipmi/util/*.h
 %{_mandir}/man3/*
 
@@ -325,6 +333,10 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Mon Mar 23 2009 Albert Chu <chu11@llnl.gov> 0.8.0
+- Update for renaming of pef-config.
+- Update for new .h files.
+
 * Tue Nov 25 2008 Albert Chu <chu11@llnl.gov> 0.8.0
 - Add new ipmimonitoring config manpages.
 
