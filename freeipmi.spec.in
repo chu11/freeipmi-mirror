@@ -223,8 +223,8 @@ fi
 %{_sbindir}/bmc-device
 %{_sbindir}/ipmi-fru
 %{_sbindir}/ipmi-locate
-%{_sbindir}/pef-config
 %{_sbindir}/ipmi-oem
+%{_sbindir}/ipmi-pef-config
 %{_sbindir}/ipmi-raw
 %{_sbindir}/ipmi-sel
 %{_sbindir}/ipmi-sensors

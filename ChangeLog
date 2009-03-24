@@ -1,3 +1,7 @@
+2009-03-23  Albert Chu <chu11@llnl.gov>
+
+	* Rename pef-config to ipmi-pef-config.
+	
 2009-03-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support inventenc get-mad-address and

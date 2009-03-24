@@ -16,8 +16,8 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _PEF_CONFIG_H
-#define _PEF_CONFIG_H
+#ifndef _IPMI_PEF_CONFIG_H
+#define _IPMI_PEF_CONFIG_H
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
@@ -36,31 +36,31 @@
 #include "config-tool-utils.h"
 #include "config-tool-validate.h"
 
-enum pef_config_argp_option_keys
+enum ipmi_pef_config_argp_option_keys
   {
     INFO_KEY = 'i',
   };
 
-struct pef_config_arguments
+struct ipmi_pef_config_arguments
 {
   struct config_arguments config_args;
   int info;
 };
 
-typedef struct pef_config_prog_data
+typedef struct ipmi_pef_config_prog_data
 {
   char *progname;
-  struct pef_config_arguments *args;
+  struct ipmi_pef_config_arguments *args;
   int hosts_count;
-} pef_config_prog_data_t;
+} ipmi_pef_config_prog_data_t;
 
-typedef struct pef_config_state_data
+typedef struct ipmi_pef_config_state_data
 {
-  pef_config_prog_data_t *prog_data;
+  ipmi_pef_config_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
 
-  /* achu: caching to make pef-config work more quickly */
+  /* achu: caching to make ipmi-pef-config work more quickly */
   int lan_channel_number_initialized;
   int8_t lan_channel_number;
   int number_of_lan_alert_destinations_initialized;
@@ -71,6 +71,6 @@ typedef struct pef_config_state_data
   int8_t number_of_alert_policy_entries;
   int number_of_event_filters_initialized;
   int8_t number_of_event_filters;
-} pef_config_state_data_t;
+} ipmi_pef_config_state_data_t;
 
 #endif

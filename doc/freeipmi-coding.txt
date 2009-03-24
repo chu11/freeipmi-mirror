@@ -630,8 +630,8 @@ could change this viewpoint later.
 8) Configuration tool callback design
 -------------------------------------
 
-Bmc-config, Pef-config, Ipmi-sensors-config, and Ipmi-chassis-config
-(henceforce together just called Configtools) are coded with a
+Bmc-config, Ipmi-chassis-config, Ipmi-pef-config, Ipmi-sensors-config,
+and (henceforce together just called Configtools) are coded with a
 archicture that reads/writes each configurable field in the BMC
 separately.
 

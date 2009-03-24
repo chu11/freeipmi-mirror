@@ -28,14 +28,14 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "pef-config.h"
-#include "pef-config-utils.h"
+#include "ipmi-pef-config.h"
+#include "ipmi-pef-config-utils.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
 config_err_t
-get_lan_channel_number (struct pef_config_state_data *state_data, uint8_t *channel_number)
+get_lan_channel_number (struct ipmi_pef_config_state_data *state_data, uint8_t *channel_number)
 {
   assert (state_data);
   assert (channel_number);
@@ -63,7 +63,7 @@ get_lan_channel_number (struct pef_config_state_data *state_data, uint8_t *chann
 }
 
 config_err_t
-get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, uint8_t *number_of_lan_alert_destinations)
+get_number_of_lan_alert_destinations (struct ipmi_pef_config_state_data *state_data, uint8_t *number_of_lan_alert_destinations)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -132,7 +132,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
 }
 
 config_err_t
-get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *number_of_alert_strings)
+get_number_of_alert_strings (struct ipmi_pef_config_state_data *state_data, uint8_t *number_of_alert_strings)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -192,7 +192,7 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *
 }
 
 config_err_t
-get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, uint8_t *number_of_alert_policy_entries)
+get_number_of_alert_policy_entries (struct ipmi_pef_config_state_data *state_data, uint8_t *number_of_alert_policy_entries)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -252,7 +252,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
 }
 
 config_err_t
-get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *number_of_event_filters)
+get_number_of_event_filters (struct ipmi_pef_config_state_data *state_data, uint8_t *number_of_event_filters)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;

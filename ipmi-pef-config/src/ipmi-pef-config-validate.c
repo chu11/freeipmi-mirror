@@ -32,9 +32,9 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "pef-config.h"
-#include "pef-config-map.h"
-#include "pef-config-validate.h"
+#include "ipmi-pef-config.h"
+#include "ipmi-pef-config-map.h"
+#include "ipmi-pef-config-validate.h"
 
 #include "freeipmi-portability.h"
 

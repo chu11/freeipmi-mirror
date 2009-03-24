@@ -16,11 +16,11 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-#ifndef _PEF_CONFIG_ARGP_H
-#define _PEF_CONFIG_ARGP_H
+#ifndef _IPMI_PEF_CONFIG_ARGP_H
+#define _IPMI_PEF_CONFIG_ARGP_H
 
-#include "pef-config.h"
+#include "ipmi-pef-config.h"
 
-void pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_args);
+void ipmi_pef_config_argp_parse (int argc, char **argv, struct ipmi_pef_config_arguments *cmd_args);
 
 #endif

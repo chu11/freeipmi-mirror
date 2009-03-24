@@ -16,11 +16,12 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _PEF_CONFIG_SECTIONS
-#define _PEF_CONFIG_SECTIONS
+#ifndef _IPMI_PEF_CONFIG_PEF_CONF_SECTION_H_
+#define _IPMI_PEF_CONFIG_PEF_CONF_SECTION_H_
 
-#include "pef-config.h"
+#include "ipmi-pef-config.h"
+#include "ipmi-pef-config-sections.h"
 
-struct config_section *pef_config_sections_create (pef_config_state_data_t *state_data);
+struct config_section * ipmi_pef_config_pef_conf_section_get (ipmi_pef_config_state_data_t *state_data);
 
-#endif /* _PEF_CONFIG_SECTIONS */
+#endif /* _BMC_PEF_CONF_SECTION_H_ */

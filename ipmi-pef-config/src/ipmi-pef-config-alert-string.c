@@ -27,17 +27,17 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "pef-config.h"
-#include "pef-config-map.h"
-#include "pef-config-utils.h"
-#include "pef-config-validate.h"
+#include "ipmi-pef-config.h"
+#include "ipmi-pef-config-map.h"
+#include "ipmi-pef-config-utils.h"
+#include "ipmi-pef-config-validate.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
 /* achu: presumably there is no maximum.  We could read/write blocks
    forever based on block numbers.  However, we need to have some
-   artificial max for the sake of pef-config.
+   artificial max for the sake of ipmi-pef-config.
 */
 #define PEF_ALERT_STRING_MAX_LEN 64
 
@@ -47,7 +47,7 @@ struct alert_string_keys {
 };
 
 static config_err_t
-_get_alert_string_keys (pef_config_state_data_t *state_data,
+_get_alert_string_keys (ipmi_pef_config_state_data_t *state_data,
                         const char *section_name,
                         struct alert_string_keys *ask)
 {
@@ -114,7 +114,7 @@ _get_alert_string_keys (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-_set_alert_string_keys (pef_config_state_data_t *state_data,
+_set_alert_string_keys (ipmi_pef_config_state_data_t *state_data,
                         const char *section_name,
                         struct alert_string_keys *ask)
 {
@@ -171,7 +171,7 @@ event_filter_number_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct alert_string_keys ask;
   config_err_t ret;
 
@@ -193,7 +193,7 @@ event_filter_number_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct alert_string_keys ask;
   config_err_t ret;
 
@@ -214,7 +214,7 @@ alert_string_set_checkout (const char *section_name,
                            struct config_keyvalue *kv,
                            void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct alert_string_keys ask;
   config_err_t ret;
 
@@ -236,7 +236,7 @@ alert_string_set_commit (const char *section_name,
                          const struct config_keyvalue *kv,
                          void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   struct alert_string_keys ask;
   config_err_t ret;
 
@@ -257,7 +257,7 @@ alert_string_checkout (const char *section_name,
                        struct config_keyvalue *kv,
                        void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   uint8_t alert_string[PEF_ALERT_STRING_MAX_LEN+1];
   uint8_t string_selector;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -351,7 +351,7 @@ alert_string_commit (const char *section_name,
                      const struct config_keyvalue *kv,
                      void *arg)
 {
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   uint8_t string_selector;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -448,7 +448,7 @@ alert_string_validate (const char *section_name,
 }
 
 struct config_section *
-pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int num)
+ipmi_pef_config_alert_string_section_get (ipmi_pef_config_state_data_t *state_data, int num)
 {
   struct config_section *section = NULL;
   char buf[CONFIG_MAX_SECTION_NAME_LEN];

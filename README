@@ -81,15 +81,15 @@ A tool for sensor monitoring and interpretation.  The tool is similar
 to ipmi-sensors, but sensor readings are analyzed and mapped into
 Nominal, Warning, and Critical states.
 
-Pef-config
-
-A tool to configure Platform Event Filtering (PEF) information.
-
 Ipmi-chassis-config
 
 A tool to configure IPMI chassis information.  Supports configuration
 of boot device, power restore policy, and other chassis related
 fields.
+
+Ipmi-pef-config
+
+A tool to configure Platform Event Filtering (PEF) information.
 
 Ipmi-sensors-config
 

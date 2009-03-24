@@ -28,14 +28,14 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "pef-config.h"
-#include "pef-config-info.h"
+#include "ipmi-pef-config.h"
+#include "ipmi-pef-config-info.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
 config_err_t
-pef_info (pef_config_state_data_t *state_data)
+pef_info (ipmi_pef_config_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;

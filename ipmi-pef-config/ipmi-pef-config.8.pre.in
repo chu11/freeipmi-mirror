@@ -1,11 +1,11 @@
-.TH PEF-CONFIG 8 "@ISODATE@" "pef-config @PACKAGE_VERSION@" "System Commands"
+.TH IPMI-PEF-CONFIG 8 "@ISODATE@" "ipmi-pef-config @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
-pef-config \- configure PEF values
+ipmi-pef-config \- configure PEF values
 .SH "SYNOPSIS"
-.B pef-config
+.B ipmi-pef-config
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
-.B Pef-config
+.B Ipmi-pef-config
 is a Platform Event Filtering (PEF) configuration utility.  
 This configuration tool is for advanced IPMI users and
 generally not-required for IPMI to function.  Most IPMI users
@@ -21,7 +21,7 @@ tools respectively.  For some OEM specific configurations, please see
 .B ipmi-oem(8).
 #include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 See GENERAL USE below for a description on how most will want to use
-.B Pef-config.
+.B Ipmi-pef-config.
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
 #include <@top_srcdir@/common/man/manpage-common-inband.man>
@@ -39,9 +39,9 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/man/manpage-common-debug.man>
 #include <@top_srcdir@/common/man/manpage-common-misc.man>
-.SH "PEF-CONFIG OPTIONS"
+.SH "IPMI-PEF-CONFIG OPTIONS"
 The following options are specific to
-.B Pef-config.
+.B Ipmi-pef-config.
 .TP
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about PEF configuration.
@@ -78,19 +78,19 @@ Battery, Session_Audit, Version_Change, FRU_State, and Any
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
 .SH "EXAMPLES"
-.B # pef-config --checkout
+.B # ipmi-pef-config --checkout
 .PP
 Output all configuration information to the console.
 .PP
-.B # pef-config --checkout --filename=pef-data1.conf
+.B # ipmi-pef-config --checkout --filename=pef-data1.conf
 .PP
 Store all configuration information in pef-data1.conf.
 .PP
-.B # pef-config --diff --filename=pef-data2.conf
+.B # ipmi-pef-config --diff --filename=pef-data2.conf
 .PP
 Show all difference between the current configuration and the pef-data2.conf file.
 .PP
-.B # pef-config --commit --filename=pef-data1.conf
+.B # ipmi-pef-config --commit --filename=pef-data1.conf
 .PP
 Commit all configuration values from the pef-data1.conf file.
 .PP

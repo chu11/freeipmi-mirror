@@ -1,17 +1,17 @@
 noinst_HEADERS = \
-	pef-config.h \
-	pef-config-argp.h \
-	pef-config-pef-conf-section.h \
-	pef-config-community-string.h \
-	pef-config-lan-alert-destination.h \
-	pef-config-alert-string.h \
-	pef-config-alert-policy-table.h \
-	pef-config-event-filter-table.h \
-	pef-config-info.h \
-	pef-config-map.h \
-	pef-config-sections.h \
-	pef-config-utils.h \
-	pef-config-validate.h
+	ipmi-pef-config.h \
+	ipmi-pef-config-argp.h \
+	ipmi-pef-config-pef-conf-section.h \
+	ipmi-pef-config-community-string.h \
+	ipmi-pef-config-lan-alert-destination.h \
+	ipmi-pef-config-alert-string.h \
+	ipmi-pef-config-alert-policy-table.h \
+	ipmi-pef-config-event-filter-table.h \
+	ipmi-pef-config-info.h \
+	ipmi-pef-config-map.h \
+	ipmi-pef-config-sections.h \
+	ipmi-pef-config-utils.h \
+	ipmi-pef-config-validate.h
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/configtool \
@@ -23,9 +23,9 @@ AM_CPPFLAGS = \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 
-sbin_PROGRAMS = pef-config
+sbin_PROGRAMS = ipmi-pef-config
 
-pef_config_LDADD = \
+ipmi_pef_config_LDADD = \
 	$(top_builddir)/common/src/configtool/libconfigtoolcommon.la \
 	$(top_builddir)/common/src/toolcommon/libtoolcommon.la \
 	$(top_builddir)/common/src/toolhostrange/libtoolhostrange.la \
@@ -34,20 +34,24 @@ pef_config_LDADD = \
 	$(top_builddir)/ipmidetect/src/libipmidetect/libipmidetect.la \
 	$(top_builddir)/libfreeipmi/src/libfreeipmi.la
 
-pef_config_SOURCES = \
-	pef-config.c \
-	pef-config-argp.c \
-	pef-config-pef-conf-section.c \
-	pef-config-community-string.c \
-	pef-config-lan-alert-destination.c \
-	pef-config-alert-string.c \
-	pef-config-alert-policy-table.c \
-	pef-config-event-filter-table.c \
-	pef-config-info.c \
-	pef-config-map.c \
-	pef-config-sections.c \
-	pef-config-utils.c \
-	pef-config-validate.c
+ipmi_pef_config_SOURCES = \
+	ipmi-pef-config.c \
+	ipmi-pef-config-argp.c \
+	ipmi-pef-config-pef-conf-section.c \
+	ipmi-pef-config-community-string.c \
+	ipmi-pef-config-lan-alert-destination.c \
+	ipmi-pef-config-alert-string.c \
+	ipmi-pef-config-alert-policy-table.c \
+	ipmi-pef-config-event-filter-table.c \
+	ipmi-pef-config-info.c \
+	ipmi-pef-config-map.c \
+	ipmi-pef-config-sections.c \
+	ipmi-pef-config-utils.c \
+	ipmi-pef-config-validate.c
+
+all: $(sbin_PROGRAMS)
+	rm -rf pef-config
+	$(LN_S) $(sbindir)/ipmi-pef-config pef-config
 
 $(top_builddir)/common/src/configtool/libconfigtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
@@ -71,3 +75,7 @@ $(top_builddir)/libfreeipmi/src/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:
+
+install-exec-hook:
+	$(install_sh) -d -m 755 $(DESTDIR)/$(sbindir)
+	cp -d ./pef-config $(DESTDIR)/$(sbindir)

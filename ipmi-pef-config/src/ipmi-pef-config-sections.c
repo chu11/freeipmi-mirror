@@ -28,22 +28,22 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "pef-config.h"
-#include "pef-config-sections.h"
-#include "pef-config-utils.h"
+#include "ipmi-pef-config.h"
+#include "ipmi-pef-config-sections.h"
+#include "ipmi-pef-config-utils.h"
 
-#include "pef-config-pef-conf-section.h"
-#include "pef-config-community-string.h"
-#include "pef-config-lan-alert-destination.h"
-#include "pef-config-alert-string.h"
-#include "pef-config-alert-policy-table.h"
-#include "pef-config-event-filter-table.h"
+#include "ipmi-pef-config-pef-conf-section.h"
+#include "ipmi-pef-config-community-string.h"
+#include "ipmi-pef-config-lan-alert-destination.h"
+#include "ipmi-pef-config-alert-string.h"
+#include "ipmi-pef-config-alert-policy-table.h"
+#include "ipmi-pef-config-event-filter-table.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
 struct config_section *
-pef_config_sections_create (pef_config_state_data_t *state_data)
+ipmi_pef_config_sections_create (ipmi_pef_config_state_data_t *state_data)
 {
   struct config_section *sections = NULL;
   struct config_section *section = NULL;
@@ -93,19 +93,19 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
       return (NULL);
     }
 
-  if (!(section = pef_config_pef_conf_section_get (state_data)))
+  if (!(section = ipmi_pef_config_pef_conf_section_get (state_data)))
     goto cleanup;
   if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
-  if (!(section = pef_config_community_string_section_get (state_data)))
+  if (!(section = ipmi_pef_config_community_string_section_get (state_data)))
     goto cleanup;
   if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;
 
   for (i = 0; i < number_of_lan_alert_destinations; i++)
     {
-      if (!(section = pef_config_lan_alert_destination_section_get (state_data, i+1)))
+      if (!(section = ipmi_pef_config_lan_alert_destination_section_get (state_data, i+1)))
         goto cleanup;
       if (config_section_append (state_data->pstate, &sections, section) < 0)
         goto cleanup;
@@ -113,7 +113,7 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
 
   for (i = 0; i < number_of_alert_strings; i++)
     {
-      if (!(section = pef_config_alert_string_section_get (state_data, i+1)))
+      if (!(section = ipmi_pef_config_alert_string_section_get (state_data, i+1)))
         goto cleanup;
       if (config_section_append (state_data->pstate, &sections, section) < 0)
         goto cleanup;
@@ -121,7 +121,7 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
 
   for (i = 0; i < number_of_alert_policy_entries; i++)
     {
-      if (!(section = pef_config_alert_policy_table_section_get (state_data, i+1)))
+      if (!(section = ipmi_pef_config_alert_policy_table_section_get (state_data, i+1)))
         goto cleanup;
       if (config_section_append (state_data->pstate, &sections, section) < 0)
         goto cleanup;
@@ -129,7 +129,7 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
 
   for (i = 0; i < number_of_event_filters; i++)
     {
-      if (!(section = pef_config_event_filter_table_section_get (state_data, i+1)))
+      if (!(section = ipmi_pef_config_event_filter_table_section_get (state_data, i+1)))
         goto cleanup;
       if (config_section_append (state_data->pstate, &sections, section) < 0)
         goto cleanup;
