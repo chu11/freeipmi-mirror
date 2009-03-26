@@ -99,7 +99,10 @@ void
 ipmi_sdr_parse_ctx_destroy (ipmi_sdr_parse_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
-    return;
+    {
+      ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+      return;
+    }
 
   ctx->magic = ~IPMI_SDR_PARSE_CTX_MAGIC;
   free (ctx);

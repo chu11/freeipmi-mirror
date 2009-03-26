@@ -60,10 +60,16 @@ static char *ipmi_fru_parse_errmsgs[] =
   };
 
 ipmi_fru_parse_ctx_t
-ipmi_fru_parse_ctx_create (void)
+ipmi_fru_parse_ctx_create (ipmi_ctx_t ipmi_ctx)
 {
   struct ipmi_fru_parse_ctx *ctx = NULL;
 
+  if (!ipmi_ctx)
+    {
+      SET_ERRNO (EINVAL);
+      return (NULL);
+    }
+  
   if (!(ctx = (ipmi_fru_parse_ctx_t)malloc (sizeof (struct ipmi_fru_parse_ctx))))
     {
       ERRNO_TRACE (errno);
@@ -72,7 +78,9 @@ ipmi_fru_parse_ctx_create (void)
   memset (ctx, '\0', sizeof (struct ipmi_fru_parse_ctx));
   ctx->magic = IPMI_FRU_PARSE_CTX_MAGIC;
   ctx->flags = IPMI_FRU_PARSE_FLAGS_DEFAULT;
+  ctx->debug_prefix = NULL;
 
+  ctx->ipmi_ctx = ipmi_ctx;
   return (ctx);
 }
 
@@ -80,7 +88,13 @@ void
 ipmi_fru_parse_ctx_destroy (ipmi_fru_parse_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
-    return;
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return;
+    }
+
+  if (ctx->debug_prefix)
+    free (ctx->debug_prefix);
 
   ctx->magic = ~IPMI_FRU_PARSE_CTX_MAGIC;
   free (ctx);
@@ -147,5 +161,44 @@ ipmi_fru_parse_ctx_set_flags (ipmi_fru_parse_ctx_t ctx, unsigned int flags)
     }
 
   ctx->flags = flags;
+  return (0);
+}
+
+char *
+ipmi_fru_parse_ctx_get_debug_prefix (ipmi_fru_parse_ctx_t ctx)
+{
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (NULL);
+    }
+  
+  return (ctx)->debug_prefix;
+}
+
+int
+ipmi_fru_parse_ctx_set_debug_prefix (ipmi_fru_parse_ctx_t ctx, const char *debug_prefix)
+{
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (ctx->debug_prefix)
+    {
+      free (ctx->debug_prefix);
+      ctx->debug_prefix = NULL;
+    }
+
+  if (debug_prefix)
+    {
+      if (!(ctx->debug_prefix = strdup (debug_prefix)))
+        {
+          FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY);
+          return (-1);
+        }
+    }
+  
   return (0);
 }

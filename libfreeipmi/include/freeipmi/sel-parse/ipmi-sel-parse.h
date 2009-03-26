@@ -77,7 +77,7 @@ char * ipmi_sel_parse_ctx_errormsg (ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_ctx_get_flags (ipmi_sel_parse_ctx_t ctx, unsigned int *flags);
 int ipmi_sel_parse_ctx_set_flags (ipmi_sel_parse_ctx_t ctx, unsigned int flags);
 char *ipmi_sel_parse_ctx_get_debug_prefix (ipmi_sel_parse_ctx_t ctx);
-int ipmi_sel_parse_ctx_set_debug_prefix (ipmi_sel_parse_ctx_t ctx, const char *prefix);
+int ipmi_sel_parse_ctx_set_debug_prefix (ipmi_sel_parse_ctx_t ctx, const char *debug_prefix);
 
 /* determines separator between fields in string functions
  *

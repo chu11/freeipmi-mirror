@@ -25,20 +25,20 @@
 #endif /* HAVE_CONFIG_H */
 
 #include <stdint.h>
-#include <sys/param.h>
 
 #include "freeipmi/fru-parse/ipmi-fru-parse.h"
 
-#include "list.h"
+#define IPMI_FRU_PARSE_CTX_MAGIC 0x12CD1DBF
 
-#define IPMI_FRU_PARSE_CTX_MAGIC 0xF12CD1DBF
-
-#define IPMI_FRU_PARSE_FLAGS_MASK           (0)
+#define IPMI_FRU_PARSE_FLAGS_MASK           (IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP)
 
 struct ipmi_fru_parse_ctx {
   uint32_t magic;
   int errnum;
   unsigned int flags;
+  char *debug_prefix;
+
+  ipmi_ctx_t ipmi_ctx;
 };
 
 #endif /* _IPMI_FRU_PARSE_DEFS_H */
