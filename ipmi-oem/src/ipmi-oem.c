@@ -70,19 +70,19 @@ static int _supermicro_reset_intrusion (ipmi_oem_state_data_t *);
 struct ipmi_oem_command oem_inventec[] =
   {
     { "get-nic-status",
-      "get NIC status.",
+      "get NIC status",
       0,
       _inventec_get_nic_status},
     { "set-nic-status",
-      "set NIC status.",
+      "set NIC status",
       1,
       _inventec_set_nic_status},
     { "get-mac-address",
-      "get MAC address.",
+      "get MAC address",
       0,
       _inventec_get_mac_address},
     { "set-mac-address",
-      "set MAC address.",
+      "set MAC address",
       2,
       _inventec_set_mac_address},
     { NULL, NULL, 0, NULL},
@@ -91,7 +91,7 @@ struct ipmi_oem_command oem_inventec[] =
 struct ipmi_oem_command oem_supermicro[] =
   {
     { "reset-intrusion",
-      "reset motherboard intrusion flag.",
+      "reset motherboard intrusion flag",
       0,
       _supermicro_reset_intrusion},
     { NULL, NULL, 0, NULL},
