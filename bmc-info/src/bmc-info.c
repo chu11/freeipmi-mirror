@@ -279,7 +279,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
         goto cleanup;
       }
 
-    /* achu: minor revision is BCD encoded and is > 4 bits, output w/ %x */
+    /* achu: minor revision is BCD encoded and is 8 bits, output w/ %x */
     pstdout_printf (state_data->pstate,
                     "Firmware Revision: %d.%02x\n",
                     (unsigned int) maj,
