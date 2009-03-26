@@ -92,6 +92,8 @@ o ipmi-fru
   - Output hex with 'h' suffix instead of '0x' prefix for consistency to
     other FreeIPMI tools.
   - Output manufacturer name with "Manufacturer ID" if name available.
+  - Re-work to use new libfreeipmi fru-parse sub library.
+  - Check for valid device ID inputs.
   - Support additional options in FreeIPMI config file.
 o bmc-info
   - Output manufacturer name with "Manufacturer ID" if name available.
@@ -116,6 +118,7 @@ o Various documentation updates.
 Libraries
 ---------
 o libfreeipmi
+  - Add new fru-parse sub library.
   - Add new sdr-parse sub library.
   - Add new sel-parse sub library.
   - Add new sensor-read sub library.

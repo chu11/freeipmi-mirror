@@ -39,6 +39,7 @@ struct ipmi_fru_parse_ctx {
   char *debug_prefix;
 
   ipmi_ctx_t ipmi_ctx;
+  uint8_t fru_device_id;
 };
 
 #endif /* _IPMI_FRU_PARSE_DEFS_H */

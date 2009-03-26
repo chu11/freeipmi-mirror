@@ -5,7 +5,9 @@
 	* libfreeipmi/: Include new fru-parse subsection to libfreeipmi
 	library.
 
-	* ipmi-fru/: Use new fru-parse library.
+	* libfreeipmi/src/cmds/: Check for valid FRU device id input.
+
+	* ipmi-fru/: Use new fru-parse library.  Check for valid device id input.
 
 	* Update documentation and manpages appropriately.
 

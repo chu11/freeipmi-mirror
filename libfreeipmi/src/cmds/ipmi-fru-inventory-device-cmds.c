@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.11 2009-03-18 00:07:57 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.11.4.1 2009-03-26 23:42:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -102,7 +102,8 @@ int8_t
 fill_cmd_get_fru_inventory_area_info (uint8_t fru_device_id,
                                       fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid (obj_cmd_rq))
+  if (fru_device_id == IPMI_FRU_DEVICE_ID_RESERVED
+      || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
       return (-1);

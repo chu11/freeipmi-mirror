@@ -38,7 +38,7 @@
 typedef struct ipmi_fru_parse_ctx *ipmi_fru_parse_ctx_t;
 
 /* FRU Parse Context Functions */
-ipmi_fru_parse_ctx_t ipmi_fru_parse_ctx_create (ipmi_ctx_t ipmi_ctx);
+ipmi_fru_parse_ctx_t ipmi_fru_parse_ctx_create (ipmi_ctx_t ipmi_ctx, uint8_t fru_device_id);
 void ipmi_fru_parse_ctx_destroy (ipmi_fru_parse_ctx_t ctx);
 int ipmi_fru_parse_ctx_errnum (ipmi_fru_parse_ctx_t ctx);
 char * ipmi_fru_parse_ctx_strerror (int errnum);

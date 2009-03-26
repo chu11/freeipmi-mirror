@@ -33,6 +33,7 @@
 #include <errno.h>
 
 #include "freeipmi/fru-parse/ipmi-fru-parse.h"
+#include "freeipmi/cmds/ipmi-fru-inventory-device-cmds.h"
 
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/fiid/fiid.h"
@@ -60,11 +61,17 @@ static char *ipmi_fru_parse_errmsgs[] =
   };
 
 ipmi_fru_parse_ctx_t
-ipmi_fru_parse_ctx_create (ipmi_ctx_t ipmi_ctx)
+ipmi_fru_parse_ctx_create (ipmi_ctx_t ipmi_ctx, uint8_t fru_device_id)
 {
   struct ipmi_fru_parse_ctx *ctx = NULL;
 
   if (!ipmi_ctx)
+    {
+      SET_ERRNO (EINVAL);
+      return (NULL);
+    }
+
+  if (fru_device_id == IPMI_FRU_DEVICE_ID_RESERVED)
     {
       SET_ERRNO (EINVAL);
       return (NULL);
@@ -79,8 +86,10 @@ ipmi_fru_parse_ctx_create (ipmi_ctx_t ipmi_ctx)
   ctx->magic = IPMI_FRU_PARSE_CTX_MAGIC;
   ctx->flags = IPMI_FRU_PARSE_FLAGS_DEFAULT;
   ctx->debug_prefix = NULL;
-
+  
   ctx->ipmi_ctx = ipmi_ctx;
+  ctx->fru_device_id = fru_device_id;
+
   return (ctx);
 }
 

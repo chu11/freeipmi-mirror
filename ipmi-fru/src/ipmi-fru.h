@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.h,v 1.12 2009-02-03 22:48:21 chu11 Exp $
+ *  $Id: ipmi-fru.h,v 1.12.8.1 2009-03-26 23:42:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -28,6 +28,7 @@
 #ifndef _IPMI_FRU_H
 #define _IPMI_FRU_H
 
+#include <stdint.h>
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
@@ -54,7 +55,7 @@ struct ipmi_fru_arguments
   struct common_cmd_args common;
   struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
-  int device_id;
+  uint8_t device_id;
   int device_id_set;
   int verbose_count;
   int skip_checks;

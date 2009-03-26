@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.25 2009-03-19 22:52:19 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.25.4.1 2009-03-26 23:42:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -116,6 +116,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid device id\n");
           exit (1);
         }
+
+      if (cmd_args->device_id == IPMI_FRU_DEVICE_ID_RESERVED)
+        {
+          fprintf (stderr, "invalid device id\n");
+          exit(1);
+        }
+
       cmd_args->device_id_set++;
       break;
     case VERBOSE_KEY:
