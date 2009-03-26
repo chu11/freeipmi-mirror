@@ -516,7 +516,7 @@ _inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
   int rv = -1;
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 1);
+  assert (state_data->prog_data->args->oem_options_count == 2);
 
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "shared")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "dedicated"))
