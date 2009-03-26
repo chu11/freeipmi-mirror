@@ -4,6 +4,7 @@ SUBDIRS = \
 	debug \
 	driver \
 	fiid \
+	fru-parse \
 	interface \
 	libcommon \
 	locate \
@@ -41,6 +42,7 @@ libfreeipmi_la_LIBADD = \
 	$(top_builddir)/libfreeipmi/src/debug/libdebug.la \
 	$(top_builddir)/libfreeipmi/src/driver/libdriver.la \
 	$(top_builddir)/libfreeipmi/src/fiid/libfiid.la \
+	$(top_builddir)/libfreeipmi/src/fru-parse/libfruparse.la \
 	$(top_builddir)/libfreeipmi/src/interface/libinterface.la \
 	$(top_builddir)/libfreeipmi/src/libcommon/libcommon.la \
 	$(top_builddir)/libfreeipmi/src/locate/liblocate.la \
@@ -74,6 +76,9 @@ $(top_builddir)/libfreeipmi/src/driver/libdriver.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/fiid/libfiid.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/libfreeipmi/src/fru-parse/libfruparse.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/interface/libinterface.la : force-dependency-check

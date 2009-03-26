@@ -1,3 +1,16 @@
+2009-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	From branch fru_lib_branch.
+
+	* libfreeipmi/: Include new fru-parse subsection to libfreeipmi
+	library.
+
+	* ipmi-fru/: Use new fru-parse library.
+
+	* Update documentation and manpages appropriately.
+
+	* Various code cleanup.
+	
 2009-03-23  Albert Chu <chu11@llnl.gov>
 
 	* Rename pef-config to ipmi-pef-config.
