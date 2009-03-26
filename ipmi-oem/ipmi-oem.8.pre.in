@@ -7,7 +7,7 @@ ipmi-oem \- IPMI OEM utility
 .SH "DESCRIPTION"
 .B Ipmi-oem
 is used to execute OEM specific IPMI commands.  It is intended to provide
-a better user interface for OEM specific support IPMI commands better than
+a better user interface for OEM specific IPMI commands better than
 .B ipmi-raw(8).
 
 See SUPPORTED OEM below for currently supported OEM IDs and COMMANDs.
