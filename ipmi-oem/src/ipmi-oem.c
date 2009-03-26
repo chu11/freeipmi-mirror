@@ -537,7 +537,7 @@ _inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
               &tmp,
               &tmp,
               &tmp,
-              &tmp) == 6)
+              &tmp) != 6)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
