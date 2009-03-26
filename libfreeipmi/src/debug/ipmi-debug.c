@@ -115,7 +115,7 @@ ipmi_obj_dump (int fd,
           goto cleanup;
         }
 
-      if (!(field_len = fiid_iterator_field_len (iter)))
+      if ((field_len = fiid_iterator_field_len (iter)) < 0)
         {
           FIID_ITERATOR_ERROR_TO_ERRNO (iter);
           goto cleanup;
