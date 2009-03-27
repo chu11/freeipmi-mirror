@@ -1,10 +1,23 @@
 0.8.0 - XX/XX/XX
 ----------------
-Tools - New Significant Additions/Features
-------------------------------------------
+Tools - High Level Description of Changes
+-----------------------------------------
+o Make output of ipmi-sel, ipmi-sensors, and ipmimonitoring easier to
+  read and consistent to each other.  Legacy output is supported
+  through the --legacy-output option.
+o Support sensor unit percentages, rates, and modifiers (i.e. "%
+  hit", "gigabyte per minute", "pounds / cu in") in most tools.
+o Support non-abbreviated units (i.e. "Amps" instead of "A") in most
+  tools.
+o Output IANA Manufacturer Name when appropriate in most tools.
+o "Library-ize" much of the functionality originally only inside the
+  tools.
+o Re-work libipmimonitoring to return sensor events for all sensors,
+  not just non-threshold sensors.  Resulted in an API change.
+o Reanme pef-config to ipmi-pef-config for naming consistency.
 
-Tools - Enhancements/Changes/Bug Fixes
---------------------------------------
+Tools - Detailed Enhancements/Changes/Fixes
+-------------------------------------------
 o ipmi-sel
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
