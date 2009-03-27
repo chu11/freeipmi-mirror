@@ -1,6 +1,9 @@
 noinst_HEADERS = \
 	ipmi-oem.h \
-	ipmi-oem-argp.h
+	ipmi-oem-argp.h \
+	ipmi-oem-common.h \
+	ipmi-oem-inventec.h \
+	ipmi-oem-supermicro.h
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/toolcommon \
@@ -23,7 +26,10 @@ ipmi_oem_LDADD = \
 
 ipmi_oem_SOURCES = \
 	ipmi-oem.c \
-	ipmi-oem-argp.c
+	ipmi-oem-argp.c \
+	ipmi-oem-common.c \
+	ipmi-oem-inventec.c \
+	ipmi-oem-supermicro.c
 
 $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
