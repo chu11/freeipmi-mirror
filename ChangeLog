@@ -1,8 +1,14 @@
+2009-03-27  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Code cleanup.
+	
 2009-03-26  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/debug/: Fix output bug.
 
 	* bmc-info/: Output firmware revision with two chars as needed.
+
+	* libfreeipmi/: Cleanup sel-parse library.  Add parsing via record bufs functions.
 	
 2009-03-23  Albert Chu <chu11@llnl.gov>
 
