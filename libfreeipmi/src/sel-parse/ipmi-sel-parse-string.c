@@ -1784,8 +1784,8 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
   assert (buflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
 
-  memcpy (sel_parse_entry.sel_event_record, record_buf, record_buflen);
-  sel_parse_entry.sel_event_record_len = record_buflen;
+  memcpy (sel_parse_entry.sel_event_record, record_buf, IPMI_SEL_RECORD_LENGTH);
+  sel_parse_entry.sel_event_record_len = IPMI_SEL_RECORD_LENGTH;
 
   if (sel_parse_get_record_header_info (ctx,
                                         &sel_parse_entry,

@@ -861,22 +861,23 @@ ipmi_sel_parse_read_timestamp (ipmi_sel_parse_ctx_t ctx, uint32_t *timestamp)
 
 int
 _parse_system_event_common (ipmi_sel_parse_ctx_t ctx,
-                            struct ipmi_sel_parse_entry **sel_parse_entry,
                             struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
+  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
+  
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (system_event_record_data);
-
-  if (_parse_read_common (ctx, sel_parse_entry) < 0)
+  
+  if (_parse_read_common (ctx, &sel_parse_entry) < 0)
     return (-1);
-
+  
   if (sel_parse_get_system_event_record (ctx,
-                                         *sel_parse_entry,
+                                         sel_parse_entry,
                                          system_event_record_data) < 0)
     return (-1);
-
+  
   return (0);
 }
 
@@ -884,7 +885,6 @@ int
 ipmi_sel_parse_read_generator_id (ipmi_sel_parse_ctx_t ctx, uint8_t *generator_id)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -898,7 +898,7 @@ ipmi_sel_parse_read_generator_id (ipmi_sel_parse_ctx_t ctx, uint8_t *generator_i
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   *generator_id = system_event_record_data.generator_id;
@@ -911,7 +911,6 @@ int
 ipmi_sel_parse_read_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx, uint8_t *ipmb_device_lun)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -925,7 +924,7 @@ ipmi_sel_parse_read_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx, uint8_t *ipmb_dev
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   *ipmb_device_lun = system_event_record_data.ipmb_device_lun;
@@ -938,7 +937,6 @@ int
 ipmi_sel_parse_read_channel_number (ipmi_sel_parse_ctx_t ctx, uint8_t *channel_number)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -946,13 +944,13 @@ ipmi_sel_parse_read_channel_number (ipmi_sel_parse_ctx_t ctx, uint8_t *channel_n
       return (-1);
     }
 
-  if (channel_number)
+  if (!channel_number)
     {
       SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   /* special case */
@@ -972,7 +970,6 @@ int
 ipmi_sel_parse_read_event_message_format_version (ipmi_sel_parse_ctx_t ctx, uint8_t *event_message_format_version)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -986,7 +983,7 @@ ipmi_sel_parse_read_event_message_format_version (ipmi_sel_parse_ctx_t ctx, uint
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   *event_message_format_version = system_event_record_data.event_message_format_version;
@@ -999,7 +996,6 @@ int
 ipmi_sel_parse_read_sensor_type (ipmi_sel_parse_ctx_t ctx, uint8_t *sensor_type)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -1013,7 +1009,7 @@ ipmi_sel_parse_read_sensor_type (ipmi_sel_parse_ctx_t ctx, uint8_t *sensor_type)
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   *sensor_type = system_event_record_data.sensor_type;
@@ -1026,7 +1022,6 @@ int
 ipmi_sel_parse_read_sensor_number (ipmi_sel_parse_ctx_t ctx, uint8_t *sensor_number)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -1040,7 +1035,7 @@ ipmi_sel_parse_read_sensor_number (ipmi_sel_parse_ctx_t ctx, uint8_t *sensor_num
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   *sensor_number = system_event_record_data.sensor_number;
@@ -1053,7 +1048,6 @@ int
 ipmi_sel_parse_read_event_direction (ipmi_sel_parse_ctx_t ctx, uint8_t *event_direction)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -1067,7 +1061,7 @@ ipmi_sel_parse_read_event_direction (ipmi_sel_parse_ctx_t ctx, uint8_t *event_di
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   *event_direction = system_event_record_data.event_direction;
@@ -1080,7 +1074,6 @@ int
 ipmi_sel_parse_read_event_type_code (ipmi_sel_parse_ctx_t ctx, uint8_t *event_type_code)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -1094,7 +1087,7 @@ ipmi_sel_parse_read_event_type_code (ipmi_sel_parse_ctx_t ctx, uint8_t *event_ty
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   *event_type_code = system_event_record_data.event_type_code;
@@ -1107,7 +1100,6 @@ int
 ipmi_sel_parse_read_event_data1 (ipmi_sel_parse_ctx_t ctx, uint8_t *event_data1)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -1121,7 +1113,7 @@ ipmi_sel_parse_read_event_data1 (ipmi_sel_parse_ctx_t ctx, uint8_t *event_data1)
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   /* note: not a mistake, event_data3 is << 2 and event_data2 is << 4 */
@@ -1138,7 +1130,6 @@ ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (ipmi_sel_pa
                                                                      uint8_t *event_data1_offset)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -1152,7 +1143,7 @@ ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (ipmi_sel_pa
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   *event_data1_offset = system_event_record_data.offset_from_event_reading_type_code;
@@ -1166,7 +1157,6 @@ ipmi_sel_parse_read_event_data1_event_data2_flag (ipmi_sel_parse_ctx_t ctx,
                                                   uint8_t *event_data2_flag)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -1180,7 +1170,7 @@ ipmi_sel_parse_read_event_data1_event_data2_flag (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   *event_data2_flag = system_event_record_data.event_data2_flag;
@@ -1194,7 +1184,6 @@ ipmi_sel_parse_read_event_data1_event_data3_flag (ipmi_sel_parse_ctx_t ctx,
                                                   uint8_t *event_data3_flag)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -1208,7 +1197,7 @@ ipmi_sel_parse_read_event_data1_event_data3_flag (ipmi_sel_parse_ctx_t ctx,
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   *event_data3_flag = system_event_record_data.event_data3_flag;
@@ -1221,7 +1210,6 @@ int
 ipmi_sel_parse_read_event_data2 (ipmi_sel_parse_ctx_t ctx, uint8_t *event_data2)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -1235,7 +1223,7 @@ ipmi_sel_parse_read_event_data2 (ipmi_sel_parse_ctx_t ctx, uint8_t *event_data2)
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   *event_data2 = system_event_record_data.event_data2;
@@ -1248,7 +1236,6 @@ int
 ipmi_sel_parse_read_event_data3 (ipmi_sel_parse_ctx_t ctx, uint8_t *event_data3)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
-  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
 
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -1262,7 +1249,7 @@ ipmi_sel_parse_read_event_data3 (ipmi_sel_parse_ctx_t ctx, uint8_t *event_data3)
       return (-1);
     }
 
-  if (_parse_system_event_common (ctx, &sel_parse_entry, &system_event_record_data) < 0)
+  if (_parse_system_event_common (ctx, &system_event_record_data) < 0)
     return (-1);
 
   *event_data3 = system_event_record_data.event_data3;
@@ -1555,6 +1542,726 @@ ipmi_sel_parse_delete_sel_entry (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
 }
 
 int
+ipmi_sel_record_type_class (uint8_t record_type)
+{
+  if (IPMI_SEL_RECORD_TYPE_IS_EVENT (record_type))
+    return (IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD);
+
+  if (IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM (record_type))
+    return (IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD);
+
+  if (IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM (record_type))
+    return (IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD);
+
+  return (IPMI_SEL_RECORD_TYPE_CLASS_UNKNOWN);
+}
+
+int
+ipmi_sel_parse_record_record_id (ipmi_sel_parse_ctx_t ctx,
+                                 uint8_t *record_buf,
+                                 unsigned int record_buflen,
+                                 uint16_t *record_id)
+{
+  struct ipmi_sel_parse_entry sel_parse_entry;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !record_id)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  memset (&sel_parse_entry, '\0', sizeof (struct ipmi_sel_parse_entry));
+  sel_parse_entry.sel_event_record_len = record_buflen > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : record_buflen;
+  memcpy (sel_parse_entry.sel_event_record,
+          record_buf,
+          sel_parse_entry.sel_event_record_len);
+
+  if (sel_parse_get_record_header_info (ctx,
+                                        &sel_parse_entry,
+                                        record_id,
+                                        NULL) < 0)
+    return (-1);
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_record_type (ipmi_sel_parse_ctx_t ctx,
+                                   uint8_t *record_buf,
+                                   unsigned int record_buflen,
+                                   uint8_t *record_type)
+{
+  struct ipmi_sel_parse_entry sel_parse_entry;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !record_type)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  memset (&sel_parse_entry, '\0', sizeof (struct ipmi_sel_parse_entry));
+  sel_parse_entry.sel_event_record_len = record_buflen > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : record_buflen;
+  memcpy (sel_parse_entry.sel_event_record,
+          record_buf,
+          sel_parse_entry.sel_event_record_len);
+
+  if (sel_parse_get_record_header_info (ctx,
+                                        &sel_parse_entry,
+                                        NULL,
+                                        record_type) < 0)
+    return (-1);
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_timestamp (ipmi_sel_parse_ctx_t ctx,
+                                 uint8_t *record_buf,
+                                 unsigned int record_buflen,
+                                 uint32_t *timestamp)
+{
+  struct ipmi_sel_parse_entry sel_parse_entry;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !timestamp)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  memset (&sel_parse_entry, '\0', sizeof (struct ipmi_sel_parse_entry));
+  sel_parse_entry.sel_event_record_len = record_buflen > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : record_buflen;
+  memcpy (sel_parse_entry.sel_event_record,
+          record_buf,
+          sel_parse_entry.sel_event_record_len);
+
+  if (sel_parse_get_timestamp (ctx,
+                               &sel_parse_entry,
+                               timestamp) < 0)
+    return (-1);
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+_parse_record_system_event_common (ipmi_sel_parse_ctx_t ctx,
+                                   uint8_t *record_buf,
+                                   unsigned int record_buflen,
+                                   struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  struct ipmi_sel_parse_entry sel_parse_entry;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (record_buf);
+  assert (record_buflen);
+  assert (system_event_record_data);
+
+  memset (&sel_parse_entry, '\0', sizeof (struct ipmi_sel_parse_entry));
+  sel_parse_entry.sel_event_record_len = record_buflen > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : record_buflen;
+  memcpy (sel_parse_entry.sel_event_record,
+          record_buf,
+          sel_parse_entry.sel_event_record_len);
+
+  if (sel_parse_get_system_event_record (ctx,
+                                         &sel_parse_entry,
+                                         system_event_record_data) < 0)
+    return (-1);
+
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_generator_id (ipmi_sel_parse_ctx_t ctx,
+                                    uint8_t *record_buf,
+                                    unsigned int record_buflen,
+                                    uint8_t *generator_id)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !generator_id)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  *generator_id = system_event_record_data.generator_id;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx,
+                                       uint8_t *record_buf,
+                                       unsigned int record_buflen,
+                                       uint8_t *ipmb_device_lun)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !ipmb_device_lun)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  *ipmb_device_lun = system_event_record_data.ipmb_device_lun;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_channel_number (ipmi_sel_parse_ctx_t ctx,
+                                      uint8_t *record_buf,
+                                      unsigned int record_buflen,
+                                      uint8_t *channel_number)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !channel_number)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  /* special case */
+  if (system_event_record_data.event_message_format_version == IPMI_V1_0_EVENT_MESSAGE_FORMAT)
+    {
+      ctx->errnum = IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY;
+      return (-1);
+    }
+
+  *channel_number = system_event_record_data.channel_number;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_event_message_format_version (ipmi_sel_parse_ctx_t ctx,
+                                                    uint8_t *record_buf,
+                                                    unsigned int record_buflen,
+                                                    uint8_t *event_message_format_version)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !event_message_format_version)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  *event_message_format_version = system_event_record_data.event_message_format_version;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_sensor_type (ipmi_sel_parse_ctx_t ctx,
+                                   uint8_t *record_buf,
+                                   unsigned int record_buflen,
+                                   uint8_t *sensor_type)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !sensor_type)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  *sensor_type = system_event_record_data.sensor_type;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_sensor_number (ipmi_sel_parse_ctx_t ctx,
+                                     uint8_t *record_buf,
+                                     unsigned int record_buflen,
+                                     uint8_t *sensor_number)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !sensor_number)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  *sensor_number = system_event_record_data.sensor_number;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_event_direction (ipmi_sel_parse_ctx_t ctx,
+                                       uint8_t *record_buf,
+                                       unsigned int record_buflen,
+                                       uint8_t *event_direction)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !event_direction)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  *event_direction = system_event_record_data.event_direction;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_event_type_code (ipmi_sel_parse_ctx_t ctx,
+                                       uint8_t *record_buf,
+                                       unsigned int record_buflen,
+                                       uint8_t *event_type_code)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !event_type_code)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  *event_type_code = system_event_record_data.event_type_code;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_event_data1 (ipmi_sel_parse_ctx_t ctx,
+                                   uint8_t *record_buf,
+                                   unsigned int record_buflen,
+                                   uint8_t *event_data1)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !event_data1)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  /* note: not a mistake, event_data3 is << 2 and event_data2 is << 4 */
+  *event_data1 = (system_event_record_data.offset_from_event_reading_type_code
+                  | system_event_record_data.event_data3_flag << 2
+                  | system_event_record_data.event_data2_flag << 4);
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_event_data1_offset_from_event_reading_type_code (ipmi_sel_parse_ctx_t ctx,
+                                                                       uint8_t *record_buf,
+                                                                       unsigned int record_buflen,
+                                                                       uint8_t *event_data1_offset)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !event_data1_offset)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  *event_data1_offset = system_event_record_data.offset_from_event_reading_type_code;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_event_data1_event_data2_flag (ipmi_sel_parse_ctx_t ctx,
+                                                    uint8_t *record_buf,
+                                                    unsigned int record_buflen,
+                                                    uint8_t *event_data2_flag)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !event_data2_flag)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  *event_data2_flag = system_event_record_data.event_data2_flag;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_event_data1_event_data3_flag (ipmi_sel_parse_ctx_t ctx,
+                                                    uint8_t *record_buf,
+                                                    unsigned int record_buflen,
+                                                    uint8_t *event_data3_flag)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !event_data3_flag)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  *event_data3_flag = system_event_record_data.event_data3_flag;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_event_data2 (ipmi_sel_parse_ctx_t ctx,
+                                   uint8_t *record_buf,
+                                   unsigned int record_buflen,
+                                   uint8_t *event_data2)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !event_data2)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  *event_data2 = system_event_record_data.event_data2;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_event_data3 (ipmi_sel_parse_ctx_t ctx,
+                                   uint8_t *record_buf,
+                                   unsigned int record_buflen,
+                                   uint8_t *event_data3)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !event_data3)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (_parse_record_system_event_common (ctx,
+                                         record_buf,
+                                         record_buflen,
+                                         &system_event_record_data) < 0)
+    return (-1);
+
+  *event_data3 = system_event_record_data.event_data3;
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
+                                       uint8_t *record_buf,
+                                       unsigned int record_buflen,
+                                       uint32_t *manufacturer_id)
+{
+  struct ipmi_sel_parse_entry sel_parse_entry;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !manufacturer_id)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  memset (&sel_parse_entry, '\0', sizeof (struct ipmi_sel_parse_entry));
+  sel_parse_entry.sel_event_record_len = record_buflen > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : record_buflen;
+  memcpy (sel_parse_entry.sel_event_record,
+          record_buf,
+          sel_parse_entry.sel_event_record_len);
+
+  if (sel_parse_get_manufacturer_id (ctx,
+                                     &sel_parse_entry,
+                                     manufacturer_id) < 0)
+    return (-1);
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_record_oem (ipmi_sel_parse_ctx_t ctx,
+                           uint8_t *record_buf,
+                           unsigned int record_buflen,
+                           uint8_t *buf,
+                           unsigned int buflen)
+{
+  struct ipmi_sel_parse_entry sel_parse_entry;
+  int rv = 0;
+
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!record_buf
+      || !record_buflen
+      || !buf
+      || !buflen)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  memset (&sel_parse_entry, '\0', sizeof (struct ipmi_sel_parse_entry));
+  sel_parse_entry.sel_event_record_len = record_buflen > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : record_buflen;
+  memcpy (sel_parse_entry.sel_event_record,
+          record_buf,
+          sel_parse_entry.sel_event_record_len);
+
+  if ((rv = sel_parse_get_oem (ctx,
+                               &sel_parse_entry,
+                               buf,
+                               buflen)) < 0)
+    return (-1);
+
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (rv);
+}
+
+int
 ipmi_sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
                                      char *fmt,
                                      uint8_t *record_buf,
@@ -1593,19 +2300,4 @@ ipmi_sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
                                           buf,
                                           buflen,
                                           flags));
-}
-
-int
-ipmi_sel_record_type_class (uint8_t record_type)
-{
-  if (IPMI_SEL_RECORD_TYPE_IS_EVENT (record_type))
-    return (IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD);
-
-  if (IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM (record_type))
-    return (IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD);
-
-  if (IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM (record_type))
-    return (IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD);
-
-  return (IPMI_SEL_RECORD_TYPE_CLASS_UNKNOWN);
 }
