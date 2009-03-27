@@ -15,6 +15,8 @@ o "Library-ize" much of the functionality originally only inside the
 o Re-work libipmimonitoring to return sensor events for all sensors,
   not just non-threshold sensors.  Resulted in an API change.
 o Reanme pef-config to ipmi-pef-config for naming consistency.
+o Various bug fixes.
+o Various documentation updates.
 
 Tools - Detailed Enhancements/Changes/Fixes
 -------------------------------------------
