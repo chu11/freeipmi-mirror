@@ -150,6 +150,7 @@ ipmi_sdr_parse_ctx_get_flags (ipmi_sdr_parse_ctx_t ctx, unsigned int *flags)
     }
 
   *flags = ctx->flags;
+  ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
   return (0);
 }
 
@@ -169,6 +170,7 @@ ipmi_sdr_parse_ctx_set_flags (ipmi_sdr_parse_ctx_t ctx, unsigned int flags)
     }
 
   ctx->flags = flags;
+  ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
   return (0);
 }
 

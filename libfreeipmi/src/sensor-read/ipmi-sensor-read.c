@@ -174,6 +174,7 @@ ipmi_sensor_read_ctx_get_flags (ipmi_sensor_read_ctx_t ctx, unsigned int *flags)
     }
 
   *flags = ctx->flags;
+  ctx->errnum = IPMI_SENSOR_READ_ERR_SUCCESS;
   return (0);
 }
 
@@ -193,6 +194,7 @@ ipmi_sensor_read_ctx_set_flags (ipmi_sensor_read_ctx_t ctx, unsigned int flags)
     }
 
   ctx->flags = flags;
+  ctx->errnum = IPMI_SENSOR_READ_ERR_SUCCESS;
   return (0);
 }
 
