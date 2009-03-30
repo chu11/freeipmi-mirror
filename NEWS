@@ -13,6 +13,7 @@ o Fix potential config file bug by clearing out stack data
 o Support build option (--with-dont-check-for-root) to not have tools
   check for root for in-band IPMI communication.
 o Update bmc-config manpage with Dell specific workaround.
+o Remove "experimental" note from SUNBMC driver documentation.
 
 0.7.6 - 02/25/09
 ----------------

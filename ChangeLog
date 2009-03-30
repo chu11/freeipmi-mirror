@@ -1,3 +1,7 @@
+2009-03-30  Albert Chu <chu11@llnl.gov>
+
+	* Remove "experimental" note about SUNBMC driver.
+	
 2009-03-27  Albert Chu <chu11@llnl.gov>
  
  	* ipmi-oem/: Code cleanup.
