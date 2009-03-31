@@ -60,6 +60,11 @@ static char *ipmi_fru_parse_errmsgs[] =
     "device id already open",
     "no FRU information",
     "common header checksum invalid",
+    "common header format invalid",
+    "chassis info area format invalid",
+    "board info area format invalid",
+    "product info area format invalid",
+    "multirecord area format invalid",
     "out of memory",
     "internal IPMI error",
     "internal system error",
@@ -69,11 +74,32 @@ static char *ipmi_fru_parse_errmsgs[] =
   };
 
 static void
+_init_fru_parsing_iterator_data (ipmi_fru_parse_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
+
+  ctx->chassis_info_area_parsed = 0;
+  ctx->board_info_area_parsed = 0;
+  ctx->product_info_area_parsed = 0;
+  ctx->multirecord_area_parsed = 0;
+}
+
+static void
 _init_fru_parsing_data (ipmi_fru_parse_ctx_t ctx)
 {
-  ctx->device_opened = 0;
+  assert (ctx);
+  assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
+  
   ctx->fru_device_id = 0;
   ctx->fru_inventory_area_size = 0;
+  ctx->chassis_info_area_starting_offset = 0;
+  ctx->board_info_area_starting_offset = 0;
+  ctx->product_info_area_starting_offset = 0;
+  ctx->multirecord_area_starting_offset = 0;
+  ctx->device_opened = 0;
+
+  _init_fru_parsing_iterator_data (ctx);
 }
 
 ipmi_fru_parse_ctx_t
@@ -308,7 +334,6 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
     }
   
   if (ipmi_fru_parse_read_fru_data (ctx,
-                                    ctx->fru_device_id,
                                     frubuf,
                                     IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
                                     0,
@@ -364,14 +389,6 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
     }
 
   if (FIID_OBJ_GET (fru_common_header,
-                    "internal_use_area_starting_offset",
-                    &ctx->internal_use_area_starting_offset) < 0)
-    {
-      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_common_header);
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (fru_common_header,
                     "chassis_info_area_starting_offset",
                     &ctx->chassis_info_area_starting_offset) < 0)
     {
@@ -403,7 +420,11 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
       goto cleanup;
     }
 
-
+  if (format_version != IPMI_FRU_COMMON_HEADER_FORMAT_VERSION)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_COMMON_HEADER_FORMAT_INVALID);
+      goto cleanup;
+    }
 
   rv = 0;
   ctx->device_opened = 1;
@@ -440,12 +461,46 @@ ipmi_fru_parse_close_device_id (ipmi_fru_parse_ctx_t ctx)
 int
 ipmi_fru_parse_first (ipmi_fru_parse_ctx_t ctx)
 {
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  _init_fru_parsing_iterator_data (ctx);
   return (0);
 }
 
 int
 ipmi_fru_parse_next (ipmi_fru_parse_ctx_t ctx)
 {
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!ctx->chassis_info_area_parsed)
+    {
+      ctx->chassis_info_area_parsed++;
+      return (1);
+    }
+  if (!ctx->board_info_area_parsed)
+    {
+      ctx->board_info_area_parsed++;
+      return (1);
+    }
+  if (!ctx->product_info_area_parsed)
+    {
+      ctx->product_info_area_parsed++;
+      return (1);
+    }
+  if (!ctx->multirecord_area_parsed)
+    {
+      ctx->multirecord_area_parsed++;
+      return (1);
+    }
+  
   return (0);
 }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
-*  $Id: ipmi-fru-information-record-format.h,v 1.7 2009-03-18 22:54:56 chu11 Exp $
+*  $Id: ipmi-fru-information-record-format.h,v 1.7.4.1 2009-03-31 22:21:01 chu11 Exp $
 *****************************************************************************
 *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 *  Copyright (C) 2007 The Regents of the University of California.
@@ -46,7 +46,7 @@ extern "C" {
 #define IPMI_FRU_CHASSIS_INFO_AREA_FORMAT_VERSION     0x01
 #define IPMI_FRU_BOARD_INFO_AREA_FORMAT_VERSION       0x01
 #define IPMI_FRU_PRODUCT_INFO_AREA_FORMAT_VERSION     0x01
-#define IPMI_FRU_MULTIRECORD_INFO_AREA_FORMAT_VERSION 0x02
+#define IPMI_FRU_MULTIRECORD_AREA_FORMAT_VERSION      0x02
 
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION       0x00
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_DC_OUTPUT                      0x01

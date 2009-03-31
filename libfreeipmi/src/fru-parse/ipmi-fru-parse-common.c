@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-common.c,v 1.1.2.1 2009-03-31 21:39:01 chu11 Exp $
+ *  $Id: ipmi-fru-parse-common.c,v 1.1.2.2 2009-03-31 22:21:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -59,7 +59,6 @@
 
 int
 ipmi_fru_parse_read_fru_data (ipmi_fru_parse_ctx_t ctx,
-                              uint8_t device_id,
                               uint8_t *frubuf,
                               unsigned int frubuflen,
                               unsigned int offset_in_bytes,
@@ -111,7 +110,7 @@ ipmi_fru_parse_read_fru_data (ipmi_fru_parse_ctx_t ctx,
        * completion code 0x81
        */
       if (ipmi_cmd_read_fru_data (ctx->ipmi_ctx,
-                                  device_id,
+                                  ctx->fru_device_id,
                                   offset_in_bytes + num_bytes_read,
                                   count_to_read,
                                   fru_read_data_rs) < 0)
@@ -506,20 +505,21 @@ ipmi_fru_parse_output_type_length_field (ipmi_fru_parse_ctx_t ctx,
  cleanup:
   return (rv);
 }
+#endif
 
-fru_err_t
+int
 ipmi_fru_parse_get_info_area_length (ipmi_fru_parse_ctx_t ctx,
-                                     uint8_t device_id,
                                      unsigned int offset_in_bytes,
                                      char *str,
-                                     uint64_t *info_area_length)
+                                     uint64_t *info_area_length,
+                                     uint8_t expected_format_version,
+                                     uint8_t err_code_format_invalid)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   fiid_obj_t fru_info_area_header = NULL;
   int32_t info_area_header_len;
   uint64_t format_version;
-  fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
+  int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
@@ -529,40 +529,26 @@ ipmi_fru_parse_get_info_area_length (ipmi_fru_parse_ctx_t ctx,
 
   if ((info_area_header_len = fiid_template_len_bytes (tmpl_fru_info_area_header)) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_template_len_bytes: %s\n",
-                       strerror (errno));
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
-  if ((offset_in_bytes + info_area_header_len) > state_data->fru_inventory_area_size)
+  if ((offset_in_bytes + info_area_header_len) > ctx->fru_inventory_area_size)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU %s Info Area size too small\n",
-                       str);
-      rv = FRU_ERR_NON_FATAL_ERROR;
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
-  if ((ret = ipmi_fru_read_fru_data (state_data,
-                                     device_id,
-                                     frubuf,
-                                     IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
-                                     offset_in_bytes,
-                                     info_area_header_len)) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
+  if (ipmi_fru_parse_read_fru_data (ctx,
+                                    frubuf,
+                                    IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                    offset_in_bytes,
+                                    info_area_header_len) < 0)
+    goto cleanup;
 
   if (!(fru_info_area_header = fiid_obj_create (tmpl_fru_info_area_header)))
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
@@ -570,10 +556,7 @@ ipmi_fru_parse_get_info_area_length (ipmi_fru_parse_ctx_t ctx,
                         frubuf,
                         info_area_header_len) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_set_all: %s\n",
-                       fiid_obj_errormsg (fru_info_area_header));
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_info_area_header);
       goto cleanup;
     }
 
@@ -581,10 +564,7 @@ ipmi_fru_parse_get_info_area_length (ipmi_fru_parse_ctx_t ctx,
                     "format_version",
                     &format_version) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'format_version': %s\n",
-                       fiid_obj_errormsg (fru_info_area_header));
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_info_area_header);
       goto cleanup;
     }
 
@@ -592,58 +572,46 @@ ipmi_fru_parse_get_info_area_length (ipmi_fru_parse_ctx_t ctx,
                     "info_area_length",
                     info_area_length) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'info_area_length': %s\n",
-                       fiid_obj_errormsg (fru_info_area_header));
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_info_area_header);
       goto cleanup;
     }
 
-  if (state_data->prog_data->args->verbose_count >= 2)
+  if (format_version != expected_format_version)
     {
-      pstdout_printf (state_data->pstate,
-                      "  FRU %s Info Area Format Version: %02Xh\n",
-                      str,
-                      format_version);
-      pstdout_printf (state_data->pstate,
-                      "  FRU %s Info Area Length: %u\n",
-                      str,
-                      *info_area_length);
-    }
-
-  if (format_version != IPMI_FRU_CHASSIS_INFO_AREA_FORMAT_VERSION)
-    {
+#if 0
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "  FRU %s Area Format Unknown: %02Xh\n",
                        str,
                        format_version);
-      rv = FRU_ERR_NON_FATAL_ERROR;
+#endif
+      FRU_PARSE_SET_ERRNUM (ctx, err_code_format_invalid);
       goto cleanup;
     }
 
   if (!(*info_area_length))
     {
-      rv = FRU_ERR_NON_FATAL_ERROR;
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_AREA_LENGTH_INVALID);
       goto cleanup;
     }
 
-  if (state_data->fru_inventory_area_size < (offset_in_bytes + (*info_area_length)*8))
+  if (ctx->fru_inventory_area_size < (offset_in_bytes + (*info_area_length)*8))
     {
+#if 0
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "  FRU %s Info Area too small\n",
                        str);
-      rv = FRU_ERR_NON_FATAL_ERROR;
+#endif
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_AREA_LENGTH_INVALID);
       goto cleanup;
     }
 
-  rv = FRU_ERR_SUCCESS;
+  rv = 0;
  cleanup:
   fiid_obj_destroy (fru_info_area_header);
   return (rv);
 }
-#endif
 
 int
 ipmi_fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,

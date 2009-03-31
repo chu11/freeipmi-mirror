@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-common.h,v 1.1.2.1 2009-03-31 21:39:01 chu11 Exp $
+ *  $Id: ipmi-fru-parse-common.h,v 1.1.2.2 2009-03-31 22:21:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -29,7 +29,6 @@
 #define _IPMI_FRU_PARSE_COMMON_H
 
 int ipmi_fru_parse_read_fru_data (ipmi_fru_parse_ctx_t ctx,
-                                  uint8_t device_id,
                                   uint8_t *frubuf,
                                   unsigned int frubuflen,
                                   unsigned int offset_in_bytes,
@@ -43,13 +42,14 @@ int ipmi_fru_parse_output_type_length_field (ipmi_fru_parse_ctx_t ctx,
                                              uint8_t *language_code,
                                              unsigned int *len_parsed,
                                              char *str);
+#endif
 
 int ipmi_fru_parse_get_info_area_length (ipmi_fru_parse_ctx_t ctx,
-                                         uint8_t device_id,
                                          unsigned int offset_in_bytes,
                                          char *str,
-                                         uint64_t *info_area_length);
-#endif
+                                         uint64_t *info_area_length,
+                                         uint8_t expected_format_version,
+                                         uint8_t err_code_format_invalid);
 
 int ipmi_fru_parse_check_checksum (ipmi_fru_parse_ctx_t ctx,
                                    uint8_t *frubuf,
