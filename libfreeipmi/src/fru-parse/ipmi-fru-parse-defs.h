@@ -30,7 +30,11 @@
 
 #define IPMI_FRU_PARSE_CTX_MAGIC 0x12CD1DBF
 
-#define IPMI_FRU_PARSE_FLAGS_MASK           (IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP)
+#define IPMI_FRU_PARSE_FLAGS_MASK \
+  (IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP \
+   | IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS)
+
+#define IPMI_FRU_PARSE_BUF_LEN 2048
 
 struct ipmi_fru_parse_ctx {
   uint32_t magic;
@@ -40,6 +44,13 @@ struct ipmi_fru_parse_ctx {
 
   ipmi_ctx_t ipmi_ctx;
   uint8_t fru_device_id;
+  uint64_t fru_inventory_area_size;
+  uint64_t internal_use_area_starting_offset;
+  uint64_t chassis_info_area_starting_offset;
+  uint64_t board_info_area_starting_offset;
+  uint64_t product_info_area_starting_offset;
+  uint64_t multirecord_area_starting_offset;
+  unsigned int device_opened;
 };
 
 #endif /* _IPMI_FRU_PARSE_DEFS_H */

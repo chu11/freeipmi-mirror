@@ -1,10 +1,11 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.1.2.1 2009-03-26 21:02:13 chu11 Exp $
+## $Id: Makefile.am,v 1.1.2.2 2009-03-31 21:39:01 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
 
 noinst_HEADERS = \
+	ipmi-fru-parse-common.h \
 	ipmi-fru-parse-defs.h \
 	ipmi-fru-parse-trace.h \
 	ipmi-fru-parse-util.h
@@ -22,4 +23,5 @@ libfruparse_la_CPPFLAGS = \
 
 libfruparse_la_SOURCES = \
 	ipmi-fru-parse.c \
+	ipmi-fru-parse-common.c
 	ipmi-fru-parse-util.c

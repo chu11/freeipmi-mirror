@@ -2,6 +2,8 @@
 
 	From branch fru_lib_branch.
 
+	* libfreeipmi/: Support new ipmi_dump_hex() debug function.
+
 	* libfreeipmi/: Include new fru-parse subsection to libfreeipmi
 	library.
 
