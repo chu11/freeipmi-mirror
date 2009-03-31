@@ -1,3 +1,8 @@
+2009-03-31  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/debug/ipmi-debug.c: Always output "raw_data"
+	fields as byte arrays.
+	
 2009-03-30  Albert Chu <chu11@llnl.gov>
 
 	* Remove "experimental" note about SUNBMC driver.
