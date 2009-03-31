@@ -138,7 +138,6 @@ o libfreeipmi
     consistency to the rest of libfreeipmi.
   - New freeipmi/template/ files to document fiid fields for fiid
     templates.
-  - More detailed KCS debug output with header information.
   - New error code IPMI_ERR_NOT_FOUND in libfreeipmi API sub library
     supported.
   - Add a number of 'errormsg' functions so common code of 
@@ -154,6 +153,9 @@ o libfreeipmi
     units, percentages, rates, and units modifiers (i.e. "% hit",
     "gigabyte per minute", "pounds / cu in").
   - Fix several sensor units abbreviations.
+  - More detailed KCS debug output with header information.
+  - Always output debug raw_data (i.e. from ipmi-raw) in byte array
+    format instead of an integer even if the field length is < 64 bits.
 o libipmimonitoring
   - Support callback functions in API to monitor sensors as they
     are read/analyzed instead of after all sensors have been
