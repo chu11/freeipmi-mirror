@@ -129,6 +129,13 @@ int32_t ipmi_dump_sdr_record (int fd,
                               uint8_t *sdr_record,
                               uint32_t sdr_record_len);
 
+int32_t ipmi_dump_hex (int fd,
+                       const char *prefix,
+                       const char *hdr,
+                       const char *trlr,
+                       uint8_t *buf,
+                       uint32_t buf_len);
+
 #ifdef __cplusplus
 }
 #endif

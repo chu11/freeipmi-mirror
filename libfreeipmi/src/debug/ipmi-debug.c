@@ -381,3 +381,55 @@ ipmi_obj_dump_ipmb (int fd,
   fiid_obj_destroy (obj_ipmb_msg_trlr);
   return (rv);
 }
+
+int32_t
+ipmi_dump_hex (int fd,
+               const char *prefix,
+               const char *hdr,
+               const char *trlr,
+               uint8_t *buf,
+               uint32_t buf_len)
+{
+  char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
+  int rv = -1;
+
+  if (!buf || !buf_len)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  if (ipmi_debug_output_str (fd, prefix_buf, hdr) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  if (ipmi_debug_dprintf (fd, "[  HEX DUMP ..... ] = %s[%2uB]\n", "HEX", BITS_ROUND_BYTES (buf_len)) < 0)
+    {
+      ERRNO_TRACE (errno);
+      goto cleanup;
+    }
+
+  if (ipmi_debug_output_byte_array (fd, prefix_buf, buf, buf_len) < 0)
+    {
+      ERRNO_TRACE (errno);
+      goto cleanup;
+    }
+
+  if (ipmi_debug_output_str (fd, prefix_buf, trlr) < 0)
+    {
+      ERRNO_TRACE (errno);
+      goto cleanup;
+    }
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
