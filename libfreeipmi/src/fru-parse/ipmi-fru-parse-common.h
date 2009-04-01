@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-common.h,v 1.1.2.2 2009-03-31 22:21:03 chu11 Exp $
+ *  $Id: ipmi-fru-parse-common.h,v 1.1.2.3 2009-04-01 18:11:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -44,12 +44,13 @@ int ipmi_fru_parse_output_type_length_field (ipmi_fru_parse_ctx_t ctx,
                                              char *str);
 #endif
 
+/* info_area_length returned as stored in header, usually is in multiples of 8 */
 int ipmi_fru_parse_get_info_area_length (ipmi_fru_parse_ctx_t ctx,
                                          unsigned int offset_in_bytes,
-                                         char *str,
-                                         uint64_t *info_area_length,
+                                         unsigned int *info_area_length,
                                          uint8_t expected_format_version,
-                                         uint8_t err_code_format_invalid);
+                                         unsigned int err_code_format_invalid,
+                                         const char *debug_hdr);
 
 int ipmi_fru_parse_check_checksum (ipmi_fru_parse_ctx_t ctx,
                                    uint8_t *frubuf,
@@ -59,6 +60,6 @@ int ipmi_fru_parse_check_checksum (ipmi_fru_parse_ctx_t ctx,
 int ipmi_fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,
                              uint8_t *frubuf,
                              uint64_t length_in_bytes,
-                             char *hdr);
+                             const char *debug_hdr);
 
 #endif

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.28 2009-03-06 18:37:30 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.28.4.1 2009-04-01 18:10:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1614,7 +1614,7 @@ ipmi_fru_output_multirecord_info_area (ipmi_fru_state_data_t *state_data,
       if (end_of_list)
         break;
 
-      if (record_format_version != IPMI_FRU_MULTIRECORD_INFO_AREA_FORMAT_VERSION)
+      if (record_format_version != IPMI_FRU_MULTIRECORD_AREA_FORMAT_VERSION)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,

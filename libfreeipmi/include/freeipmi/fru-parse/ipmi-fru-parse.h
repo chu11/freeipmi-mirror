@@ -32,20 +32,28 @@
 #define IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION                      6
 #define IPMI_FRU_PARSE_ERR_FRU_AREA_LENGTH_INVALID                 7
 #define IPMI_FRU_PARSE_ERR_COMMON_HEADER_CHECKSUM_INVALID          8
-#define IPMI_FRU_PARSE_ERR_COMMON_HEADER_FORMAT_INVALID            9
-#define IPMI_FRU_PARSE_ERR_CHASSIS_INFO_AREA_FORMAT_INVALID       10
-#define IPMI_FRU_PARSE_ERR_BOARD_INFO_AREA_FORMAT_INVALID         11
-#define IPMI_FRU_PARSE_ERR_PRODUCT_INFO_AREA_FORMAT_INVALID       12
-#define IPMI_FRU_PARSE_ERR_MULTIRECORD_AREA_FORMAT_INVALID        13
-#define IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY                          14
-#define IPMI_FRU_PARSE_ERR_IPMI_ERROR                             15
-#define IPMI_FRU_PARSE_ERR_SYSTEM_ERROR                           16
-#define IPMI_FRU_PARSE_ERR_INTERNAL_ERROR                         17
-#define IPMI_FRU_PARSE_ERR_ERRNUMRANGE                            18
+#define IPMI_FRU_PARSE_ERR_CHASSIS_INFO_AREA_CHECKSUM_INVALID      9
+#define IPMI_FRU_PARSE_ERR_BOARD_INFO_AREA_CHECKSUM_INVALID       10
+#define IPMI_FRU_PARSE_ERR_PRODUCT_INFO_AREA_CHECKSUM_INVALID     11
+#define IPMI_FRU_PARSE_ERR_MULTIRECORD_AREA_CHECKSUM_INVALID      12
+#define IPMI_FRU_PARSE_ERR_COMMON_HEADER_FORMAT_INVALID           13
+#define IPMI_FRU_PARSE_ERR_CHASSIS_INFO_AREA_FORMAT_INVALID       14
+#define IPMI_FRU_PARSE_ERR_BOARD_INFO_AREA_FORMAT_INVALID         15
+#define IPMI_FRU_PARSE_ERR_PRODUCT_INFO_AREA_FORMAT_INVALID       16
+#define IPMI_FRU_PARSE_ERR_MULTIRECORD_AREA_FORMAT_INVALID        17
+#define IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY                          18
+#define IPMI_FRU_PARSE_ERR_IPMI_ERROR                             19
+#define IPMI_FRU_PARSE_ERR_SYSTEM_ERROR                           20
+#define IPMI_FRU_PARSE_ERR_INTERNAL_ERROR                         21
+#define IPMI_FRU_PARSE_ERR_ERRNUMRANGE                            22
 
 #define IPMI_FRU_PARSE_FLAGS_DEFAULT                              0x0000
 #define IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP                           0x0001
 #define IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS                 0x0002
+
+#define IPMI_FRU_PARSE_AREA_TYPE_CHASSIS_INFO_AREA                0
+#define IPMI_FRU_PARSE_AREA_TYPE_BOARD_INFO_AREA                  1
+#define IPMI_FRU_PARSE_AREA_TYPE_PRODUCT_INFO_AREA                2
 
 typedef struct ipmi_fru_parse_ctx *ipmi_fru_parse_ctx_t;
 
@@ -70,9 +78,9 @@ int ipmi_fru_parse_close_device_id (ipmi_fru_parse_ctx_t ctx);
 int ipmi_fru_parse_first (ipmi_fru_parse_ctx_t ctx);
 /* returns 1 if iterator can continue, 0 if at end */
 int ipmi_fru_parse_next (ipmi_fru_parse_ctx_t ctx);
-/* returns length of data read */
 int ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
                                    unsigned int *area_type,
+                                   unsigned int *area_length,
                                    uint8_t *buf,
                                    unsigned int buflen);
                          

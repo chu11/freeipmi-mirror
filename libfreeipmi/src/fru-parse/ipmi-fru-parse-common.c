@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-common.c,v 1.1.2.2 2009-03-31 22:21:02 chu11 Exp $
+ *  $Id: ipmi-fru-parse-common.c,v 1.1.2.3 2009-04-01 18:11:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -510,22 +510,23 @@ ipmi_fru_parse_output_type_length_field (ipmi_fru_parse_ctx_t ctx,
 int
 ipmi_fru_parse_get_info_area_length (ipmi_fru_parse_ctx_t ctx,
                                      unsigned int offset_in_bytes,
-                                     char *str,
-                                     uint64_t *info_area_length,
+                                     unsigned int *info_area_length,
                                      uint8_t expected_format_version,
-                                     uint8_t err_code_format_invalid)
+                                     unsigned int err_code_format_invalid,
+                                     const char *debug_hdr)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   fiid_obj_t fru_info_area_header = NULL;
   int32_t info_area_header_len;
   uint64_t format_version;
+  uint64_t val;
   int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
   assert (offset_in_bytes);
-  assert (str);
   assert (info_area_length);
+  assert (err_code_format_invalid != IPMI_FRU_PARSE_ERR_SUCCESS);
 
   if ((info_area_header_len = fiid_template_len_bytes (tmpl_fru_info_area_header)) < 0)
     {
@@ -570,11 +571,12 @@ ipmi_fru_parse_get_info_area_length (ipmi_fru_parse_ctx_t ctx,
 
   if (FIID_OBJ_GET (fru_info_area_header,
                     "info_area_length",
-                    info_area_length) < 0)
+                    &val) < 0)
     {
       FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_info_area_header);
       goto cleanup;
     }
+  (*info_area_length) = val;
 
   if (format_version != expected_format_version)
     {
@@ -617,13 +619,13 @@ int
 ipmi_fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,
                          uint8_t *frubuf,
                          uint64_t length_in_bytes,
-                         char *hdr)
+                         const char *debug_hdr)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
   assert (frubuf);
   assert (length_in_bytes);
-  assert (hdr);
+  assert (debug_hdr);
 
   if (ctx->flags & IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP)
     {
@@ -631,7 +633,7 @@ ipmi_fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,
-                     hdr,
+                     debug_hdr,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
 

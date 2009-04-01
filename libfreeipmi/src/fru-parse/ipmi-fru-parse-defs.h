@@ -44,11 +44,11 @@ struct ipmi_fru_parse_ctx {
 
   ipmi_ctx_t ipmi_ctx;
   uint8_t fru_device_id;
-  uint64_t fru_inventory_area_size;
-  uint64_t chassis_info_area_starting_offset;
-  uint64_t board_info_area_starting_offset;
-  uint64_t product_info_area_starting_offset;
-  uint64_t multirecord_area_starting_offset;
+  unsigned int fru_inventory_area_size;
+  unsigned int chassis_info_area_starting_offset;
+  unsigned int board_info_area_starting_offset;
+  unsigned int product_info_area_starting_offset;
+  unsigned int multirecord_area_starting_offset;
   unsigned int device_opened;
 
   int chassis_info_area_parsed;

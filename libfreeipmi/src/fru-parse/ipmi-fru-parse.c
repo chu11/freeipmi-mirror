@@ -60,6 +60,9 @@ static char *ipmi_fru_parse_errmsgs[] =
     "device id already open",
     "no FRU information",
     "common header checksum invalid",
+    "chassis info area checksum invalid",
+    "board info area checksum invalid",
+    "product info area checksum invalid",
     "common header format invalid",
     "chassis info area format invalid",
     "board info area format invalid",
@@ -259,7 +262,8 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
   fiid_obj_t fru_get_inventory_rs = NULL;
   fiid_obj_t fru_common_header = NULL;
   int32_t common_header_len;
-  uint64_t format_version;
+  uint8_t format_version;
+  uint64_t val;
   int rv = -1;
   int ret;
 
@@ -310,12 +314,13 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
   
   if (FIID_OBJ_GET (fru_get_inventory_rs,
                     "fru_inventory_area_size",
-                    &ctx->fru_inventory_area_size) < 0)
+                    &val) < 0)
     {
       FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_get_inventory_rs);
       goto cleanup;
     }
-  
+  ctx->fru_inventory_area_size = val;
+
   /* XXX - make sure initted to insure iterator doesn't return anything */
 #if 0
   pstdout_printf (state_data->pstate,
@@ -340,10 +345,10 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
                                     common_header_len) < 0)
     goto cleanup;
 
-  if ((ret = ipmi_fru_parse_dump_hex (ctx,
-                                      frubuf,
-                                      common_header_len,
-                                      "Common Header")) < 0)
+  if (ipmi_fru_parse_dump_hex (ctx,
+                               frubuf,
+                               common_header_len,
+                               "Common Header") < 0)
     goto cleanup;
 
   if ((ret = ipmi_fru_parse_check_checksum (ctx,
@@ -382,43 +387,48 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
 
   if (FIID_OBJ_GET (fru_common_header,
                     "format_version",
-                    &format_version) < 0)
+                    &val) < 0)
     {
       FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_common_header);
       goto cleanup;
     }
+  format_version = val;
 
   if (FIID_OBJ_GET (fru_common_header,
                     "chassis_info_area_starting_offset",
-                    &ctx->chassis_info_area_starting_offset) < 0)
+                    &val) < 0)
     {
       FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_common_header);
       goto cleanup;
     }
+  ctx->chassis_info_area_starting_offset = val;
 
   if (FIID_OBJ_GET (fru_common_header,
                     "board_info_area_starting_offset",
-                    &ctx->board_info_area_starting_offset) < 0)
+                    &val) < 0)
     {
       FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_common_header);
       goto cleanup;
     }
+  ctx->board_info_area_starting_offset = val;
 
   if (FIID_OBJ_GET (fru_common_header,
                     "product_info_area_starting_offset",
-                    &ctx->product_info_area_starting_offset) < 0)
+                    &val) < 0)
     {
       FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_common_header);
       goto cleanup;
     }
+  ctx->product_info_area_starting_offset = val;
 
   if (FIID_OBJ_GET (fru_common_header,
                     "multirecord_area_starting_offset",
-                    &ctx->multirecord_area_starting_offset) < 0)
+                    &val) < 0)
     {
       FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_common_header);
       goto cleanup;
     }
+  ctx->multirecord_area_starting_offset = val;
 
   if (format_version != IPMI_FRU_COMMON_HEADER_FORMAT_VERSION)
     {
@@ -468,47 +478,164 @@ ipmi_fru_parse_first (ipmi_fru_parse_ctx_t ctx)
     }
 
   _init_fru_parsing_iterator_data (ctx);
+  ctx->errnum = IPMI_FRU_PARSE_ERR_SUCCESS;
   return (0);
 }
 
 int
 ipmi_fru_parse_next (ipmi_fru_parse_ctx_t ctx)
 {
+  int rv = 0;
+
   if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
       return (-1);
     }
 
-  if (!ctx->chassis_info_area_parsed)
+  if (ctx->chassis_info_area_starting_offset && !ctx->chassis_info_area_parsed)
     {
       ctx->chassis_info_area_parsed++;
-      return (1);
+      rv = 1;
     }
-  if (!ctx->board_info_area_parsed)
+  if (ctx->board_info_area_starting_offset && !ctx->board_info_area_parsed)
     {
       ctx->board_info_area_parsed++;
-      return (1);
+      rv = 1;
     }
-  if (!ctx->product_info_area_parsed)
+  if (ctx->product_info_area_starting_offset && !ctx->product_info_area_parsed)
     {
       ctx->product_info_area_parsed++;
-      return (1);
+      rv = 1;
     }
-  if (!ctx->multirecord_area_parsed)
+  if (ctx->multirecord_area_starting_offset && !ctx->multirecord_area_parsed)
     {
       ctx->multirecord_area_parsed++;
-      return (1);
+      rv = 1;
     }
   
-  return (0);
+  ctx->errnum = IPMI_FRU_PARSE_ERR_SUCCESS;
+  return (rv);
 }
 
 int
 ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
                                unsigned int *area_type,
+                               unsigned int *area_length,
                                uint8_t *buf,
                                unsigned int buflen)
 {
-  return (0);
+  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1]; 
+  int rv = -1;
+  int ret;
+
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!area_type
+      || !area_length
+      || !buf
+      || !buflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if ((ctx->chassis_info_area_starting_offset && !ctx->chassis_info_area_parsed)
+      || (ctx->board_info_area_starting_offset && !ctx->board_info_area_parsed)
+      || (ctx->product_info_area_starting_offset && !ctx->product_info_area_parsed))
+    {
+      unsigned int info_area_length;
+      unsigned int info_area_length_bytes;
+      uint8_t expected_format_version;
+      unsigned int err_code_format_invalid;
+      unsigned int err_code_checksum_invalid;
+      unsigned int info_area_starting_offset;
+      char *headerhdrstr;
+      char *areahdrstr;
+      unsigned int info_area_type;
+
+      if (ctx->chassis_info_area_starting_offset && !ctx->chassis_info_area_parsed)
+        {
+          expected_format_version = IPMI_FRU_CHASSIS_INFO_AREA_FORMAT_VERSION;
+          err_code_format_invalid = IPMI_FRU_PARSE_ERR_CHASSIS_INFO_AREA_FORMAT_INVALID;
+          err_code_checksum_invalid = IPMI_FRU_PARSE_ERR_CHASSIS_INFO_AREA_CHECKSUM_INVALID;
+          info_area_starting_offset = ctx->chassis_info_area_starting_offset;
+          headerhdrstr = "Chassis Info Header";
+          areahdrstr = "Chassis Info Area";
+          info_area_type = IPMI_FRU_PARSE_AREA_TYPE_CHASSIS_INFO_AREA;
+        }
+      else if (ctx->board_info_area_starting_offset && !ctx->board_info_area_parsed)
+        {
+          expected_format_version = IPMI_FRU_BOARD_INFO_AREA_FORMAT_VERSION;
+          err_code_format_invalid = IPMI_FRU_PARSE_ERR_BOARD_INFO_AREA_FORMAT_INVALID;
+          err_code_checksum_invalid = IPMI_FRU_PARSE_ERR_BOARD_INFO_AREA_CHECKSUM_INVALID;
+          info_area_starting_offset = ctx->board_info_area_starting_offset;
+          headerhdrstr = "Board Info Header";
+          areahdrstr = "Board Info Area";
+          info_area_type = IPMI_FRU_PARSE_AREA_TYPE_BOARD_INFO_AREA;
+        }
+      else /* (ctx->product_info_area_starting_offset && !ctx->product_info_area_parsed) */
+        {
+          expected_format_version = IPMI_FRU_PRODUCT_INFO_AREA_FORMAT_VERSION;
+          err_code_format_invalid = IPMI_FRU_PARSE_ERR_PRODUCT_INFO_AREA_FORMAT_INVALID;
+          err_code_checksum_invalid = IPMI_FRU_PARSE_ERR_PRODUCT_INFO_AREA_CHECKSUM_INVALID;
+          info_area_starting_offset = ctx->product_info_area_starting_offset;
+          headerhdrstr = "Product Info Header";
+          areahdrstr = "Product Info Area";
+          info_area_type = IPMI_FRU_PARSE_AREA_TYPE_PRODUCT_INFO_AREA;
+        }
+
+      if (ipmi_fru_parse_get_info_area_length (ctx,
+                                               info_area_starting_offset * 8,
+                                               &info_area_length,
+                                               expected_format_version,
+                                               err_code_format_invalid,
+                                               headerhdrstr) < 0)
+        goto cleanup;
+      info_area_length_bytes = info_area_length * 8;
+      
+      if (ipmi_fru_parse_read_fru_data (ctx,
+                                        frubuf,
+                                        IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                        info_area_starting_offset * 8,
+                                        info_area_length_bytes) < 0)
+        goto cleanup;
+      
+      if (ipmi_fru_parse_dump_hex (ctx,
+                                   frubuf,
+                                   info_area_length_bytes,
+                                   areahdrstr) < 0)
+        goto cleanup;
+
+      if ((ret = ipmi_fru_parse_check_checksum (ctx,
+                                                frubuf,
+                                                info_area_length_bytes,
+                                                0)) < 0)
+        goto cleanup;
+
+      if (!ret)
+        {
+          FRU_PARSE_SET_ERRNUM (ctx, err_code_checksum_invalid);
+          goto cleanup;
+        }
+      
+      (*area_type) = info_area_type;
+      (*area_length) = info_area_length_bytes;
+      goto out;
+    }
+
+
+  if (ctx->multirecord_area_starting_offset && !ctx->multirecord_area_parsed)
+    {
+      /* XXX */
+    }
+
+ out:
+  rv = 0;
+ cleanup:
+  return (rv);
 }
