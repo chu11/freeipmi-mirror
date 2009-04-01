@@ -29,6 +29,7 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 -x option for excluding hosts??
 firmware firewall support?
 - new config tool??
+read/store username/password/k_g out of file encrypted so it's not sitting there in the clear
 
 bmc-device
 --------
