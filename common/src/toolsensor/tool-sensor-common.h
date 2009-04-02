@@ -29,12 +29,12 @@
 #define UNRECOGNIZED_SENSOR_GROUP           "Unrecognized"
 
 #define SENSORS_HEADER_RECORD_ID_STR        "Record ID"
-#define SENSORS_HEADER_NAME_STR             "Sensor Name"
-#define SENSORS_HEADER_GROUP_STR            "Sensor Group"
-#define SENSORS_HEADER_STATE_STR            "Sensor State"
-#define SENSORS_HEADER_READING_STR          "Sensor Reading"
-#define SENSORS_HEADER_UNITS_STR            "Sensor Units"
-#define SENSORS_HEADER_EVENT_STR            "Sensor Event"
+#define SENSORS_HEADER_NAME_STR             "Name"
+#define SENSORS_HEADER_GROUP_STR            "Group"
+#define SENSORS_HEADER_STATE_STR            "State"
+#define SENSORS_HEADER_READING_STR          "Reading"
+#define SENSORS_HEADER_UNITS_STR            "Units"
+#define SENSORS_HEADER_EVENT_STR            "Event"
 
 #define MAX_SENSOR_RECORD_IDS               256
 #define MAX_SENSOR_GROUPS                   256

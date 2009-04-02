@@ -429,11 +429,11 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
               if (state_data->prog_data->args->comma_separated_output)
                 snprintf (fmt,
                           IPMI_SENSORS_FMT_BUFLEN,
-                          ",%%f,%%s");
+                          ",%%-10.2f,%%s");
               else
                 snprintf (fmt,
                           IPMI_SENSORS_FMT_BUFLEN,
-                          " | %%-14f | %%-%ds",
+                          " | %%-10.2f | %%-%ds",
                           state_data->column_width.sensor_units);
               
               pstdout_printf (state_data->pstate,
@@ -450,7 +450,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
               else
                 snprintf (fmt,
                           IPMI_SENSORS_FMT_BUFLEN,
-                          " | %%-14s | %%-%ds",
+                          " | %%-10s | %%-%ds",
                           state_data->column_width.sensor_units);
               
               pstdout_printf (state_data->pstate,
@@ -489,7 +489,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
           else
             snprintf (fmt,
                       IPMI_SENSORS_FMT_BUFLEN,
-                      " | %%-14s | %%-%ds | ",
+                      " | %%-10s | %%-%ds | ",
                       state_data->column_width.sensor_units);
           
           pstdout_printf (state_data->pstate,
@@ -550,7 +550,7 @@ _simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
       else
         snprintf (fmt,
                   IPMI_SENSORS_FMT_BUFLEN,
-                  " | %%-14s | %%-%ds | ",
+                  " | %%-10s | %%-%ds | ",
                   state_data->column_width.sensor_units);
 
       pstdout_printf (state_data->pstate,
