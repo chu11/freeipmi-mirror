@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.108 2009-04-02 22:55:02 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.109 2009-04-02 23:36:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -695,7 +695,8 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
       else
         snprintf (fmt,
                   IPMIMONITORING_FMT_BUFLEN,
-                  "%%-9u | %%-%ds | %%-%ds | %%-8s",
+                  "%%-%du | %%-%ds | %%-%ds | %%-8s",
+                  state_data->column_width.record_id,
                   state_data->column_width.sensor_name,
                   state_data->column_width.sensor_group);
       

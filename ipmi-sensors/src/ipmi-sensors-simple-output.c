@@ -357,7 +357,8 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
   else
     snprintf (fmt,
               IPMI_SENSORS_FMT_BUFLEN,
-              "%%-9u | %%-%ds | %%-%ds",
+              "%%-%du | %%-%ds | %%-%ds",
+              state_data->column_width.record_id,
               state_data->column_width.sensor_name,
               state_data->column_width.sensor_group);
             

@@ -59,6 +59,8 @@
 
 #define IPMI_SEL_EVENT_SEPARATOR " ; "
 
+#define IPMI_SEL_EVENT_COLUMN_WIDTH 36
+
 static int
 _display_sel_info (ipmi_sel_state_data_t *state_data)
 {
@@ -638,9 +640,9 @@ _normal_output_record_id (ipmi_sel_state_data_t *state_data, unsigned int flags)
   else
     {
       if (outbuf_len)
-        pstdout_printf (state_data->pstate, "%-9s", outbuf);
+        pstdout_printf (state_data->pstate, "%-2s", outbuf);
       else
-        pstdout_printf (state_data->pstate, "%-9s", IPMI_SEL_NA_STRING);
+        pstdout_printf (state_data->pstate, "%-2s", IPMI_SEL_NA_STRING);
     }
 
   return (1);
@@ -873,10 +875,26 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
     }
   else
     {
-      if (outbuf_len)
-        pstdout_printf (state_data->pstate, " | %-36s", outbuf);
+      char fmt[IPMI_SEL_FMT_BUFLEN + 1];
+
+      memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
+      if (state_data->prog_data->args->comma_separated_output)
+        snprintf (fmt,
+                  IPMI_SEL_FMT_BUFLEN,
+                  ",%%s");
       else
-        pstdout_printf (state_data->pstate, " | %-36s", IPMI_SEL_NA_STRING);
+        snprintf (fmt,
+                  IPMI_SEL_FMT_BUFLEN,
+                  " | %%-%ds",
+                  state_data->event_column_width);
+      
+      if (outbuf_len > state_data->event_column_width)
+        state_data->event_column_width = outbuf_len;
+
+      if (outbuf_len)
+        pstdout_printf (state_data->pstate, fmt, outbuf);
+      else
+        pstdout_printf (state_data->pstate, fmt, IPMI_SEL_NA_STRING);
     }
 
   return (1);
@@ -1150,20 +1168,17 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
           pstdout_printf (state_data->pstate, "\n");
         }
       else
-        {
-          pstdout_printf (state_data->pstate,
-                          "%s | Date        | Time    ",
-                          SENSORS_HEADER_RECORD_ID_STR);
-          
+        {          
           memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
           snprintf (fmt,
                     IPMI_SEL_FMT_BUFLEN,
-                    " | %%-%ds | %%-%ds",
+                    "%%s | Date        | Time     | %%-%ds | %%-%ds",
                     state_data->column_width.sensor_name,
                     state_data->column_width.sensor_group);
           
           pstdout_printf (state_data->pstate,
                           fmt,
+                          SENSORS_HEADER_RECORD_ID_STR,
                           SENSORS_HEADER_NAME_STR,
                           SENSORS_HEADER_GROUP_STR);
           
@@ -1581,6 +1596,8 @@ _ipmi_sel (pstdout_state_t pstate,
             }
         }
     }
+
+  state_data.event_column_width = IPMI_SEL_EVENT_COLUMN_WIDTH;
 
   if (run_cmd_args (&state_data) < 0)
     {

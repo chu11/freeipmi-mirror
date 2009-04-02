@@ -28,7 +28,7 @@
 
 #define UNRECOGNIZED_SENSOR_GROUP           "Unrecognized"
 
-#define SENSORS_HEADER_RECORD_ID_STR        "Record ID"
+#define SENSORS_HEADER_RECORD_ID_STR        "ID"
 #define SENSORS_HEADER_NAME_STR             "Name"
 #define SENSORS_HEADER_GROUP_STR            "Group"
 #define SENSORS_HEADER_STATE_STR            "State"
@@ -42,6 +42,7 @@
 
 struct sensor_column_width
 {
+  int record_id;
   int sensor_name;
   int sensor_group;
   int sensor_units;

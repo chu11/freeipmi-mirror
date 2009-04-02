@@ -90,6 +90,7 @@ typedef struct ipmi_sel_state_data
   ipmi_sel_parse_ctx_t sel_parse_ctx;
   int output_headers;
   struct sensor_column_width column_width;
+  unsigned int event_column_width;
 } ipmi_sel_state_data_t;
 
 #endif

@@ -37,6 +37,8 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
+#define RECORD_ID_BUFLEN    64
+
 #define SENSOR_GROUP_BUFLEN 1024
 
 #define SENSOR_UNITS_BUFLEN 1024
@@ -294,24 +296,22 @@ output_sensor_headers (pstdout_state_t pstate,
 
   assert (column_width);
 
-  PSTDOUT_PRINTF (pstate,
-                  "%s",
-                  SENSORS_HEADER_RECORD_ID_STR);
-
   memset (fmt, '\0', SENSOR_FMT_BUFLEN + 1);
   if (comma_separated_output)
     snprintf (fmt,
               SENSOR_FMT_BUFLEN,
-              ",%%s,%%s");
+              "%%s,%%s,%%s");
   else
     snprintf (fmt,
               SENSOR_FMT_BUFLEN,
-              " | %%-%ds | %%-%ds",
+              "%%-%ds | %%-%ds | %%-%ds",
+              column_width->record_id,
               column_width->sensor_name,
               column_width->sensor_group);
 
   PSTDOUT_PRINTF (pstate,
                   fmt,
+                  SENSORS_HEADER_RECORD_ID_STR,
                   SENSORS_HEADER_NAME_STR,
                   SENSORS_HEADER_GROUP_STR);
 
@@ -369,6 +369,7 @@ _sensor_column_width_init (struct sensor_column_width *column_width)
 {
   assert (column_width);
 
+  column_width->record_id = 0;
   column_width->sensor_name = 0;
   column_width->sensor_group = 0;
   column_width->sensor_units = 0;
@@ -379,6 +380,8 @@ _sensor_column_width_finish (struct sensor_column_width *column_width)
 {
   assert (column_width);
 
+  if (column_width->record_id < strlen(SENSORS_HEADER_RECORD_ID_STR))
+    column_width->record_id = strlen(SENSORS_HEADER_RECORD_ID_STR);
   if (column_width->sensor_name < strlen(SENSORS_HEADER_NAME_STR))
     column_width->sensor_name = strlen(SENSORS_HEADER_NAME_STR);
   if (column_width->sensor_group < strlen(SENSORS_HEADER_GROUP_STR))
@@ -396,6 +399,7 @@ _store_column_widths (pstdout_state_t pstate,
                       struct sensor_column_width *column_width)
 {
   char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+  char record_id_buf[RECORD_ID_BUFLEN + 1];
   uint16_t record_id;
   uint8_t record_type;
   uint8_t sensor_type;
@@ -423,6 +427,13 @@ _store_column_widths (pstdout_state_t pstate,
   if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
       && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     return (0);
+
+  memset (record_id_buf, '\0', RECORD_ID_BUFLEN + 1);
+  snprintf (record_id_buf, RECORD_ID_BUFLEN, "%u", record_id);
+
+  len = strlen (record_id_buf);
+  if (len > column_width->record_id)
+    column_width->record_id = len;
 
   memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
   if (ipmi_sdr_parse_id_string (sdr_parse_ctx,

@@ -867,7 +867,6 @@ _parse_system_event_common (ipmi_sel_parse_ctx_t ctx,
   
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
-  assert (sel_parse_entry);
   assert (system_event_record_data);
   
   if (_parse_read_common (ctx, &sel_parse_entry) < 0)
