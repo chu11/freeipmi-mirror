@@ -6,7 +6,6 @@ ipmi-sensors \- display IPMI sensor information
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-sensors
-
 displays current readings of sensors and sensor data repository (SDR)
 information.  The default display outputs each sensor's record id,
 sensor name, sensor group name, sensor reading (if appropriate), and
