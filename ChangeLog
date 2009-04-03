@@ -1,4 +1,10 @@
 2009-04-03  Albert Chu <chu11@llnl.gov>
+	
+	* configure.ac, NEWS: Update for release.
+
+	* Tagged Release-0_7_7.	
+
+2009-04-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem.8.pre.in: Update text.
 

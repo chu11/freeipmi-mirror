@@ -1,4 +1,4 @@
-0.7.7 - xx/xx/xx
+0.7.7 - 04/03/09
 ----------------
 o Support inventec get-nic-status, set-nic-status, get-mac-address,
   and set-mac-address OEM commands in ipmi-oem.
@@ -11,7 +11,9 @@ o Fix Solaris porting bugs.
 o Fix potential config file bug by clearing out stack data
   appropriatly.
 o Support build option (--with-dont-check-for-root) to not have tools
-  check for root for in-band IPMI communication.
+  check for root for in-band IPMI communication.  Permission checks are 
+  subsequently dealt with at underlying system calls and
+  drivers. (i.e. open() on /dev/ipmi0).
 o Update bmc-config manpage with Dell specific workaround.
 o Remove "experimental" note from SUNBMC driver documentation.
 
