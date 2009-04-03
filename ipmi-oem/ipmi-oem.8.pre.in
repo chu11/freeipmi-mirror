@@ -52,14 +52,18 @@ The currently supported OEM IDs and COMMANDs are:
 .RS
 .TP
 .B get-nic-status
-On some Inventec motherboards (confirmed on 5441), the NIC can be in
-a dedicated or shared status.  This command will determine the current
-status.
+On some Inventec motherboards (confirmed on 5441), the NIC can be in a
+dedicated or shared status.  This command will determine the current
+NIC status.  Dedicated indicates IPMI is only available on the
+dedicated management port.  Shared indicates IPMI is also available on
+one of the primary ethernet ports.
 .TP
 .B set-nic-status \fIdedicated|shared\fR
 On some Inventec motherboards (confirmed on 5441), the NIC can be in a
-dedicated or shared status.  This command will set the current status
-to the value indicated.  This command may internally reset the BMC.
+dedicated or shared status.  (See get-nic-status above for description
+on dedicated vs. shared status.)  This command will set the current
+status to the value indicated.  This command may internally reset the
+BMC, making the BMC unusable for awhile.
 .TP
 .B get-mac-address\fR
 Get the current BMC MAC address.  This is actually not an Inventec OEM
@@ -75,7 +79,12 @@ used in the
 .B bmc-config(8)
 tool).  Instead the dedicated or shared MAC address must specifically
 be configured via OEM commands.  This command will allow the user to
-set either the dedicated or shared BMC MAC address.
+set either the dedicated or shared BMC MAC address.  The MACADDR
+should be specified in XX:XX:XX:XX:XX:XX form.  A shared BMC MAC
+address may conflict with normal communication ethernet communication
+on the primary ethernet port.  Users may wish to configuration an
+alternate MAC address instead.  (See get-nic-status above for
+description on dedicated vs. shared status.)
 .RE
 .TP
 .B supermicro
