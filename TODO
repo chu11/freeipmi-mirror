@@ -97,6 +97,11 @@ additions.
   - these 4 commands seem like the only maybe potentially useful
     additions.
 
+PmBus functionality
+-------------------
+pmbus.org
+- doable via FreeIPMI?  Can pass through Smbus to PmBus to do power control monitoring?
+
 RELEASE TODOS - Do on every release
 -----------------------------------
 Email freeipmi-users && freeipmi-devel
