@@ -237,7 +237,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
   size_t n = 0;
   uint8_t *bytes_rq = NULL;
   int send_len;
-  uint8_t bytes_rs[ARG_MAX];
+  uint8_t bytes_rs[_SC_ARG_MAX];
   int32_t rs_len;
   int i, rv = -1;
 
@@ -273,7 +273,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
                                   &bytes_rq[2],
                                   send_len - 2,
                                   bytes_rs,
-                                  ARG_MAX)) < 0)
+                                  _SC_ARG_MAX)) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,

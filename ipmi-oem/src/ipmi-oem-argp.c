@@ -120,7 +120,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           }
         else
           {
-            if (cmd_args->oem_options_count < ARG_MAX)
+            if (cmd_args->oem_options_count < _SC_ARG_MAX)
               {
                 if (!(cmd_args->oem_options[cmd_args->oem_options_count] = strdup (arg)))
                   {
