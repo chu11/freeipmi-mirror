@@ -1,3 +1,8 @@
+2009-04-07  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/src/ipmi-oem-argp.c, ipmi-raw/src/ipmi-raw.c: Fix glibc
+	2.8 portability compile issue.
+	
 2009-04-03  Albert Chu <chu11@llnl.gov>
 	
 	* configure.ac, NEWS: Update for release.

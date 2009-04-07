@@ -1,3 +1,7 @@
+0.7.8 - 04/07/09
+----------------
+o Fix glibc 2.8 compile bug.
+
 0.7.7 - 04/03/09
 ----------------
 o Support inventec get-nic-status, set-nic-status, get-mac-address,
