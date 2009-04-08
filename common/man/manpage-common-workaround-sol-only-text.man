@@ -35,9 +35,8 @@ cipher suite records.
 Inventec 5441: The privilege level sent during the Open Session stage
 of an IPMI 2.0 connection is used for hashing keys instead of the
 privilege level sent during the RAKP1 connection stage.  This may
-cause "password invalid" or "bad rmcpplus status code" errors to
-occur.  It can be worked around by specifying the "opensesspriv"
-workaround.
+cause "password invalid" or "BMC Error" errors to occur.  It can be
+worked around by specifying the "opensesspriv" workaround.
 .LP
 Asus P5M2/RS162-E4/RX4, Intel Intel SR1520ML/X38ML, Inventec 5441:
 Incorrect IPMI 2.0 SOL payload sizes are reported by motherboard SOL
