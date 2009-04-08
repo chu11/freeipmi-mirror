@@ -32,15 +32,17 @@ They can be worked around by specifying the "sun20" workaround.  The
 workarounds include handling invalid lengthed hash keys and invalid
 cipher suite records.
 .LP
-Asus P5M2/RS162-E4/RX4: Incorrect IPMI 2.0 SOL payload sizes are
-reported by motherboard SOL packet responses.  This will likely cause
-"BMC Implementation" errors to occur.  In order to work around this
-issue, the "solpayloadsize" workaround must be specified.
+Inventec 5441: The privilege level sent during the Open Session stage
+of an IPMI 2.0 connection is used for hashing keys instead of the
+privilege level sent during the RAKP1 connection stage.  This may
+cause "password invalid" or "BMC Error" errors to occur.  It can be
+worked around by specifying the "opensesspriv" workaround.
 .LP
-Intel SR1520ML/X38ML: Incorrect IPMI 2.0 SOL payload sizes are
-reported by motherboard SOL packet responses.  This will likely cause
-"BMC Implementation" errors to occur.  In order to work around this
-issue, the "solpayloadsize" workaround must be specified.
+Asus P5M2/RS162-E4/RX4, Intel Intel SR1520ML/X38ML, Inventec 5441:
+Incorrect IPMI 2.0 SOL payload sizes are reported by motherboard SOL
+packet responses.  This will likely cause "BMC Implementation" errors
+to occur.  In order to work around this issue, the "solpayloadsize"
+workaround must be specified.
 .LP
 Asus P5MT-R: An invalid IPMI 2.0 SOL port is reported by the
 motherboard.  This may cause "session timeout" errors to occur.  In

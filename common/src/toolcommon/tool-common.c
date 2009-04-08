@@ -109,6 +109,8 @@ ipmi_open(const char *progname,
     workaround_flags |= IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
   else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
     workaround_flags |= IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION;
+  else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
+    workaround_flags |= IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE;
 
   if (hostname 
       && strcasecmp(hostname, "localhost") != 0

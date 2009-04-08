@@ -1,8 +1,33 @@
+2009-04-08  Albert Chu <chu11@llnl.gov>
+
+        * common/man/manpage-common-workaround-sol-only-text.man
+        common/man/manpage-common-workaround-text.man
+        common/src/toolcommon/tool-cmdline-common.c
+        common/src/toolcommon/tool-cmdline-common.h
+        common/src/toolcommon/tool-common.c
+        ipmiconsole/src/ipmiconsole/ipmiconsole.c
+        ipmiconsole/src/libipmiconsole/ipmiconsole.h
+        ipmiconsole/src/libipmiconsole/ipmiconsole_defs.h
+        ipmiconsole/src/libipmiconsole/ipmiconsole_packet.c
+        ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
+        ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+        ipmimonitoring/src/libipmimonitoring/ipmi_monitoring.h
+        ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_defs.h
+        ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_ipmi_communication.c
+        libfreeipmi/include/freeipmi/api/ipmi-api.h
+        libfreeipmi/src/api/ipmi-api.c
+        libfreeipmi/src/api/ipmi-lan-session-common.c: Support Inventec
+        open session privilege workaround.  Document that SOL Payload Size
+        workaround also needed.  Return Password Invalid error when
+        "invalid integrity check value" returned from RAKP4.
+
+	* configure.ac: Update library revision numbers.
+	
 2009-04-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/src/ipmi-oem-argp.c, ipmi-raw/src/ipmi-raw.c: Fix glibc
 	2.8 portability compile issue.
-	
+		
 2009-04-03  Albert Chu <chu11@llnl.gov>
 	
 	* configure.ac, NEWS: Update for release.

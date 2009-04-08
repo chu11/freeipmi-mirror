@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.74 2008-05-15 21:48:01 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.74.12.1 2009-04-08 21:12:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -171,6 +171,7 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION           0x01000000
 #define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION      0x02000000
 #define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION             0x04000000
+#define IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE      0x08000000
        
 /* 
  * Engine Flags

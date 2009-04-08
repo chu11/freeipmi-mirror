@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.53.4.3 2008-12-09 18:42:13 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.53.4.4 2009-04-08 21:12:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -327,6 +327,8 @@ main(int argc, char **argv)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION;
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION;
+  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
+    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE;
 
   memset(&protocol_config, '\0', sizeof(struct ipmiconsole_protocol_config));
   protocol_config.session_timeout_len = cmd_args.common.session_timeout; 

@@ -1,5 +1,8 @@
 0.7.8 - 04/07/09
 ----------------
+o Support and document Inventec 5441 workarounds.  Most notably, added
+  "opensesspriv" workaround to tools and OPEN_SESSION_PRIVILEGE
+  workaround to libraries.
 o Fix glibc 2.8 compile bug.
 
 0.7.7 - 04/03/09
