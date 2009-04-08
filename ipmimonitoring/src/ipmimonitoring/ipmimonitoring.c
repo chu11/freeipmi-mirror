@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.109 2009-04-02 23:36:58 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.110 2009-04-08 20:47:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1153,6 +1153,8 @@ _convert_to_ipmimonitoring_options (struct ipmimonitoring_arguments *cmd_args)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
   if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
     cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION;
+  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
+    cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE;
 
   if (cmd_args->common.debug)
     {

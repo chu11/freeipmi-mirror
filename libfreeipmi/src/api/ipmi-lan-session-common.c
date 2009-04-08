@@ -3146,7 +3146,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    * of an actual privilege, so have to pass the actual privilege
    * we want to use.
    */
-  if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION
+      || ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
     requested_maximum_privilege = ctx->io.outofband.privilege_level;
   else
     requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
@@ -3686,6 +3687,12 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
           || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
         API_SET_ERRNUM (ctx, IPMI_ERR_BMC_BUSY);
+      else if (rmcpplus_status_code == RMCPPLUS_STATUS_INVALID_INTEGRITY_CHECK_VALUE)
+        /* XXX: achu: some systems, password could be correct, but
+         * privilege used in hashing is incorrect on the BMC side
+         * (OPEN_SESSION_PRIVILEGE workaround).
+         */
+        API_SET_ERRNUM (ctx, IPMI_ERR_PASSWORD_INVALID);
       else
         API_SET_ERRNUM (ctx, IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE);
       goto cleanup;

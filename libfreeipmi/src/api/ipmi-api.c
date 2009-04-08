@@ -503,7 +503,8 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   unsigned int flags_mask = (IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES
                              | IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION
                              | IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
-                             | IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION);
+                             | IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION
+                             | IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

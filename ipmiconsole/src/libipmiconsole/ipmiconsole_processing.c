@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.83 2009-04-08 16:31:22 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.84 2009-04-08 20:47:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -2068,6 +2068,8 @@ _check_payload_sizes_legitimate (ipmiconsole_ctx_t c)
    * Discovered on an ASUS P5M2 motherboard.
    *
    * Also seen on Intel X38ML motherboard.
+   *
+   * Also seen on Inventec 5441 motherboard.
    *
    * The ASUS motherboard reports incorrect payload sizes.  Skip the
    * check and assume a reasonable size.
