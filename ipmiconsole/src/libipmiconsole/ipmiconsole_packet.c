@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.35 2009-04-08 20:47:06 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.36 2009-04-08 21:09:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1571,6 +1571,11 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE);
+          return (0);
+        }
+      else if (rmcpplus_status_code == RMCPPLUS_STATUS_INVALID_INTEGRITY_CHECK_VALUE)
+        {
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PASSWORD_INVALID);
           return (0);
         }
     }
