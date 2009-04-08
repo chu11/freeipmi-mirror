@@ -1,7 +1,7 @@
 2009-04-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/debug/ipmi-debug.c (ipmi_obj_dump): Special case
-	always dump payload data in byte array format.
+	always dump payload data and user name in byte array format.
 	
 2009-04-07  Albert Chu <chu11@llnl.gov>
 

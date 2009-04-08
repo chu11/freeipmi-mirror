@@ -136,9 +136,10 @@ ipmi_obj_dump (int fd,
             }
         }
 
-      /* special case, always dump raw data and payload_data in byte array format */
+      /* special case, always dump some fields in byte array format */
       if (field_len <= 64
           && strcasecmp (key, "raw_data")
+          && strcasecmp (key, "user_name")
           && strcasecmp (key, "payload_data"))
         {
           uint64_t val = 0;
