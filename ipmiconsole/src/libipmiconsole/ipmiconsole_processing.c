@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.82 2009-04-08 16:13:09 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.83 2009-04-08 16:31:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -2702,7 +2702,7 @@ _process_protocol_state_rakp_message_3_sent (ipmiconsole_ctx_t c)
   /* if privilege_level == IPMI_PRIVILEGE_LEVEL_USER we shouldn't have
    * to call this, b/c it should be USER by default.  But I don't
    * trust IPMI implementations.  Do it anyways.
-   *
+   */
 
   if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ) < 0)
     {
