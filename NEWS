@@ -112,19 +112,23 @@ o bmc-info
   - Output manufacturer name with "Manufacturer ID" if name available.
 o bmc-config
   - Support ability to report read only field error.
+  - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
 o ipmi-chassis-config
   - Support ability to report read only field error.
+  - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
 o ipmi-sensors-config
   - Support sensor unit percentages, rates and modifiers (i.e. "%
     hit", "gigabyte per minute", "pounds / cu in").
   - Support ability to report read only field error.
+  - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
 o ipmi-pef-config/pef-config
   - Rename pef-config to ipmi-pef-config for consistency to other
     tools.  Keep backwards compatability with symlinks and such.
   - Support ability to report read only field error.
+  - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
 o Various documentation updates.
 

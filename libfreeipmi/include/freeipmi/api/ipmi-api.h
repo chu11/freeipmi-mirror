@@ -110,6 +110,12 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_FLAGS_NONBLOCKING    0x00000001
 #define IPMI_FLAGS_DEBUG_DUMP     0x00000010
 
+#define IPMI_ERR_IS_BAD_COMPLETION_CODE(__cc)                      \
+  (((__cc) == IPMI_ERR_BAD_COMPLETION_CODE_NODE_BUSY               \
+    || (__cc) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND      \
+    || (__cc) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID \
+    || (__cc) == IPMI_ERR_BAD_COMPLETION_CODE) ? 1 : 0)
+
 typedef struct ipmi_ctx *ipmi_ctx_t;
 
 ipmi_ctx_t ipmi_ctx_create (void);

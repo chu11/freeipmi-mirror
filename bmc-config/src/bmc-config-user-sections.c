@@ -205,7 +205,8 @@ static config_err_t
 _set_user_access (bmc_config_state_data_t *state_data,
                   const char *section_name,
                   const char *key_name,
-                  struct user_access *ua)
+                  struct user_access *ua,
+                  uint64_t *comp_code)
 {
   uint8_t userid;
   uint8_t channel_number;
@@ -264,6 +265,14 @@ _set_user_access (bmc_config_state_data_t *state_data,
                          stderr,
                          "ipmi_cmd_set_user_access: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
+      if (comp_code
+          && IPMI_ERR_IS_BAD_COMPLETION_CODE (ipmi_ctx_errnum (state_data->ipmi_ctx)))
+        {
+          (*comp_code) = 0;
+          FIID_OBJ_GET (obj_cmd_rs, "comp_code", comp_code);
+        }
+
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
@@ -664,12 +673,12 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
     {
       uint64_t comp_code;
 
-      /* don't use wrapper - non-fatal error */
-      if (fiid_obj_get (obj_cmd_rs,
+      if (FIID_OBJ_GET (obj_cmd_rs,
                         "comp_code",
                         &comp_code) < 0)
         {
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
+          if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
@@ -826,8 +835,7 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
     {
       uint64_t comp_code;
 
-      /* don't use wrapper - non-fatal error */
-      if (fiid_obj_get (obj_cmd_rs,
+      if (FIID_OBJ_GET (obj_cmd_rs,
                         "comp_code",
                         &comp_code) < 0)
         {
@@ -1029,7 +1037,8 @@ lan_enable_ipmi_messaging_commit (const char *section_name,
   return (_set_user_access (state_data,
                             section_name,
                             kv->key->key_name,
-                            &ua));
+                            &ua,
+                            NULL));
 }
 
 static config_err_t
@@ -1094,7 +1103,8 @@ lan_enable_link_auth_commit (const char *section_name,
   return (_set_user_access (state_data,
                             section_name,
                             kv->key->key_name,
-                            &ua));
+                            &ua,
+                            NULL));
 }
 
 static config_err_t
@@ -1159,7 +1169,8 @@ lan_enable_restricted_to_callback_commit (const char *section_name,
   return (_set_user_access (state_data,
                             section_name,
                             kv->key->key_name,
-                            &ua));
+                            &ua,
+                            NULL));
 }
 
 static config_err_t
@@ -1224,7 +1235,8 @@ lan_privilege_limit_commit (const char *section_name,
   return (_set_user_access (state_data,
                             section_name,
                             kv->key->key_name,
-                            &ua));
+                            &ua,
+                            NULL));
 }
 
 static config_err_t
@@ -1268,7 +1280,8 @@ lan_session_limit_commit (const char *section_name,
   return (_set_user_access (state_data,
                             section_name,
                             kv->key->key_name,
-                            &ua));
+                            &ua,
+                            NULL));
 }
 
 static config_err_t
@@ -1493,7 +1506,8 @@ serial_enable_ipmi_messaging_commit (const char *section_name,
   return (_set_user_access (state_data,
                             section_name,
                             kv->key->key_name,
-                            &ua));
+                            &ua,
+                            NULL));
 }
 
 static config_err_t
@@ -1558,7 +1572,8 @@ serial_enable_link_auth_commit (const char *section_name,
   return (_set_user_access (state_data,
                             section_name,
                             kv->key->key_name,
-                            &ua));
+                            &ua,
+                            NULL));
 }
 
 static config_err_t
@@ -1623,7 +1638,8 @@ serial_enable_restricted_to_callback_commit (const char *section_name,
   return (_set_user_access (state_data,
                             section_name,
                             kv->key->key_name,
-                            &ua));
+                            &ua,
+                            NULL));
 }
 
 static config_err_t
@@ -1688,7 +1704,8 @@ serial_privilege_limit_commit (const char *section_name,
   return (_set_user_access (state_data,
                             section_name,
                             kv->key->key_name,
-                            &ua));
+                            &ua,
+                            NULL));
 }
 
 static config_err_t
@@ -1716,6 +1733,7 @@ serial_session_limit_commit (const char *section_name,
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
   config_err_t ret;
+  uint64_t comp_code = 0;
 
   /* ignore username_not_set_yet return value, if username_not_set_yet
    * conditions arise, we should get an error appriately (b/c the user
@@ -1729,10 +1747,24 @@ serial_session_limit_commit (const char *section_name,
     return (ret);
 
   /* Session limit field will be grabbed/set in _set_user_access */
-  return (_set_user_access (state_data,
-                            section_name,
-                            kv->key->key_name,
-                            &ua));
+  /* IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD is special case for
+   * this field, see IPMI spec.  "Return CCh 'invalid data field'
+   * error completion code if an attempt is made to set this bit, but
+   * hte option is not supported."
+   */
+  if ((ret = _set_user_access (state_data,
+                               section_name,
+                               kv->key->key_name,
+                               &ua,
+                               &comp_code)) != CONFIG_ERR_SUCCESS)
+    {
+      if (ret == CONFIG_ERR_NON_FATAL_ERROR
+          && comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
+        ret = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
+      return (ret);
+    }
+
+  return (CONFIG_ERR_SUCCESS);
 }
 
 struct config_section *

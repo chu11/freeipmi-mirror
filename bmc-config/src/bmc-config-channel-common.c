@@ -245,7 +245,8 @@ static config_err_t
 _set_channel_access (bmc_config_state_data_t *state_data,
                      const char *section_name,
                      const char *key_name,
-                     struct channel_access *ch)
+                     struct channel_access *ch,
+                     uint64_t *comp_code)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -297,6 +298,14 @@ _set_channel_access (bmc_config_state_data_t *state_data,
                          stderr,
                          "ipmi_cmd_set_channel_access: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
+      if (comp_code
+          && IPMI_ERR_IS_BAD_COMPLETION_CODE (ipmi_ctx_errnum (state_data->ipmi_ctx)))
+        {
+          (*comp_code) = 0;
+          FIID_OBJ_GET (obj_cmd_rs, "comp_code", comp_code);
+        }
+
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
@@ -351,7 +360,8 @@ _access_mode_commit (const char *section_name,
   if ((ret = _set_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch,
+                                  NULL)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   return (CONFIG_ERR_SUCCESS);
@@ -389,6 +399,7 @@ _enable_user_level_authentication_commit (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct channel_access ch;
   config_err_t ret;
+  uint64_t comp_code = 0;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -398,11 +409,22 @@ _enable_user_level_authentication_commit (const char *section_name,
 
   ch.user_level_authentication = same (kv->value_input, "yes");
 
+  /* IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD is special case for
+   * this field, see IPMI spec.  "Return CCh 'invalid data field'
+   * error completion code if an attempt is made to set this bit, but
+   * hte option is not supported."
+   */
   if ((ret = _set_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
-    return (ret);
+                                  &ch,
+                                  &comp_code)) != CONFIG_ERR_SUCCESS)
+    {
+      if (ret == CONFIG_ERR_NON_FATAL_ERROR
+          && comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
+        ret = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
+      return (ret);
+    }
 
   return (CONFIG_ERR_SUCCESS);
 }
@@ -451,7 +473,8 @@ _enable_per_message_authentication_commit (const char *section_name,
   if ((ret = _set_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch,
+                                  NULL)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   return (CONFIG_ERR_SUCCESS);
@@ -501,7 +524,8 @@ _enable_pef_alerting_commit (const char *section_name,
   if ((ret = _set_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch,
+                                  NULL)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   return (CONFIG_ERR_SUCCESS);
@@ -550,7 +574,8 @@ _channel_privilege_limit_commit (const char *section_name,
   if ((ret = _set_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch,
+                                  NULL)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   return (CONFIG_ERR_SUCCESS);

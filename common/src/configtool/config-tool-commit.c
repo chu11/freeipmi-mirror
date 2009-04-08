@@ -89,6 +89,12 @@ config_commit_section (pstdout_state_t pstate,
                                  "ERROR: Failed to commit `%s:%s': Read Only Field\n",
                                  section->section_name,
                                  kv->key->key_name);
+              else if (this_ret == CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED)
+                PSTDOUT_FPRINTF (pstate,
+                                 stderr,
+                                 "ERROR: Failed to commit `%s:%s': Not Supported\n",
+                                 section->section_name,
+                                 kv->key->key_name);
               else
                 PSTDOUT_FPRINTF (pstate,
                                  stderr,
