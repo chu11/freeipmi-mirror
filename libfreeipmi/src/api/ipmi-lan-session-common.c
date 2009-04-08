@@ -1685,6 +1685,11 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   fiid_obj_destroy (obj_cmd_rq);
   fiid_obj_destroy (obj_cmd_rs);
 
+  /* if privilege_level == IPMI_PRIVILEGE_LEVEL_USER we shouldn't have
+   * to call this, b/c it should be USER by default.  But I don't
+   * trust IPMI implementations.  Do it anyways.
+   *
+
   /* achu: At this point in time, the session is actually setup
    * legitimately, so we can use the actual set session privilege
    * level API function.
@@ -3743,6 +3748,11 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 
   fiid_obj_destroy (obj_cmd_rq);
   fiid_obj_destroy (obj_cmd_rs);
+
+  /* if privilege_level == IPMI_PRIVILEGE_LEVEL_USER we shouldn't have
+   * to call this, b/c it should be USER by default.  But I don't
+   * trust IPMI implementations.  Do it anyways.
+   *
 
   /* achu: At this point in time, the session is actually setup
    * legitimately, so we can use the actual set session privilege
