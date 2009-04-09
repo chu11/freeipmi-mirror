@@ -163,7 +163,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
   
   _FIID_OBJ_GET (cmd_rs, "device_id", &val);
   pstdout_printf(state_data->pstate, 
-                 "Device ID:         %X\n", (unsigned int) val);
+                 "Device ID:         %u\n", (unsigned int) val);
   
   _FIID_OBJ_GET (cmd_rs, "device_revision.revision", &val);
   pstdout_printf(state_data->pstate, 
@@ -258,10 +258,10 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     int8_t flag;
     
     _FIID_OBJ_GET (cmd_rs, "manufacturer_id.id", &manufacturer_id);
-    pstdout_printf(state_data->pstate, "Manufacturer ID:   %Xh\n", (unsigned int) manufacturer_id);
+    pstdout_printf(state_data->pstate, "Manufacturer ID:   %u\n", (unsigned int) manufacturer_id);
     
     _FIID_OBJ_GET (cmd_rs, "product_id", &product_id);
-    pstdout_printf(state_data->pstate, "Product ID:        %Xh\n", (unsigned int) product_id);
+    pstdout_printf(state_data->pstate, "Product ID:        %u\n", (unsigned int) product_id);
     
     /* auxiliary firmware info is optional */
     _FIID_OBJ_GET_WITH_RETURN_VALUE (cmd_rs,
