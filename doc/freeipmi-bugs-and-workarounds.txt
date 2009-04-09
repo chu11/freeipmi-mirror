@@ -22,6 +22,7 @@ I have worked extensively on:
 Intel SR870BN4
 Supermicro H8QME with SIMSO daughter card
 Sun X4140
+Inventec 5441
 
 I have had some temporary access to:
 
@@ -99,6 +100,13 @@ workaround ignoring those flags.
 Intel SR1520ML/X38ML: Username capabilities and/or K_g status are not
 reported properly by the Get Authentication Capabilities response.
 Resolved with a workaround ignoring those flags.
+
+Inventec 5441: The remote BMC (seems to) incorrectly calculates keys
+using the privilege specified in the open session stage rather than
+the privilege used during the RAKP1 stage.  This can be problematic if
+you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
+instead of a real privilege level.  Resolved with a workaround to
+handle this specific situation.
 
 Session Issues
 --------------
@@ -200,6 +208,9 @@ Intel Unknown Motherboard: The Activate Payload requires the "BMC
 asserts CTS and DCD/DSR to baseboard upon activation" flag to be set.
 Resolved with an Intel specific workaround.
 
+Inventec 5441: SOL payload sizes are reported incorrectly.  Resolved
+with a workaround to skip payload size checks.
+
 bmc-config
 ----------
 
@@ -234,12 +245,20 @@ Sun X4140: Get Username and Get User Payload commands fail with CCh =
 "Invalid data field in request" if a username was not set previously.
 Added workaround for this specific case.
 
+Inventec 5441: User access parameters Enable_IPMI_Msgs and
+Privilege_Limit are not changeable via Set User Access for some users.
+The values are not changeable for some users until a username has been
+set.  No current resolution.
+
+Inventec 5441: When disabling IPMI via Enable_IPMI_Msgs, IPMI over LAN
+still works for a user.  No current resolution.
+
 ipmi-fru
 --------
 
-Forgotten/Undocumented Motherboard(s): Some FRU data has invalid
-checksums.  Resolved with workaround to ignore the checksum (and pray
-for the best).
+Forgotten/Undocumented Motherboard(s) and Inventec 5441: Some FRU data
+has invalid checksums.  Resolved with workaround to ignore the
+checksum (and pray for the best).
 
 ipmi-sensors/ipmimonitoring
 ---------------------------
