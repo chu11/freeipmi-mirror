@@ -1,5 +1,9 @@
 2009-04-09  Albert Chu <chu11@llnl.gov>
 
+	* Minor code cleanup.
+	
+2009-04-09  Albert Chu <chu11@llnl.gov>
+
 	* bmc-info/src/: Output Device ID, manufacturer ID, and product ID
 	as integer.
 	

@@ -1062,7 +1062,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   min = min % 60;
 
   pstdout_printf (state_data->pstate,
-                  "Power on hours             : %d Hours %d Minutes\n",
+                  "Power on hours             : %u Hours %u Minutes\n",
                   hrs,
                   min);
   rv = 0;

@@ -125,8 +125,8 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Number of log entries:                            %d\n",
-                  val);
+                  "Number of log entries:                            %u\n",
+                  (unsigned int)val);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "free_space", &val) < 0)
     {
@@ -138,8 +138,8 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Free space remaining:                             %d bytes\n",
-                  val);
+                  "Free space remaining:                             %u bytes\n",
+                  (unsigned int)val);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val) < 0)
     {

@@ -192,8 +192,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Number of Event Filter Table entries:   %d\n",
-                  (int)val);
+                  "Number of Event Filter Table entries:   %u\n",
+                  (unsigned int)val);
 
   if (alert_action_support)
     {
@@ -237,8 +237,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
         }
 
       pstdout_printf (state_data->pstate,
-                      "Number of Event Filters:                %d\n",
-                      (int)val);
+                      "Number of Event Filters:                %u\n",
+                      (unsigned int)val);
 
       fiid_obj_destroy (obj_cmd_rs);
 
@@ -280,8 +280,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
         }
 
       pstdout_printf (state_data->pstate,
-                      "Number of Alert Policy entries:         %d\n",
-                      (int)val);
+                      "Number of Alert Policy entries:         %u\n",
+                      (unsigned int)val);
 
       fiid_obj_destroy (obj_cmd_rs);
 
@@ -323,8 +323,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
         }
 
       pstdout_printf (state_data->pstate,
-                      "Number of Alert Strings:                %d\n",
-                      (int)val);
+                      "Number of Alert Strings:                %u\n",
+                      (unsigned int)val);
     }
 
   rv = CONFIG_ERR_SUCCESS;
