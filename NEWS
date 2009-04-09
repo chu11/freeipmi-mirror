@@ -3,6 +3,8 @@
 o Support and document Inventec 5441 workarounds.  Most notably, added
   "opensesspriv" workaround to tools and OPEN_SESSION_PRIVILEGE
   workaround to libraries.
+o Do not fail on invalid chassis info area type, output that type is
+  unknown and continue to parse area.
 o Fix glibc 2.8 compile bug.
 
 0.7.7 - 04/03/09

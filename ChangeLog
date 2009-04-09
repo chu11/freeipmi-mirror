@@ -1,5 +1,11 @@
 2009-04-08  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/src/ipmi-fru-info-area.c
+	(ipmi_fru_output_chassis_info_area): Output unknown chassis area
+	and continue to parse, instead of bailing out.
+
+2009-04-08  Albert Chu <chu11@llnl.gov>
+
         * common/man/manpage-common-workaround-sol-only-text.man
         common/man/manpage-common-workaround-text.man
         common/src/toolcommon/tool-cmdline-common.c

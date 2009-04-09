@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.15 2008-08-12 18:14:36 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.15.4.1 2009-04-09 00:09:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -116,20 +116,15 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
   chassis_offset = 2; /* 2 = version + length fields */
   chassis_type = frubuf[chassis_offset];
 
-  if (!IPMI_FRU_CHASSIS_TYPE_VALID(chassis_type))
-    {
-      pstdout_fprintf(state_data->pstate, 
-                      stderr,
-                      "  FRU Chassis Type Unknown: 0x%02X\n", 
-                      chassis_type);
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  pstdout_printf(state_data->pstate, 
-                 "  Chassis Info Area Type: %s\n",
-                 ipmi_fru_chassis_types[chassis_type]);
-
+  if (IPMI_FRU_CHASSIS_TYPE_VALID (chassis_type))
+    pstdout_printf (state_data->pstate,
+                    "  Chassis Info Area Type: %s\n",
+                    ipmi_fru_chassis_types[chassis_type]);
+  else
+    pstdout_printf (state_data->pstate,
+                    "  Chassis Info Area Type: %s\n",
+                    ipmi_fru_chassis_types[IPMI_FRU_CHASSIS_TYPE_UNKNOWN]);
+  
   chassis_offset++;
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
