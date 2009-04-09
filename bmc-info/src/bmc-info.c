@@ -231,7 +231,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Device ID:         %X\n", (unsigned int) val);
+                  "Device ID:         %u\n", (unsigned int) val);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "device_revision.revision", &val) < 0)
     {
@@ -459,12 +459,12 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
         && ipmi_iana_enterprise_numbers[manufacturer_id])
       pstdout_printf (state_data->pstate,
-                      "Manufacturer ID:   %s (%Xh)\n",
+                      "Manufacturer ID:   %s (%u)\n",
                       ipmi_iana_enterprise_numbers[manufacturer_id],
                       (unsigned int) manufacturer_id);
     else
       pstdout_printf (state_data->pstate,
-                      "Manufacturer ID:   %Xh\n",
+                      "Manufacturer ID:   %u\n",
                       (unsigned int) manufacturer_id);
 
     if (FIID_OBJ_GET (obj_cmd_rs, "product_id", &product_id) < 0)
@@ -476,7 +476,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
         goto cleanup;
       }
     pstdout_printf (state_data->pstate,
-                    "Product ID:        %Xh\n",
+                    "Product ID:        %u\n",
                     (unsigned int) product_id);
 
     /* auxiliary firmware info is optional */
