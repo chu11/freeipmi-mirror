@@ -342,7 +342,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                         sdr_record,
                         sdr_record_len,
                         &sensor_reading,
-                        &sensor_event_bitmask) < 0)
+                        &sensor_event_bitmask) <= 0)
     {
       int errnum = ipmi_sensor_read_ctx_errnum (state_data->sensor_read_ctx);
 

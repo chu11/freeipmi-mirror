@@ -77,7 +77,7 @@ int ipmi_sensor_read_ctx_set_flags (ipmi_sensor_read_ctx_t ctx, unsigned int fla
  * return 0 - cannot obtain reading, but sensor_event_bitmask still
  * returned.  This is most common because the sensor cannot be
  * interpreted, b/c (for example) it is a non-analog or non-linear
- * sensor.
+ * sensor.  errnum will be set appropriately.
  *
  * return (-1) - error, neither a reading nor sensor_event_bitmask can
  * be returned.
