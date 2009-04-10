@@ -1,3 +1,9 @@
+2009-04-03  Albert Chu <chu11@llnl.gov>
+	
+	* configure.ac, NEWS: Update for release.
+
+	* Tagged Release-0_7_8.	
+
 2009-04-09  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/src/: Output Device ID, manufacturer ID, and product ID
