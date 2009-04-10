@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-common.c,v 1.1.2.3 2009-04-01 18:11:00 chu11 Exp $
+ *  $Id: ipmi-fru-parse-common.c,v 1.1.2.4 2009-04-10 21:28:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -83,7 +83,7 @@ ipmi_fru_parse_read_fru_data (ipmi_fru_parse_ctx_t ctx,
 
   if ((offset_in_bytes + fru_read_bytes) > ctx->fru_inventory_area_size)
     {
-      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_INTERNAL_ERROR);
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT);
       goto cleanup;
     }
 
@@ -536,7 +536,7 @@ ipmi_fru_parse_get_info_area_length (ipmi_fru_parse_ctx_t ctx,
 
   if ((offset_in_bytes + info_area_header_len) > ctx->fru_inventory_area_size)
     {
-      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_INTERNAL_ERROR);
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT);
       goto cleanup;
     }
 

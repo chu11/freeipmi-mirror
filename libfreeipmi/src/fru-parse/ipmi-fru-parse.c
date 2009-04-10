@@ -68,6 +68,8 @@ static char *ipmi_fru_parse_errmsgs[] =
     "board info area format invalid",
     "product info area format invalid",
     "multirecord area format invalid",
+    "FRU information inconsistent",
+    "buffer too small to hold result",
     "out of memory",
     "internal IPMI error",
     "internal system error",
@@ -86,6 +88,7 @@ _init_fru_parsing_iterator_data (ipmi_fru_parse_ctx_t ctx)
   ctx->board_info_area_parsed = 0;
   ctx->product_info_area_parsed = 0;
   ctx->multirecord_area_parsed = 0;
+  ctx->multirecord_area_offset_in_bytes = 0;
 }
 
 static void
@@ -482,6 +485,154 @@ ipmi_fru_parse_first (ipmi_fru_parse_ctx_t ctx)
   return (0);
 }
 
+static int
+_parse_multirecord_header (ipmi_fru_parse_ctx_t ctx,
+                           unsigned int *__multirecord_header_length,
+                           unsigned int *record_type_id,
+                           unsigned int *record_format_version,
+                           unsigned int *end_of_list,
+                           unsigned int *record_length,
+                           unsigned int *record_checksum)
+{
+  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1]; 
+  fiid_obj_t fru_multirecord_header = NULL;
+  int32_t multirecord_header_length;
+  uint64_t val;
+  int ret;
+  int rv = -1;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
+  assert (record_type_id
+          || record_format_version
+          || end_of_list
+          || record_length
+          || record_checksum);
+
+  if ((multirecord_header_length = fiid_template_len_bytes (tmpl_fru_multirecord_area_header)) < 0)
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  if (__multirecord_header_length)
+    (*__multirecord_header_length) = multirecord_header_length;
+      
+  if ((ctx->multirecord_area_offset_in_bytes + multirecord_header_length) > ctx->fru_inventory_area_size)
+    {
+#if 0
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU MultirecordInfo Info Area size too small\n");
+#endif
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
+  
+  if (ipmi_fru_parse_read_fru_data (ctx,
+                                    frubuf,
+                                    IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                    ctx->multirecord_area_offset_in_bytes,
+                                    multirecord_header_length) < 0)
+    goto cleanup;
+      
+  if (ipmi_fru_parse_dump_hex (ctx,
+                               frubuf,
+                               multirecord_header_length,
+                               "MultiRecord Header") < 0)
+    goto cleanup;
+
+  if ((ret = ipmi_fru_parse_check_checksum (ctx,
+                                            frubuf,
+                                            multirecord_header_length,
+                                            0)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_MULTIRECORD_AREA_CHECKSUM_INVALID);
+      goto cleanup;
+    }
+  
+  if (!(fru_multirecord_header = fiid_obj_create (tmpl_fru_multirecord_area_header)))
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (fru_multirecord_header,
+                        frubuf,
+                        multirecord_header_length) < 0)
+    {
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_multirecord_header);
+      goto cleanup;
+    }
+  
+  if (record_type_id)
+    {
+      if (FIID_OBJ_GET (fru_multirecord_header,
+                        "record_type_id",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_multirecord_header);
+          goto cleanup;
+        }
+      (*record_type_id) = val;
+    }
+
+  if (record_format_version)
+    {
+      if (FIID_OBJ_GET (fru_multirecord_header,
+                        "record_format_version",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_multirecord_header);
+          goto cleanup;
+        }
+      (*record_format_version) = val;
+    }
+
+  if (end_of_list)
+    {
+      if (FIID_OBJ_GET (fru_multirecord_header,
+                        "end_of_list",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_multirecord_header);
+          goto cleanup;
+        }
+      (*end_of_list) = val;
+    }
+
+  if (record_length)
+    {
+      if (FIID_OBJ_GET (fru_multirecord_header,
+                        "record_length",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_multirecord_header);
+          goto cleanup;
+        }
+      (*record_length) = val;
+    }
+
+  if (record_checksum)
+    {
+      if (FIID_OBJ_GET (fru_multirecord_header,
+                        "record_checksum",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_multirecord_header);
+          goto cleanup;
+        }
+      (*record_checksum) = val;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (fru_multirecord_header);
+  return (rv);
+}
+
 int
 ipmi_fru_parse_next (ipmi_fru_parse_ctx_t ctx)
 {
@@ -510,10 +661,37 @@ ipmi_fru_parse_next (ipmi_fru_parse_ctx_t ctx)
     }
   if (ctx->multirecord_area_starting_offset && !ctx->multirecord_area_parsed)
     {
-      ctx->multirecord_area_parsed++;
+      unsigned int multirecord_header_length;
+      unsigned int record_length;
+      unsigned int end_of_list;
+
+      /* Special case, user is iterator-ing and wants to skip the first multirecord_area */
+      if (!ctx->multirecord_area_offset_in_bytes)
+        ctx->multirecord_area_offset_in_bytes = ctx->multirecord_area_starting_offset * 8;    
+
+      if (_parse_multirecord_header (ctx,
+                                     &multirecord_header_length,
+                                     NULL,
+                                     NULL,
+                                     &end_of_list,
+                                     &record_length,
+                                     NULL) < 0)
+        return (-1);
+
+      if (end_of_list)
+        {
+          ctx->multirecord_area_parsed++;
+          goto out;
+        }
+      
+      ctx->multirecord_area_offset_in_bytes += multirecord_header_length;
+      /* if record_length is 0, that's ok still */
+      ctx->multirecord_area_offset_in_bytes += record_length;
+
       rv = 1;
     }
-  
+
+ out:  
   ctx->errnum = IPMI_FRU_PARSE_ERR_SUCCESS;
   return (rv);
 }
@@ -526,6 +704,8 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
                       unsigned int buflen)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1]; 
+  fiid_obj_t fru_info_area_header = NULL;
+  int32_t info_area_header_length;
   unsigned int info_area_length;
   unsigned int info_area_length_bytes;
   uint8_t expected_format_version;
@@ -535,6 +715,10 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
   char *headerhdrstr;
   char *areahdrstr;
   unsigned int info_area_type;
+  unsigned int offset_in_bytes;
+  uint64_t format_version;
+  uint64_t val;
+  int rv = -1;
   int ret;
 
   assert (ctx);
@@ -577,45 +761,246 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
       areahdrstr = "Product Info Area";
       info_area_type = IPMI_FRU_PARSE_AREA_TYPE_PRODUCT_INFO_AREA;
     }
-  
-  if (ipmi_fru_parse_get_info_area_length (ctx,
-                                           info_area_starting_offset * 8,
-                                           &info_area_length,
-                                           expected_format_version,
-                                           err_code_format_invalid,
-                                           headerhdrstr) < 0)
-    return (-1);
+
+  offset_in_bytes = info_area_starting_offset * 8;
+
+  if ((info_area_header_length = fiid_template_len_bytes (tmpl_fru_info_area_header)) < 0)
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if ((offset_in_bytes + info_area_header_length) > ctx->fru_inventory_area_size)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
+
+  if (ipmi_fru_parse_read_fru_data (ctx,
+                                    frubuf,
+                                    IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                    offset_in_bytes,
+                                    info_area_header_length) < 0)
+    goto cleanup;
+
+  if (!(fru_info_area_header = fiid_obj_create (tmpl_fru_info_area_header)))
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (fru_info_area_header,
+                        frubuf,
+                        info_area_header_length) < 0)
+    {
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_info_area_header);
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (fru_info_area_header,
+                    "format_version",
+                    &format_version) < 0)
+    {
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_info_area_header);
+      goto cleanup;
+    }
+
+  if (format_version != expected_format_version)
+    {
+#if 0
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU %s Area Format Unknown: %02Xh\n",
+                       str,
+                       format_version);
+#endif
+      FRU_PARSE_SET_ERRNUM (ctx, err_code_format_invalid);
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (fru_info_area_header,
+                    "info_area_length",
+                    &val) < 0)
+    {
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_info_area_header);
+      goto cleanup;
+    }
+  info_area_length = val;
   info_area_length_bytes = info_area_length * 8;
-  
+
+  if (!info_area_length)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_AREA_LENGTH_INVALID);
+      goto cleanup;
+    }
+
+  if (ctx->fru_inventory_area_size < (offset_in_bytes + info_area_length_bytes))
+    {
+#if 0
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU %s Info Area too small\n",
+                       str);
+#endif
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_AREA_LENGTH_INVALID);
+      goto cleanup;
+    }
+ 
   if (ipmi_fru_parse_read_fru_data (ctx,
                                     frubuf,
                                     IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
                                     info_area_starting_offset * 8,
                                     info_area_length_bytes) < 0)
-    return (-1);
+    goto cleanup;
   
   if (ipmi_fru_parse_dump_hex (ctx,
                                frubuf,
                                info_area_length_bytes,
                                areahdrstr) < 0)
-    return (-1);
+    goto cleanup;
   
   if ((ret = ipmi_fru_parse_check_checksum (ctx,
                                             frubuf,
                                             info_area_length_bytes,
                                             0)) < 0)
-    return (-1);
+    goto cleanup;
   
   if (!ret)
     {
       FRU_PARSE_SET_ERRNUM (ctx, err_code_checksum_invalid);
-      return (-1);
+      goto cleanup;
     }
   
+  if (buflen < info_area_length_bytes)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
+      goto cleanup;
+    }
+
   (*area_type) = info_area_type;
   (*area_length) = info_area_length_bytes;
+  memcpy (buf, frubuf, info_area_length_bytes);
   
-  return (0);
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (fru_info_area_header);
+  return (rv);
+}
+
+static int
+_read_multirecord_area_data (ipmi_fru_parse_ctx_t ctx,
+                             unsigned int *area_type,
+                             unsigned int *area_length,
+                             uint8_t *buf,
+                             unsigned int buflen)
+{
+  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
+  unsigned int multirecord_header_length = 0;
+  unsigned int record_type_id = 0;
+  unsigned int record_format_version = 0;
+  unsigned int record_length = 0;
+  unsigned int record_checksum = 0;
+  int ret;
+  int rv = -1;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
+  assert (area_type);
+  assert (area_length);
+  assert (buf);
+  assert (buflen);
+  assert (ctx->multirecord_area_starting_offset && !ctx->multirecord_area_parsed);
+
+  if (!ctx->multirecord_area_offset_in_bytes)
+    ctx->multirecord_area_offset_in_bytes = ctx->multirecord_area_starting_offset * 8;
+
+  if (_parse_multirecord_header (ctx,
+                                 &multirecord_header_length,
+                                 &record_type_id,
+                                 &record_format_version,
+                                 NULL,
+                                 &record_length,
+                                 &record_checksum) < 0)
+    goto cleanup;
+
+  if (record_format_version != IPMI_FRU_MULTIRECORD_AREA_FORMAT_VERSION)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_MULTIRECORD_AREA_FORMAT_INVALID);
+      goto cleanup;
+    }
+
+  if (!record_length)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_AREA_LENGTH_INVALID);
+      goto cleanup;
+    }
+
+  /* Note: Unlike Info Areas, record_length is in bytes */
+  if (ctx->fru_inventory_area_size < (ctx->multirecord_area_offset_in_bytes + multirecord_header_length + record_length))
+    {
+#if 0
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "  FRU Multirecord Info Area too small\n");
+#endif
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_AREA_LENGTH_INVALID);
+      goto cleanup;
+    }
+
+  if (ipmi_fru_parse_read_fru_data (ctx,
+                                    frubuf,
+                                    IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                    ctx->multirecord_area_offset_in_bytes + multirecord_header_length,
+                                    record_length) < 0)
+    goto cleanup;
+
+  if (ipmi_fru_parse_dump_hex (ctx,
+                               frubuf,
+                               record_length,
+                               "MultiRecord") < 0)
+    goto cleanup;
+  
+  if ((ret = ipmi_fru_parse_check_checksum (ctx,
+                                            frubuf,
+                                            record_length,
+                                            record_checksum)) < 0)
+    goto cleanup;
+  
+  if (!ret)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_MULTIRECORD_AREA_CHECKSUM_INVALID);
+      goto cleanup;
+    }
+
+  if (buflen < record_length)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
+      goto cleanup;
+    }
+
+  if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION)
+    (*area_type) = IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_POWER_SUPPLY_INFORMATION;
+  else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_DC_OUTPUT)
+    (*area_type) = IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_DC_OUTPUT;
+  else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_DC_LOAD)
+    (*area_type) = IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_DC_LOAD;
+  else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_MANAGEMENT_ACCESS_RECORD)
+    (*area_type) = IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_MANAGEMENT_ACCESS_RECORD;
+  else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_BASE_COMPATIBILITY_RECORD)
+    (*area_type) = IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_BASE_COMPATABILITY_RECORD;
+  else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD)
+    (*area_type) = IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_EXTENDED_COMPATABILITY_RECORD;
+  else if (IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM (record_type_id))
+    (*area_type) = IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_OEM;
+  else
+    (*area_type) = IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_UNKNOWN;
+    
+  (*area_length) = record_length;
+  memcpy (buf, frubuf, record_length);
+
+  rv = 0;
+ cleanup:
+  return (rv);
 }
 
 int
@@ -658,7 +1043,14 @@ ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
 
   if (ctx->multirecord_area_starting_offset && !ctx->multirecord_area_parsed)
     {
-      /* XXX */
+      if (_read_multirecord_area_data (ctx,
+                                       area_type,
+                                       area_length,
+                                       buf,
+                                       buflen) < 0)
+        goto cleanup;
+
+      goto out;
     }
 
  out:

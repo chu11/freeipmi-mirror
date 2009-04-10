@@ -41,11 +41,13 @@
 #define IPMI_FRU_PARSE_ERR_BOARD_INFO_AREA_FORMAT_INVALID         15
 #define IPMI_FRU_PARSE_ERR_PRODUCT_INFO_AREA_FORMAT_INVALID       16
 #define IPMI_FRU_PARSE_ERR_MULTIRECORD_AREA_FORMAT_INVALID        17
-#define IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY                          18
-#define IPMI_FRU_PARSE_ERR_IPMI_ERROR                             19
-#define IPMI_FRU_PARSE_ERR_SYSTEM_ERROR                           20
-#define IPMI_FRU_PARSE_ERR_INTERNAL_ERROR                         21
-#define IPMI_FRU_PARSE_ERR_ERRNUMRANGE                            22
+#define IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT           18
+#define IPMI_FRU_PARSE_ERR_OVERFLOW                               19
+#define IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY                          20
+#define IPMI_FRU_PARSE_ERR_IPMI_ERROR                             21
+#define IPMI_FRU_PARSE_ERR_SYSTEM_ERROR                           22
+#define IPMI_FRU_PARSE_ERR_INTERNAL_ERROR                         23
+#define IPMI_FRU_PARSE_ERR_ERRNUMRANGE                            24
 
 #define IPMI_FRU_PARSE_FLAGS_DEFAULT                              0x0000
 #define IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP                           0x0001

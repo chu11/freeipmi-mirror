@@ -55,6 +55,7 @@ struct ipmi_fru_parse_ctx {
   int board_info_area_parsed;
   int product_info_area_parsed;
   int multirecord_area_parsed;
+  unsigned int multirecord_area_offset_in_bytes;
 };
 
 #endif /* _IPMI_FRU_PARSE_DEFS_H */
