@@ -11,10 +11,15 @@ libfreeipmi
     system I can test on?
 * abstract FRU parsing into lib
 
+bmc-config
+----------
+consolidate password/password20
+
 sensors/monitoring
 ------------------
 make sure bridging still works w/ sensor-read lib
 make sure oem still outputs fine
+make sensor-raw equivalent API func (i.e. don't need to do IPMI to get raw reading)
 
 ipmi-chassis-config
 -------------------
