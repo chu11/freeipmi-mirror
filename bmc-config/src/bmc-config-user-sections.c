@@ -789,6 +789,12 @@ password20_checkout (const char *section_name,
        * If it is, return the inputted password back for proper
        * diffing.
        */
+      if ((ret = _check_bmc_user_password20 (state_data,
+                                             userid,
+                                             kv->value_input,
+                                             &is_same)) != CONFIG_ERR_SUCCESS)
+        return (ret);
+      
       if (is_same)
         str = kv->value_input;
       else
