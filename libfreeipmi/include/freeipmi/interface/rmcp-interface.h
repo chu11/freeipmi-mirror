@@ -30,10 +30,10 @@ extern "C" {
 
 #define RMCP_VERSION_1_0              0x06 /* RMCP Version 1.0 */
 
-#define RMCP_AUX_BUS_SHUNT            0x26F
+#define RMCP_AUX_BUS_SHUNT            0x26F /* 623 */
 #define RMCP_PRIMARY_RMCP_PORT        RMCP_AUX_BUS_SHUNT
 
-#define RMCP_SECURE_AUX_BUS           0x298
+#define RMCP_SECURE_AUX_BUS           0x298 /* 664 */
 #define RMCP_SECONDARY_RMCP_PORT      RMCP_SECURE_AUX_BUS
 
 #define RMCP_HDR_SEQ_NUM_NO_RMCP_ACK  0xFF
