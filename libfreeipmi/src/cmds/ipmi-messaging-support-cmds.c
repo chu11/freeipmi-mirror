@@ -1383,8 +1383,6 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
                                 unsigned int password_len,
                                 fiid_obj_t obj_cmd_rq)
 {
-  uint8_t buf[IPMI_2_0_MAX_PASSWORD_LENGTH];
-
   /* achu: password can be the max length.  Null termination in IPMI
    * packet not required.
    *
@@ -1422,6 +1420,7 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
   if (operation == IPMI_PASSWORD_OPERATION_SET_PASSWORD
       || operation == IPMI_PASSWORD_OPERATION_TEST_PASSWORD)
     {
+      uint8_t buf[IPMI_2_0_MAX_PASSWORD_LENGTH];
       uint32_t buf_max_len;
 
       if (password_size == IPMI_PASSWORD_SIZE_16_BYTES)
