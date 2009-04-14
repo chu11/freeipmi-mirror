@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.53 2009-03-16 23:03:37 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.54 2009-04-14 22:19:40 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -146,7 +146,7 @@ permutations and types. Users may notice some sensors output in
 .B ipmi-sensors(8)
 do not output in
 .B ipmimonitoring.
-If sensor interpretation rules are needed,
+If additional sensor interpretation rules are needed,
 please contact the FreeIPMI maintainers.
 #include <@top_srcdir@/common/man/manpage-common-known-issues.man>
 .LP
