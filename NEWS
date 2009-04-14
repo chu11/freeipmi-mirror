@@ -111,6 +111,9 @@ o ipmi-fru
 o bmc-info
   - Output manufacturer name with "Manufacturer ID" if name available.
 o bmc-config
+  - Collapse "Password20" field into "Password" field so "Password"
+    supports both IPMI 1.5 and IPMI 2.0 length passwords.
+    "Password20" still supported as legacy support.
   - Support ability to report read only field error.
   - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.

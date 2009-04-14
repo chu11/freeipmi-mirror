@@ -41,8 +41,6 @@ Future versions of this manpage will try to include more information.
      	Enable_User                                  Yes
      	## Give password or leave it blank to clear password
      	Password                                     mypassword
-     	## Give password for IPMI 2.0 or blank to clear. MAX 20 chars.
-      	## Password20                                   
      	## Possible values: Yes/No
      	Lan_Enable_Ipmi_Msgs                         Yes
      	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
@@ -60,8 +58,6 @@ Future versions of this manpage will try to include more information.
      	## Give password or leave it blank to clear password
      	Password                                     userpass
      	## Give password for IPMI 2.0 or blank to clear. MAX 20 chars.
-     	## Password20                                   
-     	## Possible values: Yes/No
      	Lan_Enable_Ipmi_Msgs                         No
      	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
      	Lan_Privilege_Limit                          No_Access
@@ -248,13 +244,6 @@ to define a NULL password.  Each user you wish to enable must be
 enabled through the \fIEnable_User\fR configuration option.  It is
 recommended that all usernames have non-NULL passwords or be disabled
 for security reasons.
-.LP
-Under IPMI 2.0 (including Serial-over-LAN), additional 20 byte
-password support was added.  \fIPassword20\fR can be used to set
-longer passwords.  Under most circumstances though, it isn't
-necessary.  In the above configuration, we have chosen not to set
-\fIPassword20\fR by leaving it commented out.  If your machine does
-not support IPMI 2.0, this field will not be configurable.
 .LP
 \fILan_Enable_Ipmi_Msgs\fR is used to enable or disable IPMI over LAN
 access for the user.  This should be set to "Yes" to allow

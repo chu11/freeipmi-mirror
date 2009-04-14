@@ -1,3 +1,11 @@
+2009-04-14  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-config-user-sections.c (password20_checkout):
+	Fix diff check.
+	
+	* bmc-config/: Collapse "Password20" into "Password" field so
+	Password field supports both IPMI 1.5 and IPMI 2.0.
+
 2009-04-09  Albert Chu <chu11@llnl.gov>
 
 	* Minor code cleanup.
