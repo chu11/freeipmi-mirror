@@ -35,6 +35,7 @@ try and consolidate checks/etc code in ipmipower/ipmiconsole/api
 firmware firewall support?
 - new config tool??
 read/store username/password/k_g out of file encrypted so it's not sitting there in the clear
+configure alternate port - i.e. don't use port 623, use 722
 
 bmc-device
 --------
