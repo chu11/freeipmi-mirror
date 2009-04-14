@@ -1335,8 +1335,6 @@ fill_cmd_set_user_password (uint8_t user_id,
                             unsigned int password_len,
                             fiid_obj_t obj_cmd_rq)
 {
-  uint8_t buf[IPMI_1_5_MAX_PASSWORD_LENGTH];
-
   /* achu: password can be the max length.  Null termination in IPMI
    * packet not required.
    */
@@ -1364,6 +1362,8 @@ fill_cmd_set_user_password (uint8_t user_id,
   if (operation == IPMI_PASSWORD_OPERATION_SET_PASSWORD
       || operation == IPMI_PASSWORD_OPERATION_TEST_PASSWORD)
     {
+      uint8_t buf[IPMI_1_5_MAX_PASSWORD_LENGTH];
+
       /* achu: password must be zero extended */
       memset (buf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
       if (password)
