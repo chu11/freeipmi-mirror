@@ -14,6 +14,9 @@ libfreeipmi
 bmc-config
 ----------
 test that ipmi 2.0 (> 20 char) password not possible on ipmi 1.5 only mobo
+copy ipmi-oem stuff in
+- inventec mac/shared nic stuff
+- into lan_conf?  or into new section?
 
 sensors/monitoring
 ------------------
