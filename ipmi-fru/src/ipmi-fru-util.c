@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.36 2009-03-06 18:37:30 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.36.4.1 2009-04-15 17:14:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -408,7 +408,7 @@ ipmi_fru_output_type_length_field (ipmi_fru_state_data_t *state_data,
                       type_length);
     }
 
-  type_code = type_length & IPMI_FRU_TYPE_LENGTH_TYPE_CODE_MASK;
+  type_code = (type_length & IPMI_FRU_TYPE_LENGTH_TYPE_CODE_MASK) >> IPMI_FRU_TYPE_LENGTH_TYPE_CODE_SHIFT;
   number_of_data_bytes = type_length & IPMI_FRU_TYPE_LENGTH_NUMBER_OF_DATA_BYTES_MASK;
 
   if (!number_of_data_bytes)

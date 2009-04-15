@@ -1,5 +1,5 @@
 /*****************************************************************************\
-*  $Id: ipmi-fru-information-record-format.h,v 1.7.4.1 2009-03-31 22:21:01 chu11 Exp $
+*  $Id: ipmi-fru-information-record-format.h,v 1.7.4.2 2009-04-15 17:14:49 chu11 Exp $
 *****************************************************************************
 *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 *  Copyright (C) 2007 The Regents of the University of California.
@@ -88,10 +88,11 @@ extern "C" {
     && (__sub_record_type) <= IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID) ? 1 : 0)
 
 #define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_BINARY          0x00
-#define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_BCD             0x40
-#define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_SIXBIT_ASCII    0x80
-#define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_LANGUAGE_CODE   0xC0
+#define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_BCD             0x01
+#define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_SIXBIT_ASCII    0x02
+#define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_LANGUAGE_CODE   0x03
 #define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_MASK            0xC0
+#define IPMI_FRU_TYPE_LENGTH_TYPE_CODE_SHIFT           0x06
 #define IPMI_FRU_TYPE_LENGTH_NUMBER_OF_DATA_BYTES_MASK 0x3F
 
 #define IPMI_FRU_BCD_DIGIT_MIN                         0x0

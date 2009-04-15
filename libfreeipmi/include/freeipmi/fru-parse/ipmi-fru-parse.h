@@ -42,12 +42,14 @@
 #define IPMI_FRU_PARSE_ERR_PRODUCT_INFO_AREA_FORMAT_INVALID       16
 #define IPMI_FRU_PARSE_ERR_MULTIRECORD_AREA_FORMAT_INVALID        17
 #define IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT           18
-#define IPMI_FRU_PARSE_ERR_OVERFLOW                               19
-#define IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY                          20
-#define IPMI_FRU_PARSE_ERR_IPMI_ERROR                             21
-#define IPMI_FRU_PARSE_ERR_SYSTEM_ERROR                           22
-#define IPMI_FRU_PARSE_ERR_INTERNAL_ERROR                         23
-#define IPMI_FRU_PARSE_ERR_ERRNUMRANGE                            24
+#define IPMI_FRU_PARSE_ERR_FRU_LANGUAGE_CODE_NOT_SUPPORTED        19
+#define IPMI_FRU_PARSE_ERR_FRU_INVALID_BCD_ENCODING               20
+#define IPMI_FRU_PARSE_ERR_OVERFLOW                               21
+#define IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY                          22
+#define IPMI_FRU_PARSE_ERR_IPMI_ERROR                             23
+#define IPMI_FRU_PARSE_ERR_SYSTEM_ERROR                           24
+#define IPMI_FRU_PARSE_ERR_INTERNAL_ERROR                         25
+#define IPMI_FRU_PARSE_ERR_ERRNUMRANGE                            26
 
 #define IPMI_FRU_PARSE_FLAGS_DEFAULT                              0x0000
 #define IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP                           0x0001
@@ -64,6 +66,19 @@
 #define IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_EXTENDED_COMPATABILITY_RECORD  8
 #define IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_OEM                            9
 #define IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_UNKNOWN                       10
+
+/* number of bytes possible is 1 (type-length code) + 64 (6 bits).
+ * Rounded up to 128 for good measure.
+ */
+#define IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX                         128
+
+/* length field is 6 bits = 64 bytes of text, x2 b/c could be hex
+ * output, x2 because of possible space in between hex output and 'h'
+ * at end of hex output, x2 for extra measure.  This length is
+ * sufficient for 6-bit ASCII as well, since you have 4 chars / 3
+ * bytes.
+ */
+#define IPMI_FRU_PARSE_AREA_STRING_MAX                                    512
 
 typedef struct ipmi_fru_parse_ctx *ipmi_fru_parse_ctx_t;
 
