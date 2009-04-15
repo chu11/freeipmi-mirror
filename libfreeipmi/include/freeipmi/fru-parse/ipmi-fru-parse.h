@@ -80,6 +80,13 @@
  */
 #define IPMI_FRU_PARSE_AREA_STRING_MAX                                    512
 
+struct ipmi_fru_parse_type_length_field
+{
+  uint8_t type_length_field[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX];
+  /* store length of data stored in buffer */
+  unsigned int type_length_field_length;
+};
+
 typedef struct ipmi_fru_parse_ctx *ipmi_fru_parse_ctx_t;
 
 /* FRU Parse Context Functions */
@@ -110,13 +117,11 @@ int ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
                                    unsigned int buflen);
                          
 /* FRU utility functions */
-int ipmi_fru_parse_read_type_length_field (ipmi_fru_parse_ctx_t ctx,
-                                           uint8_t *areabuf,
-                                           unsigned int areabuflen,
-                                           unsigned int area_offset_to_bytes,
-                                           uint8_t *language_code,
-                                           unsigned int *length_parsed,
-                                           char *strbuf,
-                                           unsigned int strbuflen);
+int ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
+                                                uint8_t *type_length_buf,
+                                                unsigned int type_length_buflen,
+                                                uint8_t language_code,
+                                                char *strbuf,
+                                                unsigned int strbuflen);
 
 #endif /* _IPMI_FRU_PARSE_H */

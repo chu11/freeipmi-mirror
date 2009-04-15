@@ -53,8 +53,8 @@
 
 int
 ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
-                                  uint8_t *buf,
-                                  unsigned int buflen,
+                                  uint8_t *areabuf,
+                                  unsigned int areabuflen,
                                   uint8_t *chassis_type,
                                   char *chassis_part_number,
                                   unsigned int chassis_part_number_len,
@@ -64,6 +64,8 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
                                   unsigned int chassis_info_fields_len,
                                   unsigned int *chassis_info_fields_parsed)
 {
+  unsigned int chassis_offset = 0;
+  unsigned int length_parsed = 0;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
@@ -72,7 +74,18 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
       return (-1);
     }
   
-  
+  if (!areabuf || !areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  chassis_offset = 2; /* 2 = version + length fields */
+  if (chassis_type)
+    (*chassis_type) = areabuf[chassis_offset];
+  chassis_offset++;
+
+  chassis_offset += length_parsed;
 
   rv = 0;
  cleanup:
