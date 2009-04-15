@@ -253,6 +253,10 @@ set.  No current resolution.
 Inventec 5441: When disabling IPMI via Enable_IPMI_Msgs, IPMI over LAN
 still works for a user.  No current resolution.
 
+Forgotten/Undocumented Motherboard(s): Setting a password using IPMI
+2.0 extensions (i.e. up to 20 bytes in length) does not appear to
+work.  User must configure password using IPMI 1.5 formatted payloads.
+
 ipmi-fru
 --------
 
