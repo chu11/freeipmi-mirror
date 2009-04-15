@@ -109,5 +109,14 @@ int ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
                                    uint8_t *buf,
                                    unsigned int buflen);
                          
+/* FRU utility functions */
+int ipmi_fru_parse_read_type_length_field (ipmi_fru_parse_ctx_t ctx,
+                                           uint8_t *areabuf,
+                                           unsigned int areabuflen,
+                                           unsigned int area_offset_to_bytes,
+                                           uint8_t *language_code,
+                                           unsigned int *length_parsed,
+                                           char *strbuf,
+                                           unsigned int strbuflen);
 
 #endif /* _IPMI_FRU_PARSE_H */

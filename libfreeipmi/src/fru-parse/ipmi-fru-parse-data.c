@@ -72,6 +72,8 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
       return (-1);
     }
   
+  
+
   rv = 0;
  cleanup:
   return (rv);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-common.h,v 1.1.2.6 2009-04-15 17:14:49 chu11 Exp $
+ *  $Id: ipmi-fru-parse-common.h,v 1.1.2.7 2009-04-15 17:38:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -36,14 +36,5 @@ int ipmi_fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,
 int ipmi_fru_parse_dump_obj (ipmi_fru_parse_ctx_t ctx,
                              fiid_obj_t obj,
                              const char *debug_hdr);
-
-int ipmi_fru_parse_read_type_length_field (ipmi_fru_parse_ctx_t ctx,
-                                           uint8_t *areabuf,
-                                           unsigned int areabuflen,
-                                           unsigned int area_offset_to_bytes,
-                                           uint8_t *language_code,
-                                           unsigned int *length_parsed,
-                                           char *strbuf,
-                                           unsigned int strbuflen);
 
 #endif
