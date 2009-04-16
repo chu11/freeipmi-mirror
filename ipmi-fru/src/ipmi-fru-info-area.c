@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.15.4.2 2009-04-16 17:25:00 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.15.4.3 2009-04-16 21:39:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -118,11 +118,11 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
 
   if (IPMI_FRU_CHASSIS_TYPE_VALID (chassis_type))
     pstdout_printf (state_data->pstate,
-                    "  Chassis Info Area Type: %s\n",
+                    "  FRU Chassis Info Area Type: %s\n",
                     ipmi_fru_chassis_types[chassis_type]);
   else
     pstdout_printf (state_data->pstate,
-                    "  Chassis Info Area Type: %s\n",
+                    "  FRU Chassis Info Area Type: %s\n",
                     ipmi_fru_chassis_types[IPMI_FRU_CHASSIS_TYPE_UNKNOWN]);
   
   chassis_offset++;
