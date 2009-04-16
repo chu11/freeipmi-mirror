@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.15.4.1 2009-04-09 00:09:41 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.15.4.2 2009-04-16 17:25:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -543,7 +543,7 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
                                                product_offset,
                                                &language_code,
                                                &len_parsed,
-                                               "Product Product Name")) != FRU_ERR_SUCCESS)
+                                               "Product Name")) != FRU_ERR_SUCCESS)
     {
       pstdout_fprintf(state_data->pstate, 
                       stderr,
