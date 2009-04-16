@@ -3,6 +3,7 @@
 o In bmc-config, fix diff check for "Password20" field.
 o In ipmi-fru, output "Product Name" instead of "Product Product Name".
 o In ipmi-fru, output "FRU Chassis Type" instead of just "Chassis Type".
+o In ipmi-fru, output "Version" instead of "Version Type".
 
 0.7.8 - 04/10/09
 ----------------
