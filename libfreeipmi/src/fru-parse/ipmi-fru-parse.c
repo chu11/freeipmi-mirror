@@ -75,6 +75,7 @@ static char *ipmi_fru_parse_errmsgs[] =
     "FRU information inconsistent",
     "FRU language code not supported",
     "FRU invalid BCD encoding",
+    "FRU sentinel value not found",
     "buffer too small to hold result",
     "out of memory",
     "internal IPMI error",
@@ -1214,7 +1215,6 @@ static int
 _get_type_length_bytes (ipmi_fru_parse_ctx_t ctx,
                         uint8_t *type_length_buf,
                         unsigned int type_length_buflen,
-                        unsigned int *bytes_parsed,
                         uint8_t type_code,
                         uint8_t number_of_data_bytes,
                         uint8_t *databuf,
@@ -1222,14 +1222,12 @@ _get_type_length_bytes (ipmi_fru_parse_ctx_t ctx,
 
 {
   unsigned int start_offset = 0;
-  unsigned int bytes_offset = 0;
   int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
   assert (type_length_buf);
   assert (type_length_buflen);
-  assert (bytes_parsed);
   assert (databuf);
   assert (databuflen);
 
@@ -1246,6 +1244,8 @@ _get_type_length_bytes (ipmi_fru_parse_ctx_t ctx,
       && number_of_data_bytes == 0x01)
     {
 #if 0
+      unsigned int bytes_offset = 0;
+  
       /* I don't know what to do.  I guess we'll just copy data until
        * we hit the sentinel value and pray for the best.
        */
@@ -1287,12 +1287,10 @@ _get_type_length_bytes (ipmi_fru_parse_ctx_t ctx,
         }
 
       memcpy (databuf, &type_length_buf[start_offset], number_of_data_bytes);
-      bytes_offset = number_of_data_bytes;
     }
 
  out:
   rv = 0;
-  *bytes_parsed = bytes_offset;
  cleanup:
   return (rv);
 }
@@ -1412,7 +1410,6 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
   unsigned int strtmpbuflen = 0;
   uint8_t type_code;
   uint8_t number_of_data_bytes;
-  unsigned int bytes_parsed = 0;
   int rv = -1;
   int ret;
   int i;
@@ -1431,6 +1428,8 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
       return (-1);
     }
+
+  memset (strbuf, '\0', strbuflen);
 
   memset (databuf, '\0', IPMI_FRU_PARSE_BUF_LEN+1);
   memset (strtmpbuf, '\0', IPMI_FRU_PARSE_AREA_STRING_MAX+1);
@@ -1451,27 +1450,23 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
   if (_get_type_length_bytes (ctx,
                               type_length_buf,
                               type_length_buflen,
-                              &bytes_parsed,
                               type_code,
                               number_of_data_bytes,
                               databuf,
                               IPMI_FRU_PARSE_BUF_LEN) < 0)
     goto cleanup;
 
-  if (!bytes_parsed)
-    goto out;
-
   if (type_code == IPMI_FRU_TYPE_LENGTH_TYPE_CODE_BINARY)
     {
       /* Ummm - it's binary or unspecified.  I guess we'll output hex */
 
-      /* must be atleast length of 1, b/c we check for bytes_parsed above */
+      /* must be atleast length of 1, b/c we check for number_of_data_bytes above */
       ret = snprintf (strtmpbuf + strtmpbuflen,
                       IPMI_FRU_PARSE_AREA_STRING_MAX - strtmpbuflen,
                       "%02Xh",
                       databuf[0]);
       strtmpbuflen += ret;
-      for (i = 1; i < bytes_parsed; i++)
+      for (i = 1; i < number_of_data_bytes; i++)
         {
           ret = snprintf (strtmpbuf + strtmpbuflen,
                           IPMI_FRU_PARSE_AREA_STRING_MAX - strtmpbuflen,
@@ -1484,7 +1479,7 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
     {
       if (_bcd_to_ascii (ctx,
                          databuf,
-                         bytes_parsed,
+                         number_of_data_bytes,
                          strtmpbuf,
                          IPMI_FRU_PARSE_AREA_STRING_MAX) < 0)
         goto cleanup;
@@ -1499,7 +1494,7 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
     {
       if (_sixbitascii_to_ascii (ctx,
                                  databuf,
-                                 bytes_parsed,
+                                 number_of_data_bytes,
                                  strtmpbuf,
                                  IPMI_FRU_PARSE_AREA_STRING_MAX) < 0)
         goto cleanup;
@@ -1524,7 +1519,7 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_LANGUAGE_CODE_NOT_SUPPORTED);
           goto cleanup;
         }
-      memcpy (strtmpbuf, databuf, bytes_parsed);
+      memcpy (strtmpbuf, databuf, number_of_data_bytes);
 
       ret = snprintf (strtmpbuf + strtmpbuflen,
                       IPMI_FRU_PARSE_AREA_STRING_MAX - strtmpbuflen,

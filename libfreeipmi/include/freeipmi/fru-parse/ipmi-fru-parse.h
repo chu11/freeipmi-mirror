@@ -44,12 +44,13 @@
 #define IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT           18
 #define IPMI_FRU_PARSE_ERR_FRU_LANGUAGE_CODE_NOT_SUPPORTED        19
 #define IPMI_FRU_PARSE_ERR_FRU_INVALID_BCD_ENCODING               20
-#define IPMI_FRU_PARSE_ERR_OVERFLOW                               21
-#define IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY                          22
-#define IPMI_FRU_PARSE_ERR_IPMI_ERROR                             23
-#define IPMI_FRU_PARSE_ERR_SYSTEM_ERROR                           24
-#define IPMI_FRU_PARSE_ERR_INTERNAL_ERROR                         25
-#define IPMI_FRU_PARSE_ERR_ERRNUMRANGE                            26
+#define IPMI_FRU_PARSE_ERR_FRU_SENTINEL_VALUE_NOT_FOUND           21
+#define IPMI_FRU_PARSE_ERR_OVERFLOW                               22
+#define IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY                          23
+#define IPMI_FRU_PARSE_ERR_IPMI_ERROR                             24
+#define IPMI_FRU_PARSE_ERR_SYSTEM_ERROR                           25
+#define IPMI_FRU_PARSE_ERR_INTERNAL_ERROR                         26
+#define IPMI_FRU_PARSE_ERR_ERRNUMRANGE                            27
 
 #define IPMI_FRU_PARSE_FLAGS_DEFAULT                              0x0000
 #define IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP                           0x0001
@@ -80,12 +81,14 @@
  */
 #define IPMI_FRU_PARSE_AREA_STRING_MAX                                    512
 
-struct ipmi_fru_parse_type_length_field
+struct ipmi_fru_parse_field
 {
   uint8_t type_length_field[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX];
   /* store length of data stored in buffer */
   unsigned int type_length_field_length;
 };
+
+typedef struct ipmi_fru_parse_field ipmi_fru_parse_field_t;
 
 typedef struct ipmi_fru_parse_ctx *ipmi_fru_parse_ctx_t;
 
