@@ -846,8 +846,8 @@ static int
 _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
                       unsigned int *area_type,
                       unsigned int *area_length,
-                      uint8_t *buf,
-                      unsigned int buflen)
+                      uint8_t *areabuf,
+                      unsigned int areabuflen)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1]; 
   fiid_obj_t fru_info_area_header = NULL;
@@ -871,8 +871,8 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
   assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
   assert (area_type);
   assert (area_length);
-  assert (buf);
-  assert (buflen);
+  assert (areabuf);
+  assert (areabuflen);
   assert ((ctx->chassis_info_area_starting_offset && !ctx->chassis_info_area_parsed)
           || (ctx->board_info_area_starting_offset && !ctx->board_info_area_parsed)
           || (ctx->product_info_area_starting_offset && !ctx->product_info_area_parsed));
@@ -1022,7 +1022,7 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
   
-  if (buflen < info_area_length_bytes)
+  if (areabuflen < info_area_length_bytes)
     {
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
       goto cleanup;
@@ -1030,7 +1030,7 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
 
   (*area_type) = info_area_type;
   (*area_length) = info_area_length_bytes;
-  memcpy (buf, frubuf, info_area_length_bytes);
+  memcpy (areabuf, frubuf, info_area_length_bytes);
   
   rv = 0;
  cleanup:
@@ -1042,8 +1042,8 @@ static int
 _read_multirecord_area_data (ipmi_fru_parse_ctx_t ctx,
                              unsigned int *area_type,
                              unsigned int *area_length,
-                             uint8_t *buf,
-                             unsigned int buflen)
+                             uint8_t *areabuf,
+                             unsigned int areabuflen)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   unsigned int multirecord_header_length = 0;
@@ -1058,8 +1058,8 @@ _read_multirecord_area_data (ipmi_fru_parse_ctx_t ctx,
   assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
   assert (area_type);
   assert (area_length);
-  assert (buf);
-  assert (buflen);
+  assert (areabuf);
+  assert (areabuflen);
   assert (ctx->multirecord_area_starting_offset && !ctx->multirecord_area_parsed);
 
   if (!ctx->multirecord_area_offset_in_bytes)
@@ -1147,7 +1147,7 @@ _read_multirecord_area_data (ipmi_fru_parse_ctx_t ctx,
     (*area_type) = IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_UNKNOWN;
     
   (*area_length) = record_length;
-  memcpy (buf, frubuf, record_length);
+  memcpy (areabuf, frubuf, record_length);
 
   rv = 0;
  cleanup:
@@ -1158,8 +1158,8 @@ int
 ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
                                unsigned int *area_type,
                                unsigned int *area_length,
-                               uint8_t *buf,
-                               unsigned int buflen)
+                               uint8_t *areabuf,
+                               unsigned int areabuflen)
 {
   int rv = -1;
 
@@ -1171,8 +1171,8 @@ ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
 
   if (!area_type
       || !area_length
-      || !buf
-      || !buflen)
+      || !areabuf
+      || !areabuflen)
     {
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
       return (-1);
@@ -1185,8 +1185,8 @@ ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
       if (_read_info_area_data (ctx,
                                 area_type,
                                 area_length,
-                                buf,
-                                buflen) < 0)
+                                areabuf,
+                                areabuflen) < 0)
         goto cleanup;
 
       goto out;
@@ -1197,8 +1197,8 @@ ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
       if (_read_multirecord_area_data (ctx,
                                        area_type,
                                        area_length,
-                                       buf,
-                                       buflen) < 0)
+                                       areabuf,
+                                       areabuflen) < 0)
         goto cleanup;
 
       goto out;

@@ -102,7 +102,6 @@ _parse_type_length (ipmi_fru_parse_ctx_t ctx,
   return (0);
 }
                     
-
 int
 ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
                                   uint8_t *areabuf,
@@ -127,6 +126,13 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
   if (!areabuf || !areabuflen)
     {
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  /* index 1 is the length field */
+  if (areabuflen != (areabuf[1] * 8))
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT);
       return (-1);
     }
 
@@ -177,6 +183,384 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
         {
           if (info_fields_index < chassis_info_fields_len)
             field_ptr = &chassis_info_fields[info_fields_index];
+          else
+            {
+              FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
+              goto cleanup;
+            }
+        }
+
+      if (_parse_type_length (ctx,
+                              areabuf,
+                              areabuflen,
+                              area_offset,
+                              &number_of_data_bytes,
+                              field_ptr) < 0)
+        goto cleanup;
+
+      area_offset += 1;          /* type/length byte */
+      area_offset += number_of_data_bytes;
+      info_fields_index++;
+    }
+
+#if 0
+  if (area_offset > areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_SENTINEL_VALUE_NOT_FOUND);
+      goto cleanup;
+    }
+#endif
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
+                                uint8_t *areabuf,
+                                unsigned int areabuflen,
+                                uint8_t *language_code,
+                                uint32_t *mfg_data_time,
+                                ipmi_fru_parse_field_t *board_manufacturer,
+                                ipmi_fru_parse_field_t *board_product_name,
+                                ipmi_fru_parse_field_t *board_serial_number,
+                                ipmi_fru_parse_field_t *board_part_number,
+                                ipmi_fru_parse_field_t *board_fru_file_id,
+                                ipmi_fru_parse_field_t *board_info_fields,
+                                unsigned int board_info_fields_len)
+{
+  uint32_t mfg_date_time_tmp = 0;
+  unsigned int area_offset = 0;
+  unsigned int info_fields_index = 0;
+  uint8_t number_of_data_bytes;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (!areabuf || !areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  /* index 1 is the length field */
+  if (areabuflen != (areabuf[1] * 8))
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT);
+      return (-1);
+    }
+
+  if (board_manufacturer)
+    memset (board_manufacturer,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t));
+  if (board_product_name)
+    memset (board_product_name,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t));
+  if (board_serial_number)
+    memset (board_serial_number,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t));
+  if (board_part_number)
+    memset (board_part_number,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t));
+  if (board_fru_file_id)
+    memset (board_fru_file_id,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t));
+  if (board_info_fields && board_info_fields_len)
+    memset (board_info_fields,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t) * board_info_fields_len);
+
+  area_offset = 2; /* 2 = version + length fields */
+  if (language_code)
+    (*language_code) = areabuf[area_offset];
+  area_offset++;
+
+  if (mfg_date_time)
+    {
+      /* mfg_date_time is little endian - see spec */
+      mfg_date_time_tmp |= areabuf[area_offset];
+      area_offset++;
+      mfg_date_time_tmp |= (areabuf[area_offset] << 8);
+      area_offset++;
+      mfg_date_time_tmp |= (areabuf[area_offset] << 16);
+      area_offset++;
+      
+      /* mfg_date_time is in minutes, so multiple by 60 to get seconds */
+      mfg_date_time_tmp *= 60;
+
+      /* In FRU, epoch is 0:00 hrs 1/1/96
+       *
+       * So convert into ansi epoch
+       *
+       * 26 years difference in epoch
+       * 365 days/year
+       * etc.
+       *
+       */
+      mfg_date_time_tmp += (26 * 365 * 24 * 60 * 60);
+      (*mfg_date_time) = mfg_date_time_tmp;
+    }
+  else
+    area_offset += 3;
+
+  if (_parse_type_length (ctx,
+                          areabuf,
+                          areabuflen,
+                          area_offset,
+                          &number_of_data_bytes,
+                          board_manufacturer) < 0)
+    goto cleanup;
+  area_offset += 1;          /* type/length byte */
+  area_offset += number_of_data_bytes;
+
+  if (_parse_type_length (ctx,
+                          areabuf,
+                          areabuflen,
+                          area_offset,
+                          &number_of_data_bytes,
+                          board_product_name) < 0)
+    goto cleanup;
+  area_offset += 1;          /* type/length byte */
+  area_offset += number_of_data_bytes;
+
+  if (_parse_type_length (ctx,
+                          areabuf,
+                          areabuflen,
+                          area_offset,
+                          &number_of_data_bytes,
+                          board_serial_number) < 0)
+    goto cleanup;
+  area_offset += 1;          /* type/length byte */
+  area_offset += number_of_data_bytes;
+
+  if (_parse_type_length (ctx,
+                          areabuf,
+                          areabuflen,
+                          area_offset,
+                          &number_of_data_bytes,
+                          board_part_number) < 0)
+    goto cleanup;
+  area_offset += 1;          /* type/length byte */
+  area_offset += number_of_data_bytes;
+
+  if (_parse_type_length (ctx,
+                          areabuf,
+                          areabuflen,
+                          area_offset,
+                          &number_of_data_bytes,
+                          board_fru_file_id) < 0)
+    goto cleanup;
+  area_offset += 1;          /* type/length byte */
+  area_offset += number_of_data_bytes;
+
+  while (area_offset < areabuflen
+         && areabuf[area_offset] != IPMI_FRU_SENTINEL_VALUE)
+    {
+      ipmi_fru_parse_field_t *field_ptr = NULL;
+
+      if (board_info_fields && board_info_fields_len)
+        {
+          if (info_fields_index < board_info_fields_len)
+            field_ptr = &board_info_fields[info_fields_index];
+          else
+            {
+              FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
+              goto cleanup;
+            }
+        }
+
+      if (_parse_type_length (ctx,
+                              areabuf,
+                              areabuflen,
+                              area_offset,
+                              &number_of_data_bytes,
+                              field_ptr) < 0)
+        goto cleanup;
+
+      area_offset += 1;          /* type/length byte */
+      area_offset += number_of_data_bytes;
+      info_fields_index++;
+    }
+
+#if 0
+  if (area_offset > areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_SENTINEL_VALUE_NOT_FOUND);
+      goto cleanup;
+    }
+#endif
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
+                                  uint8_t *areabuf,
+                                  unsigned int areabuflen,
+                                  uint8_t *language_code,
+                                  ipmi_fru_parse_field_t *product_manufacturer_name,
+                                  ipmi_fru_parse_field_t *product_product_name,
+                                  ipmi_fru_parse_field_t *product_part_model_number,
+                                  ipmi_fru_parse_field_t *product_version,
+                                  ipmi_fru_parse_field_t *product_serial_number,
+                                  ipmi_fru_parse_field_t *product_asset_tag,
+                                  ipmi_fru_parse_field_t *product_fru_file_id,
+                                  ipmi_fru_parse_field_t *product_info_fields,
+                                  unsigned int product_info_fields_len)
+{
+  unsigned int area_offset = 0;
+  unsigned int info_fields_index = 0;
+  uint8_t number_of_data_bytes;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (!areabuf || !areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  /* index 1 is the length field */
+  if (areabuflen != (areabuf[1] * 8))
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT);
+      return (-1);
+    }
+
+  if (product_manufacturer_name)
+    memset (product_manufacturer_name,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t));
+  if (product_product_name)
+    memset (product_product_name,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t));
+  if (product_part_model_number)
+    memset (product_part_model_number,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t));
+  if (product_version)
+    memset (product_version,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t));
+  if (product_serial_number)
+    memset (product_serial_number,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t));
+  if (product_asset_tag)
+    memset (product_asset_tag,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t));
+  if (product_fru_file_id)
+    memset (product_fru_file_id,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t));
+  if (product_info_fields && product_info_fields_len)
+    memset (product_info_fields,
+            '\0',
+            sizeof (ipmi_fru_parse_field_t) * product_info_fields_len);
+
+  area_offset = 2; /* 2 = version + length fields */
+  if (language_code)
+    (*language_code) = areabuf[area_offset];
+  area_offset++;
+
+  if (_parse_type_length (ctx,
+                          areabuf,
+                          areabuflen,
+                          area_offset,
+                          &number_of_data_bytes,
+                          product_manufacturer_name) < 0)
+    goto cleanup;
+  area_offset += 1;          /* type/length byte */
+  area_offset += number_of_data_bytes;
+
+  if (_parse_type_length (ctx,
+                          areabuf,
+                          areabuflen,
+                          area_offset,
+                          &number_of_data_bytes,
+                          product_product_name) < 0)
+    goto cleanup;
+  area_offset += 1;          /* type/length byte */
+  area_offset += number_of_data_bytes;
+
+  if (_parse_type_length (ctx,
+                          areabuf,
+                          areabuflen,
+                          area_offset,
+                          &number_of_data_bytes,
+                          product_product_part_model_number) < 0)
+    goto cleanup;
+  area_offset += 1;          /* type/length byte */
+  area_offset += number_of_data_bytes;
+
+  if (_parse_type_length (ctx,
+                          areabuf,
+                          areabuflen,
+                          area_offset,
+                          &number_of_data_bytes,
+                          product_version) < 0)
+    goto cleanup;
+  area_offset += 1;          /* type/length byte */
+  area_offset += number_of_data_bytes;
+
+  if (_parse_type_length (ctx,
+                          areabuf,
+                          areabuflen,
+                          area_offset,
+                          &number_of_data_bytes,
+                          product_serial_number) < 0)
+    goto cleanup;
+  area_offset += 1;          /* type/length byte */
+  area_offset += number_of_data_bytes;
+
+  if (_parse_type_length (ctx,
+                          areabuf,
+                          areabuflen,
+                          area_offset,
+                          &number_of_data_bytes,
+                          product_asset_tag) < 0)
+    goto cleanup;
+  area_offset += 1;          /* type/length byte */
+  area_offset += number_of_data_bytes;
+
+  if (_parse_type_length (ctx,
+                          areabuf,
+                          areabuflen,
+                          area_offset,
+                          &number_of_data_bytes,
+                          product_fru_file_id) < 0)
+    goto cleanup;
+  area_offset += 1;          /* type/length byte */
+  area_offset += number_of_data_bytes;
+
+  while (area_offset < areabuflen
+         && areabuf[area_offset] != IPMI_FRU_SENTINEL_VALUE)
+    {
+      ipmi_fru_parse_field_t *field_ptr = NULL;
+
+      if (product_info_fields && product_info_fields_len)
+        {
+          if (info_fields_index < product_info_fields_len)
+            field_ptr = &product_info_fields[info_fields_index];
           else
             {
               FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
