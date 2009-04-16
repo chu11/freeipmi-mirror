@@ -1123,7 +1123,7 @@ _read_multirecord_area_data (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if (buflen < record_length)
+  if (areabuflen < record_length)
     {
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
       goto cleanup;

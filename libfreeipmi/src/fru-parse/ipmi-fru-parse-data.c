@@ -55,7 +55,7 @@ static int
 _parse_type_length (ipmi_fru_parse_ctx_t ctx,
                     uint8_t *areabuf,
                     unsigned int areabuflen,
-                    unsigned int current_offset,
+                    unsigned int current_area_offset,
                     uint8_t *number_of_data_bytes,
                     ipmi_fru_parse_field_t *field)
 {
@@ -68,7 +68,7 @@ _parse_type_length (ipmi_fru_parse_ctx_t ctx,
   assert (areabuflen);
   assert (number_of_data_bytes);
   
-  type_length = areabuf[current_offset];
+  type_length = areabuf[current_area_offset];
   type_code = (type_length & IPMI_FRU_TYPE_LENGTH_TYPE_CODE_MASK) >> IPMI_FRU_TYPE_LENGTH_TYPE_CODE_SHIFT;
   (*number_of_data_bytes) = type_length & IPMI_FRU_TYPE_LENGTH_NUMBER_OF_DATA_BYTES_MASK;
 
@@ -82,7 +82,7 @@ _parse_type_length (ipmi_fru_parse_ctx_t ctx,
       return (-1);
     }
 
-  if ((current_offset + 1 + (*number_of_data_bytes)) > areabuflen)
+  if ((current_area_offset + 1 + (*number_of_data_bytes)) > areabuflen)
     {
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT);
       return (-1);
@@ -94,7 +94,7 @@ _parse_type_length (ipmi_fru_parse_ctx_t ctx,
               '\0',
               IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX);
       memcpy (field->type_length_field,
-              areabuf[current_offset],
+              &areabuf[current_area_offset],
               1 + (*number_of_data_bytes));
       field->type_length_field_length = 1 + (*number_of_data_bytes);
     }
@@ -109,11 +109,11 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
                                   uint8_t *chassis_type,
                                   ipmi_fru_parse_field_t *chassis_part_number,
                                   ipmi_fru_parse_field_t *chassis_serial_number,
-                                  ipmi_fru_parse_field_t *chassis_info_fields,
-                                  unsigned int chassis_info_fields_len)
+                                  ipmi_fru_parse_field_t *chassis_custom_fields,
+                                  unsigned int chassis_custom_fields_len)
 {
   unsigned int area_offset = 0;
-  unsigned int info_fields_index = 0;
+  unsigned int custom_fields_index = 0;
   uint8_t number_of_data_bytes;
   int rv = -1;
 
@@ -144,10 +144,10 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
     memset (chassis_serial_number,
             '\0',
             sizeof (ipmi_fru_parse_field_t));
-  if (chassis_info_fields && chassis_info_fields_len)
-    memset (chassis_info_fields,
+  if (chassis_custom_fields && chassis_custom_fields_len)
+    memset (chassis_custom_fields,
             '\0',
-            sizeof (ipmi_fru_parse_field_t) * chassis_info_fields_len);
+            sizeof (ipmi_fru_parse_field_t) * chassis_custom_fields_len);
 
   area_offset = 2; /* 2 = version + length fields */
   if (chassis_type)
@@ -179,10 +179,10 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
     {
       ipmi_fru_parse_field_t *field_ptr = NULL;
 
-      if (chassis_info_fields && chassis_info_fields_len)
+      if (chassis_custom_fields && chassis_custom_fields_len)
         {
-          if (info_fields_index < chassis_info_fields_len)
-            field_ptr = &chassis_info_fields[info_fields_index];
+          if (custom_fields_index < chassis_custom_fields_len)
+            field_ptr = &chassis_custom_fields[custom_fields_index];
           else
             {
               FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
@@ -200,7 +200,7 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
 
       area_offset += 1;          /* type/length byte */
       area_offset += number_of_data_bytes;
-      info_fields_index++;
+      custom_fields_index++;
     }
 
 #if 0
@@ -221,18 +221,18 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
                                 uint8_t *areabuf,
                                 unsigned int areabuflen,
                                 uint8_t *language_code,
-                                uint32_t *mfg_data_time,
+                                uint32_t *mfg_date_time,
                                 ipmi_fru_parse_field_t *board_manufacturer,
                                 ipmi_fru_parse_field_t *board_product_name,
                                 ipmi_fru_parse_field_t *board_serial_number,
                                 ipmi_fru_parse_field_t *board_part_number,
                                 ipmi_fru_parse_field_t *board_fru_file_id,
-                                ipmi_fru_parse_field_t *board_info_fields,
-                                unsigned int board_info_fields_len)
+                                ipmi_fru_parse_field_t *board_custom_fields,
+                                unsigned int board_custom_fields_len)
 {
   uint32_t mfg_date_time_tmp = 0;
   unsigned int area_offset = 0;
-  unsigned int info_fields_index = 0;
+  unsigned int custom_fields_index = 0;
   uint8_t number_of_data_bytes;
   int rv = -1;
 
@@ -275,10 +275,10 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
     memset (board_fru_file_id,
             '\0',
             sizeof (ipmi_fru_parse_field_t));
-  if (board_info_fields && board_info_fields_len)
-    memset (board_info_fields,
+  if (board_custom_fields && board_custom_fields_len)
+    memset (board_custom_fields,
             '\0',
-            sizeof (ipmi_fru_parse_field_t) * board_info_fields_len);
+            sizeof (ipmi_fru_parse_field_t) * board_custom_fields_len);
 
   area_offset = 2; /* 2 = version + length fields */
   if (language_code)
@@ -368,10 +368,10 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
     {
       ipmi_fru_parse_field_t *field_ptr = NULL;
 
-      if (board_info_fields && board_info_fields_len)
+      if (board_custom_fields && board_custom_fields_len)
         {
-          if (info_fields_index < board_info_fields_len)
-            field_ptr = &board_info_fields[info_fields_index];
+          if (custom_fields_index < board_custom_fields_len)
+            field_ptr = &board_custom_fields[custom_fields_index];
           else
             {
               FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
@@ -389,7 +389,7 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
 
       area_offset += 1;          /* type/length byte */
       area_offset += number_of_data_bytes;
-      info_fields_index++;
+      custom_fields_index++;
     }
 
 #if 0
@@ -411,17 +411,17 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
                                   unsigned int areabuflen,
                                   uint8_t *language_code,
                                   ipmi_fru_parse_field_t *product_manufacturer_name,
-                                  ipmi_fru_parse_field_t *product_product_name,
+                                  ipmi_fru_parse_field_t *product_name,
                                   ipmi_fru_parse_field_t *product_part_model_number,
                                   ipmi_fru_parse_field_t *product_version,
                                   ipmi_fru_parse_field_t *product_serial_number,
                                   ipmi_fru_parse_field_t *product_asset_tag,
                                   ipmi_fru_parse_field_t *product_fru_file_id,
-                                  ipmi_fru_parse_field_t *product_info_fields,
-                                  unsigned int product_info_fields_len)
+                                  ipmi_fru_parse_field_t *product_custom_fields,
+                                  unsigned int product_custom_fields_len)
 {
   unsigned int area_offset = 0;
-  unsigned int info_fields_index = 0;
+  unsigned int custom_fields_index = 0;
   uint8_t number_of_data_bytes;
   int rv = -1;
 
@@ -448,8 +448,8 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
     memset (product_manufacturer_name,
             '\0',
             sizeof (ipmi_fru_parse_field_t));
-  if (product_product_name)
-    memset (product_product_name,
+  if (product_name)
+    memset (product_name,
             '\0',
             sizeof (ipmi_fru_parse_field_t));
   if (product_part_model_number)
@@ -472,10 +472,10 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
     memset (product_fru_file_id,
             '\0',
             sizeof (ipmi_fru_parse_field_t));
-  if (product_info_fields && product_info_fields_len)
-    memset (product_info_fields,
+  if (product_custom_fields && product_custom_fields_len)
+    memset (product_custom_fields,
             '\0',
-            sizeof (ipmi_fru_parse_field_t) * product_info_fields_len);
+            sizeof (ipmi_fru_parse_field_t) * product_custom_fields_len);
 
   area_offset = 2; /* 2 = version + length fields */
   if (language_code)
@@ -497,7 +497,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
-                          product_product_name) < 0)
+                          product_name) < 0)
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
@@ -507,7 +507,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
-                          product_product_part_model_number) < 0)
+                          product_part_model_number) < 0)
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
@@ -557,10 +557,10 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
     {
       ipmi_fru_parse_field_t *field_ptr = NULL;
 
-      if (product_info_fields && product_info_fields_len)
+      if (product_custom_fields && product_custom_fields_len)
         {
-          if (info_fields_index < product_info_fields_len)
-            field_ptr = &product_info_fields[info_fields_index];
+          if (custom_fields_index < product_custom_fields_len)
+            field_ptr = &product_custom_fields[custom_fields_index];
           else
             {
               FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
@@ -578,7 +578,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
 
       area_offset += 1;          /* type/length byte */
       area_offset += number_of_data_bytes;
-      info_fields_index++;
+      custom_fields_index++;
     }
 
 #if 0

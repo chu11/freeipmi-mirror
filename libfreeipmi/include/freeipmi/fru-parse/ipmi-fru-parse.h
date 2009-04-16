@@ -81,6 +81,9 @@
  */
 #define IPMI_FRU_PARSE_AREA_STRING_MAX                                    512
 
+/* 16 bit field for length */
+#define IPMI_FRU_PARSE_AREA_SIZE_MAX                                    65536
+
 struct ipmi_fru_parse_field
 {
   uint8_t type_length_field[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX];
@@ -111,7 +114,7 @@ int ipmi_fru_parse_close_device_id (ipmi_fru_parse_ctx_t ctx);
 
 /* FRU data iterator functions */
 int ipmi_fru_parse_first (ipmi_fru_parse_ctx_t ctx);
-/* returns 1 if iterator can continue, 0 if at end */
+/* returns 1 if iterator can continue, 0 if at end, -1 on error */
 int ipmi_fru_parse_next (ipmi_fru_parse_ctx_t ctx);
 int ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
                                    unsigned int *area_type,
@@ -126,21 +129,21 @@ int ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
                                       uint8_t *chassis_type,
                                       ipmi_fru_parse_field_t *chassis_part_number,
                                       ipmi_fru_parse_field_t *chassis_serial_number,
-                                      ipmi_fru_parse_field_t *chassis_info_fields,
-                                      unsigned int chassis_info_fields_len);
+                                      ipmi_fru_parse_field_t *chassis_custom_fields,
+                                      unsigned int chassis_custom_fields_len);
 
 int ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
                                     uint8_t *areabuf,
                                     unsigned int areabuflen,
                                     uint8_t *language_code,
-                                    uint32_t *mfg_data_time,
+                                    uint32_t *mfg_date_time,
                                     ipmi_fru_parse_field_t *board_manufacturer,
                                     ipmi_fru_parse_field_t *board_product_name,
                                     ipmi_fru_parse_field_t *board_serial_number,
                                     ipmi_fru_parse_field_t *board_part_number,
                                     ipmi_fru_parse_field_t *board_fru_file_id,
-                                    ipmi_fru_parse_field_t *board_info_fields,
-                                    unsigned int chassis_info_fields_len);
+                                    ipmi_fru_parse_field_t *board_custom_fields,
+                                    unsigned int chassis_custom_fields_len);
 
 int ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
                                       uint8_t *areabuf,
@@ -148,13 +151,13 @@ int ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
                                       uint8_t *language_code,
                                       ipmi_fru_parse_field_t *product_manufacturer_name,
                                       ipmi_fru_parse_field_t *product_product_name,
-                                      ipmi_fru_parse_field_t *product_part_model_number,
+                                      ipmi_fru_parse_field_t *product_propart_model_number,
                                       ipmi_fru_parse_field_t *product_version,
                                       ipmi_fru_parse_field_t *product_serial_number,
                                       ipmi_fru_parse_field_t *product_asset_tag,
                                       ipmi_fru_parse_field_t *product_fru_file_id,
-                                      ipmi_fru_parse_field_t *product_info_fields,
-                                      unsigned int product_info_fields_len);
+                                      ipmi_fru_parse_field_t *product_custom_fields,
+                                      unsigned int product_custom_fields_len);
 
 /* FRU utility functions */
 /* Typically pass in buffer and length from ipmi_fru_parse_field_t 
