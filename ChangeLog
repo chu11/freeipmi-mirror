@@ -13,7 +13,7 @@
 
 	* Update documentation and manpages appropriately.
 
-	* Various code cleanup.
+	* Various code cleanup.  Fix various compiler warnings.
 	
 2009-03-23  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.h,v 1.9 2009-03-03 23:56:46 chu11 Exp $
+ *  $Id: ipmi-fru-util.h,v 1.9.4.1 2009-04-16 22:54:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -28,6 +28,33 @@
 #ifndef _IPMI_FRU_UTIL_H
 #define _IPMI_FRU_UTIL_H
 
+#include <freeipmi/freeipmi.h>
+
+
+#define IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR(__ipmi_fru_parse_ctx) \
+  ((ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_FRU_AREA_LENGTH_INVALID \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) ==  IPMI_FRU_PARSE_ERR_COMMON_HEADER_CHECKSUM_INVALID \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_CHASSIS_INFO_AREA_CHECKSUM_INVALID \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_BOARD_INFO_AREA_CHECKSUM_INVALID \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_PRODUCT_INFO_AREA_CHECKSUM_INVALID \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_MULTIRECORD_AREA_CHECKSUM_INVALID \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_COMMON_HEADER_FORMAT_INVALID \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_CHASSIS_INFO_AREA_FORMAT_INVALID \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_BOARD_INFO_AREA_FORMAT_INVALID \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_PRODUCT_INFO_AREA_FORMAT_INVALID \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_MULTIRECORD_AREA_FORMAT_INVALID \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_FRU_LANGUAGE_CODE_NOT_SUPPORTED \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_FRU_INVALID_BCD_ENCODING \
+    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_FRU_SENTINEL_VALUE_NOT_FOUND) ? 1 : 0)
+
+int ipmi_fru_output_field (ipmi_fru_state_data_t *state_data,
+                           uint8_t language_code,
+                           ipmi_fru_parse_field_t *field,
+                           char *str);
+
+#if 0
 fru_err_t ipmi_fru_read_fru_data (ipmi_fru_state_data_t *state_data,
                                   uint8_t device_id,
                                   uint8_t *frubuf,
@@ -60,4 +87,5 @@ fru_err_t ipmi_fru_dump_hex (ipmi_fru_state_data_t *state_data,
                              uint64_t length_in_bytes,
                              char *str);
 
+#endif
 #endif

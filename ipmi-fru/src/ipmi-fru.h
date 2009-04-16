@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.h,v 1.12.8.1 2009-03-26 23:42:24 chu11 Exp $
+ *  $Id: ipmi-fru.h,v 1.12.8.2 2009-04-16 22:54:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -34,15 +34,6 @@
 #include "tool-cmdline-common.h"
 #include "pstdout.h"
 
-#define FRU_BUF_LEN 2048
-
-typedef enum
-  {
-    FRU_ERR_FATAL_ERROR = -2,
-    FRU_ERR_NON_FATAL_ERROR = -1,
-    FRU_ERR_SUCCESS = 0,
-  } fru_err_t;
-
 enum ipmi_sel_argp_option_keys
   {
     DEVICE_ID_KEY = 'e',
@@ -73,9 +64,9 @@ typedef struct ipmi_fru_state_data
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   char *hostname;
+  ipmi_fru_parse_ctx_t fru_parse_ctx;
   ipmi_sdr_cache_ctx_t sdr_cache_ctx;
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
-  uint64_t fru_inventory_area_size;
 } ipmi_fru_state_data_t;
 
 #endif

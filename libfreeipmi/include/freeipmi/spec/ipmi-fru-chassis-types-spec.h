@@ -16,7 +16,7 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 /*****************************************************************************\
-*  $Id: ipmi-fru-chassis-types-spec.h,v 1.5.4.1 2009-04-16 22:39:46 chu11 Exp $
+*  $Id: ipmi-fru-chassis-types-spec.h,v 1.5.4.2 2009-04-16 22:54:51 chu11 Exp $
 *****************************************************************************
 *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 *  Copyright (C) 2007 The Regents of the University of California.
@@ -83,9 +83,10 @@ extern "C" {
 #define IPMI_FRU_CHASSIS_TYPE_RAID_CHASSIS          0x16
 #define IPMI_FRU_CHASSIS_TYPE_RACK_MOUNT_CHASSIS    0x17
 
+/* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_FRU_CHASSIS_TYPE_VALID(__chassis_type) \
-  (((__chassis_type) >= IPMI_FRU_CHASSIS_TYPE_OTHER \
-    && (__chassis_type) <= IPMI_FRU_CHASSIS_TYPE_RACK_MOUNT_CHASSIS) ? 1 : 0)
+  (((__chassis_type + 1) >= (IPMI_FRU_CHASSIS_TYPE_OTHER + 1) \
+    && (__chassis_type - 1) <= (IPMI_FRU_CHASSIS_TYPE_RACK_MOUNT_CHASSIS - 1)) ? 1 : 0)
 
 extern const char *const ipmi_fru_chassis_types[];
 

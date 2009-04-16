@@ -92,6 +92,10 @@ o ipmi-fru
   - Output hex with 'h' suffix instead of '0x' prefix for consistency to
     other FreeIPMI tools.
   - Output manufacturer name with "Manufacturer ID" if name available.
+  - Language codes now output all the time instead of only under
+    verbose mode.  Language code output as string instead of hex code.
+  - Very verbose support removed.
+  - Various output changes under error conditions.
   - Re-work to use new libfreeipmi fru-parse sub library.
   - Check for valid device ID inputs.
   - Support additional options in FreeIPMI config file.

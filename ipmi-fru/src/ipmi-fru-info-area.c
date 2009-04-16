@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.21 2009-03-06 18:37:30 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.21.4.1 2009-04-16 22:54:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -54,602 +54,333 @@
 
 #include "freeipmi-portability.h"
 
-fru_err_t
+/* haven't seen a motherboard with more than 2-3 so far, 64 should be more than enough */
+#define IPMI_FRU_CUSTOM_FIELDS 64
+
+#define IPMI_FRU_STR_BUFLEN    1024
+
+int
 ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
-                                   uint8_t device_id,
-                                   unsigned int offset)
+                                   uint8_t *areabuf,
+                                   unsigned int area_length)
 {
-  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
-  uint64_t chassis_info_area_length;
-  uint64_t chassis_info_area_length_bytes;
-  fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
   uint8_t chassis_type;
-  uint32_t chassis_offset = 0;
-  unsigned int len_parsed;
+  ipmi_fru_parse_field_t chassis_part_number;
+  ipmi_fru_parse_field_t chassis_serial_number;
+  ipmi_fru_parse_field_t chassis_custom_fields[IPMI_FRU_CUSTOM_FIELDS];
+  int i;
 
   assert (state_data);
-  assert (offset);
+  assert (areabuf);
+  assert (area_length);
 
-  if ((ret = ipmi_fru_get_info_area_length (state_data,
-                                            device_id,
-                                            offset*8,
-                                            "Chassis",
-                                            &chassis_info_area_length)) != FRU_ERR_SUCCESS)
+  memset (&chassis_part_number, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&chassis_serial_number, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&chassis_custom_fields[0],
+          '\0',
+          sizeof (ipmi_fru_parse_field_t) * IPMI_FRU_CUSTOM_FIELDS);
+
+  if (ipmi_fru_parse_chassis_info_area (state_data->fru_parse_ctx,
+                                        areabuf,
+                                        area_length,
+                                        &chassis_type,
+                                        &chassis_part_number,
+                                        &chassis_serial_number,
+                                        chassis_custom_fields,
+                                        IPMI_FRU_CUSTOM_FIELDS) < 0)
     {
-      rv = ret;
-      goto cleanup;
-    }
-  chassis_info_area_length_bytes = chassis_info_area_length*8;
-
-  if ((ret = ipmi_fru_read_fru_data (state_data,
-                                     device_id,
-                                     frubuf,
-                                     IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
-                                     offset*8,
-                                     chassis_info_area_length*8)) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  if ((ret = ipmi_fru_dump_hex (state_data,
-                                frubuf,
-                                chassis_info_area_length_bytes,
-                                "Chassis Info Area")) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  if ((ret = ipmi_fru_check_checksum (state_data,
-                                      frubuf,
-                                      chassis_info_area_length_bytes,
-                                      0,
-                                      "Chassis Info Header")) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  chassis_offset = 2; /* 2 = version + length fields */
-  chassis_type = frubuf[chassis_offset];
-
-  if (!IPMI_FRU_CHASSIS_TYPE_VALID (chassis_type))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Chassis Type Unknown: %02Xh\n",
-                       chassis_type);
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  pstdout_printf (state_data->pstate,
-                  "  Chassis Info Area Type: %s\n",
-                  ipmi_fru_chassis_types[chassis_type]);
-
-  chassis_offset++;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                chassis_info_area_length_bytes,
-                                                chassis_offset,
-                                                NULL,
-                                                &len_parsed,
-                                                "Chassis Part Number")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Chassis Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  chassis_offset += len_parsed;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                chassis_info_area_length_bytes,
-                                                chassis_offset,
-                                                NULL,
-                                                &len_parsed,
-                                                "Chassis Serial Number")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Chassis Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  chassis_offset += len_parsed;
-
-  while (chassis_offset < chassis_info_area_length_bytes
-         && frubuf[chassis_offset] != IPMI_FRU_SENTINEL_VALUE)
-    {
-      if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                    frubuf,
-                                                    chassis_info_area_length_bytes,
-                                                    chassis_offset,
-                                                    NULL,
-                                                    &len_parsed,
-                                                    "Chassis Custom Info")) != FRU_ERR_SUCCESS)
+      if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "  FRU Chassis Info: Remaining Area Cannot Be Parsed\n");
-          rv = ret;
-          goto cleanup;
+                           "  FRU Chassis Info Area Error: %s\n",
+                           ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+          return (0);
         }
-
-      chassis_offset += len_parsed;
-    }
-
-  if (state_data->prog_data->args->verbose_count >= 2
-      && chassis_offset >= chassis_info_area_length_bytes)
-    {
+      
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "  FRU Missing Sentinel Value\n");
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
+                       "ipmi_fru_parse_chassis_info_area: %s\n",
+                       ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+      return (-1);
     }
 
-  rv = FRU_ERR_SUCCESS;
- cleanup:
-  return (rv);
+  if (IPMI_FRU_CHASSIS_TYPE_VALID (chassis_type))
+    pstdout_printf (state_data->pstate,
+                    "  FRU Chassis Info Area Type: %s\n",
+                    ipmi_fru_chassis_types[chassis_type]);
+  else
+    pstdout_printf (state_data->pstate,
+                    "  FRU Chassis Info Area Type: %s\n",
+                    ipmi_fru_chassis_types[IPMI_FRU_CHASSIS_TYPE_UNKNOWN]);
+
+  /* achu: Chassis Info Area has no language code, assume English. */
+
+  if (ipmi_fru_output_field (state_data,
+                             IPMI_FRU_LANGUAGE_CODE_ENGLISH,
+                             &chassis_part_number,
+                             "Chassis Part Number") < 0)
+    return (-1);
+
+  if (ipmi_fru_output_field (state_data,
+                             IPMI_FRU_LANGUAGE_CODE_ENGLISH,
+                             &chassis_serial_number,
+                             "Chassis Serial Number") < 0)
+    return (-1);
+
+  for (i = 0; i < IPMI_FRU_CUSTOM_FIELDS; i++)
+    {
+      if (ipmi_fru_output_field (state_data,
+                                 IPMI_FRU_LANGUAGE_CODE_ENGLISH,
+                                 &chassis_custom_fields[i],
+                                 "Chassis Custom Info") < 0)
+        return (-1);
+    }
+
+  return (0);
 }
 
-fru_err_t
+int
 ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
-                                 uint8_t device_id,
-                                 unsigned int offset)
+                                 uint8_t *areabuf,
+                                 unsigned int area_length)
 {
-  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
-  uint64_t board_info_area_length;
-  uint64_t board_info_area_length_bytes;
-  fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
   uint8_t language_code;
-  uint32_t mfg_date_time = 0;
-  time_t mfg_date_time_tmp = 0;
+  uint32_t mfg_date_time;
+  ipmi_fru_parse_field_t board_manufacturer;
+  ipmi_fru_parse_field_t board_product_name;
+  ipmi_fru_parse_field_t board_serial_number;
+  ipmi_fru_parse_field_t board_part_number;
+  ipmi_fru_parse_field_t board_fru_file_id;
+  ipmi_fru_parse_field_t board_custom_fields[IPMI_FRU_CUSTOM_FIELDS];
+  time_t timetmp;
   struct tm mfg_date_time_tm;
-  char mfg_date_time_buf[FRU_BUF_LEN+1];
-  uint32_t board_offset = 0;
-  unsigned int len_parsed;
+  char mfg_date_time_buf[IPMI_FRU_STR_BUFLEN + 1];
+  int i;
 
   assert (state_data);
-  assert (offset);
+  assert (areabuf);
+  assert (area_length);
 
-  if ((ret = ipmi_fru_get_info_area_length (state_data,
-                                            device_id,
-                                            offset*8,
-                                            "Board",
-                                            &board_info_area_length)) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-  board_info_area_length_bytes = board_info_area_length*8;
+  memset (&board_manufacturer, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&board_product_name, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&board_serial_number, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&board_fru_file_id, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&board_custom_fields[0],
+          '\0',
+          sizeof (ipmi_fru_parse_field_t) * IPMI_FRU_CUSTOM_FIELDS);
 
-  if ((ret = ipmi_fru_read_fru_data (state_data,
-                                     device_id,
-                                     frubuf,
-                                     IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
-                                     offset*8,
-                                     board_info_area_length_bytes)) != FRU_ERR_SUCCESS)
+  if (ipmi_fru_parse_board_info_area (state_data->fru_parse_ctx,
+                                      areabuf,
+                                      area_length,
+                                      &language_code,
+                                      &mfg_date_time,
+                                      &board_manufacturer,
+                                      &board_product_name,
+                                      &board_serial_number,
+                                      &board_part_number,
+                                      &board_fru_file_id,
+                                      board_custom_fields,
+                                      IPMI_FRU_CUSTOM_FIELDS) < 0)
     {
-      rv = ret;
-      goto cleanup;
-    }
-
-  if ((ret = ipmi_fru_dump_hex (state_data,
-                                frubuf,
-                                board_info_area_length_bytes,
-                                "Board Info Area")) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  if ((ret = ipmi_fru_check_checksum (state_data,
-                                      frubuf,
-                                      board_info_area_length_bytes,
-                                      0,
-                                      "Board Info Header")) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
+      if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "  FRU Board Info Area Error: %s\n",
+                           ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+          return (0);
+        }
+      
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_fru_parse_board_info_area: %s\n",
+                       ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+      return (-1);
     }
 
-  board_offset = 2; /* 2 = version + length fields */
-  language_code = frubuf[board_offset];
+  if (IPMI_FRU_LANGUAGE_CODE_VALID (language_code))
+    pstdout_printf (state_data->pstate,
+                    "  FRU Board Info Area Language: %s\n",
+                    ipmi_fru_language_codes[language_code]);
+  else
+    pstdout_printf (state_data->pstate,
+                    "  FRU Board Info Area Language Code: %02Xh\n",
+                    language_code);
 
-  if (state_data->prog_data->args->verbose_count >= 2)
-    {
-      pstdout_printf (state_data->pstate,
-                      "  FRU Board Info Area Language Code: %02Xh\n",
-                      language_code);
-    }
-
-  board_offset++;
-
-  /* mfg_date_time is little endian - see spec */
-  mfg_date_time |= frubuf[board_offset];
-  board_offset++;
-  mfg_date_time |= (frubuf[board_offset] << 8);
-  board_offset++;
-  mfg_date_time |= (frubuf[board_offset] << 16);
-  board_offset++;
-
-  /* Here, epoch is 0:00 hrs 1/1/96
-   *
-   * mfg_date_time is in minutes
-   *
-   * So convert into ansi epoch to output date/time
-   *
-   * 26 years difference in epoch
-   * 365 days/year
-   * etc.
-   *
-   */
-  mfg_date_time_tmp = 26 * 365 * 24 * 60 * 60;
-  mfg_date_time_tmp += (mfg_date_time * 60);
-
-  localtime_r (&mfg_date_time_tmp, &mfg_date_time_tm);
-
-  memset (mfg_date_time_buf, '\0', FRU_BUF_LEN+1);
-  strftime (mfg_date_time_buf, FRU_BUF_LEN, "%D - %T", &mfg_date_time_tm);
+  timetmp = mfg_date_time;
+  localtime_r (&timetmp, &mfg_date_time_tm);
+  memset (mfg_date_time_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
+  strftime (mfg_date_time_buf, IPMI_FRU_STR_BUFLEN, "%D - %T", &mfg_date_time_tm);
 
   pstdout_printf (state_data->pstate,
                   "  FRU Board Info Area Manufacturing Date/Time: %s\n",
                   mfg_date_time_buf);
 
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                board_info_area_length_bytes,
-                                                board_offset,
-                                                &language_code,
-                                                &len_parsed,
-                                                "Board Manufacturer")) != FRU_ERR_SUCCESS)
+  if (ipmi_fru_output_field (state_data,
+                             language_code,
+                             &board_manufacturer,
+                             "Board Manufacturer") < 0)
+    return (-1);
+
+  if (ipmi_fru_output_field (state_data,
+                             language_code,
+                             &board_product_name,
+                             "Board Product Name") < 0)
+    return (-1);
+
+
+  if (ipmi_fru_output_field (state_data,
+                             language_code,
+                             &board_serial_number,
+                             "Board Serial Number") < 0)
+    return (-1);
+
+  if (ipmi_fru_output_field (state_data,
+                             language_code,
+                             &board_part_number,
+                             "Board Part Number") < 0)
+    return (-1);
+
+  if (ipmi_fru_output_field (state_data,
+                             language_code,
+                             &board_fru_file_id,
+                             "FRU File ID") < 0)
+    return (-1);
+
+  for (i = 0; i < IPMI_FRU_CUSTOM_FIELDS; i++)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Board Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
+      if (ipmi_fru_output_field (state_data,
+                                 language_code,
+                                 &board_custom_fields[i],
+                                 "Board Custom Info") < 0)
+        return (-1);
     }
 
-  board_offset += len_parsed;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                board_info_area_length_bytes,
-                                                board_offset,
-                                                &language_code,
-                                                &len_parsed,
-                                                "Board Product Name")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Board Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  board_offset += len_parsed;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                board_info_area_length_bytes,
-                                                board_offset,
-                                                &language_code,
-                                                &len_parsed,
-                                                "Board Serial Number")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Board Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  board_offset += len_parsed;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                board_info_area_length_bytes,
-                                                board_offset,
-                                                &language_code,
-                                                &len_parsed,
-                                                "Board Part Number")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Board Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  board_offset += len_parsed;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                board_info_area_length_bytes,
-                                                board_offset,
-                                                &language_code,
-                                                &len_parsed,
-                                                "Board FRU File ID")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Board Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  board_offset += len_parsed;
-
-  while (board_offset < board_info_area_length_bytes
-         && frubuf[board_offset] != IPMI_FRU_SENTINEL_VALUE)
-    {
-      if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                    frubuf,
-                                                    board_info_area_length_bytes,
-                                                    board_offset,
-                                                    &language_code,
-                                                    &len_parsed,
-                                                    "Board Custom Info")) != FRU_ERR_SUCCESS)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "  FRU Board Info: Remaining Area Cannot Be Parsed\n");
-          rv = ret;
-          goto cleanup;
-        }
-
-      board_offset += len_parsed;
-    }
-
-  if (state_data->prog_data->args->verbose_count >= 2
-      && board_offset >= board_info_area_length_bytes)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Missing Sentinel Value\n");
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  rv = FRU_ERR_SUCCESS;
- cleanup:
-  return (rv);
+  return (0);
 }
 
-fru_err_t
+int
 ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
-                                   uint8_t device_id,
-                                   unsigned int offset)
+                                   uint8_t *areabuf,
+                                   unsigned int area_length)
 {
-  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
-  uint64_t product_info_area_length;
-  uint64_t product_info_area_length_bytes;
-  fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
   uint8_t language_code;
-  uint32_t product_offset = 0;
-  unsigned int len_parsed;
+  ipmi_fru_parse_field_t product_manufacturer_name;
+  ipmi_fru_parse_field_t product_name;
+  ipmi_fru_parse_field_t product_part_model_number;
+  ipmi_fru_parse_field_t product_version;
+  ipmi_fru_parse_field_t product_serial_number;
+  ipmi_fru_parse_field_t product_asset_tag;
+  ipmi_fru_parse_field_t product_fru_file_id;
+  ipmi_fru_parse_field_t product_custom_fields[IPMI_FRU_CUSTOM_FIELDS];
+  int i;
 
   assert (state_data);
-  assert (offset);
-
-  if ((ret = ipmi_fru_get_info_area_length (state_data,
-                                            device_id,
-                                            offset*8,
-                                            "Product",
-                                            &product_info_area_length)) != FRU_ERR_SUCCESS)
+  assert (areabuf);
+  assert (area_length);
+  
+  memset (&product_manufacturer_name, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&product_name, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&product_part_model_number, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&product_version, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&product_serial_number, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&product_asset_tag, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&product_fru_file_id, '\0', sizeof (ipmi_fru_parse_field_t));
+  memset (&product_custom_fields[0],
+          '\0',
+          sizeof (ipmi_fru_parse_field_t) * IPMI_FRU_CUSTOM_FIELDS);
+  
+  if (ipmi_fru_parse_product_info_area (state_data->fru_parse_ctx,
+                                        areabuf,
+                                        area_length,
+                                        &language_code,
+                                        &product_manufacturer_name,
+                                        &product_name,
+                                        &product_part_model_number,
+                                        &product_version,
+                                        &product_serial_number,
+                                        &product_asset_tag,
+                                        &product_fru_file_id,
+                                        product_custom_fields,
+                                        IPMI_FRU_CUSTOM_FIELDS) < 0)
     {
-      rv = ret;
-      goto cleanup;
-    }
-  product_info_area_length_bytes = product_info_area_length*8;
-
-  if ((ret = ipmi_fru_read_fru_data (state_data,
-                                     device_id,
-                                     frubuf,
-                                     IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
-                                     offset*8,
-                                     product_info_area_length_bytes)) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-
-  if ((ret = ipmi_fru_dump_hex (state_data,
-                                frubuf,
-                                product_info_area_length_bytes,
-                                "Product Info Area")) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  if ((ret = ipmi_fru_check_checksum (state_data,
-                                      frubuf,
-                                      product_info_area_length_bytes,
-                                      0,
-                                      "Product Info Header")) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  product_offset = 2; /* 2 = version + length fields */
-  language_code = frubuf[product_offset];
-
-  if (state_data->prog_data->args->verbose_count >= 2)
-    {
-      pstdout_printf (state_data->pstate,
-                      "  FRU Product Info Area Language Code: %02Xh\n",
-                      language_code);
-    }
-
-  product_offset++;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                product_info_area_length_bytes,
-                                                product_offset,
-                                                &language_code,
-                                                &len_parsed,
-                                                "Product Manufacturer Name")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Product Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  product_offset += len_parsed;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                product_info_area_length_bytes,
-                                                product_offset,
-                                                &language_code,
-                                                &len_parsed,
-                                                "Product Product Name")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Product Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  product_offset += len_parsed;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                product_info_area_length_bytes,
-                                                product_offset,
-                                                &language_code,
-                                                &len_parsed,
-                                                "Product Part/Model Number")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Product Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  product_offset += len_parsed;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                product_info_area_length_bytes,
-                                                product_offset,
-                                                &language_code,
-                                                &len_parsed,
-                                                "Product Version Type")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Product Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  product_offset += len_parsed;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                product_info_area_length_bytes,
-                                                product_offset,
-                                                &language_code,
-                                                &len_parsed,
-                                                "Product Serial Number")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Product Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  product_offset += len_parsed;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                product_info_area_length_bytes,
-                                                product_offset,
-                                                &language_code,
-                                                &len_parsed,
-                                                "Product Asset Tag")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Product Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  product_offset += len_parsed;
-
-  if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                frubuf,
-                                                product_info_area_length_bytes,
-                                                product_offset,
-                                                &language_code,
-                                                &len_parsed,
-                                                "Product FRU File ID")) != FRU_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Product Info: Remaining Area Cannot Be Parsed\n");
-      rv = ret;
-      goto cleanup;
-    }
-
-  product_offset += len_parsed;
-
-  while (product_offset < product_info_area_length_bytes
-         && frubuf[product_offset] != IPMI_FRU_SENTINEL_VALUE)
-    {
-      if ((ret = ipmi_fru_output_type_length_field (state_data,
-                                                    frubuf,
-                                                    product_info_area_length_bytes,
-                                                    product_offset,
-                                                    &language_code,
-                                                    &len_parsed,
-                                                    "Product Custom Info")) != FRU_ERR_SUCCESS)
+      if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "  FRU Product Info: Remaining Area Cannot Be Parsed\n");
-          rv = ret;
-          goto cleanup;
+                           "  FRU Product Info Area Error: %s\n",
+                           ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+          return (0);
         }
-
-      product_offset += len_parsed;
-    }
-
-  if (state_data->prog_data->args->verbose_count >= 2
-      && product_offset >= product_info_area_length_bytes)
-    {
+      
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "  FRU Missing Sentinel Value\n");
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
+                       "ipmi_fru_parse_product_info_area: %s\n",
+                       ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+      return (-1);
     }
 
-  rv = FRU_ERR_SUCCESS;
- cleanup:
-  return (rv);
+  if (IPMI_FRU_LANGUAGE_CODE_VALID (language_code))
+    pstdout_printf (state_data->pstate,
+                    "  FRU Product Info Area Language: %s\n",
+                    ipmi_fru_language_codes[language_code]);
+    pstdout_printf (state_data->pstate,
+                    "  FRU Product Info Area Language Code: %02Xh\n",
+                    language_code);
+
+  if (ipmi_fru_output_field (state_data,
+                             language_code,
+                             &product_manufacturer_name,
+                             "Product Manufacturer Name") < 0)
+    return (-1);
+
+  if (ipmi_fru_output_field (state_data,
+                             language_code,
+                             &product_name,
+                             "Product Name") < 0)
+    return (-1);
+
+
+  if (ipmi_fru_output_field (state_data,
+                             language_code,
+                             &product_part_model_number,
+                             "Product Part/Model Number") < 0)
+    return (-1);
+
+  if (ipmi_fru_output_field (state_data,
+                             language_code,
+                             &product_version,
+                             "Product Version") < 0)
+    return (-1);
+
+  if (ipmi_fru_output_field (state_data,
+                             language_code,
+                             &product_serial_number,
+                             "Product Serial Number") < 0)
+    return (-1);
+
+  if (ipmi_fru_output_field (state_data,
+                             language_code,
+                             &product_asset_tag,
+                             "Product Asset Tag") < 0)
+    return (-1);
+
+  if (ipmi_fru_output_field (state_data,
+                             language_code,
+                             &product_fru_file_id,
+                             "FRU File ID") < 0)
+    return (-1);
+
+  for (i = 0; i < IPMI_FRU_CUSTOM_FIELDS; i++)
+    {
+      if (ipmi_fru_output_field (state_data,
+                                 language_code,
+                                 &product_custom_fields[i],
+                                 "Product Custom Info") < 0)
+        return (-1);
+    }
+
+  return (0);
 }
 

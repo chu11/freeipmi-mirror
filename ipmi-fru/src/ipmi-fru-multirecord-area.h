@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.h,v 1.9 2009-03-03 23:56:46 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.h,v 1.9.4.1 2009-04-16 22:54:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -28,8 +28,12 @@
 #ifndef _IPMI_FRU_MULTIRECORD_AREA_H
 #define _IPMI_FRU_MULTIRECORD_AREA_H
 
+#include "ipmi-fru.h"
+
+#if 0
 fru_err_t ipmi_fru_output_multirecord_info_area (ipmi_fru_state_data_t *state_data,
                                                  uint8_t device_id,
                                                  unsigned int offset);
+#endif
 
 #endif

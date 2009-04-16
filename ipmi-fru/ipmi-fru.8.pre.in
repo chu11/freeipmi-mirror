@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.36 2009-01-13 19:26:48 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.36.16.1 2009-04-16 22:54:48 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -60,9 +60,6 @@ Specify a specific FRU device ID.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Increase verbosity in output to include additional error output.
-.TP
-\fB\-vv\fR, \fB\-\-verbose\fR
-Increase verbosity more in output to include detailed FRU parsing information.
 .TP
 \fB\-s\fR, \fB\-\-skip-checks\fR
 Skip FRU checksum checks. Some FRUs have incorrect checksums, but the

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.36.4.1 2009-04-15 17:14:49 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.36.4.2 2009-04-16 22:54:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -42,6 +42,58 @@
 
 #include "freeipmi-portability.h"
 
+int
+ipmi_fru_output_field (ipmi_fru_state_data_t *state_data,
+                       uint8_t language_code,
+                       ipmi_fru_parse_field_t *field,
+                       char *str)
+{
+  char strbuf[IPMI_FRU_PARSE_AREA_STRING_MAX + 1];
+
+  assert (state_data);
+  assert (field);
+  assert (str);
+
+  if (!field->type_length_field_length)
+    return (0);
+
+  memset (strbuf, '\0', IPMI_FRU_PARSE_AREA_STRING_MAX + 1);
+      
+  if (ipmi_fru_parse_type_length_field_to_string (state_data->fru_parse_ctx,
+                                                  field->type_length_field,
+                                                  field->type_length_field_length,
+                                                  language_code,
+                                                  strbuf,
+                                                  IPMI_FRU_PARSE_AREA_STRING_MAX) < 0)
+    {
+      if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "  FRU %s: Error '%s'\n",
+                           str,
+                           ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+          return (0);
+        }
+      
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_fru_parse_type_length_field_to_string: %s\n",
+                       ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+      return (-1);
+    }
+
+  pstdout_fprintf (state_data->pstate,
+                   stderr,
+                   "  FRU %s: %s\n",
+                   str,
+                   strbuf);
+
+  return (0);
+}
+
+
+#if 0
 #define FRU_COUNT_TO_READ_BLOCK_SIZE  16
 
 fru_err_t
@@ -520,7 +572,7 @@ ipmi_fru_get_info_area_length (ipmi_fru_state_data_t *state_data,
                                char *str,
                                uint64_t *info_area_length)
 {
-  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
+  uint8_t frubuf[IPMI_FRU_PARSE_AREA_SIZE_MAX+1];
   fiid_obj_t fru_info_area_header = NULL;
   int32_t info_area_header_len;
   uint64_t format_version;
@@ -554,7 +606,7 @@ ipmi_fru_get_info_area_length (ipmi_fru_state_data_t *state_data,
   if ((ret = ipmi_fru_read_fru_data (state_data,
                                      device_id,
                                      frubuf,
-                                     IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                     IPMI_FRU_PARSE_AREA_SIZE_MAX,
                                      offset_in_bytes,
                                      info_area_header_len)) != FRU_ERR_SUCCESS)
     {
@@ -723,3 +775,4 @@ ipmi_fru_check_checksum (ipmi_fru_state_data_t *state_data,
 
   return (FRU_ERR_SUCCESS);;
 }
+#endif

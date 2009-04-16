@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.28.4.1 2009-04-01 18:10:59 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.28.4.2 2009-04-16 22:54:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -41,6 +41,8 @@
 #include "ipmi-fru-util.h"
 
 #include "freeipmi-portability.h"
+
+#if 0
 
 static char *
 voltage_str (uint8_t voltage)
@@ -1446,7 +1448,7 @@ ipmi_fru_output_multirecord_info_area (ipmi_fru_state_data_t *state_data,
                                        uint8_t device_id,
                                        unsigned int offset)
 {
-  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
+  uint8_t frubuf[IPMI_FRU_PARSE_AREA_SIZE_MAX+1];
   fiid_obj_t fru_multirecord_header = NULL;
   int32_t record_header_length;
   uint64_t record_type_id;
@@ -1483,7 +1485,7 @@ ipmi_fru_output_multirecord_info_area (ipmi_fru_state_data_t *state_data,
   if ((ret = ipmi_fru_read_fru_data (state_data,
                                      device_id,
                                      frubuf,
-                                     IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                     IPMI_FRU_PARSE_AREA_SIZE_MAX,
                                      offset*8,
                                      record_header_length)) != FRU_ERR_SUCCESS)
     {
@@ -1506,7 +1508,7 @@ ipmi_fru_output_multirecord_info_area (ipmi_fru_state_data_t *state_data,
       if ((ret = ipmi_fru_read_fru_data (state_data,
                                          device_id,
                                          frubuf,
-                                         IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                         IPMI_FRU_PARSE_AREA_SIZE_MAX,
                                          multirecord_offset,
                                          record_header_length)) != FRU_ERR_SUCCESS)
         {
@@ -1644,7 +1646,7 @@ ipmi_fru_output_multirecord_info_area (ipmi_fru_state_data_t *state_data,
       if ((ret = ipmi_fru_read_fru_data (state_data,
                                          device_id,
                                          frubuf,
-                                         IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                                         IPMI_FRU_PARSE_AREA_SIZE_MAX,
                                          multirecord_offset,
                                          record_length)) != FRU_ERR_SUCCESS)
         {
@@ -1788,3 +1790,5 @@ ipmi_fru_output_multirecord_info_area (ipmi_fru_state_data_t *state_data,
   return (rv);
 
 }
+
+#endif
