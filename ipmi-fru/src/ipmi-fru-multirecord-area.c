@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.28.4.5 2009-04-17 20:02:31 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.28.4.6 2009-04-17 20:10:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -59,40 +59,38 @@ voltage_str (uint8_t voltage)
     return "";
 }
 
-static fru_err_t
+static int
 output_power_supply_information (ipmi_fru_state_data_t *state_data,
-                                 uint8_t *frubuf,
-                                 uint8_t record_length,
-                                 uint8_t record_checksum)
+                                 uint8_t *areabuf,
+                                 uint8_t area_length)
 {
-  int32_t tmpl_record_length;
-  uint64_t overall_capacity;
-  uint64_t peak_va;
-  uint64_t inrush_current;
-  uint64_t inrush_interval;
-  uint64_t low_end_input_voltage_range_1;
-  uint64_t high_end_input_voltage_range_1;
-  uint64_t low_end_input_voltage_range_2;
-  uint64_t high_end_input_voltage_range_2;
-  uint64_t low_end_input_frequency_range;
-  uint64_t high_end_input_frequency_range;
-  uint64_t ac_dropout_tolerance;
-  uint64_t predictive_fail_support;
-  uint64_t power_factor_correction;
-  uint64_t autoswitch;
-  uint64_t hot_swap_support;
-  uint64_t tachometer_pulses_per_rotation_predictive_fail_polarity;
-  uint64_t peak_capacity;
-  uint64_t hold_up_time;
-  uint64_t voltage_1;
-  uint64_t voltage_2;
-  uint64_t total_combined_wattage;
-  uint64_t predictive_fail_tachometer_lower_threshold;
+  unsigned int overall_capacity;
+  unsigned int peak_va;
+  unsigned int inrush_current;
+  unsigned int inrush_interval;
+  unsigned int low_end_input_voltage_range_1;
+  unsigned int high_end_input_voltage_range_1;
+  unsigned int low_end_input_voltage_range_2;
+  unsigned int high_end_input_voltage_range_2;
+  unsigned int low_end_input_frequency_range;
+  unsigned int high_end_input_frequency_range;
+  unsigned int ac_dropout_tolerance;
+  unsigned int predictive_fail_support;
+  unsigned int power_factor_correction;
+  unsigned int autoswitch;
+  unsigned int hot_swap_support;
+  unsigned int tachometer_pulses_per_rotation_predictive_fail_polarity;
+  unsigned int peak_capacity;
+  unsigned int hold_up_time;
+  unsigned int voltage_1;
+  unsigned int voltage_2;
+  unsigned int total_combined_wattage;
+  unsigned int predictive_fail_tachometer_lower_threshold;
+  int rv = -1;
 
   assert (state_data);
-  assert (frubuf);
-  assert (record_length);
-
+  assert (areabuf);
+  assert (area_length);
 
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Overall Capacity: %u Watts\n",
@@ -177,33 +175,29 @@ output_power_supply_information (ipmi_fru_state_data_t *state_data,
                   "  FRU Power Supply Total Combined Wattage: %u Watts\n",
                   total_combined_wattage);
 
-  rv = FRU_ERR_SUCCESS;
+  rv = 0;
  cleanup:
   return (rv);
 }
 
-static fru_err_t
+static int
 output_dc_output (ipmi_fru_state_data_t *state_data,
-                  uint8_t *frubuf,
-                  uint8_t record_length,
-                  uint8_t record_checksum)
+                  uint8_t *areabuf,
+                  uint8_t area_length)
 {
-  int32_t tmpl_record_length;
-  fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
-  uint64_t output_number;
-  uint64_t standby;
-  uint64_t nominal_voltage;
-  uint64_t maximum_negative_voltage_deviation;
-  uint64_t maximum_positive_voltage_deviation;
-  uint64_t ripple_and_noise_pk_pk;
-  uint64_t minimum_current_draw;
-  uint64_t maximum_current_draw;
+  unsigned int output_number;
+  unsigned int standby;
+  unsigned int nominal_voltage;
+  unsigned int maximum_negative_voltage_deviation;
+  unsigned int maximum_positive_voltage_deviation;
+  unsigned int ripple_and_noise_pk_pk;
+  unsigned int minimum_current_draw;
+  unsigned int maximum_current_draw;
+  int rv = -1;
 
   assert (state_data);
-  assert (frubuf);
-  assert (record_length);
-
+  assert (areabuf);
+  assert (area_length);
 
   pstdout_printf (state_data->pstate,
                   "  FRU DC Output Output Number: %u\n",
@@ -230,33 +224,28 @@ output_dc_output (ipmi_fru_state_data_t *state_data,
                   "  FRU DC Output Maximum Current Draw: %u mA\n",
                   maximum_current_draw);
 
-  rv = FRU_ERR_SUCCESS;
+  rv = 0;
  cleanup:
-  fiid_obj_destroy (obj_record);
   return (rv);
 }
 
-static fru_err_t
+static int
 output_dc_load (ipmi_fru_state_data_t *state_data,
-                uint8_t *frubuf,
-                uint8_t record_length,
-                uint8_t record_checksum)
+                uint8_t *areabuf,
+                uint8_t area_length)
 {
-  fiid_obj_t obj_record = NULL;
-  int32_t tmpl_record_length;
-  fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
-  uint64_t output_number;
-  uint64_t nominal_voltage;
-  uint64_t specd_minimum_voltage;
-  uint64_t specd_maximum_voltage;
-  uint64_t specd_ripple_and_noise_pk_pk;
-  uint64_t minimum_current_load;
-  uint64_t maximum_current_load;
+  unsigned int output_number;
+  unsigned int nominal_voltage;
+  unsigned int specd_minimum_voltage;
+  unsigned int specd_maximum_voltage;
+  unsigned int specd_ripple_and_noise_pk_pk;
+  unsigned int minimum_current_load;
+  unsigned int maximum_current_load;
+  int rv = -1;
 
   assert (state_data);
-  assert (frubuf);
-  assert (record_length);
+  assert (areabuf);
+  assert (area_length);
 
 
   pstdout_printf (state_data->pstate,
@@ -281,54 +270,27 @@ output_dc_load (ipmi_fru_state_data_t *state_data,
                   "  FRU DC Load Maximum Current Load: %u mA\n",
                   maximum_current_load);
 
-  rv = FRU_ERR_SUCCESS;
+  rv = 0;
  cleanup:
-  fiid_obj_destroy (obj_record);
   return (rv);
 }
 
-static fru_err_t
+static int
 output_management_access_record (ipmi_fru_state_data_t *state_data,
-                                 uint8_t *frubuf,
-                                 uint8_t record_length,
-                                 uint8_t record_checksum)
+                                 uint8_t *areabuf,
+                                 uint8_t area_length)
 {
-  fiid_obj_t obj_record = NULL;
-  int32_t min_tmpl_record_length;
-  int32_t len;
-  fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
-  uint64_t sub_record_type;
-  uint8_t managementaccessbuf[FRU_BUF_LEN+1];
+  uint8_t sub_record_type;
+  uint8_t managementaccessbuf[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1];
+  int rv = -1;
   int i;
 
   assert (state_data);
-  assert (frubuf);
-  assert (record_length);
+  assert (areabuf);
+  assert (area_length);
 
-  memset (managementaccessbuf, '\0', FRU_BUF_LEN+1);
+  memset (managementaccessbuf, '\0', IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1);
 
-
-  if ((len = fiid_obj_get_data (obj_record,
-                                "record",
-                                managementaccessbuf,
-                                FRU_BUF_LEN)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get_data: 'record': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if (!len)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Management Access Record: No Record Bytes\n");
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
 
   if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_MANAGEMENT_URL)
     pstdout_printf (state_data->pstate,
@@ -386,37 +348,31 @@ output_management_access_record (ipmi_fru_state_data_t *state_data,
       pstdout_printf (state_data->pstate, "\n");
     }
 
-  rv = FRU_ERR_SUCCESS;
+  rv = 0;
  cleanup:
-  fiid_obj_destroy (obj_record);
   return (rv);
 }
 
-static fru_err_t
+static int
 output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
-                                  uint8_t *frubuf,
-                                  uint8_t record_length,
-                                  uint8_t record_checksum)
+                                  uint8_t *areabuf,
+                                  uint8_t area_length)
 {
-  fiid_obj_t obj_record = NULL;
-  int32_t min_tmpl_record_length;
-  int32_t len;
-  fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
   uint64_t manufacturer_id;
   uint64_t entity_id_code;
   uint64_t compatibility_base;
   uint64_t compatibility_code_start_value;
-  uint8_t codemaskbuf[FRU_BUF_LEN+1];
+  uint8_t codemaskbuf[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX+1];
+  int rv = -1;
 
   assert (state_data);
-  assert (frubuf);
-  assert (record_length);
+  assert (areabuf);
+  assert (area_length);
 
-  memset (codemaskbuf, '\0', FRU_BUF_LEN+1);
+  memset (codemaskbuf, '\0', IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX+1);
 
   if ((ret = ipmi_fru_check_checksum (state_data,
-                                      frubuf,
+                                      areabuf,
                                       record_length,
                                       record_checksum,
                                       "Base Compatibility Multirecord")) != FRU_ERR_SUCCESS)
@@ -456,7 +412,7 @@ output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
     }
 
   if (fiid_obj_set_all (obj_record,
-                        frubuf,
+                        areabuf,
                         record_length) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -513,7 +469,7 @@ output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
   if ((len = fiid_obj_get_data (obj_record,
                                 "code_range_mask",
                                 codemaskbuf,
-                                FRU_BUF_LEN)) < 0)
+                                IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -562,37 +518,33 @@ output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
       pstdout_printf (state_data->pstate, "\n");
     }
 
-  rv = FRU_ERR_SUCCESS;
+  rv = 0;
  cleanup:
-  fiid_obj_destroy (obj_record);
   return (rv);
 }
 
-static fru_err_t
+static int
 output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
-                                      uint8_t *frubuf,
-                                      uint8_t record_length,
-                                      uint8_t record_checksum)
+                                      uint8_t *areabuf,
+                                      uint8_t area_length)
 {
-  fiid_obj_t obj_record = NULL;
   int32_t min_tmpl_record_length;
   int32_t len;
-  fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
   uint64_t manufacturer_id;
   uint64_t entity_id_code;
   uint64_t compatibility_base;
   uint64_t compatibility_code_start_value;
-  uint8_t codemaskbuf[FRU_BUF_LEN+1];
+  uint8_t codemaskbuf[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX+1];
+  int rv = -1;
 
   assert (state_data);
-  assert (frubuf);
-  assert (record_length);
+  assert (areabuf);
+  assert (area_length);
 
-  memset (codemaskbuf, '\0', FRU_BUF_LEN+1);
+  memset (codemaskbuf, '\0', IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX+1);
 
   if ((ret = ipmi_fru_check_checksum (state_data,
-                                      frubuf,
+                                      areabuf,
                                       record_length,
                                       record_checksum,
                                       "Extended Compatibility Multirecord")) != FRU_ERR_SUCCESS)
@@ -632,7 +584,7 @@ output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
     }
 
   if (fiid_obj_set_all (obj_record,
-                        frubuf,
+                        areabuf,
                         record_length) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -689,7 +641,7 @@ output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
   if ((len = fiid_obj_get_data (obj_record,
                                 "code_range_mask",
                                 codemaskbuf,
-                                FRU_BUF_LEN)) < 0)
+                                IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -731,34 +683,30 @@ output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
       pstdout_printf (state_data->pstate, "\n");
     }
 
-  rv = FRU_ERR_SUCCESS;
+  rv = 0;
  cleanup:
-  fiid_obj_destroy (obj_record);
   return (rv);
 }
 
-static fru_err_t
+static int
 output_oem_record (ipmi_fru_state_data_t *state_data,
-                   uint8_t *frubuf,
-                   uint8_t record_length,
-                   uint8_t record_checksum)
+                   uint8_t *areabuf,
+                   uint8_t area_length)
 {
-  fiid_obj_t obj_record = NULL;
   int32_t min_tmpl_record_length;
   int32_t len;
-  fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
   uint64_t manufacturer_id;
-  uint8_t oemdatabuf[FRU_BUF_LEN+1];
+  uint8_t oemdatabuf[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX+1];
+  int rv = -1;
 
   assert (state_data);
-  assert (frubuf);
-  assert (record_length);
+  assert (areabuf);
+  assert (area_length);
 
-  memset (oemdatabuf, '\0', FRU_BUF_LEN+1);
+  memset (oemdatabuf, '\0', IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX+1);
 
   if ((ret = ipmi_fru_check_checksum (state_data,
-                                      frubuf,
+                                      areabuf,
                                       record_length,
                                       record_checksum,
                                       "OEM Multirecord")) != FRU_ERR_SUCCESS)
@@ -798,7 +746,7 @@ output_oem_record (ipmi_fru_state_data_t *state_data,
     }
 
   if (fiid_obj_set_all (obj_record,
-                        frubuf,
+                        areabuf,
                         record_length) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -822,7 +770,7 @@ output_oem_record (ipmi_fru_state_data_t *state_data,
   if ((len = fiid_obj_get_data (obj_record,
                                 "oem_data",
                                 oemdatabuf,
-                                FRU_BUF_LEN)) < 0)
+                                IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -854,358 +802,9 @@ output_oem_record (ipmi_fru_state_data_t *state_data,
       pstdout_printf (state_data->pstate, "\n");
     }
 
-  rv = FRU_ERR_SUCCESS;
+  rv = 0;
  cleanup:
-  fiid_obj_destroy (obj_record);
   return (rv);
-}
-
-fru_err_t
-ipmi_fru_output_multirecord_info_area (ipmi_fru_state_data_t *state_data,
-                                       uint8_t device_id,
-                                       unsigned int offset)
-{
-  uint8_t frubuf[IPMI_FRU_PARSE_AREA_SIZE_MAX+1];
-  fiid_obj_t fru_multirecord_header = NULL;
-  int32_t record_header_length;
-  uint64_t record_type_id;
-  uint64_t end_of_list;
-  uint64_t record_format_version;
-  uint64_t record_length;
-  uint64_t record_checksum;
-  fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
-  uint32_t multirecord_offset = 0;
-  int output_count = 0;
-
-  assert (state_data);
-  assert (offset);
-
-  if ((record_header_length = fiid_template_len_bytes (tmpl_fru_multirecord_area_header)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_template_len_bytes: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if ((offset*8 + record_header_length) > state_data->fru_inventory_area_size)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU MultirecordInfo Info Area size too small\n");
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  if ((ret = ipmi_fru_read_fru_data (state_data,
-                                     device_id,
-                                     frubuf,
-                                     IPMI_FRU_PARSE_AREA_SIZE_MAX,
-                                     offset*8,
-                                     record_header_length)) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  if (!(fru_multirecord_header = fiid_obj_create (tmpl_fru_multirecord_area_header)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  multirecord_offset = offset*8;
-  while (multirecord_offset < state_data->fru_inventory_area_size)
-    {
-      if ((ret = ipmi_fru_read_fru_data (state_data,
-                                         device_id,
-                                         frubuf,
-                                         IPMI_FRU_PARSE_AREA_SIZE_MAX,
-                                         multirecord_offset,
-                                         record_header_length)) != FRU_ERR_SUCCESS)
-        {
-          rv = ret;
-          goto cleanup;
-        }
-
-      if ((ret = ipmi_fru_dump_hex (state_data,
-                                    frubuf,
-                                    record_header_length,
-                                    "MultiRecord Record Header")) != FRU_ERR_SUCCESS)
-        {
-          rv = ret;
-          goto cleanup;
-        }
-
-      if ((ret = ipmi_fru_check_checksum (state_data,
-                                          frubuf,
-                                          record_header_length,
-                                          0,
-                                          "Multirecord Record Header")) != FRU_ERR_SUCCESS)
-        {
-          rv = ret;
-          goto cleanup;
-        }
-
-      if (fiid_obj_set_all (fru_multirecord_header,
-                            frubuf,
-                            record_header_length) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_set_all: %s\n",
-                           fiid_obj_errormsg (fru_multirecord_header));
-          goto cleanup;
-        }
-
-      if (FIID_OBJ_GET (fru_multirecord_header,
-                        "record_type_id",
-                        &record_type_id) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'record_type_id': %s\n",
-                           fiid_obj_errormsg (fru_multirecord_header));
-          goto cleanup;
-        }
-      if (FIID_OBJ_GET (fru_multirecord_header,
-                        "record_format_version",
-                        &record_format_version) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'record_format_version': %s\n",
-                           fiid_obj_errormsg (fru_multirecord_header));
-          goto cleanup;
-        }
-      if (FIID_OBJ_GET (fru_multirecord_header,
-                        "end_of_list",
-                        &end_of_list) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'end_of_list': %s\n",
-                           fiid_obj_errormsg (fru_multirecord_header));
-          goto cleanup;
-        }
-      if (FIID_OBJ_GET (fru_multirecord_header,
-                        "record_length",
-                        &record_length) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'record_length': %s\n",
-                           fiid_obj_errormsg (fru_multirecord_header));
-          goto cleanup;
-        }
-      if (FIID_OBJ_GET (fru_multirecord_header,
-                        "record_checksum",
-                        &record_checksum) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get: 'record_checksum': %s\n",
-                           fiid_obj_errormsg (fru_multirecord_header));
-          goto cleanup;
-        }
-
-      if (state_data->prog_data->args->verbose_count >= 2)
-        {
-          pstdout_printf (state_data->pstate,
-                          "  FRU Multirecord Info Area Record Type ID: %02Xh\n",
-                          record_type_id);
-          pstdout_printf (state_data->pstate,
-                          "  FRU Multirecord Info Area Record Format Version: %02Xh\n",
-                          record_format_version);
-          pstdout_printf (state_data->pstate,
-                          "  FRU Multirecord Info Area End Of List: %02Xh\n",
-                          end_of_list);
-          pstdout_printf (state_data->pstate,
-                          "  FRU Multirecord Info Area Record Length: %u\n",
-                          record_length);
-        }
-
-      if (end_of_list)
-        break;
-
-      if (record_format_version != IPMI_FRU_MULTIRECORD_AREA_FORMAT_VERSION)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "  FRU Multirecord Area Format Unknown: %02Xh\n",
-                           record_format_version);
-          continue;
-        }
-
-      if (!record_length)
-        {
-          multirecord_offset += record_header_length;
-          continue;
-        }
-
-      /* Note: Unlike Info Areas, record_length is in bytes */
-      if (state_data->fru_inventory_area_size < (multirecord_offset + record_header_length + record_length))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "  FRU Multirecord Info Area too small\n");
-          rv = FRU_ERR_NON_FATAL_ERROR;
-          goto cleanup;
-        }
-
-      multirecord_offset += record_header_length;
-
-      if ((ret = ipmi_fru_read_fru_data (state_data,
-                                         device_id,
-                                         frubuf,
-                                         IPMI_FRU_PARSE_AREA_SIZE_MAX,
-                                         multirecord_offset,
-                                         record_length)) != FRU_ERR_SUCCESS)
-        {
-          rv = ret;
-          goto cleanup;
-        }
-
-      if ((ret = ipmi_fru_dump_hex (state_data,
-                                    frubuf,
-                                    record_length,
-                                    "MultiRecord")) != FRU_ERR_SUCCESS)
-        {
-          rv = ret;
-          goto cleanup;
-        }
-
-      if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION)
-        {
-          if (output_count)
-            pstdout_printf (state_data->pstate, "\n");
-          output_count++;
-          ret = output_power_supply_information (state_data,
-                                                 frubuf,
-                                                 record_length,
-                                                 record_checksum);
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          /* else continue on */
-        }
-      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_DC_OUTPUT)
-        {
-          if (output_count)
-            pstdout_printf (state_data->pstate, "\n");
-          output_count++;
-          ret = output_dc_output (state_data,
-                                  frubuf,
-                                  record_length,
-                                  record_checksum);
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          /* else continue on */
-        }
-      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_DC_LOAD)
-        {
-          if (output_count)
-            pstdout_printf (state_data->pstate, "\n");
-          output_count++;
-          ret = output_dc_load (state_data,
-                                frubuf,
-                                record_length,
-                                record_checksum);
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          /* else continue on */
-        }
-      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_MANAGEMENT_ACCESS_RECORD)
-        {
-          if (output_count)
-            pstdout_printf (state_data->pstate, "\n");
-          output_count++;
-          ret = output_management_access_record (state_data,
-                                                 frubuf,
-                                                 record_length,
-                                                 record_checksum);
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          /* else continue on */
-        }
-      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_BASE_COMPATIBILITY_RECORD)
-        {
-          if (output_count)
-            pstdout_printf (state_data->pstate, "\n");
-          output_count++;
-          ret = output_base_compatibility_record (state_data,
-                                                  frubuf,
-                                                  record_length,
-                                                  record_checksum);
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          /* else continue on */
-        }
-      else if (record_type_id == IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD)
-        {
-          if (output_count)
-            pstdout_printf (state_data->pstate, "\n");
-          output_count++;
-          ret = output_extended_compatibility_record (state_data,
-                                                      frubuf,
-                                                      record_length,
-                                                      record_checksum);
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          /* else continue on */
-        }
-      else if (IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM (record_type_id))
-        {
-          if (output_count)
-            pstdout_printf (state_data->pstate, "\n");
-          output_count++;
-          ret = output_oem_record (state_data,
-                                   frubuf,
-                                   record_length,
-                                   record_checksum);
-          if (ret == FRU_ERR_FATAL_ERROR)
-            {
-              rv = ret;
-              goto cleanup;
-            }
-          /* else continue on */
-        }
-      else
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "  FRU Multirecord Record ID Type Unknown: %02Xh\n",
-                         record_type_id);
-
-      multirecord_offset += record_length;
-    }
-
-  rv = FRU_ERR_SUCCESS;
- cleanup:
-  fiid_obj_destroy (fru_multirecord_header);
-  return (rv);
-
 }
 
 #endif
