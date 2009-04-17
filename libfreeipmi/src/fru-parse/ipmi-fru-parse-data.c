@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.1.2.8 2009-04-17 16:47:10 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.1.2.9 2009-04-17 16:49:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -623,6 +623,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
                                                      unsigned int *total_combined_wattage,
                                                      unsigned int *predictive_fail_tachometer_lower_threshold)
 {
+  fiid_obj_t obj_record = NULL;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)

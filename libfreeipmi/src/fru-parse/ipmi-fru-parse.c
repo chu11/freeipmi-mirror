@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.1.2.20 2009-04-17 16:47:10 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.1.2.21 2009-04-17 16:49:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -488,11 +488,6 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
     }
   ctx->fru_inventory_area_size = val;
 
-  /* XXX - make sure initted to insure iterator doesn't return anything */
-#if 0
-  pstdout_printf (state_data->pstate,
-                  "  FRU Inventory Area Size Empty\n");
-#endif
   if (!ctx->fru_inventory_area_size)
     {
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
@@ -523,14 +518,6 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
                               common_header_len,
                               0)) < 0)
     goto cleanup;
-
-#if 0
-  pstdout_fprintf (state_data->pstate,
-                   stderr,
-                   "  FRU %s Checksum Invalid: %02Xh\n",
-                   str,
-                   checksum);
-#endif
 
   if (!ret)
     {
@@ -688,11 +675,6 @@ _parse_multirecord_header (ipmi_fru_parse_ctx_t ctx,
       
   if ((ctx->multirecord_area_offset_in_bytes + multirecord_header_length) > ctx->fru_inventory_area_size)
     {
-#if 0
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU MultirecordInfo Info Area size too small\n");
-#endif
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT);
       goto cleanup;
     }
@@ -990,13 +972,6 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
 
   if (format_version != expected_format_version)
     {
-#if 0
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU %s Area Format Unknown: %02Xh\n",
-                       str,
-                       format_version);
-#endif
       FRU_PARSE_SET_ERRNUM (ctx, err_code_format_invalid);
       goto cleanup;
     }
@@ -1019,12 +994,6 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
 
   if (ctx->fru_inventory_area_size < (offset_in_bytes + info_area_length_bytes))
     {
-#if 0
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU %s Info Area too small\n",
-                       str);
-#endif
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_AREA_LENGTH_INVALID);
       goto cleanup;
     }
@@ -1127,11 +1096,6 @@ _read_multirecord_area_data (ipmi_fru_parse_ctx_t ctx,
   /* Note: Unlike Info Areas, record_length is in bytes */
   if (ctx->fru_inventory_area_size < (ctx->multirecord_area_offset_in_bytes + multirecord_header_length + record_length))
     {
-#if 0
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Multirecord Info Area too small\n");
-#endif
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_AREA_LENGTH_INVALID);
       goto cleanup;
     }
@@ -1423,12 +1387,6 @@ _bcd_to_ascii (ipmi_fru_parse_ctx_t ctx,
         typestr[i] = '.';
       else
         {
-#if 0
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "  FRU Unknown BCD Character: %02Xh\n",
-                           databuf[i]);
-#endif
           FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INVALID_BCD_ENCODING);
           goto cleanup;
         }
@@ -1548,12 +1506,6 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
       if (language_code != IPMI_FRU_LANGUAGE_CODE_ENGLISH_LEGACY
           && language_code != IPMI_FRU_LANGUAGE_CODE_ENGLISH)
         {
-#if 0
-          pstdout_printf (state_data->pstate,
-                          "  FRU %s: Unsupported Language Code: %02Xh\n",
-                          str,
-                          *language_code);
-#endif
           FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_LANGUAGE_CODE_NOT_SUPPORTED);
           goto cleanup;
         }
