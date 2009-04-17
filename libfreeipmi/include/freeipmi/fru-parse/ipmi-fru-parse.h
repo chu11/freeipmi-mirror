@@ -215,6 +215,13 @@ int ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
                                         unsigned int *minimum_current_load,
                                         unsigned int *maximum_current_load);
 
+int ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
+                                                         uint8_t *areabuf,
+                                                         unsigned int areabuflen,
+                                                         uint8_t *sub_record_type,
+                                                         uint8_t *sub_record_data,
+                                                         unsigned int *sub_record_data_len);
+
 /* FRU utility functions */
 /* Typically pass in buffer and length from ipmi_fru_parse_field_t
  * after info area is parsed.  strbuflen is an in/out value.  input

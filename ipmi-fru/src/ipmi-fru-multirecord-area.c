@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.28.4.4 2009-04-17 18:18:29 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.28.4.5 2009-04-17 20:02:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -108,16 +108,16 @@ output_power_supply_information (ipmi_fru_state_data_t *state_data,
                   inrush_interval);
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Low End Input Voltage 1: %u mV\n",
-                  low_end_input_voltage_range_1*10);
+                  low_end_input_voltage_range_1);
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply High End Input Voltage 1: %u mV\n",
-                  high_end_input_voltage_range_1*10);
+                  high_end_input_voltage_range_1);
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Low End Input Voltage 2: %u mV\n",
-                  low_end_input_voltage_range_2*10);
+                  low_end_input_voltage_range_2);
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply High End Input Voltage 2: %u mV\n",
-                  high_end_input_voltage_range_2*10);
+                  high_end_input_voltage_range_2);
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Low End Acceptable Frequencey: %u Hz\n",
                   low_end_input_frequency_range);
@@ -308,67 +308,6 @@ output_management_access_record (ipmi_fru_state_data_t *state_data,
 
   memset (managementaccessbuf, '\0', FRU_BUF_LEN+1);
 
-  if ((ret = ipmi_fru_check_checksum (state_data,
-                                      frubuf,
-                                      record_length,
-                                      record_checksum,
-                                      "Management Access Multirecord")) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  /* Variable Length Record - So need to check min length */
-  if ((min_tmpl_record_length = fiid_template_field_start_bytes (tmpl_fru_management_access_record,
-                                                                 "record")) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_template_field_start_bytes: 'record': %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (record_length < min_tmpl_record_length)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Management Access Record Length Incorrect: %u\n",
-                       record_length);
-      goto cleanup;
-    }
-
-  if (!(obj_record = fiid_obj_create (tmpl_fru_management_access_record)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set_all (obj_record,
-                        frubuf,
-                        record_length) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_set_all: %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_record,
-                    "sub_record_type",
-                    &sub_record_type) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'sub_record_type': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
 
   if ((len = fiid_obj_get_data (obj_record,
                                 "record",
@@ -394,27 +333,27 @@ output_management_access_record (ipmi_fru_state_data_t *state_data,
   if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_MANAGEMENT_URL)
     pstdout_printf (state_data->pstate,
                     "  FRU Management Access System Management URL: %s\n",
-                    managementaccessbuf);
+                    (char *)managementaccessbuf);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_NAME)
     pstdout_printf (state_data->pstate,
                     "  FRU Management Access System Name: %s\n",
-                    managementaccessbuf);
+                    (char *)managementaccessbuf);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_PING_ADDRESS)
     pstdout_printf (state_data->pstate,
                     "  FRU Management Access System Ping Address: %s\n",
-                    managementaccessbuf);
+                    (char *)managementaccessbuf);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_MANAGEMENT_URL)
     pstdout_printf (state_data->pstate,
                     "  FRU Management Access Component Management URL: %s\n",
-                    managementaccessbuf);
+                    (char *)managementaccessbuf);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_NAME)
     pstdout_printf (state_data->pstate,
                     "  FRU Management Access Component Name: %s\n",
-                    managementaccessbuf);
+                    (char *)managementaccessbuf);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_PING_ADDRESS)
     pstdout_printf (state_data->pstate,
                     "  FRU Management Access Component Ping Address: %s\n",
-                    managementaccessbuf);
+                    (char *)managementaccessbuf);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID)
     {
       pstdout_printf (state_data->pstate,
