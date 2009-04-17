@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.28.4.6 2009-04-17 20:10:28 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.28.4.7 2009-04-17 21:45:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -60,7 +60,7 @@ voltage_str (uint8_t voltage)
 }
 
 static int
-output_power_supply_information (ipmi_fru_state_data_t *state_data,
+ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
                                  uint8_t *areabuf,
                                  uint8_t area_length)
 {
@@ -181,7 +181,7 @@ output_power_supply_information (ipmi_fru_state_data_t *state_data,
 }
 
 static int
-output_dc_output (ipmi_fru_state_data_t *state_data,
+ipmi_fru_output_dc_output (ipmi_fru_state_data_t *state_data,
                   uint8_t *areabuf,
                   uint8_t area_length)
 {
@@ -230,7 +230,7 @@ output_dc_output (ipmi_fru_state_data_t *state_data,
 }
 
 static int
-output_dc_load (ipmi_fru_state_data_t *state_data,
+ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
                 uint8_t *areabuf,
                 uint8_t area_length)
 {
@@ -276,12 +276,12 @@ output_dc_load (ipmi_fru_state_data_t *state_data,
 }
 
 static int
-output_management_access_record (ipmi_fru_state_data_t *state_data,
+ipmi_fru_output_management_access_record (ipmi_fru_state_data_t *state_data,
                                  uint8_t *areabuf,
                                  uint8_t area_length)
 {
   uint8_t sub_record_type;
-  uint8_t managementaccessbuf[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1];
+  uint8_t sub_record_data[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1];
   int rv = -1;
   int i;
 
@@ -289,33 +289,33 @@ output_management_access_record (ipmi_fru_state_data_t *state_data,
   assert (areabuf);
   assert (area_length);
 
-  memset (managementaccessbuf, '\0', IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1);
+  memset (sub_record_data, '\0', IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1);
 
 
   if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_MANAGEMENT_URL)
     pstdout_printf (state_data->pstate,
                     "  FRU Management Access System Management URL: %s\n",
-                    (char *)managementaccessbuf);
+                    (char *)sub_record_data);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_NAME)
     pstdout_printf (state_data->pstate,
                     "  FRU Management Access System Name: %s\n",
-                    (char *)managementaccessbuf);
+                    (char *)sub_record_data);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_PING_ADDRESS)
     pstdout_printf (state_data->pstate,
                     "  FRU Management Access System Ping Address: %s\n",
-                    (char *)managementaccessbuf);
+                    (char *)sub_record_data);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_MANAGEMENT_URL)
     pstdout_printf (state_data->pstate,
                     "  FRU Management Access Component Management URL: %s\n",
-                    (char *)managementaccessbuf);
+                    (char *)sub_record_data);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_NAME)
     pstdout_printf (state_data->pstate,
                     "  FRU Management Access Component Name: %s\n",
-                    (char *)managementaccessbuf);
+                    (char *)sub_record_data);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_COMPONENT_PING_ADDRESS)
     pstdout_printf (state_data->pstate,
                     "  FRU Management Access Component Ping Address: %s\n",
-                    (char *)managementaccessbuf);
+                    (char *)sub_record_data);
   else if (sub_record_type == IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_UNIQUE_ID)
     {
       pstdout_printf (state_data->pstate,
@@ -323,12 +323,12 @@ output_management_access_record (ipmi_fru_state_data_t *state_data,
 
       for (i = 0; i < len; i++)
         {
-          if ((i % 8) == 0)
+          if (len > 8 && (i % 8) == 0)
             pstdout_printf (state_data->pstate, "\n    ");
 
           pstdout_printf (state_data->pstate,
                           " %02Xh",
-                          managementaccessbuf[i]);
+                          sub_record_data[i]);
         }
       pstdout_printf (state_data->pstate, "\n");
     }
@@ -338,12 +338,12 @@ output_management_access_record (ipmi_fru_state_data_t *state_data,
                       "  FRU Management Access Record: Unknown Sub Record Type:");
       for (i = 0; i < len; i++)
         {
-          if ((i % 8) == 0)
+          if (len > 8 && (i % 8) == 0)
             pstdout_printf (state_data->pstate, "\n    ");
 
           pstdout_printf (state_data->pstate,
                           " %02Xh",
-                          managementaccessbuf[i]);
+                          sub_record_data[i]);
         }
       pstdout_printf (state_data->pstate, "\n");
     }
@@ -354,129 +354,25 @@ output_management_access_record (ipmi_fru_state_data_t *state_data,
 }
 
 static int
-output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
+ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
                                   uint8_t *areabuf,
                                   uint8_t area_length)
 {
-  uint64_t manufacturer_id;
-  uint64_t entity_id_code;
-  uint64_t compatibility_base;
-  uint64_t compatibility_code_start_value;
-  uint8_t codemaskbuf[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX+1];
+  uint32_t manufacturer_id;
+  unsigned int entity_id_code;
+  unsigned int compatibility_base;
+  unsigned int compatibility_code_start_value;
+  uint8_t code_range_mask[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1];
+  unsigned int code_range_mask_len = IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX;
   int rv = -1;
 
   assert (state_data);
   assert (areabuf);
   assert (area_length);
 
-  memset (codemaskbuf, '\0', IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX+1);
+  memset (code_range_mask, '\0', IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1);
 
-  if ((ret = ipmi_fru_check_checksum (state_data,
-                                      areabuf,
-                                      record_length,
-                                      record_checksum,
-                                      "Base Compatibility Multirecord")) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
 
-  /* Variable Length Record - So need to check min length */
-  if ((min_tmpl_record_length = fiid_template_field_start_bytes (tmpl_fru_base_compatibility_record,
-                                                                 "code_range_mask")) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_template_field_start_bytes: 'code_range_mask': %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (record_length < min_tmpl_record_length)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Base Compatibility Record Length Incorrect: %u\n",
-                       record_length);
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  if (!(obj_record = fiid_obj_create (tmpl_fru_base_compatibility_record)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set_all (obj_record,
-                        areabuf,
-                        record_length) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_set_all: %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_record,
-                    "manufacturer_id",
-                    &manufacturer_id) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'manufacturer_id': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_record,
-                    "entity_id_code",
-                    &entity_id_code) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'entity_id_code': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_record,
-                    "compatibility_base",
-                    &compatibility_base) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'compatibility_base': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_record,
-                    "compatibility_code_start_value",
-                    &compatibility_code_start_value) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'compatibility_code_start_value': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if ((len = fiid_obj_get_data (obj_record,
-                                "code_range_mask",
-                                codemaskbuf,
-                                IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get_data: 'code_range_mask': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
 
   if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
       && ipmi_iana_enterprise_numbers[manufacturer_id])
@@ -499,21 +395,21 @@ output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
                   "  FRU Base Compatibility Comptability Code Start Value: %Xh\n",
                   compatibility_code_start_value);
 
-  if (len)
+  if (code_range_mask_len)
     {
       int i;
 
       pstdout_printf (state_data->pstate,
                       "  FRU Base Compatibility Code Mask:");
 
-      for (i = 0; i < len; i++)
+      for (i = 0; i < code_range_mask_len; i++)
         {
-          if ((i % 8) == 0)
+          if (code_range_mask_len > 8 && (i % 8) == 0)
             pstdout_printf (state_data->pstate, "\n    ");
-
+          
           pstdout_printf (state_data->pstate,
                           " %02Xh",
-                          codemaskbuf[i]);
+                          code_range_mask[i]);
         }
       pstdout_printf (state_data->pstate, "\n");
     }
@@ -524,131 +420,23 @@ output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
 }
 
 static int
-output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
+ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
                                       uint8_t *areabuf,
                                       uint8_t area_length)
 {
-  int32_t min_tmpl_record_length;
-  int32_t len;
-  uint64_t manufacturer_id;
-  uint64_t entity_id_code;
-  uint64_t compatibility_base;
-  uint64_t compatibility_code_start_value;
-  uint8_t codemaskbuf[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX+1];
+  uint32_t manufacturer_id;
+  unsigned int entity_id_code;
+  unsigned int compatibility_base;
+  unsigned int compatibility_code_start_value;
+  uint8_t code_range_mask[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1];
+  unsigned int code_range_mask_len = IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX;
   int rv = -1;
 
   assert (state_data);
   assert (areabuf);
   assert (area_length);
 
-  memset (codemaskbuf, '\0', IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX+1);
-
-  if ((ret = ipmi_fru_check_checksum (state_data,
-                                      areabuf,
-                                      record_length,
-                                      record_checksum,
-                                      "Extended Compatibility Multirecord")) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  /* Variable Length Record - So need to check min length */
-  if ((min_tmpl_record_length = fiid_template_field_start_bytes (tmpl_fru_extended_compatibility_record,
-                                                                 "code_range_mask")) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_template_field_start_bytes: 'code_range_mask': %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (record_length < min_tmpl_record_length)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU Extended Compatibility Record Length Incorrect: %u\n",
-                       record_length);
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  if (!(obj_record = fiid_obj_create (tmpl_fru_extended_compatibility_record)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set_all (obj_record,
-                        areabuf,
-                        record_length) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_set_all: %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_record,
-                    "manufacturer_id",
-                    &manufacturer_id) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'manufacturer_id': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_record,
-                    "entity_id_code",
-                    &entity_id_code) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'entity_id_code': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_record,
-                    "compatibility_base",
-                    &compatibility_base) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'compatibility_base': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_record,
-                    "compatibility_code_start_value",
-                    &compatibility_code_start_value) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'compatibility_code_start_value': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if ((len = fiid_obj_get_data (obj_record,
-                                "code_range_mask",
-                                codemaskbuf,
-                                IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get_data: 'code_range_mask': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
+  memset (code_range_mask, '\0', IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1);
 
   pstdout_printf (state_data->pstate,
                   "  FRU Extended Compatibility Manufacturer ID: %Xh\n",
@@ -664,21 +452,21 @@ output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
                   "  FRU Extended Compatibility Comptability Code Start Value: %Xh\n",
                   compatibility_code_start_value);
 
-  if (len)
+  if (code_range_mask_len)
     {
       int i;
 
       pstdout_printf (state_data->pstate,
                       "  FRU Extended Compatibility Code Mask:");
 
-      for (i = 0; i < len; i++)
+      for (i = 0; i < code_range_mask_len; i++)
         {
-          if ((i % 8) == 0)
+          if (code_range_mask_len > 8 && (i % 8) == 0)
             pstdout_printf (state_data->pstate, "\n    ");
-
+          
           pstdout_printf (state_data->pstate,
                           " %02Xh",
-                          codemaskbuf[i]);
+                          code_range_mask[i]);
         }
       pstdout_printf (state_data->pstate, "\n");
     }
@@ -689,115 +477,41 @@ output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
 }
 
 static int
-output_oem_record (ipmi_fru_state_data_t *state_data,
+ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
                    uint8_t *areabuf,
                    uint8_t area_length)
 {
-  int32_t min_tmpl_record_length;
-  int32_t len;
-  uint64_t manufacturer_id;
-  uint8_t oemdatabuf[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX+1];
+  uint32_t manufacturer_id;
+  uint8_t oem_data[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1];
+  unsigned int oem_data_len = IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX;
   int rv = -1;
 
   assert (state_data);
   assert (areabuf);
   assert (area_length);
 
-  memset (oemdatabuf, '\0', IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX+1);
+  memset (oem_data, '\0', IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1);
 
-  if ((ret = ipmi_fru_check_checksum (state_data,
-                                      areabuf,
-                                      record_length,
-                                      record_checksum,
-                                      "OEM Multirecord")) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  /* Variable Length Record - So need to check min length */
-  if ((min_tmpl_record_length = fiid_template_field_start_bytes (tmpl_fru_oem_record,
-                                                                 "oem_data")) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_template_field_start_bytes: 'oem_data': %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (record_length < min_tmpl_record_length)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "  FRU OEM Record Length Incorrect: %u\n",
-                       record_length);
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  if (!(obj_record = fiid_obj_create (tmpl_fru_oem_record)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set_all (obj_record,
-                        areabuf,
-                        record_length) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_set_all: %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_record,
-                    "manufacturer_id",
-                    &manufacturer_id) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'manufacturer_id': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
-
-  if ((len = fiid_obj_get_data (obj_record,
-                                "oem_data",
-                                oemdatabuf,
-                                IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get_data: 'oem_data': %s\n",
-                       fiid_obj_errormsg (obj_record));
-      goto cleanup;
-    }
 
   pstdout_printf (state_data->pstate,
                   "  FRU OEM Manufacturer ID: %Xh\n",
                   manufacturer_id);
 
-  if (len)
+  if (oem_data_len)
     {
       int i;
 
       pstdout_printf (state_data->pstate,
                       "  FRU OEM Code Mask:");
 
-      for (i = 0; i < len; i++)
+      for (i = 0; i < oem_data_len; i++)
         {
-          if ((i % 8) == 0)
+          if (oem_data_len > 8 && (i % 8) == 0)
             pstdout_printf (state_data->pstate, "\n    ");
 
           pstdout_printf (state_data->pstate,
                           " %02Xh",
-                          oemdatabuf[i]);
+                          oem_data[i]);
         }
       pstdout_printf (state_data->pstate, "\n");
     }

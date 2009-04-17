@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.1.2.12 2009-04-17 20:02:32 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.1.2.13 2009-04-17 21:45:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1302,3 +1302,335 @@ ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
   return (rv);
 }
 
+int
+ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
+                                                      uint8_t *areabuf,
+                                                      unsigned int areabuflen,
+                                                      uint32_t *manufacturer_id,
+                                                      unsigned int *entity_id_code,
+                                                      unsigned int *compatibility_base,
+                                                      unsigned int *compatibility_code_start_value,
+                                                      uint8_t *code_range_mask,
+                                                      unsigned int *code_range_mask_len)
+{
+  fiid_obj_t obj_record = NULL;
+  int32_t min_tmpl_record_length;
+  uint64_t val;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (!areabuf || !areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if ((min_tmpl_record_length = fiid_template_field_start_bytes (tmpl_fru_base_compatibility_record, "code_range_mask")) < 0)
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (areabuflen < min_tmpl_record_length)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      goto cleanup;
+    }
+
+  if (!(obj_record = fiid_obj_create (tmpl_fru_base_compatibility_record)))
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_record,
+                        areabuf,
+                        areabuflen) < 0)
+    {
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+      goto cleanup;
+    }
+  
+  if (manufacturer_id)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "manufacturer_id",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*manufacturer_id) = (uint32_t)val;
+    }
+
+  if (entity_id_code)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "entity_id_code",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*entity_id_code) = (unsigned int)val;
+    }
+
+  if (compatibility_base)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "compatibility_base",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*compatibility_base) = (unsigned int)val;
+    }
+
+  if (compatibility_code_start_value)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "compatibility_code_start_value",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*compatibility_code_start_value) = (unsigned int)val;
+    }
+
+  if (code_range_mask && code_range_mask_len && (*code_range_mask_len))
+    {
+      int32_t len;
+      
+      if ((len = fiid_obj_get_data (obj_record,
+                                    "code_range_mask",
+                                    code_range_mask,
+                                    (*code_range_mask_len))) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+
+      (*code_range_mask_len) = (unsigned int)len;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_record);
+  return (rv);
+}
+
+int
+ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t ctx,
+                                                          uint8_t *areabuf,
+                                                          unsigned int areabuflen,
+                                                          uint32_t *manufacturer_id,
+                                                          unsigned int *entity_id_code,
+                                                          unsigned int *compatibility_base,
+                                                          unsigned int *compatibility_code_start_value,
+                                                          uint8_t *code_range_mask,
+                                                          unsigned int *code_range_mask_len)
+{
+  fiid_obj_t obj_record = NULL;
+  int32_t min_tmpl_record_length;
+  uint64_t val;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (!areabuf || !areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if ((min_tmpl_record_length = fiid_template_field_start_bytes (tmpl_fru_extended_compatibility_record, "code_range_mask")) < 0)
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (areabuflen < min_tmpl_record_length)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      goto cleanup;
+    }
+
+  if (!(obj_record = fiid_obj_create (tmpl_fru_extended_compatibility_record)))
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_record,
+                        areabuf,
+                        areabuflen) < 0)
+    {
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+      goto cleanup;
+    }
+  
+  if (manufacturer_id)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "manufacturer_id",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*manufacturer_id) = (uint32_t)val;
+    }
+
+  if (entity_id_code)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "entity_id_code",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*entity_id_code) = (unsigned int)val;
+    }
+
+  if (compatibility_base)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "compatibility_base",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*compatibility_base) = (unsigned int)val;
+    }
+
+  if (compatibility_code_start_value)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "compatibility_code_start_value",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*compatibility_code_start_value) = (unsigned int)val;
+    }
+
+  if (code_range_mask && code_range_mask_len && (*code_range_mask_len))
+    {
+      int32_t len;
+      
+      if ((len = fiid_obj_get_data (obj_record,
+                                    "code_range_mask",
+                                    code_range_mask,
+                                    (*code_range_mask_len))) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+
+      (*code_range_mask_len) = (unsigned int)len;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_record);
+  return (rv);
+}
+
+int
+ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
+                                       uint8_t *areabuf,
+                                       unsigned int areabuflen,
+                                       uint32_t *manufacturer_id,
+                                       uint8_t *oem_data,
+                                       unsigned int *oem_data_len)
+{
+  fiid_obj_t obj_record = NULL;
+  int32_t min_tmpl_record_length;
+  uint64_t val;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (!areabuf || !areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if ((min_tmpl_record_length = fiid_template_field_start_bytes (tmpl_fru_oem_record, "oem_data")) < 0)
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (areabuflen < min_tmpl_record_length)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      goto cleanup;
+    }
+
+  if (!(obj_record = fiid_obj_create (tmpl_fru_oem_record)))
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_record,
+                        areabuf,
+                        areabuflen) < 0)
+    {
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+      goto cleanup;
+    }
+  
+  if (manufacturer_id)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "manufacturer_id",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*manufacturer_id) = (uint32_t)val;
+    }
+
+  if (oem_data && oem_data_len && (*oem_data_len))
+    {
+      int32_t len;
+      
+      if ((len = fiid_obj_get_data (obj_record,
+                                    "oem_data",
+                                    oem_data,
+                                    (*oem_data_len))) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+
+      (*oem_data_len) = (unsigned int)len;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_record);
+  return (rv);
+}

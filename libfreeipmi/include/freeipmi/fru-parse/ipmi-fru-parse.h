@@ -67,10 +67,10 @@
 #define IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_OEM                            9
 #define IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_UNKNOWN                       10
 
-/* number of bytes possible is 1 (type-length code) + 64 (6 bits).
- * Rounded up to 128 for good measure.
+/* multirecord length field is 1 byte => max 256 chars.  Round up to
+ * 512 for good measure.
  */
-#define IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX                         128
+#define IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX                         512
 
 /* length field is 6 bits = 64 bytes of text, x2 b/c could be hex
  * output, x2 because of possible space in between hex output and 'h'
@@ -221,6 +221,34 @@ int ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ct
                                                          uint8_t *sub_record_type,
                                                          uint8_t *sub_record_data,
                                                          unsigned int *sub_record_data_len);
+
+int ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
+                                                          uint8_t *areabuf,
+                                                          unsigned int areabuflen,
+                                                          uint32_t *manufacturer_id,
+                                                          unsigned int *entity_id_code,
+                                                          unsigned int *compatibility_base,
+                                                          unsigned int *compatibility_code_start_value,
+                                                          uint8_t *code_range_mask,
+                                                          unsigned int *code_range_mask_len);
+
+int ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t ctx,
+                                                              uint8_t *areabuf,
+                                                              unsigned int areabuflen,
+                                                              uint32_t *manufacturer_id,
+                                                              unsigned int *entity_id_code,
+                                                              unsigned int *compatibility_base,
+                                                              unsigned int *compatibility_code_start_value,
+                                                              uint8_t *code_range_mask,
+                                                              unsigned int *code_range_mask_len);
+
+int ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
+                                           uint8_t *areabuf,
+                                           unsigned int areabuflen,
+                                           uint32_t *manufacturer_id,
+                                           uint8_t *oem_data,
+                                           unsigned int *oem_data_len);
+
 
 /* FRU utility functions */
 /* Typically pass in buffer and length from ipmi_fru_parse_field_t

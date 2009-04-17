@@ -96,6 +96,8 @@ o ipmi-fru
   - Very verbose support removed.
   - Language codes now output under verbose mode.  Language code
     output as string instead of hex code.
+  - Slightly alter Base/Extended Compatibility Code Mask output for
+    common case.
   - Various output changes under error conditions.
   - Re-work to use new libfreeipmi fru-parse sub library.
   - Check for valid device ID inputs.
