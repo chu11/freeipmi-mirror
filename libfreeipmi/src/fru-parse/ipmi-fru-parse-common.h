@@ -1,5 +1,23 @@
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+
+*/
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.h,v 1.9 2009-03-03 23:56:46 chu11 Exp $
+ *  $Id: ipmi-fru-parse-common.h,v 1.2 2009-04-17 23:50:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -25,21 +43,16 @@
  *  with Ipmi-fru.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _IPMI_FRU_INFO_AREA_H
-#define _IPMI_FRU_INFO_AREA_H
+#ifndef _IPMI_FRU_PARSE_COMMON_H
+#define _IPMI_FRU_PARSE_COMMON_H
 
-#include "ipmi-fru.h"
+int ipmi_fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,
+                             uint8_t *frubuf,
+                             uint64_t length_in_bytes,
+                             const char *debug_hdr);
 
-fru_err_t ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
-                                             uint8_t device_id,
-                                             unsigned int offset);
-
-fru_err_t ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
-                                           uint8_t device_id,
-                                           unsigned int offset);
-
-fru_err_t ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
-                                             uint8_t device_id,
-                                             unsigned int offset);
+int ipmi_fru_parse_dump_obj (ipmi_fru_parse_ctx_t ctx,
+                             fiid_obj_t obj,
+                             const char *debug_hdr);
 
 #endif

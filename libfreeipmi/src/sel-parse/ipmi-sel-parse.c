@@ -213,6 +213,7 @@ ipmi_sel_parse_ctx_get_flags (ipmi_sel_parse_ctx_t ctx, unsigned int *flags)
     }
 
   *flags = ctx->flags;
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
   return (0);
 }
 
@@ -232,6 +233,7 @@ ipmi_sel_parse_ctx_set_flags (ipmi_sel_parse_ctx_t ctx, unsigned int flags)
     }
 
   ctx->flags = flags;
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
   return (0);
 }
 
@@ -244,11 +246,12 @@ ipmi_sel_parse_ctx_get_debug_prefix (ipmi_sel_parse_ctx_t ctx)
       return (NULL);
     }
 
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
   return (ctx)->debug_prefix;
 }
 
 int
-ipmi_sel_parse_ctx_set_debug_prefix (ipmi_sel_parse_ctx_t ctx, const char *prefix)
+ipmi_sel_parse_ctx_set_debug_prefix (ipmi_sel_parse_ctx_t ctx, const char *debug_prefix)
 {
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
@@ -262,15 +265,16 @@ ipmi_sel_parse_ctx_set_debug_prefix (ipmi_sel_parse_ctx_t ctx, const char *prefi
       ctx->debug_prefix = NULL;
     }
 
-  if (prefix)
+  if (debug_prefix)
     {
-      if (!(ctx->debug_prefix = strdup (prefix)))
+      if (!(ctx->debug_prefix = strdup (debug_prefix)))
         {
           SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_OUT_OF_MEMORY);
           return (-1);
         }
     }
 
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
   return (0);
 }
 
@@ -283,6 +287,7 @@ ipmi_sel_parse_ctx_get_separator (ipmi_sel_parse_ctx_t ctx)
       return (NULL);
     }
 
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
   return (ctx)->separator;
 }
 
@@ -310,6 +315,7 @@ ipmi_sel_parse_ctx_set_separator (ipmi_sel_parse_ctx_t ctx, const char *separato
         }
     }
 
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
   return (0);
 }
 

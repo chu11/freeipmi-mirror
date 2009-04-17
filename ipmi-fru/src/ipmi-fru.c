@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.50 2009-03-12 17:57:50 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.51 2009-04-17 23:50:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -40,9 +40,7 @@
 
 #include "ipmi-fru.h"
 #include "ipmi-fru-argp.h"
-#include "ipmi-fru-info-area.h"
-#include "ipmi-fru-multirecord-area.h"
-#include "ipmi-fru-util.h"
+#include "ipmi-fru-output.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -68,24 +66,14 @@ _flush_cache (ipmi_fru_state_data_t *state_data)
   return (0);
 }
 
-static fru_err_t
+static int
 _output_fru (ipmi_fru_state_data_t *state_data,
              int *output_count,
              uint8_t device_id,
              const char *device_id_str)
 {
-  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
-  fiid_obj_t fru_get_inventory_rs = NULL;
-  fiid_obj_t fru_common_header = NULL;
-  int32_t common_header_len;
-  uint64_t format_version;
-  uint64_t internal_use_area_starting_offset;
-  uint64_t chassis_info_area_starting_offset;
-  uint64_t board_info_area_starting_offset;
-  uint64_t product_info_area_starting_offset;
-  uint64_t multirecord_area_starting_offset;
-  fru_err_t rv = FRU_ERR_FATAL_ERROR;
-  fru_err_t ret;
+  int ret = 0;
+  int rv = -1;
 
   assert (state_data);
   assert (output_count);
@@ -94,281 +82,128 @@ _output_fru (ipmi_fru_state_data_t *state_data,
   if ((*output_count))
     pstdout_printf (state_data->pstate, "\n");
   (*output_count)++;
+
   pstdout_printf (state_data->pstate,
                   "FRU Inventory Device: %s (ID %02Xh)\n",
                   device_id_str,
                   device_id);
 
-  if (!(fru_get_inventory_rs = fiid_obj_create (tmpl_cmd_get_fru_inventory_area_info_rs)))
+  if (ipmi_fru_parse_open_device_id (state_data->fru_parse_ctx, device_id) < 0)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (ipmi_cmd_get_fru_inventory_area_info (state_data->ipmi_ctx,
-                                            device_id,
-                                            fru_get_inventory_rs) < 0)
-    {
-      /* achu: Assume this completion code means we got a FRU SDR
-       * entry pointed to a device that doesn't exist on this
-       * particular mother board (b/c manufacturers may use the same
-       * SDR for multiple motherboards).
-       */
-      if (ipmi_check_completion_code (fru_get_inventory_rs, IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) != 1)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "  FRU Get FRU Inventory Area Failure: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (fru_get_inventory_rs,
-                    "fru_inventory_area_size",
-                    &state_data->fru_inventory_area_size) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'fru_inventory_area_size': %s\n",
-                       fiid_obj_errormsg (fru_get_inventory_rs));
-      goto cleanup;
-    }
-
-  if (state_data->prog_data->args->verbose_count >= 2)
-    pstdout_printf (state_data->pstate,
-                    "  FRU Inventory Area Size: %u bytes\n",
-                    (unsigned int) state_data->fru_inventory_area_size);
-
-  if (!state_data->fru_inventory_area_size)
-    {
-      pstdout_printf (state_data->pstate,
-                      "  FRU Inventory Area Size Empty\n");
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  if ((common_header_len = fiid_template_len_bytes (tmpl_fru_common_header)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_template_len_bytes: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  memset (frubuf, '\0', IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1);
-
-  if ((ret = ipmi_fru_read_fru_data (state_data,
-                                     device_id,
-                                     frubuf,
-                                     IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
-                                     0,
-                                     common_header_len)) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  if ((ret = ipmi_fru_dump_hex (state_data,
-                                frubuf,
-                                common_header_len,
-                                "Common Header")) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  if ((ret = ipmi_fru_check_checksum (state_data,
-                                      frubuf,
-                                      common_header_len,
-                                      0,
-                                      "Common Header")) != FRU_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  if (!(fru_common_header = fiid_obj_create (tmpl_fru_common_header)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (fiid_obj_set_all (fru_common_header,
-                        frubuf,
-                        common_header_len) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_set: %s\n",
-                       fiid_obj_errormsg (fru_common_header));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (fru_common_header,
-                    "format_version",
-                    &format_version) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'format_version': %s\n",
-                       fiid_obj_errormsg (fru_common_header));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (fru_common_header,
-                    "internal_use_area_starting_offset",
-                    &internal_use_area_starting_offset) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'internal_use_area_starting_offset': %s\n",
-                       fiid_obj_errormsg (fru_common_header));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (fru_common_header,
-                    "chassis_info_area_starting_offset",
-                    &chassis_info_area_starting_offset) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'chassis_info_area_starting_offset': %s\n",
-                       fiid_obj_errormsg (fru_common_header));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (fru_common_header,
-                    "board_info_area_starting_offset",
-                    &board_info_area_starting_offset) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'board_info_area_starting_offset': %s\n",
-                       fiid_obj_errormsg (fru_common_header));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (fru_common_header,
-                    "product_info_area_starting_offset",
-                    &product_info_area_starting_offset) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'product_info_area_starting_offset': %s\n",
-                       fiid_obj_errormsg (fru_common_header));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (fru_common_header,
-                    "multirecord_area_starting_offset",
-                    &multirecord_area_starting_offset) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'multirecord_area_starting_offset': %s\n",
-                       fiid_obj_errormsg (fru_common_header));
-      goto cleanup;
-    }
-
-  if (state_data->prog_data->args->verbose_count >= 2)
-    {
-      pstdout_printf (state_data->pstate,
-                      "  FRU Common Header Format Version: %02Xh\n",
-                      format_version);
-      pstdout_printf (state_data->pstate,
-                      "  Internal Use Area Starting Offset: %02Xh\n",
-                      internal_use_area_starting_offset);
-      pstdout_printf (state_data->pstate,
-                      "  Chassis Info Area Starting Offset: %02Xh\n",
-                      chassis_info_area_starting_offset);
-      pstdout_printf (state_data->pstate,
-                      "  Board Info Area Starting Offset: %02Xh\n",
-                      board_info_area_starting_offset);
-      pstdout_printf (state_data->pstate,
-                      "  Product Info Area Starting Offset: %02Xh\n",
-                      product_info_area_starting_offset);
-      pstdout_printf (state_data->pstate,
-                      "  Multirecord Area Starting Offset: %02Xh\n",
-                      multirecord_area_starting_offset);
-    }
-
-  if (format_version != IPMI_FRU_COMMON_HEADER_FORMAT_VERSION)
-    {
-      if (state_data->prog_data->args->verbose_count)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "  FRU Common Header Format Unknown: %02Xh\n",
-                         format_version);
-      rv = FRU_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  if (chassis_info_area_starting_offset)
-    {
-      pstdout_printf (state_data->pstate, "\n");
-      ret = ipmi_fru_output_chassis_info_area (state_data,
-                                               device_id,
-                                               chassis_info_area_starting_offset);
-      if (ret == FRU_ERR_FATAL_ERROR)
+      if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
         {
-          rv = ret;
+          /* Special case, not really an "error" */
+          if (ipmi_fru_parse_ctx_errnum (state_data->fru_parse_ctx) != IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION)
+            {
+              pstdout_printf (state_data->pstate, "\n");
+              pstdout_printf (state_data->pstate,
+                              "  FRU Error: %s\n",
+                              ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+            }
+          goto out;
+        }
+      
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_fru_parse_open_device_id: %s\n",
+                       ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_fru_parse_first (state_data->fru_parse_ctx) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_fru_parse_first: %s\n",
+                       ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+      goto cleanup;
+    }
+
+  do 
+    {
+      uint8_t areabuf[IPMI_FRU_PARSE_AREA_SIZE_MAX+1];
+      unsigned int area_type = 0;
+      unsigned int area_length = 0;
+      
+      memset (areabuf, '\0', IPMI_FRU_PARSE_AREA_SIZE_MAX + 1);
+      if (ipmi_fru_parse_read_data_area (state_data->fru_parse_ctx,
+                                         &area_type,
+                                         &area_length,
+                                         areabuf,
+                                         IPMI_FRU_PARSE_AREA_SIZE_MAX) < 0)
+        {
+          if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
+            {
+              /* Special case, not really an "error" */
+              if (ipmi_fru_parse_ctx_errnum (state_data->fru_parse_ctx) != IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION)
+                {
+                  pstdout_printf (state_data->pstate, "\n");
+                  pstdout_printf (state_data->pstate,
+                                  "  FRU Error: %s\n",
+                                  ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+                }
+              goto next;
+            }
+          
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_fru_parse_open_device_id: %s\n",
+                           ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
           goto cleanup;
         }
-      /* else continue on */
+
+      if (area_length)
+        {
+          pstdout_printf (state_data->pstate, "\n");
+
+          switch (area_type)
+            {
+            case IPMI_FRU_PARSE_AREA_TYPE_CHASSIS_INFO_AREA:
+              if (ipmi_fru_output_chassis_info_area (state_data,
+                                                     areabuf,
+                                                     area_length) < 0)
+                goto cleanup;
+              break;
+            case IPMI_FRU_PARSE_AREA_TYPE_BOARD_INFO_AREA:
+              if (ipmi_fru_output_board_info_area (state_data,
+                                                   areabuf,
+                                                   area_length) < 0)
+                goto cleanup;
+              break;
+            case IPMI_FRU_PARSE_AREA_TYPE_PRODUCT_INFO_AREA:
+              if (ipmi_fru_output_product_info_area (state_data,
+                                                     areabuf,
+                                                     area_length) < 0)
+                goto cleanup;
+              break;
+              /* XXX */
+            default:
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "  FRU Error: Unknown FRU Area Type Read: %02Xh\n",
+                               area_type);
+              goto next;
+              break;
+            }
+        }
+
+    next:
+      ;
+    } while ((ret = ipmi_fru_parse_next (state_data->fru_parse_ctx)) == 1);
+    
+  if (ret < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_fru_parse_next: %s\n",
+                       ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+      goto cleanup;
     }
 
-  if (board_info_area_starting_offset)
-    {
-      pstdout_printf (state_data->pstate, "\n");
-      ret = ipmi_fru_output_board_info_area (state_data,
-                                             device_id,
-                                             board_info_area_starting_offset);
-      if (ret == FRU_ERR_FATAL_ERROR)
-        {
-          rv = ret;
-          goto cleanup;
-        }
-      /* else continue on */
-    }
-
-  if (product_info_area_starting_offset)
-    {
-      pstdout_printf (state_data->pstate, "\n");
-      ret = ipmi_fru_output_product_info_area (state_data,
-                                               device_id,
-                                               product_info_area_starting_offset);
-      if (ret == FRU_ERR_FATAL_ERROR)
-        {
-          rv = ret;
-          goto cleanup;
-        }
-      /* else continue on */
-    }
-  if (multirecord_area_starting_offset)
-    {
-      pstdout_printf (state_data->pstate, "\n");
-      ret = ipmi_fru_output_multirecord_info_area (state_data,
-                                                   device_id,
-                                                   multirecord_area_starting_offset);
-      if (ret == FRU_ERR_FATAL_ERROR)
-        {
-          rv = ret;
-          goto cleanup;
-        }
-      /* else continue on */
-    }
-
-  rv = FRU_ERR_SUCCESS;
+ out:
+  rv = 0;
  cleanup:
-  fiid_obj_destroy (fru_get_inventory_rs);
-  fiid_obj_destroy (fru_common_header);
+  ipmi_fru_parse_close_device_id (state_data->fru_parse_ctx);
   return (rv);
 }
 
@@ -393,7 +228,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
       if (_output_fru (state_data,
                        &output_count,
                        IPMI_FRU_DEVICE_ID_DEFAULT,
-                       IPMI_FRU_DEFAULT_DEVICE_ID_STRING) != FRU_ERR_SUCCESS)
+                       IPMI_FRU_DEFAULT_DEVICE_ID_STRING) < 0)
         return (-1);
       return (0);
     }
@@ -424,21 +259,19 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
       if (_output_fru (state_data,
                        &output_count,
                        IPMI_FRU_DEVICE_ID_DEFAULT,
-                       IPMI_FRU_DEFAULT_DEVICE_ID_STRING) != FRU_ERR_SUCCESS)
+                       IPMI_FRU_DEFAULT_DEVICE_ID_STRING) < 0)
         return (-1);
     }
   else
     {
-      fru_err_t ret;
       int found = 0;
 
       if (!args->device_id_set)
         {
-          ret = _output_fru (state_data,
-                             &output_count,
-                             IPMI_FRU_DEVICE_ID_DEFAULT,
-                             IPMI_FRU_DEFAULT_DEVICE_ID_STRING);
-          if (ret == FRU_ERR_FATAL_ERROR)
+          if (_output_fru (state_data,
+                           &output_count,
+                           IPMI_FRU_DEVICE_ID_DEFAULT,
+                           IPMI_FRU_DEFAULT_DEVICE_ID_STRING) < 0)
             return (-1);
         }
 
@@ -513,13 +346,10 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                   return (-1);
                 }
 
-              ret = _output_fru (state_data,
-                                 &output_count,
-                                 logical_fru_device_device_slave_address,
-                                 device_id_string);
-              if (args->device_id_set && ret != FRU_ERR_SUCCESS)
-                return (-1);
-              if (ret == FRU_ERR_FATAL_ERROR)
+              if (_output_fru (state_data,
+                               &output_count,
+                               logical_fru_device_device_slave_address,
+                               device_id_string) < 0)
                 return (-1);
               found++;
             }
@@ -569,6 +399,43 @@ _ipmi_fru (pstdout_state_t pstate,
                            errmsg);
           exit_code = EXIT_FAILURE;
           goto cleanup;
+        }      
+    }
+
+  if (!prog_data->args->sdr.flush_cache)
+    {
+      unsigned int flags = 0;
+
+      if (!(state_data.fru_parse_ctx = ipmi_fru_parse_ctx_create (state_data.ipmi_ctx)))
+        {
+          pstdout_perror (pstate, "ipmi_fru_parse_ctx_create()");
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+      
+      if (state_data.prog_data->args->common.debug)
+        flags |= IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP;
+      if (state_data.prog_data->args->skip_checks)
+        flags |= IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS;
+
+      if (hostname)
+        {
+          if (ipmi_fru_parse_ctx_set_debug_prefix (state_data.fru_parse_ctx,
+                                                   hostname) < 0)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_fru_parse_ctx_set_debug_prefix: %s\n",
+                             ipmi_fru_parse_ctx_errormsg (state_data.fru_parse_ctx));
+        }
+      
+      if (flags)
+        {
+          /* Don't error out, if this fails we can still continue */
+          if (ipmi_fru_parse_ctx_set_flags (state_data.fru_parse_ctx, flags) < 0)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_fru_parse_ctx_set_flags: %s\n",
+                             ipmi_fru_parse_ctx_strerror (ipmi_fru_parse_ctx_errnum (state_data.fru_parse_ctx)));
         }
     }
 
@@ -615,6 +482,8 @@ _ipmi_fru (pstdout_state_t pstate,
 
   exit_code = 0;
  cleanup:
+  if (state_data.fru_parse_ctx)
+    ipmi_fru_parse_ctx_destroy (state_data.fru_parse_ctx);
   if (state_data.sdr_cache_ctx)
     ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
   if (state_data.sdr_parse_ctx)

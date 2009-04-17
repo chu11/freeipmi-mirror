@@ -99,7 +99,10 @@ void
 ipmi_sdr_parse_ctx_destroy (ipmi_sdr_parse_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
-    return;
+    {
+      ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+      return;
+    }
 
   ctx->magic = ~IPMI_SDR_PARSE_CTX_MAGIC;
   free (ctx);
@@ -147,6 +150,7 @@ ipmi_sdr_parse_ctx_get_flags (ipmi_sdr_parse_ctx_t ctx, unsigned int *flags)
     }
 
   *flags = ctx->flags;
+  ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
   return (0);
 }
 
@@ -166,6 +170,7 @@ ipmi_sdr_parse_ctx_set_flags (ipmi_sdr_parse_ctx_t ctx, unsigned int flags)
     }
 
   ctx->flags = flags;
+  ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
   return (0);
 }
 

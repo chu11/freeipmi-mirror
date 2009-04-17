@@ -1,5 +1,22 @@
+/*
+  Copyright (C) 2003-2009 FreeIPMI Core Team
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+*/
 /*****************************************************************************\
-*  $Id: ipmi-fru-inventory-device-cmds.h,v 1.6 2009-03-18 00:14:36 chu11 Exp $
+*  $Id: ipmi-fru-inventory-device-cmds.h,v 1.7 2009-04-17 23:50:26 chu11 Exp $
 *****************************************************************************
 *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 *  Copyright (C) 2007 The Regents of the University of California.
@@ -37,7 +54,8 @@ extern "C" {
 #include <freeipmi/fiid/fiid.h>
 
 #define IPMI_FRU_DEVICE_ID_DEFAULT         0x00  /* FRU for Management Controller - Chap 38 */
-#define IPMI_FRU_INVENTORY_AREA_SIZE_MAX   65536 /* 16 byte field for length */
+#define IPMI_FRU_DEVICE_ID_RESERVED        0xFF
+#define IPMI_FRU_INVENTORY_AREA_SIZE_MAX   65536 /* 16 bit field for length */
 #define IPMI_FRU_DATA_MAX                  255
 
 /* 

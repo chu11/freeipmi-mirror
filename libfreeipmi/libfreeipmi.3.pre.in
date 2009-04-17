@@ -50,6 +50,10 @@ issues are handled within 'fiid'.  Fiid objects are used throughout
 libfreeipmi, including the 'api' sub-section, 'cmds' sub-sections,
 and various tools.
 .TP
+.B fru-parse
+Provides an API for parsing Field Replaceable Unit (FRU) records.
+Utilized by tools such as ipmi-fru(8).
+.TP
 .B interface
 Provides 'assemble' and 'disassemble' functions for building packets
 for individual in-band or out-of-band protocols.  Also provides all

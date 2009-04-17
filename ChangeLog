@@ -1,3 +1,28 @@
+2009-04-17  Albert Chu <chu11@llnl.gov>
+
+	From branch fru_lib_branch.
+
+	* libfreeipmi/: Support new ipmi_dump_hex() debug function.
+
+	* libfreeipmi/: Include new fru-parse subsection to libfreeipmi
+	library.
+
+	* libfreeipmi/src/cmds/: Check for valid FRU device id input.
+
+	* ipmi-fru/src/ipmi-fru-output.h, ipmi-fru/src/ipmi-fru-output.c: New files.
+
+	* ipmi-fru/src/ipmi-fru-util.h, ipmi-fru/src/ipmi-fru-util.c,
+	ipmi-fru/src/ipmi-fru-info-area.h,
+	ipmi-fru/src/ipmi-fru-info-area.c,
+	ipmi-fru/src/ipmi-fru-multirecord-area.h,
+	ipmi-fru/src/ipmi-fru-multirecord-area.c: Removed files.
+
+	* ipmi-fru/: Use new fru-parse library.  Check for valid device id input.
+
+	* Update documentation and manpages appropriately.
+
+	* Various code cleanup.  Fix various compiler warnings.
+
 2009-04-14  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-config-user-sections.c (password20_checkout):
