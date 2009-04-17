@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.1.2.9 2009-04-17 16:49:40 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.1.2.10 2009-04-17 17:47:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -624,6 +624,8 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
                                                      unsigned int *predictive_fail_tachometer_lower_threshold)
 {
   fiid_obj_t obj_record = NULL;
+  int32_t tmpl_record_length;
+  uint64_t val;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
@@ -638,7 +640,429 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
       return (-1);
     }
 
+  if ((tmpl_record_length = fiid_template_len_bytes (tmpl_fru_power_supply_information)) < 0)
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (tmpl_record_length != areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      goto cleanup;
+    }
+
+  if (!(obj_record = fiid_obj_create (tmpl_fru_power_supply_information)))
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_record,
+                        areabuf,
+                        areabuflen) < 0)
+    {
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+      goto cleanup;
+    }
+
+  if (overall_capacity)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "overall_capacity",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*overall_capacity) = (unsigned int)val;
+    }
+  if (peak_va)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "peak_va",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*peak_va) = (unsigned int)val;
+    }
+  if (inrush_current)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "inrush_current",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*inrush_current) = (unsigned int)val;
+    }
+  if (inrush_interval)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "inrush_interval",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*inrush_interval) = (unsigned int)val;
+    }
+  if (low_end_input_voltage_range_1)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "low_end_input_voltage_range_1",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*low_end_input_voltage_range_1) = (((unsigned int)val) * 10);
+    }
+  if (high_end_input_voltage_range_1)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "high_end_input_voltage_range_1",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*high_end_input_voltage_range_1) = (((unsigned int)val) * 10);
+    }
+  if (low_end_input_voltage_range_2)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "low_end_input_voltage_range_2",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*low_end_input_voltage_range_2) = (((unsigned int)val) * 10);
+    }
+  if (high_end_input_voltage_range_2)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "high_end_input_voltage_range_2",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*high_end_input_voltage_range_2) = (((unsigned int)val) * 10);
+    }
+  if (low_end_input_frequency_range)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "low_end_input_frequency_range",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*low_end_input_frequency_range) = (unsigned int)val;
+    }
+  if (high_end_input_frequency_range)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "high_end_input_frequency_range",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*high_end_input_frequency_range) = (unsigned int)val;
+    }
+  if (ac_dropout_tolerance)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "ac_dropout_tolerance",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*ac_dropout_tolerance) = (unsigned int)val;
+    }
+  if (predictive_fail_support)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "predictive_fail_support",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*predictive_fail_support) = (unsigned int)val;
+    }
+  if (power_factor_correction)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "power_factor_correction",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*power_factor_correction) = (unsigned int)val;
+    }
+  if (autoswitch)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "autoswitch",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*autoswitch) = (unsigned int)val;
+    }
+  if (hot_swap_support)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "hot_swap_support",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*hot_swap_support) = (unsigned int)val;
+    }
+  if (tachometer_pulses_per_rotation_predictive_fail_polarity)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "tachometer_pulses_per_rotation_predictive_fail_polarity",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*tachometer_pulses_per_rotation_predictive_fail_polarity) = (unsigned int)val;
+    }
+  if (peak_capacity)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "peak_capacity",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*peak_capacity) = (unsigned int)val;
+    }
+  if (hold_up_time)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "hold_up_time",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*hold_up_time) = (unsigned int)val;
+    }
+  if (voltage_1)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "voltage_1",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*voltage_1) = (unsigned int)val;
+    }
+  if (voltage_2)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "voltage_2",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*voltage_2) = (unsigned int)val;
+    }
+  if (total_combined_wattage)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "total_combined_wattage",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*total_combined_wattage) = (unsigned int)val;
+    }
+  if (predictive_fail_tachometer_lower_threshold)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "predictive_fail_tachometer_lower_threshold",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*predictive_fail_tachometer_lower_threshold) = (unsigned int)val;
+    }
+
   rv = 0;
  cleanup:
+  fiid_obj_destroy (obj_record);
   return (rv);
 }
+
+int
+ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
+                                      uint8_t *areabuf,
+                                      unsigned int areabuflen,
+                                      unsigned int *output_number,
+                                      unsigned int *standby,
+                                      int *nominal_voltage,
+                                      int *maximum_negative_voltage_deviation,
+                                      int *maximum_positive_voltage_deviation,
+                                      unsigned int *ripple_and_noise_pk_pk,
+                                      unsigned int *minimum_current_draw,
+                                      unsigned int *maximum_current_draw)
+{
+  fiid_obj_t obj_record = NULL;
+  int32_t tmpl_record_length;
+  uint64_t val;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (!areabuf || !areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if ((tmpl_record_length = fiid_template_len_bytes (tmpl_fru_dc_output)) < 0)
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (tmpl_record_length != areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      goto cleanup;
+    }
+
+  if (!(obj_record = fiid_obj_create (tmpl_fru_dc_output)))
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_record,
+                        areabuf,
+                        areabuflen) < 0)
+    {
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+      goto cleanup;
+    }
+
+  if (output_number)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "output_number",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*output_number) = (unsigned int)val;
+    }
+  if (standby)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "standby",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*standby) = (unsigned int)val;
+    }
+  if (nominal_voltage)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "nominal_voltage",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*nominal_voltage) = ((int16_t)val * 10);
+    }
+  if (maximum_negative_voltage_deviation)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "maximum_negative_voltage_deviation",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*maximum_negative_voltage_deviation) = ((int16_t)val * 10);
+    }
+  if (maximum_positive_voltage_deviation)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "maximum_positive_voltage_deviation",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*maximum_positive_voltage_deviation) = ((int16_t)val * 10);
+    }
+  if (ripple_and_noise_pk_pk)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "ripple_and_noise_pk_pk",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*ripple_and_noise_pk_pk) = (unsigned int)val;
+    }
+  if (minimum_current_draw)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "minimum_current_draw",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*minimum_current_draw) = (unsigned int)val;
+    }
+  if (maximum_current_draw)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "maximum_current_draw",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*maximum_current_draw) = (unsigned int)val;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_record);
+  return (rv);
+}
+

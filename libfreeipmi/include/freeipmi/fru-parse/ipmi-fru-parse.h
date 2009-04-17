@@ -16,7 +16,7 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.h,v 1.1.2.17 2009-04-17 16:47:09 chu11 Exp $
+ *  $Id: ipmi-fru-parse.h,v 1.1.2.18 2009-04-17 17:47:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -188,6 +188,47 @@ int ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
                                       ipmi_fru_parse_field_t *product_fru_file_id,
                                       ipmi_fru_parse_field_t *product_custom_fields,
                                       unsigned int product_custom_fields_len);
+
+/* 10 mV multipliers factored in return voltages */
+int ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
+                                                         uint8_t *areabuf,
+                                                         unsigned int areabuflen,
+                                                         unsigned int *overall_capacity,
+                                                         unsigned int *peak_va,
+                                                         unsigned int *inrush_current,
+                                                         unsigned int *inrush_interval,
+                                                         unsigned int *low_end_input_voltage_range_1,
+                                                         unsigned int *high_end_input_voltage_range_1,
+                                                         unsigned int *low_end_input_voltage_range_2,
+                                                         unsigned int *high_end_input_voltage_range_2,
+                                                         unsigned int *low_end_input_frequency_range,
+                                                         unsigned int *high_end_input_frequency_range,
+                                                         unsigned int *ac_dropout_tolerance,
+                                                         unsigned int *predictive_fail_support,
+                                                         unsigned int *power_factor_correction,
+                                                         unsigned int *autoswitch,
+                                                         unsigned int *hot_swap_support,
+                                                         unsigned int *tachometer_pulses_per_rotation_predictive_fail_polarity,
+                                                         unsigned int *peak_capacity,
+                                                         unsigned int *hold_up_time,
+                                                         unsigned int *voltage_1,
+                                                         unsigned int *voltage_2,
+                                                         unsigned int *total_combined_wattage,
+                                                         unsigned int *predictive_fail_tachometer_lower_threshold);
+
+/* 10 mV multipliers factored in return voltages */
+int ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
+                                          uint8_t *areabuf,
+                                          unsigned int areabuflen,
+                                          unsigned int *output_number,
+                                          unsigned int *standby,
+                                          int *nominal_voltage,
+                                          int *maximum_negative_voltage_deviation,
+                                          int *maximum_positive_voltage_deviation,
+                                          unsigned int *ripple_and_noise_pk_pk,
+                                          unsigned int *minimum_current_draw,
+                                          unsigned int *maximum_current_draw);
+
 
 /* FRU utility functions */
 /* Typically pass in buffer and length from ipmi_fru_parse_field_t
