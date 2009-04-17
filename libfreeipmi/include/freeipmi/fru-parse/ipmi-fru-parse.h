@@ -16,7 +16,7 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.h,v 1.1.2.18 2009-04-17 17:47:54 chu11 Exp $
+ *  $Id: ipmi-fru-parse.h,v 1.1.2.19 2009-04-17 18:18:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -229,6 +229,18 @@ int ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
                                           unsigned int *minimum_current_draw,
                                           unsigned int *maximum_current_draw);
 
+/* 10 mV multipliers factored in return voltages */
+int ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
+                                        uint8_t *areabuf,
+                                        unsigned int areabuflen,
+                                        unsigned int *output_number,
+                                        unsigned int *standby,
+                                        int *nominal_voltage,
+                                        int *specd_minimum_voltage,
+                                        int *specd_maximum_voltage,
+                                        unsigned int *specd_ripple_and_noise_pk_pk,
+                                        unsigned int *minimum_current_load,
+                                        unsigned int *maximum_current_load);
 
 /* FRU utility functions */
 /* Typically pass in buffer and length from ipmi_fru_parse_field_t

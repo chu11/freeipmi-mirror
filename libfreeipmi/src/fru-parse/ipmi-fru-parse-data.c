@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.1.2.10 2009-04-17 17:47:55 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.1.2.11 2009-04-17 18:18:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1058,6 +1058,157 @@ ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
           goto cleanup;
         }
       (*maximum_current_draw) = (unsigned int)val;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_record);
+  return (rv);
+}
+
+int
+ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
+                                    uint8_t *areabuf,
+                                    unsigned int areabuflen,
+                                    unsigned int *output_number,
+                                    unsigned int *standby,
+                                    int *nominal_voltage,
+                                    int *specd_minimum_voltage,
+                                    int *specd_maximum_voltage,
+                                    unsigned int *specd_ripple_and_noise_pk_pk,
+                                    unsigned int *minimum_current_load,
+                                    unsigned int *maximum_current_load)
+{
+  fiid_obj_t obj_record = NULL;
+  int32_t tmpl_record_length;
+  uint64_t val;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (!areabuf || !areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if ((tmpl_record_length = fiid_template_len_bytes (tmpl_fru_dc_load)) < 0)
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (tmpl_record_length != areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      goto cleanup;
+    }
+
+  if (!(obj_record = fiid_obj_create (tmpl_fru_dc_load)))
+    {
+      FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_record,
+                        areabuf,
+                        areabuflen) < 0)
+    {
+      FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+      goto cleanup;
+    }
+
+  if (output_number)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "output_number",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*output_number) = (unsigned int)val;
+    }
+  if (standby)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "standby",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*standby) = (unsigned int)val;
+    }
+  if (nominal_voltage)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "nominal_voltage",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*nominal_voltage) = ((int16_t)val * 10);
+    }
+  if (specd_minimum_voltage)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "specd_minimum_voltage",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*specd_minimum_voltage) = ((int16_t)val * 10);
+    }
+  if (specd_maximum_voltage)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "specd_maximum_voltage",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*specd_maximum_voltage) = ((int16_t)val * 10);
+    }
+  if (specd_ripple_and_noise_pk_pk)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "specd_ripple_and_noise_pk_pk",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*specd_ripple_and_noise_pk_pk) = (unsigned int)val;
+    }
+  if (minimum_current_load)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "minimum_current_load",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*minimum_current_load) = (unsigned int)val;
+    }
+  if (maximum_current_load)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "maximum_current_load",
+                        &val) < 0)
+        {
+          FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*maximum_current_load) = (unsigned int)val;
     }
 
   rv = 0;
