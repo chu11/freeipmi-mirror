@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.16.2.1 2009-04-17 17:40:42 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.16.2.2 2009-04-17 17:45:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -469,13 +469,13 @@ output_dc_load(ipmi_fru_state_data_t *state_data,
                  output_number);
   pstdout_printf(state_data->pstate,
                  "  FRU DC Load Nominal Voltage: %d mV\n",
-                 (int16_t)nominal_voltage);
+                 (int16_t)nominal_voltage * 10);
   pstdout_printf(state_data->pstate,
                  "  FRU DC Load Spec'd Minimum Voltage: %d mV\n",
-                 (int16_t)specd_minimum_voltage);
+                 (int16_t)specd_minimum_voltage * 10);
   pstdout_printf(state_data->pstate,
                  "  FRU DC Load Spec'd Maximum Voltage: %d mV\n",
-                 (int16_t)specd_maximum_voltage);
+                 (int16_t)specd_maximum_voltage * 10);
   pstdout_printf(state_data->pstate,
                  "  FRU DC Load Spec'd Ripple and Noise pk-pk: %u mV\n",
                  specd_ripple_and_noise_pk_pk);
