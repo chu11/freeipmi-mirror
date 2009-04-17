@@ -9,7 +9,10 @@ libfreeipmi
 * more detailed debug output for ssif interface like KCS interface
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
-* abstract FRU parsing into lib
+
+ipmi-fru
+--------
+test multirecord stuff against a FRU
 
 bmc-config
 ----------
