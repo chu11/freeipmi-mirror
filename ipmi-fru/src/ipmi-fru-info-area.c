@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.21.4.1 2009-04-16 22:54:48 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.21.4.2 2009-04-17 00:07:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -93,7 +93,7 @@ ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "  FRU Chassis Info Area Error: %s\n",
+                           "  FRU Chassis Error: %s\n",
                            ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
           return (0);
         }
@@ -107,11 +107,11 @@ ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
 
   if (IPMI_FRU_CHASSIS_TYPE_VALID (chassis_type))
     pstdout_printf (state_data->pstate,
-                    "  FRU Chassis Info Area Type: %s\n",
+                    "  FRU Chassis Type: %s\n",
                     ipmi_fru_chassis_types[chassis_type]);
   else
     pstdout_printf (state_data->pstate,
-                    "  FRU Chassis Info Area Type: %s\n",
+                    "  FRU Chassis Type: %s\n",
                     ipmi_fru_chassis_types[IPMI_FRU_CHASSIS_TYPE_UNKNOWN]);
 
   /* achu: Chassis Info Area has no language code, assume English. */
@@ -187,7 +187,7 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "  FRU Board Info Area Error: %s\n",
+                           "  FRU Board Error: %s\n",
                            ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
           return (0);
         }
@@ -201,11 +201,11 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
 
   if (IPMI_FRU_LANGUAGE_CODE_VALID (language_code))
     pstdout_printf (state_data->pstate,
-                    "  FRU Board Info Area Language: %s\n",
+                    "  FRU Board Language: %s\n",
                     ipmi_fru_language_codes[language_code]);
   else
     pstdout_printf (state_data->pstate,
-                    "  FRU Board Info Area Language Code: %02Xh\n",
+                    "  FRU Board Language Code: %02Xh\n",
                     language_code);
 
   timetmp = mfg_date_time;
@@ -214,7 +214,7 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
   strftime (mfg_date_time_buf, IPMI_FRU_STR_BUFLEN, "%D - %T", &mfg_date_time_tm);
 
   pstdout_printf (state_data->pstate,
-                  "  FRU Board Info Area Manufacturing Date/Time: %s\n",
+                  "  FRU Board Manufacturing Date/Time: %s\n",
                   mfg_date_time_buf);
 
   if (ipmi_fru_output_field (state_data,
@@ -309,7 +309,7 @@ ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "  FRU Product Info Area Error: %s\n",
+                           "  FRU Product Error: %s\n",
                            ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
           return (0);
         }
@@ -323,10 +323,10 @@ ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
 
   if (IPMI_FRU_LANGUAGE_CODE_VALID (language_code))
     pstdout_printf (state_data->pstate,
-                    "  FRU Product Info Area Language: %s\n",
+                    "  FRU Product Language: %s\n",
                     ipmi_fru_language_codes[language_code]);
     pstdout_printf (state_data->pstate,
-                    "  FRU Product Info Area Language Code: %02Xh\n",
+                    "  FRU Product Language Code: %02Xh\n",
                     language_code);
 
   if (ipmi_fru_output_field (state_data,

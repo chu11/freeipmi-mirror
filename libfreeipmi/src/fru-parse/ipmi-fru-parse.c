@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.1.2.16 2009-04-16 22:39:46 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.1.2.17 2009-04-17 00:07:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1326,7 +1326,8 @@ _sixbitascii_to_ascii (ipmi_fru_parse_ctx_t ctx,
                        uint8_t *databuf,
                        unsigned int databuf_bytes,
                        char *typestr,
-                       unsigned int typestrlen)
+                       unsigned int typestrlen,
+                       unsigned int *bytes_written)
 {
   int rv = -1;
   int i;
@@ -1338,6 +1339,7 @@ _sixbitascii_to_ascii (ipmi_fru_parse_ctx_t ctx,
   assert (databuf_bytes);
   assert (typestr);
   assert (typestrlen);
+  assert (bytes_written);
 
   /* six bit ascii packs 4 chars in 3 bytes - see FRU Information Storage Definition */
   if (typestrlen < ((databuf_bytes/3 + 1))*4)
@@ -1364,6 +1366,7 @@ _sixbitascii_to_ascii (ipmi_fru_parse_ctx_t ctx,
         }
     }
 
+  (*bytes_written) = c;
   rv = 0;
  cleanup:
   return (rv);
@@ -1374,7 +1377,8 @@ _bcd_to_ascii (ipmi_fru_parse_ctx_t ctx,
                uint8_t *databuf,
                unsigned int databuf_bytes,
                char *typestr,
-               unsigned int typestrlen)
+               unsigned int typestrlen,
+               unsigned int *bytes_written)
 {
   int rv = -1;
   int i;
@@ -1385,6 +1389,7 @@ _bcd_to_ascii (ipmi_fru_parse_ctx_t ctx,
   assert (databuf_bytes);
   assert (typestr);
   assert (typestrlen);
+  assert (bytes_written);
 
   if (typestrlen < databuf_bytes)
     {
@@ -1417,6 +1422,7 @@ _bcd_to_ascii (ipmi_fru_parse_ctx_t ctx,
         }
     }
 
+  (*bytes_written) = databuf_bytes;
   rv = 0;
  cleanup:
   return (rv);
@@ -1428,7 +1434,7 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
                                             unsigned int type_length_buflen,
                                             uint8_t language_code,
                                             char *strbuf,
-                                            unsigned int strbuflen)
+                                            unsigned int *strbuflen)
 {
   uint8_t type_length;
   uint8_t databuf[IPMI_FRU_PARSE_BUF_LEN+1];
@@ -1449,13 +1455,14 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
   if (!type_length_buf
       || !type_length_buflen
       || !strbuf
-      || !strbuflen)
+      || !strbuflen
+      || !(*strbuflen))
     {
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 
-  memset (strbuf, '\0', strbuflen);
+  memset (strbuf, '\0', (*strbuflen));
 
   memset (databuf, '\0', IPMI_FRU_PARSE_BUF_LEN+1);
   memset (strtmpbuf, '\0', IPMI_FRU_PARSE_AREA_STRING_MAX+1);
@@ -1471,7 +1478,10 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
   number_of_data_bytes = type_length & IPMI_FRU_TYPE_LENGTH_NUMBER_OF_DATA_BYTES_MASK;
 
   if (!number_of_data_bytes)
-    goto out;
+    {
+      (*strbuflen) = 0;
+      goto out;
+    }
 
   if (_get_type_length_bytes (ctx,
                               type_length_buf,
@@ -1507,14 +1517,9 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
                          databuf,
                          number_of_data_bytes,
                          strtmpbuf,
-                         IPMI_FRU_PARSE_AREA_STRING_MAX) < 0)
+                         IPMI_FRU_PARSE_AREA_STRING_MAX,
+                         &strtmpbuflen) < 0)
         goto cleanup;
-
-      ret = snprintf (strtmpbuf + strtmpbuflen,
-                      IPMI_FRU_PARSE_AREA_STRING_MAX - strtmpbuflen,
-                      "%s",
-                      strtmpbuf);
-      strtmpbuflen += ret;
     }
   else if (type_code == IPMI_FRU_TYPE_LENGTH_TYPE_CODE_SIXBIT_ASCII)
     {
@@ -1522,14 +1527,9 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
                                  databuf,
                                  number_of_data_bytes,
                                  strtmpbuf,
-                                 IPMI_FRU_PARSE_AREA_STRING_MAX) < 0)
+                                 IPMI_FRU_PARSE_AREA_STRING_MAX,
+                                 &strtmpbuflen) < 0)
         goto cleanup;
-
-      ret = snprintf (strtmpbuf + strtmpbuflen,
-                      IPMI_FRU_PARSE_AREA_STRING_MAX - strtmpbuflen,
-                      "%s",
-                      strtmpbuf);
-      strtmpbuflen += ret;
     }
   else
     {
@@ -1545,22 +1545,26 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_LANGUAGE_CODE_NOT_SUPPORTED);
           goto cleanup;
         }
-      memcpy (strtmpbuf, databuf, number_of_data_bytes);
 
-      ret = snprintf (strtmpbuf + strtmpbuflen,
-                      IPMI_FRU_PARSE_AREA_STRING_MAX - strtmpbuflen,
-                      "%s",
-                      strtmpbuf);
-      strtmpbuflen += ret;
+      if (IPMI_FRU_PARSE_AREA_STRING_MAX < (number_of_data_bytes + 1))
+        {
+          FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_INTERNAL_ERROR);
+          goto cleanup;
+        }
+
+      memcpy (strtmpbuf, databuf, number_of_data_bytes);
+      strtmpbuflen += number_of_data_bytes;
     }
 
-  if (strbuflen < (strtmpbuflen + 1))
+  if ((*strbuflen) < (strtmpbuflen + 1))
     {
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_OVERFLOW);
       goto cleanup;
     }
-  memset (strbuf, '\0', strbuflen);
+  memset (strbuf, '\0', (*strbuflen));
   memcpy (strbuf, strtmpbuf, strtmpbuflen);
+  (*strbuflen) = strtmpbuflen;
+
  out:
   rv = 0;
  cleanup:

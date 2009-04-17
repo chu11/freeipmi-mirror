@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.36.4.2 2009-04-16 22:54:50 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.36.4.3 2009-04-17 00:07:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -49,7 +49,7 @@ ipmi_fru_output_field (ipmi_fru_state_data_t *state_data,
                        char *str)
 {
   char strbuf[IPMI_FRU_PARSE_AREA_STRING_MAX + 1];
-
+  unsigned int strbuflen = IPMI_FRU_PARSE_AREA_STRING_MAX;
   assert (state_data);
   assert (field);
   assert (str);
@@ -64,7 +64,7 @@ ipmi_fru_output_field (ipmi_fru_state_data_t *state_data,
                                                   field->type_length_field_length,
                                                   language_code,
                                                   strbuf,
-                                                  IPMI_FRU_PARSE_AREA_STRING_MAX) < 0)
+                                                  &strbuflen) < 0)
     {
       if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
         {
@@ -83,11 +83,12 @@ ipmi_fru_output_field (ipmi_fru_state_data_t *state_data,
       return (-1);
     }
 
-  pstdout_fprintf (state_data->pstate,
-                   stderr,
-                   "  FRU %s: %s\n",
-                   str,
-                   strbuf);
+  if (strbuflen)
+    pstdout_fprintf (state_data->pstate,
+                     stderr,
+                     "  FRU %s: %s\n",
+                     str,
+                     strbuf);
 
   return (0);
 }

@@ -16,7 +16,7 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.h,v 1.1.2.15 2009-04-16 22:39:46 chu11 Exp $
+ *  $Id: ipmi-fru-parse.h,v 1.1.2.16 2009-04-17 00:07:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -187,14 +187,16 @@ int ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
                                       unsigned int product_custom_fields_len);
 
 /* FRU utility functions */
-/* Typically pass in buffer and length from ipmi_fru_parse_field_t 
- * after info area is parsed
+/* Typically pass in buffer and length from ipmi_fru_parse_field_t
+ * after info area is parsed.  strbuflen is an in/out value.  input
+ * indicates length of buffer, output indicates bytes written to
+ * buffer.
  */
 int ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
                                                 uint8_t *type_length_buf,
                                                 unsigned int type_length_buflen,
                                                 uint8_t language_code,
                                                 char *strbuf,
-                                                unsigned int strbuflen);
+                                                unsigned int *strbuflen);
 
 #endif /* _IPMI_FRU_PARSE_H */

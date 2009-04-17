@@ -92,6 +92,7 @@ o ipmi-fru
   - Output hex with 'h' suffix instead of '0x' prefix for consistency to
     other FreeIPMI tools.
   - Output manufacturer name with "Manufacturer ID" if name available.
+  - Do not output string "Info Area", the text is redundant.
   - Language codes now output all the time instead of only under
     verbose mode.  Language code output as string instead of hex code.
   - Very verbose support removed.
