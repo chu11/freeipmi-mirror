@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.1.2.19 2009-04-17 16:28:49 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.1.2.20 2009-04-17 16:47:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1060,9 +1060,15 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
 
+  if (info_area_header_length > info_area_length_bytes)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
   (*area_type) = info_area_type;
-  (*area_length) = info_area_length_bytes;
-  memcpy (areabuf, frubuf, info_area_length_bytes);
+  (*area_length) = (info_area_length_bytes - info_area_header_length);
+  memcpy (areabuf, (frubuf + info_area_header_length), (*area_length));
   
   rv = 0;
  cleanup:

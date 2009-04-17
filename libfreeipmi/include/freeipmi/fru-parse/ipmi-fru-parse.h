@@ -16,7 +16,7 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.h,v 1.1.2.16 2009-04-17 00:07:36 chu11 Exp $
+ *  $Id: ipmi-fru-parse.h,v 1.1.2.17 2009-04-17 16:47:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -142,6 +142,7 @@ int ipmi_fru_parse_close_device_id (ipmi_fru_parse_ctx_t ctx);
 int ipmi_fru_parse_first (ipmi_fru_parse_ctx_t ctx);
 /* returns 1 if iterator can continue, 0 if at end, -1 on error */
 int ipmi_fru_parse_next (ipmi_fru_parse_ctx_t ctx);
+/* area read will not include record headers */
 int ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
                                    unsigned int *area_type,
                                    unsigned int *area_length,
@@ -149,6 +150,8 @@ int ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
                                    unsigned int areabuflen);
                          
 /* FRU area parsing */
+/* Functions assume record headers have been stripped out */
+
 int ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
                                       uint8_t *areabuf,
                                       unsigned int areabuflen,

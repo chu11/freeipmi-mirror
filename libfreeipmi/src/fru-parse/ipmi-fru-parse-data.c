@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.1.2.7 2009-04-16 22:39:46 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.1.2.8 2009-04-17 16:47:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -155,13 +155,6 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
       return (-1);
     }
 
-  /* index 1 is the length field */
-  if (areabuflen != (areabuf[1] * 8))
-    {
-      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT);
-      return (-1);
-    }
-
   if (chassis_part_number)
     memset (chassis_part_number,
             '\0',
@@ -175,7 +168,6 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
             '\0',
             sizeof (ipmi_fru_parse_field_t) * chassis_custom_fields_len);
 
-  area_offset = 2; /* 2 = version + length fields */
   if (chassis_type)
     (*chassis_type) = areabuf[area_offset];
   area_offset++;
@@ -274,13 +266,6 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
       return (-1);
     }
 
-  /* index 1 is the length field */
-  if (areabuflen != (areabuf[1] * 8))
-    {
-      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT);
-      return (-1);
-    }
-
   if (board_manufacturer)
     memset (board_manufacturer,
             '\0',
@@ -306,7 +291,6 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
             '\0',
             sizeof (ipmi_fru_parse_field_t) * board_custom_fields_len);
 
-  area_offset = 2; /* 2 = version + length fields */
   if (language_code)
     (*language_code) = areabuf[area_offset];
   area_offset++;
@@ -463,13 +447,6 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
       return (-1);
     }
 
-  /* index 1 is the length field */
-  if (areabuflen != (areabuf[1] * 8))
-    {
-      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT);
-      return (-1);
-    }
-
   if (product_manufacturer_name)
     memset (product_manufacturer_name,
             '\0',
@@ -503,7 +480,6 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
             '\0',
             sizeof (ipmi_fru_parse_field_t) * product_custom_fields_len);
 
-  area_offset = 2; /* 2 = version + length fields */
   if (language_code)
     (*language_code) = areabuf[area_offset];
   area_offset++;
@@ -614,6 +590,52 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
 #endif
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
+                                                     uint8_t *areabuf,
+                                                     unsigned int areabuflen,
+                                                     unsigned int *overall_capacity,
+                                                     unsigned int *peak_va,
+                                                     unsigned int *inrush_current,
+                                                     unsigned int *inrush_interval,
+                                                     unsigned int *low_end_input_voltage_range_1,
+                                                     unsigned int *high_end_input_voltage_range_1,
+                                                     unsigned int *low_end_input_voltage_range_2,
+                                                     unsigned int *high_end_input_voltage_range_2,
+                                                     unsigned int *low_end_input_frequency_range,
+                                                     unsigned int *high_end_input_frequency_range,
+                                                     unsigned int *ac_dropout_tolerance,
+                                                     unsigned int *predictive_fail_support,
+                                                     unsigned int *power_factor_correction,
+                                                     unsigned int *autoswitch,
+                                                     unsigned int *hot_swap_support,
+                                                     unsigned int *tachometer_pulses_per_rotation_predictive_fail_polarity,
+                                                     unsigned int *peak_capacity,
+                                                     unsigned int *hold_up_time,
+                                                     unsigned int *voltage_1,
+                                                     unsigned int *voltage_2,
+                                                     unsigned int *total_combined_wattage,
+                                                     unsigned int *predictive_fail_tachometer_lower_threshold)
+{
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (!areabuf || !areabuflen)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
 
   rv = 0;
  cleanup:
