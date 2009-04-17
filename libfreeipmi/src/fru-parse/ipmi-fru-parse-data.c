@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.1.2.13 2009-04-17 21:45:21 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.1.2.14 2009-04-17 22:16:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -666,6 +666,11 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
 
+  if (ipmi_fru_parse_dump_obj (ctx,
+                               obj_record,
+                               "FRU Power Supply Information") < 0)
+    goto cleanup;
+
   if (overall_capacity)
     {
       if (FIID_OBJ_GET (obj_record,
@@ -971,6 +976,11 @@ ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
 
+  if (ipmi_fru_parse_dump_obj (ctx,
+                               obj_record,
+                               "FRU DC Output") < 0)
+    goto cleanup;
+
   if (output_number)
     {
       if (FIID_OBJ_GET (obj_record,
@@ -1122,6 +1132,11 @@ ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
 
+  if (ipmi_fru_parse_dump_obj (ctx,
+                               obj_record,
+                               "FRU DC Load") < 0)
+    goto cleanup;
+
   if (output_number)
     {
       if (FIID_OBJ_GET (obj_record,
@@ -1268,6 +1283,11 @@ ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
   
+  if (ipmi_fru_parse_dump_obj (ctx,
+                               obj_record,
+                               "FRU Management Access Record") < 0)
+    goto cleanup;
+
   if (sub_record_type)
     {
       if (FIID_OBJ_GET (obj_record,
@@ -1356,6 +1376,11 @@ ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
   
+  if (ipmi_fru_parse_dump_obj (ctx,
+                               obj_record,
+                               "FRU Base Compatibility Record") < 0)
+    goto cleanup;
+
   if (manufacturer_id)
     {
       if (FIID_OBJ_GET (obj_record,
@@ -1480,6 +1505,11 @@ ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t c
       goto cleanup;
     }
   
+  if (ipmi_fru_parse_dump_obj (ctx,
+                               obj_record,
+                               "FRU Extended Compatibility Record") < 0)
+    goto cleanup;
+
   if (manufacturer_id)
     {
       if (FIID_OBJ_GET (obj_record,
@@ -1601,6 +1631,11 @@ ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
   
+  if (ipmi_fru_parse_dump_obj (ctx,
+                               obj_record,
+                               "FRU OEM Record") < 0)
+    goto cleanup;
+
   if (manufacturer_id)
     {
       if (FIID_OBJ_GET (obj_record,
