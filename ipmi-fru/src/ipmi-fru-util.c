@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.36.4.3 2009-04-17 00:07:36 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.36.4.4 2009-04-17 16:28:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -68,11 +68,10 @@ ipmi_fru_output_field (ipmi_fru_state_data_t *state_data,
     {
       if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
         {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "  FRU %s: Error '%s'\n",
-                           str,
-                           ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+          pstdout_printf (state_data->pstate,
+                          "  FRU %s: Error '%s'\n",
+                          str,
+                          ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
           return (0);
         }
       
@@ -84,11 +83,10 @@ ipmi_fru_output_field (ipmi_fru_state_data_t *state_data,
     }
 
   if (strbuflen)
-    pstdout_fprintf (state_data->pstate,
-                     stderr,
-                     "  FRU %s: %s\n",
-                     str,
-                     strbuf);
+    pstdout_printf (state_data->pstate,
+                    "  FRU %s: %s\n",
+                    str,
+                    strbuf);
 
   return (0);
 }

@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.1.2.18 2009-04-17 00:15:26 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.1.2.19 2009-04-17 16:28:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -82,32 +82,34 @@
 
 static char *ipmi_fru_parse_errmsgs[] =
   {
-    "success",
-    "context null",
-    "context invalid",
-    "invalid parameters",
-    "device id not open",
-    "device id already open",
-    "no FRU information",
-    "common header checksum invalid",
-    "chassis info area checksum invalid",
-    "board info area checksum invalid",
-    "product info area checksum invalid",
-    "common header format invalid",
-    "chassis info area format invalid",
-    "board info area format invalid",
-    "product info area format invalid",
-    "multirecord area format invalid",
-    "FRU information inconsistent",
-    "FRU language code not supported",
-    "FRU invalid BCD encoding",
-    "FRU sentinel value not found",
-    "buffer too small to hold result",
-    "out of memory",
-    "internal IPMI error",
-    "internal system error",
-    "internal error",
-    "errnum out of range",
+    "success",                            /* 0 */
+    "context null",                       /* 1 */
+    "context invalid",                    /* 2 */
+    "invalid parameters",                 /* 3 */
+    "device id not open",                 /* 4 */
+    "device id already open",             /* 5 */
+    "no FRU information",                 /* 6 */
+    "FRU area length invalid",            /* 7 */
+    "common header checksum invalid",     /* 8 */
+    "chassis info area checksum invalid", /* 9 */
+    "board info area checksum invalid",   /* 10 */
+    "product info area checksum invalid", /* 11 */
+    "multirecord area checksum invalid",  /* 12 */
+    "common header format invalid",       /* 13 */
+    "chassis info area format invalid",   /* 14 */
+    "board info area format invalid",     /* 15 */
+    "product info area format invalid",   /* 16 */
+    "multirecord area format invalid",    /* 17 */
+    "FRU information inconsistent",       /* 18 */
+    "FRU language code not supported",    /* 19 */
+    "FRU invalid BCD encoding",           /* 20 */
+    "FRU sentinel value not found",       /* 21 */
+    "buffer too small to hold result",    /* 22 */
+    "out of memory",                      /* 23 */
+    "internal IPMI error",                /* 24 */
+    "internal system error",              /* 25 */
+    "internal error",                     /* 26 */
+    "errnum out of range",                /* 27 */
     NULL
   };
 

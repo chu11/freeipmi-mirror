@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.50.4.2 2009-04-17 00:15:26 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.50.4.3 2009-04-17 16:28:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -90,32 +90,18 @@ _output_fru (ipmi_fru_state_data_t *state_data,
                   device_id_str,
                   device_id);
 
-#if 0
-  /* achu: Assume this completion code means we got a FRU SDR
-   * entry pointed to a device that doesn't exist on this
-   * particular mother board (b/c manufacturers may use the same
-   * SDR for multiple motherboards).
-   */
-  if (ipmi_check_completion_code (fru_get_inventory_rs, IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) != 1)
-    pstdout_fprintf (state_data->pstate,
-                     stderr,
-                     "  FRU Get FRU Inventory Area Failure: %s\n",
-                     ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
-  pstdout_printf (state_data->pstate,
-                  "  FRU Inventory Area Size Empty\n");
-  rv = FRU_ERR_NON_FATAL_ERROR;
-  goto cleanup;
-#endif
-
   if (ipmi_fru_parse_open_device_id (state_data->fru_parse_ctx, device_id) < 0)
     {
       if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
         {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "  FRU Error: %s\n",
-                           ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+          /* Special case, not really an "error" */
+          if (ipmi_fru_parse_ctx_errnum (state_data->fru_parse_ctx) != IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION)
+            {
+              pstdout_printf (state_data->pstate, "\n");
+              pstdout_printf (state_data->pstate,
+                              "  FRU Error: %s\n",
+                              ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+            }
           goto out;
         }
       
@@ -147,7 +133,26 @@ _output_fru (ipmi_fru_state_data_t *state_data,
                                          &area_length,
                                          areabuf,
                                          IPMI_FRU_PARSE_AREA_SIZE_MAX) < 0)
-        goto cleanup;
+        {
+          if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
+            {
+              /* Special case, not really an "error" */
+              if (ipmi_fru_parse_ctx_errnum (state_data->fru_parse_ctx) != IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION)
+                {
+                  pstdout_printf (state_data->pstate, "\n");
+                  pstdout_printf (state_data->pstate,
+                                  "  FRU Error: %s\n",
+                                  ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+                }
+              goto next;
+            }
+          
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_fru_parse_open_device_id: %s\n",
+                           ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+          goto cleanup;
+        }
 
       if (area_length)
         {
@@ -177,12 +182,15 @@ _output_fru (ipmi_fru_state_data_t *state_data,
             default:
               pstdout_fprintf (state_data->pstate,
                                stderr,
-                               "  FRU Error: Unknown FRU Area Type Read\n");
-              goto out;             /* not a fatal error */
+                               "  FRU Error: Unknown FRU Area Type Read: %02Xh\n",
+                               area_type);
+              goto next;
               break;
             }
         }
 
+    next:
+      ;
     } while ((ret = ipmi_fru_parse_next (state_data->fru_parse_ctx)) == 1);
     
   if (ret < 0)
@@ -393,14 +401,47 @@ _ipmi_fru (pstdout_state_t pstate,
                            errmsg);
           exit_code = EXIT_FAILURE;
           goto cleanup;
-        }
-      
+        }      
+    }
+
+  if (!prog_data->args->sdr.flush_cache)
+    {
       if (!(state_data.fru_parse_ctx = ipmi_fru_parse_ctx_create (state_data.ipmi_ctx)))
         {
           pstdout_perror (pstate, "ipmi_fru_parse_ctx_create()");
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }
+      
+      if (state_data.prog_data->args->common.debug)
+        {
+          /* Don't error out, if this fails we can still continue */
+          if (ipmi_fru_parse_ctx_set_flags (state_data.fru_parse_ctx,
+                                            IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP) < 0)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_fru_parse_ctx_set_flags: %s\n",
+                             ipmi_fru_parse_ctx_errormsg (state_data.fru_parse_ctx));
+        }
+      
+      if (hostname)
+        {
+          if (ipmi_fru_parse_ctx_set_debug_prefix (state_data.fru_parse_ctx,
+                                                   hostname) < 0)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_fru_parse_ctx_set_debug_prefix: %s\n",
+                             ipmi_fru_parse_ctx_errormsg (state_data.fru_parse_ctx));
+        }
+      
+      if (state_data.prog_data->args->skip_checks)
+        /* Don't error out, if this fails we can still continue */
+        if (ipmi_fru_parse_ctx_set_flags (state_data.fru_parse_ctx,
+                                          IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS) < 0)
+          pstdout_fprintf (pstate,
+                           stderr,
+                           "ipmi_fru_parse_ctx_set_flags: %s\n",
+                           ipmi_fru_parse_ctx_strerror (ipmi_fru_parse_ctx_errnum (state_data.fru_parse_ctx)));
     }
 
   if (!(state_data.sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
@@ -412,24 +453,6 @@ _ipmi_fru (pstdout_state_t pstate,
 
   if (state_data.prog_data->args->common.debug)
     {
-      /* Don't error out, if this fails we can still continue */
-      if (ipmi_fru_parse_ctx_set_flags (state_data.fru_parse_ctx,
-                                        IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP) < 0)
-        pstdout_fprintf (pstate,
-                         stderr,
-                         "ipmi_fru_parse_ctx_set_flags: %s\n",
-                         ipmi_fru_parse_ctx_errormsg (state_data.fru_parse_ctx));
-
-      if (hostname)
-        {
-          if (ipmi_fru_parse_ctx_set_debug_prefix (state_data.fru_parse_ctx,
-                                                   hostname) < 0)
-            pstdout_fprintf (pstate,
-                             stderr,
-                             "ipmi_fru_parse_ctx_set_debug_prefix: %s\n",
-                             ipmi_fru_parse_ctx_errormsg (state_data.fru_parse_ctx));
-        }
-
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sdr_cache_ctx_set_flags (state_data.sdr_cache_ctx,
                                         IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
