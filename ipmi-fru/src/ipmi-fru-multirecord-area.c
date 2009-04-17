@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.16 2008-09-30 20:40:33 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.16.2.1 2009-04-17 17:40:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -367,13 +367,13 @@ output_dc_output(ipmi_fru_state_data_t *state_data,
                  (standby) ? "Yes" : "No");
   pstdout_printf(state_data->pstate,
                  "  FRU DC Output Nominal Voltage: %d mV\n",
-                 (int16_t)nominal_voltage);
+                 (int16_t)nominal_voltage * 10);
   pstdout_printf(state_data->pstate,
                  "  FRU DC Output Maximum Negative Voltage Deviation: %d mV\n",
-                 (int16_t)maximum_negative_voltage_deviation);
+                 (int16_t)maximum_negative_voltage_deviation * 10);
   pstdout_printf(state_data->pstate,
                  "  FRU DC Output Maximum Positive Voltage Deviation: %d mV\n",
-                 (int16_t)maximum_positive_voltage_deviation);
+                 (int16_t)maximum_positive_voltage_deviation * 10);
   pstdout_printf(state_data->pstate,
                  "  FRU DC Output Ripple and Noise pk-pk: %u mV\n",
                  ripple_and_noise_pk_pk);
