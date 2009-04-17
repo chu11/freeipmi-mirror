@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.21.4.2 2009-04-17 00:07:36 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.21.4.3 2009-04-17 00:15:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -199,14 +199,17 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
       return (-1);
     }
 
-  if (IPMI_FRU_LANGUAGE_CODE_VALID (language_code))
-    pstdout_printf (state_data->pstate,
-                    "  FRU Board Language: %s\n",
-                    ipmi_fru_language_codes[language_code]);
-  else
-    pstdout_printf (state_data->pstate,
-                    "  FRU Board Language Code: %02Xh\n",
-                    language_code);
+  if (state_data->prog_data->args->verbose_count)
+    {
+      if (IPMI_FRU_LANGUAGE_CODE_VALID (language_code))
+        pstdout_printf (state_data->pstate,
+                        "  FRU Board Language: %s\n",
+                        ipmi_fru_language_codes[language_code]);
+      else
+        pstdout_printf (state_data->pstate,
+                        "  FRU Board Language Code: %02Xh\n",
+                        language_code);
+    }
 
   timetmp = mfg_date_time;
   localtime_r (&timetmp, &mfg_date_time_tm);
@@ -321,13 +324,17 @@ ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
       return (-1);
     }
 
-  if (IPMI_FRU_LANGUAGE_CODE_VALID (language_code))
-    pstdout_printf (state_data->pstate,
-                    "  FRU Product Language: %s\n",
-                    ipmi_fru_language_codes[language_code]);
-    pstdout_printf (state_data->pstate,
-                    "  FRU Product Language Code: %02Xh\n",
-                    language_code);
+  if (state_data->prog_data->args->verbose_count)
+    {
+      if (IPMI_FRU_LANGUAGE_CODE_VALID (language_code))
+        pstdout_printf (state_data->pstate,
+                        "  FRU Product Language: %s\n",
+                        ipmi_fru_language_codes[language_code]);
+      else
+        pstdout_printf (state_data->pstate,
+                        "  FRU Product Language Code: %02Xh\n",
+                        language_code);
+    }
 
   if (ipmi_fru_output_field (state_data,
                              language_code,

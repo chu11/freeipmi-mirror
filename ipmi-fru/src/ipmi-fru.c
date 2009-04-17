@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.50.4.1 2009-04-16 22:54:50 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.50.4.2 2009-04-17 00:15:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -151,6 +151,8 @@ _output_fru (ipmi_fru_state_data_t *state_data,
 
       if (area_length)
         {
+          pstdout_printf (state_data->pstate, "\n");
+
           switch (area_type)
             {
             case IPMI_FRU_PARSE_AREA_TYPE_CHASSIS_INFO_AREA:

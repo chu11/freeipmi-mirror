@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.1.2.17 2009-04-17 00:07:36 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.1.2.18 2009-04-17 00:15:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -820,16 +820,19 @@ ipmi_fru_parse_next (ipmi_fru_parse_ctx_t ctx)
     {
       ctx->chassis_info_area_parsed++;
       rv = 1;
+      goto out;
     }
   if (ctx->board_info_area_starting_offset && !ctx->board_info_area_parsed)
     {
       ctx->board_info_area_parsed++;
       rv = 1;
+      goto out;
     }
   if (ctx->product_info_area_starting_offset && !ctx->product_info_area_parsed)
     {
       ctx->product_info_area_parsed++;
       rv = 1;
+      goto out;
     }
   if (ctx->multirecord_area_starting_offset && !ctx->multirecord_area_parsed)
     {
@@ -861,6 +864,7 @@ ipmi_fru_parse_next (ipmi_fru_parse_ctx_t ctx)
       ctx->multirecord_area_offset_in_bytes += record_length;
 
       rv = 1;
+      goto out;
     }
 
  out:  

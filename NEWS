@@ -93,9 +93,9 @@ o ipmi-fru
     other FreeIPMI tools.
   - Output manufacturer name with "Manufacturer ID" if name available.
   - Do not output string "Info Area", the text is redundant.
-  - Language codes now output all the time instead of only under
-    verbose mode.  Language code output as string instead of hex code.
   - Very verbose support removed.
+  - Language codes now output under verbose mode.  Language code
+    output as string instead of hex code.
   - Various output changes under error conditions.
   - Re-work to use new libfreeipmi fru-parse sub library.
   - Check for valid device ID inputs.
