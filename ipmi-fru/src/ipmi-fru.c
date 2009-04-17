@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.50.4.3 2009-04-17 16:28:49 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.50.4.4 2009-04-17 22:13:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -40,9 +40,7 @@
 
 #include "ipmi-fru.h"
 #include "ipmi-fru-argp.h"
-#include "ipmi-fru-info-area.h"
-#include "ipmi-fru-multirecord-area.h"
-#include "ipmi-fru-util.h"
+#include "ipmi-fru-output.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -406,6 +404,8 @@ _ipmi_fru (pstdout_state_t pstate,
 
   if (!prog_data->args->sdr.flush_cache)
     {
+      unsigned int flags = 0;
+
       if (!(state_data.fru_parse_ctx = ipmi_fru_parse_ctx_create (state_data.ipmi_ctx)))
         {
           pstdout_perror (pstate, "ipmi_fru_parse_ctx_create()");
@@ -414,16 +414,10 @@ _ipmi_fru (pstdout_state_t pstate,
         }
       
       if (state_data.prog_data->args->common.debug)
-        {
-          /* Don't error out, if this fails we can still continue */
-          if (ipmi_fru_parse_ctx_set_flags (state_data.fru_parse_ctx,
-                                            IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP) < 0)
-            pstdout_fprintf (pstate,
-                             stderr,
-                             "ipmi_fru_parse_ctx_set_flags: %s\n",
-                             ipmi_fru_parse_ctx_errormsg (state_data.fru_parse_ctx));
-        }
-      
+        flags |= IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP;
+      if (state_data.prog_data->args->skip_checks)
+        flags |= IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS;
+
       if (hostname)
         {
           if (ipmi_fru_parse_ctx_set_debug_prefix (state_data.fru_parse_ctx,
@@ -434,14 +428,15 @@ _ipmi_fru (pstdout_state_t pstate,
                              ipmi_fru_parse_ctx_errormsg (state_data.fru_parse_ctx));
         }
       
-      if (state_data.prog_data->args->skip_checks)
-        /* Don't error out, if this fails we can still continue */
-        if (ipmi_fru_parse_ctx_set_flags (state_data.fru_parse_ctx,
-                                          IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS) < 0)
-          pstdout_fprintf (pstate,
-                           stderr,
-                           "ipmi_fru_parse_ctx_set_flags: %s\n",
-                           ipmi_fru_parse_ctx_strerror (ipmi_fru_parse_ctx_errnum (state_data.fru_parse_ctx)));
+      if (flags)
+        {
+          /* Don't error out, if this fails we can still continue */
+          if (ipmi_fru_parse_ctx_set_flags (state_data.fru_parse_ctx, flags) < 0)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_fru_parse_ctx_set_flags: %s\n",
+                             ipmi_fru_parse_ctx_strerror (ipmi_fru_parse_ctx_errnum (state_data.fru_parse_ctx)));
+        }
     }
 
   if (!(state_data.sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
