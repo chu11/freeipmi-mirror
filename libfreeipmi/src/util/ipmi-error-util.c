@@ -44,7 +44,7 @@
   do                                            \
     {                                           \
       snprintf (errstr, len, arg);              \
-      return (0);                                 \
+      return (0);                               \
     } while (0)
 
 int8_t
