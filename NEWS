@@ -191,6 +191,36 @@ Contributions
 o Update Ganglia and Nagios plugins for changes in ipmi-sensors and
 ipmimonitoring.
 
+0.7.8 - 04/10/09
+----------------
+o Support and document Inventec 5441 workarounds.  Most notably, added
+  "opensesspriv" workaround to tools and OPEN_SESSION_PRIVILEGE
+  workaround to libraries.
+o In ipmi-fru, do not fail on invalid chassis info area type, output
+  that type is unknown and continue to parse area.
+o In bmc-info, output device ID, manufacturer ID, and product ID as
+  integers, not hex.
+o Fix glibc 2.8 compile bug.
+
+0.7.7 - 04/03/09
+----------------
+o Support inventec get-nic-status, set-nic-status, get-mac-address,
+  and set-mac-address OEM commands in ipmi-oem.
+o Make default privilege level ADMIN for ipmi-oem.
+o In bmc-info, output both chars of firmware minor revision (i.e. 1.01
+  instead of 1.1).
+o Fix libfreeipmi field validity checks for sensor units.
+o Support "oem_reserved" group input to ipmi-sensors.
+o Fix Solaris porting bugs.
+o Fix potential config file bug by clearing out stack data
+  appropriatly.
+o Support build option (--with-dont-check-for-root) to not have tools
+  check for root for in-band IPMI communication.  Permission checks are 
+  subsequently dealt with at underlying system calls and
+  drivers. (i.e. open() on /dev/ipmi0).
+o Update bmc-config manpage with Dell specific workaround.
+o Remove "experimental" note from SUNBMC driver documentation.
+
 0.7.7 - 04/03/09
 ----------------
 o Support inventec get-nic-status, set-nic-status, get-mac-address,
