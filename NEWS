@@ -1,8 +1,8 @@
 0.7.9 - xx/xx/xx
 ----------------
 o In bmc-config, fix diff check for "Password20" field.
-o In ipmi-fru, fix various output typoes.
-  - Output ""Product Name" instead of "Product Product Name".
+o In ipmi-fru, fix various output typoes and output errors.
+  - Output "Product Name" instead of "Product Product Name".
   - Output "FRU Chassis Type" instead of just "Chassis Type".
   - Output "Version" instead of "Version Type".
   - Fix invalid DC Output and DC Load voltage outputs. mV multiplier
