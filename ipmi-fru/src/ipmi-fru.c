@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.51 2009-04-17 23:50:25 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.52 2009-04-20 22:52:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -176,7 +176,48 @@ _output_fru (ipmi_fru_state_data_t *state_data,
                                                      area_length) < 0)
                 goto cleanup;
               break;
-              /* XXX */
+            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_POWER_SUPPLY_INFORMATION:
+              if (ipmi_fru_output_power_supply_information (state_data,
+                                                            areabuf,
+                                                            area_length) < 0)
+                goto cleanup;
+              break;
+            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_DC_OUTPUT:
+              if (ipmi_fru_output_dc_output (state_data,
+                                             areabuf,
+                                             area_length) < 0)
+                goto cleanup;
+              break;
+            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_DC_LOAD:
+              if (ipmi_fru_output_dc_load (state_data,
+                                           areabuf,
+                                           area_length) < 0)
+                goto cleanup;
+              break;
+            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_MANAGEMENT_ACCESS_RECORD:
+              if (ipmi_fru_output_management_access_record (state_data,
+                                                            areabuf,
+                                                            area_length) < 0)
+                goto cleanup;
+              break;
+            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_BASE_COMPATABILITY_RECORD:
+              if (ipmi_fru_output_base_compatibility_record (state_data,
+                                                             areabuf,
+                                                             area_length) < 0)
+                goto cleanup;
+              break;
+            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_EXTENDED_COMPATABILITY_RECORD:
+              if (ipmi_fru_output_extended_compatibility_record (state_data,
+                                                                 areabuf,
+                                                                 area_length) < 0)
+                goto cleanup;
+              break;
+            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_OEM:
+              if (ipmi_fru_output_oem_record (state_data,
+                                              areabuf,
+                                              area_length) < 0)
+                goto cleanup;
+              break;
             default:
               pstdout_fprintf (state_data->pstate,
                                stderr,
