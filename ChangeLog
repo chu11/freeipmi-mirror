@@ -1,5 +1,13 @@
 2009-04-21  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h,
+	libfreeipmi/src/spec/ipmi-entity-ids-spec.c: New files.
+
+	* ipmi-sensors/: Output Entity IDs under verbose instead of very
+	verbose mode.  Output Entity ID type if available.
+	
+2009-04-21  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/ipmimonitoring/: Have default output same
 	sensors as in ipmi-sensors, including those that can't be
 	interpreted.  Support --ignore-non-interpretable-sensors.

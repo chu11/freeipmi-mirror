@@ -8,6 +8,7 @@ libspec_la_CPPFLAGS = \
 	-D_REENTRANT
 
 libspec_la_SOURCES = \
+	ipmi-entity-ids-spec.c \
 	ipmi-fru-chassis-types-spec.c \
 	ipmi-fru-language-codes-spec.c \
 	ipmi-iana-enterprise-numbers-spec.c \

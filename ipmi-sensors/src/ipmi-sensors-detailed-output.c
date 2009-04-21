@@ -264,15 +264,18 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
   pstdout_printf (state_data->pstate,
                   "Channel Number: %Xh\n",
                   channel_number);
-  if (state_data->prog_data->args->verbose_count >= 2)
-    {
-      pstdout_printf (state_data->pstate,
-                      "Entity ID: %u\n",
-                      entity_id);
-      pstdout_printf (state_data->pstate,
-                      "Entity Instance: %u\n",
-                      entity_instance);
-    }
+  if (IPMI_ENTITY_ID_VALID (entity_id))
+    pstdout_printf (state_data->pstate,
+                    "Entity ID: %s (%u)\n",
+                    ipmi_entity_ids[entity_id],
+                    entity_id);
+  else
+    pstdout_printf (state_data->pstate,
+                    "Entity ID: %u\n",
+                    entity_id);
+  pstdout_printf (state_data->pstate,
+                  "Entity Instance: %u\n",
+                  entity_instance);
   pstdout_printf (state_data->pstate,
                   "Event/Reading Type Code: %Xh\n",
                   event_reading_type_code);

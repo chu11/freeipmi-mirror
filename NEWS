@@ -60,6 +60,7 @@ o ipmi-sensors
     verbose output.
   - Support sensor unit percentages, rates and modifiers (i.e. "%
     hit", "gigabyte per minute", "pounds / cu in").
+  - Output Entity ID under verbose instead of very verbose mode.
   - Under very verbose output, "Sensor Status" is now "Sensor Event".
   - Under very verbose output, if multiple sensor states are
     triggered, always output a prefix of "Sensor Event".
@@ -75,6 +76,7 @@ o ipmi-sensors
   - Output analog data format in hex in verbose outputs.
   - Output analog data format name in verbose outputs.
   - Output manufacturer name with "Manufacturer ID" if name available.
+  - Output Entity ID string with "Entity ID" if string available.
   - Output hex code of group name in addition to group name in
     very-verbose output.
   - Re-work to use new libfreeipmi sensor-read sub library.
@@ -164,7 +166,8 @@ o libfreeipmi
   - Add a number of 'errormsg' functions so common code of 
     foo_strerror(foo_errnum(ctx)) can be condensed to foo_errormsg(ctx).
   - Various fixes to maintain consistency between sub library APIs.
-  - Add IANA Enterprise Numbers support.
+  - Add IANA Enterprise Numbers definitions.
+  - Add Entity IDs definitions.
   - Remove IPMI_ERR_LIBRARY_ERROR errnum.  Use IPMI_ERR_INTERNAL_ERROR
     errnum instead.
   - IPMI_*CTX_ERR* renamed to IPMI_*ERR* for consistency throughout.
@@ -175,8 +178,9 @@ o libfreeipmi
     "gigabyte per minute", "pounds / cu in").
   - Fix several sensor units abbreviations.
   - More detailed KCS debug output with header information.
-  - Always output debug raw_data (i.e. from ipmi-raw) in byte array
-    format instead of an integer even if the field length is < 64 bits.
+  - Always output debug key fields (i.e. 'raw_data' from ipmi-raw) in
+    byte array format instead of an integer even if the field length
+    is < 64 bits.
 o libipmimonitoring
   - Support callback functions in API to monitor sensors as they
     are read/analyzed instead of after all sensors have been

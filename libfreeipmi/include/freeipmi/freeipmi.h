@@ -78,6 +78,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h>
 #include <freeipmi/spec/ipmi-cmd-spec.h>
 #include <freeipmi/spec/ipmi-comp-code-spec.h>
+#include <freeipmi/spec/ipmi-entity-ids-spec.h>
 #include <freeipmi/spec/ipmi-event-reading-type-code-spec.h>
 #include <freeipmi/spec/ipmi-fru-chassis-types-spec.h>
 #include <freeipmi/spec/ipmi-fru-language-codes-spec.h>
