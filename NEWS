@@ -3,8 +3,9 @@
 Tools - High Level Description of Changes
 -----------------------------------------
 o Make output of ipmi-sel, ipmi-sensors, and ipmimonitoring easier to
-  read and consistent to each other.  Legacy output is supported
-  through the --legacy-output option.
+  read and consistent to each other.  Under default output, sensors
+  listed in ipmi-sensors and ipmimonitoring are identical.  Legacy
+  output is supported through the --legacy-output option.
 o Support sensor unit percentages, rates, and modifiers (i.e. "%
   hit", "gigabyte per minute", "pounds / cu in") in most tools.
 o Support non-abbreviated units (i.e. "Amps" instead of "A") in most
@@ -85,6 +86,8 @@ o ipmimonitoring
     consistency to libipmimonitoring library definition.
   - Sensor events are now output for all sensors.  Sensor readings are
     only output appropriately for non-discrete sensors.
+  - With default output, output same sensors as listed in
+    ipmi-sensors, including some sensors that can't be interpreted.
   - Rename --sensors option to --record-ids.  Maintain old options for
     backwards compatability.
   - Support --legacy-output option.

@@ -1,3 +1,9 @@
+2009-04-21  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring/: Have default output same
+	sensors as in ipmi-sensors, including those that can't be
+	interpreted.
+	
 2009-04-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/src/ipmi-fru.c: Fix multirecord output.

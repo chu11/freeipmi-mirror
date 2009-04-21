@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.110 2009-04-08 20:47:06 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.111 2009-04-21 18:36:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -79,6 +79,8 @@
 #define IPMIMONITORING_UNRECOGNIZED_STATE     "Unrecognized State"
 
 #define IPMIMONITORING_FMT_BUFLEN             1024
+
+#define IPMIMONITORING_RECORD_IDS_MAX         65536 /* record_id is 2 byte field */
 
 static int
 _list_groups (ipmimonitoring_state_data_t *state_data)
@@ -401,6 +403,75 @@ _output_setup (ipmimonitoring_state_data_t *state_data)
   
   return (0);
 }
+
+static int
+_calculate_record_ids (ipmimonitoring_state_data_t *state_data,
+                       unsigned int record_ids[IPMIMONITORING_RECORD_IDS_MAX],
+                       unsigned int *record_ids_len)
+{
+  uint16_t record_count;
+  int i;
+
+  assert (state_data);
+  assert (record_ids);
+  assert (record_ids_len);
+
+  if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx,
+                                   &record_count) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_cache_record_count: %s\n",
+                       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+      return (-1);
+    }
+
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
+    {
+      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      int sdr_record_len = 0;
+      uint16_t record_id;
+      uint8_t record_type;
+          
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+                                                        sdr_record,
+                                                        IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_cache_record_read: %s\n",
+                           ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+          return (-1);
+        }
+
+      /* Shouldn't be possible */
+      if (!sdr_record_len)
+        continue;
+      
+      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &record_id,
+                                             &record_type) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_parse_record_id_and_type: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+          return (-1);
+        }
+
+      if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+          || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+        {
+          record_ids[(*record_ids_len)] = record_id;
+          (*record_ids_len)++;
+        }
+    }
+
+  return (0);
+}
+  
 
 static void
 _output_sensor_units (ipmimonitoring_state_data_t *state_data,
@@ -857,6 +928,9 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
 {
   struct ipmimonitoring_arguments *args;
   unsigned int sensor_reading_flags;
+  unsigned int record_ids[IPMIMONITORING_RECORD_IDS_MAX];
+  unsigned int record_ids_len = 0;
+  unsigned int *record_ids_ptr = NULL;
 
   assert (state_data);
 
@@ -885,6 +959,22 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   if (_output_setup (state_data) < 0)
     return (-1);
 
+  if (!args->record_ids_length
+      && !args->ipmimonitoring_groups_length
+      && !args->verbose_count)
+    {
+      /* achu: for consistent output to ipmi-sensors, find all full
+       * and compact sensor records and build an array to pass in.
+       */
+      if (_calculate_record_ids (state_data,
+                                 record_ids,
+                                 &record_ids_len) < 0)
+        return (-1);
+
+      if (record_ids_len)
+        record_ids_ptr = record_ids;
+    }
+
   /* At this point in time we no longer need sdr_cache b/c
    * libipmimonitoring will open its own copy.
    */
@@ -902,11 +992,10 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   ipmi_ctx_destroy (state_data->ipmi_ctx);
   state_data->ipmi_ctx = NULL;
 
-  if (args->verbose_count)
-    sensor_reading_flags = 0;
-  else
-    sensor_reading_flags = IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS;
-
+  sensor_reading_flags = 0;
+#if 0
+  sensor_reading_flags = IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS;
+#endif
   if (args->bridge_sensors)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS;
 
@@ -916,8 +1005,8 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
                                                         state_data->hostname,
                                                         &(args->conf),
                                                         sensor_reading_flags,
-                                                        NULL,
-                                                        0,
+                                                        record_ids_ptr,
+                                                        record_ids_len,
                                                         _ipmimonitoring_callback,
                                                         (void *)state_data) < 0)
         {
