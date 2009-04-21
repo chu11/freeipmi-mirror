@@ -9,6 +9,7 @@ libfreeipmi
 * more detailed debug output for ssif interface like KCS interface
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
+* entity ids
 
 ipmi-fru
 --------
@@ -26,6 +27,7 @@ sensors/monitoring
 make sure bridging still works w/ sensor-read lib
 make sure oem still outputs fine
 make sensor-raw equivalent API func (i.e. don't need to do IPMI to get raw reading)
+output via entity_id organization
 
 ipmi-chassis-config
 -------------------
