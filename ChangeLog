@@ -2,7 +2,11 @@
 
 	* ipmimonitoring/src/ipmimonitoring/: Have default output same
 	sensors as in ipmi-sensors, including those that can't be
-	interpreted.
+	interpreted.  Support --ignore-non-interpretable-sensors.
+
+	* ipmimonitoring/src/libipmimonitoring/: Rename
+	IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS to
+	IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS..
 	
 2009-04-20  Albert Chu <chu11@llnl.gov>
 

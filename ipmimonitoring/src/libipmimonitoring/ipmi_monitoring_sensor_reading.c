@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.69 2009-03-12 17:57:53 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.70 2009-04-21 20:33:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -152,7 +152,7 @@ _store_sensor_reading (ipmi_monitoring_ctx_t c,
   assert (IPMI_MONITORING_SENSOR_READING_TYPE_VALID (sensor_reading_type));
   assert (IPMI_MONITORING_SENSOR_BITMASK_TYPE_VALID (sensor_bitmask_type));
 
-  if ((sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS)
+  if ((sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS)
       && sensor_state == IPMI_MONITORING_SENSOR_STATE_UNKNOWN)
     return (0);
 
@@ -219,7 +219,7 @@ _store_unreadable_sensor_reading (ipmi_monitoring_ctx_t c,
   assert (IPMI_MONITORING_SENSOR_GROUP_VALID (sensor_group));
   assert (IPMI_MONITORING_SENSOR_UNITS_VALID (sensor_units));
 
-  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS)
+  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS)
     return (0);
 
   if (!(s = _allocate_sensor_reading (c)))

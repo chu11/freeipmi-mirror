@@ -88,6 +88,7 @@ o ipmimonitoring
     only output appropriately for non-discrete sensors.
   - With default output, output same sensors as listed in
     ipmi-sensors, including some sensors that can't be interpreted.
+  - Support --ignore-non-interpretable-sensors option.
   - Rename --sensors option to --record-ids.  Maintain old options for
     backwards compatability.
   - Support --legacy-output option.
@@ -186,6 +187,9 @@ o libipmimonitoring
   - Remove IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK
     sensor reading type.  Every sensor technically has a bitmask, but
     not all sensors have a sensor reading.
+  - Rename IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS
+    to IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS.
+    Legacy macro still supported.
   - Variety of API functions reworked or renamed for new functionality.  Will
     require recompile and rework in existing code.
 

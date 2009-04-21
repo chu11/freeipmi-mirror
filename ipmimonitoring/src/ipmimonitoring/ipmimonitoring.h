@@ -37,6 +37,7 @@ enum ipmimonitoring_argp_option_keys
     RECORD_IDS_KEY = 'r',
     CACHE_DIR_KEY = 'c',              /* legacy */
     BRIDGE_SENSORS_KEY = 'b',
+    IGNORE_NON_INTERPRETABLE_SENSORS = 'i',
     COMMA_SEPARATED_OUTPUT_KEY = 160,
     NON_ABBREVIATED_UNITS_KEY = 161,
     LEGACY_OUTPUT_KEY = 162,
@@ -57,6 +58,7 @@ struct ipmimonitoring_arguments
   unsigned int record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int record_ids_length;
   int bridge_sensors;
+  int ignore_non_interpretable_sensors;
   int comma_separated_output;
   int non_abbreviated_units;
   int legacy_output;

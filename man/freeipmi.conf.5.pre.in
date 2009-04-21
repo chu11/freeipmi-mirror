@@ -1111,6 +1111,9 @@ can be specified separated by whitespace.
 \fBipmimonitoring-bridge-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.
 .TP
+\fBipmimonitoring-ignore-non-interpretable-sensors\fR \fIENABLE|DISABLE\fR
+Specify if non-interpretable sensors should be ignored by default or not.
+.TP
 \Bipmimonitoring-comma-separated-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be comma separated or not.
 .TP
