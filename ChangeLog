@@ -1,3 +1,7 @@
+2009-04-22  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem.8.pre.in: Update inventec text.
+
 2009-04-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/: Fix typoes in output.

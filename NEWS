@@ -7,6 +7,7 @@ o In ipmi-fru, fix various output typoes and output errors.
   - Output "Version" instead of "Version Type".
   - Fix invalid DC Output and DC Load voltage outputs. mV multiplier
     of 10 was previously not factored in.
+o Update ipmi-oem manpage with extra information.
 
 0.7.8 - 04/10/09
 ----------------
