@@ -26,8 +26,8 @@
 
 enum ipmi_chassis_argp_option_keys
   {
-    GET_CAPABILITIES_KEY = 'c',
-    GET_STATUS_KEY = 's',
+    GET_CHASSIS_CAPABILITIES_KEY = 'c',
+    GET_CHASSIS_STATUS_KEY = 's',
     CHASSIS_CONTROL_KEY = 'O',
     CHASSIS_IDENTIFY_KEY = 'i',
     GET_SYSTEM_RESTART_CAUSE_KEY = 'R',

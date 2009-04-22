@@ -4,6 +4,9 @@
 
 	* ipmi-chassis/src/ipmi-chassis (get_chassis_status): Fix output
 	corner cases.
+
+	* ipmi-chassis/: Rename --get-status to --get-chassis-status and
+	--get-capabilities to --get-chassis-capabilities.
 	
 2009-04-21  Albert Chu <chu11@llnl.gov>
 

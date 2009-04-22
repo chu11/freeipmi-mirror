@@ -66,9 +66,15 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    { "get-capabilities", GET_CAPABILITIES_KEY, NULL, 0,
+    /* for backwards compatability */
+    { "get-capabilities", GET_CHASSIS_CAPABILITIES_KEY, NULL, OPTION_HIDDEN,
       "Get chassis capabilities.", 30},
-    { "get-status", GET_STATUS_KEY, NULL, 0,
+    /* for backwards compatability */
+    { "get-status", GET_CHASSIS_STATUS_KEY, NULL, OPTION_HIDDEN,
+      "Get chassis status.", 31},
+    { "get-chassis-capabilities", GET_CHASSIS_CAPABILITIES_KEY, NULL, 0,
+      "Get chassis capabilities.", 30},
+    { "get-chassis-status", GET_CHASSIS_STATUS_KEY, NULL, 0,
       "Get chassis status.", 31},
     { "chassis-control", CHASSIS_CONTROL_KEY, "CONTROL", 0,
       "Control the chassis.", 32},
@@ -312,7 +318,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-    case GET_CAPABILITIES_KEY:
+    case GET_CHASSIS_CAPABILITIES_KEY:
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Multiple commands specified\n");
@@ -321,7 +327,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->cmd = CHASSIS_CMD_GET_CHASSIS_CAPABILITIES;
       break;
 
-    case GET_STATUS_KEY:
+    case GET_CHASSIS_STATUS_KEY:
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Multiple commands specified\n");

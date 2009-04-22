@@ -35,11 +35,11 @@ To perform IPMI chassis configuration, please see
 The following options are specific to
 .B Ipmi-chassis.
 .TP
-\fB\-c\fR, \fB\-\-get\-capabilities\fR
+\fB\-c\fR, \fB\-\-get\-chassis\-capabilities\fR
 Get chassis capabilities.  This command returns information on which
 main chassis management functions are available.
 .TP
-\fB\-s\fR, \fB\-\-get\-status\fR
+\fB\-s\fR, \fB\-\-get\-chassis\-status\fR
 Get chassis status.  This command returns high level status
 information on the chassis.
 .TP

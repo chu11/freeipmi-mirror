@@ -125,6 +125,11 @@ o ipmi-fru
   - Support additional options in FreeIPMI config file.
 o bmc-info
   - Output manufacturer name with "Manufacturer ID" if name available.
+o ipmi-chassis
+  - Rename --get-status option to --get-chassis-status.  Legacy option
+    still supported.
+  - Rename --get-capabilities option to --get-chassis-capabilities.
+    Legacy option still supported.
 o bmc-config
   - Collapse "Password20" field into "Password" field so "Password"
     supports both IPMI 1.5 and IPMI 2.0 length passwords.
