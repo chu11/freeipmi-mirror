@@ -290,7 +290,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                         "\n                            ");
       misc_chassis_status = 1;
       pstdout_printf (state_data->pstate, 
-                      "                             Drive Fault");
+                      " Drive Fault");
     }
 
   _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.cooling_fan_fault_detected", &val);
@@ -301,7 +301,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                         "\n                            ");
       misc_chassis_status = 1;
       pstdout_printf (state_data->pstate, 
-                      "                             Cooling fan fault detected");
+                      " Cooling fan fault detected");
     }
 
   _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.chassis_identify_command_and_state_info_supported", &val);
@@ -312,7 +312,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                         "\n                            ");
       misc_chassis_status = 1;
       pstdout_printf (state_data->pstate, 
-                      "                             Chassis Identify Command and State Info supported");
+                      " Chassis Identify Command and State Info supported");
 
       _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.chassis_identify_state", &val);
       pstdout_printf (state_data->pstate, 
