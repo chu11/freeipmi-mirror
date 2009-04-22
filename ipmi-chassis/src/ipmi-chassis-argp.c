@@ -394,8 +394,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               fprintf (stderr, "invalid value for chassis-identify\n");
               exit (1);
             }
-          cmd_args->args.identify_args.force_identify_set = 1;
-
           cmd_args->args.identify_args.force_identify_set = 0;
         }
 
