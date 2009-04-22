@@ -1,3 +1,7 @@
+2009-04-22  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem.8.pre.in: Update inventec text.
+	
 2009-04-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h,
