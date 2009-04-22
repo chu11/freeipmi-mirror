@@ -1,6 +1,9 @@
 2009-04-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem.8.pre.in: Update inventec text.
+
+	* ipmi-chassis/src/ipmi-chassis (get_chassis_status): Fix output
+	corner cases.
 	
 2009-04-21  Albert Chu <chu11@llnl.gov>
 
