@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.169 2009-04-23 16:45:05 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.170 2009-04-23 17:21:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -396,14 +396,15 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
        * Challenge phase of the IPMI protocol.  See comments in
        * _retry_packets().
        */
-      if (list_count (ip->sockets_to_close) > 0) {
-    int *fd;
-    while ((fd = list_pop (ip->sockets_to_close)))
-      {
-        Close (*fd);
-        Free (fd);
-      }
-      }
+      if (list_count (ip->sockets_to_close) > 0)
+        {
+          int *fd;
+          while ((fd = list_pop (ip->sockets_to_close)))
+            {
+              Close (*fd);
+              Free (fd);
+            }
+        }
     }
   else if (pkt == OPEN_SESSION_REQ)
     ip->protocol_state = PROTOCOL_STATE_OPEN_SESSION_SENT;
