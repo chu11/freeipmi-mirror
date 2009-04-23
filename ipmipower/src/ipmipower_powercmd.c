@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.170 2009-04-23 17:21:53 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.171 2009-04-23 17:25:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -888,22 +888,25 @@ _retry_packets (ipmipower_powercmd_t ip)
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT)
     _send_packet (ip, CHASSIS_IDENTIFY_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_CLOSE_SESSION_SENT)
-    /*
-     * It's pointless to retransmit a close-session.
-     *
-     * 1) The power control operation has already completed.
-     *
-     * 2) There is no guarantee the remote BMC will respond.  If the
-     * previous close session response was dropped by the network,
-     * then the session has already been closed by the BMC.  Any
-     * retransmission will send a session id that is unknown to the
-     * BMC, and they will either respond with an error or ignore the
-     * packet.
-     *
-     * _send_packet(ip, CLOSE_SESSION_REQ);
-     */
-    ip->close_timeout++;
-
+    {
+      /*
+       * It's pointless to retransmit a close-session.
+       *
+       * 1) The power control operation has already completed.
+       *
+       * 2) There is no guarantee the remote BMC will respond.  If the
+       * previous close session response was dropped by the network,
+       * then the session has already been closed by the BMC.  Any
+       * retransmission will send a session id that is unknown to the
+       * BMC, and they will either respond with an error or ignore the
+       * packet.
+       *
+       * _send_packet(ip, CLOSE_SESSION_REQ);
+       */
+      ip->close_timeout++;
+      return (0);
+    }
+      
   return (1);
 }
 
