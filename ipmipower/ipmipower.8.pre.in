@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.45 2008-07-10 20:06:18 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.45.6.1 2009-04-23 17:26:24 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -293,6 +293,15 @@ Pulse diagnostic interrupt all configured hosts or specified hosts.
 .TP
 \fBsoft\fR \fI[IPMIHOST(s)]\fR
 Initiate a soft-shutdown for all configured hosts or specified hosts. 
+.TP
+\fBidentify-on\fR \fI[IPMIHOST(s)]\fR
+Turn on physical system identification.
+.TP
+\fBidentify-off\fR \fI[IPMIHOST(s)]\fR
+Turn off physical system identification.
+.TP
+\fBidentify-status\fR \fI[IPMIHOST(s)]\fR
+Query physical system identification status.
 .TP
 \fBon-if-off\fR \fI[on|off]\fR
 Toggle on-if-off functionality.

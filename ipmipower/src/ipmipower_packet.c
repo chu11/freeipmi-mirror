@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.102.4.2 2008-12-09 18:42:16 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.102.4.3 2009-04-23 17:26:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -91,6 +91,10 @@ ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
     return &tmpl_cmd_chassis_control_rq[0];
   else if (pkt == CHASSIS_CONTROL_RES)
     return &tmpl_cmd_chassis_control_rs[0];
+  else if (pkt == CHASSIS_IDENTIFY_REQ)
+    return (&tmpl_cmd_chassis_identify_rq[0]);
+  else if (pkt == CHASSIS_IDENTIFY_RES)
+    return (&tmpl_cmd_chassis_identify_rs[0]);
   else if (pkt == CLOSE_SESSION_REQ)
     return &tmpl_cmd_close_session_rq[0];
   else if (pkt == CLOSE_SESSION_RES)
@@ -148,6 +152,10 @@ ipmipower_packet_cmd_obj(ipmipower_powercmd_t ip, packet_type_t pkt)
     return ip->obj_chassis_control_req;
   else if (pkt == CHASSIS_CONTROL_RES)
     return ip->obj_chassis_control_res;
+  else if (pkt == CHASSIS_IDENTIFY_REQ)
+    return (ip->obj_chassis_identify_req);
+  else if (pkt == CHASSIS_IDENTIFY_RES)
+    return (ip->obj_chassis_identify_res);
   else if (pkt == CLOSE_SESSION_REQ)
     return ip->obj_close_session_req;
   else if (pkt == CLOSE_SESSION_RES)
@@ -211,6 +219,9 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
       else if (pkt == CHASSIS_CONTROL_REQ
                || pkt == CHASSIS_CONTROL_RES)
         str_cmd = ipmi_cmd_str(IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_CHASSIS_CONTROL);
+      else if (pkt == CHASSIS_IDENTIFY_REQ
+               || pkt == CHASSIS_IDENTIFY_RES)
+        str_cmd = ipmi_cmd_str(IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_CHASSIS_IDENTIFY);
       else if (pkt == CLOSE_SESSION_REQ
                || pkt == CLOSE_SESSION_RES)
         str_cmd = ipmi_cmd_str(IPMI_NET_FN_APP_RQ, IPMI_CMD_CLOSE_SESSION);
@@ -262,6 +273,8 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                    || pkt == GET_CHASSIS_STATUS_RES
                    || pkt == CHASSIS_CONTROL_REQ
                    || pkt == CHASSIS_CONTROL_RES
+                   || pkt == CHASSIS_IDENTIFY_REQ
+                   || pkt == CHASSIS_IDENTIFY_RES
                    || pkt == CLOSE_SESSION_REQ
                    || pkt == CLOSE_SESSION_RES))
         {
@@ -602,6 +615,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
       || pkt == GET_CHASSIS_STATUS_REQ
       || pkt == CHASSIS_CONTROL_REQ
+      || pkt == CHASSIS_IDENTIFY_REQ
       || pkt == CLOSE_SESSION_REQ)
     password = cmd_args.common.password;
   else
@@ -616,6 +630,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
 	       || pkt == CHASSIS_CONTROL_REQ
+	       || pkt == CHASSIS_IDENTIFY_REQ
 	       || pkt == CLOSE_SESSION_REQ))
     Fiid_obj_get(ip->obj_activate_session_res, 
                  "session_id", 
@@ -624,6 +639,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
+               || pkt == CHASSIS_IDENTIFY_REQ
 	       || pkt == CLOSE_SESSION_REQ))
     Fiid_obj_get(ip->obj_open_session_res,
                  "managed_system_session_id",
@@ -636,6 +652,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	  || pkt == GET_CHASSIS_STATUS_REQ
 	  || pkt == CHASSIS_CONTROL_REQ
+	  || pkt == CHASSIS_IDENTIFY_REQ
 	  || pkt == CLOSE_SESSION_REQ))
     {
       uint64_t initial_inbound_sequence_number;
@@ -650,6 +667,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
+               || pkt == CHASSIS_IDENTIFY_REQ
 	       || pkt == CLOSE_SESSION_REQ))
     sequence_number = ip->session_sequence_number;
   else
@@ -657,7 +675,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
   /* Calculate Network Function */
   if (pkt == GET_CHASSIS_STATUS_REQ
-      || pkt == CHASSIS_CONTROL_REQ)
+      || pkt == CHASSIS_CONTROL_REQ
+      || pkt == CHASSIS_IDENTIFY_REQ)
     net_fn = IPMI_NET_FN_CHASSIS_RQ;
   else
     net_fn = IPMI_NET_FN_APP_RQ;
@@ -669,6 +688,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
 	       || pkt == CHASSIS_CONTROL_REQ
+	       || pkt == CHASSIS_IDENTIFY_REQ
 	       || pkt == CLOSE_SESSION_REQ))
     {
       if (!ip->permsgauth_enabled)
@@ -960,6 +980,39 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                   ip->ic->hostname, ip->protocol_state, strerror(errno));
       obj_cmd_req = ip->obj_chassis_control_req;
     }
+  else if (pkt == CHASSIS_IDENTIFY_REQ)
+    {
+      uint8_t identify_interval;
+      uint8_t force_identify;
+      uint8_t *identify_interval_ptr = NULL;
+      uint8_t *force_identify_ptr = NULL;
+
+      assert (ip->cmd == POWER_CMD_IDENTIFY_ON
+              || ip->cmd == POWER_CMD_IDENTIFY_OFF);
+
+      if (ip->cmd == POWER_CMD_IDENTIFY_ON)
+        {
+          /* must pass interval for force to be taken */
+          identify_interval = 0xFF;
+          identify_interval_ptr = &identify_interval;
+
+          force_identify = IPMI_CHASSIS_FORCE_IDENTIFY_ON;
+          force_identify_ptr = &force_identify;
+        }
+      else
+        {
+          identify_interval = 0;
+          identify_interval_ptr = &identify_interval;
+        }
+
+      if (fill_cmd_chassis_identify (identify_interval_ptr,
+                                     force_identify_ptr,
+                                     ip->obj_chassis_identify_req) < 0)
+        ierr_exit ("ipmipower_packet_create(%s: %d): "
+                   "fill_cmd_chassis_identify: %s",
+                   ip->ic->hostname, ip->protocol_state, strerror (errno));
+      obj_cmd_req = ip->obj_chassis_identify_req;
+    }
   else if (pkt == CLOSE_SESSION_REQ)
     {
       if (fill_cmd_close_session((uint32_t)session_id, ip->obj_close_session_req) < 0)
@@ -978,6 +1031,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
               || pkt == GET_CHASSIS_STATUS_REQ
               || pkt == CHASSIS_CONTROL_REQ
+              || pkt == CHASSIS_IDENTIFY_REQ
 	      || pkt == CLOSE_SESSION_REQ)))
     len = _ipmi_1_5_packet_create(ip,
                                   pkt,
@@ -997,6 +1051,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                    || pkt == GET_CHASSIS_STATUS_REQ
                    || pkt == CHASSIS_CONTROL_REQ
+                   || pkt == CHASSIS_IDENTIFY_REQ
 		   || pkt == CLOSE_SESSION_REQ)))
     len = _ipmi_2_0_packet_create(ip,
                                   pkt,

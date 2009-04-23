@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.89.4.4 2008-12-12 18:55:51 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.89.4.5 2009-04-23 17:26:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -62,6 +62,7 @@ ipmipower_check_checksum(ipmipower_powercmd_t ip, packet_type_t pkt)
 	  || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES /* IPMI 1.5 or 2.0 */
 	  || pkt == GET_CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
 	  || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
+          || pkt == CHASSIS_IDENTIFY_RES /* IPMI 1.5 or 2.0 */
 	  || pkt == CLOSE_SESSION_RES); /* IPMI 1.5 or 2.0 */
 
   obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
@@ -97,6 +98,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	 || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES /* IPMI 1.5 or 2.0 */
 	 || pkt == GET_CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
 	 || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
+         || pkt == CHASSIS_IDENTIFY_RES /* IPMI 1.5 or 2.0 */
 	 || pkt == CLOSE_SESSION_RES); /* IPMI 1.5 or 2.0 */
   assert(buffer && buffer_len);
 
@@ -108,6 +110,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	  && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	      || pkt == GET_CHASSIS_STATUS_RES
 	      || pkt == CHASSIS_CONTROL_RES
+              || pkt == CHASSIS_IDENTIFY_RES
 	      || pkt == CLOSE_SESSION_RES)))
     {
       uint8_t authentication_type;
@@ -123,6 +126,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
       else /* pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
               || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
+              || pkt == CHASSIS_IDENTIFY_RES
               || pkt == CLOSE_SESSION_RES
 	   */
 	{
@@ -193,6 +197,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
            || pkt == GET_CHASSIS_STATUS_RES
            || pkt == CHASSIS_CONTROL_RES
+           || pkt == CHASSIS_IDENTIFY_RES
            || pkt == CLOSE_SESSION_RES))
 	*/
     {
@@ -259,6 +264,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	  || pkt == GET_CHASSIS_STATUS_RES
 	  || pkt == CHASSIS_CONTROL_RES
+          || pkt == CHASSIS_IDENTIFY_RES
 	  || pkt == CLOSE_SESSION_RES))
     Fiid_obj_get(ip->obj_rmcpplus_session_hdr_res,
 		 "session_sequence_number",
@@ -269,6 +275,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
           || pkt == GET_CHASSIS_STATUS_RES
           || pkt == CHASSIS_CONTROL_RES
+          || pkt == CHASSIS_IDENTIFY_RES
           || pkt == CLOSE_SESSION_RES))
        */
     Fiid_obj_get(ip->obj_lan_session_hdr_res,
@@ -444,6 +451,7 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	       || pkt == GET_CHASSIS_STATUS_RES
 	       || pkt == CHASSIS_CONTROL_RES
+               || pkt == CHASSIS_IDENTIFY_RES
 	       || pkt == CLOSE_SESSION_RES))
     {
       Fiid_obj_get(ip->obj_lan_session_hdr_res, 
@@ -457,6 +465,7 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
 	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	       || pkt == GET_CHASSIS_STATUS_RES
 	       || pkt == CHASSIS_CONTROL_RES
+               || pkt == CHASSIS_IDENTIFY_RES
 	       || pkt == CLOSE_SESSION_RES))
     {
       Fiid_obj_get(ip->obj_rmcpplus_session_hdr_res, 
@@ -514,7 +523,9 @@ ipmipower_check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
     
   Fiid_obj_get(ip->obj_lan_msg_hdr_res, "net_fn", &netfn);
 
-  if (pkt == GET_CHASSIS_STATUS_RES || pkt == CHASSIS_CONTROL_RES)
+  if (pkt == GET_CHASSIS_STATUS_RES
+      || pkt == CHASSIS_CONTROL_RES
+      || pkt == CHASSIS_IDENTIFY_RES)
     expected_netfn = IPMI_NET_FN_CHASSIS_RS;
   else
     expected_netfn = IPMI_NET_FN_APP_RS;
@@ -557,6 +568,8 @@ ipmipower_check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_cmd = IPMI_CMD_GET_CHASSIS_STATUS;
   else if (pkt == CHASSIS_CONTROL_RES) 
     expected_cmd = IPMI_CMD_CHASSIS_CONTROL;
+  else if (pkt == CHASSIS_IDENTIFY_RES)
+    expected_cmd = IPMI_CMD_CHASSIS_IDENTIFY;
   else if (pkt == CLOSE_SESSION_RES) 
     expected_cmd = IPMI_CMD_CLOSE_SESSION;
   
@@ -632,6 +645,7 @@ ipmipower_check_payload_type(ipmipower_powercmd_t ip, packet_type_t pkt)
 	     && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 		 || pkt == GET_CHASSIS_STATUS_RES
 		 || pkt == CHASSIS_CONTROL_RES
+                 || pkt == CHASSIS_IDENTIFY_RES
 		 || pkt == CLOSE_SESSION_RES)));
 
   Fiid_obj_get(ip->obj_rmcpplus_session_hdr_res, 
@@ -1032,6 +1046,7 @@ ipmipower_check_payload_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
              || pkt == GET_CHASSIS_STATUS_RES
              || pkt == CHASSIS_CONTROL_RES
+             || pkt == CHASSIS_IDENTIFY_RES
              || pkt == CLOSE_SESSION_RES));
 
   confidentiality_algorithm = ip->confidentiality_algorithm;
@@ -1061,6 +1076,7 @@ ipmipower_check_integrity_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
              || pkt == GET_CHASSIS_STATUS_RES
              || pkt == CHASSIS_CONTROL_RES
+             || pkt == CHASSIS_IDENTIFY_RES
              || pkt == CLOSE_SESSION_RES));
 
   if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)

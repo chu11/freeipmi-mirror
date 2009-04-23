@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.96.4.3 2008-12-09 18:42:16 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.96.4.4 2009-04-23 17:26:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -466,6 +466,9 @@ _cmd_help(void)
               "stat [IPMIHOST(s)]                       - Query power status for all configured hosts or specified hosts.\n"
               "pulse [IPMIHOST(s)]                      - Pulse diagnostic interrupt all configured hosts or specified hosts.\n"
               "soft [IPMIHOST(s)]                       - Initiate a soft-shutdown for all configured hosts or specified hosts.\n"
+              "identify-on [IPMIHOST(s)]                - Turn on physical system identification.\n"
+              "identify-off [IPMIHOST(s)]               - Turn off physical system identification.\n"
+              "identify-status [IPMIHOST(s)]            - Query physical system identification status.\n"
               "on-if-off [on|off]                       - Toggle on-if-off functionality.\n"
               "wait-until-on [on|off]                   - Toggle wait-until-on functionality.\n"
               "wait-until-off [on|off]                  - Toggle wait-until-off functionality.\n"
@@ -949,6 +952,12 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_power(argv, POWER_CMD_PULSE_DIAG_INTR);
               else if (!strcmp(argv[0], "soft"))
                 _cmd_power(argv, POWER_CMD_SOFT_SHUTDOWN_OS);
+              else if (!strcmp (argv[0], "identify-on"))
+                _cmd_power (argv, POWER_CMD_IDENTIFY_ON);
+              else if (!strcmp (argv[0], "identify-off"))
+                _cmd_power (argv, POWER_CMD_IDENTIFY_OFF);
+              else if (!strcmp (argv[0], "identify-status"))
+                _cmd_power (argv, POWER_CMD_IDENTIFY_STATUS);
               else if (!strcmp(argv[0], "on-if-off"))
                 _cmd_set_flag(argv,
                               &cmd_args.on_if_off, 

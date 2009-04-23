@@ -8,6 +8,9 @@ o In ipmi-fru, fix various output typoes and output errors.
   - Fix invalid DC Output and DC Load voltage outputs. mV multiplier
     of 10 was previously not factored in.
 o In ipmi-chassis, fix output corner cases.
+o In ipmipower, support identify-on, identify-off, identify-status in
+  interactive mode.
+o In ipmipower, fix closing session corner case bug.
 o Update ipmi-oem manpage with extra information.
 
 0.7.8 - 04/10/09
