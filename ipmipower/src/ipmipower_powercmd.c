@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.168 2009-03-12 17:57:53 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.169 2009-04-23 16:45:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -109,21 +109,24 @@ _destroy_ipmipower_powercmd (ipmipower_powercmd_t ip)
   Fiid_obj_destroy (ip->obj_get_chassis_status_res);
   Fiid_obj_destroy (ip->obj_chassis_control_req);
   Fiid_obj_destroy (ip->obj_chassis_control_res);
+  Fiid_obj_destroy (ip->obj_chassis_identify_req);
+  Fiid_obj_destroy (ip->obj_chassis_identify_res);
   Fiid_obj_destroy (ip->obj_close_session_req);
   Fiid_obj_destroy (ip->obj_close_session_res);
 
   /* Close all sockets that were saved during the Get Session
    * Challenge phase of the IPMI protocol.
    */
-  if (list_count (ip->sockets_to_close) > 0) {
-    int *fd;
-    while ((fd = list_pop (ip->sockets_to_close)))
-      {
-    Close (*fd);
-    Free (fd);
-      }
-  }
-
+  if (list_count (ip->sockets_to_close) > 0)
+    {
+      int *fd;
+      while ((fd = list_pop (ip->sockets_to_close)))
+        {
+          Close (*fd);
+          Free (fd);
+        }
+    }
+  
   list_destroy (ip->sockets_to_close);
 
   Free (ip);
@@ -314,6 +317,8 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_get_chassis_status_res = Fiid_obj_create (tmpl_cmd_get_chassis_status_rs);
   ip->obj_chassis_control_req = Fiid_obj_create (tmpl_cmd_chassis_control_rq);
   ip->obj_chassis_control_res = Fiid_obj_create (tmpl_cmd_chassis_control_rs);
+  ip->obj_chassis_identify_req = Fiid_obj_create (tmpl_cmd_chassis_identify_rq);
+  ip->obj_chassis_identify_res = Fiid_obj_create (tmpl_cmd_chassis_identify_rs);
   ip->obj_close_session_req = Fiid_obj_create (tmpl_cmd_close_session_rq);
   ip->obj_close_session_res = Fiid_obj_create (tmpl_cmd_close_session_rs);
 
@@ -361,6 +366,7 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
+               || pkt == CHASSIS_IDENTIFY_REQ
                || pkt == CLOSE_SESSION_REQ))
     {
       /* IPMI 2.0 is special, sequence numbers of 0 don't count */
@@ -411,6 +417,8 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
     ip->protocol_state = PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT;
   else if (pkt == CHASSIS_CONTROL_REQ)
     ip->protocol_state = PROTOCOL_STATE_CHASSIS_CONTROL_SENT;
+  else if (pkt == CHASSIS_IDENTIFY_REQ)
+    ip->protocol_state = PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT;
   else if (pkt == CLOSE_SESSION_REQ)
     ip->protocol_state = PROTOCOL_STATE_CLOSE_SESSION_SENT;
 
@@ -422,6 +430,7 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
           || pkt == GET_CHASSIS_STATUS_REQ
           || pkt == CHASSIS_CONTROL_REQ
+          || pkt == CHASSIS_IDENTIFY_REQ
           || pkt == CLOSE_SESSION_REQ))
     ip->session_inbound_count++;
 
@@ -458,6 +467,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
               || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
+              || pkt == CHASSIS_IDENTIFY_RES
               || pkt == CLOSE_SESSION_RES)))
     {
       /* rv = 0 if the packet is unparseable */
@@ -538,6 +548,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
        && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
        || pkt == GET_CHASSIS_STATUS_RES
        || pkt == CHASSIS_CONTROL_RES
+       || pkt == CHASSIS_IDENTIFY_RES
        || pkt == CLOSE_SESSION_RES)))
        */
     {
@@ -620,6 +631,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
               && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
           || pkt == GET_CHASSIS_STATUS_RES
           || pkt == CHASSIS_CONTROL_RES
+          || pkt == CHASSIS_IDENTIFY_RES
           || pkt == CLOSE_SESSION_RES)) */
         {
           if (!ipmipower_check_payload_type (ip, pkt))
@@ -872,6 +884,8 @@ _retry_packets (ipmipower_powercmd_t ip)
     _send_packet (ip, GET_CHASSIS_STATUS_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_CONTROL_SENT)
     _send_packet (ip, CHASSIS_CONTROL_REQ);
+  else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT)
+    _send_packet (ip, CHASSIS_IDENTIFY_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_CLOSE_SESSION_SENT)
     /*
      * It's pointless to retransmit a close-session.
@@ -1479,10 +1493,14 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
         }
 
       if (ip->cmd == POWER_CMD_POWER_STATUS
+          || ip->cmd == POWER_CMD_IDENTIFY_STATUS
           || (cmd_args.on_if_off
               && (ip->cmd == POWER_CMD_POWER_CYCLE
                   || ip->cmd == POWER_CMD_POWER_RESET)))
         _send_packet (ip, GET_CHASSIS_STATUS_REQ);
+      else if (ip->cmd == POWER_CMD_IDENTIFY_ON
+               || ip->cmd == POWER_CMD_IDENTIFY_OFF)
+        _send_packet (ip, CHASSIS_IDENTIFY_REQ);
       else
         _send_packet (ip, CHASSIS_CONTROL_REQ);
     }
@@ -1540,6 +1558,35 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
             }
           _send_packet (ip, CHASSIS_CONTROL_REQ);
         }
+      else if (ip->cmd == POWER_CMD_IDENTIFY_STATUS)
+        {
+          uint64_t identify_status_supported;
+
+          Fiid_obj_get (ip->obj_get_chassis_status_res,
+                        "misc_chassis_state.chassis_identify_command_and_state_info_supported",
+                        &identify_status_supported);
+
+          if (identify_status_supported)
+            {
+              uint64_t identify_status;
+
+              Fiid_obj_get (ip->obj_get_chassis_status_res,
+                            "misc_chassis_state.chassis_identify_state",
+                            &identify_status);
+              
+              if (identify_status == IPMI_CHASSIS_IDENTIFY_STATE_OFF)
+                ipmipower_output (MSG_TYPE_OFF, ip->ic->hostname);
+              else if (identify_status == IPMI_CHASSIS_IDENTIFY_STATE_TEMPORARY_ON
+                       || identify_status == IPMI_CHASSIS_IDENTIFY_STATE_INDEFINITE_ON)
+                ipmipower_output (MSG_TYPE_ON, ip->ic->hostname);
+              else
+                ipmipower_output (MSG_TYPE_UNKNOWN, ip->ic->hostname);
+            }
+          else
+            ipmipower_output (MSG_TYPE_UNKNOWN, ip->ic->hostname);
+
+          _send_packet (ip, CLOSE_SESSION_REQ);
+        }
       else
         ierr_exit ("_process_ipmi_packets: invalid command state: %d", ip->cmd);
     }
@@ -1581,6 +1628,19 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           else
             _send_packet (ip, CLOSE_SESSION_REQ);
         }
+    }
+  else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT)
+    {
+      if ((rv = _recv_packet (ip, CHASSIS_IDENTIFY_RES)) != 1)
+        {
+          if (rv < 0)
+            /* Session is up, so close it */
+            _send_packet (ip, CLOSE_SESSION_REQ);
+          goto done;
+        }
+
+      ipmipower_output (MSG_TYPE_OK, ip->ic->hostname);
+      _send_packet (ip, CLOSE_SESSION_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_CLOSE_SESSION_SENT)
     {

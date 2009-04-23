@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.128 2009-03-03 23:56:54 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.129 2009-04-23 16:45:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -89,11 +89,14 @@ typedef enum
     POWER_CMD_POWER_STATUS     = 0x05,
     POWER_CMD_PULSE_DIAG_INTR  = 0x06,
     POWER_CMD_SOFT_SHUTDOWN_OS = 0x07,
+    POWER_CMD_IDENTIFY_ON      = 0x08,
+    POWER_CMD_IDENTIFY_OFF     = 0x09,
+    POWER_CMD_IDENTIFY_STATUS  = 0x0A,
   } power_cmd_t;
 
 #define POWER_CMD_VALID(__c)             \
   ((__c) > POWER_CMD_POWER_OFF &&        \
-   (__c) <= POWER_CMD_SOFT_SHUTDOWN_OS)
+   (__c) <= POWER_CMD_IDENTIFY_STATUS)
 
 #define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(__c)    \
   ((__c) == POWER_CMD_POWER_OFF                             \
@@ -101,7 +104,9 @@ typedef enum
    || (__c) == POWER_CMD_POWER_CYCLE                        \
    || (__c) == POWER_CMD_POWER_RESET                        \
    || (__c) == POWER_CMD_PULSE_DIAG_INTR                    \
-   || (__c) == POWER_CMD_SOFT_SHUTDOWN_OS)
+   || (__c) == POWER_CMD_SOFT_SHUTDOWN_OS                   \
+   || (__c) == POWER_CMD_IDENTIFY_ON                        \
+   || (__c) == POWER_CMD_IDENTIFY_OFF)
 
 /* packet_type_t
  * - packet types stored internally in an ipmipower_powercmd structure.
@@ -129,8 +134,10 @@ typedef enum
     GET_CHASSIS_STATUS_RES              = 0x209,
     CHASSIS_CONTROL_REQ                 = 0x10A,
     CHASSIS_CONTROL_RES                 = 0x20A,
-    CLOSE_SESSION_REQ                   = 0x10B,
-    CLOSE_SESSION_RES                   = 0x20B,
+    CHASSIS_IDENTIFY_REQ                = 0x10B,
+    CHASSIS_IDENTIFY_RES                = 0x20B,
+    CLOSE_SESSION_REQ                   = 0x10C,
+    CLOSE_SESSION_RES                   = 0x20C,
   } packet_type_t;
 
 #define PACKET_TYPE_REQ_MASK           0x100
@@ -163,8 +170,9 @@ typedef enum
     PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT     = 0x08,
     PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT              = 0x09,
     PROTOCOL_STATE_CHASSIS_CONTROL_SENT                 = 0x0A,
-    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x0B,
-    PROTOCOL_STATE_END                                  = 0x0C,
+    PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT                = 0x0B,
+    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x0C,
+    PROTOCOL_STATE_END                                  = 0x0D,
   } protocol_state_t;
 
 #define PROTOCOL_STATE_VALID(__s)    \
@@ -200,25 +208,26 @@ typedef enum
     MSG_TYPE_ON                                 =  0,
     MSG_TYPE_OFF                                =  1,
     MSG_TYPE_OK                                 =  2,
-    MSG_TYPE_USERNAME_INVALID                   =  3,
-    MSG_TYPE_PASSWORD_INVALID                   =  4,
-    MSG_TYPE_PASSWORD_LENGTH_INVALID            =  5,
-    MSG_TYPE_K_G_INVALID                        =  6,
-    MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED =  7,
-    MSG_TYPE_OPERATION_INVALID                  =  8,
-    MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE    =  9,
-    MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE        = 10,
-    MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT      = 11,
-    MSG_TYPE_CONNECTION_TIMEOUT                 = 12,
-    MSG_TYPE_SESSION_TIMEOUT                    = 13,
-    MSG_TYPE_NOTDISCOVERED                      = 14,
-    MSG_TYPE_BADCONNECTION                      = 15,
-    MSG_TYPE_HOSTNAME_INVALID                   = 16,
-    MSG_TYPE_UNCONFIGURED_HOSTNAME              = 17,
-    MSG_TYPE_RESOURCES                          = 18,
-    MSG_TYPE_IPMI_2_0_UNAVAILABLE               = 19,
-    MSG_TYPE_BMC_BUSY                           = 20,
-    MSG_TYPE_BMC_ERROR                          = 21,
+    MSG_TYPE_UNKNOWN                            =  3,
+    MSG_TYPE_USERNAME_INVALID                   =  4,
+    MSG_TYPE_PASSWORD_INVALID                   =  5,
+    MSG_TYPE_PASSWORD_LENGTH_INVALID            =  6,
+    MSG_TYPE_K_G_INVALID                        =  7,
+    MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED =  8,
+    MSG_TYPE_OPERATION_INVALID                  =  9,
+    MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE    = 10,
+    MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE        = 11,
+    MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT      = 12,
+    MSG_TYPE_CONNECTION_TIMEOUT                 = 13,
+    MSG_TYPE_SESSION_TIMEOUT                    = 14,
+    MSG_TYPE_NOTDISCOVERED                      = 15,
+    MSG_TYPE_BADCONNECTION                      = 16,
+    MSG_TYPE_HOSTNAME_INVALID                   = 17,
+    MSG_TYPE_UNCONFIGURED_HOSTNAME              = 18,
+    MSG_TYPE_RESOURCES                          = 19,
+    MSG_TYPE_IPMI_2_0_UNAVAILABLE               = 20,
+    MSG_TYPE_BMC_BUSY                           = 21,
+    MSG_TYPE_BMC_ERROR                          = 22,
   } msg_type_t;
 
 #define MSG_TYPE_VALID(__m)          \
@@ -311,6 +320,8 @@ struct ipmipower_powercmd {
   fiid_obj_t obj_get_chassis_status_res;
   fiid_obj_t obj_chassis_control_req;
   fiid_obj_t obj_chassis_control_res;
+  fiid_obj_t obj_chassis_identify_req;
+  fiid_obj_t obj_chassis_identify_res;
   fiid_obj_t obj_close_session_req;
   fiid_obj_t obj_close_session_res;
 
