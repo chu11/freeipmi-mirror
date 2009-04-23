@@ -282,6 +282,7 @@ fi
 %dir %{_includedir}/freeipmi/debug
 %dir %{_includedir}/freeipmi/driver
 %dir %{_includedir}/freeipmi/fiid
+%dir %{_includedir}/freeipmi/fru-parse
 %dir %{_includedir}/freeipmi/interface
 %dir %{_includedir}/freeipmi/locate
 %dir %{_includedir}/freeipmi/record-format
@@ -301,6 +302,7 @@ fi
 %{_includedir}/freeipmi/debug/*.h
 %{_includedir}/freeipmi/driver/*.h
 %{_includedir}/freeipmi/fiid/*.h
+%{_includedir}/freeipmi/fru-parse/*.h
 %{_includedir}/freeipmi/interface/*.h
 %{_includedir}/freeipmi/locate/*.h
 %{_includedir}/freeipmi/record-format/*.h
@@ -333,7 +335,7 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
-* Mon Mar 23 2009 Albert Chu <chu11@llnl.gov> 0.8.0
+* Mon Apr 23 2009 Albert Chu <chu11@llnl.gov> 0.8.0
 - Update for renaming of pef-config.
 - Update for new .h files.
 
