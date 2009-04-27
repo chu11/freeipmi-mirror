@@ -19,6 +19,10 @@
 #ifndef _IPMI_BMC_WATCHDOG_TIMER_CMDS_TEMPLATES_H
 #define _IPMI_BMC_WATCHDOG_TIMER_CMDS_TEMPLATES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* This header file is for documentation only */
 
 #if 0
@@ -126,5 +130,9 @@ fiid_template_t tmpl_cmd_get_watchdog_timer_rs =
   };
 
 #endif  /* 0 */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* _IPMI_BMC_WATCHDOG_TIMER_CMDS_TEMPLATES_H */

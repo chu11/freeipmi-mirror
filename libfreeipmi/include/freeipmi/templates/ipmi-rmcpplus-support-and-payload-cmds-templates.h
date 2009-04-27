@@ -19,6 +19,10 @@
 #ifndef _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_TEMPLATES_H
 #define _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_TEMPLATES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* This header file is for documentation only */
 
 #if 0
@@ -420,5 +424,9 @@ fiid_template_t tmpl_cmd_get_channel_oem_payload_info_rs =
   };
 
 #endif  /* 0 */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_TEMPLATES_H */

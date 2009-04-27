@@ -19,6 +19,10 @@
 #ifndef _IPMI_CHASSIS_CMDS_TEMPLATES_H
 #define _IPMI_CHASSIS_CMDS_TEMPLATES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* This header file is for documentation only */
 
 #if 0
@@ -479,5 +483,9 @@ fiid_template_t tmpl_cmd_get_power_on_hours_counter_rs =
   };
 
 #endif  /* 0 */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* _IPMI_CHASSIS_CMDS_TEMPLATES_H */

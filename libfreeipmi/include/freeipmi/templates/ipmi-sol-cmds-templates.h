@@ -19,6 +19,10 @@
 #ifndef _IPMI_SOL_CMDS_TEMPLATES_H
 #define _IPMI_SOL_CMDS_TEMPLATES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* This header file is for documentation only */
 
 #if 0
@@ -364,5 +368,9 @@ fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_numbe
   };
 
 #endif  /* 0 */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* _IPMI_SOL_CMDS_TEMPLATES_H */

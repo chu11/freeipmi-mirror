@@ -19,6 +19,10 @@
 #ifndef _IPMI_IPMB_INTERFACE_TEMPLATES_H
 #define _IPMI_IPMB_INTERFACE_TEMPLATES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* This header file is for documentation only */
 
 #if 0
@@ -73,5 +77,9 @@ fiid_template_t tmpl_ipmb_msg =
   };
 
 #endif  /* 0 */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* _IPMI_IPMB_INTERFACE_TEMPLATES_H */
