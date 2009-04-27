@@ -1,7 +1,13 @@
+2009-04-27  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/: Code cleanup.
+	
 2009-04-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Support identify-on, identify-off, identify-status
 	in interactive mode of ipmipower.
+
+	* freeipmi.spec.in: Update for fru-parse.
 	
 2009-04-22  Albert Chu <chu11@llnl.gov>
 

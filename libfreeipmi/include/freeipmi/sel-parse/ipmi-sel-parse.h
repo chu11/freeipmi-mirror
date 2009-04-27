@@ -20,6 +20,10 @@
 #ifndef _IPMI_SEL_PARSE_H
 #define _IPMI_SEL_PARSE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/sdr-cache/ipmi-sdr-cache.h>
@@ -342,5 +346,9 @@ int ipmi_sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
                                          char *buf,
                                          unsigned int buflen,
                                          unsigned int flags);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _IPMI_SEL_PARSE_H */

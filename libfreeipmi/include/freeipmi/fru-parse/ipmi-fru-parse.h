@@ -19,6 +19,10 @@
 #ifndef _IPMI_FRU_PARSE_H
 #define _IPMI_FRU_PARSE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
 
@@ -262,5 +266,9 @@ int ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
                                                 uint8_t language_code,
                                                 char *strbuf,
                                                 unsigned int *strbuflen);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _IPMI_FRU_PARSE_H */

@@ -20,6 +20,10 @@
 #ifndef _IPMI_SENSOR_READ_H
 #define _IPMI_SENSOR_READ_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/sdr-cache/ipmi-sdr-cache.h>
@@ -89,5 +93,9 @@ int ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
                       unsigned int sdr_record_len,
                       double **sensor_reading,
                       uint16_t *sensor_event_bitmask);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _IPMI_SENSOR_READ_H */

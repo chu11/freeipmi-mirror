@@ -20,6 +20,10 @@
 #ifndef _IPMI_SDR_PARSE_H
 #define _IPMI_SDR_PARSE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #define IPMI_SDR_PARSE_ERR_SUCCESS                                 0
@@ -363,5 +367,9 @@ int ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
                              unsigned int sdr_record_len,
                              uint8_t *oem_data,
                              unsigned int oem_data_len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _IPMI_SDR_PARSE_H */

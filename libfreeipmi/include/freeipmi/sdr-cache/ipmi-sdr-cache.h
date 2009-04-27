@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.h,v 1.12 2009-04-17 23:50:27 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.h,v 1.13 2009-04-27 21:20:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -26,6 +26,10 @@
 
 #ifndef _IPMI_SDR_CACHE_H
 #define _IPMI_SDR_CACHE_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
@@ -136,5 +140,8 @@ int ipmi_sdr_cache_close (ipmi_sdr_cache_ctx_t ctx);
 /* SDR Cache Delete Functions */
 int ipmi_sdr_cache_delete (ipmi_sdr_cache_ctx_t ctx, char *filename);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _IPMI_SDR_CACHE_H */
