@@ -1,3 +1,7 @@
+2009-04-28  Albert Chu <chu11@llnl.gov>
+
+	* Various code cleanup.
+	
 2009-04-27  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/: Code cleanup.

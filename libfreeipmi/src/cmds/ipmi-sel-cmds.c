@@ -106,7 +106,7 @@ fiid_template_t tmpl_cmd_get_sel_entry_rs =
     { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16,  "next_record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
-    { 128, "record_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "record_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0,   "", 0}
   };
 

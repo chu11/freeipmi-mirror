@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.12 2009-04-17 23:50:29 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.13 2009-04-28 17:43:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -76,7 +76,7 @@ fiid_template_t tmpl_cmd_read_fru_data_rs =
     { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,    "count_returned", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2040, "requested_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    { 2040, "requested_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 
