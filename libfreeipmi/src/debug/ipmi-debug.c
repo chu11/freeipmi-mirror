@@ -386,7 +386,7 @@ ipmi_obj_dump_ipmb (int fd,
   return (rv);
 }
 
-int32_t
+int8_t
 ipmi_dump_hex (int fd,
                const char *prefix,
                const char *hdr,

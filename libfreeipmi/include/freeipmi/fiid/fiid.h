@@ -594,11 +594,11 @@ int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
  * write as much as possible if data is not large enough to fill the
  * entire block.
  */
-int8_t fiid_obj_set_block (fiid_obj_t obj,
-                           const char *field_start,
-                           const char *field_end,
-                           uint8_t *data,
-                           uint32_t data_len);
+int32_t fiid_obj_set_block (fiid_obj_t obj,
+                            const char *field_start,
+                            const char *field_end,
+                            uint8_t *data,
+                            uint32_t data_len);
 
 /*
  * fiid_obj_get_block
@@ -607,11 +607,11 @@ int8_t fiid_obj_set_block (fiid_obj_t obj,
  * ending with 'field_end'.  Returns length of data read on success,
  * -1 on error.  Data being read must fall on a byte boundary.
  */
-int8_t fiid_obj_get_block (fiid_obj_t obj,
-                           const char *field_start,
-                           const char *field_end,
-                           uint8_t *data,
-                           uint32_t data_len);
+int32_t fiid_obj_get_block (fiid_obj_t obj,
+                            const char *field_start,
+                            const char *field_end,
+                            uint8_t *data,
+                            uint32_t data_len);
 
 /*****************************
 * FIID Iterator API         *

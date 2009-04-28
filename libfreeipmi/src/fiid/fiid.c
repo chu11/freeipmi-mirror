@@ -2181,7 +2181,7 @@ _fiid_obj_max_block_len (fiid_obj_t obj,
   return (end - start);
 }
 
-int8_t
+int32_t
 fiid_obj_set_block (fiid_obj_t obj,
                     const char *field_start,
                     const char *field_end,
@@ -2288,7 +2288,7 @@ fiid_obj_set_block (fiid_obj_t obj,
   return (data_len);
 }
 
-int8_t
+int32_t
 fiid_obj_get_block (fiid_obj_t obj,
                     const char *field_start,
                     const char *field_end,

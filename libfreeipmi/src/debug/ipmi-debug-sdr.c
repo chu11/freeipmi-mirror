@@ -41,7 +41,7 @@
 
 #include "freeipmi-portability.h"
 
-int32_t
+int8_t
 ipmi_dump_sdr_record (int fd,
                       const char *prefix,
                       const char *hdr,

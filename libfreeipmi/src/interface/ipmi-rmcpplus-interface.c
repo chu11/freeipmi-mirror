@@ -2159,7 +2159,7 @@ _deconstruct_payload (uint8_t payload_type,
                                        ipmi_payload_len));
 }
 
-int32_t
+int8_t
 unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                               uint8_t integrity_algorithm,
                               uint8_t confidentiality_algorithm,

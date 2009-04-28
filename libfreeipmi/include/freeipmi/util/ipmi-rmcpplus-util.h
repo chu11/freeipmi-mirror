@@ -74,7 +74,7 @@ int32_t ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
                                               uint8_t **confidentiality_key,
                                               uint32_t *confidentiality_key_len);
 
-int32_t ipmi_calculate_rakp_3_key_exchange_authentication_code (int8_t authentication_algorithm,
+int32_t ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_algorithm,
                                                                 uint8_t *k_uid,
                                                                 uint32_t k_uid_len,
                                                                 uint8_t *managed_system_random_number,
@@ -92,7 +92,7 @@ int8_t ipmi_rmcpplus_check_payload_pad (uint8_t confidentiality_algorithm,
 
 int8_t ipmi_rmcpplus_check_integrity_pad (fiid_obj_t obj_rmcpplus_session_trlr);
 
-int8_t ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (int8_t authentication_algorithm,
+int8_t ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authentication_algorithm,
                                                                     uint8_t *k_uid,
                                                                     uint32_t k_uid_len,
                                                                     uint32_t remote_console_session_id,
@@ -109,7 +109,7 @@ int8_t ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (int8_t authe
                                                                     uint8_t user_name_length,
                                                                     fiid_obj_t obj_cmd);
 
-int8_t ipmi_rmcpplus_check_rakp_4_integrity_check_value (int8_t authentication_algorithm,
+int8_t ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorithm,
                                                          uint8_t *sik_key,
                                                          uint32_t sik_key_len,
                                                          uint8_t *remote_console_random_number,
@@ -119,7 +119,7 @@ int8_t ipmi_rmcpplus_check_rakp_4_integrity_check_value (int8_t authentication_a
                                                          uint32_t managed_system_guid_len,
                                                          fiid_obj_t obj_cmd);
 
-int8_t ipmi_rmcpplus_check_packet_session_authentication_code (int8_t integrity_algorithm,
+int8_t ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algorithm,
                                                                uint8_t *pkt,
                                                                uint32_t pkt_len,
                                                                uint8_t *integrity_key,

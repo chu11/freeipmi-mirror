@@ -1172,7 +1172,7 @@ _dump_rmcpplus_session_trlr (int fd,
   return (rv);
 }
 
-static int32_t
+static int8_t
 _ipmi_dump_rmcpplus_packet (int fd,
                             const char *prefix,
                             const char *hdr,
@@ -1503,7 +1503,7 @@ _ipmi_dump_rmcpplus_packet (int fd,
   return (rv);
 }
 
-int32_t
+int8_t
 ipmi_dump_rmcpplus_packet (int fd,
                            const char *prefix,
                            const char *hdr,
@@ -1553,7 +1553,7 @@ ipmi_dump_rmcpplus_packet (int fd,
                                       NULL));
 }
 
-int32_t
+int8_t
 ipmi_dump_rmcpplus_packet_ipmb (int fd,
                                 const char *prefix,
                                 const char *hdr,
