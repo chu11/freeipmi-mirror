@@ -62,15 +62,15 @@ typedef struct ipmi_pef_config_state_data
 
   /* achu: caching to make ipmi-pef-config work more quickly */
   int lan_channel_number_initialized;
-  int8_t lan_channel_number;
+  uint8_t lan_channel_number;
   int number_of_lan_alert_destinations_initialized;
-  int8_t number_of_lan_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   int number_of_alert_strings_initialized;
-  int8_t number_of_alert_strings;
+  uint8_t number_of_alert_strings;
   int number_of_alert_policy_entries_initialized;
-  int8_t number_of_alert_policy_entries;
+  uint8_t number_of_alert_policy_entries;
   int number_of_event_filters_initialized;
-  int8_t number_of_event_filters;
+  uint8_t number_of_event_filters;
 } ipmi_pef_config_state_data_t;
 
 #endif

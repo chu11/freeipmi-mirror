@@ -1,5 +1,11 @@
 2009-04-28  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/: ipmi_get_channel_number now takes a parameter for
+	the returned channel number.
+
+	* ipmi-oem/, bmc-device/, bmc-config/, pef-config/: Adjust for API
+	changes.
+
 	* Various code cleanup.
 	
 2009-04-27  Albert Chu <chu11@llnl.gov>

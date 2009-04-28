@@ -24,7 +24,7 @@
 #include "ipmi-pef-config.h"
 
 config_err_t get_lan_channel_number (struct ipmi_pef_config_state_data *state_data,
-                                     uint8_t *channel_number);
+                                     uint8_t *channel_num);
 
 config_err_t get_number_of_lan_alert_destinations (struct ipmi_pef_config_state_data *state_data,
                                                    uint8_t *number_of_lan_alert_destinations);

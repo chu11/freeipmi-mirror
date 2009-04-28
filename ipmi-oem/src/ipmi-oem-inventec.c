@@ -288,7 +288,7 @@ ipmi_oem_inventec_get_mac_address (ipmi_oem_state_data_t *state_data)
   fiid_obj_t obj_cmd_rs = NULL;
   char mac_address_str[IPMI_OEM_MAX_MACADDRLEN+1];
   uint8_t mac_address_bytes[6];
-  int8_t lan_channel_number;
+  uint8_t lan_channel_number;
   int rv = -1;
 
   assert (state_data);
@@ -299,8 +299,9 @@ ipmi_oem_inventec_get_mac_address (ipmi_oem_state_data_t *state_data)
    * a "set" command in ipmi-oem.
    */
 
-  if ((lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
-                                                     IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,

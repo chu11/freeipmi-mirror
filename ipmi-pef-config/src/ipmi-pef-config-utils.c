@@ -35,19 +35,22 @@
 #include "pstdout.h"
 
 config_err_t
-get_lan_channel_number (struct ipmi_pef_config_state_data *state_data, uint8_t *channel_number)
+get_lan_channel_number (struct ipmi_pef_config_state_data *state_data, uint8_t *channel_num)
 {
+  uint8_t channel_number;
+
   assert (state_data);
   assert (channel_number);
 
   if (state_data->lan_channel_number_initialized)
     {
-      *channel_number = state_data->lan_channel_number;
+      *channel_num = state_data->lan_channel_number;
       return (0);
     }
 
-  if ((state_data->lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
-                                                                 IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &channel_number) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
@@ -58,7 +61,8 @@ get_lan_channel_number (struct ipmi_pef_config_state_data *state_data, uint8_t *
     }
 
   state_data->lan_channel_number_initialized = 1;
-  *channel_number = state_data->lan_channel_number;
+  state_data->lan_channel_number = channel_number;
+  *channel_num = state_data->lan_channel_number;
   return (CONFIG_ERR_SUCCESS);
 }
 

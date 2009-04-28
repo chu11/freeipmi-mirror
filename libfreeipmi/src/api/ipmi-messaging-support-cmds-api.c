@@ -1695,7 +1695,9 @@ ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
 }
 
 int8_t
-ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
+ipmi_get_channel_number (ipmi_ctx_t ctx,
+                         uint8_t channel_medium_type,
+                         uint8_t *channel_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t manufacturer_id, product_id;
@@ -1707,6 +1709,12 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!channel_number)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -1782,7 +1790,8 @@ ipmi_get_channel_number (ipmi_ctx_t ctx, uint8_t channel_medium_type)
               goto cleanup;
             }
 
-          rv = (int8_t) val;
+          rv = 0;
+          (*channel_number) = (uint8_t)val;
           break;
         }
     }

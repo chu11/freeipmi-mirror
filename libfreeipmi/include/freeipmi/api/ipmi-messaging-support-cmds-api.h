@@ -174,7 +174,8 @@ int8_t ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
                                        fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_get_channel_number (ipmi_ctx_t ctx,
-                                uint8_t channel_medium_type);
+                                uint8_t channel_medium_type,
+                                uint8_t *channel_number);
 
 #ifdef __cplusplus
 }

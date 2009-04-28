@@ -520,7 +520,7 @@ static int
 get_lan_statistics (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t lan_channel_number;
+  uint8_t lan_channel_number;
   uint64_t val;
   int rv = -1;
 
@@ -535,8 +535,9 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if ((lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
-                                                     IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -702,7 +703,7 @@ static int
 clear_lan_statistics (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t lan_channel_number;
+  uint8_t lan_channel_number;
   int rv = -1;
 
   assert (state_data);
@@ -716,8 +717,9 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if ((lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
-                                                     IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,

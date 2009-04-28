@@ -80,13 +80,13 @@ typedef struct bmc_config_state_data
 
   /* achu: caching to make bmc-config work more quickly */
   int lan_channel_number_initialized;
-  int8_t lan_channel_number;
+  uint8_t lan_channel_number;
   int serial_channel_number_initialized;
-  int8_t serial_channel_number;
+  uint8_t serial_channel_number;
   int sol_channel_number_initialized;
-  int8_t sol_channel_number;
+  uint8_t sol_channel_number;
   int number_of_users_initialized;
-  int8_t number_of_users;
+  uint8_t number_of_users;
 } bmc_config_state_data_t;
 
 #endif /* _BMC_CONFIG_H_ */

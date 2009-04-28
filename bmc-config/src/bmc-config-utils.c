@@ -34,14 +34,17 @@
 config_err_t
 get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_num)
 {
+  uint8_t channel_number;
+
   if (state_data->lan_channel_number_initialized)
     {
       *channel_num = state_data->lan_channel_number;
       return (CONFIG_ERR_SUCCESS);
     }
 
-  if ((state_data->lan_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
-                                                                 IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &channel_number) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
@@ -52,21 +55,26 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
     }
 
   state_data->lan_channel_number_initialized = 1;
+  state_data->lan_channel_number = channel_number;
   *channel_num = state_data->lan_channel_number;
+
   return (CONFIG_ERR_SUCCESS);
 }
 
 config_err_t
 get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_num)
 {
+  uint8_t channel_number;
+
   if (state_data->serial_channel_number_initialized)
     {
       *channel_num = state_data->serial_channel_number;
       return (CONFIG_ERR_SUCCESS);
     }
 
-  if ((state_data->serial_channel_number = ipmi_get_channel_number (state_data->ipmi_ctx,
-                                                                    IPMI_CHANNEL_MEDIUM_TYPE_RS232)) < 0)
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_RS232,
+                               &channel_number) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
@@ -77,7 +85,9 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel
     }
 
   state_data->serial_channel_number_initialized = 1;
+  state_data->lan_channel_number = channel_number;
   *channel_num = state_data->serial_channel_number;
+
   return (CONFIG_ERR_SUCCESS);
 }
 
@@ -138,9 +148,9 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
     }
 
   state_data->sol_channel_number_initialized = 1;
-  state_data->sol_channel_number = val;
-
+  state_data->sol_channel_number = (uint8_t)val;
   *channel_num = state_data->sol_channel_number;
+
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -202,9 +212,9 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
     }
 
   state_data->number_of_users_initialized = 1;
-  state_data->number_of_users = val;
-
+  state_data->number_of_users = (uint8_t)val;
   *number_of_users = state_data->number_of_users;
+
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
