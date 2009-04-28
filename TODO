@@ -53,6 +53,7 @@ bmc-device
 --------
 get auxiliary log status
 - not tested, don't have a machine with this support
+ensure get-lan-statistics and clear-lan-statistics still work
 
 ipmi-pef-config
 -----------
