@@ -49,7 +49,7 @@
 #include "freeipmi-portability.h"
 #include "secure.h"
 
-int8_t
+int
 ipmi_lan_check_session_sequence_number (fiid_obj_t obj_lan_session_hdr, uint32_t session_sequence_number)
 {
   uint64_t session_sequence_number_recv;
@@ -75,7 +75,7 @@ ipmi_lan_check_session_sequence_number (fiid_obj_t obj_lan_session_hdr, uint32_t
   return ((((uint32_t)session_sequence_number_recv) == session_sequence_number) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_id)
 {
   uint64_t session_id_recv;
@@ -101,7 +101,7 @@ ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_id)
   return ((((uint32_t)session_id_recv) == session_id) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
                                             fiid_obj_t obj_lan_msg_hdr_rs,
                                             fiid_obj_t obj_cmd,
@@ -319,8 +319,12 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
   return (rv);
 }
 
-int8_t
-ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt, uint64_t pkt_len, uint8_t authentication_type, uint8_t *authentication_code_data, uint32_t authentication_code_data_len)
+int
+ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt,
+                                                   uint64_t pkt_len,
+                                                   uint8_t authentication_type,
+                                                   uint8_t *authentication_code_data,
+                                                   uint32_t authentication_code_data_len)
 {
   uint8_t authentication_type_recv;
   int32_t rmcp_hdr_len, authentication_type_index, authentication_code_index;
@@ -502,7 +506,7 @@ ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt, uint64_t pkt_le
   return (rv);
 }
 
-int8_t
+int
 ipmi_lan_check_net_fn (fiid_obj_t obj_lan_msg_hdr, uint8_t net_fn)
 {
   uint64_t net_fn_recv;
@@ -529,7 +533,7 @@ ipmi_lan_check_net_fn (fiid_obj_t obj_lan_msg_hdr, uint8_t net_fn)
   return ((((uint8_t)net_fn_recv) == net_fn) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_lan_check_rq_seq (fiid_obj_t obj_lan_msg_hdr, uint8_t rq_seq)
 {
   uint64_t rq_seq_recv;
@@ -555,7 +559,7 @@ ipmi_lan_check_rq_seq (fiid_obj_t obj_lan_msg_hdr, uint8_t rq_seq)
   return ((((uint8_t)rq_seq_recv) == rq_seq) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
                          fiid_obj_t obj_cmd,
                          fiid_obj_t obj_lan_msg_trlr)
@@ -665,7 +669,7 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
   return (1);
 }
 
-int8_t
+int
 ipmi_lan_check_packet_checksum (uint8_t *pkt, uint64_t pkt_len)
 {
   uint8_t authentication_type;

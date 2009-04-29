@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.28 2009-04-29 16:35:37 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.29 2009-04-29 16:40:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -55,7 +55,7 @@ int
 ipmiconsole_check_checksum (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
   fiid_obj_t obj_cmd;
-  int8_t rv;
+  int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -82,7 +82,7 @@ ipmiconsole_check_checksum (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
   if (!rv)
     IPMICONSOLE_CTX_DEBUG (c, ("checksum check failed; p = %d", p));
 
-  return ((int)rv);
+  return (rv);
 }
 
 int

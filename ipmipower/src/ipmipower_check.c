@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.99 2009-04-29 16:35:37 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.100 2009-04-29 16:40:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -51,7 +51,7 @@ int
 ipmipower_check_checksum (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   fiid_obj_t obj_cmd;
-  int8_t rv;
+  int rv;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
@@ -77,7 +77,7 @@ ipmipower_check_checksum (ipmipower_powercmd_t ip, packet_type_t pkt)
     ierr_dbg ("ipmipower_check_checksum(%s:%d): checksum check failed",
               ip->ic->hostname, ip->protocol_state);
 
-  return ((int)rv);
+  return (rv);
 }
 
 int
