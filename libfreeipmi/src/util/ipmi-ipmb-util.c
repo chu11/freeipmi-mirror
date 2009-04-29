@@ -42,7 +42,7 @@
 #include "freeipmi-portability.h"
 #include "secure.h"
 
-int8_t
+int
 ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq)
 {
   uint64_t rq_seq_recv;
@@ -68,7 +68,7 @@ ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq)
   return ((((uint8_t)rq_seq_recv) == rq_seq) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_ipmb_check_checksum (uint8_t rq_addr,
                           fiid_obj_t obj_ipmb_msg_hdr,
                           fiid_obj_t obj_cmd,

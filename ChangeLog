@@ -1,3 +1,8 @@
+2009-04-29  Albert Chu <chu11@llnl.gov>
+
+	* Cleanup APIs.  Return 'int' instead of 'int8_t' when size of
+	integer is clearly irrelevant.
+
 2009-04-28  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_int_cleanup

@@ -30,7 +30,7 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_cipher_suite_id_to_algorithms (uint8_t cipher_suite_id,
                                     uint8_t *authentication_algorithm,
                                     uint8_t *integrity_algorithm,
@@ -94,7 +94,7 @@ ipmi_cipher_suite_id_to_algorithms (uint8_t cipher_suite_id,
   return (0);
 }
 
-int8_t
+int
 ipmi_algorithms_to_cipher_suite_id (uint8_t authentication_algorithm,
                                     uint8_t integrity_algorithm,
                                     uint8_t confidentiality_algorithm,

@@ -47,7 +47,7 @@
       return (0);                               \
     } while (0)
 
-int8_t
+int
 ipmi_completion_code_strerror_r (uint8_t cmd,
                                  uint8_t netfn,
                                  uint8_t comp_code,
@@ -521,7 +521,7 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                    netfn);
 }
 
-int8_t
+int
 ipmi_completion_code_strerror_cmd_r (fiid_obj_t obj_cmd,
                                      uint8_t netfn,
                                      char *errstr,
@@ -564,7 +564,7 @@ ipmi_completion_code_strerror_cmd_r (fiid_obj_t obj_cmd,
 }
 
 
-int8_t
+int
 ipmi_rmcpplus_status_strerror_r (uint8_t rmcpplus_status_code,
                                  char *errstr,
                                  size_t len)
