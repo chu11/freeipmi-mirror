@@ -810,7 +810,7 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
   return (rv);
 }
 
-static int8_t
+static int
 _ipmi_ssif_cmd_write (ipmi_ssif_ctx_t ctx,
                       uint8_t lun,
                       uint8_t net_fn,
@@ -885,7 +885,7 @@ _ipmi_ssif_cmd_write (ipmi_ssif_ctx_t ctx,
   return (rv);
 }
 
-static int8_t
+static int
 _ipmi_ssif_cmd_read (ipmi_ssif_ctx_t ctx,
                      fiid_obj_t obj_cmd_rs)
 {
@@ -895,7 +895,7 @@ _ipmi_ssif_cmd_read (ipmi_ssif_ctx_t ctx,
   int32_t read_len;
   fiid_obj_t obj_hdr = NULL;
   fiid_field_t *tmpl = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SSIF_CTX_MAGIC);

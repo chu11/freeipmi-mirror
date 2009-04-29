@@ -86,7 +86,7 @@ _ipmi_dump_kcs_packet (int fd,
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   fiid_obj_t obj_unexpected_data = NULL;
   int32_t len;
-  int8_t rv = -1;
+  int rv = -1;
 
   assert (pkt);
   assert (tmpl_cmd);

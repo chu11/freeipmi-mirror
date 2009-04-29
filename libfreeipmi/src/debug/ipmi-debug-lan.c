@@ -100,7 +100,7 @@ _ipmi_dump_lan_packet (int fd,
   fiid_obj_t obj_lan_msg_trlr = NULL;
   fiid_obj_t obj_unexpected_data = NULL;
   int32_t len;
-  int8_t rv = -1;
+  int rv = -1;
   uint64_t authentication_type;
 
   assert (pkt);
