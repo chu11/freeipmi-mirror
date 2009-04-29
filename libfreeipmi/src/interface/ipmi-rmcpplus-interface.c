@@ -208,7 +208,7 @@ fiid_template_t tmpl_rmcpplus_rakp_message_4 =
     { 0, "", 0}
   };
 
-int8_t
+int
 ipmi_rmcpplus_init (void)
 {
   if (ipmi_crypt_init ())
@@ -216,7 +216,7 @@ ipmi_rmcpplus_init (void)
   return (0);
 }
 
-int8_t
+int
 fill_rmcpplus_session_hdr (uint8_t payload_type,
                            uint8_t payload_authenticated,
                            uint8_t payload_encrypted,
@@ -267,7 +267,7 @@ fill_rmcpplus_session_hdr (uint8_t payload_type,
   return (0);
 }
 
-int8_t
+int
 fill_rmcpplus_session_trlr (fiid_obj_t obj_rmcpplus_session_trlr)
 {
   if (!fiid_obj_valid (obj_rmcpplus_session_trlr))
@@ -294,7 +294,7 @@ fill_rmcpplus_session_trlr (fiid_obj_t obj_rmcpplus_session_trlr)
   return (0);
 }
 
-int8_t
+int
 fill_rmcpplus_payload (uint8_t *confidentiality_header,
                        uint32_t confidentiality_header_len,
                        uint8_t *payload_data,
@@ -341,7 +341,7 @@ fill_rmcpplus_payload (uint8_t *confidentiality_header,
   return (0);
 }
 
-int8_t
+int
 fill_rmcpplus_open_session (uint8_t message_tag,
                             uint8_t requested_maximum_privilege_level,
                             uint32_t remote_console_session_id,
@@ -441,7 +441,7 @@ fill_rmcpplus_open_session (uint8_t message_tag,
   return (0);
 }
 
-int8_t
+int
 fill_rmcpplus_rakp_message_1 (uint8_t message_tag,
                               uint32_t managed_system_session_id,
                               uint8_t *remote_console_random_number,
@@ -509,7 +509,7 @@ fill_rmcpplus_rakp_message_1 (uint8_t message_tag,
   return (0);
 }
 
-int8_t
+int
 fill_rmcpplus_rakp_message_3 (uint8_t message_tag,
                               uint8_t rmcpplus_status_code,
                               uint32_t managed_system_session_id,
@@ -982,7 +982,7 @@ _construct_payload (uint8_t payload_type,
                                      obj_rmcpplus_payload));
 }
 
-static int8_t
+static int
 _construct_session_trlr_pad (uint8_t integrity_algorithm,
                              uint32_t ipmi_msg_len,
                              fiid_obj_t obj_rmcpplus_session_trlr)
@@ -1715,7 +1715,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   return (rv);
 }
 
-static int32_t
+static int
 _deconstruct_payload_buf (uint8_t payload_type,
                           fiid_obj_t obj_lan_msg_hdr,
                           fiid_obj_t obj_cmd,
@@ -1824,7 +1824,7 @@ _deconstruct_payload_buf (uint8_t payload_type,
   return (0);
 }
 
-static int32_t
+static int
 _deconstruct_payload_confidentiality_none (uint8_t payload_type,
                                            fiid_obj_t obj_rmcpplus_payload,
                                            fiid_obj_t obj_lan_msg_hdr,
@@ -1882,7 +1882,7 @@ _deconstruct_payload_confidentiality_none (uint8_t payload_type,
   return (0);
 }
 
-static int32_t
+static int
 _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
                                                   uint8_t payload_encrypted,
                                                   fiid_obj_t obj_rmcpplus_payload,
@@ -2044,7 +2044,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
   return (0);
 }
 
-static int32_t
+static int
 _deconstruct_payload_rakp (uint8_t payload_type,
                            fiid_obj_t obj_rmcpplus_payload,
                            fiid_obj_t obj_cmd,
@@ -2096,7 +2096,7 @@ _deconstruct_payload_rakp (uint8_t payload_type,
   return (0);
 }
 
-static int32_t
+static int
 _deconstruct_payload (uint8_t payload_type,
                       uint8_t payload_encrypted,
                       uint8_t authentication_algorithm,
@@ -2159,7 +2159,7 @@ _deconstruct_payload (uint8_t payload_type,
                                        ipmi_payload_len));
 }
 
-int8_t
+int
 unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                               uint8_t integrity_algorithm,
                               uint8_t confidentiality_algorithm,

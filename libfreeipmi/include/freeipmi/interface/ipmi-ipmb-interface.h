@@ -37,22 +37,22 @@ extern fiid_template_t tmpl_ipmb_msg_hdr_rs;
 extern fiid_template_t tmpl_ipmb_msg_trlr;
 extern fiid_template_t tmpl_ipmb_msg;
 
-int8_t fill_ipmb_msg_hdr (uint8_t rs_addr,
-                          uint8_t net_fn,
-                          uint8_t rs_lun,
-                          uint8_t rq_addr,
-                          uint8_t rq_lun,
-                          uint8_t rq_seq,
-                          fiid_obj_t obj_ipmb_msg_hdr);
+int fill_ipmb_msg_hdr (uint8_t rs_addr,
+                       uint8_t net_fn,
+                       uint8_t rs_lun,
+                       uint8_t rq_addr,
+                       uint8_t rq_lun,
+                       uint8_t rq_seq,
+                       fiid_obj_t obj_ipmb_msg_hdr);
 
 int32_t assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
                                 fiid_obj_t obj_cmd,
                                 fiid_obj_t obj_ipmb_msg);
 
-int8_t unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
-                                 fiid_obj_t obj_ipmb_msg_hdr,
-                                 fiid_obj_t obj_cmd,
-                                 fiid_obj_t obj_ipmb_msg_trlr);
+int unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
+                              fiid_obj_t obj_ipmb_msg_hdr,
+                              fiid_obj_t obj_cmd,
+                              fiid_obj_t obj_ipmb_msg_trlr);
 
 #ifdef __cplusplus
 }

@@ -46,7 +46,7 @@ fiid_template_t tmpl_rmcp_hdr =
     { 0, "", 0}
   };
 
-int8_t
+int
 fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
 {
   if (!RMCP_HDR_MESSAGE_CLASS_VALID (message_class)
@@ -72,13 +72,13 @@ fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
   return (0);
 }
 
-int8_t
+int
 fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr)
 {
   return (fill_rmcp_hdr (RMCP_HDR_MESSAGE_CLASS_IPMI, obj_rmcp_hdr));
 }
 
-int8_t
+int
 fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr)
 {
   return (fill_rmcp_hdr (RMCP_HDR_MESSAGE_CLASS_ASF, obj_rmcp_hdr));
@@ -151,7 +151,7 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
   return (obj_rmcp_hdr_len + obj_cmd_len);
 }
 
-int32_t
+int
 unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd)
 {
   uint32_t indx = 0;

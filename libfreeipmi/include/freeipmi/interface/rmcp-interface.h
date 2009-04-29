@@ -63,15 +63,15 @@ extern "C" {
 
 extern fiid_template_t tmpl_rmcp_hdr;
 
-int8_t fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr);
+int fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr);
 
-int8_t fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr);
+int fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr);
 
-int8_t fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr);
+int fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr);
 
 int32_t assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_t pkt_len);
 
-int32_t unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd);
+int unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus
 }

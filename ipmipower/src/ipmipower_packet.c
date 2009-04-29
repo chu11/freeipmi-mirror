@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.108 2009-04-23 16:45:04 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.109 2009-04-29 18:01:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -315,7 +315,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip, packet_type_t pkt,
                         char *buffer, int len)
 {
   fiid_obj_t obj;
-  int32_t rv = -1;
+  int rv = -1;
 
   assert (ip);
   assert (buffer);

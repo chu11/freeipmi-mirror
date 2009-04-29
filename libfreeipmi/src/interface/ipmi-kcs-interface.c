@@ -46,7 +46,7 @@ fiid_template_t tmpl_hdr_kcs =
     { 0, "", 0}
   };
 
-int8_t
+int
 fill_hdr_ipmi_kcs (uint8_t lun,
                    uint8_t fn,
                    fiid_obj_t obj_kcs_hdr)
@@ -141,7 +141,7 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
   return (obj_kcs_hdr_len + obj_cmd_len);
 }
 
-int32_t
+int
 unassemble_ipmi_kcs_pkt (uint8_t *pkt,
                          uint32_t pkt_len,
                          fiid_obj_t obj_kcs_hdr,

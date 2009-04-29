@@ -84,7 +84,7 @@ fiid_template_t tmpl_ipmb_msg =
 
 #define IPMB_MAX_LEN 65536   /* udp max size */
 
-int8_t
+int
 fill_ipmb_msg_hdr (uint8_t rs_addr,
                    uint8_t net_fn,
                    uint8_t rs_lun,
@@ -279,7 +279,7 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
   return (rv);
 }
 
-int8_t
+int
 unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
                           fiid_obj_t obj_ipmb_msg_hdr,
                           fiid_obj_t obj_cmd,
