@@ -41,11 +41,11 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_cmd_get_device_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -94,11 +94,11 @@ ipmi_cmd_get_device_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_cold_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -147,11 +147,11 @@ ipmi_cmd_cold_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_warm_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -200,7 +200,7 @@ ipmi_cmd_warm_reset (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_acpi_power_state (ipmi_ctx_t ctx,
                                uint8_t system_power_state_enumeration,
                                uint8_t set_system_power_state,
@@ -209,7 +209,7 @@ ipmi_cmd_set_acpi_power_state (ipmi_ctx_t ctx,
                                fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -268,11 +268,11 @@ ipmi_cmd_set_acpi_power_state (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_acpi_power_state (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -321,11 +321,11 @@ ipmi_cmd_get_acpi_power_state (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_self_test_results (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -374,11 +374,11 @@ ipmi_cmd_get_self_test_results (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_device_guid (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

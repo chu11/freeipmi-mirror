@@ -42,7 +42,7 @@
 #include "freeipmi-portability.h"
 
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
-int8_t
+int
 ipmi_cmd_set_sensor_hysteresis (ipmi_ctx_t ctx,
                                 uint8_t sensor_number,
                                 uint8_t hysteresis_mask,
@@ -51,7 +51,7 @@ ipmi_cmd_set_sensor_hysteresis (ipmi_ctx_t ctx,
                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -106,14 +106,14 @@ ipmi_cmd_set_sensor_hysteresis (ipmi_ctx_t ctx,
 }
 
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
-int8_t
+int
 ipmi_cmd_get_sensor_hysteresis (ipmi_ctx_t ctx,
                                 uint8_t sensor_number,
                                 uint8_t hysteresis_mask,
                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -165,7 +165,7 @@ ipmi_cmd_get_sensor_hysteresis (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_sensor_thresholds (ipmi_ctx_t ctx,
                                 uint8_t sensor_number,
                                 uint8_t *lower_non_critical_threshold,
@@ -177,7 +177,7 @@ ipmi_cmd_set_sensor_thresholds (ipmi_ctx_t ctx,
                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -233,13 +233,13 @@ ipmi_cmd_set_sensor_thresholds (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_sensor_thresholds (ipmi_ctx_t ctx,
                                 uint8_t sensor_number,
                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -289,7 +289,7 @@ ipmi_cmd_get_sensor_thresholds (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_sensor_event_enable (ipmi_ctx_t ctx,
                                   uint8_t sensor_number,
                                   uint8_t event_message_action,
@@ -300,7 +300,7 @@ ipmi_cmd_set_sensor_event_enable (ipmi_ctx_t ctx,
                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -358,7 +358,7 @@ ipmi_cmd_set_sensor_event_enable (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_sensor_event_enable_threshold (ipmi_ctx_t ctx,
                                             uint8_t sensor_number,
                                             uint8_t event_message_action,
@@ -391,7 +391,7 @@ ipmi_cmd_set_sensor_event_enable_threshold (ipmi_ctx_t ctx,
                                             fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -495,7 +495,7 @@ ipmi_cmd_set_sensor_event_enable_threshold (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_sensor_event_enable_discrete (ipmi_ctx_t ctx,
                                            uint8_t sensor_number,
                                            uint8_t event_message_action,
@@ -534,7 +534,7 @@ ipmi_cmd_set_sensor_event_enable_discrete (ipmi_ctx_t ctx,
                                            fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -650,13 +650,13 @@ ipmi_cmd_set_sensor_event_enable_discrete (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_sensor_event_enable (ipmi_ctx_t ctx,
                                   uint8_t sensor_number,
                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -706,13 +706,13 @@ ipmi_cmd_get_sensor_event_enable (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_sensor_event_enable_threshold (ipmi_ctx_t ctx,
                                             uint8_t sensor_number,
                                             fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -762,13 +762,13 @@ ipmi_cmd_get_sensor_event_enable_threshold (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_sensor_event_enable_discrete (ipmi_ctx_t ctx,
                                            uint8_t sensor_number,
                                            fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -819,13 +819,13 @@ ipmi_cmd_get_sensor_event_enable_discrete (ipmi_ctx_t ctx,
 }
 
 
-int8_t
+int
 ipmi_cmd_get_sensor_reading (ipmi_ctx_t ctx,
                              uint8_t sensor_number,
                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -875,7 +875,7 @@ ipmi_cmd_get_sensor_reading (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_sensor_reading_ipmb (ipmi_ctx_t ctx,
                                   uint8_t slave_address,
                                   uint8_t lun,
@@ -883,7 +883,7 @@ ipmi_cmd_get_sensor_reading_ipmb (ipmi_ctx_t ctx,
                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -934,13 +934,13 @@ ipmi_cmd_get_sensor_reading_ipmb (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_sensor_reading_threshold (ipmi_ctx_t ctx,
                                        uint8_t sensor_number,
                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -990,13 +990,13 @@ ipmi_cmd_get_sensor_reading_threshold (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_sensor_reading_discrete (ipmi_ctx_t ctx,
                                       uint8_t sensor_number,
                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

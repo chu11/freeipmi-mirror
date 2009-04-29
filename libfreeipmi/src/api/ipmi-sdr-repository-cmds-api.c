@@ -42,12 +42,12 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_cmd_get_sdr_repository_info (ipmi_ctx_t ctx,
                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -96,12 +96,12 @@ ipmi_cmd_get_sdr_repository_info (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_sdr_repository_allocation_info (ipmi_ctx_t ctx,
                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -150,12 +150,12 @@ ipmi_cmd_get_sdr_repository_allocation_info (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_reserve_sdr_repository (ipmi_ctx_t ctx,
                                  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -204,7 +204,7 @@ ipmi_cmd_reserve_sdr_repository (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_sdr (ipmi_ctx_t ctx,
                   uint16_t reservation_id,
                   uint16_t record_id,
@@ -213,7 +213,7 @@ ipmi_cmd_get_sdr (ipmi_ctx_t ctx,
                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -266,12 +266,12 @@ ipmi_cmd_get_sdr (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_sdr_repository_time (ipmi_ctx_t ctx,
                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -320,13 +320,13 @@ ipmi_cmd_get_sdr_repository_time (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_sdr_repository_time (ipmi_ctx_t ctx,
                                   uint32_t time,
                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

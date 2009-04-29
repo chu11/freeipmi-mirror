@@ -57,7 +57,7 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_cmd_clear_message_flags (ipmi_ctx_t ctx,
                               uint8_t receive_message_queue,
                               uint8_t event_message_buffer,
@@ -68,7 +68,7 @@ ipmi_cmd_clear_message_flags (ipmi_ctx_t ctx,
                               fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -136,12 +136,12 @@ ipmi_cmd_clear_message_flags (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_message_flags (ipmi_ctx_t ctx,
                             fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -197,14 +197,14 @@ ipmi_cmd_get_message_flags (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_enable_message_channel_receive (ipmi_ctx_t ctx,
                                          uint8_t channel_number,
                                          uint8_t channel_operation,
                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -264,12 +264,12 @@ ipmi_cmd_enable_message_channel_receive (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_message (ipmi_ctx_t ctx,
                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -325,7 +325,7 @@ ipmi_cmd_get_message (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_send_message (ipmi_ctx_t ctx,
                        uint8_t channel_number,
                        uint8_t message_authentication,
@@ -336,7 +336,7 @@ ipmi_cmd_send_message (ipmi_ctx_t ctx,
                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -397,12 +397,12 @@ ipmi_cmd_send_message (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_read_event_message_buffer (ipmi_ctx_t ctx,
                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -458,13 +458,13 @@ ipmi_cmd_read_event_message_buffer (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_system_interface_capabilities (ipmi_ctx_t ctx,
                                             uint8_t system_interface,
                                             fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -515,12 +515,12 @@ ipmi_cmd_get_system_interface_capabilities (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_system_interface_capabilities_ssif (ipmi_ctx_t ctx,
                                                  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -570,12 +570,12 @@ ipmi_cmd_get_system_interface_capabilities_ssif (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_system_interface_capabilities_kcs (ipmi_ctx_t ctx,
                                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -625,12 +625,12 @@ ipmi_cmd_get_system_interface_capabilities_kcs (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_bt_interface_capabilities (ipmi_ctx_t ctx,
                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -680,14 +680,14 @@ ipmi_cmd_get_bt_interface_capabilities (ipmi_ctx_t ctx,
 }
 
 
-int8_t
+int
 ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx,
                                                   uint8_t channel_number,
                                                   uint8_t maximum_privilege_level,
                                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -740,7 +740,7 @@ ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
                                                       uint8_t channel_number,
                                                       uint8_t maximum_privilege_level,
@@ -748,7 +748,7 @@ ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -803,7 +803,7 @@ ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_session_challenge (ipmi_ctx_t ctx,
                                 uint8_t authentication_type,
                                 char *user_name,
@@ -811,7 +811,7 @@ ipmi_cmd_get_session_challenge (ipmi_ctx_t ctx,
                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -865,7 +865,7 @@ ipmi_cmd_get_session_challenge (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_activate_session (ipmi_ctx_t ctx,
                            uint8_t authentication_type,
                            uint8_t maximum_privilege_level,
@@ -875,7 +875,7 @@ ipmi_cmd_activate_session (ipmi_ctx_t ctx,
                            fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -933,13 +933,13 @@ ipmi_cmd_activate_session (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_session_privilege_level (ipmi_ctx_t ctx,
                                       uint8_t privilege_level,
                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -990,13 +990,13 @@ ipmi_cmd_set_session_privilege_level (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_close_session (ipmi_ctx_t ctx,
                         uint32_t close_session_id,
                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1045,7 +1045,7 @@ ipmi_cmd_close_session (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_channel_access (ipmi_ctx_t ctx,
                              uint8_t channel_number,
                              uint8_t ipmi_messaging_access_mode,
@@ -1058,7 +1058,7 @@ ipmi_cmd_set_channel_access (ipmi_ctx_t ctx,
                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1123,14 +1123,14 @@ ipmi_cmd_set_channel_access (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_channel_access (ipmi_ctx_t ctx,
                              uint8_t channel_number,
                              uint8_t channel_access_get,
                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1183,13 +1183,13 @@ ipmi_cmd_get_channel_access (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_channel_info (ipmi_ctx_t ctx,
                            uint8_t channel_number,
                            fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1239,7 +1239,7 @@ ipmi_cmd_get_channel_info (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_channel_security_keys (ipmi_ctx_t ctx,
                                     uint8_t channel_number,
                                     uint8_t operation,
@@ -1249,7 +1249,7 @@ ipmi_cmd_set_channel_security_keys (ipmi_ctx_t ctx,
                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1312,7 +1312,7 @@ ipmi_cmd_set_channel_security_keys (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
                           uint8_t channel_number,
                           uint8_t user_ipmi_messaging,
@@ -1324,7 +1324,7 @@ ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
                           fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1385,14 +1385,14 @@ ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_user_access (ipmi_ctx_t ctx,
                           uint8_t channel_number,
                           uint8_t user_id,
                           fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1442,7 +1442,7 @@ ipmi_cmd_get_user_access (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_user_name (ipmi_ctx_t ctx,
                         uint8_t user_id,
                         char *user_name,
@@ -1450,7 +1450,7 @@ ipmi_cmd_set_user_name (ipmi_ctx_t ctx,
                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1503,13 +1503,13 @@ ipmi_cmd_set_user_name (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_user_name (ipmi_ctx_t ctx,
                         uint8_t user_id,
                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1558,7 +1558,7 @@ ipmi_cmd_get_user_name (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_user_password (ipmi_ctx_t ctx,
                             uint8_t user_id,
                             uint8_t operation,
@@ -1567,7 +1567,7 @@ ipmi_cmd_set_user_password (ipmi_ctx_t ctx,
                             fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1622,7 +1622,7 @@ ipmi_cmd_set_user_password (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
                                 uint8_t user_id,
                                 uint8_t password_size,
@@ -1632,7 +1632,7 @@ ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1694,14 +1694,14 @@ ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_get_channel_number (ipmi_ctx_t ctx,
                          uint8_t channel_medium_type,
                          uint8_t *channel_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t manufacturer_id, product_id;
-  int8_t rv = -1;
+  int rv = -1;
   uint64_t val;
   int i;
 

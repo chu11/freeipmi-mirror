@@ -44,12 +44,12 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_cmd_get_chassis_capabilities (ipmi_ctx_t ctx,
                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -98,12 +98,12 @@ ipmi_cmd_get_chassis_capabilities (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_chassis_status (ipmi_ctx_t ctx,
                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -152,13 +152,13 @@ ipmi_cmd_get_chassis_status (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_chassis_control (ipmi_ctx_t ctx,
                           uint8_t chassis_control,
                           fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -208,14 +208,14 @@ ipmi_cmd_chassis_control (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_chassis_identify (ipmi_ctx_t ctx,
                            uint8_t *identify_interval,
                            uint8_t *force_identify,
                            fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -268,7 +268,7 @@ ipmi_cmd_chassis_identify (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_front_panel_enables (ipmi_ctx_t ctx,
                                   uint8_t disable_power_off_button_for_power_off_only,
                                   uint8_t disable_reset_button,
@@ -277,7 +277,7 @@ ipmi_cmd_set_front_panel_enables (ipmi_ctx_t ctx,
                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -334,13 +334,13 @@ ipmi_cmd_set_front_panel_enables (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_power_restore_policy (ipmi_ctx_t ctx,
                                    uint8_t power_restore_policy,
                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -391,13 +391,13 @@ ipmi_cmd_set_power_restore_policy (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_power_cycle_interval (ipmi_ctx_t ctx,
                                    uint8_t interval,
                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -446,12 +446,12 @@ ipmi_cmd_set_power_cycle_interval (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_system_restart_cause (ipmi_ctx_t ctx,
                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -500,7 +500,7 @@ ipmi_cmd_get_system_restart_cause (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
                                   uint8_t parameter_selector,
                                   uint8_t *configuration_parameter_data,
@@ -508,7 +508,7 @@ ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -560,13 +560,13 @@ ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_system_boot_options_set_in_progress (ipmi_ctx_t ctx,
                                                   uint8_t value,
                                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -615,7 +615,7 @@ ipmi_cmd_set_system_boot_options_set_in_progress (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
                                                         uint8_t *bios_or_post_handled_boot_info,
                                                         uint8_t *os_loader_handled_boot_info,
@@ -625,7 +625,7 @@ ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
                                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -689,7 +689,7 @@ ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
                                                                    uint8_t dont_clear_on_power_up,
                                                                    uint8_t dont_clear_on_pushbutton_rest_soft_reset,
@@ -699,7 +699,7 @@ ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -758,7 +758,7 @@ ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                              uint8_t bios_boot_type,
                                              uint8_t boot_flags_persistent,
@@ -779,7 +779,7 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -860,7 +860,7 @@ ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
                                   uint8_t parameter_selector,
                                   uint8_t set_selector,
@@ -868,7 +868,7 @@ ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -920,14 +920,14 @@ ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
                                                                    uint8_t set_selector,
                                                                    uint8_t block_selector,
                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -979,14 +979,14 @@ ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                              uint8_t set_selector,
                                              uint8_t block_selector,
                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1038,12 +1038,12 @@ ipmi_cmd_get_system_boot_options_boot_flags (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_power_on_hours_counter (ipmi_ctx_t ctx,
                                      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

@@ -44,7 +44,7 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_t ctx,
                                                                        uint8_t channel_number,
                                                                        uint8_t callback_level_none,
@@ -75,7 +75,7 @@ ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
                                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -176,14 +176,14 @@ ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
                                                       uint8_t channel_number,
                                                       uint32_t ip_address,
                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -235,14 +235,14 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
                                                              uint8_t channel_number,
                                                              uint8_t ip_address_source,
                                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -294,14 +294,14 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
                                                        uint8_t channel_number,
                                                        uint64_t mac_address,
                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -353,14 +353,14 @@ ipmi_cmd_set_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
                                                        uint8_t channel_number,
                                                        uint32_t subnet_mask,
                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -412,7 +412,7 @@ ipmi_cmd_set_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t ctx,
                                                                      uint8_t channel_number,
                                                                      uint8_t bmc_generated_gratuitous_arps,
@@ -420,7 +420,7 @@ ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
                                                                      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -475,14 +475,14 @@ ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
   return (rv);
 }
 
-int8_t
-ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ctx,
+int
+ipmi_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ctx,
                                                                    uint8_t channel_number,
                                                                    uint8_t gratuitous_arp_interval,
                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -534,14 +534,14 @@ ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ctx,
                                                                    uint8_t channel_number,
                                                                    uint32_t ip_address,
                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -593,14 +593,14 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_t ctx,
                                                                        uint8_t channel_number,
                                                                        uint64_t mac_address,
                                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -652,14 +652,14 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx,
                                                                   uint8_t channel_number,
                                                                   uint32_t ip_address,
                                                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -711,14 +711,14 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t ctx,
                                                                       uint8_t channel_number,
                                                                       uint64_t mac_address,
                                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -770,7 +770,7 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
                                                             uint8_t channel_number,
                                                             char *community_string,
@@ -778,7 +778,7 @@ ipmi_cmd_set_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
                                                             fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -833,7 +833,7 @@ ipmi_cmd_set_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
                                                             uint8_t channel_number,
                                                             uint8_t destination_selector,
@@ -844,7 +844,7 @@ ipmi_cmd_set_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
                                                             fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -904,7 +904,7 @@ ipmi_cmd_set_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
                                                                  uint8_t channel_number,
                                                                  uint8_t destination_selector,
@@ -914,7 +914,7 @@ ipmi_cmd_set_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
                                                                  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -971,7 +971,7 @@ ipmi_cmd_set_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
 
 
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
                                                    uint8_t channel_number,
                                                    uint16_t vlan_id,
@@ -979,7 +979,7 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1033,14 +1033,14 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
                                                          uint8_t channel_number,
                                                          uint32_t vlan_priority,
                                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1092,7 +1092,7 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (ipmi_ctx_t ctx,
                                                                                             uint8_t channel_number,
                                                                                             uint8_t maximum_privilege_for_cipher_suite_1,
@@ -1114,7 +1114,7 @@ ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
                                                                                             fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1215,7 +1215,7 @@ ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
 
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (ipmi_ctx_t ctx,
                                                                        uint8_t channel_number,
                                                                        uint8_t get_parameter,
@@ -1224,7 +1224,7 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (ipmi_ctx_
                                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1280,7 +1280,7 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (ipmi_ctx_
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_t ctx,
                                                                        uint8_t channel_number,
                                                                        uint8_t get_parameter,
@@ -1289,7 +1289,7 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
                                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1345,7 +1345,7 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
                                                       uint8_t channel_number,
                                                       uint8_t get_parameter,
@@ -1354,7 +1354,7 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1410,7 +1410,7 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
                                                              uint8_t channel_number,
                                                              uint8_t get_parameter,
@@ -1419,7 +1419,7 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
                                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1475,7 +1475,7 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
                                                        uint8_t channel_number,
                                                        uint8_t get_parameter,
@@ -1484,7 +1484,7 @@ ipmi_cmd_get_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1540,7 +1540,7 @@ ipmi_cmd_get_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
                                                        uint8_t channel_number,
                                                        uint8_t get_parameter,
@@ -1549,7 +1549,7 @@ ipmi_cmd_get_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1605,7 +1605,7 @@ ipmi_cmd_get_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t ctx,
                                                                      uint8_t channel_number,
                                                                      uint8_t get_parameter,
@@ -1614,7 +1614,7 @@ ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
                                                                      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1670,7 +1670,7 @@ ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ctx,
                                                                    uint8_t channel_number,
                                                                    uint8_t get_parameter,
@@ -1679,7 +1679,7 @@ ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1735,7 +1735,7 @@ ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ctx,
                                                                    uint8_t channel_number,
                                                                    uint8_t get_parameter,
@@ -1744,7 +1744,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1800,7 +1800,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_t ctx,
                                                                        uint8_t channel_number,
                                                                        uint8_t get_parameter,
@@ -1809,7 +1809,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
                                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1865,7 +1865,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx,
                                                                   uint8_t channel_number,
                                                                   uint8_t get_parameter,
@@ -1874,7 +1874,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
                                                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1930,7 +1930,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t ctx,
                                                                       uint8_t channel_number,
                                                                       uint8_t get_parameter,
@@ -1939,7 +1939,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
                                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1995,7 +1995,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
                                                             uint8_t channel_number,
                                                             uint8_t get_parameter,
@@ -2004,7 +2004,7 @@ ipmi_cmd_get_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
                                                             fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -2060,7 +2060,7 @@ ipmi_cmd_get_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (ipmi_ctx_t ctx,
                                                                   uint8_t channel_number,
                                                                   uint8_t get_parameter,
@@ -2069,7 +2069,7 @@ ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (ipmi_ctx_t ctx
                                                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -2125,7 +2125,7 @@ ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (ipmi_ctx_t ctx
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
                                                             uint8_t channel_number,
                                                             uint8_t get_parameter,
@@ -2134,7 +2134,7 @@ ipmi_cmd_get_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
                                                             fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -2191,7 +2191,7 @@ ipmi_cmd_get_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
                                                                  uint8_t channel_number,
                                                                  uint8_t get_parameter,
@@ -2200,7 +2200,7 @@ ipmi_cmd_get_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
                                                                  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -2257,7 +2257,7 @@ ipmi_cmd_get_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
                                                    uint8_t channel_number,
                                                    uint8_t get_parameter,
@@ -2266,7 +2266,7 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -2322,7 +2322,7 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
                                                          uint8_t channel_number,
                                                          uint8_t get_parameter,
@@ -2331,7 +2331,7 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
                                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -2387,7 +2387,7 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (ipmi_ctx_t ctx,
                                                                                          uint8_t channel_number,
                                                                                          uint8_t get_parameter,
@@ -2396,7 +2396,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_
                                                                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -2452,7 +2452,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (ipmi_ctx_t ctx,
                                                                                    uint8_t channel_number,
                                                                                    uint8_t get_parameter,
@@ -2461,7 +2461,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entrie
                                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -2517,7 +2517,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entrie
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (ipmi_ctx_t ctx,
                                                                                             uint8_t channel_number,
                                                                                             uint8_t get_parameter,
@@ -2526,7 +2526,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
                                                                                             fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -2582,7 +2582,7 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
                            uint8_t channel_number,
                            uint8_t gratuitous_arp_suspend,
@@ -2590,7 +2590,7 @@ ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
                            fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -2645,14 +2645,14 @@ ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_ip_udp_rmcp_statistics (ipmi_ctx_t ctx,
                                      uint8_t channel_number,
                                      uint8_t clear_all_statistics,
                                      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

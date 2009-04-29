@@ -43,7 +43,7 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_cmd_get_pef_capabilities (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -96,7 +96,7 @@ ipmi_cmd_get_pef_capabilities (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_arm_pef_postpone_timer (ipmi_ctx_t ctx,
                                  uint8_t pef_postpone_timeout,
                                  fiid_obj_t obj_cmd_rs)
@@ -152,7 +152,7 @@ ipmi_cmd_arm_pef_postpone_timer (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
                                                        uint8_t pef,
                                                        uint8_t pef_event_messages,
@@ -217,7 +217,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t ctx,
                                                                      uint8_t alert_action,
                                                                      uint8_t power_down_action,
@@ -288,7 +288,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
                                                              uint8_t pef_startup_delay,
                                                              fiid_obj_t obj_cmd_rs)
@@ -344,7 +344,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ctx,
                                                                    uint8_t pef_alert_startup_delay,
                                                                    fiid_obj_t obj_cmd_rs)
@@ -400,7 +400,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
                                                               uint8_t filter_number,
                                                               uint8_t filter_configuration_type,
@@ -520,7 +520,7 @@ ipmi_cmd_set_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t ctx,
                                                                      uint8_t filter_number,
                                                                      uint8_t filter_configuration_type,
@@ -582,7 +582,7 @@ ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
                                                               uint8_t alert_policy_entry_number,
                                                               uint8_t policy_type,
@@ -655,7 +655,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
                                                              uint8_t string_selector,
                                                              uint8_t filter_number,
@@ -716,7 +716,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
                                                          uint8_t string_selector,
                                                          uint8_t block_selector,
@@ -781,7 +781,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
                                                        uint8_t get_parameter,
                                                        uint8_t set_selector,
@@ -843,7 +843,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t ctx,
                                                                      uint8_t get_parameter,
                                                                      uint8_t set_selector,
@@ -905,7 +905,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
                                                              uint8_t get_parameter,
                                                              uint8_t set_selector,
@@ -967,7 +967,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ctx,
                                                                    uint8_t get_parameter,
                                                                    uint8_t set_selector,
@@ -1029,7 +1029,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (ipmi_ctx_t ctx,
                                                                    uint8_t get_parameter,
                                                                    uint8_t set_selector,
@@ -1091,7 +1091,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (ipmi_ctx_t ct
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
                                                               uint8_t get_parameter,
                                                               uint8_t set_selector,
@@ -1153,7 +1153,7 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t ctx,
                                                                      uint8_t get_parameter,
                                                                      uint8_t set_selector,
@@ -1215,7 +1215,7 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_ctx_t ctx,
                                                                           uint8_t get_parameter,
                                                                           uint8_t set_selector,
@@ -1277,7 +1277,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_c
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (ipmi_ctx_t ctx,
                                                                    uint8_t get_parameter,
                                                                    uint8_t set_selector,
@@ -1339,7 +1339,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (ipmi_ctx_t ct
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
                                                              uint8_t get_parameter,
                                                              uint8_t set_selector,
@@ -1401,7 +1401,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_ctx_t ctx,
                                                         uint8_t get_parameter,
                                                         uint8_t set_selector,
@@ -1463,7 +1463,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
                                                               uint8_t get_parameter,
                                                               uint8_t set_selector,
@@ -1526,7 +1526,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
 }
 
 
-int8_t
+int
 ipmi_cmd_set_last_processed_event_id (ipmi_ctx_t ctx,
                                       uint8_t set_record_id_for_last_record,
                                       uint16_t record_id,
@@ -1585,7 +1585,7 @@ ipmi_cmd_set_last_processed_event_id (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_last_processed_event_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1638,7 +1638,7 @@ ipmi_cmd_get_last_processed_event_id (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_alert_immediate (ipmi_ctx_t ctx,
                           uint8_t channel_number,
                           uint8_t destination_selector,
@@ -1703,7 +1703,7 @@ ipmi_cmd_alert_immediate (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_pet_acknowledge (ipmi_ctx_t ctx,
                           uint16_t sequence_number,
                           uint32_t local_timestamp,

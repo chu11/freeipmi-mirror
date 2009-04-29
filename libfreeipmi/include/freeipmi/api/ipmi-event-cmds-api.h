@@ -26,18 +26,18 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-int8_t ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
-                                    uint8_t event_receiver_slave_address,
-                                    uint8_t event_receiver_lun,
-                                    fiid_obj_t obj_cmd_rs);
+int ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
+                                 uint8_t event_receiver_slave_address,
+                                 uint8_t event_receiver_lun,
+                                 fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
-                                         uint8_t slave_address,
-                                         uint8_t event_receiver_slave_address,
-                                         uint8_t event_receiver_lun,
-                                         fiid_obj_t obj_cmd_rs);
+int ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
+                                      uint8_t slave_address,
+                                      uint8_t event_receiver_slave_address,
+                                      uint8_t event_receiver_lun,
+                                      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs);
+int ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

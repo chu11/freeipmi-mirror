@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.16 2009-03-06 22:06:25 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.c,v 1.17 2009-04-29 17:18:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -51,13 +51,13 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
                                       uint8_t fru_device_id,
                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -107,7 +107,7 @@ ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
                         uint8_t fru_device_id,
                         uint16_t fru_inventory_offset_to_read,
@@ -115,7 +115,7 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

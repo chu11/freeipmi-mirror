@@ -173,6 +173,7 @@ o libfreeipmi
   - Various API cleanup.
     - Return int instead of int8_t, int32_t, etc. when size of return
       variable is clearly irrelevant.
+    - Fix function naming inconsistencies.
   - Various fixes to maintain consistency between sub library APIs.
   - Add IANA Enterprise Numbers definitions.
   - Add Entity IDs definitions.

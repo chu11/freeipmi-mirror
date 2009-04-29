@@ -325,7 +325,7 @@ gratuitous_arp_interval_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (state_data->ipmi_ctx,
+  if (ipmi_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (state_data->ipmi_ctx,
                                                                          channel_number,
                                                                          atoi (kv->value_input),
                                                                          obj_cmd_rs) < 0)

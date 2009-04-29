@@ -41,14 +41,14 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
                              uint8_t event_receiver_slave_address,
                              uint8_t event_receiver_lun,
                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -100,7 +100,7 @@ ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
                                   uint8_t slave_address,
                                   uint8_t event_receiver_slave_address,
@@ -108,7 +108,7 @@ ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -160,11 +160,11 @@ ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

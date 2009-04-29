@@ -43,7 +43,7 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
                                                          uint8_t channel_number,
                                                          uint8_t basic_mode,
@@ -53,7 +53,7 @@ ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
                                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -112,7 +112,7 @@ ipmi_cmd_set_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t ctx,
                                                                       uint8_t channel_number,
                                                                       uint8_t dtr_hangup,
@@ -121,7 +121,7 @@ ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
                                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -178,14 +178,14 @@ ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
                                                                 uint8_t channel_number,
                                                                 uint8_t page_blackout_interval,
                                                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -237,14 +237,14 @@ ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_set_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
                                                              uint8_t channel_number,
                                                              uint8_t call_retry_interval,
                                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -296,7 +296,7 @@ ipmi_cmd_set_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
                                                          uint8_t channel_number,
                                                          uint8_t get_parameter,
@@ -305,7 +305,7 @@ ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
                                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -361,7 +361,7 @@ ipmi_cmd_get_serial_modem_configuration_connection_mode (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t ctx,
                                                                       uint8_t channel_number,
                                                                       uint8_t get_parameter,
@@ -370,7 +370,7 @@ ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
                                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -426,7 +426,7 @@ ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (ipmi_ctx_t
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
                                                              uint8_t channel_number,
                                                              uint8_t get_parameter,
@@ -435,7 +435,7 @@ ipmi_cmd_get_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
                                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -491,7 +491,7 @@ ipmi_cmd_get_serial_modem_configuration_call_retry_interval (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
                                                                 uint8_t channel_number,
                                                                 uint8_t get_parameter,
@@ -500,7 +500,7 @@ ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (ipmi_ctx_t ctx,
                                                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
