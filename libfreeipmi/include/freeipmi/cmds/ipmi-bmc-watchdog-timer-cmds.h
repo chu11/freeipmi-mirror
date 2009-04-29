@@ -96,23 +96,23 @@ extern fiid_template_t tmpl_cmd_set_watchdog_timer_rs;
 extern fiid_template_t tmpl_cmd_get_watchdog_timer_rq;
 extern fiid_template_t tmpl_cmd_get_watchdog_timer_rs;
 
-int8_t fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd_rq);
+int fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_set_watchdog_timer (uint8_t timer_use,
-                                    uint8_t stop_timer,
-                                    uint8_t log,
-                                    uint8_t timeout_action,
-                                    uint8_t pre_timeout_interrupt,
-                                    uint8_t pre_timeout_interval,
-                                    uint8_t timer_use_expiration_flag_bios_frb2,
-                                    uint8_t timer_use_expiration_flag_bios_post,
-                                    uint8_t timer_use_expiration_flag_os_load,
-                                    uint8_t timer_use_expiration_flag_sms_os,
-                                    uint8_t timer_use_expiration_flag_oem,
-                                    uint16_t initial_countdown_value,
-                                    fiid_obj_t obj_cmd_rq);
+int fill_cmd_set_watchdog_timer (uint8_t timer_use,
+                                 uint8_t stop_timer,
+                                 uint8_t log,
+                                 uint8_t timeout_action,
+                                 uint8_t pre_timeout_interrupt,
+                                 uint8_t pre_timeout_interval,
+                                 uint8_t timer_use_expiration_flag_bios_frb2,
+                                 uint8_t timer_use_expiration_flag_bios_post,
+                                 uint8_t timer_use_expiration_flag_os_load,
+                                 uint8_t timer_use_expiration_flag_sms_os,
+                                 uint8_t timer_use_expiration_flag_oem,
+                                 uint16_t initial_countdown_value,
+                                 fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

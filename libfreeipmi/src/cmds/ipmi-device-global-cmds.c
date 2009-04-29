@@ -219,7 +219,7 @@ fiid_template_t tmpl_cmd_get_device_guid_format_rs =
     { 0, "", 0}
   };
 
-int8_t
+int
 fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -239,7 +239,7 @@ fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_cold_reset (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -259,7 +259,7 @@ fill_cmd_cold_reset (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_warm_reset (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -279,7 +279,7 @@ fill_cmd_warm_reset (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_acpi_power_state (uint8_t system_power_state_enumeration,
                                uint8_t set_system_power_state,
                                uint8_t device_power_state_enumeration,
@@ -314,7 +314,7 @@ fill_cmd_set_acpi_power_state (uint8_t system_power_state_enumeration,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_acpi_power_state (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -334,7 +334,7 @@ fill_cmd_get_acpi_power_state (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_self_test_results (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -354,7 +354,7 @@ fill_cmd_get_self_test_results (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))

@@ -684,7 +684,7 @@ fiid_template_t tmpl_cmd_get_ip_udp_rmcp_statistics_rs =
     { 0, "", 0}
   };
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                            uint8_t parameter_selector,
                                            uint8_t *configuration_parameter_data,
@@ -723,7 +723,7 @@ fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t channel_number,
                                                                        uint8_t callback_level_none,
                                                                        uint8_t callback_level_md2,
@@ -833,7 +833,7 @@ fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t c
   return (0);
 }
 
-static int8_t
+static int
 _fill_lan_ip (uint8_t parameter_selector,
               uint8_t channel_number,
               uint32_t ip_address,
@@ -855,7 +855,7 @@ _fill_lan_ip (uint8_t parameter_selector,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_ip_address (uint8_t channel_number,
                                                       uint32_t ip_address,
                                                       fiid_obj_t obj_cmd_rq)
@@ -879,7 +879,7 @@ fill_cmd_set_lan_configuration_parameters_ip_address (uint8_t channel_number,
                         obj_cmd_rq));
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_ip_address_source (uint8_t channel_number,
                                                              uint8_t ip_address_source,
                                                              fiid_obj_t obj_cmd_rq)
@@ -909,7 +909,7 @@ fill_cmd_set_lan_configuration_parameters_ip_address_source (uint8_t channel_num
   return (0);
 }
 
-static int8_t
+static int
 _fill_lan_mac_address (uint8_t parameter_selector,
                        uint8_t channel_number,
                        uint64_t mac_address,
@@ -931,7 +931,7 @@ _fill_lan_mac_address (uint8_t parameter_selector,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_mac_address (uint8_t channel_number,
                                                        uint64_t mac_address,
                                                        fiid_obj_t obj_cmd_rq)
@@ -955,7 +955,7 @@ fill_cmd_set_lan_configuration_parameters_mac_address (uint8_t channel_number,
                                  obj_cmd_rq));
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_subnet_mask (uint8_t channel_number,
                                                        uint32_t subnet_mask,
                                                        fiid_obj_t obj_cmd_rq)
@@ -983,7 +983,7 @@ fill_cmd_set_lan_configuration_parameters_subnet_mask (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (uint8_t channel_number,
                                                                      uint8_t bmc_generated_gratuitous_arps,
                                                                      uint8_t bmc_generated_arp_responses,
@@ -1016,7 +1016,7 @@ fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (uint8_t cha
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (uint8_t channel_number,
                                                                    uint8_t gratuitous_arp_interval,
                                                                    fiid_obj_t obj_cmd_rq)
@@ -1044,7 +1044,7 @@ fill_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (uint8_t chann
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_default_gateway_address (uint8_t channel_number,
                                                                    uint32_t ip_address,
                                                                    fiid_obj_t obj_cmd_rq)
@@ -1068,7 +1068,7 @@ fill_cmd_set_lan_configuration_parameters_default_gateway_address (uint8_t chann
                         obj_cmd_rq));
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_default_gateway_mac_address (uint8_t channel_number,
                                                                        uint64_t mac_address,
                                                                        fiid_obj_t obj_cmd_rq)
@@ -1092,7 +1092,7 @@ fill_cmd_set_lan_configuration_parameters_default_gateway_mac_address (uint8_t c
                                  obj_cmd_rq));
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_backup_gateway_address (uint8_t channel_number,
                                                                   uint32_t ip_address,
                                                                   fiid_obj_t obj_cmd_rq)
@@ -1116,7 +1116,7 @@ fill_cmd_set_lan_configuration_parameters_backup_gateway_address (uint8_t channe
                         obj_cmd_rq));
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uint8_t channel_number,
                                                                       uint64_t mac_address,
                                                                       fiid_obj_t obj_cmd_rq)
@@ -1140,7 +1140,7 @@ fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uint8_t ch
                                  obj_cmd_rq));
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_number,
                                                             char *community_string,
                                                             unsigned int community_string_len,
@@ -1182,7 +1182,7 @@ fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_numb
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_destination_type (uint8_t channel_number,
                                                             uint8_t destination_selector,
                                                             uint8_t destination_type,
@@ -1226,7 +1226,7 @@ fill_cmd_set_lan_configuration_parameters_destination_type (uint8_t channel_numb
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_destination_addresses (uint8_t channel_number,
                                                                  uint8_t destination_selector,
                                                                  uint8_t gateway_selector,
@@ -1266,7 +1266,7 @@ fill_cmd_set_lan_configuration_parameters_destination_addresses (uint8_t channel
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number,
                                                    uint16_t vlan_id,
                                                    uint8_t vlan_id_enable,
@@ -1298,7 +1298,7 @@ fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_vlan_priority (uint8_t channel_number,
                                                          uint8_t vlan_priority,
                                                          fiid_obj_t obj_cmd_rq)
@@ -1328,7 +1328,7 @@ fill_cmd_set_lan_configuration_parameters_vlan_priority (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (uint8_t channel_number,
                                                                                             uint8_t maximum_privilege_for_cipher_suite_1,
                                                                                             uint8_t maximum_privilege_for_cipher_suite_2,
@@ -1419,7 +1419,7 @@ fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
                                            uint8_t get_parameter,
                                            uint8_t parameter_selector,
@@ -1454,7 +1454,7 @@ fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_suspend_bmc_arps (uint8_t channel_number,
                            uint8_t gratuitous_arp_suspend,
                            uint8_t arp_response_suspend,
@@ -1486,7 +1486,7 @@ fill_cmd_suspend_bmc_arps (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_ip_udp_rmcp_statistics (uint8_t channel_number,
                                      uint8_t clear_all_statistics,
                                      fiid_obj_t obj_cmd_rq)

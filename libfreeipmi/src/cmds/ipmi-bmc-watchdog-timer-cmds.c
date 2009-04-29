@@ -110,7 +110,7 @@ fiid_template_t tmpl_cmd_get_watchdog_timer_rs =
     { 0, "", 0}
   };
 
-int8_t
+int
 fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -130,7 +130,7 @@ fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_watchdog_timer (uint8_t timer_use,
                              uint8_t stop_timer,
                              uint8_t log,
@@ -191,7 +191,7 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))

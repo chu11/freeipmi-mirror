@@ -170,7 +170,9 @@ o libfreeipmi
     supported.
   - Add a number of 'errormsg' functions so common code of 
     foo_strerror(foo_errnum(ctx)) can be condensed to foo_errormsg(ctx).
-  - Some API functions altered for consistency.
+  - Various API cleanup.
+    - Return int instead of int8_t, int32_t, etc. when size of return
+      variable is clearly irrelevant.
   - Various fixes to maintain consistency between sub library APIs.
   - Add IANA Enterprise Numbers definitions.
   - Add Entity IDs definitions.

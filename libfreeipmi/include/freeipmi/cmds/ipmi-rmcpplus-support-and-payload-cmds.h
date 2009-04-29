@@ -117,74 +117,74 @@ extern fiid_template_t tmpl_cmd_get_channel_payload_version_rs;
 extern fiid_template_t tmpl_cmd_get_channel_oem_payload_info_rq;
 extern fiid_template_t tmpl_cmd_get_channel_oem_payload_info_rs;
 
-int8_t fill_cmd_activate_payload (uint8_t payload_type,
-                                  uint8_t payload_instance,
-                                  uint8_t *auxiliary_request_data,
-                                  uint32_t auxiliary_request_data_len,
-                                  fiid_obj_t obj_cmd_rq);
+int fill_cmd_activate_payload (uint8_t payload_type,
+                               uint8_t payload_instance,
+                               uint8_t *auxiliary_request_data,
+                               uint32_t auxiliary_request_data_len,
+                               fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_activate_payload_sol (uint8_t payload_type,
-                                      uint8_t payload_instance,
-                                      uint8_t sol_startup_handshake,
-                                      uint8_t shared_serial_alert_behavior,
-                                      uint8_t test_mode,
-                                      uint8_t authentication_activation,
-                                      uint8_t encryption_activation,
+int fill_cmd_activate_payload_sol (uint8_t payload_type,
+                                   uint8_t payload_instance,
+                                   uint8_t sol_startup_handshake,
+                                   uint8_t shared_serial_alert_behavior,
+                                   uint8_t test_mode,
+                                   uint8_t authentication_activation,
+                                   uint8_t encryption_activation,
+                                   fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_deactivate_payload (uint8_t payload_type,
+                                 uint8_t payload_instance,
+                                 uint32_t payload_auxiliary_data,
+                                 fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_suspend_resume_payload_encryption (uint8_t payload_type,
+                                                uint8_t payload_instance,
+                                                uint8_t operation,
+                                                fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_get_payload_activation_status (uint8_t payload_type,
+                                            fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_get_payload_instance_info (uint8_t payload_type,
+                                        uint8_t payload_instance,
+                                        fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_user_payload_access (uint8_t channel_number,
+                                      uint8_t user_id,
+                                      uint8_t operation,
+                                      uint8_t standard_payload_1,
+                                      uint8_t standard_payload_2,
+                                      uint8_t standard_payload_3,
+                                      uint8_t standard_payload_4,
+                                      uint8_t standard_payload_5,
+                                      uint8_t standard_payload_6,
+                                      uint8_t standard_payload_7,
+                                      uint8_t oem_payload_0,
+                                      uint8_t oem_payload_1,
+                                      uint8_t oem_payload_2,
+                                      uint8_t oem_payload_3,
+                                      uint8_t oem_payload_4,
+                                      uint8_t oem_payload_5,
+                                      uint8_t oem_payload_6,
+                                      uint8_t oem_payload_7,
                                       fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_deactivate_payload (uint8_t payload_type,
-                                    uint8_t payload_instance,
-                                    uint32_t payload_auxiliary_data,
-                                    fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_user_payload_access (uint8_t channel_number,
+                                      uint8_t user_id,
+                                      fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_suspend_resume_payload_encryption (uint8_t payload_type,
-                                                   uint8_t payload_instance,
-                                                   uint8_t operation,
-                                                   fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_channel_payload_support (uint8_t channel_number,
+                                          fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_get_payload_activation_status (uint8_t payload_type,
-                                               fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_channel_payload_version (uint8_t channel_number,
+                                          uint8_t payload_type,
+                                          fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_get_payload_instance_info (uint8_t payload_type,
-                                           uint8_t payload_instance,
+int fill_cmd_get_channel_oem_payload_info (uint8_t channel_number,
+                                           uint8_t payload_type,
+                                           uint32_t oem_iana,
+                                           uint16_t oem_payload_id,
                                            fiid_obj_t obj_cmd_rq);
-
-int8_t fill_cmd_set_user_payload_access (uint8_t channel_number,
-                                         uint8_t user_id,
-                                         uint8_t operation,
-                                         uint8_t standard_payload_1,
-                                         uint8_t standard_payload_2,
-                                         uint8_t standard_payload_3,
-                                         uint8_t standard_payload_4,
-                                         uint8_t standard_payload_5,
-                                         uint8_t standard_payload_6,
-                                         uint8_t standard_payload_7,
-                                         uint8_t oem_payload_0,
-                                         uint8_t oem_payload_1,
-                                         uint8_t oem_payload_2,
-                                         uint8_t oem_payload_3,
-                                         uint8_t oem_payload_4,
-                                         uint8_t oem_payload_5,
-                                         uint8_t oem_payload_6,
-                                         uint8_t oem_payload_7,
-                                         fiid_obj_t obj_cmd_rq);
-
-int8_t fill_cmd_get_user_payload_access (uint8_t channel_number,
-                                         uint8_t user_id,
-                                         fiid_obj_t obj_cmd_rq);
-
-int8_t fill_cmd_get_channel_payload_support (uint8_t channel_number,
-                                             fiid_obj_t obj_cmd_rq);
-
-int8_t fill_cmd_get_channel_payload_version (uint8_t channel_number,
-                                             uint8_t payload_type,
-                                             fiid_obj_t obj_cmd_rq);
-
-int8_t fill_cmd_get_channel_oem_payload_info (uint8_t channel_number,
-                                              uint8_t payload_type,
-                                              uint32_t oem_iana,
-                                              uint16_t oem_payload_id,
-                                              fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

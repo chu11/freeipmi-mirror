@@ -518,7 +518,7 @@ fiid_template_t tmpl_cmd_pet_acknowledge_rs =
     { 0, "", 0}
   };
 
-int8_t
+int
 fill_cmd_get_pef_capabilities (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -538,7 +538,7 @@ fill_cmd_get_pef_capabilities (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_arm_pef_postpone_timer (uint8_t pef_postpone_timeout, fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -559,7 +559,7 @@ fill_cmd_arm_pef_postpone_timer (uint8_t pef_postpone_timeout, fiid_obj_t obj_cm
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_pef_configuration_parameters (fiid_obj_t obj_cmd_rq,
                                            uint8_t parameter_selector,
                                            uint8_t *configuration_parameter_data,
@@ -591,7 +591,7 @@ fill_cmd_set_pef_configuration_parameters (fiid_obj_t obj_cmd_rq,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_pef_configuration_parameters_pef_control (uint8_t pef,
                                                        uint8_t pef_event_messages,
                                                        uint8_t pef_startup_delay,
@@ -626,7 +626,7 @@ fill_cmd_set_pef_configuration_parameters_pef_control (uint8_t pef,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_pef_configuration_parameters_pef_action_global_control (uint8_t alert_action,
                                                                      uint8_t power_down_action,
                                                                      uint8_t reset_action,
@@ -667,7 +667,7 @@ fill_cmd_set_pef_configuration_parameters_pef_action_global_control (uint8_t ale
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_pef_configuration_parameters_pef_startup_delay (uint8_t pef_startup_delay, fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -690,7 +690,7 @@ fill_cmd_set_pef_configuration_parameters_pef_startup_delay (uint8_t pef_startup
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (uint8_t pef_alert_startup_delay, fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -713,7 +713,7 @@ fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (uint8_t pef_a
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_pef_configuration_parameters_event_filter_table (uint8_t filter_number,
                                                               uint8_t filter_configuration_type,
                                                               uint8_t filter_configuration_filter,
@@ -806,7 +806,7 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table (uint8_t filter_num
 }
 
 
-int8_t
+int
 fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (uint8_t filter_number,
                                                                     uint8_t filter_configuration_type,
                                                                     uint8_t filter_configuration_filter,
@@ -838,7 +838,7 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (uint8_t filt
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_pef_configuration_parameters_alert_string_keys (uint8_t string_selector,
                                                              uint8_t filter_number,
                                                              uint8_t set_number_for_string,
@@ -870,7 +870,7 @@ fill_cmd_set_pef_configuration_parameters_alert_string_keys (uint8_t string_sele
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_selector,
                                                          uint8_t block_selector,
                                                          uint8_t *string_data,
@@ -909,7 +909,7 @@ fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_selector
 }
 
 
-int8_t
+int
 fill_cmd_set_pef_configuration_parameters_alert_policy_table (uint8_t alert_policy_entry_number,
                                                               uint8_t policy_type,
                                                               uint8_t policy_enabled,
@@ -954,7 +954,7 @@ fill_cmd_set_pef_configuration_parameters_alert_policy_table (uint8_t alert_poli
 }
 
 
-int8_t
+int
 fill_cmd_get_pef_configuration_parameters (uint8_t parameter_selector,
                                            uint8_t get_parameter,
                                            uint8_t set_selector,
@@ -985,7 +985,7 @@ fill_cmd_get_pef_configuration_parameters (uint8_t parameter_selector,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_last_processed_event_id (uint8_t set_record_id_for_last_record,
                                       uint16_t record_id,
                                       fiid_obj_t obj_cmd_rq)
@@ -1011,7 +1011,7 @@ fill_cmd_set_last_processed_event_id (uint8_t set_record_id_for_last_record,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_last_processed_event_id (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -1031,7 +1031,7 @@ fill_cmd_get_last_processed_event_id (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_alert_immediate (uint8_t channel_number,
                           uint8_t destination_selector,
                           uint8_t operation,
@@ -1067,7 +1067,7 @@ fill_cmd_alert_immediate (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_pet_acknowledge (uint16_t sequence_number,
                           uint32_t local_timestamp,
                           uint8_t event_source_type,

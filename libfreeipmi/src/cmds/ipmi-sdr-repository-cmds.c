@@ -141,7 +141,7 @@ fiid_template_t tmpl_cmd_set_sdr_repository_time_rs =
     { 0,   "", 0}
   };
 
-int8_t
+int
 fill_cmd_get_repository_info (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -161,7 +161,7 @@ fill_cmd_get_repository_info (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_repository_allocation_info (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -181,7 +181,7 @@ fill_cmd_get_repository_allocation_info (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_reserve_sdr_repository (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -201,7 +201,7 @@ fill_cmd_reserve_sdr_repository (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_sdr (uint16_t reservation_id,
                   uint16_t record_id,
                   uint8_t offset_into_record,
@@ -229,7 +229,7 @@ fill_cmd_get_sdr (uint16_t reservation_id,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_sdr_repository_time (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -250,7 +250,7 @@ fill_cmd_get_sdr_repository_time (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sdr_repository_time (uint32_t time, fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))

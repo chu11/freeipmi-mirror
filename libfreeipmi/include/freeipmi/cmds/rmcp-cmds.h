@@ -40,7 +40,7 @@ extern fiid_template_t tmpl_cmd_asf_presence_pong;
    ranging from 0x00 to 0xFE.  This is because the RMCP consumers may
    optionally discard duplicate messages.  */
 
-int8_t fill_cmd_asf_presence_ping (uint8_t message_tag, fiid_obj_t obj_cmd);
+int fill_cmd_asf_presence_ping (uint8_t message_tag, fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus
 }

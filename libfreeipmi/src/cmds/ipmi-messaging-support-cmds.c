@@ -597,7 +597,7 @@ fiid_template_t tmpl_cmd_set_user_password_rs =
     { 0, "", 0}
   };
 
-int8_t
+int
 fill_cmd_clear_message_flags (uint8_t receive_message_queue,
                               uint8_t event_message_buffer,
                               uint8_t watchdog_pre_timeout_interrupt_flag,
@@ -637,7 +637,7 @@ fill_cmd_clear_message_flags (uint8_t receive_message_queue,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_message_flags (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -657,7 +657,7 @@ fill_cmd_get_message_flags (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_enable_message_channel_receive (uint8_t channel_number,
                                          uint8_t channel_operation,
                                          fiid_obj_t obj_cmd_rq)
@@ -685,7 +685,7 @@ fill_cmd_enable_message_channel_receive (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_message (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -705,7 +705,7 @@ fill_cmd_get_message (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_send_message (uint8_t channel_number,
                        uint8_t message_authentication,
                        uint8_t message_encryption,
@@ -745,7 +745,7 @@ fill_cmd_send_message (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_read_event_message_buffer (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -765,7 +765,7 @@ fill_cmd_read_event_message_buffer (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_system_interface_capabilities (uint8_t system_interface,
                                             fiid_obj_t obj_cmd_rq)
 {
@@ -789,7 +789,7 @@ fill_cmd_get_system_interface_capabilities (uint8_t system_interface,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_bt_interface_capabilities (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -809,7 +809,7 @@ fill_cmd_get_bt_interface_capabilities (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                   uint8_t maximum_privilege_level,
                                                   fiid_obj_t obj_cmd_rq)
@@ -837,7 +837,7 @@ fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
                                                       uint8_t maximum_privilege_level,
                                                       uint8_t get_ipmi_v20_extended_data,
@@ -868,7 +868,7 @@ fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_channel_cipher_suites (uint8_t channel_number,
                                     uint8_t payload_type,
                                     uint8_t list_index,
@@ -901,7 +901,7 @@ fill_cmd_get_channel_cipher_suites (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_session_challenge (uint8_t authentication_type,
                                 char *user_name,
                                 uint32_t user_name_len,
@@ -941,7 +941,7 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_activate_session (uint8_t authentication_type,
                            uint8_t maximum_privilege_level,
                            uint8_t *challenge_string,
@@ -990,7 +990,7 @@ fill_cmd_activate_session (uint8_t authentication_type,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_session_privilege_level (uint8_t privilege_level,
                                       fiid_obj_t obj_cmd_rq)
 {
@@ -1014,7 +1014,7 @@ fill_cmd_set_session_privilege_level (uint8_t privilege_level,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_close_session (uint32_t close_session_id,
                         fiid_obj_t obj_cmd_rq)
 {
@@ -1036,7 +1036,7 @@ fill_cmd_close_session (uint32_t close_session_id,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_channel_access (uint8_t channel_number,
                              uint8_t ipmi_messaging_access_mode,
                              uint8_t user_level_authentication,
@@ -1082,7 +1082,7 @@ fill_cmd_set_channel_access (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_channel_access (uint8_t channel_number,
                              uint8_t channel_access_get,
                              fiid_obj_t obj_cmd_rq)
@@ -1111,7 +1111,7 @@ fill_cmd_get_channel_access (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
@@ -1135,7 +1135,7 @@ fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_channel_security_keys (uint8_t channel_number,
                                     uint8_t operation,
                                     uint8_t key_id,
@@ -1194,7 +1194,7 @@ fill_cmd_set_channel_security_keys (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_user_access (uint8_t channel_number,
                           uint8_t user_ipmi_messaging,
                           uint8_t user_link_authentication,
@@ -1238,7 +1238,7 @@ fill_cmd_set_user_access (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_user_access (uint8_t channel_number,
                           uint8_t user_id,
                           fiid_obj_t obj_cmd_rq)
@@ -1266,7 +1266,7 @@ fill_cmd_get_user_access (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_user_name (uint8_t user_id,
                         char *user_name,
                         unsigned int user_name_len,
@@ -1305,7 +1305,7 @@ fill_cmd_set_user_name (uint8_t user_id,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -1328,7 +1328,7 @@ fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_user_password (uint8_t user_id,
                             uint8_t operation,
                             char *password,
@@ -1375,7 +1375,7 @@ fill_cmd_set_user_password (uint8_t user_id,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_user_password_v20 (uint8_t user_id,
                                 uint8_t password_size,
                                 uint8_t operation,

@@ -303,7 +303,7 @@ fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_numbe
     { 0, "", 0}
   };
 
-int8_t
+int
 fill_sol_payload_data (uint8_t packet_sequence_number,
                        uint8_t packet_ack_nack_sequence_number,
                        uint8_t accepted_character_count,
@@ -340,7 +340,7 @@ fill_sol_payload_data (uint8_t packet_sequence_number,
   return (0);
 }
 
-int8_t
+int
 fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
                                              uint8_t packet_ack_nack_sequence_number,
                                              uint8_t accepted_character_count,
@@ -397,7 +397,7 @@ fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
                                            uint8_t parameter_selector,
                                            uint8_t *configuration_parameter_data,
@@ -433,7 +433,7 @@ fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
 }
 
 
-int8_t
+int
 fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
                                                       uint8_t sol_enable,
                                                       fiid_obj_t obj_cmd_rq)
@@ -463,7 +463,7 @@ fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_number,
                                                               uint8_t sol_privilege_level,
                                                               uint8_t force_sol_payload_authentication,
@@ -499,7 +499,7 @@ fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_nu
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (uint8_t channel_number,
                                                                                             uint8_t character_accumulate_interval,
                                                                                             uint8_t character_send_threshold,
@@ -529,7 +529,7 @@ fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sol_configuration_parameters_sol_retry (uint8_t channel_number,
                                                      uint8_t retry_count,
                                                      uint8_t retry_interval,
@@ -560,7 +560,7 @@ fill_cmd_set_sol_configuration_parameters_sol_retry (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (uint8_t channel_number,
                                                                      uint8_t bit_rate,
                                                                      fiid_obj_t obj_cmd_rq)
@@ -590,7 +590,7 @@ fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (uint8_t cha
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (uint8_t channel_number,
                                                                  uint8_t bit_rate,
                                                                  fiid_obj_t obj_cmd_rq)
@@ -620,7 +620,7 @@ fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (uint8_t channel
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t channel_number,
                                                                    uint16_t port_number,
                                                                    fiid_obj_t obj_cmd_rq)
@@ -648,8 +648,7 @@ fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t chann
   return (0);
 }
 
-
-int8_t
+int
 fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
                                            uint8_t get_parameter,
                                            uint8_t parameter_selector,

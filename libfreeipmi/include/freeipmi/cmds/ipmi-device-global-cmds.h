@@ -131,17 +131,17 @@ extern fiid_template_t tmpl_cmd_get_device_guid_rq;
 extern fiid_template_t tmpl_cmd_get_device_guid_rs;
 extern fiid_template_t tmpl_cmd_get_device_guid_format_rs;
 
-int8_t fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq);
-int8_t fill_cmd_cold_reset (fiid_obj_t obj_cmd_rq);
-int8_t fill_cmd_warm_reset (fiid_obj_t obj_cmd_rq);
-int8_t fill_cmd_set_acpi_power_state (uint8_t system_power_state_enumeration,
-                                      uint8_t set_system_power_state,
-                                      uint8_t device_power_state_enumeration,
-                                      uint8_t set_device_power_state,
-                                      fiid_obj_t obj_cmd_rq);
-int8_t fill_cmd_get_acpi_power_state (fiid_obj_t obj_cmd_rq);
-int8_t fill_cmd_get_self_test_results (fiid_obj_t obj_cmd_rq);
-int8_t fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq);
+int fill_cmd_cold_reset (fiid_obj_t obj_cmd_rq);
+int fill_cmd_warm_reset (fiid_obj_t obj_cmd_rq);
+int fill_cmd_set_acpi_power_state (uint8_t system_power_state_enumeration,
+                                   uint8_t set_system_power_state,
+                                   uint8_t device_power_state_enumeration,
+                                   uint8_t set_device_power_state,
+                                   fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_acpi_power_state (fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_self_test_results (fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

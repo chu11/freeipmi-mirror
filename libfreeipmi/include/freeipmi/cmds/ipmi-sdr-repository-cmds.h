@@ -62,19 +62,19 @@ extern fiid_template_t tmpl_cmd_get_sdr_repository_time_rs;
 extern fiid_template_t tmpl_cmd_set_sdr_repository_time_rq;
 extern fiid_template_t tmpl_cmd_set_sdr_repository_time_rs;
 
-int8_t fill_cmd_get_repository_info (fiid_obj_t obj_cmd_rq);
-int8_t fill_cmd_get_repository_allocation_info (fiid_obj_t obj_cmd_rq);
-int8_t fill_cmd_reserve_sdr_repository (fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_repository_info (fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_repository_allocation_info (fiid_obj_t obj_cmd_rq);
+int fill_cmd_reserve_sdr_repository (fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_get_sdr (uint16_t reservation_id,
-                         uint16_t record_id,
-                         uint8_t offset_into_record,
-                         uint8_t bytes_to_read,
-                         fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_sdr (uint16_t reservation_id,
+                      uint16_t record_id,
+                      uint8_t offset_into_record,
+                      uint8_t bytes_to_read,
+                      fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_get_sdr_repository_time (fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_sdr_repository_time (fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_set_sdr_repository_time (uint32_t time, fiid_obj_t obj_cmd_rq);
+int fill_cmd_set_sdr_repository_time (uint32_t time, fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

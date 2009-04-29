@@ -227,7 +227,7 @@ fiid_template_t tmpl_cmd_set_auxiliary_log_status_rs =
     { 0, "", 0}
   };
 
-int8_t
+int
 fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -247,7 +247,7 @@ fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -267,7 +267,7 @@ fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_reserve_sel (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -287,7 +287,7 @@ fill_cmd_reserve_sel (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_sel_entry (uint16_t reservation_id,
                         uint16_t record_id,
                         uint8_t offset_into_record,
@@ -316,7 +316,7 @@ fill_cmd_get_sel_entry (uint16_t reservation_id,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_delete_sel_entry (uint16_t reservation_id,
                            uint16_t record_id,
                            fiid_obj_t obj_cmd_rq)
@@ -341,7 +341,7 @@ fill_cmd_delete_sel_entry (uint16_t reservation_id,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_clear_sel (uint16_t reservation_id,
                     uint8_t operation,
                     fiid_obj_t obj_cmd_rq)
@@ -371,7 +371,7 @@ fill_cmd_clear_sel (uint16_t reservation_id,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_sel_time (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -392,7 +392,7 @@ fill_cmd_get_sel_time (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sel_time (uint32_t time, fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -414,7 +414,7 @@ fill_cmd_set_sel_time (uint32_t time, fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_auxiliary_log_status (uint8_t log_type,
                                    fiid_obj_t obj_cmd_rq)
 {
@@ -439,7 +439,7 @@ fill_cmd_get_auxiliary_log_status (uint8_t log_type,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_auxiliary_log_status (uint8_t log_type,
                                    uint8_t *log_data,
                                    uint8_t log_data_len,

@@ -717,7 +717,7 @@ fiid_template_t tmpl_cmd_get_sensor_type_rs =
   };
 
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
-int8_t
+int
 fill_cmd_set_sensor_hysteresis (uint8_t sensor_number,
                                 uint8_t hysteresis_mask,
                                 uint8_t positive_going_threshold_hysteresis_value,
@@ -752,7 +752,7 @@ fill_cmd_set_sensor_hysteresis (uint8_t sensor_number,
 }
 
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
-int8_t
+int
 fill_cmd_get_sensor_hysteresis (uint8_t sensor_number,
                                 uint8_t hysteresis_mask,
                                 fiid_obj_t obj_cmd_rq)
@@ -778,7 +778,7 @@ fill_cmd_get_sensor_hysteresis (uint8_t sensor_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
                                 uint8_t *lower_non_critical_threshold,
                                 uint8_t *lower_critical_threshold,
@@ -874,7 +874,7 @@ fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -896,7 +896,7 @@ fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sensor_event_enable (uint8_t sensor_number,
                                   uint8_t event_message_action,
                                   uint8_t scanning_on_this_sensor,
@@ -933,7 +933,7 @@ fill_cmd_set_sensor_event_enable (uint8_t sensor_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sensor_event_enable_threshold (uint8_t sensor_number,
                                             uint8_t event_message_action,
                                             uint8_t scanning_on_this_sensor,
@@ -1042,7 +1042,7 @@ fill_cmd_set_sensor_event_enable_threshold (uint8_t sensor_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_sensor_event_enable_discrete (uint8_t sensor_number,
                                            uint8_t event_message_action,
                                            uint8_t scanning_on_this_sensor,
@@ -1169,7 +1169,7 @@ fill_cmd_set_sensor_event_enable_discrete (uint8_t sensor_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_sensor_event_enable (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -1191,7 +1191,7 @@ fill_cmd_get_sensor_event_enable (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))

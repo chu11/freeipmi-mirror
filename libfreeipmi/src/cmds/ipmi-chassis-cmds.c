@@ -400,7 +400,7 @@ fiid_template_t tmpl_cmd_get_power_on_hours_counter_rs =
     { 0, "", 0},
   };
 
-int8_t
+int
 fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -421,7 +421,7 @@ fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -441,7 +441,7 @@ fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_chassis_control (uint8_t chassis_control,
                           fiid_obj_t obj_cmd_rq)
 {
@@ -465,7 +465,7 @@ fill_cmd_chassis_control (uint8_t chassis_control,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_chassis_identify (uint8_t *identify_interval,
                            uint8_t *force_identify,
                            fiid_obj_t obj_cmd_rq)
@@ -500,7 +500,7 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_front_panel_enables (uint8_t disable_power_off_button_for_power_off_only,
                                   uint8_t disable_reset_button,
                                   uint8_t disable_diagnostic_interrupt_button,
@@ -535,7 +535,7 @@ fill_cmd_set_front_panel_enables (uint8_t disable_power_off_button_for_power_off
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_power_restore_policy (uint8_t power_restore_policy,
                                    fiid_obj_t obj_cmd_rq)
 {
@@ -564,7 +564,7 @@ fill_cmd_set_power_restore_policy (uint8_t power_restore_policy,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_power_cycle_interval (uint8_t interval,
                                    fiid_obj_t obj_cmd_rq)
 {
@@ -587,7 +587,7 @@ fill_cmd_set_power_cycle_interval (uint8_t interval,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -608,7 +608,7 @@ fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq)
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_system_boot_options (uint8_t parameter_selector,
                                   uint8_t *configuration_parameter_data,
                                   uint8_t data_len,
@@ -638,7 +638,7 @@ fill_cmd_set_system_boot_options (uint8_t parameter_selector,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
                                                   fiid_obj_t obj_cmd_rq)
 {
@@ -668,7 +668,7 @@ fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_handled_boot_info,
                                                         uint8_t *os_loader_handled_boot_info,
                                                         uint8_t *os_or_service_partition_handled_boot_info,
@@ -766,7 +766,7 @@ fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_ha
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_clear_on_power_up,
                                                                    uint8_t dont_clear_on_pushbutton_reset_soft_reset,
                                                                    uint8_t dont_clear_on_watchdog_timeout,
@@ -805,7 +805,7 @@ fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (uint8_t dont_
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
                                              uint8_t boot_flags_persistent,
                                              uint8_t boot_flags_valid,
@@ -879,7 +879,7 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t bios_boot_type,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_system_boot_options (uint8_t parameter_selector,
                                   uint8_t set_selector,
                                   uint8_t block_selector,
@@ -907,7 +907,7 @@ fill_cmd_get_system_boot_options (uint8_t parameter_selector,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_power_on_hours_counter (fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))

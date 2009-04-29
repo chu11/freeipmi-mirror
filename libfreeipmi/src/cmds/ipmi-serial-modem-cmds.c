@@ -171,7 +171,7 @@ fiid_template_t tmpl_cmd_get_serial_modem_configuration_call_retry_interval_rs =
     { 0, "", 0}
   };
 
-int8_t
+int
 fill_cmd_set_serial_modem_configuration (uint8_t channel_number,
                                          uint8_t parameter_selector,
                                          uint8_t *configuration_parameter_data,
@@ -207,7 +207,7 @@ fill_cmd_set_serial_modem_configuration (uint8_t channel_number,
 }
 
 
-int8_t
+int
 fill_cmd_set_serial_modem_configuration_connection_mode (uint8_t channel_number,
                                                          uint8_t basic_mode,
                                                          uint8_t ppp_mode,
@@ -246,7 +246,7 @@ fill_cmd_set_serial_modem_configuration_connection_mode (uint8_t channel_number,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (uint8_t channel_number,
                                                                       uint8_t dtr_hangup,
                                                                       uint8_t flow_control,
@@ -283,7 +283,7 @@ fill_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (uint8_t ch
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_serial_modem_configuration_page_blackout_interval (uint8_t channel_number,
                                                                 uint8_t page_blackout_interval,
                                                                 fiid_obj_t obj_cmd_rq)
@@ -311,7 +311,7 @@ fill_cmd_set_serial_modem_configuration_page_blackout_interval (uint8_t channel_
   return (0);
 }
 
-int8_t
+int
 fill_cmd_set_serial_modem_configuration_call_retry_interval (uint8_t channel_number,
                                                              uint8_t call_retry_interval,
                                                              fiid_obj_t obj_cmd_rq)
@@ -339,7 +339,7 @@ fill_cmd_set_serial_modem_configuration_call_retry_interval (uint8_t channel_num
   return (0);
 }
 
-int8_t
+int
 fill_cmd_get_serial_modem_configuration (uint8_t channel_number,
                                          uint8_t get_parameter,
                                          uint8_t parameter_selector,

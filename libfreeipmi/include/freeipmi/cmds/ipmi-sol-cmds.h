@@ -165,72 +165,72 @@ extern fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bi
 extern fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs;
 extern fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs;
 
-int8_t fill_sol_payload_data (uint8_t packet_sequence_number,
-                              uint8_t packet_ack_nack_sequence_number,
-                              uint8_t accepted_character_count,
-                              uint8_t operation_status,
-                              uint8_t *character_data,
-                              uint32_t character_data_len,
-                              fiid_obj_t obj_sol_payload);
+int fill_sol_payload_data (uint8_t packet_sequence_number,
+                           uint8_t packet_ack_nack_sequence_number,
+                           uint8_t accepted_character_count,
+                           uint8_t operation_status,
+                           uint8_t *character_data,
+                           uint32_t character_data_len,
+                           fiid_obj_t obj_sol_payload);
 
-int8_t fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
-                                                    uint8_t packet_ack_nack_sequence_number,
-                                                    uint8_t accepted_character_count,
-                                                    uint8_t flush_outbound,
-                                                    uint8_t flush_inbound,
-                                                    uint8_t drop_dcd_dsr,
-                                                    uint8_t cts_pause,
-                                                    uint8_t generate_break,
-                                                    uint8_t ring_wor,
-                                                    uint8_t nack,
-                                                    uint8_t *character_data,
-                                                    uint32_t character_data_len,
-                                                    fiid_obj_t obj_sol_payload);
+int fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
+                                                 uint8_t packet_ack_nack_sequence_number,
+                                                 uint8_t accepted_character_count,
+                                                 uint8_t flush_outbound,
+                                                 uint8_t flush_inbound,
+                                                 uint8_t drop_dcd_dsr,
+                                                 uint8_t cts_pause,
+                                                 uint8_t generate_break,
+                                                 uint8_t ring_wor,
+                                                 uint8_t nack,
+                                                 uint8_t *character_data,
+                                                 uint32_t character_data_len,
+                                                 fiid_obj_t obj_sol_payload);
 
-int8_t fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
-                                                  uint8_t parameter_selector,
-                                                  uint8_t *configuration_parameter_data,
-                                                  uint8_t configuration_parameter_data_len,
-                                                  fiid_obj_t obj_data_rq);
+int fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
+                                               uint8_t parameter_selector,
+                                               uint8_t *configuration_parameter_data,
+                                               uint8_t configuration_parameter_data_len,
+                                               fiid_obj_t obj_data_rq);
 
-int8_t fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
-                                                             uint8_t sol_enable,
-                                                             fiid_obj_t obj_data_rq);
+int fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
+                                                          uint8_t sol_enable,
+                                                          fiid_obj_t obj_data_rq);
 
-int8_t fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_number,
-                                                                     uint8_t sol_privilege_level,
-                                                                     uint8_t force_sol_payload_authentication,
-                                                                     uint8_t force_sol_payload_encryption,
+int fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_number,
+                                                                  uint8_t sol_privilege_level,
+                                                                  uint8_t force_sol_payload_authentication,
+                                                                  uint8_t force_sol_payload_encryption,
+                                                                  fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (uint8_t channel_number,
+                                                                                                uint8_t character_accumulate_interval,
+                                                                                                uint8_t character_send_threshold,
+                                                                                                fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_sol_configuration_parameters_sol_retry (uint8_t channel_number,
+                                                         uint8_t retry_count,
+                                                         uint8_t retry_interval,
+                                                         fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (uint8_t channel_number,
+                                                                         uint8_t bit_rate,
+                                                                         fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (uint8_t channel_number,
+                                                                     uint8_t bit_rate,
                                                                      fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (uint8_t channel_number,
-                                                                                                   uint8_t character_accumulate_interval,
-                                                                                                   uint8_t character_send_threshold,
-                                                                                                   fiid_obj_t obj_cmd_rq);
+int fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t channel_number,
+                                                                       uint16_t port_number,
+                                                                       fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_set_sol_configuration_parameters_sol_retry (uint8_t channel_number,
-                                                            uint8_t retry_count,
-                                                            uint8_t retry_interval,
-                                                            fiid_obj_t obj_cmd_rq);
-
-int8_t fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (uint8_t channel_number,
-                                                                            uint8_t bit_rate,
-                                                                            fiid_obj_t obj_cmd_rq);
-
-int8_t fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (uint8_t channel_number,
-                                                                        uint8_t bit_rate,
-                                                                        fiid_obj_t obj_cmd_rq);
-
-int8_t fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t channel_number,
-                                                                          uint16_t port_number,
-                                                                          fiid_obj_t obj_cmd_rq);
-
-int8_t fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
-                                                  uint8_t get_parameter,
-                                                  uint8_t parameter_selector,
-                                                  uint8_t set_selector,
-                                                  uint8_t block_selector,
-                                                  fiid_obj_t obj_data_rq);
+int fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
+                                               uint8_t get_parameter,
+                                               uint8_t parameter_selector,
+                                               uint8_t set_selector,
+                                               uint8_t block_selector,
+                                               fiid_obj_t obj_data_rq);
 
 #ifdef __cplusplus
 }

@@ -36,11 +36,11 @@ extern fiid_template_t tmpl_cmd_set_event_receiver_rs;
 extern fiid_template_t tmpl_cmd_get_event_receiver_rq;
 extern fiid_template_t tmpl_cmd_get_event_receiver_rs;
 
-int8_t fill_cmd_set_event_receiver (uint8_t event_receiver_slave_address,
-                                    uint8_t event_receiver_lun,
-                                    fiid_obj_t obj_cmd_rq);
+int fill_cmd_set_event_receiver (uint8_t event_receiver_slave_address,
+                                 uint8_t event_receiver_lun,
+                                 fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_get_event_receiver (fiid_obj_t obj_cmd_rq);
+int fill_cmd_get_event_receiver (fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.13 2009-04-28 17:43:36 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds.c,v 1.14 2009-04-29 00:05:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -98,7 +98,7 @@ fiid_template_t tmpl_cmd_write_fru_data_rs =
     { 0, "", 0}
   };
 
-int8_t
+int
 fill_cmd_get_fru_inventory_area_info (uint8_t fru_device_id,
                                       fiid_obj_t obj_cmd_rq)
 {
@@ -121,7 +121,7 @@ fill_cmd_get_fru_inventory_area_info (uint8_t fru_device_id,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_read_fru_data (uint8_t fru_device_id,
                         uint16_t fru_inventory_offset_to_read,
                         uint8_t count_to_read,
@@ -147,7 +147,7 @@ fill_cmd_read_fru_data (uint8_t fru_device_id,
   return (0);
 }
 
-int8_t
+int
 fill_cmd_write_fru_data (uint8_t fru_device_id,
                          uint16_t fru_inventory_offset_to_write,
                          uint8_t *data_to_write,

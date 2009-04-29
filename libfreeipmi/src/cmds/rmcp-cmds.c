@@ -65,7 +65,7 @@ fiid_template_t tmpl_cmd_asf_presence_pong =
     { 0,  "", 0}
   };
 
-int8_t
+int
 fill_cmd_asf_presence_ping (uint8_t message_tag, fiid_obj_t obj_cmd)
 {
   if (!fiid_obj_valid (obj_cmd))
