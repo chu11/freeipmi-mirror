@@ -31,7 +31,7 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag)
 {
   uint64_t val;
@@ -56,7 +56,6 @@ ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag)
 
   if (message_tag == val)
     return (1);
-  else
-    return (0);
+  return (0);
 }
 

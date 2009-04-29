@@ -1294,7 +1294,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   uint32_t initial_outbound_sequence_number = 0;
   unsigned int seedp;
   int8_t rv = -1;
-  int8_t ret;
+  int ret;
   uint64_t val;
 
   assert (ctx

@@ -74,7 +74,7 @@ ipmi_checksum (uint8_t *buf, uint64_t len)
   return (-checksum);
 }
 
-int8_t
+int
 ipmi_check_cmd (fiid_obj_t obj_cmd, uint8_t cmd)
 {
   uint64_t cmd_recv;
@@ -100,7 +100,7 @@ ipmi_check_cmd (fiid_obj_t obj_cmd, uint8_t cmd)
   return ((((uint8_t)cmd_recv) == cmd) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_check_completion_code (fiid_obj_t obj_cmd, uint8_t completion_code)
 {
   uint64_t completion_code_recv;
@@ -126,7 +126,7 @@ ipmi_check_completion_code (fiid_obj_t obj_cmd, uint8_t completion_code)
   return ((((uint8_t)completion_code_recv) == completion_code) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_check_completion_code_success (fiid_obj_t obj_cmd)
 {
   return (ipmi_check_completion_code (obj_cmd, IPMI_COMP_CODE_COMMAND_SUCCESS));
@@ -169,7 +169,7 @@ ipmi_get_random (uint8_t *buf, uint32_t buflen)
   return (buflen);
 }
 
-int8_t
+int
 ipmi_is_ipmi_1_5_packet (uint8_t *pkt, uint32_t pkt_len)
 {
   int32_t rmcp_hdr_len;
@@ -192,7 +192,7 @@ ipmi_is_ipmi_1_5_packet (uint8_t *pkt, uint32_t pkt_len)
   return ((auth_type != IPMI_AUTHENTICATION_TYPE_RMCPPLUS) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_is_ipmi_2_0_packet (uint8_t *pkt, uint32_t pkt_len)
 {
   int32_t rmcp_hdr_len;

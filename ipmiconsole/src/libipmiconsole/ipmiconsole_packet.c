@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.36 2009-04-08 21:09:42 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.37 2009-04-29 00:26:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -402,7 +402,7 @@ _packet_dump_unknown_hdr (ipmiconsole_ctx_t c,
     "%s\n"
     "================================================";
   char *str;
-  int8_t rv;
+  int rv;
   int len;
 
   assert (c);
@@ -474,7 +474,7 @@ ipmiconsole_packet_dump_unknown (ipmiconsole_ctx_t c,
 {
   char hdr[IPMICONSOLE_MAX_PACKET_DUMP_HDR_LEN];
   int fd;
-  int8_t rv;
+  int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -1335,7 +1335,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
 {
   ipmiconsole_packet_type_t pkt;
   fiid_obj_t obj_cmd = NULL;
-  int8_t rv;
+  int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);

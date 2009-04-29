@@ -230,7 +230,7 @@ api_ipmi_cmd (ipmi_ctx_t ctx,
               fiid_obj_t obj_cmd_rq,
               fiid_obj_t obj_cmd_rs)
 {
-  int8_t ret;
+  int ret;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return (-1);
@@ -266,7 +266,7 @@ api_ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                    fiid_obj_t obj_cmd_rq,
                    fiid_obj_t obj_cmd_rs)
 {
-  int8_t ret;
+  int ret;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return (-1);
