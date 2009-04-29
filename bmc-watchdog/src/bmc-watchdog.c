@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.117 2009-03-06 01:19:58 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.118 2009-04-29 18:29:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -635,7 +635,7 @@ _cmd (char *str,
 {
   uint64_t comp_code;
   int retry_count = 0;
-  int8_t ret = 0;
+  int ret = 0;
 
   assert (str
           && retry_wait_time >= 0

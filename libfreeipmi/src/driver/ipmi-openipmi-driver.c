@@ -259,7 +259,7 @@ ipmi_openipmi_ctx_errormsg (ipmi_openipmi_ctx_t ctx)
   return (ipmi_openipmi_ctx_strerror (ipmi_openipmi_ctx_errnum (ctx)));
 }
 
-int8_t
+int
 ipmi_openipmi_ctx_get_driver_device (ipmi_openipmi_ctx_t ctx, char **driver_device)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
@@ -279,7 +279,7 @@ ipmi_openipmi_ctx_get_driver_device (ipmi_openipmi_ctx_t ctx, char **driver_devi
   return (0);
 }
 
-int8_t
+int
 ipmi_openipmi_ctx_get_flags (ipmi_openipmi_ctx_t ctx, unsigned int *flags)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
@@ -299,7 +299,7 @@ ipmi_openipmi_ctx_get_flags (ipmi_openipmi_ctx_t ctx, unsigned int *flags)
   return (0);
 }
 
-int8_t
+int
 ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, const char *driver_device)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
@@ -328,7 +328,7 @@ ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, const char *driver
   return (0);
 }
 
-int8_t
+int
 ipmi_openipmi_ctx_set_flags (ipmi_openipmi_ctx_t ctx, unsigned int flags)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
@@ -348,7 +348,7 @@ ipmi_openipmi_ctx_set_flags (ipmi_openipmi_ctx_t ctx, unsigned int flags)
   return (0);
 }
 
-int8_t
+int
 ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx)
 {
   unsigned int addr = IPMI_SLAVE_ADDRESS_BMC;
@@ -394,7 +394,7 @@ ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx)
   return (-1);
 }
 
-static int8_t
+static int
 _openipmi_write (ipmi_openipmi_ctx_t ctx,
                  uint8_t rs_addr,
                  uint8_t lun,
@@ -478,7 +478,7 @@ _openipmi_write (ipmi_openipmi_ctx_t ctx,
   return (0);
 }
 
-static int8_t
+static int
 _openipmi_read (ipmi_openipmi_ctx_t ctx,
                 fiid_obj_t obj_cmd_rs)
 {
@@ -554,7 +554,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   return (0);
 }
 
-int8_t
+int
 ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
                    uint8_t lun,
                    uint8_t net_fn,
@@ -598,7 +598,7 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
   return (0);
 }
 
-int8_t
+int
 ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
                         uint8_t rs_addr,
                         uint8_t lun,

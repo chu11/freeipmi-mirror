@@ -51,26 +51,26 @@ int ipmi_openipmi_ctx_errnum (ipmi_openipmi_ctx_t ctx);
 char *ipmi_openipmi_ctx_strerror (int errnum);
 char *ipmi_openipmi_ctx_errormsg (ipmi_openipmi_ctx_t ctx);
 
-int8_t ipmi_openipmi_ctx_get_driver_device (ipmi_openipmi_ctx_t ctx, char **driver_device);
-int8_t ipmi_openipmi_ctx_get_flags (ipmi_openipmi_ctx_t ctx, unsigned int *flags);
+int ipmi_openipmi_ctx_get_driver_device (ipmi_openipmi_ctx_t ctx, char **driver_device);
+int ipmi_openipmi_ctx_get_flags (ipmi_openipmi_ctx_t ctx, unsigned int *flags);
 
-int8_t ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, const char *driver_device);
-int8_t ipmi_openipmi_ctx_set_flags (ipmi_openipmi_ctx_t ctx, unsigned int flags);
+int ipmi_openipmi_ctx_set_driver_device (ipmi_openipmi_ctx_t ctx, const char *driver_device);
+int ipmi_openipmi_ctx_set_flags (ipmi_openipmi_ctx_t ctx, unsigned int flags);
 
-int8_t ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx);
+int ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx);
 
-int8_t ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
-                          uint8_t lun,
-                          uint8_t net_fn,
-                          fiid_obj_t obj_cmd_rq,
-                          fiid_obj_t obj_cmd_rs);
+int ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
+                       uint8_t lun,
+                       uint8_t net_fn,
+                       fiid_obj_t obj_cmd_rq,
+                       fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
-                               uint8_t rs_addr,
-                               uint8_t lun,
-                               uint8_t net_fn,
-                               fiid_obj_t obj_cmd_rq,
-                               fiid_obj_t obj_cmd_rs);
+int ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
+                            uint8_t rs_addr,
+                            uint8_t lun,
+                            uint8_t net_fn,
+                            fiid_obj_t obj_cmd_rq,
+                            fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

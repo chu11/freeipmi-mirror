@@ -209,7 +209,7 @@ ipmi_sunbmc_ctx_errormsg (ipmi_sunbmc_ctx_t ctx)
   return (ipmi_sunbmc_ctx_strerror (ipmi_sunbmc_ctx_errnum (ctx)));
 }
 
-int8_t
+int
 ipmi_sunbmc_ctx_get_driver_device (ipmi_sunbmc_ctx_t ctx, char **driver_device)
 {
   if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
@@ -229,7 +229,7 @@ ipmi_sunbmc_ctx_get_driver_device (ipmi_sunbmc_ctx_t ctx, char **driver_device)
   return (0);
 }
 
-int8_t
+int
 ipmi_sunbmc_ctx_get_flags (ipmi_sunbmc_ctx_t ctx, unsigned int *flags)
 {
   if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
@@ -249,7 +249,7 @@ ipmi_sunbmc_ctx_get_flags (ipmi_sunbmc_ctx_t ctx, unsigned int *flags)
   return (0);
 }
 
-int8_t
+int
 ipmi_sunbmc_ctx_set_driver_device (ipmi_sunbmc_ctx_t ctx, const char *driver_device)
 {
   if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
@@ -278,7 +278,7 @@ ipmi_sunbmc_ctx_set_driver_device (ipmi_sunbmc_ctx_t ctx, const char *driver_dev
   return (0);
 }
 
-int8_t
+int
 ipmi_sunbmc_ctx_set_flags (ipmi_sunbmc_ctx_t ctx, unsigned int flags)
 {
   if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
@@ -298,7 +298,7 @@ ipmi_sunbmc_ctx_set_flags (ipmi_sunbmc_ctx_t ctx, unsigned int flags)
   return (0);
 }
 
-int8_t
+int
 ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx)
 {
 #if defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H) && defined(IOCTL_IPMI_INTERFACE_METHOD)
@@ -379,7 +379,7 @@ ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx)
   return (-1);
 }
 
-static int8_t
+static int
 _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
                uint8_t lun,
                uint8_t net_fn,
@@ -477,7 +477,7 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
   return (rv);
 }
 
-static int8_t
+static int
 _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
               fiid_obj_t obj_cmd_rs)
 {
@@ -588,7 +588,7 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   return (0);
 }
 
-int8_t
+int
 ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
                  uint8_t lun,
                  uint8_t net_fn,

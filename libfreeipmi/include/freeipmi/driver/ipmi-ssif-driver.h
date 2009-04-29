@@ -65,15 +65,15 @@ int ipmi_ssif_ctx_errnum (ipmi_ssif_ctx_t ctx);
 char *ipmi_ssif_ctx_strerror (int errnum);
 char *ipmi_ssif_ctx_errormsg (ipmi_ssif_ctx_t ctx);
 
-int8_t ipmi_ssif_ctx_get_driver_device (ipmi_ssif_ctx_t ctx, char **driver_device);
-int8_t ipmi_ssif_ctx_get_driver_address (ipmi_ssif_ctx_t ctx, uint8_t *driver_address);
-int8_t ipmi_ssif_ctx_get_flags (ipmi_ssif_ctx_t ctx, unsigned int *flags);
+int ipmi_ssif_ctx_get_driver_device (ipmi_ssif_ctx_t ctx, char **driver_device);
+int ipmi_ssif_ctx_get_driver_address (ipmi_ssif_ctx_t ctx, uint8_t *driver_address);
+int ipmi_ssif_ctx_get_flags (ipmi_ssif_ctx_t ctx, unsigned int *flags);
 
-int8_t ipmi_ssif_ctx_set_driver_device (ipmi_ssif_ctx_t ctx, const char *driver_device);
-int8_t ipmi_ssif_ctx_set_driver_address (ipmi_ssif_ctx_t ctx, uint8_t driver_address);
-int8_t ipmi_ssif_ctx_set_flags (ipmi_ssif_ctx_t ctx, unsigned int flags);
+int ipmi_ssif_ctx_set_driver_device (ipmi_ssif_ctx_t ctx, const char *driver_device);
+int ipmi_ssif_ctx_set_driver_address (ipmi_ssif_ctx_t ctx, uint8_t driver_address);
+int ipmi_ssif_ctx_set_flags (ipmi_ssif_ctx_t ctx, unsigned int flags);
 
-int8_t ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx);
+int ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx);
 
 int32_t ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
                          uint8_t *buf,
@@ -83,11 +83,11 @@ int32_t ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
                         uint8_t* buf,
                         unsigned int buf_len);
 
-int8_t ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
-                      uint8_t lun,
-                      uint8_t net_fn,
-                      fiid_obj_t obj_cmd_rq,
-                      fiid_obj_t obj_cmd_rs);
+int ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
+                   uint8_t lun,
+                   uint8_t net_fn,
+                   fiid_obj_t obj_cmd_rq,
+                   fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

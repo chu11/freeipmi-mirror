@@ -530,7 +530,7 @@ ipmi_ssif_ctx_errormsg (ipmi_ssif_ctx_t ctx)
   return (ipmi_ssif_ctx_strerror (ipmi_ssif_ctx_errnum (ctx)));
 }
 
-int8_t
+int
 ipmi_ssif_ctx_get_driver_device (ipmi_ssif_ctx_t ctx, char **driver_device)
 {
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
@@ -550,7 +550,7 @@ ipmi_ssif_ctx_get_driver_device (ipmi_ssif_ctx_t ctx, char **driver_device)
   return (0);
 }
 
-int8_t
+int
 ipmi_ssif_ctx_get_driver_address (ipmi_ssif_ctx_t ctx, uint8_t *driver_address)
 {
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
@@ -570,7 +570,7 @@ ipmi_ssif_ctx_get_driver_address (ipmi_ssif_ctx_t ctx, uint8_t *driver_address)
   return (0);
 }
 
-int8_t
+int
 ipmi_ssif_ctx_get_flags (ipmi_ssif_ctx_t ctx, unsigned int *flags)
 {
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
@@ -590,7 +590,7 @@ ipmi_ssif_ctx_get_flags (ipmi_ssif_ctx_t ctx, unsigned int *flags)
   return (0);
 }
 
-int8_t
+int
 ipmi_ssif_ctx_set_driver_device (ipmi_ssif_ctx_t ctx, const char *driver_device)
 {
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
@@ -619,7 +619,7 @@ ipmi_ssif_ctx_set_driver_device (ipmi_ssif_ctx_t ctx, const char *driver_device)
   return (0);
 }
 
-int8_t
+int
 ipmi_ssif_ctx_set_driver_address (ipmi_ssif_ctx_t ctx, uint8_t driver_address)
 {
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
@@ -633,7 +633,7 @@ ipmi_ssif_ctx_set_driver_address (ipmi_ssif_ctx_t ctx, uint8_t driver_address)
   return (0);
 }
 
-int8_t
+int
 ipmi_ssif_ctx_set_flags (ipmi_ssif_ctx_t ctx, unsigned int flags)
 {
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
@@ -653,7 +653,7 @@ ipmi_ssif_ctx_set_flags (ipmi_ssif_ctx_t ctx, unsigned int flags)
   return (0);
 }
 
-int8_t
+int
 ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
@@ -964,7 +964,7 @@ _ipmi_ssif_cmd_read (ipmi_ssif_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
                uint8_t lun,
                uint8_t net_fn,

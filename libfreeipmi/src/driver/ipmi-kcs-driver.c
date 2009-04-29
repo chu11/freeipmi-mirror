@@ -325,7 +325,7 @@ ipmi_kcs_ctx_errormsg (ipmi_kcs_ctx_t ctx)
   return (ipmi_kcs_ctx_strerror (ipmi_kcs_ctx_errnum (ctx)));
 }
 
-int8_t
+int
 ipmi_kcs_ctx_get_driver_address (ipmi_kcs_ctx_t ctx, uint16_t *driver_address)
 {
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
@@ -345,7 +345,7 @@ ipmi_kcs_ctx_get_driver_address (ipmi_kcs_ctx_t ctx, uint16_t *driver_address)
   return (0);
 }
 
-int8_t
+int
 ipmi_kcs_ctx_get_register_spacing (ipmi_kcs_ctx_t ctx, uint8_t *register_spacing)
 {
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
@@ -365,7 +365,7 @@ ipmi_kcs_ctx_get_register_spacing (ipmi_kcs_ctx_t ctx, uint8_t *register_spacing
   return (0);
 }
 
-int8_t
+int
 ipmi_kcs_ctx_get_poll_interval (ipmi_kcs_ctx_t ctx, uint8_t *poll_interval)
 {
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
@@ -385,7 +385,7 @@ ipmi_kcs_ctx_get_poll_interval (ipmi_kcs_ctx_t ctx, uint8_t *poll_interval)
   return (0);
 }
 
-int8_t
+int
 ipmi_kcs_ctx_get_flags (ipmi_kcs_ctx_t ctx, unsigned int *flags)
 {
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
@@ -405,7 +405,7 @@ ipmi_kcs_ctx_get_flags (ipmi_kcs_ctx_t ctx, unsigned int *flags)
   return (0);
 }
 
-int8_t
+int
 ipmi_kcs_ctx_set_driver_address (ipmi_kcs_ctx_t ctx, uint16_t driver_address)
 {
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
@@ -419,7 +419,7 @@ ipmi_kcs_ctx_set_driver_address (ipmi_kcs_ctx_t ctx, uint16_t driver_address)
   return (0);
 }
 
-int8_t
+int
 ipmi_kcs_ctx_set_register_spacing (ipmi_kcs_ctx_t ctx, uint8_t register_spacing)
 {
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
@@ -433,7 +433,7 @@ ipmi_kcs_ctx_set_register_spacing (ipmi_kcs_ctx_t ctx, uint8_t register_spacing)
   return (0);
 }
 
-int8_t
+int
 ipmi_kcs_ctx_set_poll_interval (ipmi_kcs_ctx_t ctx, uint8_t poll_interval)
 {
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
@@ -447,7 +447,7 @@ ipmi_kcs_ctx_set_poll_interval (ipmi_kcs_ctx_t ctx, uint8_t poll_interval)
   return (0);
 }
 
-int8_t
+int
 ipmi_kcs_ctx_set_flags (ipmi_kcs_ctx_t ctx, unsigned int flags)
 {
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
@@ -467,7 +467,7 @@ ipmi_kcs_ctx_set_flags (ipmi_kcs_ctx_t ctx, unsigned int flags)
   return (0);
 }
 
-int8_t
+int
 ipmi_kcs_ctx_io_init (ipmi_kcs_ctx_t ctx)
 {
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
@@ -1052,7 +1052,7 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
               uint8_t lun,
               uint8_t net_fn,
