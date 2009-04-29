@@ -767,7 +767,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
   return (rv);
 }
 
-int8_t
+int
 ipmi_rmcpplus_check_payload_pad (uint8_t confidentiality_algorithm,
                                  fiid_obj_t obj_rmcpplus_payload)
 {
@@ -822,7 +822,7 @@ ipmi_rmcpplus_check_payload_pad (uint8_t confidentiality_algorithm,
     }
 }
 
-int8_t
+int
 ipmi_rmcpplus_check_integrity_pad (fiid_obj_t obj_rmcpplus_session_trlr)
 {
   uint8_t integrity_pad[IPMI_MAX_INTEGRITY_PAD_LENGTH];
@@ -872,7 +872,7 @@ ipmi_rmcpplus_check_integrity_pad (fiid_obj_t obj_rmcpplus_session_trlr)
   return (1);
 }
 
-int8_t
+int
 ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authentication_algorithm,
                                                              uint8_t *k_uid,
                                                              uint32_t k_uid_len,
@@ -903,7 +903,7 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
   uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
   int32_t key_exchange_authentication_code_len;
   int32_t compare_len = 0;
-  int8_t rv = -1;
+  int rv = -1;
 
   if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
        && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
@@ -1046,7 +1046,7 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
   return (rv);
 }
 
-int8_t
+int
 ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorithm,
                                                   uint8_t *sik_key,
                                                   uint32_t sik_key_len,
@@ -1066,7 +1066,7 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorit
   int32_t compare_len = 0;
   uint8_t integrity_check_value[IPMI_MAX_INTEGRITY_CHECK_VALUE_LENGTH];
   int32_t integrity_check_value_len;
-  int8_t rv = -1;
+  int rv = -1;
 
   if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
        && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
@@ -1177,7 +1177,7 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorit
   return (rv);
 }
 
-int8_t
+int
 ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algorithm,
                                                         uint8_t *pkt,
                                                         uint32_t pkt_len,
@@ -1195,7 +1195,7 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
   uint8_t authentication_code[IPMI_MAX_INTEGRITY_DATA_LENGTH];
   int32_t authentication_code_len, integrity_digest_len;
   uint8_t pwbuf[IPMI_2_0_MAX_PASSWORD_LENGTH];
-  int8_t rv = -1;
+  int rv = -1;
 
   if ((integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_NONE
        && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
@@ -1339,7 +1339,7 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
   return (rv);
 }
 
-int8_t
+int
 ipmi_rmcpplus_check_payload_type (fiid_obj_t obj_rmcpplus_session_hdr, uint8_t payload_type)
 {
   uint64_t val;
@@ -1366,7 +1366,7 @@ ipmi_rmcpplus_check_payload_type (fiid_obj_t obj_rmcpplus_session_hdr, uint8_t p
   return ((payload_type == val) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_rmcpplus_check_status_code (fiid_obj_t obj_cmd,
                                  uint8_t status_code)
 {
@@ -1392,7 +1392,7 @@ ipmi_rmcpplus_check_status_code (fiid_obj_t obj_cmd,
   return ((status_code == val) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_rmcpplus_check_message_tag (fiid_obj_t obj_cmd, uint8_t message_tag)
 {
   uint64_t val;
@@ -1418,7 +1418,7 @@ ipmi_rmcpplus_check_message_tag (fiid_obj_t obj_cmd, uint8_t message_tag)
   return ((message_tag == val) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_rmcpplus_check_remote_console_session_id (fiid_obj_t obj_cmd, uint32_t remote_console_session_id)
 {
   uint64_t val;
@@ -1442,7 +1442,7 @@ ipmi_rmcpplus_check_remote_console_session_id (fiid_obj_t obj_cmd, uint32_t remo
   return ((remote_console_session_id == val) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_rmcpplus_check_session_id (fiid_obj_t obj_rmcpplus_session_hdr,
                                 uint32_t session_id)
 {

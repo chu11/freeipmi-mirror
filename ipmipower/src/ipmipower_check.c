@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.98 2009-04-23 16:45:04 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.99 2009-04-29 16:35:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -87,7 +87,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
                                      uint32_t buffer_len)
 {
   char *password;
-  int8_t rv = -1;
+  int rv = -1;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
@@ -226,7 +226,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
               "authentication code check failed",
               ip->ic->hostname, ip->protocol_state);
 
-  return ((int)rv);
+  return (rv);
 }
 
 int
@@ -800,7 +800,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
   char *password;
   uint32_t username_len, password_len;
   uint64_t managed_system_session_id;
-  int8_t rv;
+  int rv;
 
   assert (ip);
   assert (pkt == RAKP_MESSAGE_2_RES);
@@ -955,7 +955,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
               "rakp 2 check failed",
               ip->ic->hostname, ip->protocol_state);
 
-  return ((int)rv);
+  return (rv);
 }
 
 int
@@ -966,7 +966,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_ty
   uint32_t managed_system_session_id;
   uint8_t authentication_algorithm = 0;
   uint64_t val;
-  int8_t rv;
+  int rv;
 
   assert (ip);
   assert (pkt == RAKP_MESSAGE_4_RES);
@@ -1031,14 +1031,14 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_ty
               "rakp 4 check failed",
               ip->ic->hostname, ip->protocol_state);
 
-  return ((int)rv);
+  return (rv);
 }
 
 int
 ipmipower_check_payload_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   uint8_t confidentiality_algorithm;
-  int8_t rv;
+  int rv;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
@@ -1062,13 +1062,13 @@ ipmipower_check_payload_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
               "payload pad check failed",
               ip->ic->hostname, ip->protocol_state);
 
-  return ((int)rv);
+  return (rv);
 }
 
 int
 ipmipower_check_integrity_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  int8_t rv;
+  int rv;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
@@ -1092,6 +1092,6 @@ ipmipower_check_integrity_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
               "integrity pad check failed",
               ip->ic->hostname, ip->protocol_state);
 
-  return ((int)rv);
+  return (rv);
 }
 

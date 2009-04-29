@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.27 2009-03-04 19:41:28 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.28 2009-04-29 16:35:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -92,7 +92,7 @@ ipmiconsole_check_authentication_code (ipmiconsole_ctx_t c,
                                        uint32_t buflen)
 {
   uint8_t *password;
-  int8_t rv;
+  int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -130,7 +130,7 @@ ipmiconsole_check_authentication_code (ipmiconsole_ctx_t c,
   if (!rv)
     IPMICONSOLE_CTX_DEBUG (c, ("authentication code check failed; p = %d", p));
 
-  return ((int)rv);
+  return (rv);
 }
 
 int
@@ -626,7 +626,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code (ipmiconsole_ctx_t c, 
   uint32_t password_len;
   uint32_t managed_system_session_id;
   uint64_t val;
-  int8_t rv;
+  int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -806,7 +806,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code (ipmiconsole_ctx_t c, 
   if (!rv)
     IPMICONSOLE_CTX_DEBUG (c, ("rakp 2 key exchanged authentication code check failed; p = %d", p));
 
-  return ((int)rv);
+  return (rv);
 }
 
 int
@@ -817,7 +817,7 @@ ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmiconsole
   uint32_t managed_system_session_id;
   uint8_t authentication_algorithm = 0;
   uint64_t val;
-  int8_t rv;
+  int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -878,13 +878,13 @@ ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmiconsole
   if (!rv)
     IPMICONSOLE_CTX_DEBUG (c, ("rakp 4 integrity check value check failed; p = %d", p));
 
-  return ((int)rv);
+  return (rv);
 }
 
 int
 ipmiconsole_check_payload_pad (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  int8_t rv;
+  int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -905,13 +905,13 @@ ipmiconsole_check_payload_pad (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
   if (!rv)
     IPMICONSOLE_CTX_DEBUG (c, ("payload pad check failed; p = %d", p));
 
-  return ((int)rv);
+  return (rv);
 }
 
 int
 ipmiconsole_check_integrity_pad (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  int8_t rv;
+  int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -935,6 +935,6 @@ ipmiconsole_check_integrity_pad (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t 
   if (!rv)
     IPMICONSOLE_CTX_DEBUG (c, ("integrity pad check failed; p = %d", p));
 
-  return ((int)rv);
+  return (rv);
 }
 
