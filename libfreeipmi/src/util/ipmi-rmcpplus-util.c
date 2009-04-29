@@ -1469,7 +1469,7 @@ ipmi_rmcpplus_check_session_id (fiid_obj_t obj_rmcpplus_session_hdr,
   return ((session_id == val) ? 1 : 0);
 }
 
-int8_t
+int
 ipmi_rmcpplus_calculate_payload_type (uint8_t *pkt, uint32_t pkt_len)
 {
   int32_t rmcp_hdr_len;
@@ -1511,5 +1511,5 @@ ipmi_rmcpplus_calculate_payload_type (uint8_t *pkt, uint32_t pkt_len)
       return (-1);
     }
 
-  return (payload_type);
+  return ((int)payload_type);
 }

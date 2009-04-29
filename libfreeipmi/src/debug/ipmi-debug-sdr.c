@@ -41,7 +41,7 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_dump_sdr_record (int fd,
                       const char *prefix,
                       const char *hdr,
@@ -55,7 +55,7 @@ ipmi_dump_sdr_record (int fd,
   uint64_t val;
   uint8_t record_type;
   int32_t sdr_record_header_len;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!sdr_record)
     {

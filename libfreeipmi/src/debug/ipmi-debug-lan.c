@@ -48,7 +48,7 @@
 
 #include "freeipmi-portability.h"
 
-static int8_t
+static int
 _ipmi_dump_lan_packet (int fd,
                        const char *prefix,
                        const char *hdr,
@@ -536,7 +536,7 @@ _ipmi_dump_lan_packet (int fd,
   return (rv);
 }
 
-int8_t
+int
 ipmi_dump_lan_packet (int fd,
                       const char *prefix,
                       const char *hdr,
@@ -566,7 +566,7 @@ ipmi_dump_lan_packet (int fd,
                                  NULL));
 }
 
-int8_t
+int
 ipmi_dump_lan_packet_ipmb (int fd,
                            const char *prefix,
                            const char *hdr,

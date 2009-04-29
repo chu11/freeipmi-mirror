@@ -83,7 +83,7 @@ ipmi_debug_dprintf (int fd, char *fmt, ...)
   return (rv);
 }
 
-int8_t
+int
 ipmi_debug_set_prefix (char *buf, unsigned int buflen, const char *prefix)
 {
   assert (buf && buflen > 3);
@@ -101,7 +101,7 @@ ipmi_debug_set_prefix (char *buf, unsigned int buflen, const char *prefix)
   return (0);
 }
 
-int8_t
+int
 ipmi_debug_output_str (int fd, const char *prefix, const char *str)
 {
   /* achu: Yeah, I know this is slow.  Figure out something better
@@ -158,7 +158,7 @@ ipmi_debug_output_str (int fd, const char *prefix, const char *str)
   return (0);
 }
 
-int8_t
+int
 ipmi_debug_output_byte_array (int fd, const char *prefix, uint8_t *buf, uint32_t buf_len)
 {
   uint32_t count = 0;

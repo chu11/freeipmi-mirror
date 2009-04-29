@@ -42,7 +42,7 @@
 
 #include "freeipmi-portability.h"
 
-int8_t
+int
 ipmi_dump_rmcp_packet (int fd,
                        const char *prefix,
                        const char *hdr,
@@ -66,7 +66,7 @@ ipmi_dump_rmcp_packet (int fd,
   fiid_obj_t obj_cmd = NULL;
   fiid_obj_t obj_unexpected_data = NULL;
   int32_t len;
-  int8_t rv = -1;
+  int rv = -1;
 
   if (!pkt || !tmpl_cmd)
     {

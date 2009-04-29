@@ -188,7 +188,7 @@ _dump_rmcpplus_session_hdr (int fd,
   return (rv);
 }
 
-static int32_t
+static int
 _dump_rmcpplus_payload_data (int fd,
                              const char *prefix,
                              const char *msg_hdr,
@@ -213,7 +213,7 @@ _dump_rmcpplus_payload_data (int fd,
   fiid_obj_t obj_lan_msg_trlr = NULL;
   int32_t len, obj_cmd_len, obj_lan_msg_trlr_len;
   unsigned int indx = 0;
-  int32_t rv = -1;
+  int rv = -1;
 
   assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
            || payload_type == IPMI_PAYLOAD_TYPE_SOL)
@@ -502,7 +502,7 @@ _dump_rmcpplus_payload_data (int fd,
   return (rv);
 }
 
-static int32_t
+static int
 _dump_rmcpplus_payload_confidentiality_none (int fd,
                                              const char *prefix,
                                              const char *payload_hdr,
@@ -521,7 +521,7 @@ _dump_rmcpplus_payload_confidentiality_none (int fd,
                                              uint32_t ipmi_payload_len)
 {
   fiid_obj_t obj_rmcpplus_payload = NULL;
-  int32_t rv = -1;
+  int rv = -1;
 
   assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
            || payload_type == IPMI_PAYLOAD_TYPE_SOL)
@@ -594,7 +594,7 @@ _dump_rmcpplus_payload_confidentiality_none (int fd,
   return (rv);
 }
 
-static int32_t
+static int
 _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
                                                     const char *prefix,
                                                     const char *payload_hdr,
@@ -621,7 +621,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
   int32_t payload_data_len, decrypt_len, cmd_data_len;
   fiid_obj_t obj_rmcpplus_payload = NULL;
   unsigned int indx = 0;
-  int32_t rv = -1;
+  int rv = -1;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
 
@@ -786,7 +786,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
   return (rv);
 }
 
-static int32_t
+static int
 _dump_rmcpplus_payload_rakp (int fd,
                              const char *prefix,
                              const char *payload_hdr,
@@ -798,7 +798,7 @@ _dump_rmcpplus_payload_rakp (int fd,
 {
   fiid_obj_t obj_rmcpplus_payload = NULL;
   fiid_obj_t obj_cmd = NULL;
-  int32_t rv = -1;
+  int rv = -1;
 
   assert ((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
            || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
@@ -927,7 +927,7 @@ _dump_rmcpplus_payload_rakp (int fd,
   return (rv);
 }
 
-static int32_t
+static int
 _dump_rmcpplus_payload (int fd,
                         const char *prefix,
                         const char *payload_hdr,
@@ -1172,7 +1172,7 @@ _dump_rmcpplus_session_trlr (int fd,
   return (rv);
 }
 
-static int8_t
+static int
 _ipmi_dump_rmcpplus_packet (int fd,
                             const char *prefix,
                             const char *hdr,
@@ -1230,7 +1230,7 @@ _ipmi_dump_rmcpplus_packet (int fd,
     "Unexpected Data:\n"
     "----------------";
   unsigned int indx = 0;
-  int32_t rv = -1;
+  int rv = -1;
 
   assert (pkt);
   assert (IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm));
@@ -1503,7 +1503,7 @@ _ipmi_dump_rmcpplus_packet (int fd,
   return (rv);
 }
 
-int8_t
+int
 ipmi_dump_rmcpplus_packet (int fd,
                            const char *prefix,
                            const char *hdr,
@@ -1553,7 +1553,7 @@ ipmi_dump_rmcpplus_packet (int fd,
                                       NULL));
 }
 
-int8_t
+int
 ipmi_dump_rmcpplus_packet_ipmb (int fd,
                                 const char *prefix,
                                 const char *hdr,

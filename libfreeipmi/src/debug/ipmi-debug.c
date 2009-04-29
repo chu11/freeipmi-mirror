@@ -61,7 +61,7 @@ fiid_template_t tmpl_unexpected_data =
     { 0, "", 0}
   };
 
-int8_t
+int
 ipmi_obj_dump (int fd,
                const char *prefix,
                const char *hdr,
@@ -196,7 +196,7 @@ ipmi_obj_dump (int fd,
   return (rv);
 }
 
-int8_t
+int
 ipmi_obj_dump_ipmb (int fd,
                     const char *prefix,
                     const char *hdr,
@@ -386,7 +386,7 @@ ipmi_obj_dump_ipmb (int fd,
   return (rv);
 }
 
-int8_t
+int
 ipmi_dump_hex (int fd,
                const char *prefix,
                const char *hdr,
