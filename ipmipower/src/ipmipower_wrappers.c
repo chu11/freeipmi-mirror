@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.39 2009-03-04 19:41:31 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.40 2009-04-29 23:31:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -185,7 +185,7 @@ Fiid_obj_destroy (fiid_obj_t obj)
 void
 Fiid_obj_clear (fiid_obj_t obj)
 {
-  int8_t rv;
+  int rv;
 
   assert (fiid_obj_valid (obj));
 
@@ -196,7 +196,7 @@ Fiid_obj_clear (fiid_obj_t obj)
 void
 Fiid_obj_clear_field (fiid_obj_t obj, char *field)
 {
-  int8_t rv;
+  int rv;
 
   assert (fiid_obj_valid (obj) && field);
 
@@ -207,7 +207,7 @@ Fiid_obj_clear_field (fiid_obj_t obj, char *field)
 void
 Fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val)
 {
-  int8_t rv;
+  int rv;
 
   assert (fiid_obj_valid (obj) && field && val);
 

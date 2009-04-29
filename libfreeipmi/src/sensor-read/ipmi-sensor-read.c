@@ -319,8 +319,8 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t sensor_event_bitmask1 = 0;
   uint64_t sensor_event_bitmask2 = 0;
-  int8_t sensor_event_bitmask1_len = 0;
-  int8_t sensor_event_bitmask2_len = 0;
+  int sensor_event_bitmask1_len = 0;
+  int sensor_event_bitmask2_len = 0;
   uint16_t record_id = 0;
   uint8_t record_type = 0;
   uint8_t sensor_number = 0;

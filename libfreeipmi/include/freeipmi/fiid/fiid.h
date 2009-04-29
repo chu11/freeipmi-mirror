@@ -164,8 +164,8 @@ typedef struct fiid_iterator *fiid_iterator_t;
  * Returns 1 if the field is found in the template, 0 if not, -1 on
  * error.
  */
-int8_t fiid_template_field_lookup (fiid_template_t tmpl,
-                                   const char *field);
+int fiid_template_field_lookup (fiid_template_t tmpl,
+                                const char *field);
 
 /*
  * FIID_TEMPLATE_FIELD_LOOKUP
@@ -175,8 +175,8 @@ int8_t fiid_template_field_lookup (fiid_template_t tmpl,
  * not possible.  If the field is not found, -1 is returned and
  * errno EINVAL is the error code set.
  */
-int8_t FIID_TEMPLATE_FIELD_LOOKUP (fiid_template_t tmpl,
-                                   const char *field);
+int FIID_TEMPLATE_FIELD_LOOKUP (fiid_template_t tmpl,
+                                const char *field);
 
 /*
  * fiid_template_len
@@ -281,8 +281,8 @@ int32_t fiid_template_block_len_bytes (fiid_template_t tmpl,
  * Returns 1 if the two specified templates are identical, 0 if not,
  * -1 on error.
  */
-int8_t fiid_template_compare (fiid_template_t tmpl1,
-                              fiid_template_t tmpl2);
+int fiid_template_compare (fiid_template_t tmpl1,
+                           fiid_template_t tmpl2);
 
 /*
  * FIID_TEMPLATE_COMPARE
@@ -292,8 +292,8 @@ int8_t fiid_template_compare (fiid_template_t tmpl1,
  * is not possible.  If templates are not identical, -1 is returned and
  * errno EINVAL is the error code set.
  */
-int8_t FIID_TEMPLATE_COMPARE (fiid_template_t tmpl1,
-                              fiid_template_t tmpl2);
+int FIID_TEMPLATE_COMPARE (fiid_template_t tmpl1,
+                           fiid_template_t tmpl2);
 
 /*
  * fiid_template_free
@@ -351,7 +351,7 @@ fiid_obj_t fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl);
  *
  * Returns 1 if the object passed in is a valid fiid object, 0 if not.
  */
-int8_t fiid_obj_valid (fiid_obj_t obj);
+int fiid_obj_valid (fiid_obj_t obj);
 
 /*
  * fiid_obj_packet_valid
@@ -363,7 +363,7 @@ int8_t fiid_obj_valid (fiid_obj_t obj);
  * correct number of bytes.  It will also check that data set within
  * the object is byte aligned.
  */
-int8_t fiid_obj_packet_valid (fiid_obj_t obj);
+int fiid_obj_packet_valid (fiid_obj_t obj);
 
 /*
  * FIID_OBJ_PACKET_VALID
@@ -373,7 +373,7 @@ int8_t fiid_obj_packet_valid (fiid_obj_t obj);
  * of 0 is not possible.  If object template and input template are
  * not identical, -1 is returned and the appropriate error code set.
  */
-int8_t FIID_OBJ_PACKET_VALID (fiid_obj_t obj);
+int FIID_OBJ_PACKET_VALID (fiid_obj_t obj);
 
 /*
  * fiid_obj_template
@@ -390,7 +390,7 @@ fiid_field_t *fiid_obj_template (fiid_obj_t obj);
  * Returns 1 if the template specified is the one used to create the
  * object, 0 if not, -1 one error.
  */
-int8_t fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl);
+int fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl);
 
 /*
  * FIID_OBJ_TEMPLATE_COMPARE
@@ -401,7 +401,7 @@ int8_t fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl);
  * template are not identical, -1 is returned and
  * FIID_ERR_NOT_IDENTICAL is the error code set.
  */
-int8_t FIID_OBJ_TEMPLATE_COMPARE (fiid_obj_t obj, fiid_template_t tmpl);
+int FIID_OBJ_TEMPLATE_COMPARE (fiid_obj_t obj, fiid_template_t tmpl);
 
 /*
  * fiid_obj_errnum
@@ -480,7 +480,7 @@ int32_t fiid_obj_block_len_bytes (fiid_obj_t obj,
  * Clear all data stored in the object.  Return 0 on success, -1 on
  * error.
  */
-int8_t fiid_obj_clear (fiid_obj_t obj);
+int fiid_obj_clear (fiid_obj_t obj);
 
 /*
  * fiid_obj_clear_field
@@ -488,7 +488,7 @@ int8_t fiid_obj_clear (fiid_obj_t obj);
  * Clear all data stored in a specified field in the object.  Return 0
  * on success, -1 on error.
  */
-int8_t fiid_obj_clear_field (fiid_obj_t obj, const char *field);
+int fiid_obj_clear_field (fiid_obj_t obj, const char *field);
 
 /*
  * fiid_obj_field_lookup
@@ -496,7 +496,7 @@ int8_t fiid_obj_clear_field (fiid_obj_t obj, const char *field);
  * Returns 1 if the field is found in the object, 0 if not, -1 on
  * error.
  */
-int8_t fiid_obj_field_lookup (fiid_obj_t obj, const char *field);
+int fiid_obj_field_lookup (fiid_obj_t obj, const char *field);
 
 /*
  * FIID_OBJ_FIELD_LOOKUP
@@ -506,7 +506,7 @@ int8_t fiid_obj_field_lookup (fiid_obj_t obj, const char *field);
  * possible.  If the field is not found, -1 is returned and
  * FIID_ERR_FIELD_NOT_FOUND is the error code set.
  */
-int8_t FIID_OBJ_FIELD_LOOKUP (fiid_obj_t obj, const char *field);
+int FIID_OBJ_FIELD_LOOKUP (fiid_obj_t obj, const char *field);
 
 /*
  * fiid_obj_set
@@ -514,7 +514,7 @@ int8_t FIID_OBJ_FIELD_LOOKUP (fiid_obj_t obj, const char *field);
  * Set data in the object for the specified field.  Returns 0 on
  * success, -1 on error.
  */
-int8_t fiid_obj_set (fiid_obj_t obj, const char *field, uint64_t val);
+int fiid_obj_set (fiid_obj_t obj, const char *field, uint64_t val);
 
 /*
  * fiid_obj_get
@@ -523,7 +523,7 @@ int8_t fiid_obj_set (fiid_obj_t obj, const char *field, uint64_t val);
  * if data was available and returned, 0 if no data was available, -1
  * on error.
  */
-int8_t fiid_obj_get (fiid_obj_t obj, const char *field, uint64_t *val);
+int fiid_obj_get (fiid_obj_t obj, const char *field, uint64_t *val);
 
 /*
  * FIID_OBJ_GET
@@ -534,7 +534,7 @@ int8_t fiid_obj_get (fiid_obj_t obj, const char *field, uint64_t *val);
  * available, -1 is returned and FIID_ERR_DATA_NOT_AVAILABLE is the
  * error code set.
  */
-int8_t FIID_OBJ_GET (fiid_obj_t obj, const char *field, uint64_t *val);
+int FIID_OBJ_GET (fiid_obj_t obj, const char *field, uint64_t *val);
 
 /*
  * fiid_obj_set_data
@@ -652,7 +652,7 @@ char *fiid_iterator_errormsg (fiid_iterator_t iter);
  * Reset the iterator back to the beginning.  Returns 0 on success, -1
  * on error.
  */
-int8_t fiid_iterator_reset (fiid_iterator_t iter);
+int fiid_iterator_reset (fiid_iterator_t iter);
 
 /*
  * fiid_iterator_next
@@ -660,7 +660,7 @@ int8_t fiid_iterator_reset (fiid_iterator_t iter);
  * Move the iterator to the next field.  Returns 0 on success, -1 on
  * error.
  */
-int8_t fiid_iterator_next (fiid_iterator_t iter);
+int fiid_iterator_next (fiid_iterator_t iter);
 
 /*
  * fiid_iterator_end
@@ -668,7 +668,7 @@ int8_t fiid_iterator_next (fiid_iterator_t iter);
  * Returns 1 if you are at the end of the iterator, 0 if not, -1
  * error.
  */
-int8_t fiid_iterator_end (fiid_iterator_t iter);
+int fiid_iterator_end (fiid_iterator_t iter);
 
 /*
  * fiid_iterator_field_len

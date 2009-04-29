@@ -185,7 +185,7 @@ _fiid_template_len_bytes (fiid_template_t tmpl,
   return (BITS_ROUND_BYTES (len));
 }
 
-int8_t
+int
 fiid_template_field_lookup (fiid_template_t tmpl,
                             const char *field)
 {
@@ -214,11 +214,11 @@ fiid_template_field_lookup (fiid_template_t tmpl,
   return (0);
 }
 
-int8_t
+int
 FIID_TEMPLATE_FIELD_LOOKUP (fiid_template_t tmpl,
                             const char *field)
 {
-  int8_t ret;
+  int ret;
 
   if ((ret = fiid_template_field_lookup (tmpl, field)) < 0)
     return (ret);
@@ -578,7 +578,7 @@ fiid_template_block_len_bytes (fiid_template_t tmpl,
   return (BITS_ROUND_BYTES (len));
 }
 
-int8_t
+int
 fiid_template_compare (fiid_template_t tmpl1,
                        fiid_template_t tmpl2)
 {
@@ -623,11 +623,11 @@ fiid_template_compare (fiid_template_t tmpl1,
   return (1);
 }
 
-int8_t
+int
 FIID_TEMPLATE_COMPARE (fiid_template_t tmpl1,
                        fiid_template_t tmpl2)
 {
-  int8_t ret;
+  int ret;
 
   if ((ret = fiid_template_compare (tmpl1, tmpl2)) < 0)
     return (ret);
@@ -966,7 +966,7 @@ fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl)
   return (NULL);
 }
 
-int8_t
+int
 fiid_obj_valid (fiid_obj_t obj)
 {
   if (!obj || obj->magic != FIID_OBJ_MAGIC)
@@ -974,7 +974,7 @@ fiid_obj_valid (fiid_obj_t obj)
   return (1);
 }
 
-int8_t
+int
 fiid_obj_packet_valid (fiid_obj_t obj)
 {
   int i, total_set_bits_counter = 0, max_bits_counter = 0,
@@ -1083,10 +1083,10 @@ fiid_obj_packet_valid (fiid_obj_t obj)
   return (1);
 }
 
-int8_t
+int
 FIID_OBJ_PACKET_VALID (fiid_obj_t obj)
 {
-  int8_t ret;
+  int ret;
 
   if ((ret = fiid_obj_packet_valid (obj)) < 0)
     return (ret);
@@ -1125,7 +1125,7 @@ fiid_obj_template (fiid_obj_t obj)
   return (tmpl);
 }
 
-int8_t
+int
 fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl)
 {
   int i;
@@ -1182,10 +1182,10 @@ fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl)
   return (1);
 }
 
-int8_t
+int
 FIID_OBJ_TEMPLATE_COMPARE (fiid_obj_t obj, fiid_template_t tmpl)
 {
-  int8_t ret;
+  int ret;
 
   if ((ret = fiid_obj_template_compare (obj, tmpl)) < 0)
     return (ret);
@@ -1382,7 +1382,7 @@ fiid_obj_block_len_bytes (fiid_obj_t obj, const char *field_start, const char *f
   return (BITS_ROUND_BYTES (len));
 }
 
-int8_t
+int
 fiid_obj_clear (fiid_obj_t obj)
 {
   int i;
@@ -1398,7 +1398,7 @@ fiid_obj_clear (fiid_obj_t obj)
   return (0);
 }
 
-int8_t
+int
 fiid_obj_clear_field (fiid_obj_t obj, const char *field)
 {
   int32_t bits_len;
@@ -1464,7 +1464,7 @@ fiid_obj_clear_field (fiid_obj_t obj, const char *field)
   return (0);
 }
 
-int8_t
+int
 fiid_obj_field_lookup (fiid_obj_t obj, const char *field)
 {
   uint32_t start = 0;
@@ -1491,10 +1491,10 @@ fiid_obj_field_lookup (fiid_obj_t obj, const char *field)
     }
 }
 
-int8_t
+int
 FIID_OBJ_FIELD_LOOKUP (fiid_obj_t obj, const char *field)
 {
-  int8_t ret;
+  int ret;
 
   if ((ret = fiid_obj_field_lookup (obj, field)) < 0)
     return (ret);
@@ -1508,7 +1508,7 @@ FIID_OBJ_FIELD_LOOKUP (fiid_obj_t obj, const char *field)
   return (ret);
 }
 
-int8_t
+int
 fiid_obj_set (fiid_obj_t obj,
               const char *field,
               uint64_t val)
@@ -1660,7 +1660,7 @@ fiid_obj_set (fiid_obj_t obj,
   return (-1);
 }
 
-int8_t
+int
 fiid_obj_get (fiid_obj_t obj,
               const char *field,
               uint64_t *val)
@@ -1805,13 +1805,13 @@ fiid_obj_get (fiid_obj_t obj,
   return (1);
 }
 
-int8_t
+int
 FIID_OBJ_GET (fiid_obj_t obj,
               const char *field,
               uint64_t *val)
 {
   uint64_t lval;
-  int8_t ret;
+  int ret;
 
   if ((ret = fiid_obj_get (obj, field, &lval)) < 0)
     return (ret);
@@ -2539,7 +2539,7 @@ fiid_iterator_errormsg (fiid_iterator_t iter)
   return (fiid_strerror (fiid_iterator_errnum (iter)));
 }
 
-int8_t
+int
 fiid_iterator_reset (fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
@@ -2550,7 +2550,7 @@ fiid_iterator_reset (fiid_iterator_t iter)
   return (0);
 }
 
-int8_t
+int
 fiid_iterator_next (fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
@@ -2563,7 +2563,7 @@ fiid_iterator_next (fiid_iterator_t iter)
   return (0);
 }
 
-int8_t
+int
 fiid_iterator_end (fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
@@ -2597,7 +2597,7 @@ int32_t
 fiid_iterator_get (fiid_iterator_t iter, uint64_t *val)
 {
   char *key;
-  int32_t rv;
+  int rv;
 
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
     return (-1);
@@ -2605,7 +2605,7 @@ fiid_iterator_get (fiid_iterator_t iter, uint64_t *val)
   key = iter->obj->field_data[iter->current_index].key;
   rv = fiid_obj_get (iter->obj, key, val);
   iter->errnum = (iter->obj->errnum);
-  return (rv);
+  return ((int32_t)rv);
 }
 
 int32_t
@@ -2624,5 +2624,3 @@ fiid_iterator_get_data (fiid_iterator_t iter,
   iter->errnum = (iter->obj->errnum);
   return (rv);
 }
-
-

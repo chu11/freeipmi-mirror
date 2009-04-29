@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.h,v 1.9 2009-03-03 23:56:51 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.h,v 1.10 2009-04-29 23:31:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -34,12 +34,12 @@ int32_t Fiid_template_len_bytes (ipmiconsole_ctx_t c, fiid_template_t tmpl);
 int32_t Fiid_template_block_len_bytes (ipmiconsole_ctx_t c, fiid_template_t tmpl, char *field_start, char *field_end);
 
 fiid_obj_t Fiid_obj_create (ipmiconsole_ctx_t c, fiid_template_t tmpl);
-int8_t Fiid_obj_clear (ipmiconsole_ctx_t c, fiid_obj_t obj);
-int8_t Fiid_obj_clear_field (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field);
+int Fiid_obj_clear (ipmiconsole_ctx_t c, fiid_obj_t obj);
+int Fiid_obj_clear_field (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field);
 void Fiid_obj_destroy (ipmiconsole_ctx_t c, fiid_obj_t obj);
-int8_t Fiid_obj_get (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint64_t *val);
+int Fiid_obj_get (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint64_t *val);
 int32_t Fiid_obj_get_data (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
-int8_t Fiid_obj_set (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint64_t val);
+int Fiid_obj_set (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint64_t val);
 int32_t Fiid_obj_set_data (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
 int32_t Fiid_obj_set_all (ipmiconsole_ctx_t c, fiid_obj_t obj, uint8_t *data, uint32_t data_len);
 

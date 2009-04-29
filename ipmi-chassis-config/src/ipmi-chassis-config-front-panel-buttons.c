@@ -60,7 +60,7 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   uint64_t val;
-  int8_t flag;
+  int flag;
 
   assert (state_data);
   assert (data);

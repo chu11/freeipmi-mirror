@@ -805,7 +805,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
   unsigned int assertion_event_message_list_len = 0;
   char **deassertion_event_message_list = NULL;
   unsigned int deassertion_event_message_list_len = 0;
-  int8_t field_len;
+  int field_len;
   int rv = -1;
 
   assert (state_data);

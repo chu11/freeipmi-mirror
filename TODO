@@ -7,8 +7,15 @@ lan-session-common
 - _session_timed_out usage, should check if ret < 0 or == 0
 ipmi-api.c
 - rv instead of status
+fiid_obj_packet_valid usage
+- checkout == 1, not just !=0
+libfreeipmi/src/sensor-read/ipmi-sensor-read.c
+ipmi-sensors-detailed-output.c
+ipmi-sensors-config/src/ipmi-sensors-config-sensor-event-enable-common.c "field_len" -> 'field_flag" when calling fiid_obj_get
 document which funcs return lens
 - raw funcs
+fiid.c internal
+- more in/out params?
 
 freeipmi tools
 --------------

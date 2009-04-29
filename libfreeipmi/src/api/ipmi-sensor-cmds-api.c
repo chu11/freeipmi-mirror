@@ -575,7 +575,7 @@ ipmi_cmd_set_sensor_event_enable_discrete (ipmi_ctx_t ctx,
       || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_12)
       || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_13)
       || !IPMI_SENSOR_EVENT_FLAG_VALID (deassertion_event_state_bit_14)
-      || !fiid_obj_valid (obj_cmd_rs)) ;
+      || !fiid_obj_valid (obj_cmd_rs))
   {
     API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
     return (-1);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.c,v 1.18 2009-03-04 22:39:38 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.c,v 1.19 2009-04-29 23:31:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -105,10 +105,10 @@ Fiid_obj_create (ipmiconsole_ctx_t c, fiid_template_t tmpl)
   return (obj);
 }
 
-int8_t
+int
 Fiid_obj_clear (ipmiconsole_ctx_t c, fiid_obj_t obj)
 {
-  int8_t rv;
+  int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -124,10 +124,10 @@ Fiid_obj_clear (ipmiconsole_ctx_t c, fiid_obj_t obj)
   return (rv);
 }
 
-int8_t
+int
 Fiid_obj_clear_field (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field)
 {
-  int8_t rv;
+  int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -154,10 +154,10 @@ Fiid_obj_destroy (ipmiconsole_ctx_t c, fiid_obj_t obj)
   fiid_obj_destroy (obj);
 }
 
-int8_t
+int
 Fiid_obj_get (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint64_t *val)
 {
-  int8_t rv;
+  int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -204,10 +204,10 @@ Fiid_obj_get_data (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint8_t *da
   return (rv);
 }
 
-int8_t
+int
 Fiid_obj_set (ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint64_t val)
 {
-  int8_t rv;
+  int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);

@@ -449,7 +449,7 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t sensor_number;
-  int8_t field_len;
+  int field_len;
   uint64_t val;
 
   assert (state_data);

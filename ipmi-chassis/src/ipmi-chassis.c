@@ -205,7 +205,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
   uint64_t val = 0, temp_val;
   uint8_t front_panel_capabilities = 0, misc_chassis_status = 0;
   int32_t rv = -1;
-  int8_t flag;
+  int flag;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_status_rs)))
     {
