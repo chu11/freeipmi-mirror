@@ -61,7 +61,7 @@
  *
  * Returns 0 on success, -1 on error.
  */
-int8_t ipmi_crypt_init (void);
+int ipmi_crypt_init (void);
 
 int32_t ipmi_crypt_hash (int hash_algorithm,
                          int hash_flags,

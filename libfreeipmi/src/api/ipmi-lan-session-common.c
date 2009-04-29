@@ -311,12 +311,12 @@ _ipmi_lan_dump_rs (ipmi_ctx_t ctx,
     }
 }
 
-static int8_t
+static int
 _ipmi_check_session_sequence_number (ipmi_ctx_t ctx,
                                      uint32_t session_sequence_number)
 {
   uint32_t shift_num, wrap_val;
-  int8_t rv = 0;
+  int rv = 0;
 
   /* achu: This algorithm is more or less from Appendix A of the IPMI
    * spec.  It may not be entirely necessary, since the requester
@@ -455,7 +455,7 @@ _ipmi_check_session_sequence_number (ipmi_ctx_t ctx,
   return (rv);
 }
 
-static int8_t
+static int
 _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                     uint8_t lun,
                     uint8_t net_fn,
@@ -569,7 +569,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
   return (0);
 }
 
-static int8_t
+static int32_t
 _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                     uint8_t *pkt,
                     uint32_t pkt_len,
@@ -675,7 +675,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
  * == 1 good packet
  * == 0 bad packet
  */
-static int8_t
+static int
 _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                      unsigned int internal_workaround_flags,
                                      uint8_t authentication_type,
@@ -688,7 +688,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 {
   uint64_t rs_session_id;
   uint64_t rs_session_sequence_number;
-  int8_t rv = -1;
+  int rv = -1;
   int ret;
 
   assert (ctx
@@ -831,7 +831,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                       unsigned int internal_workaround_flags,
                       uint8_t lun,
@@ -1024,7 +1024,8 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
         }
-      rv = recv_len;
+
+      rv = 0;
       break;
     }
 
@@ -1041,7 +1042,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+static int
 _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
                      uint8_t rs_addr,
                      uint8_t lun,
@@ -1052,7 +1053,7 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
   fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
   fiid_obj_t obj_ipmb_msg_rq = NULL;
   fiid_obj_t obj_send_cmd_rs = NULL;
-  int8_t rv = -1;
+  int rv = -1;
   int32_t len;
 
   assert (ctx
@@ -1142,7 +1143,7 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
                            fiid_obj_t obj_cmd_rq,
                            fiid_obj_t obj_cmd_rs)
@@ -1263,7 +1264,8 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
         }
-      rv = recv_len;
+
+      rv = 0;
       break;
     }
 
@@ -1278,7 +1280,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_lan_open_session (ipmi_ctx_t ctx)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1293,7 +1295,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   uint64_t session_sequence_number = 0;
   uint32_t initial_outbound_sequence_number = 0;
   unsigned int seedp;
-  int8_t rv = -1;
+  int rv = -1;
   int ret;
   uint64_t val;
 
@@ -1721,11 +1723,11 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   return (rv);
 }
 
-int8_t
+int
 ipmi_lan_close_session (ipmi_ctx_t ctx)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -1923,7 +1925,7 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
     }
 }
 
-static int8_t
+static int
 _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                         uint8_t lun,
                         uint8_t net_fn,
@@ -2087,7 +2089,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
   return (0);
 }
 
-static int8_t
+static int32_t
 _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                         uint8_t authentication_algorithm,
                         uint8_t integrity_algorithm,
@@ -2120,7 +2122,6 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
           && pkt
           && pkt_len
           && fiid_obj_valid (obj_cmd_rs));
-
 
   if (fiid_obj_clear (ctx->io.outofband.rs.obj_rmcp_hdr) < 0)
     {
@@ -2229,7 +2230,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
  * == 1 good packet
  * == 0 bad packet
  */
-static int8_t
+static int
 _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                          uint8_t payload_type,
                                          uint8_t *message_tag,
@@ -2247,7 +2248,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 {
   uint64_t rs_session_sequence_number;
   uint64_t val;
-  int8_t rv = -1;
+  int rv = -1;
   int ret;
 
   assert (ctx
@@ -2544,7 +2545,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                           uint8_t lun,
                           uint8_t net_fn,
@@ -2767,7 +2768,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
                                fiid_obj_t obj_cmd_rq,
                                fiid_obj_t obj_cmd_rs)
@@ -2901,7 +2902,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
           goto cleanup;
         }
 
-      rv = recv_len;
+      rv = 0;
       break;
     }
 
@@ -2916,7 +2917,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2946,7 +2947,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   uint8_t requested_maximum_privilege;
   uint8_t assume_rakp_4_success = 0;
   uint8_t name_only_lookup;
-  int8_t rv = -1;
+  int rv = -1;
   unsigned int seedp;
   int ret;
   uint64_t val;
@@ -3793,11 +3794,11 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   return (rv);
 }
 
-int8_t
+int
 ipmi_lan_2_0_close_session (ipmi_ctx_t ctx)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC

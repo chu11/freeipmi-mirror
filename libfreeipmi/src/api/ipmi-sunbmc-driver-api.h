@@ -23,9 +23,9 @@
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-int8_t ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
-                            fiid_obj_t obj_cmd_rq,
-                            fiid_obj_t obj_cmd_rs);
+int ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
+                         fiid_obj_t obj_cmd_rq,
+                         fiid_obj_t obj_cmd_rs);
 
 int32_t ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
                                  uint8_t *buf_rq,

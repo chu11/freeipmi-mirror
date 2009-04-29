@@ -214,7 +214,7 @@ _ipmi_kcs_dump_raw_rs (ipmi_ctx_t ctx,
                   ctx->tmpl_ipmb_cmd_rs);
 }
 
-int8_t
+int
 ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
                   fiid_obj_t obj_cmd_rq,
                   fiid_obj_t obj_cmd_rs)
@@ -313,7 +313,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
     int32_t hdr_len, cmd_len;
     int32_t read_len;
     fiid_field_t *tmpl = NULL;
-    int8_t rv = -1;
+    int rv = -1;
 
     if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
       {
@@ -379,7 +379,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
   return (0);
 }
 
-static int8_t
+static int
 _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
                      fiid_obj_t obj_cmd_rq)
 {
@@ -388,7 +388,7 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
   fiid_obj_t obj_ipmb_msg_rq = NULL;
   fiid_obj_t obj_send_cmd_rs = NULL;
   int32_t len;
-  int8_t rv = -1;
+  int rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -462,7 +462,7 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
   return (rv);
 }
 
-static int8_t
+static int
 _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
                      fiid_obj_t obj_ipmb_msg_hdr_rs,
                      fiid_obj_t obj_ipmb_msg_trlr,
@@ -472,7 +472,7 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
   fiid_obj_t obj_ipmb_msg_rs = NULL;
   fiid_obj_t obj_get_cmd_rs = NULL;
   int32_t len;
-  int8_t rv = -1;
+  int rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -534,7 +534,7 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
                        fiid_obj_t obj_cmd_rq,
                        fiid_obj_t obj_cmd_rs)
@@ -543,7 +543,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   unsigned retransmission_count = 0;
   unsigned reread_count = 0;
-  int8_t rv = -1;
+  int rv = -1;
   int ret;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)

@@ -49,7 +49,7 @@ _gpg_error_to_errno (gcry_error_t e)
     return (EINVAL);
 }
 
-int8_t
+int
 ipmi_crypt_init (void)
 {
   gcry_error_t e;

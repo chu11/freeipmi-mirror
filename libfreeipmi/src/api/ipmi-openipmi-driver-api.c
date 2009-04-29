@@ -47,7 +47,7 @@ fiid_template_t tmpl_openipmi_raw =
     { 0, "", 0}
   };
 
-int8_t
+int
 ipmi_openipmi_cmd_api (ipmi_ctx_t ctx,
                        fiid_obj_t obj_cmd_rq,
                        fiid_obj_t obj_cmd_rs)
@@ -86,7 +86,7 @@ ipmi_openipmi_cmd_api (ipmi_ctx_t ctx,
   return (0);
 }
 
-int8_t
+int
 ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx,
                             fiid_obj_t obj_cmd_rq,
                             fiid_obj_t obj_cmd_rs)

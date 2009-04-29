@@ -1004,7 +1004,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
           fiid_obj_t obj_cmd_rq,
           fiid_obj_t obj_cmd_rs)
 {
-  int8_t status = 0;
+  int status = 0;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1152,7 +1152,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                fiid_obj_t obj_cmd_rq,
                fiid_obj_t obj_cmd_rs)
 {
-  int8_t status = 0;
+  int status = 0;
 
   /* achu:
    *
@@ -1228,7 +1228,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
               uint8_t *out,
               size_t out_len)
 {
-  int8_t status = 0;
+  int status = 0;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

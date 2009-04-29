@@ -47,7 +47,7 @@ fiid_template_t tmpl_sunbmc_raw =
     { 0, "", 0}
   };
 
-int8_t
+int
 ipmi_sunbmc_cmd_api (ipmi_ctx_t ctx,
                      fiid_obj_t obj_cmd_rq,
                      fiid_obj_t obj_cmd_rs)

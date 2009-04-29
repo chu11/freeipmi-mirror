@@ -53,7 +53,7 @@ fiid_template_t tmpl_lan_raw =
     { 0, "", 0}
   };
 
-int8_t
+int
 ipmi_lan_cmd (ipmi_ctx_t ctx,
               fiid_obj_t obj_cmd_rq,
               fiid_obj_t obj_cmd_rs)
@@ -218,7 +218,7 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
   return (rv);
 }
 
-int8_t
+int
 ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
                   fiid_obj_t obj_cmd_rq,
                   fiid_obj_t obj_cmd_rs)

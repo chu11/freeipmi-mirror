@@ -653,7 +653,7 @@ _ipmi_kcs_get_abort (ipmi_kcs_ctx_t ctx)
 }
 #endif
 
-static int8_t
+static int
 _ipmi_kcs_test_if_state (ipmi_kcs_ctx_t ctx, uint8_t status)
 {
   assert (ctx);
@@ -898,7 +898,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   return (rv);
 }
 
-static int8_t
+static int
 _ipmi_kcs_cmd_write (ipmi_kcs_ctx_t ctx,
                      uint8_t lun,
                      uint8_t net_fn,
@@ -973,7 +973,7 @@ _ipmi_kcs_cmd_write (ipmi_kcs_ctx_t ctx,
   return (rv);
 }
 
-static int8_t
+static int
 _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
                     fiid_obj_t obj_cmd_rs)
 {
@@ -983,7 +983,7 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
   int32_t read_len;
   fiid_obj_t obj_hdr = NULL;
   fiid_field_t *tmpl = NULL;
-  int8_t rv = -1;
+  int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
