@@ -3,6 +3,8 @@ cleanup
 rmcpplus_calculate_payload_type - should in/out param
 ipmiconsole_packet.c - int rv -> int ret
 bmc-config, config-tool, chassis-config, pef-config - check_completion_code should == 1 check
+document which funcs return lens
+- raw funcs
 
 freeipmi tools
 --------------
