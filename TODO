@@ -5,6 +5,8 @@ ipmiconsole_packet.c - int rv -> int ret
 bmc-config, config-tool, chassis-config, pef-config - check_completion_code should == 1 check
 lan-session-common
 - _session_timed_out usage, should check if ret < 0 or == 0
+ipmi-api.c
+- rv instead of status
 document which funcs return lens
 - raw funcs
 
