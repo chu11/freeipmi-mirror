@@ -74,6 +74,7 @@ configure alternate port - i.e. don't use port 623, use 722
 have funcs return int instead of int8/int32
 have funcs that need to return value return via in/out param instead of return val
 - i.e. get channel
+have funcs that return buflen return ssize_t?, input should be size_t and void *? like read(), write()?
 coverity check
 
 bmc-device
