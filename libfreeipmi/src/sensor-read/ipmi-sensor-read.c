@@ -319,8 +319,8 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t sensor_event_bitmask1 = 0;
   uint64_t sensor_event_bitmask2 = 0;
-  int sensor_event_bitmask1_len = 0;
-  int sensor_event_bitmask2_len = 0;
+  int sensor_event_bitmask1_flag = 0;
+  int sensor_event_bitmask2_flag = 0;
   uint16_t record_id = 0;
   uint8_t record_type = 0;
   uint8_t sensor_number = 0;
@@ -477,17 +477,17 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
    * isn't set, we want to know and not error out.
    */
 
-  if ((sensor_event_bitmask1_len = fiid_obj_get (obj_cmd_rs,
-                                                 "sensor_event_bitmask1",
-                                                 &sensor_event_bitmask1)) < 0)
+  if ((sensor_event_bitmask1_flag = fiid_obj_get (obj_cmd_rs,
+                                                  "sensor_event_bitmask1",
+                                                  &sensor_event_bitmask1)) < 0)
     {
       SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
 
-  if ((sensor_event_bitmask2_len = fiid_obj_get (obj_cmd_rs,
-                                                 "sensor_event_bitmask2",
-                                                 &sensor_event_bitmask2)) < 0)
+  if ((sensor_event_bitmask2_flag = fiid_obj_get (obj_cmd_rs,
+                                                  "sensor_event_bitmask2",
+                                                  &sensor_event_bitmask2)) < 0)
     {
       SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
@@ -505,11 +505,11 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
    * sensor_event_bitmask = 0;
    */
 
-  if (!sensor_event_bitmask1_len && !sensor_event_bitmask2_len)
+  if (!sensor_event_bitmask1_flag && !sensor_event_bitmask2_flag)
     (*sensor_event_bitmask) = 0;
-  else if (sensor_event_bitmask1_len && sensor_event_bitmask2_len)
+  else if (sensor_event_bitmask1_flag && sensor_event_bitmask2_flag)
     (*sensor_event_bitmask) = sensor_event_bitmask1 | (sensor_event_bitmask2 << 8);
-  else if (sensor_event_bitmask1_len && !sensor_event_bitmask2_len)
+  else if (sensor_event_bitmask1_flag && !sensor_event_bitmask2_flag)
     (*sensor_event_bitmask) = sensor_event_bitmask1;
   else
     {

@@ -449,7 +449,7 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t sensor_number;
-  int field_len;
+  int field_flag;
   uint64_t val;
 
   assert (state_data);
@@ -529,9 +529,9 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
       goto out;
     }
 
-  if ((field_len = fiid_obj_get (obj_cmd_rs,
-                                 "assertion_event_bitmask",
-                                 &val)) < 0)
+  if ((field_flag = fiid_obj_get (obj_cmd_rs,
+                                  "assertion_event_bitmask",
+                                  &val)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -542,14 +542,14 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
 
 
   /* assertion event bitmask need not be returned */
-  if (field_len)
+  if (field_flag)
     data->assertion_bits = (uint16_t)val;
   else
     data->assertion_bits = 0;
 
-  if ((field_len = fiid_obj_get (obj_cmd_rs,
-                                 "deassertion_event_bitmask",
-                                 &val)) < 0)
+  if ((field_flag = fiid_obj_get (obj_cmd_rs,
+                                  "deassertion_event_bitmask",
+                                  &val)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -559,7 +559,7 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
     }
 
   /* deassertion event bitmask need not be returned */
-  if (field_len)
+  if (field_flag)
     data->deassertion_bits = (uint16_t)val;
   else
     data->deassertion_bits = 0;

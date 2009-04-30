@@ -805,7 +805,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
   unsigned int assertion_event_message_list_len = 0;
   char **deassertion_event_message_list = NULL;
   unsigned int deassertion_event_message_list_len = 0;
-  int field_len;
+  int field_flag;
   int rv = -1;
 
   assert (state_data);
@@ -985,9 +985,9 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
    * disabled.
    */
 
-  if ((field_len = fiid_obj_get (obj_cmd_rs,
-                                 "assertion_event_bitmask",
-                                 &val)) < 0)
+  if ((field_flag = fiid_obj_get (obj_cmd_rs,
+                                  "assertion_event_bitmask",
+                                  &val)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -996,7 +996,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (field_len)
+  if (field_flag)
     {
       if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
           || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
@@ -1028,9 +1028,9 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
         goto cleanup;
     }
 
-  if ((field_len = fiid_obj_get (obj_cmd_rs,
-                                 "deassertion_event_bitmask",
-                                 &val)) < 0)
+  if ((field_flag = fiid_obj_get (obj_cmd_rs,
+                                  "deassertion_event_bitmask",
+                                  &val)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1039,7 +1039,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (field_len)
+  if (field_flag)
     {
       if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
           || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE)
