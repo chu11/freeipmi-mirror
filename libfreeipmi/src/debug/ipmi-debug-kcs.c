@@ -53,7 +53,7 @@ _ipmi_dump_kcs_packet (int fd,
                        const char *hdr,
                        const char *trlr,
                        uint8_t *pkt,
-                       uint32_t pkt_len,
+                       unsigned int pkt_len,
                        fiid_template_t tmpl_cmd,
                        fiid_template_t tmpl_ipmb_msg_hdr,
                        fiid_template_t tmpl_ipmb_cmd)
@@ -343,7 +343,7 @@ ipmi_dump_kcs_packet (int fd,
                       const char *hdr,
                       const char *trlr,
                       uint8_t *pkt,
-                      uint32_t pkt_len,
+                      unsigned int pkt_len,
                       fiid_template_t tmpl_cmd)
 {
   if (!pkt || !tmpl_cmd)
@@ -369,7 +369,7 @@ ipmi_dump_kcs_packet_ipmb (int fd,
                            const char *hdr,
                            const char *trlr,
                            uint8_t *pkt,
-                           uint32_t pkt_len,
+                           unsigned int pkt_len,
                            fiid_template_t tmpl_cmd,
                            fiid_template_t tmpl_ipmb_msg_hdr,
                            fiid_template_t tmpl_ipmb_cmd)

@@ -47,7 +47,7 @@ ipmi_dump_sdr_record (int fd,
                       const char *hdr,
                       const char *trlr,
                       uint8_t *sdr_record,
-                      uint32_t sdr_record_len)
+                      unsigned int sdr_record_len)
 {
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   fiid_obj_t obj_sdr_record_header = NULL;

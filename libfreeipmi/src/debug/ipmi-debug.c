@@ -392,7 +392,7 @@ ipmi_dump_hex (int fd,
                const char *hdr,
                const char *trlr,
                uint8_t *buf,
-               uint32_t buf_len)
+               unsigned int buf_len)
 {
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   int rv = -1;

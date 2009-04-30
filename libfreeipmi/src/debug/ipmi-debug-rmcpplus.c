@@ -47,21 +47,23 @@
 
 #include "freeipmi-portability.h"
 
-static int32_t
+static int
 _dump_rmcpplus_session_hdr (int fd,
                             const char *prefix,
                             const char *session_hdr,
                             uint8_t *pkt,
-                            uint32_t pkt_len,
-                            uint64_t *payload_type,
-                            uint64_t *payload_authenticated,
-                            uint64_t *payload_encrypted,
-                            uint64_t *session_id,
-                            uint64_t *ipmi_payload_len)
+                            unsigned int pkt_len,
+                            uint8_t *payload_type,
+                            uint8_t *payload_authenticated,
+                            uint8_t *payload_encrypted,
+                            uint32_t *session_id,
+                            uint16_t *ipmi_payload_len)
 {
   fiid_obj_t obj_rmcpplus_session_hdr = NULL;
   unsigned int indx = 0;
-  int32_t obj_len, rv = -1;
+  int32_t obj_len;
+  int rv = -1;
+  uint64_t val;
 
   assert (pkt
           && pkt_len
@@ -96,11 +98,12 @@ _dump_rmcpplus_session_hdr (int fd,
 
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "payload_type",
-                    payload_type) < 0)
+                    &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       goto cleanup;
     }
+  (*payload_type) = val;
 
   /*
    * Extract OEM IANA and OEM Payload ID
@@ -141,35 +144,39 @@ _dump_rmcpplus_session_hdr (int fd,
 
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "payload_type.authenticated",
-                    payload_authenticated) < 0)
+                    &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       goto cleanup;
     }
+  (*payload_authenticated) = val;
 
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "payload_type.encrypted",
-                    payload_encrypted) < 0)
+                    &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       goto cleanup;
     }
-
+  (*payload_encrypted) = val;
+  
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "session_id",
-                    session_id) < 0)
+                    &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       goto cleanup;
     }
+  (*session_id) = val;
 
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "ipmi_payload_len",
-                    ipmi_payload_len) < 0)
+                    &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       goto cleanup;
     }
+  (*ipmi_payload_len) = val;
 
  output:
   if (ipmi_obj_dump (fd,
@@ -203,7 +210,7 @@ _dump_rmcpplus_payload_data (int fd,
                              fiid_template_t tmpl_ipmb_msg_hdr,
                              fiid_template_t tmpl_ipmb_cmd,
                              uint8_t *pkt,
-                             uint32_t ipmi_payload_len)
+                             uint16_t ipmi_payload_len)
 {
   fiid_obj_t obj_lan_msg_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
@@ -518,7 +525,7 @@ _dump_rmcpplus_payload_confidentiality_none (int fd,
                                              fiid_template_t tmpl_ipmb_msg_hdr,
                                              fiid_template_t tmpl_ipmb_cmd,
                                              uint8_t *pkt,
-                                             uint32_t ipmi_payload_len)
+                                             uint16_t ipmi_payload_len)
 {
   fiid_obj_t obj_rmcpplus_payload = NULL;
   int rv = -1;
@@ -610,9 +617,9 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
                                                     fiid_template_t tmpl_ipmb_msg_hdr,
                                                     fiid_template_t tmpl_ipmb_cmd,
                                                     uint8_t *confidentiality_key,
-                                                    uint32_t confidentiality_key_len,
+                                                    unsigned int confidentiality_key_len,
                                                     uint8_t *pkt,
-                                                    int32_t ipmi_payload_len)
+                                                    uint16_t ipmi_payload_len)
 {
   uint8_t iv[IPMI_CRYPT_AES_CBC_128_IV_LENGTH];
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
@@ -794,7 +801,7 @@ _dump_rmcpplus_payload_rakp (int fd,
                              uint8_t payload_type,
                              fiid_template_t tmpl_cmd,
                              uint8_t *pkt,
-                             uint32_t ipmi_payload_len)
+                             uint16_t ipmi_payload_len)
 {
   fiid_obj_t obj_rmcpplus_payload = NULL;
   fiid_obj_t obj_cmd = NULL;
@@ -945,9 +952,9 @@ _dump_rmcpplus_payload (int fd,
                         fiid_template_t tmpl_ipmb_msg_hdr,
                         fiid_template_t tmpl_ipmb_cmd,
                         uint8_t *confidentiality_key,
-                        uint32_t confidentiality_key_len,
+                        unsigned int confidentiality_key_len,
                         uint8_t *pkt,
-                        uint32_t ipmi_payload_len)
+                        uint16_t ipmi_payload_len)
 {
   assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
            || payload_type == IPMI_PAYLOAD_TYPE_SOL
@@ -1032,20 +1039,20 @@ _dump_rmcpplus_payload (int fd,
                                          ipmi_payload_len));
 }
 
-static int32_t
+static int
 _dump_rmcpplus_session_trlr (int fd,
                              const char *prefix,
                              const char *session_trailer_hdr,
-                             uint64_t session_id,
-                             uint64_t payload_authenticated,
+                             uint32_t session_id,
+                             uint8_t payload_authenticated,
                              uint8_t integrity_algorithm,
                              uint8_t *pkt,
-                             uint32_t pkt_len)
+                             unsigned int pkt_len)
 {
   int32_t pad_length_field_len, next_header_field_len, pad_length, authentication_code_len = 0;
   fiid_obj_t obj_rmcpplus_session_trlr = NULL;
   unsigned int indx = 0;
-  int32_t rv = -1;
+  int rv = -1;
 
   assert (IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm));
 
@@ -1181,18 +1188,20 @@ _ipmi_dump_rmcpplus_packet (int fd,
                             uint8_t integrity_algorithm,
                             uint8_t confidentiality_algorithm,
                             uint8_t *integrity_key,
-                            uint32_t integrity_key_len,
+                            unsigned int integrity_key_len,
                             uint8_t *confidentiality_key,
-                            uint32_t confidentiality_key_len,
+                            unsigned int confidentiality_key_len,
                             uint8_t *pkt,
-                            uint32_t pkt_len,
+                            unsigned int pkt_len,
                             fiid_template_t tmpl_lan_msg_hdr,
                             fiid_template_t tmpl_cmd,
                             fiid_template_t tmpl_ipmb_msg_hdr,
                             fiid_template_t tmpl_ipmb_cmd)
 {
   int32_t obj_rmcp_hdr_len, obj_len;
-  uint64_t payload_type=0, payload_authenticated=0, payload_encrypted, session_id=0, ipmi_payload_len=0;
+  uint8_t payload_type = 0, payload_authenticated = 0, payload_encrypted = 0;
+  uint32_t session_id = 0;
+  uint16_t ipmi_payload_len = 0;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   fiid_obj_t obj_rmcp_hdr = NULL;
   fiid_obj_t obj_unexpected_data = NULL;
@@ -1512,11 +1521,11 @@ ipmi_dump_rmcpplus_packet (int fd,
                            uint8_t integrity_algorithm,
                            uint8_t confidentiality_algorithm,
                            uint8_t *integrity_key,
-                           uint32_t integrity_key_len,
+                           unsigned int integrity_key_len,
                            uint8_t *confidentiality_key,
-                           uint32_t confidentiality_key_len,
+                           unsigned int confidentiality_key_len,
                            uint8_t *pkt,
-                           uint32_t pkt_len,
+                           unsigned int pkt_len,
                            fiid_template_t tmpl_lan_msg_hdr,
                            fiid_template_t tmpl_cmd)
 {
@@ -1562,11 +1571,11 @@ ipmi_dump_rmcpplus_packet_ipmb (int fd,
                                 uint8_t integrity_algorithm,
                                 uint8_t confidentiality_algorithm,
                                 uint8_t *integrity_key,
-                                uint32_t integrity_key_len,
+                                unsigned int integrity_key_len,
                                 uint8_t *confidentiality_key,
-                                uint32_t confidentiality_key_len,
+                                unsigned int confidentiality_key_len,
                                 uint8_t *pkt,
-                                uint32_t pkt_len,
+                                unsigned int pkt_len,
                                 fiid_template_t tmpl_lan_msg_hdr,
                                 fiid_template_t tmpl_cmd,
                                 fiid_template_t tmpl_ipmb_msg_hdr,
