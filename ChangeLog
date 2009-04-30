@@ -13,6 +13,10 @@
 	common/src/configtool/config-tool-pef-conf-section.c: Fix read
 	only/write only completion code check usage.
 
+	* common/src/pingtool/, ipmiping/, rmcpping/: API cleanup.
+
+	* Various other code cleanup.
+
 2009-04-29  Albert Chu <chu11@llnl.gov>
 
 	* Cleanup APIs.  Return 'int' instead of 'int8_t' when size of
