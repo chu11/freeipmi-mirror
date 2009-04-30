@@ -170,7 +170,7 @@ ipmi_get_random (uint8_t *buf, uint32_t buflen)
 }
 
 int
-ipmi_is_ipmi_1_5_packet (uint8_t *pkt, uint32_t pkt_len)
+ipmi_is_ipmi_1_5_packet (uint8_t *pkt, unsigned int pkt_len)
 {
   int32_t rmcp_hdr_len;
   uint8_t auth_type;
@@ -193,7 +193,7 @@ ipmi_is_ipmi_1_5_packet (uint8_t *pkt, uint32_t pkt_len)
 }
 
 int
-ipmi_is_ipmi_2_0_packet (uint8_t *pkt, uint32_t pkt_len)
+ipmi_is_ipmi_2_0_packet (uint8_t *pkt, unsigned int pkt_len)
 {
   int32_t rmcp_hdr_len;
   uint8_t auth_type;

@@ -37,9 +37,9 @@ int ipmi_check_completion_code_success (fiid_obj_t obj_cmd);
 
 int ipmi_get_random (uint8_t *buf, unsigned int buflen);
 
-int ipmi_is_ipmi_1_5_packet (uint8_t *pkt, uint32_t pkt_len);
+int ipmi_is_ipmi_1_5_packet (uint8_t *pkt, unsigned int pkt_len);
 
-int ipmi_is_ipmi_2_0_packet (uint8_t *pkt, uint32_t pkt_len);
+int ipmi_is_ipmi_2_0_packet (uint8_t *pkt, unsigned int pkt_len);
 
 const char *ipmi_cmd_str (uint8_t net_fn, uint8_t cmd);
 
