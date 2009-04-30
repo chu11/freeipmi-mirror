@@ -900,10 +900,12 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 
   while (1)
     {
-      if (_session_timed_out (ctx))
+      if ((ret = _session_timed_out (ctx)) < 0)
+        break;
+
+      if (ret)
         {
           API_SET_ERRNUM (ctx, IPMI_ERR_SESSION_TIMEOUT);
-          rv = -1;
           break;
         }
 
@@ -916,10 +918,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                                           cmd, /* for debug dumping */
                                           net_fn, /* for debug dumping */
                                           obj_cmd_rs)) < 0)
-        {
-          rv = -1;
-          break;
-        }
+        break;
 
       if (!recv_len)
         {
@@ -1196,10 +1195,12 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       uint8_t authentication_type;
       unsigned int internal_workaround_flags = 0;
 
-      if (_session_timed_out (ctx))
+      if ((ret = _session_timed_out (ctx)) < 0)
+        break;
+
+      if (ret)
         {
           API_SET_ERRNUM (ctx, IPMI_ERR_SESSION_TIMEOUT);
-          rv = -1;
           break;
         }
 
@@ -1212,10 +1213,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
                                           cmd, /* for debug dumping */
                                           ctx->net_fn, /* for debug dumping */
                                           obj_cmd_rs)) < 0)
-        {
-          rv = -1;
-          break;
-        }
+        break;
 
       if (!recv_len)
         {
@@ -2638,10 +2636,12 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
 
   while (1)
     {
-      if (_session_timed_out (ctx))
+      if ((ret = _session_timed_out (ctx)) < 0)
+        break;
+
+      if (ret)
         {
           API_SET_ERRNUM (ctx, IPMI_ERR_SESSION_TIMEOUT);
-          rv = -1;
           break;
         }
 
@@ -2661,10 +2661,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                               cmd, /* for debug dumping */
                                               net_fn, /* for debug dumping */
                                               obj_cmd_rs)) < 0)
-        {
-          rv = -1;
-          break;
-        }
+        break;
 
       if (!recv_len)
         {
@@ -2749,7 +2746,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
           goto cleanup;
         }
 
-      rv = recv_len;
+      rv = 0;
       break;
     }
 
@@ -2820,10 +2817,12 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       uint8_t payload_authenticated;
       uint8_t payload_encrypted;
 
-      if (_session_timed_out (ctx))
+      if ((ret = _session_timed_out (ctx)) < 0)
+        break;
+
+      if (!ret)
         {
           API_SET_ERRNUM (ctx, IPMI_ERR_SESSION_TIMEOUT);
-          rv = -1;
           break;
         }
 

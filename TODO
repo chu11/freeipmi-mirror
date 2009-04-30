@@ -3,8 +3,6 @@ cleanup
 ipmi_crypt_cipher_key_len
 ipmi_crypt_cipher_block_len
 ipmi_crypt_hash_digest_len
-lan-session-common
-- _session_timed_out usage, should check if ret < 0 or == 0
 fiid_obj_packet_valid usage
 - checkout == 1, not just !=0
 document which funcs return lens
