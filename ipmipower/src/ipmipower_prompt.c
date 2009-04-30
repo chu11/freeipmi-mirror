@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.103 2009-04-23 16:45:05 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.104 2009-04-30 18:08:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -556,7 +556,7 @@ _cmd_config (void)
       hostlist_t discovered = NULL;
       hostlist_t undiscovered = NULL;
       hostlist_t badconnection = NULL;
-      char buffer[IPMIPOWER_OUTPUT_BUFLEN];
+      char buf[IPMIPOWER_OUTPUT_BUFLEN];
       int rv;
 #endif /* NDEBUG */
 
@@ -582,20 +582,20 @@ _cmd_config (void)
       goto cleanup;
       }
 
-      if ((rv = hostlist_ranged_string (discovered, IPMIPOWER_OUTPUT_BUFLEN, buffer)) < 0)
+      if ((rv = hostlist_ranged_string (discovered, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
         ierr_exit ("hostlist_ranged_string: %s", strerror (errno));
       if (rv > 0)
-        cbuf_printf (ttyout, "Discovered:                   %s\n", buffer);
+        cbuf_printf (ttyout, "Discovered:                   %s\n", buf);
 
-      if ((rv = hostlist_ranged_string (undiscovered, IPMIPOWER_OUTPUT_BUFLEN, buffer)) < 0)
+      if ((rv = hostlist_ranged_string (undiscovered, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
         ierr_exit ("hostlist_ranged_string: %s", strerror (errno));
       if (rv > 0)
-        cbuf_printf (ttyout, "Undiscovered:                 %s\n", buffer);
+        cbuf_printf (ttyout, "Undiscovered:                 %s\n", buf);
 
-      if ((rv = hostlist_ranged_string (badconnection, IPMIPOWER_OUTPUT_BUFLEN, buffer)) < 0)
+      if ((rv = hostlist_ranged_string (badconnection, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
         ierr_exit ("hostlist_ranged_string: %s", strerror (errno));
       if (rv > 0)
-        cbuf_printf (ttyout, "BadConnection:                %s\n", buffer);
+        cbuf_printf (ttyout, "BadConnection:                %s\n", buf);
 
     cleanup:
       hostlist_destroy (discovered);

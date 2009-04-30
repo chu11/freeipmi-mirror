@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.42 2009-03-12 17:57:53 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.43 2009-04-30 18:08:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -63,14 +63,14 @@ extern cbuf_t ttyout;
 #define IPMIPOWER_MAX_CONNECTION_BUF 1024*4
 
 /* _clean_fd
- * - Remove any extraneous packets sitting on the fd buffer
+ * - Remove any extraneous packets sitting on the fd buf
  */
 static void
 _clean_fd (int fd)
 {
   int rv;
   struct pollfd ufds;
-  char buffer[IPMIPOWER_PACKET_BUFLEN];
+  char buf[IPMIPOWER_PACKET_BUFLEN];
 
   while (1)
     {
@@ -86,7 +86,7 @@ _clean_fd (int fd)
 
       if (ufds.revents & POLLIN)
         {
-          rv = Recvfrom (fd, (uint8_t *)buffer, IPMIPOWER_PACKET_BUFLEN, 0, NULL, NULL);
+          rv = Recvfrom (fd, (uint8_t *)buf, IPMIPOWER_PACKET_BUFLEN, 0, NULL, NULL);
           if (rv == 0)
             break;
         }
@@ -109,7 +109,7 @@ ipmipower_connection_clear (struct ipmipower_connection *ic)
 }
 
 static int
-_connection_setup (struct ipmipower_connection *ic, char *hostname)
+_connection_setup (struct ipmipower_connection *ic, const char *hostname)
 {
   struct sockaddr_in srcaddr;
   struct hostent *result;
@@ -303,7 +303,7 @@ ipmipower_connection_array_destroy (struct ipmipower_connection *ics,
 int
 ipmipower_connection_hostname_index (struct ipmipower_connection *ics,
                                      unsigned int ics_len,
-                                     char *hostname)
+                                     const char *hostname)
 {
   int i;
 

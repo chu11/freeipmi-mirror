@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.171 2009-04-23 17:25:19 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.172 2009-04-30 18:08:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -348,7 +348,7 @@ static void
 _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   int len = 0;
-  char buffer[IPMIPOWER_PACKET_BUFLEN];
+  char buf[IPMIPOWER_PACKET_BUFLEN];
 
   assert (PACKET_TYPE_VALID_REQ (pkt));
 
@@ -375,10 +375,10 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
         ip->session_sequence_number++;
     }
 
-  len = ipmipower_packet_create (ip, pkt, buffer, IPMIPOWER_PACKET_BUFLEN);
-  ipmipower_packet_dump (ip, pkt, buffer, len);
-  Cbuf_write (ip->ic->ipmi_out, buffer, len);
-  secure_memset (buffer, '\0', IPMIPOWER_PACKET_BUFLEN);
+  len = ipmipower_packet_create (ip, pkt, buf, IPMIPOWER_PACKET_BUFLEN);
+  ipmipower_packet_dump (ip, pkt, buf, len);
+  Cbuf_write (ip->ic->ipmi_out, buf, len);
+  secure_memset (buf, '\0', IPMIPOWER_PACKET_BUFLEN);
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
     ip->protocol_state = PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT;
@@ -1654,7 +1654,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
        * descriptor will be closed and the packet lost.  If we are in
        * interactive mode, the next power control command will call
        * 'ipmipower_connection_clear' and get rid of the packet if it
-       * is sitting on a buffer.
+       * is sitting on a buf.
        */
       if (ip->close_timeout)
         {

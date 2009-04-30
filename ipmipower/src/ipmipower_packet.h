@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.h,v 1.18 2009-04-30 17:53:24 chu11 Exp $
+ *  $Id: ipmipower_packet.h,v 1.19 2009-04-30 18:08:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -42,32 +42,32 @@ fiid_obj_t ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
 
 /* ipmipower_packet_store
  * - Store pkt into ipmipower_powercmd_t structure
- * - if buffer too long, packet truncated
+ * - if buf too long, packet truncated
  * - Only works with response packet types
  * - Returns -1 if the packet is un-storeable, returns 0 on success
  */
 int ipmipower_packet_store (ipmipower_powercmd_t ip,
                             packet_type_t pkt,
-                            char *buffer,
-                            int len);
+                            const char *buf,
+                            unsigned int buflen);
 
 /* ipmipower_packet_dump
  * - Dump contents of ipmi packet
  */
 void ipmipower_packet_dump (ipmipower_powercmd_t ip,
                             packet_type_t pkt,
-                            char *buffer,
-                            unsigned int len);
+                            const char *buf,
+                            unsigned int buflen);
 
 /* ipmipower_packet_create
  * - Create packet of the specified packet type
  * - Only works with request packet types
- * - Returns length of packet stored in buffer
+ * - Returns length of packet stored in buf
  */
 int ipmipower_packet_create (ipmipower_powercmd_t ip,
                              packet_type_t pkt,
-                             char *buffer,
-                             int len);
+                             char *buf,
+                             unsigned int buflen);
 
 /* ipmipower_packet_errmsg
  * - Get error message type

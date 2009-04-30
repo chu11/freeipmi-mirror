@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.48 2009-04-23 16:45:04 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.49 2009-04-30 18:08:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -95,18 +95,18 @@ ipmipower_output_finish (void)
   if (cmd_args.hostrange.consolidate_output)
     {
       int i, rv;
-      char buffer[IPMIPOWER_OUTPUT_BUFLEN];
+      char buf[IPMIPOWER_OUTPUT_BUFLEN];
 
       for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
         {
           if (hostlist_count (output_hostrange[i]) > 0) {
-        memset (buffer, '\0', IPMIPOWER_OUTPUT_BUFLEN);
+        memset (buf, '\0', IPMIPOWER_OUTPUT_BUFLEN);
 
         hostlist_sort (output_hostrange[i]);
 
         rv = hostlist_ranged_string (output_hostrange[i],
-                     IPMIPOWER_OUTPUT_BUFLEN,
-                     buffer);
+                                     IPMIPOWER_OUTPUT_BUFLEN,
+                                     buf);
         if (rv < 0)
           {
         cbuf_printf (ttyout, "OVERFLOWED BUFFER: %s\n",
@@ -119,11 +119,11 @@ ipmipower_output_finish (void)
         if (rv > 0)
           {
         cbuf_printf (ttyout, "----------------\n");
-        cbuf_printf (ttyout, "%s\n", buffer);
+        cbuf_printf (ttyout, "%s\n", buf);
         cbuf_printf (ttyout, "----------------\n");
         cbuf_printf (ttyout, " %s\n",
                  ipmipower_outputs[i]);
-        hostlist_delete (output_hostrange[i], buffer);
+        hostlist_delete (output_hostrange[i], buf);
           }
 
         assert (!hostlist_count (output_hostrange[i]));

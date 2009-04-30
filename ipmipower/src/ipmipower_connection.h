@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.h,v 1.14 2009-03-03 23:56:55 chu11 Exp $
+ *  $Id: ipmipower_connection.h,v 1.15 2009-04-30 18:08:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -52,6 +52,7 @@ void ipmipower_connection_array_destroy (struct ipmipower_connection *ics,
  * - Returns index of entry, -1 if not found
  */
 int ipmipower_connection_hostname_index (struct ipmipower_connection *ics,
-                                         unsigned int ics_len, char *hostname);
+                                         unsigned int ics_len,
+                                         const char *hostname);
 
 #endif /* _IPMIPOWER_CONNECTION_H */

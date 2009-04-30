@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.75 2009-03-12 17:57:53 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.76 2009-04-30 18:08:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -151,17 +151,17 @@ _cleanup (void)
 }
 
 static void
-_sendto (cbuf_t buf, int fd, struct sockaddr_in *destaddr)
+_sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr)
 {
   int n, rv;
-  char buffer[IPMIPOWER_PACKET_BUFLEN];
+  char buf[IPMIPOWER_PACKET_BUFLEN];
 
-  if ((n = cbuf_read (buf, buffer, IPMIPOWER_PACKET_BUFLEN)) < 0)
+  if ((n = cbuf_read (cbuf, buf, IPMIPOWER_PACKET_BUFLEN)) < 0)
     ierr_exit ("_sendto(%d): cbuf_read: %s", fd, strerror (errno));
   if (n == IPMIPOWER_PACKET_BUFLEN)
     ierr_exit ("_sendto: Buffer full");
 
-  rv = ipmi_lan_sendto (fd, buffer, n, 0, (struct sockaddr *)destaddr,
+  rv = ipmi_lan_sendto (fd, buf, n, 0, (struct sockaddr *)destaddr,
                         sizeof (struct sockaddr_in));
   if (rv < 0)
     ierr_exit ("_sendto: ipmi_lan_sendto %s", strerror (errno));
@@ -169,19 +169,19 @@ _sendto (cbuf_t buf, int fd, struct sockaddr_in *destaddr)
     ierr_exit ("_sendto: ipmi_lan_sendto rv=%d n=%d", rv, n);
 
   /* cbuf should be empty now */
-  if (!cbuf_is_empty (buf))
+  if (!cbuf_is_empty (cbuf))
     ierr_exit ("_sendto: cbuf not empty");
 }
 
 static void
-_recvfrom (cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
+_recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
 {
   int n, rv, dropped = 0;
-  char buffer[IPMIPOWER_PACKET_BUFLEN];
+  char buf[IPMIPOWER_PACKET_BUFLEN];
   struct sockaddr_in from;
   unsigned int fromlen = sizeof (struct sockaddr_in);
 
-  rv = ipmi_lan_recvfrom (fd, buffer, IPMIPOWER_PACKET_BUFLEN, 0,
+  rv = ipmi_lan_recvfrom (fd, buf, IPMIPOWER_PACKET_BUFLEN, 0,
                           (struct sockaddr *)&from, &fromlen);
   if (rv < 0)
     ierr_exit ("_recvfrom: ipmi_lan_recvfrom: %s", strerror (errno));
@@ -194,18 +194,18 @@ _recvfrom (cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
     return;
 
   /* cbuf should be empty, but if it isn't, empty it */
-  if (!cbuf_is_empty (buf))
+  if (!cbuf_is_empty (cbuf))
     {
       ierr_dbg ("_recvfrom: cbuf not empty, draining");
       do
         {
           char tempbuf[IPMIPOWER_PACKET_BUFLEN];
-          if (cbuf_read (buf, tempbuf, IPMIPOWER_PACKET_BUFLEN) < 0)
+          if (cbuf_read (cbuf, tempbuf, IPMIPOWER_PACKET_BUFLEN) < 0)
             ierr_exit ("_recvfrom: cbuf_read: %s", strerror (errno));
-        } while(!cbuf_is_empty (buf));
+        } while(!cbuf_is_empty (cbuf));
     }
 
-  if ((n = cbuf_write (buf, buffer, rv, &dropped)) < 0)
+  if ((n = cbuf_write (cbuf, buf, rv, &dropped)) < 0)
     ierr_exit ("_recvfrom(%d): cbuf_write: %s", fd, strerror (errno));
   if (n != rv)
     ierr_exit ("_recvfrom: rv=%d n=%d", rv, n);
