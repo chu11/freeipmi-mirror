@@ -95,7 +95,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
                               &bytes_rq[2],
                               send_len - 2,
                               bytes_rs,
-                              (unsigned int)arg_max)) >= 0)
+                              arg_max)) >= 0)
     {
       pstdout_printf (state_data->pstate, "rcvd: ");
       for (i = 0; i < rs_len; i++)
