@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.41 2009-03-03 23:56:55 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.42 2009-04-30 17:48:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -84,8 +84,8 @@ ipmipower_ping_process_pings (int *timeout)
 
   for (i = 0; i < ics_len; i++)
     {
-      int len;
       char buffer[IPMIPOWER_PACKET_BUFLEN];
+      int len;
 
       if (send_pings_flag)
         {
@@ -155,7 +155,7 @@ ipmipower_ping_process_pings (int *timeout)
                                          hdrbuf,
                                          NULL,
                                          (uint8_t *)buffer,
-                                         (uint32_t)len,
+                                         len,
                                          tmpl_cmd_asf_presence_ping) < 0)
                 ierr_dbg ("ipmi_dump_rmcp_packet: %s", strerror (errno));
             }
@@ -201,7 +201,7 @@ ipmipower_ping_process_pings (int *timeout)
                                          hdrbuf,
                                          NULL,
                                          (uint8_t *)buffer,
-                                         (uint32_t)len,
+                                         len,
                                          tmpl_cmd_asf_presence_pong) < 0)
                 ierr_dbg ("ipmi_dump_rmcp_packet: %s", strerror (errno));
             }

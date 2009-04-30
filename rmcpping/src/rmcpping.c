@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.45 2009-03-06 18:11:04 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.46 2009-04-30 17:48:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -104,7 +104,7 @@ createpacket (char *destination,
                                  hdrbuf,
                                  NULL,
                                  (uint8_t *)buffer,
-                                 (uint32_t)len,
+                                 len,
                                  tmpl_cmd_asf_presence_ping) < 0)
         ipmi_ping_err_exit ("ipmi_dump_rmcp_packet: %s", strerror (errno));
     }
@@ -156,7 +156,7 @@ parsepacket (char * destination,
                                  hdrbuf,
                                  NULL,
                                  (uint8_t *)buffer,
-                                 (uint32_t)buflen,
+                                 buflen,
                                  tmpl_cmd_asf_presence_pong) < 0)
         ipmi_ping_err_exit ("ipmi_dump_rmcp_packet: %s", strerror (errno));
     }

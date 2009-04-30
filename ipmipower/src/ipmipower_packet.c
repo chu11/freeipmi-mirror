@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.109 2009-04-29 18:01:01 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.110 2009-04-30 17:48:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -169,7 +169,8 @@ ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
 
 void
 ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
-                       char *buffer, int len)
+                       char *buffer,
+                       unsigned int len)
 {
   assert (ip);
   assert (PACKET_TYPE_VALID_PKT (pkt));
@@ -261,7 +262,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
                                          NULL,
                                          0,
                                          (uint8_t *)buffer,
-                                         (uint32_t)len,
+                                         len,
                                          tmpl_lan_msg_hdr,
                                          ipmipower_packet_cmd_template (ip, pkt)) < 0)
             ierr_dbg ("ipmi_dump_rmcpplus_packet: %s", strerror (errno));
@@ -290,7 +291,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
                                          ip->confidentiality_key_ptr,
                                          ip->confidentiality_key_len,
                                          (uint8_t *)buffer,
-                                         (uint32_t)len,
+                                         len,
                                          tmpl_lan_msg_hdr,
                                          ipmipower_packet_cmd_template (ip, pkt)) < 0)
             ierr_dbg ("ipmi_dump_rmcpplus_packet: %s", strerror (errno));
@@ -302,7 +303,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
                                     hdrbuf,
                                     NULL,
                                     (uint8_t *)buffer,
-                                    (uint32_t)len,
+                                    len,
                                     tmpl_lan_msg_hdr,
                                     ipmipower_packet_cmd_template (ip, pkt)) < 0)
             ierr_dbg ("ipmi_dump_lan_packet: %s", strerror (errno));
