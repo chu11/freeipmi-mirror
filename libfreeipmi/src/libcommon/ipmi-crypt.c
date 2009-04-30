@@ -435,13 +435,13 @@ _ipmi_crypt_cipher_info (int cipher_algorithm, int cipher_info)
 }
 
 
-int32_t
+int
 ipmi_crypt_cipher_key_len (int cipher_algorithm)
 {
   return (_ipmi_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH));
 }
 
-int32_t
+int
 ipmi_crypt_cipher_block_len (int cipher_algorithm)
 {
   return (_ipmi_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH));

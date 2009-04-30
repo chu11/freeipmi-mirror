@@ -92,8 +92,8 @@ int32_t ipmi_crypt_cipher_decrypt (int cipher_algorithm,
                                    uint8_t *data,
                                    unsigned int data_len);
 
-int32_t ipmi_crypt_cipher_key_len (int cipher_algorithm);
+int ipmi_crypt_cipher_key_len (int cipher_algorithm);
 
-int32_t ipmi_crypt_cipher_block_len (int cipher_algorithm);
+int ipmi_crypt_cipher_block_len (int cipher_algorithm);
 
 #endif
