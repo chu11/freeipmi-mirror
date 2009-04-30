@@ -43,7 +43,7 @@ int ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                           uint32_t session_id,
                           uint8_t *rq_seq,
                           char *password,
-                          uint32_t password_len,
+                          unsigned int password_len,
                           fiid_obj_t obj_cmd_rq,
                           fiid_obj_t obj_cmd_rs);
 
@@ -69,11 +69,11 @@ int ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                               uint8_t integrity_algorithm,
                               uint8_t confidentiality_algorithm,
                               uint8_t *integrity_key,
-                              uint32_t integrity_key_len,
+                              unsigned int integrity_key_len,
                               uint8_t *confidentiality_key,
-                              uint32_t confidentiality_key_len,
+                              unsigned int confidentiality_key_len,
                               char *password,
-                              uint32_t password_len,
+                              unsigned int password_len,
                               fiid_obj_t obj_cmd_rq,
                               fiid_obj_t obj_cmd_rs);
 

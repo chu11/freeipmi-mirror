@@ -464,7 +464,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                     uint32_t session_id,
                     uint8_t rq_seq,
                     char *password,
-                    uint32_t password_len,
+                    unsigned int password_len,
                     uint8_t cmd, /* for debug dumping */
                     fiid_obj_t obj_cmd_rq)
 {
@@ -683,7 +683,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                      uint32_t session_id,
                                      uint8_t *rq_seq,
                                      char *password,
-                                     uint32_t password_len,
+                                     unsigned int password_len,
                                      fiid_obj_t obj_cmd_rs)
 {
   uint64_t rs_session_id;
@@ -841,7 +841,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                       uint32_t session_id,
                       uint8_t *rq_seq,
                       char *password,
-                      uint32_t password_len,
+                      unsigned int password_len,
                       fiid_obj_t obj_cmd_rq,
                       fiid_obj_t obj_cmd_rs)
 {
@@ -1766,9 +1766,9 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
                        uint8_t integrity_algorithm,
                        uint8_t confidentiality_algorithm,
                        uint8_t *integrity_key,
-                       uint32_t integrity_key_len,
+                       unsigned int integrity_key_len,
                        uint8_t *confidentiality_key,
-                       uint32_t confidentiality_key_len,
+                       unsigned int confidentiality_key_len,
                        uint8_t *pkt,
                        unsigned int pkt_len,
                        uint8_t cmd,
@@ -1857,9 +1857,9 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
                        uint8_t integrity_algorithm,
                        uint8_t confidentiality_algorithm,
                        uint8_t *integrity_key,
-                       uint32_t integrity_key_len,
+                       unsigned int integrity_key_len,
                        uint8_t *confidentiality_key,
-                       uint32_t confidentiality_key_len,
+                       unsigned int confidentiality_key_len,
                        uint8_t *pkt,
                        unsigned int pkt_len,
                        uint8_t cmd,
@@ -1937,11 +1937,11 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                         uint8_t integrity_algorithm,
                         uint8_t confidentiality_algorithm,
                         uint8_t *integrity_key,
-                        uint32_t integrity_key_len,
+                        unsigned int integrity_key_len,
                         uint8_t *confidentiality_key,
-                        uint32_t confidentiality_key_len,
+                        unsigned int confidentiality_key_len,
                         char *password,
-                        uint32_t password_len,
+                        unsigned int password_len,
                         uint8_t cmd, /* for debug dumping */
                         fiid_obj_t obj_cmd_rq)
 {
@@ -2093,9 +2093,9 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                         uint8_t integrity_algorithm,
                         uint8_t confidentiality_algorithm,
                         uint8_t *integrity_key,
-                        uint32_t integrity_key_len,
+                        unsigned int integrity_key_len,
                         uint8_t *confidentiality_key,
-                        uint32_t confidentiality_key_len,
+                        unsigned int confidentiality_key_len,
                         uint8_t *pkt,
                         unsigned int pkt_len,
                         unsigned int retransmission_count,
@@ -2237,9 +2237,9 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                          uint8_t *rq_seq,
                                          uint8_t integrity_algorithm,
                                          uint8_t *integrity_key,
-                                         uint32_t integrity_key_len,
+                                         unsigned int integrity_key_len,
                                          char *password,
-                                         uint32_t password_len,
+                                         unsigned int password_len,
                                          fiid_obj_t obj_cmd_rs,
                                          uint8_t *pkt,
                                          unsigned int pkt_len)
@@ -2558,11 +2558,11 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                           uint8_t integrity_algorithm,
                           uint8_t confidentiality_algorithm,
                           uint8_t *integrity_key,
-                          uint32_t integrity_key_len,
+                          unsigned int integrity_key_len,
                           uint8_t *confidentiality_key,
-                          uint32_t confidentiality_key_len,
+                          unsigned int confidentiality_key_len,
                           char *password,
-                          uint32_t password_len,
+                          unsigned int password_len,
                           fiid_obj_t obj_cmd_rq,
                           fiid_obj_t obj_cmd_rs)
 {
@@ -2939,9 +2939,9 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   uint8_t message_tag;
   char *username;
   char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
-  uint32_t username_len;
+  unsigned int username_len;
   char *password;
-  uint32_t password_len;
+  unsigned int password_len;
   uint8_t authentication_algorithm = 0; /* init to 0 to remove gcc warning */
   uint8_t requested_maximum_privilege;
   uint8_t assume_rakp_4_success = 0;

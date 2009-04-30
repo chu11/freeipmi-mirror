@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.70 2009-04-08 20:47:06 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.71 2009-04-30 19:56:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -234,7 +234,7 @@ struct ipmiconsole_ctx_config {
   unsigned int k_g_len;
   uint8_t privilege_level;
   uint8_t cipher_suite_id;
-  uint32_t workaround_flags;
+  unsigned int workaround_flags;
 
   /* protocol config */
   unsigned int session_timeout_len;
@@ -246,9 +246,9 @@ struct ipmiconsole_ctx_config {
   unsigned int maximum_retransmission_count;
 
   /* engine config */
-  uint32_t engine_flags;
-  uint32_t behavior_flags;
-  uint32_t debug_flags;
+  unsigned int engine_flags;
+  unsigned int behavior_flags;
+  unsigned int debug_flags;
 
   /* Data based on Configuration Parameters */
   uint8_t authentication_algorithm;
@@ -345,11 +345,11 @@ struct ipmiconsole_ctx_session {
   /*
    * Protocol Maintenance Variables
    */
-  uint32_t retransmission_count;
-  uint32_t errors_count;
-  uint32_t session_sequence_number_errors_count;
-  uint32_t activate_payloads_count;
-  uint32_t deactivate_active_payloads_count;
+  unsigned int retransmission_count;
+  unsigned int errors_count;
+  unsigned int session_sequence_number_errors_count;
+  unsigned int activate_payloads_count;
+  unsigned int deactivate_active_payloads_count;
   uint32_t highest_received_sequence_number;
   /* need to also store bytes read from a previous seq num */
   unsigned int previously_received_list;
@@ -363,13 +363,13 @@ struct ipmiconsole_ctx_session {
 
   uint8_t sik_key[IPMI_MAX_SIK_KEY_LENGTH];
   uint8_t *sik_key_ptr;
-  uint32_t sik_key_len;
+  unsigned int sik_key_len;
   uint8_t integrity_key[IPMI_MAX_INTEGRITY_KEY_LENGTH];
   uint8_t *integrity_key_ptr;
-  uint32_t integrity_key_len;
+  unsigned int integrity_key_len;
   uint8_t confidentiality_key[IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH];
   uint8_t *confidentiality_key_ptr;
-  uint32_t confidentiality_key_len;
+  unsigned int confidentiality_key_len;
 
   uint8_t sol_payload_instance;
   uint32_t sol_instance_capacity;
@@ -392,7 +392,7 @@ struct ipmiconsole_ctx_session {
   struct timeval last_sol_input_packet_sent;
   uint8_t sol_input_packet_sequence_number;
   uint8_t sol_input_character_data[IPMICONSOLE_MAX_CHARACTER_DATA+1];
-  uint32_t sol_input_character_data_len;
+  unsigned int sol_input_character_data_len;
 
   /* SOL Output (BMC to remote console) */
   uint8_t last_sol_output_packet_sequence_number;

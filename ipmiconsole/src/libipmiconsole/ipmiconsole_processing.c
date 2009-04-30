@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.84 2009-04-08 20:47:06 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.85 2009-04-30 19:56:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1753,9 +1753,9 @@ _calculate_cipher_keys (ipmiconsole_ctx_t c)
   int32_t managed_system_random_number_len;
   char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
   char *username;
-  uint32_t username_len;
+  unsigned int username_len;
   char *password;
-  uint32_t password_len;
+  unsigned int password_len;
   uint8_t *k_g;
 
   assert (c);

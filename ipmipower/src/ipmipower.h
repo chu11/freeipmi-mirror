@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.129 2009-04-23 16:45:02 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.130 2009-04-30 19:56:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -267,13 +267,13 @@ struct ipmipower_powercmd {
   uint8_t confidentiality_algorithm;
   uint8_t sik_key[IPMI_MAX_SIK_KEY_LENGTH];
   uint8_t *sik_key_ptr;
-  uint32_t sik_key_len;
+  unsigned int sik_key_len;
   uint8_t integrity_key[IPMI_MAX_INTEGRITY_KEY_LENGTH];
   uint8_t *integrity_key_ptr;
-  uint32_t integrity_key_len;
+  unsigned int integrity_key_len;
   uint8_t confidentiality_key[IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH];
   uint8_t *confidentiality_key_ptr;
-  uint32_t confidentiality_key_len;
+  unsigned int confidentiality_key_len;
   uint8_t initial_message_tag;
   uint8_t message_tag_count;
   uint32_t session_sequence_number;

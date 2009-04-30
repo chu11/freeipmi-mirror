@@ -1,11 +1,5 @@
 cleanup
 -------
-pinglib - fields should be unsigned int
-ipmipower
-- unsigned int everywhere
-- packet_create
-- packet_dump
-
 ipmi-lan_recvfrom/sendto return
 
 ipmiconsole

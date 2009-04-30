@@ -90,11 +90,11 @@ int32_t
 ipmi_crypt_hash (int hash_algorithm,
                  int hash_flags,
                  uint8_t *key,
-                 uint32_t key_len,
+                 unsigned int key_len,
                  uint8_t *hash_data,
-                 uint32_t hash_data_len,
+                 unsigned int hash_data_len,
                  uint8_t *digest,
-                 uint32_t digest_len)
+                 unsigned int digest_len)
 {
   gcry_md_hd_t h = NULL;
   gcry_error_t e;
@@ -209,11 +209,11 @@ static int32_t
 _cipher_crypt (int cipher_algorithm,
                int cipher_mode,
                uint8_t *key,
-               uint32_t key_len,
+               unsigned int key_len,
                uint8_t *iv,
-               uint32_t iv_len,
+               unsigned int iv_len,
                uint8_t *data,
-               uint32_t data_len,
+               unsigned int data_len,
                int encrypt_flag)
 {
   int gcry_cipher_algorithm, gcry_cipher_mode = 0;
@@ -356,11 +356,11 @@ int32_t
 ipmi_crypt_cipher_encrypt (int cipher_algorithm,
                            int cipher_mode,
                            uint8_t *key,
-                           uint32_t key_len,
+                           unsigned int key_len,
                            uint8_t *iv,
-                           uint32_t iv_len,
+                           unsigned int iv_len,
                            uint8_t *data,
-                           uint32_t data_len)
+                           unsigned int data_len)
 {
   return (_cipher_crypt (cipher_algorithm,
                          cipher_mode,
@@ -377,11 +377,11 @@ int32_t
 ipmi_crypt_cipher_decrypt (int cipher_algorithm,
                            int cipher_mode,
                            uint8_t *key,
-                           uint32_t key_len,
+                           unsigned int key_len,
                            uint8_t *iv,
-                           uint32_t iv_len,
+                           unsigned int iv_len,
                            uint8_t *data,
-                           uint32_t data_len)
+                           unsigned int data_len)
 {
   return (_cipher_crypt (cipher_algorithm,
                          cipher_mode,
