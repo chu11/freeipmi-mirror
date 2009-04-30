@@ -158,7 +158,7 @@ enable_sol_commit (const char *section_name,
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER)))
+                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
@@ -296,7 +296,7 @@ _set_sol_sol_authentication (bmc_config_state_data_t *state_data,
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER)))
+                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
@@ -534,7 +534,7 @@ _set_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER)))
+                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
@@ -732,7 +732,7 @@ _set_sol_sol_retry (bmc_config_state_data_t *state_data,
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER)))
+                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
@@ -925,7 +925,7 @@ non_volatile_bit_rate_commit (const char *section_name,
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER)))
+                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
@@ -1043,7 +1043,7 @@ volatile_bit_rate_commit (const char *section_name,
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER)))
+                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
@@ -1161,7 +1161,7 @@ sol_payload_port_commit (const char *section_name,
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER)))
+                                              IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;

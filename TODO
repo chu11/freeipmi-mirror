@@ -3,11 +3,8 @@ cleanup
 ipmi_crypt_cipher_key_len
 ipmi_crypt_cipher_block_len
 ipmi_crypt_hash_digest_len
-bmc-config, config-tool, chassis-config, pef-config - check_completion_code should == 1 check
 lan-session-common
 - _session_timed_out usage, should check if ret < 0 or == 0
-ipmi-api.c
-- rv instead of status
 fiid_obj_packet_valid usage
 - checkout == 1, not just !=0
 libfreeipmi/src/sensor-read/ipmi-sensor-read.c

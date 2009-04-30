@@ -185,7 +185,7 @@ _set_connection_mode (bmc_config_state_data_t *state_data,
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER)))
+                                              IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
@@ -452,7 +452,7 @@ page_blackout_interval_commit (const char *section_name,
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER)))
+                                              IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
@@ -570,7 +570,7 @@ call_retry_interval_commit (const char *section_name,
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER)))
+                                              IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
@@ -708,7 +708,7 @@ _set_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER)))
+                                              IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;

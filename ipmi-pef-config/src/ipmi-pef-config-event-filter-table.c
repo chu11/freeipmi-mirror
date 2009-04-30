@@ -473,7 +473,7 @@ _set_event_filter_table (struct ipmi_pef_config_state_data *state_data,
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER)))
+                                              IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
