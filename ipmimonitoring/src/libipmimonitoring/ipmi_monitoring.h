@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.43 2009-04-21 20:33:43 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.44 2009-04-30 15:41:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -976,7 +976,7 @@ void *ipmi_monitoring_read_sensor_reading (ipmi_monitoring_ctx_t c);
  * Returns 0 on success, -1 on error
  */
 int ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
-                                    int bitmask_type,
+                                    unsigned int bitmask_type,
                                     unsigned int bitmask,
                                     char *buffer,
                                     unsigned int buflen);

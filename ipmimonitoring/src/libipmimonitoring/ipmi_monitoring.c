@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.52 2009-03-12 17:57:53 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.53 2009-04-30 15:41:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -868,7 +868,7 @@ ipmi_monitoring_read_sensor_reading (ipmi_monitoring_ctx_t c)
 
 int
 ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
-                                int bitmask_type,
+                                unsigned int bitmask_type,
                                 unsigned int bitmask,
                                 char *buffer,
                                 unsigned int buflen)
