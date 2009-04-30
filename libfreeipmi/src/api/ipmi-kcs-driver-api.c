@@ -131,7 +131,7 @@ _ipmi_kcs_dump (ipmi_ctx_t ctx,
 static void
 _ipmi_kcs_dump_rq (ipmi_ctx_t ctx,
                    uint8_t *pkt,
-                   uint32_t pkt_len,
+                   unsigned int pkt_len,
                    uint8_t cmd,
                    uint8_t net_fn,
                    fiid_obj_t obj_cmd_rq)
@@ -156,7 +156,7 @@ _ipmi_kcs_dump_rq (ipmi_ctx_t ctx,
 static void
 _ipmi_kcs_dump_rs (ipmi_ctx_t ctx,
                    uint8_t *pkt,
-                   uint32_t pkt_len,
+                   unsigned int pkt_len,
                    uint8_t cmd,
                    uint8_t net_fn,
                    fiid_obj_t obj_cmd_rs)
@@ -181,7 +181,7 @@ _ipmi_kcs_dump_rs (ipmi_ctx_t ctx,
 static void
 _ipmi_kcs_dump_raw_rq (ipmi_ctx_t ctx,
                        uint8_t *pkt,
-                       uint32_t pkt_len,
+                       unsigned int pkt_len,
                        uint8_t cmd,
                        uint8_t net_fn)
 {
@@ -199,7 +199,7 @@ _ipmi_kcs_dump_raw_rq (ipmi_ctx_t ctx,
 static void
 _ipmi_kcs_dump_raw_rs (ipmi_ctx_t ctx,
                        uint8_t *pkt,
-                       uint32_t pkt_len,
+                       unsigned int pkt_len,
                        uint8_t cmd,
                        uint8_t net_fn)
 {
@@ -255,7 +255,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
   {
     uint8_t *pkt;
-    uint32_t pkt_len;
+    unsigned int pkt_len;
     int32_t hdr_len, cmd_len, send_len;
 
     if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
@@ -309,7 +309,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
 
   {
     uint8_t *pkt;
-    uint32_t pkt_len;
+    unsigned int pkt_len;
     int32_t hdr_len, cmd_len;
     int read_len;
     fiid_field_t *tmpl = NULL;
@@ -673,7 +673,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
                       size_t buf_rs_len)
 {
   uint8_t *pkt = NULL;
-  uint32_t pkt_len;
+  unsigned int pkt_len;
   uint8_t *readbuf = NULL;
   int bytes_read = 0;
   int32_t hdr_len;

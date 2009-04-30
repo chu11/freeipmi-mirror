@@ -216,7 +216,7 @@ _calculate_timeout (ipmi_ctx_t ctx,
 static void
 _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
                    uint8_t *pkt,
-                   uint32_t pkt_len,
+                   unsigned int pkt_len,
                    uint8_t cmd,
                    uint8_t net_fn,
                    fiid_obj_t obj_cmd_rq)
@@ -271,7 +271,7 @@ _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
 static void
 _ipmi_lan_dump_rs (ipmi_ctx_t ctx,
                    uint8_t *pkt,
-                   uint32_t pkt_len,
+                   unsigned int pkt_len,
                    uint8_t cmd,
                    uint8_t net_fn,
                    fiid_obj_t obj_cmd_rs)
@@ -469,7 +469,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                     fiid_obj_t obj_cmd_rq)
 {
   uint8_t *pkt;
-  int32_t pkt_len = 1024;
+  unsigned int pkt_len = 1024;
   int32_t send_len = 0;
 
   assert (ctx
@@ -572,7 +572,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
 static int32_t
 _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                     uint8_t *pkt,
-                    uint32_t pkt_len,
+                    unsigned int pkt_len,
                     unsigned int retransmission_count,
                     uint8_t cmd, /* for debug dumping */
                     uint8_t net_fn, /* for debug dumping */
@@ -1772,7 +1772,7 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
                        uint8_t *confidentiality_key,
                        uint32_t confidentiality_key_len,
                        uint8_t *pkt,
-                       uint32_t pkt_len,
+                       unsigned int pkt_len,
                        uint8_t cmd,
                        uint8_t net_fn,
                        fiid_obj_t obj_cmd_rq)
@@ -1863,7 +1863,7 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
                        uint8_t *confidentiality_key,
                        uint32_t confidentiality_key_len,
                        uint8_t *pkt,
-                       uint32_t pkt_len,
+                       unsigned int pkt_len,
                        uint8_t cmd,
                        uint8_t net_fn,
                        fiid_obj_t obj_cmd_rs)
@@ -1948,7 +1948,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                         fiid_obj_t obj_cmd_rq)
 {
   uint8_t *pkt;
-  int32_t pkt_len = 1024;
+  unsigned int pkt_len = 1024;
   int32_t send_len = 0;
 
   assert (ctx
@@ -2099,7 +2099,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                         uint8_t *confidentiality_key,
                         uint32_t confidentiality_key_len,
                         uint8_t *pkt,
-                        uint32_t pkt_len,
+                        unsigned int pkt_len,
                         unsigned int retransmission_count,
                         uint8_t cmd, /* for debug dumping */
                         uint8_t net_fn, /* for debug dumping */
