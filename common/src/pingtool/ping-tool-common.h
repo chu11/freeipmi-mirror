@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.h,v 1.4 2009-03-03 23:56:43 chu11 Exp $
+ *  $Id: ping-tool-common.h,v 1.5 2009-04-30 17:54:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -36,7 +36,7 @@
  */
 typedef int (*Ipmi_Ping_CreatePacket)(char *destination,
                                       char *buffer,
-                                      int buflen,
+                                      unsigned int buflen,
                                       unsigned int sequence_number,
                                       int version,
                                       int debug);
@@ -49,7 +49,7 @@ typedef int (*Ipmi_Ping_CreatePacket)(char *destination,
  */
 typedef int (*Ipmi_Ping_ParsePacket)(char *destination,
                                      char *buffer,
-                                     int buflen,
+                                     unsigned int buflen,
                                      const char *from,
                                      unsigned int sequence_number,
                                      int verbose,

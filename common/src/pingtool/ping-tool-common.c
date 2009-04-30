@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.11 2009-03-12 17:57:48 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.12 2009-04-30 17:54:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -425,8 +425,12 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
             continue;
         }
 
-      if ((len = _create (_dest, (char *)buffer, IPMI_PING_MAX_PKT_LEN,
-                          sequence_number, _version, _debug)) < 0)
+      if ((len = _create (_dest,
+                          (char *)buffer,
+                          IPMI_PING_MAX_PKT_LEN,
+                          sequence_number,
+                          _version,
+                          _debug)) < 0)
         ipmi_ping_err_exit ("_create failed: %s", strerror (errno));
 
       rv = ipmi_lan_sendto (_sockfd, buffer, len, 0,
@@ -461,13 +465,23 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
               socklen_t fromlen;
 
               fromlen = sizeof (from);
-              len = ipmi_lan_recvfrom (_sockfd, buffer, IPMI_PING_MAX_PKT_LEN, 0,
-                                       (struct sockaddr *)&from, &fromlen);
+              len = ipmi_lan_recvfrom (_sockfd,
+                                       buffer,
+                                       IPMI_PING_MAX_PKT_LEN,
+                                       0,
+                                       (struct sockaddr *)&from,
+                                       &fromlen);
               if (len < 0)
                 ipmi_ping_err_exit ("ipmi_recvfrom: %s", strerror (errno));
 
-              if ((rv = _parse (_dest, (char *)buffer, len, inet_ntoa (from.sin_addr),
-                                sequence_number, _verbose, _version, _debug)) < 0)
+              if ((rv = _parse (_dest,
+                                (char *)buffer,
+                                len,
+                                inet_ntoa (from.sin_addr),
+                                sequence_number,
+                                _verbose,
+                                _version,
+                                _debug)) < 0)
                 ipmi_ping_err_exit ("_parse failed: %s", strerror (errno));
 
               /* If rv == 0, the sequence numbers don't match, so

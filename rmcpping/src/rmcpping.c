@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.46 2009-04-30 17:48:22 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.47 2009-04-30 17:54:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -50,7 +50,7 @@
 int
 createpacket (char *destination,
               char *buffer,
-              int buflen,
+              unsigned int buflen,
               unsigned int sequence_number,
               int version,
               int debug)
@@ -62,10 +62,7 @@ createpacket (char *destination,
   assert (destination);
   assert (buffer);
 
-  if (buflen < 0)
-    return (-1);
-
-  if (buflen == 0)
+  if (!buflen)
     return (0);
 
   if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
@@ -85,8 +82,10 @@ createpacket (char *destination,
                                   obj_rmcp_cmd) < 0)
     ipmi_ping_err_exit ("fill_cmd_asf_presence_ping: %s", strerror (errno));
 
-  if ((len = assemble_rmcp_pkt (obj_rmcp_hdr, obj_rmcp_cmd,
-                                (uint8_t *)buffer, buflen)) < 0)
+  if ((len = assemble_rmcp_pkt (obj_rmcp_hdr,
+                                obj_rmcp_cmd,
+                                (uint8_t *)buffer,
+                                buflen)) < 0)
     ipmi_ping_err_exit ("assemble_rmcp_pkt: %s", strerror (errno));
 
   if (debug)
@@ -117,7 +116,7 @@ createpacket (char *destination,
 int
 parsepacket (char * destination,
              char *buffer,
-             int buflen,
+             unsigned int buflen,
              const char *from,
              unsigned int sequence_number,
              int verbose,
@@ -133,7 +132,7 @@ parsepacket (char * destination,
   assert (buffer);
   assert (from);
 
-  if (buflen == 0)
+  if (!buflen)
     return (0);
 
   if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
