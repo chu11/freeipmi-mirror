@@ -176,9 +176,9 @@ int ipmi_cmd_raw (ipmi_ctx_t ctx,
                   uint8_t lun,
                   uint8_t net_fn,
                   uint8_t *in,
-                  size_t in_len,
+                  unsigned int in_len,
                   uint8_t *out,
-                  size_t out_len);
+                  unsigned int out_len);
 
 int ipmi_ctx_close (ipmi_ctx_t ctx);
 

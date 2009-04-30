@@ -130,17 +130,17 @@ ipmi_openipmi_cmd_api_ipmb (ipmi_ctx_t ctx,
   return (0);
 }
 
-int32_t
+int
 ipmi_openipmi_cmd_raw_api (ipmi_ctx_t ctx,
                            uint8_t *buf_rq,
-                           size_t buf_rq_len,
+                           unsigned int buf_rq_len,
                            uint8_t *buf_rs,
-                           size_t buf_rs_len)
+                           unsigned int buf_rs_len)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
   int32_t len;
-  int32_t rv = -1;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

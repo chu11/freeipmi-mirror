@@ -22,8 +22,16 @@ fiid.c internal
 buffer overflow corner case unsigned > signed
 ipmi_kcs_write/read
 ipmi_ssif_write/read
+api/raw_api funcs
+debug funcs
+assemble funcs
+hash/crypto funcs
+fiid funcs
 
 _ipmi_lan_2_0_cmd_send/_ipmi_lan_cmd_send - don't assume buffer length
+
+ipmi-raw - ipmi_raw_stream
+use of _SC_ARG_MAX correct? no likely, need to fix
 
 freeipmi tools
 --------------

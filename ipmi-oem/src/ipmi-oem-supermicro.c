@@ -42,7 +42,7 @@ ipmi_oem_supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  int32_t rs_len;
+  int rs_len;
   int rv = -1;
 
   assert (state_data);

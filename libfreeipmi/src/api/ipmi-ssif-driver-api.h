@@ -34,8 +34,8 @@ int ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 
 int ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
                            uint8_t *buf_rq,
-                           size_t buf_rq_len,
+                           unsigned int buf_rq_len,
                            uint8_t *buf_rs,
-                           size_t buf_rs_len);
+                           unsigned int buf_rs_len);
 
 #endif /* IPMI_SSIF_DRIVER_API_H */
