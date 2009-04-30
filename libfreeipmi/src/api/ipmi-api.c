@@ -1004,7 +1004,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
           fiid_obj_t obj_cmd_rq,
           fiid_obj_t obj_cmd_rs)
 {
-  int status = 0;
+  int rv = 0;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1083,17 +1083,17 @@ ipmi_cmd (ipmi_ctx_t ctx,
     }
 
   if (ctx->type == IPMI_DEVICE_LAN)
-    status = ipmi_lan_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+    rv = ipmi_lan_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)
-    status = ipmi_lan_2_0_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+    rv = ipmi_lan_2_0_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
   else if (ctx->type == IPMI_DEVICE_KCS)
-    status = ipmi_kcs_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
+    rv = ipmi_kcs_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
   else if (ctx->type == IPMI_DEVICE_SSIF)
-    status = ipmi_ssif_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
+    rv = ipmi_ssif_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
   else if (ctx->type == IPMI_DEVICE_OPENIPMI)
-    status = ipmi_openipmi_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
+    rv = ipmi_openipmi_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
   else /* ctx->type == IPMI_DEVICE_SUNBMC */
-    status = ipmi_sunbmc_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
+    rv = ipmi_sunbmc_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
@@ -1141,7 +1141,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
     }
 
   /* errnum set in ipmi_*_cmd functions */
-  return (status);
+  return (rv);
 }
 
 int
@@ -1152,7 +1152,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                fiid_obj_t obj_cmd_rq,
                fiid_obj_t obj_cmd_rs)
 {
-  int status = 0;
+  int rv = 0;
 
   /* achu:
    *
@@ -1194,21 +1194,21 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
   ctx->net_fn = net_fn;
 
   if (ctx->type == IPMI_DEVICE_LAN)
-    status = ipmi_lan_cmd_wrapper_ipmb (ctx,
-                                        obj_cmd_rq,
-                                        obj_cmd_rs);
-  else if (ctx->type == IPMI_DEVICE_LAN_2_0)
-    status = ipmi_lan_2_0_cmd_wrapper_ipmb (ctx,
-                                            obj_cmd_rq,
-                                            obj_cmd_rs);
-  else if (ctx->type == IPMI_DEVICE_KCS)
-    status = ipmi_kcs_cmd_api_ipmb (ctx,
+    rv = ipmi_lan_cmd_wrapper_ipmb (ctx,
                                     obj_cmd_rq,
                                     obj_cmd_rs);
+  else if (ctx->type == IPMI_DEVICE_LAN_2_0)
+    rv = ipmi_lan_2_0_cmd_wrapper_ipmb (ctx,
+                                        obj_cmd_rq,
+                                        obj_cmd_rs);
+  else if (ctx->type == IPMI_DEVICE_KCS)
+    rv = ipmi_kcs_cmd_api_ipmb (ctx,
+                                obj_cmd_rq,
+                                obj_cmd_rs);
   else if (ctx->type == IPMI_DEVICE_OPENIPMI)
-    status = ipmi_openipmi_cmd_api_ipmb (ctx,
-                                         obj_cmd_rq,
-                                         obj_cmd_rs);
+    rv = ipmi_openipmi_cmd_api_ipmb (ctx,
+                                     obj_cmd_rq,
+                                     obj_cmd_rs);
   else
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
@@ -1216,7 +1216,7 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
     }
 
   /* errnum set in ipmi_*_cmd functions */
-  return (status);
+  return (rv);
 }
 
 int
@@ -1228,7 +1228,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
               uint8_t *out,
               unsigned int out_len)
 {
-  int status = 0;
+  int rv = 0;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1266,20 +1266,20 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
   ctx->net_fn = net_fn;
 
   if (ctx->type == IPMI_DEVICE_LAN)
-    status = ipmi_lan_cmd_raw (ctx, in, in_len, out, out_len);
+    rv = ipmi_lan_cmd_raw (ctx, in, in_len, out, out_len);
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)
-    status = ipmi_lan_2_0_cmd_raw (ctx, in, in_len, out, out_len);
+    rv = ipmi_lan_2_0_cmd_raw (ctx, in, in_len, out, out_len);
   else if (ctx->type == IPMI_DEVICE_KCS)
-    status = ipmi_kcs_cmd_raw_api (ctx, in, in_len, out, out_len);
+    rv = ipmi_kcs_cmd_raw_api (ctx, in, in_len, out, out_len);
   else if (ctx->type == IPMI_DEVICE_SSIF)
-    status = ipmi_ssif_cmd_raw_api (ctx, in, in_len, out, out_len);
+    rv = ipmi_ssif_cmd_raw_api (ctx, in, in_len, out, out_len);
   else if (ctx->type == IPMI_DEVICE_OPENIPMI)
-    status = ipmi_openipmi_cmd_raw_api (ctx, in, in_len, out, out_len);
+    rv = ipmi_openipmi_cmd_raw_api (ctx, in, in_len, out, out_len);
   else /* ctx->type == IPMI_DEVICE_SUNBMC */
-    status = ipmi_sunbmc_cmd_raw_api (ctx, in, in_len, out, out_len);
+    rv = ipmi_sunbmc_cmd_raw_api (ctx, in, in_len, out, out_len);
 
   /* errnum set in ipmi_*_cmd_raw functions */
-  return (status);
+  return (rv);
 }
 
 static void
