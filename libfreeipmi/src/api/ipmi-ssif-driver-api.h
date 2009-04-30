@@ -32,10 +32,10 @@ int ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
                        fiid_obj_t obj_cmd_rq,
                        fiid_obj_t obj_cmd_rs);
 
-int32_t ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
-                               uint8_t *buf_rq,
-                               size_t buf_rq_len,
-                               uint8_t *buf_rs,
-                               size_t buf_rs_len);
+int ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
+                           uint8_t *buf_rq,
+                           size_t buf_rq_len,
+                           uint8_t *buf_rs,
+                           size_t buf_rs_len);
 
 #endif /* IPMI_SSIF_DRIVER_API_H */
