@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.37 2009-04-29 00:26:12 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.38 2009-04-30 17:00:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -402,7 +402,7 @@ _packet_dump_unknown_hdr (ipmiconsole_ctx_t c,
     "%s\n"
     "================================================";
   char *str;
-  int rv;
+  int ret;
   int len;
 
   assert (c);
@@ -412,39 +412,41 @@ _packet_dump_unknown_hdr (ipmiconsole_ctx_t c,
   assert (hdr);
   assert (hdrlen);
 
-  if ((rv = ipmi_is_ipmi_1_5_packet (buf, buflen)) < 0)
+  if ((ret = ipmi_is_ipmi_1_5_packet (buf, buflen)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_is_ipmi_1_5_packet: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
-  if (rv)
+  if (ret)
     str = "= Unexpected IPMI 1.5 Packet                   =";
   else
     {
-      if ((rv = ipmi_rmcpplus_calculate_payload_type (buf, buflen)) < 0)
+      uint8_t payload_type;
+
+      if (ipmi_rmcpplus_calculate_payload_type (buf, buflen, &payload_type) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("ipmi_rmcpplus_calculate_payload_type: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           return (-1);
         }
 
-      if (rv == IPMI_PAYLOAD_TYPE_SOL)
+      if (payload_type == IPMI_PAYLOAD_TYPE_SOL)
         str = "= Unexpected SOL Packet                        =";
-      else if (rv == IPMI_PAYLOAD_TYPE_IPMI)
+      else if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
         str = "= Unexpected IPMI 2.0 Packet                   =";
-      else if (rv == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
+      else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
         str = "= Unexpected Open Session Request              =";
-      else if (rv == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
+      else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
         str = "= Unexpected Open Session Response             =";
-      else if (rv == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
+      else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
         str = "= Unexpected RAKP Message 1                    =";
-      else if (rv == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)
+      else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)
         str = "= Unexpected RAKP Message 2                    =";
-      else if (rv == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
+      else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
         str = "= Unexpected RAKP Message 3                    =";
-      else if (rv == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+      else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
         str = "= Unexpected RAKP Message 4                    =";
       else
         str = "= Unexpected Packet                            =";
@@ -474,7 +476,7 @@ ipmiconsole_packet_dump_unknown (ipmiconsole_ctx_t c,
 {
   char hdr[IPMICONSOLE_MAX_PACKET_DUMP_HDR_LEN];
   int fd;
-  int rv;
+  int ret;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -493,14 +495,14 @@ ipmiconsole_packet_dump_unknown (ipmiconsole_ctx_t c,
   if (_packet_dump_unknown_hdr (c, buf, buflen, hdr, IPMICONSOLE_MAX_PACKET_DUMP_HDR_LEN) < 0)
     return (-1);
 
-  if ((rv = ipmi_is_ipmi_1_5_packet (buf, buflen)) < 0)
+  if ((ret = ipmi_is_ipmi_1_5_packet (buf, buflen)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_is_ipmi_1_5_packet: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
-  if (rv)
+  if (ret)
     {
       if (ipmi_dump_lan_packet (fd,
                                 c->config.hostname,
@@ -1335,7 +1337,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
 {
   ipmiconsole_packet_type_t pkt;
   fiid_obj_t obj_cmd = NULL;
-  int rv;
+  int ret;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -1360,14 +1362,14 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
 
   /* Calculate packet type */
 
-  if ((rv = ipmi_is_ipmi_1_5_packet (buf, buflen)) < 0)
+  if ((ret = ipmi_is_ipmi_1_5_packet (buf, buflen)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_is_ipmi_1_5_packet: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
-  if (rv)
+  if (ret)
     {
       if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT)
         pkt = IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS;
@@ -1398,16 +1400,18 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
     }
   else
     {
-      if ((rv = ipmi_rmcpplus_calculate_payload_type (buf, buflen)) < 0)
+      uint8_t payload_type;
+
+      if (ipmi_rmcpplus_calculate_payload_type (buf, buflen, &payload_type) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("ipmi_rmcpplus_calculate_payload_type: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           return (-1);
         }
 
-      if (rv == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
-          || rv == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
-          || rv == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+      if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
+          || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
+          || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
         {
           if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT)
             pkt = IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE;
@@ -1448,10 +1452,10 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
             }
           *p = pkt;
         }
-      else if (rv == IPMI_PAYLOAD_TYPE_IPMI
-               || rv == IPMI_PAYLOAD_TYPE_SOL)
+      else if (payload_type == IPMI_PAYLOAD_TYPE_IPMI
+               || payload_type == IPMI_PAYLOAD_TYPE_SOL)
         {
-          if (rv == IPMI_PAYLOAD_TYPE_IPMI)
+          if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
             {
               if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT)
                 pkt = IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS;
@@ -1514,7 +1518,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
         }
       else
         {
-          IPMICONSOLE_CTX_DEBUG (c, ("Unexpected payload_type: payload_type = %d", rv));
+          IPMICONSOLE_CTX_DEBUG (c, ("Unexpected payload_type: payload_type = %u", payload_type));
           return (-1);
         }
     }

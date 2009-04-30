@@ -4,6 +4,11 @@
 	"uint32_t" an "unsigned int" when buffers are passed to API
 	functions.
 
+	* libfreeipmi/: Rework ipmi_rmcpplus_calculate_payload_type() with
+	in/out parameter.
+
+	* ipmiconsole/src/libipmiconsole/: Update for API change.
+
 2009-04-29  Albert Chu <chu11@llnl.gov>
 
 	* Cleanup APIs.  Return 'int' instead of 'int8_t' when size of

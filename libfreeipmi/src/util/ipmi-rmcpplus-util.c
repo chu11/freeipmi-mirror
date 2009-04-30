@@ -1470,13 +1470,14 @@ ipmi_rmcpplus_check_session_id (fiid_obj_t obj_rmcpplus_session_hdr,
 }
 
 int
-ipmi_rmcpplus_calculate_payload_type (uint8_t *pkt, uint32_t pkt_len)
+ipmi_rmcpplus_calculate_payload_type (uint8_t *pkt, uint32_t pkt_len, uint8_t *payload_type)
 {
   int32_t rmcp_hdr_len;
-  uint8_t auth_type, payload_type;
+  uint8_t auth_type;
 
   if (!pkt
-      || !pkt_len)
+      || !pkt_len
+      || !payload_type)
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -1502,14 +1503,14 @@ ipmi_rmcpplus_calculate_payload_type (uint8_t *pkt, uint32_t pkt_len)
       return (-1);
     }
 
-  payload_type = *(pkt + rmcp_hdr_len + 1);
-  payload_type &= 0x3F;
+  (*payload_type) = *(pkt + rmcp_hdr_len + 1);
+  (*payload_type) &= 0x3F;
 
-  if (!IPMI_PAYLOAD_TYPE_VALID (payload_type))
+  if (!IPMI_PAYLOAD_TYPE_VALID ((*payload_type)))
     {
       SET_ERRNO (EINVAL);
       return (-1);
     }
 
-  return ((int)payload_type);
+  return (0);
 }
