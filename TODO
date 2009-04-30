@@ -1,9 +1,6 @@
 cleanup
 -------
 rmcpplus_calculate_payload_type - should in/out param
-ipmi_crypt_cipher_key_len
-ipmi_crypt_cipher_block_len
-ipmi_crypt_hash_digest_len
 ipmiconsole_packet.c - int rv -> int ret
 bmc-config, config-tool, chassis-config, pef-config - check_completion_code should == 1 check
 lan-session-common
@@ -19,9 +16,6 @@ document which funcs return lens
 - raw funcs
 fiid.c internal
 - more in/out params?
-buffer overflow corner case unsigned > signed
-ipmi_kcs_write/read
-ipmi_ssif_write/read
 
 freeipmi tools
 --------------

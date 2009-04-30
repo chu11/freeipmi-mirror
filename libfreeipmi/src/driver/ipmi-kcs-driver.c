@@ -679,13 +679,13 @@ _ipmi_kcs_clear_obf (ipmi_kcs_ctx_t ctx)
     _ipmi_kcs_read_byte (ctx);
 }
 
-int
+int32_t
 ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
                 uint8_t *buf,
                 unsigned int buf_len)
 {
   uint8_t *p = buf;
-  int count = 0;
+  int32_t count = 0;
   int lock_flag = 0;
 
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
@@ -810,14 +810,14 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
 /*
  * Main read loop.
  */
-int
+int32_t
 ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
                uint8_t* buf,
                unsigned int buf_len)
 {
   uint8_t *p = buf;
-  int count = 0;
-  int rv = -1;
+  int32_t count = 0;
+  int32_t rv = -1;
 
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
     {
@@ -905,7 +905,7 @@ _ipmi_kcs_cmd_write (ipmi_kcs_ctx_t ctx,
                      fiid_obj_t obj_cmd_rq)
 {
   uint8_t *pkt = NULL;
-  unsigned int pkt_len;
+  uint32_t pkt_len;
   int32_t hdr_len, cmd_len;
   fiid_obj_t obj_hdr = NULL;
   int rv = -1;
@@ -978,9 +978,9 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
                     fiid_obj_t obj_cmd_rs)
 {
   uint8_t *pkt = NULL;
-  unsigned int pkt_len;
+  uint32_t pkt_len;
   int32_t hdr_len, cmd_len;
-  int read_len;
+  int32_t read_len;
   fiid_obj_t obj_hdr = NULL;
   fiid_field_t *tmpl = NULL;
   int rv = -1;

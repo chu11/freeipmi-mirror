@@ -311,7 +311,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
     uint8_t *pkt;
     uint32_t pkt_len;
     int32_t hdr_len, cmd_len;
-    int read_len;
+    int32_t read_len;
     fiid_field_t *tmpl = NULL;
     int rv = -1;
 
@@ -675,7 +675,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   uint8_t *pkt = NULL;
   uint32_t pkt_len;
   uint8_t *readbuf = NULL;
-  int bytes_read = 0;
+  int32_t bytes_read = 0;
   int32_t hdr_len;
   int32_t rv = -1;
   uint64_t cmd = 0;             /* used for debugging */
