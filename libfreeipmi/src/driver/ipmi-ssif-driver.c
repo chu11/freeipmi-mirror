@@ -278,7 +278,7 @@ _ipmi_i2c_smbus_access (ipmi_ssif_ctx_t ctx,
   return (rv);
 }
 
-static ssize_t
+static int
 _ipmi_ssif_single_part_write (ipmi_ssif_ctx_t ctx,
                               int dev_fd,
                               uint8_t *buf,
@@ -302,7 +302,7 @@ _ipmi_ssif_single_part_write (ipmi_ssif_ctx_t ctx,
                                   &data));
 }
 
-static ssize_t
+static int
 _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
                              int dev_fd,
                              uint8_t *buf,
@@ -372,7 +372,7 @@ _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
                                   &data));
 }
 
-static ssize_t
+static int
 _ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
                  int dev_fd,
                  uint8_t *buf,
@@ -697,12 +697,12 @@ ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx)
   return (-1);
 }
 
-int32_t
+int
 ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
                  uint8_t *buf,
                  unsigned int buf_len)
 {
-  int32_t count;
+  int count;
   int lock_flag = 0;
 
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
@@ -767,13 +767,13 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
   return (-1);
 }
 
-int32_t
+int
 ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
                 uint8_t* buf,
                 unsigned int buf_len)
 {
-  int32_t count = 0;
-  int32_t rv = -1;
+  int count = 0;
+  int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
     {
@@ -817,7 +817,7 @@ _ipmi_ssif_cmd_write (ipmi_ssif_ctx_t ctx,
                       fiid_obj_t obj_cmd_rq)
 {
   uint8_t *pkt = NULL;
-  uint32_t pkt_len;
+  unsigned int pkt_len;
   int32_t hdr_len, cmd_len;
   fiid_obj_t obj_hdr = NULL;
   int rv = -1;
@@ -890,7 +890,7 @@ _ipmi_ssif_cmd_read (ipmi_ssif_ctx_t ctx,
                      fiid_obj_t obj_cmd_rs)
 {
   uint8_t *pkt = NULL;
-  uint32_t pkt_len;
+  unsigned int pkt_len;
   int32_t hdr_len, cmd_len;
   int32_t read_len;
   fiid_obj_t obj_hdr = NULL;
