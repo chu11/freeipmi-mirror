@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.17 2009-03-12 17:57:48 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.18 2009-05-01 23:52:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -355,7 +355,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case LOG_KEY:
       cmd_args->log++;
-      tmp = (uint8_t)strtol (arg, &ptr, 10);
+      tmp = strtol (arg, &ptr, 10);
       if ((ptr != (arg + strlen (arg)))
           || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID (tmp))
         {

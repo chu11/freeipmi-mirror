@@ -971,6 +971,8 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   fiid_obj_t mca_obj_cmd_rs = NULL;
+  uint8_t log_type;
+  uint32_t mca_log_entry_count;
   uint64_t val;
   char str[512];
   int rv = -1;
@@ -1009,13 +1011,14 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-
-  if (val != IPMI_AUXILIARY_LOG_TYPE_MCA)
+  log_type = val;
+  
+  if (log_type != IPMI_AUXILIARY_LOG_TYPE_MCA)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_auxiliary_log_status: invalid log type returned: 0x%X\n",
-                       (uint8_t)val);
+                       log_type);
       goto cleanup;
     }
 
@@ -1056,10 +1059,11 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-
+  mca_log_entry_count = val;
+  
   pstdout_printf (state_data->pstate,
                   "Number of entries in MCA log: %u\n",
-                  (uint32_t)val);
+                  mca_log_entry_count);
 
   rv = 0;
  cleanup:

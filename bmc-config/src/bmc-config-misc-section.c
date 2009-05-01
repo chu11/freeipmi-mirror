@@ -41,6 +41,7 @@ power_restore_policy_checkout (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  uint8_t power_restore_policy;
   uint64_t val;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_status_rs)))
@@ -64,7 +65,9 @@ power_restore_policy_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_restore_policy", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "current_power_state.power_restore_policy",
+                    &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -72,10 +75,11 @@ power_restore_policy_checkout (const char *section_name,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  power_restore_policy = val;
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
-                                             power_restore_policy_string ((uint8_t)val)) < 0)
+                                             power_restore_policy_string (power_restore_policy)) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;

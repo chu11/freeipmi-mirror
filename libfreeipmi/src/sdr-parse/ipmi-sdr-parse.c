@@ -2483,7 +2483,7 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      *linearization = (uint8_t)val;
+      (*linearization) = val;
     }
 
   if (analog_data_format)
@@ -2495,7 +2495,7 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      *analog_data_format = (uint8_t) val;
+      (*analog_data_format) = val;
     }
 
   rv = 0;

@@ -567,7 +567,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
           goto cleanup;
         }
 
-      channel_info_list[ci].channel_number = (uint8_t) val;
+      channel_info_list[ci].channel_number = val;
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "channel_medium_type",
@@ -580,7 +580,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
           goto cleanup;
         }
 
-      channel_info_list[ci].medium_type = (uint8_t) val;
+      channel_info_list[ci].medium_type = val;
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "channel_protocol_type",
@@ -593,7 +593,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
           goto cleanup;
         }
 
-      channel_info_list[ci].protocol_type = (uint8_t) val;
+      channel_info_list[ci].protocol_type = val;
 
       ci++;
     }

@@ -344,7 +344,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
       return (-1);
     }
 
-  required_len = _ipmi_lan_pkt_rq_min_size ((uint8_t)authentication_type, obj_cmd);
+  required_len = _ipmi_lan_pkt_rq_min_size (authentication_type, obj_cmd);
   if (pkt_len < required_len)
     {
       SET_ERRNO (EMSGSIZE);

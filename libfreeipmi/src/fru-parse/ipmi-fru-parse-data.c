@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.6 2009-05-01 17:58:31 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.7 2009-05-01 23:52:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1297,7 +1297,7 @@ ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*sub_record_type) = (uint8_t)val;
+      (*sub_record_type) = val;
     }
 
   if (sub_record_data && sub_record_data_len && (*sub_record_data_len))

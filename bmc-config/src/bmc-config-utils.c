@@ -148,7 +148,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
     }
 
   state_data->sol_channel_number_initialized = 1;
-  state_data->sol_channel_number = (uint8_t)val;
+  state_data->sol_channel_number = val;
   *channel_num = state_data->sol_channel_number;
 
   rv = CONFIG_ERR_SUCCESS;
@@ -212,7 +212,7 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
     }
 
   state_data->number_of_users_initialized = 1;
-  state_data->number_of_users = (uint8_t)val;
+  state_data->number_of_users = val;
   *number_of_users = state_data->number_of_users;
 
   rv = CONFIG_ERR_SUCCESS;
