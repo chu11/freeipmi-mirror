@@ -77,7 +77,8 @@ ipmi_checksum (const uint8_t *buf, unsigned int buflen)
 int
 ipmi_check_cmd (fiid_obj_t obj_cmd, uint8_t cmd)
 {
-  uint64_t cmd_recv;
+  uint8_t cmd_recv;
+  uint64_t val;
 
   if (!fiid_obj_valid (obj_cmd))
     {
@@ -91,19 +92,21 @@ ipmi_check_cmd (fiid_obj_t obj_cmd, uint8_t cmd)
       return (-1);
     }
 
-  if (FIID_OBJ_GET (obj_cmd, "cmd", &cmd_recv) < 0)
+  if (FIID_OBJ_GET (obj_cmd, "cmd", &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
+  cmd_recv = val;
 
-  return ((((uint8_t)cmd_recv) == cmd) ? 1 : 0);
+  return ((cmd_recv == cmd) ? 1 : 0);
 }
 
 int
 ipmi_check_completion_code (fiid_obj_t obj_cmd, uint8_t completion_code)
 {
-  uint64_t completion_code_recv;
+  uint8_t completion_code_recv;
+  uint64_t val;
 
   if (!fiid_obj_valid (obj_cmd))
     {
@@ -117,13 +120,14 @@ ipmi_check_completion_code (fiid_obj_t obj_cmd, uint8_t completion_code)
       return (-1);
     }
 
-  if (FIID_OBJ_GET (obj_cmd, "comp_code", &completion_code_recv) < 0)
+  if (FIID_OBJ_GET (obj_cmd, "comp_code", &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
+  completion_code_recv = val;
 
-  return ((((uint8_t)completion_code_recv) == completion_code) ? 1 : 0);
+  return ((completion_code_recv == completion_code) ? 1 : 0);
 }
 
 int

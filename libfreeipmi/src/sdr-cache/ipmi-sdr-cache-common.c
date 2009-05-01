@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.c,v 1.16 2009-05-01 05:21:25 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-common.c,v 1.17 2009-05-01 23:09:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -163,7 +163,8 @@ ipmi_sdr_cache_record_type_str (ipmi_sdr_cache_ctx_t ctx,
                                 unsigned int sdr_record_len)
 {
   fiid_obj_t obj_sdr_record_header = NULL;
-  uint64_t record_type;
+  uint8_t record_type;
+  uint64_t val;
   int sdr_record_header_len;
   char *rv = NULL;
 
@@ -197,11 +198,12 @@ ipmi_sdr_cache_record_type_str (ipmi_sdr_cache_ctx_t ctx,
 
   if (FIID_OBJ_GET (obj_sdr_record_header,
                     "record_type",
-                    &record_type) < 0)
+                    &val) < 0)
     {
       SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM (ctx, obj_sdr_record_header);
       goto cleanup;
     }
+  record_type = val;
 
   if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
     rv = "SDR Full Sensor Record";

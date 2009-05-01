@@ -861,7 +861,8 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
   uint8_t pkt[IPMI_MAX_PKT_LEN];
   int32_t recv_len;
   struct socket_to_close *sockets = NULL;
-  uint64_t cmd = 0;             /* used for debugging */
+  uint8_t cmd = 0;             /* used for debugging */
+  uint64_t val;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -891,8 +892,10 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
       /* ignore error, continue on */
       if (FIID_OBJ_GET (obj_cmd_rq,
                         "cmd",
-                        &cmd) < 0)
+                        &val) < 0)
         API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+      else
+        cmd = val;
     }
 
   if (_ipmi_lan_cmd_send (ctx,
@@ -1161,8 +1164,9 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
   int32_t recv_len;
-  uint64_t cmd = 0;             /* used for debugging */
+  uint8_t cmd = 0;             /* used for debugging */
   uint8_t rq_seq_orig;
+  uint64_t val;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -1178,8 +1182,10 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       /* ignore error, continue on */
       if (FIID_OBJ_GET (obj_cmd_rq,
                         "cmd",
-                        &cmd) < 0)
+                        &val) < 0)
         API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+      else
+        cmd = val;
     }
 
   /* for debugging */
@@ -2590,7 +2596,8 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
   int32_t recv_len;
-  uint64_t cmd = 0;             /* used for debugging */
+  uint8_t cmd = 0;             /* used for debugging */
+  uint64_t val;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -2627,8 +2634,10 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
       /* ignore error, continue on */
       if (FIID_OBJ_GET (obj_cmd_rq,
                         "cmd",
-                        &cmd) < 0)
+                        &val) < 0)
         API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+      else
+        cmd = val;
     }
 
   if (_ipmi_lan_2_0_cmd_send (ctx,
@@ -2794,8 +2803,9 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
   int32_t recv_len;
-  uint64_t cmd = 0;             /* used for debugging */
+  uint8_t cmd = 0;             /* used for debugging */
   uint8_t rq_seq_orig;
+  uint64_t val;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -2810,8 +2820,10 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       /* ignore error, continue on */
       if (FIID_OBJ_GET (obj_cmd_rq,
                         "cmd",
-                        &cmd) < 0)
+                        &val) < 0)
         API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+      else
+        cmd = val;
     }
 
   /* for debugging */

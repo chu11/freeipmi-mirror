@@ -45,7 +45,8 @@
 int
 ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq)
 {
-  uint64_t rq_seq_recv;
+  uint8_t rq_seq_recv;
+  uint64_t val;
 
   if (!fiid_obj_valid (obj_ipmb_msg_hdr))
     {
@@ -59,13 +60,14 @@ ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq)
       return (-1);
     }
 
-  if (FIID_OBJ_GET (obj_ipmb_msg_hdr, "rq_seq", &rq_seq_recv) < 0)
+  if (FIID_OBJ_GET (obj_ipmb_msg_hdr, "rq_seq", &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_hdr);
       return (-1);
     }
+  rq_seq_recv = val;
 
-  return ((((uint8_t)rq_seq_recv) == rq_seq) ? 1 : 0);
+  return ((rq_seq_recv == rq_seq) ? 1 : 0);
 }
 
 int

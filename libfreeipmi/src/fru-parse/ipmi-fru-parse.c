@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.5 2009-05-01 17:58:32 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.6 2009-05-01 23:09:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -327,7 +327,8 @@ _read_fru_data (ipmi_fru_parse_ctx_t ctx,
     {
       uint8_t buf[IPMI_FRU_PARSE_BUF_LEN+1];
       uint8_t count_to_read;
-      uint64_t count_returned;
+      uint8_t count_returned;
+      uint64_t val;
 
       memset (buf, '\0', IPMI_FRU_PARSE_BUF_LEN+1);
 
@@ -357,11 +358,12 @@ _read_fru_data (ipmi_fru_parse_ctx_t ctx,
 
       if (FIID_OBJ_GET (fru_read_data_rs,
                         "count_returned",
-                        &count_returned) < 0)
+                        &val) < 0)
         {
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_read_data_rs);
           goto cleanup;
         }
+      count_returned = val;
 
       if (!count_returned)
         {
@@ -399,7 +401,7 @@ _read_fru_data (ipmi_fru_parse_ctx_t ctx,
 static int
 _check_checksum (ipmi_fru_parse_ctx_t ctx,
                  uint8_t *frubuf,
-                 uint64_t length_in_bytes,
+                 unsigned int length_in_bytes,
                  uint8_t checksum_init)
 {
   assert (ctx);
@@ -876,7 +878,7 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
   char *areahdrstr;
   unsigned int info_area_type;
   unsigned int offset_in_bytes;
-  uint64_t format_version;
+  uint8_t format_version;
   uint64_t val;
   int rv = -1;
   int ret;
@@ -964,11 +966,12 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
 
   if (FIID_OBJ_GET (fru_info_area_header,
                     "format_version",
-                    &format_version) < 0)
+                    &val) < 0)
     {
       FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, fru_info_area_header);
       goto cleanup;
     }
+  format_version = val;
 
   if (format_version != expected_format_version)
     {

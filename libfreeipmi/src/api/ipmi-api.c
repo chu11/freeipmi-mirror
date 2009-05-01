@@ -1047,13 +1047,16 @@ ipmi_cmd (ipmi_ctx_t ctx,
           && ctx->type != IPMI_DEVICE_KCS)
         {
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
-          uint64_t cmd = 0;
+          uint8_t cmd = 0;
+          uint64_t val;
 
           /* ignore error, continue on */
           if (FIID_OBJ_GET (obj_cmd_rq,
                             "cmd",
-                            &cmd) < 0)
+                            &val) < 0)
             API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+          else
+            cmd = val;
 
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_REQUEST,
@@ -1104,13 +1107,16 @@ ipmi_cmd (ipmi_ctx_t ctx,
           && ctx->type != IPMI_DEVICE_KCS)
         {
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
-          uint64_t cmd = 0;
+          uint8_t cmd = 0;
+          uint64_t val;
 
           /* ignore error, continue on */
           if (FIID_OBJ_GET (obj_cmd_rq,
                             "cmd",
-                            &cmd) < 0)
+                            &val) < 0)
             API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+          else
+            cmd = val;
 
           /* its ok to use the "request" net_fn */
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,

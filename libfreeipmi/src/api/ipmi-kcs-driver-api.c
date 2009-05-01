@@ -219,7 +219,8 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
                   fiid_obj_t obj_cmd_rq,
                   fiid_obj_t obj_cmd_rs)
 {
-  uint64_t cmd = 0;             /* used for debugging */
+  uint8_t cmd = 0;             /* used for debugging */
+  uint64_t val;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -249,8 +250,10 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
       /* ignore error, continue on */
-      if (FIID_OBJ_GET (obj_cmd_rq, "cmd", &cmd) < 0)
+      if (FIID_OBJ_GET (obj_cmd_rq, "cmd", &val) < 0)
         API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+      else
+        cmd = val;
     }
 
   {
@@ -677,7 +680,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   int bytes_read = 0;
   int hdr_len;
   int rv = -1;
-  uint64_t cmd = 0;             /* used for debugging */
+  uint8_t cmd = 0;             /* used for debugging */
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

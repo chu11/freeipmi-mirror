@@ -317,8 +317,8 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
   uint64_t val;
   int rv = -1;
   fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t sensor_event_bitmask1 = 0;
-  uint64_t sensor_event_bitmask2 = 0;
+  uint8_t sensor_event_bitmask1 = 0;
+  uint8_t sensor_event_bitmask2 = 0;
   int sensor_event_bitmask1_flag = 0;
   int sensor_event_bitmask2_flag = 0;
   uint16_t record_id = 0;
@@ -479,19 +479,21 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
 
   if ((sensor_event_bitmask1_flag = fiid_obj_get (obj_cmd_rs,
                                                   "sensor_event_bitmask1",
-                                                  &sensor_event_bitmask1)) < 0)
+                                                  &val)) < 0)
     {
       SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
+  sensor_event_bitmask1 = val;
 
   if ((sensor_event_bitmask2_flag = fiid_obj_get (obj_cmd_rs,
                                                   "sensor_event_bitmask2",
-                                                  &sensor_event_bitmask2)) < 0)
+                                                  &val)) < 0)
     {
       SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
+  sensor_event_bitmask2 = val;
 
   /*
    * IPMI Workaround (achu)

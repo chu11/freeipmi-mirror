@@ -101,7 +101,8 @@ _ipmi_dump_lan_packet (int fd,
   fiid_obj_t obj_lan_msg_trlr = NULL;
   fiid_obj_t obj_unexpected_data = NULL;
   int len, rv = -1;
-  uint64_t authentication_type;
+  uint8_t authentication_type;
+  uint64_t val;
 
   assert (pkt);
   assert (tmpl_lan_msg_hdr);
@@ -191,11 +192,12 @@ _ipmi_dump_lan_packet (int fd,
 
   if (FIID_OBJ_GET (obj_session_hdr,
                     "authentication_type",
-                    &authentication_type) < 0)
+                    &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_session_hdr);
       goto cleanup;
     }
+  authentication_type = val;
 
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {

@@ -1700,7 +1700,8 @@ ipmi_get_channel_number (ipmi_ctx_t ctx,
                          uint8_t *channel_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t manufacturer_id, product_id;
+  uint32_t manufacturer_id;
+  uint16_t product_id;
   int rv = -1;
   uint64_t val;
   int i;
@@ -1731,19 +1732,21 @@ ipmi_get_channel_number (ipmi_ctx_t ctx,
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "manufacturer_id.id",
-                        &manufacturer_id) < 0)
+                        &val) < 0)
         {
           API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
+      manufacturer_id = val;
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "product_id",
-                        &product_id) < 0)
+                        &val) < 0)
         {
           API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
+      product_id = val;
 
       switch (manufacturer_id)
         {
@@ -1769,6 +1772,8 @@ ipmi_get_channel_number (ipmi_ctx_t ctx,
   /* Channel numbers range from 0 - 7 */
   for (i = 0; i < 8; i++)
     {
+      uint8_t channel_medium_type_read;
+
       if (ipmi_cmd_get_channel_info (ctx, i, obj_cmd_rs) != 0)
         continue;
 
@@ -1779,9 +1784,12 @@ ipmi_get_channel_number (ipmi_ctx_t ctx,
           API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
+      channel_medium_type_read = val;
 
-      if ((uint8_t) val == channel_medium_type)
+      if (channel_medium_type_read == channel_medium_type)
         {
+          uint8_t actual_channel_number;
+
           if (FIID_OBJ_GET (obj_cmd_rs,
                             "actual_channel_number",
                             &val) < 0)
@@ -1789,9 +1797,10 @@ ipmi_get_channel_number (ipmi_ctx_t ctx,
               API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
               goto cleanup;
             }
+          actual_channel_number = val;
 
           rv = 0;
-          (*channel_number) = (uint8_t)val;
+          (*channel_number) = actual_channel_number;
           break;
         }
     }
