@@ -566,7 +566,7 @@ _construct_payload_buf (uint8_t payload_type,
   int32_t obj_lan_msg_hdr_len = 0;
   int32_t obj_cmd_len = 0;
   int obj_lan_msg_trlr_len = 0;
-  int32_t checksum_start_offset;
+  int checksum_start_offset;
   unsigned int payload_len;
   uint8_t checksum;
   int32_t len, rv = -1;
@@ -988,7 +988,7 @@ _construct_session_trlr_pad (uint8_t integrity_algorithm,
                              uint32_t ipmi_msg_len,
                              fiid_obj_t obj_rmcpplus_session_trlr)
 {
-  int32_t pad_length_field_len, next_header_field_len;
+  int pad_length_field_len, next_header_field_len;
   unsigned int pad_length = 0;
   uint8_t pad_bytes[IPMI_INTEGRITY_PAD_MULTIPLE] = { IPMI_INTEGRITY_PAD_DATA,
                                                      IPMI_INTEGRITY_PAD_DATA,
@@ -2502,7 +2502,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
   if (session_id && payload_authenticated == IPMI_PAYLOAD_FLAG_AUTHENTICATED)
     {
-      int32_t pad_length_field_len, next_header_field_len;
+      int pad_length_field_len, next_header_field_len;
       unsigned int authentication_code_len;
       uint8_t pad_length;
 

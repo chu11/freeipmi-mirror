@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.4 2009-05-01 05:21:24 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.5 2009-05-01 16:29:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1241,7 +1241,7 @@ ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
                                                      unsigned int *sub_record_data_len)
 {
   fiid_obj_t obj_record = NULL;
-  int32_t min_tmpl_record_length;
+  int min_tmpl_record_length;
   uint64_t val;
   int rv = -1;
 
@@ -1334,7 +1334,7 @@ ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
                                                       unsigned int *code_range_mask_len)
 {
   fiid_obj_t obj_record = NULL;
-  int32_t min_tmpl_record_length;
+  int min_tmpl_record_length;
   uint64_t val;
   int rv = -1;
 
@@ -1463,7 +1463,7 @@ ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t c
                                                           unsigned int *code_range_mask_len)
 {
   fiid_obj_t obj_record = NULL;
-  int32_t min_tmpl_record_length;
+  int min_tmpl_record_length;
   uint64_t val;
   int rv = -1;
 
@@ -1589,7 +1589,7 @@ ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
                                        unsigned int *oem_data_len)
 {
   fiid_obj_t obj_record = NULL;
-  int32_t min_tmpl_record_length;
+  int min_tmpl_record_length;
   uint64_t val;
   int rv = -1;
 

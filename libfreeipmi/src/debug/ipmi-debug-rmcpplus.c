@@ -1050,7 +1050,8 @@ _dump_rmcpplus_session_trlr (int fd,
                              const uint8_t *pkt,
                              unsigned int pkt_len)
 {
-  int32_t pad_length_field_len, next_header_field_len, pad_length, authentication_code_len = 0;
+  int pad_length_field_len, next_header_field_len;
+  unsigned int pad_length, authentication_code_len = 0;
   fiid_obj_t obj_rmcpplus_session_trlr = NULL;
   unsigned int indx = 0;
   int rv = -1;
@@ -1084,6 +1085,7 @@ _dump_rmcpplus_session_trlr (int fd,
       ERRNO_TRACE (errno);
       goto cleanup;
     }
+
   if ((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr,
                                                               "next_header")) < 0)
     {

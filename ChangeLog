@@ -1,3 +1,7 @@
+2009-05-01  Albert Chu <chu11@llnl.gov>
+
+	* Continued lib cleanup.
+	
 2009-04-30  Albert Chu <chu11@llnl.gov>
 	
 	* Cleanup APIs.  Return 'int' instead of 'int32_t'.  Make

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.85 2009-04-30 19:56:42 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.86 2009-05-01 16:29:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -2023,7 +2023,7 @@ _check_sol_activated2 (ipmiconsole_ctx_t c)
 static int
 _check_payload_sizes_legitimate (ipmiconsole_ctx_t c)
 {
-  int32_t sol_hdr_len;
+  int sol_hdr_len;
   uint64_t val;
   uint16_t max_inbound_payload_size;
   uint16_t max_outbound_payload_size;

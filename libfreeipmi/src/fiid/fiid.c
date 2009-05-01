@@ -44,10 +44,10 @@
 
 struct fiid_field_data
 {
-  uint32_t max_field_len;
+  unsigned int max_field_len;
   char key[FIID_FIELD_MAX_KEY_LEN];
-  uint32_t set_field_len;
-  uint32_t flags;
+  unsigned int set_field_len;
+  unsigned int flags;
 };
 
 struct fiid_obj
@@ -255,7 +255,7 @@ fiid_template_len (fiid_template_t tmpl)
 int
 fiid_template_len_bytes (fiid_template_t tmpl)
 {
-  int32_t len;
+  int len;
 
   if (!tmpl)
     {
@@ -277,11 +277,11 @@ fiid_template_len_bytes (fiid_template_t tmpl)
   return (BITS_ROUND_BYTES (len));
 }
 
-static int32_t
+static int
 _fiid_template_field_start_end (fiid_template_t tmpl,
                                 const char *field,
-                                uint32_t *start,
-                                uint32_t *end)
+                                unsigned int *start,
+                                unsigned int *end)
 {
   int i = 0;
   int _start = 0;
@@ -309,12 +309,12 @@ _fiid_template_field_start_end (fiid_template_t tmpl,
   return (-1);
 }
 
-int32_t
+int
 fiid_template_field_start (fiid_template_t tmpl,
                            const char *field)
 {
-  uint32_t start = 0;
-  uint32_t end = 0;
+  unsigned int start = 0;
+  unsigned int end = 0;
 
   if (!tmpl || !field)
     {
@@ -339,11 +339,11 @@ fiid_template_field_start (fiid_template_t tmpl,
   return (start);
 }
 
-int32_t
+int
 fiid_template_field_start_bytes (fiid_template_t tmpl,
                                  const char *field)
 {
-  int32_t start = 0;
+  int start = 0;
 
   if (!tmpl || !field)
     {
@@ -373,12 +373,12 @@ fiid_template_field_start_bytes (fiid_template_t tmpl,
   return (BITS_ROUND_BYTES (start));
 }
 
-int32_t
+int
 fiid_template_field_end (fiid_template_t tmpl,
                          const char *field)
 {
-  uint32_t start = 0;
-  uint32_t end = 0;
+  unsigned int start = 0;
+  unsigned int end = 0;
 
   if (!tmpl || !field)
     {
@@ -403,11 +403,11 @@ fiid_template_field_end (fiid_template_t tmpl,
   return (end);
 }
 
-int32_t
+int
 fiid_template_field_end_bytes (fiid_template_t tmpl,
                                const char *field)
 {
-  int32_t end = 0;
+  int end = 0;
 
   if (!tmpl || !field)
     {
@@ -437,7 +437,7 @@ fiid_template_field_end_bytes (fiid_template_t tmpl,
   return (BITS_ROUND_BYTES (end));
 }
 
-int32_t
+int
 fiid_template_field_len (fiid_template_t tmpl,
                          const char *field)
 {
@@ -457,7 +457,7 @@ fiid_template_field_len (fiid_template_t tmpl,
       return (-1);
     }
 
-  for (i=0; tmpl[i].max_field_len != 0; i++)
+  for (i = 0; tmpl[i].max_field_len != 0; i++)
     {
       if (!strcmp (tmpl[i].key, field))
         return (tmpl[i].max_field_len);
@@ -468,11 +468,11 @@ fiid_template_field_len (fiid_template_t tmpl,
   return (-1);
 }
 
-int32_t
+int
 fiid_template_field_len_bytes (fiid_template_t tmpl,
                                const char *field)
 {
-  int32_t len;
+  int len;
 
   if (!tmpl || !field)
     {
@@ -502,13 +502,13 @@ fiid_template_field_len_bytes (fiid_template_t tmpl,
   return (BITS_ROUND_BYTES (len));
 }
 
-int32_t
+int
 fiid_template_block_len (fiid_template_t tmpl,
                          const char *field_start,
                          const char *field_end)
 {
-  int32_t start;
-  int32_t end;
+  int start;
+  int end;
 
   if (!tmpl || !field_start || !field_end)
     {
@@ -542,12 +542,12 @@ fiid_template_block_len (fiid_template_t tmpl,
   return (end - start);
 }
 
-int32_t
+int
 fiid_template_block_len_bytes (fiid_template_t tmpl,
                                const char *field_start,
                                const char *field_end)
 {
-  int32_t len;
+  int len;
 
   if (!tmpl || !field_start || !field_end)
     {
@@ -651,8 +651,8 @@ fiid_template_free (fiid_field_t *tmpl_dynamic)
 static int32_t
 _fiid_obj_field_start_end (fiid_obj_t obj,
                            const char *field,
-                           uint32_t *start,
-                           uint32_t *end)
+                           unsigned int *start,
+                           unsigned int *end)
 {
   int i = 0;
   int _start = 0;
@@ -683,8 +683,8 @@ _fiid_obj_field_start_end (fiid_obj_t obj,
 static int32_t
 _fiid_obj_field_start (fiid_obj_t obj, const char *field)
 {
-  uint32_t start = 0;
-  uint32_t end = 0; /* excluded always */
+  unsigned int start = 0;
+  unsigned int end = 0; /* excluded always */
 
   assert (obj);
   assert (obj->magic == FIID_OBJ_MAGIC);
@@ -698,8 +698,8 @@ _fiid_obj_field_start (fiid_obj_t obj, const char *field)
 static int32_t
 _fiid_obj_field_end (fiid_obj_t obj, const char *field)
 {
-  uint32_t start = 0;
-  uint32_t end = 0; /* excluded always */
+  unsigned int start = 0;
+  unsigned int end = 0; /* excluded always */
 
   assert (obj);
   assert (obj->magic == FIID_OBJ_MAGIC);
@@ -742,7 +742,7 @@ fiid_obj_t
 fiid_obj_create (fiid_template_t tmpl)
 {
   fiid_obj_t obj = NULL;
-  uint32_t max_pkt_len = 0;
+  unsigned int max_pkt_len = 0;
   int data_len;
 
   int i;
@@ -985,10 +985,10 @@ fiid_obj_packet_valid (fiid_obj_t obj)
 
   for (i = 0; i < obj->field_data_len; i++)
     {
-      uint32_t required_flag = FIID_FIELD_REQUIRED_FLAG (obj->field_data[i].flags);
-      uint32_t length_flag = FIID_FIELD_LENGTH_FLAG (obj->field_data[i].flags);
-      uint32_t max_field_len = obj->field_data[i].max_field_len;
-      uint32_t set_field_len = obj->field_data[i].set_field_len;
+      unsigned int required_flag = FIID_FIELD_REQUIRED_FLAG (obj->field_data[i].flags);
+      unsigned int length_flag = FIID_FIELD_LENGTH_FLAG (obj->field_data[i].flags);
+      unsigned int max_field_len = obj->field_data[i].max_field_len;
+      unsigned int set_field_len = obj->field_data[i].set_field_len;
 
       if (required_flag == FIID_FIELD_REQUIRED && !set_field_len)
         {
@@ -1467,8 +1467,8 @@ fiid_obj_clear_field (fiid_obj_t obj, const char *field)
 int
 fiid_obj_field_lookup (fiid_obj_t obj, const char *field)
 {
-  uint32_t start = 0;
-  uint32_t end = 0; /* excluded always */
+  unsigned int start = 0;
+  unsigned int end = 0; /* excluded always */
 
   if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
@@ -1513,8 +1513,8 @@ fiid_obj_set (fiid_obj_t obj,
               const char *field,
               uint64_t val)
 {
-  uint32_t start_bit_pos = 0;
-  uint32_t end_bit_pos = 0; /* excluded always */
+  unsigned int start_bit_pos = 0;
+  unsigned int end_bit_pos = 0; /* excluded always */
   int byte_pos = 0;
   int start_bit_in_byte_pos = 0;
   int end_bit_in_byte_pos = 0;
@@ -1665,8 +1665,8 @@ fiid_obj_get (fiid_obj_t obj,
               const char *field,
               uint64_t *val)
 {
-  uint32_t start_bit_pos = 0;
-  uint32_t end_bit_pos = 0; /* excluded always */
+  unsigned int start_bit_pos = 0;
+  unsigned int end_bit_pos = 0; /* excluded always */
   int byte_pos = 0;
   int start_bit_in_byte_pos = 0;
   int end_bit_in_byte_pos = 0;

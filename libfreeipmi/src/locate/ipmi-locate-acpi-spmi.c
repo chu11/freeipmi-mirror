@@ -1005,7 +1005,7 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
   uint32_t table_length = 0;
   int32_t acpi_table_hdr_length;
   uint8_t *table;
-  int32_t len;
+  int len;
   int rv = -1;
 
   assert (ctx);

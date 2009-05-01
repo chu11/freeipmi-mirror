@@ -134,9 +134,9 @@ typedef enum fiid_err fiid_err_t;
  */
 typedef struct fiid_field
 {
-  uint32_t max_field_len;
+  unsigned int max_field_len;
   char key[FIID_FIELD_MAX_KEY_LEN];
-  uint32_t flags;
+  unsigned int flags;
 } fiid_field_t;
 
 /*
@@ -201,8 +201,8 @@ int fiid_template_len_bytes (fiid_template_t tmpl);
  * Returns the offset (in bits) of the beginning of the field within
  * this template, -1 on error.
  */
-int32_t fiid_template_field_start (fiid_template_t tmpl,
-                                   const char *field);
+int fiid_template_field_start (fiid_template_t tmpl,
+                               const char *field);
 
 /*
  * fiid_template_field_start_bytes
@@ -211,8 +211,8 @@ int32_t fiid_template_field_start (fiid_template_t tmpl,
  * this template, -1 on error.  Will return an error if field bit
  * offset is not a multiple of 8.
  */
-int32_t fiid_template_field_start_bytes (fiid_template_t tmpl,
-                                         const char *field);
+int fiid_template_field_start_bytes (fiid_template_t tmpl,
+                                     const char *field);
 
 /*
  * fiid_template_field_end
@@ -220,8 +220,8 @@ int32_t fiid_template_field_start_bytes (fiid_template_t tmpl,
  * Returns the offset (in bits) of the ending of the field within this
  * template, -1 on error.
  */
-int32_t fiid_template_field_end (fiid_template_t tmpl,
-                                 const char *field);
+int fiid_template_field_end (fiid_template_t tmpl,
+                             const char *field);
 
 /*
  * fiid_template_field_end_bytes
@@ -230,8 +230,8 @@ int32_t fiid_template_field_end (fiid_template_t tmpl,
  * this template, -1 on error.  Will return an error if field bit
  * offset is not a multiple of 8.
  */
-int32_t fiid_template_field_end_bytes (fiid_template_t tmpl,
-                                       const char *field);
+int fiid_template_field_end_bytes (fiid_template_t tmpl,
+                                   const char *field);
 
 /*
  * fiid_template_field_len
@@ -239,8 +239,8 @@ int32_t fiid_template_field_end_bytes (fiid_template_t tmpl,
  * Returns the maximum length (in bits) of the specified field, -1 on
  * error.
  */
-int32_t fiid_template_field_len (fiid_template_t tmpl,
-                                 const char *field);
+int fiid_template_field_len (fiid_template_t tmpl,
+                             const char *field);
 
 /*
  * fiid_template_field_len_bytes
@@ -249,8 +249,8 @@ int32_t fiid_template_field_len (fiid_template_t tmpl,
  * error.  Will return an error if the field maximum bit length is not
  * a multiple of 8.
  */
-int32_t fiid_template_field_len_bytes (fiid_template_t tmpl,
-                                       const char *field);
+int fiid_template_field_len_bytes (fiid_template_t tmpl,
+                                   const char *field);
 
 /*
  * fiid_template_block_len
@@ -259,9 +259,9 @@ int32_t fiid_template_field_len_bytes (fiid_template_t tmpl,
  * beginning at 'field_start' and ending at 'field_end'.  Returns -1
  * on error.
  */
-int32_t fiid_template_block_len (fiid_template_t tmpl,
-                                 const char *field_start,
-                                 const char *field_end);
+int fiid_template_block_len (fiid_template_t tmpl,
+                             const char *field_start,
+                             const char *field_end);
 
 /*
  * fiid_template_block_len_bytes
@@ -271,9 +271,9 @@ int32_t fiid_template_block_len (fiid_template_t tmpl,
  * on error.  Will return an error if the calculated bit length is not
  * a multiple of 8.
  */
-int32_t fiid_template_block_len_bytes (fiid_template_t tmpl,
-                                       const char *field_start,
-                                       const char *field_end);
+int fiid_template_block_len_bytes (fiid_template_t tmpl,
+                                   const char *field_start,
+                                   const char *field_end);
 
 /*
  * fiid_template_compare
