@@ -10,7 +10,6 @@ noinst_HEADERS = \
 	ipmipower_ping.h \
 	ipmipower_powercmd.h \
 	ipmipower_prompt.h \
-	ipmipower_util.h \
 	ipmipower_wrappers.h \
 	wrappers.h
  
@@ -50,7 +49,6 @@ ipmipower_SOURCES = \
 	ipmipower_ping.c \
 	ipmipower_powercmd.c \
 	ipmipower_prompt.c \
-	ipmipower_util.c \
 	ipmipower_wrappers.c \
 	wrappers.c
  

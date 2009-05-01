@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.22 2009-01-13 01:02:24 chu11 Exp $
+ *  $Id: wrappers.c,v 1.23 2009-05-01 21:14:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -447,8 +447,13 @@ int Close(int fd)
     return n;
 }
 
-int Recvfrom(int fd, unsigned char *p, int len, int flags, 
-             struct sockaddr_in *from, socklen_t *fromlen)
+ssize_t
+Recvfrom(int fd,
+         void *p,
+         size_t len,
+         int flags, 
+         struct sockaddr_in *from,
+         socklen_t *fromlen)
 {
     int n;
 
@@ -460,8 +465,13 @@ int Recvfrom(int fd, unsigned char *p, int len, int flags,
     return n;
 }
 
-int Sendto(int fd, unsigned char *p, int len, int flags,
-           struct sockaddr_in *to, socklen_t tolen)
+ssize_t
+Sendto(int fd,
+       void *p,
+       size_t len,
+       int flags, 
+       struct sockaddr_in *to,
+       socklen_t tolen)
 {
     int n;
 
@@ -469,7 +479,7 @@ int Sendto(int fd, unsigned char *p, int len, int flags,
         n = sendto(fd, p, len, flags, (struct sockaddr *)to, tolen);
     } while (n < 0 && errno == EINTR);
     if (n < 0)
-        lsd_fatal_error(__FILE__, __LINE__, "write");
+        lsd_fatal_error(__FILE__, __LINE__, "sendto");
     return n;
 }
 

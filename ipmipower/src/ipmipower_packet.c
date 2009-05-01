@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.114 2009-05-01 18:29:37 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.115 2009-05-01 21:13:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -169,7 +169,7 @@ ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
 
 void
 ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
-                       const char *buf,
+                       const uint8_t *buf,
                        unsigned int buflen)
 {
   assert (ip);
@@ -261,7 +261,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
                                          0,
                                          NULL,
                                          0,
-                                         (uint8_t *)buf,
+                                         buf,
                                          buflen,
                                          tmpl_lan_msg_hdr,
                                          ipmipower_packet_cmd_template (ip, pkt)) < 0)
@@ -290,7 +290,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
                                          ip->integrity_key_len,
                                          ip->confidentiality_key_ptr,
                                          ip->confidentiality_key_len,
-                                         (uint8_t *)buf,
+                                         buf,
                                          buflen,
                                          tmpl_lan_msg_hdr,
                                          ipmipower_packet_cmd_template (ip, pkt)) < 0)
@@ -302,7 +302,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
                                     ip->ic->hostname,
                                     hdrbuf,
                                     NULL,
-                                    (uint8_t *)buf,
+                                    buf,
                                     buflen,
                                     tmpl_lan_msg_hdr,
                                     ipmipower_packet_cmd_template (ip, pkt)) < 0)
@@ -314,7 +314,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
 int
 ipmipower_packet_store (ipmipower_powercmd_t ip,
                         packet_type_t pkt,
-                        const char *buf,
+                        const uint8_t *buf,
                         unsigned int buflen)
 {
   fiid_obj_t obj;
@@ -345,7 +345,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
       || pkt == ACTIVATE_SESSION_RES
       || cmd_args.common.driver_type == IPMI_DEVICE_LAN)
     {
-      if ((rv = unassemble_ipmi_lan_pkt ((uint8_t *)buf,
+      if ((rv = unassemble_ipmi_lan_pkt (buf,
                                          buflen,
                                          ip->obj_rmcp_hdr_res,
                                          ip->obj_lan_session_hdr_res,
@@ -367,7 +367,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
                                                   0,
                                                   NULL,
                                                   0,
-                                                  (uint8_t *)buf,
+                                                  buf,
                                                   buflen,
                                                   ip->obj_rmcp_hdr_res,
                                                   ip->obj_rmcpplus_session_hdr_res,
@@ -387,7 +387,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
                                                   ip->integrity_key_len,
                                                   ip->confidentiality_key_ptr,
                                                   ip->confidentiality_key_len,
-                                                  (uint8_t *)buf,
+                                                  buf,
                                                   buflen,
                                                   ip->obj_rmcp_hdr_res,
                                                   ip->obj_rmcpplus_session_hdr_res,
@@ -403,20 +403,20 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
   return (rv);
 }
 
-static int32_t
+static int
 _ipmi_1_5_packet_create (ipmipower_powercmd_t ip,
                          packet_type_t pkt,
                          uint8_t authentication_type,
                          uint32_t inbound_sequence_number,
                          uint32_t session_id,
                          uint8_t *authentication_code_data,
-                         uint32_t authentication_code_data_len,
+                         unsigned int authentication_code_data_len,
                          uint8_t net_fn,
                          fiid_obj_t obj_cmd_req,
-                         char *buf,
+                         uint8_t *buf,
                          unsigned int buflen)
 {
-  int32_t len;
+  int len;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_REQ (pkt));
@@ -453,7 +453,7 @@ _ipmi_1_5_packet_create (ipmipower_powercmd_t ip,
                                     obj_cmd_req,
                                     authentication_code_data,
                                     authentication_code_data_len,
-                                    (uint8_t *)buf,
+                                    buf,
                                     buflen)) < 0)
     ierr_exit ("_ipmi_1_5_packet_create(%s: %d): "
                "assemble_ipmi_lan_pkt: %s",
@@ -462,7 +462,7 @@ _ipmi_1_5_packet_create (ipmipower_powercmd_t ip,
   return (len);
 }
 
-static int32_t
+static int
 _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
                          packet_type_t pkt,
                          uint8_t payload_type,
@@ -471,17 +471,17 @@ _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
                          uint32_t session_id,
                          uint32_t session_sequence_number,
                          uint8_t *authentication_code_data,
-                         uint32_t authentication_code_data_len,
+                         unsigned int authentication_code_data_len,
                          uint8_t net_fn,
                          uint8_t authentication_algorithm,
                          uint8_t integrity_algorithm,
                          uint8_t confidentiality_algorithm,
                          uint8_t *integrity_key,
-                         uint32_t integrity_key_len,
+                         unsigned int integrity_key_len,
                          uint8_t *confidentiality_key,
-                         uint32_t confidentiality_key_len,
+                         unsigned int confidentiality_key_len,
                          fiid_obj_t obj_cmd_req,
-                         char *buf,
+                         uint8_t *buf,
                          unsigned int buflen)
 {
   int len;
@@ -538,7 +538,7 @@ _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
                                          ip->obj_lan_msg_hdr_req,
                                          obj_cmd_req,
                                          ip->obj_rmcpplus_session_trlr_req,
-                                         (uint8_t *)buf,
+                                         buf,
                                          buflen)) < 0)
     ierr_exit ("_ipmi_2_0_packet_create(%s: %d): "
                "assemble_ipmi_rmcpplus_pkt: %s",
@@ -550,7 +550,7 @@ _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
 int
 ipmipower_packet_create (ipmipower_powercmd_t ip,
                          packet_type_t pkt,
-                         char *buf,
+                         uint8_t *buf,
                          unsigned int buflen)
 {
   char *username = NULL;
@@ -558,11 +558,11 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   uint8_t *integrity_key = NULL;
   uint8_t *confidentiality_key = NULL;
   char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
-  uint32_t username_len;
-  uint64_t session_id, managed_system_session_id;
+  unsigned int username_len;
+  uint32_t session_id, managed_system_session_id = 0;
   uint32_t sequence_number = 0;
-  uint32_t integrity_key_len = 0;
-  uint32_t confidentiality_key_len = 0;
+  unsigned int integrity_key_len = 0;
+  unsigned int confidentiality_key_len = 0;
   uint8_t authentication_type = 0;
   uint8_t net_fn = 0;
   uint8_t payload_authenticated = 0;
@@ -572,6 +572,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   uint8_t integrity_algorithm = 0;
   uint8_t confidentiality_algorithm = 0;
   fiid_obj_t obj_cmd_req = NULL;
+  uint64_t val;
   int rv = 0;
 
   assert (ip);
@@ -628,27 +629,36 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
 
   /* Calculate Session ID */
   if (pkt == ACTIVATE_SESSION_REQ)
-    Fiid_obj_get (ip->obj_get_session_challenge_res,
-                  "temp_session_id",
-                  &session_id);
+    {
+      Fiid_obj_get (ip->obj_get_session_challenge_res,
+                    "temp_session_id",
+                    &val);
+      session_id = val;
+    }
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
                || pkt == CHASSIS_IDENTIFY_REQ
                || pkt == CLOSE_SESSION_REQ))
-    Fiid_obj_get (ip->obj_activate_session_res,
-                  "session_id",
-                  &session_id);
+    {
+      Fiid_obj_get (ip->obj_activate_session_res,
+                    "session_id",
+                    &val);
+      session_id = val;
+    }
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
                || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ
                || pkt == CHASSIS_IDENTIFY_REQ
                || pkt == CLOSE_SESSION_REQ))
-    Fiid_obj_get (ip->obj_open_session_res,
-                  "managed_system_session_id",
-                  &session_id);
+    {
+      Fiid_obj_get (ip->obj_open_session_res,
+                    "managed_system_session_id",
+                    &val);
+      session_id = val;
+    }
   else
     session_id = 0;
 
@@ -725,9 +735,12 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
        */
       if (pkt == RAKP_MESSAGE_1_REQ
           || pkt == RAKP_MESSAGE_3_REQ)
-        Fiid_obj_get (ip->obj_open_session_res,
-                      "managed_system_session_id",
-                      &managed_system_session_id);
+        {
+          Fiid_obj_get (ip->obj_open_session_res,
+                        "managed_system_session_id",
+                        &val);
+          managed_system_session_id = val;
+        }
 
       /* Setup authentication/integrity/confidentiality keys */
       if (pkt == OPEN_SESSION_REQ
@@ -867,7 +880,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   else if (pkt == RAKP_MESSAGE_3_REQ)
     {
       uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
-      int32_t managed_system_random_number_len;
+      int managed_system_random_number_len;
       uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
       int key_exchange_authentication_code_len;
       uint8_t name_only_lookup;
@@ -1020,7 +1033,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
     }
   else if (pkt == CLOSE_SESSION_REQ)
     {
-      if (fill_cmd_close_session ((uint32_t)session_id, ip->obj_close_session_req) < 0)
+      if (fill_cmd_close_session (session_id, ip->obj_close_session_req) < 0)
         ierr_exit ("ipmipower_packet_create(%s: %d): "
                    "fill_cmd_close_session: %s",
                    ip->ic->hostname, ip->protocol_state, strerror (errno));
@@ -1042,7 +1055,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                                   pkt,
                                   authentication_type,
                                   sequence_number,
-                                  (uint32_t)session_id,
+                                  session_id,
                                   (uint8_t *)password,
                                   (password) ? strlen (password) : 0,
                                   net_fn,
@@ -1063,7 +1076,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                                   payload_type,
                                   payload_authenticated,
                                   payload_encrypted,
-                                  (uint32_t)session_id,
+                                  session_id,
                                   sequence_number,
                                   (uint8_t *)password,
                                   (password) ? strlen (password) : 0,

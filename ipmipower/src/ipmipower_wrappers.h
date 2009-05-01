@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.30 2009-03-03 23:56:56 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.31 2009-05-01 21:14:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -96,26 +96,30 @@ void Fiid_obj_clear (fiid_obj_t obj);
 /* Fiid_obj_clear_field
  * - Clear a fiid field
  */
-void Fiid_obj_clear_field (fiid_obj_t obj, char *field);
+void Fiid_obj_clear_field (fiid_obj_t obj,
+                           const char *field);
 
 /* Fiid_obj_get
  * - Get fiid field data
  */
-void Fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
+void Fiid_obj_get (fiid_obj_t obj,
+                   const char *field,
+                   uint64_t *val);
 
 /* Fiid_obj_get_data
  * - Get fiid field data
  */
-int32_t Fiid_obj_get_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
+int Fiid_obj_get_data (fiid_obj_t obj,
+                       const char *field,
+                       uint8_t *data,
+                       unsigned int data_len);
 
 /* Fiid_obj_set_data
  * - Set all object field data
  */
-int32_t Fiid_obj_set_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
-
-/* Fiid_obj_set_all
- * - Set all object data
- */
-int32_t Fiid_obj_set_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
+int Fiid_obj_set_data (fiid_obj_t obj,
+                       const char *field,
+                       uint8_t *data,
+                       unsigned int data_len);
 
 #endif /* _IPMIPOWER_WRAPPERS_H */

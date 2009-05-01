@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.40 2009-04-29 23:31:59 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.41 2009-05-01 21:14:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -194,7 +194,7 @@ Fiid_obj_clear (fiid_obj_t obj)
 }
 
 void
-Fiid_obj_clear_field (fiid_obj_t obj, char *field)
+Fiid_obj_clear_field (fiid_obj_t obj, const char *field)
 {
   int rv;
 
@@ -205,7 +205,9 @@ Fiid_obj_clear_field (fiid_obj_t obj, char *field)
 }
 
 void
-Fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val)
+Fiid_obj_get (fiid_obj_t obj,
+              const char *field,
+              uint64_t *val)
 {
   int rv;
 
@@ -220,10 +222,13 @@ Fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val)
   return;
 }
 
-int32_t
-Fiid_obj_get_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len)
+int
+Fiid_obj_get_data (fiid_obj_t obj,
+                   const char *field,
+                   uint8_t *data,
+                   unsigned int data_len)
 {
-  int32_t rv;
+  int rv;
 
   assert (fiid_obj_valid (obj) && field && data && data_len);
 
@@ -233,28 +238,18 @@ Fiid_obj_get_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len
   return (rv);
 }
 
-int32_t
-Fiid_obj_set_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len)
+int
+Fiid_obj_set_data (fiid_obj_t obj,
+                   const char *field,
+                   uint8_t *data,
+                   unsigned int data_len)
 {
-  int32_t rv;
+  int rv;
 
   assert (fiid_obj_valid (obj) && field && data && data_len);
 
   if ((rv = fiid_obj_set_data (obj, field, data, data_len)) < 0)
     ierr_exit ("Fiid_obj_set_data: field=%s: %s", field, fiid_obj_errormsg (obj));
-
-  return (rv);
-}
-
-int32_t
-Fiid_obj_set_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len)
-{
-  int32_t rv;
-
-  assert (fiid_obj_valid (obj) && data && data_len);
-
-  if ((rv = fiid_obj_set_all (obj, data, data_len)) < 0)
-    ierr_exit ("Fiid_obj_set_all: %s", fiid_obj_errormsg (obj));
 
   return (rv);
 }

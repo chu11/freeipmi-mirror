@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.43 2009-04-30 18:08:42 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.44 2009-05-01 21:13:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -50,7 +50,6 @@
 
 #include "ipmipower_connection.h"
 #include "ipmipower_output.h"
-#include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
 
 #include "freeipmi-portability.h"
@@ -68,12 +67,13 @@ extern cbuf_t ttyout;
 static void
 _clean_fd (int fd)
 {
-  int rv;
   struct pollfd ufds;
-  char buf[IPMIPOWER_PACKET_BUFLEN];
+  uint8_t buf[IPMIPOWER_PACKET_BUFLEN];
 
   while (1)
     {
+      ssize_t rv;
+
       ufds.fd = fd;
       ufds.events = POLLIN;
       ufds.revents = 0;
@@ -86,7 +86,7 @@ _clean_fd (int fd)
 
       if (ufds.revents & POLLIN)
         {
-          rv = Recvfrom (fd, (uint8_t *)buf, IPMIPOWER_PACKET_BUFLEN, 0, NULL, NULL);
+          rv = Recvfrom (fd, buf, IPMIPOWER_PACKET_BUFLEN, 0, NULL, NULL);
           if (rv == 0)
             break;
         }
@@ -152,8 +152,16 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   ic->ping_out = Cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
                               IPMIPOWER_MAX_CONNECTION_BUF);
 
-  ic->ipmi_requester_sequence_number_counter = get_rand ();
-  ic->ping_sequence_number_counter = get_rand ();
+  /* if ipmi_get_random fails, use junk sitting on stack */
+
+  if (ipmi_get_random ((uint8_t *)&ic->ipmi_requester_sequence_number_counter,
+                       sizeof (ic->ipmi_requester_sequence_number_counter)) < 0)
+    ierr_dbg ("ipmi_get_random: %s", strerror(errno));
+  
+  if (ipmi_get_random ((uint8_t *)&ic->ping_sequence_number_counter,
+                       sizeof (ic->ping_sequence_number_counter)) < 0)
+    ierr_dbg ("ipmi_get_random: %s", strerror(errno));
+
   memset (&ic->last_ipmi_send, '\0', sizeof (struct timeval));
   memset (&ic->last_ping_send, '\0', sizeof (struct timeval));
   memset (&ic->last_ipmi_recv, '\0', sizeof (struct timeval));

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.h,v 1.15 2009-01-13 01:02:24 chu11 Exp $
+ *  $Id: wrappers.h,v 1.16 2009-05-01 21:14:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -127,10 +127,19 @@ pid_t Waitpid(pid_t pid, int *status, int options);
 
 /* Recvfrom, Sendto, Poll by achu */
 
-int Recvfrom(int fd, unsigned char *p, int len, int flags, 
-             struct sockaddr_in *from, socklen_t *fromlen);
-int Sendto(int fd, unsigned char *p, int len, int flags, 
-           struct sockaddr_in *to, socklen_t tolen);
+ssize_t Recvfrom(int fd,
+                 void *p,
+                 size_t len,
+                 int flags, 
+                 struct sockaddr_in *from,
+                 socklen_t *fromlen);
+
+ssize_t Sendto(int fd,
+               void *p,
+               size_t len,
+               int flags, 
+               struct sockaddr_in *to,
+               socklen_t tolen);
 
 int Poll(struct pollfd *ufds, unsigned int nfds, int timeout);
 

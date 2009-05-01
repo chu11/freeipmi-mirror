@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.104 2009-04-30 18:08:43 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.105 2009-05-01 21:13:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -496,7 +496,10 @@ _cmd_version (void)
 }
 
 static void
-_workarounds_strcat (char *strbuf, unsigned int mask, char *str, int *is_first)
+_workarounds_strcat (char *strbuf,
+                     unsigned int mask,
+                     const char *str,
+                     int *is_first)
 {
   assert (strbuf && str && is_first);
 
@@ -748,7 +751,7 @@ _cmd_config (void)
 static void
 _cmd_set_unsigned_int (char **argv,
                        unsigned int *val,
-                       char *str,
+                       const char *str,
                        int allow_zero)
 {
   assert (argv && val && str);
@@ -774,7 +777,7 @@ _cmd_set_unsigned_int (char **argv,
 static void
 _cmd_set_unsigned_int_ranged (char **argv,
                               unsigned int *val,
-                              char *str,
+                              const char *str,
                               int allow_zero,
                               int min,
                               int max)
@@ -800,7 +803,7 @@ _cmd_set_unsigned_int_ranged (char **argv,
 }
 
 static void
-_cmd_set_flag (char **argv, int *flag, char *str)
+_cmd_set_flag (char **argv, int *flag, const char *str)
 {
   assert (argv && flag && str);
 
@@ -1064,7 +1067,7 @@ ipmipower_prompt_process_cmdline (void)
 
           argv_destroy (argv);
         }
-    } while (!quit && strlen ((char *)buf) > 0);
+    } while (!quit && strlen (buf) > 0);
   Free (buf);
 
   return (!quit);

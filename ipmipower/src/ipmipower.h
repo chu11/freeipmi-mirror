@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.130 2009-04-30 19:56:43 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.131 2009-05-01 21:13:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -340,8 +340,8 @@ struct ipmipower_connection
   cbuf_t ipmi_out;
   cbuf_t ping_in;
   cbuf_t ping_out;
-  uint32_t ipmi_requester_sequence_number_counter;
-  uint32_t ping_sequence_number_counter;
+  unsigned int ipmi_requester_sequence_number_counter;
+  unsigned int ping_sequence_number_counter;
   struct timeval last_ipmi_send;
   struct timeval last_ping_send;
   struct timeval last_ipmi_recv;

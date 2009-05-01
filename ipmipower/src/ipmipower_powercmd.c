@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.172 2009-04-30 18:08:43 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.173 2009-05-01 21:13:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -55,7 +55,6 @@
 #include "ipmipower_powercmd.h"
 #include "ipmipower_packet.h"
 #include "ipmipower_check.h"
-#include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
 
 #include "freeipmi-portability.h"
@@ -262,7 +261,11 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
       ip->confidentiality_key_ptr = ip->confidentiality_key;
       ip->confidentiality_key_len = IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH;
 
-      ip->initial_message_tag = (uint8_t)get_rand ();
+      /* if ipmi_get_random fails, use junk sitting on stack */
+      if (ipmi_get_random ((uint8_t *)&ip->initial_message_tag,
+                           sizeof (ip->initial_message_tag)) < 0)
+        ierr_dbg ("ipmi_get_random: %s", strerror(errno));
+
       ip->message_tag_count = 0;
       ip->session_sequence_number = 0;
       ip->name_only_lookup = IPMI_NAME_ONLY_LOOKUP;
@@ -270,7 +273,10 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
       /* In IPMI 2.0, session_ids of 0 are special */
       do
         {
-          ip->remote_console_session_id = get_rand ();
+          /* if ipmi_get_random fails, use junk sitting on stack */
+          if (ipmi_get_random ((uint8_t *)&ip->remote_console_session_id,
+                               sizeof (ip->remote_console_session_id)) < 0)
+            ierr_dbg ("ipmi_get_random: %s", strerror(errno));
         } while (!ip->remote_console_session_id);
 
       /* Even if this fails, we'll just live with it */
@@ -348,7 +354,7 @@ static void
 _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   int len = 0;
-  char buf[IPMIPOWER_PACKET_BUFLEN];
+  uint8_t buf[IPMIPOWER_PACKET_BUFLEN];
 
   assert (PACKET_TYPE_VALID_REQ (pkt));
 
@@ -447,13 +453,15 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 static int
 _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  char recv_buf[IPMIPOWER_PACKET_BUFLEN];
+  uint8_t recv_buf[IPMIPOWER_PACKET_BUFLEN];
   int recv_len = 0;
   int rv = -1;
 
   assert (PACKET_TYPE_VALID_RES (pkt));
 
-  if (!(recv_len = Cbuf_peek_and_drop (ip->ic->ipmi_in, recv_buf, IPMIPOWER_PACKET_BUFLEN)))
+  if (!(recv_len = Cbuf_peek_and_drop (ip->ic->ipmi_in,
+                                       recv_buf,
+                                       IPMIPOWER_PACKET_BUFLEN)))
     return (0);
 
   ipmipower_packet_dump (ip, pkt, recv_buf, recv_len);
@@ -487,7 +495,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
       if (!ipmipower_check_authentication_code (ip,
                                                 pkt,
                                                 (uint8_t *)recv_buf,
-                                                (uint32_t)recv_len))
+                                                (unsigned int)recv_len))
         {
           rv = 0;
           goto cleanup;
@@ -662,7 +670,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
           if (!ipmipower_check_authentication_code (ip,
                                                     pkt,
                                                     (uint8_t *)recv_buf,
-                                                    (uint32_t)recv_len))
+                                                    (unsigned int)recv_len))
             {
               rv = 0;
               goto cleanup;
@@ -1228,12 +1236,12 @@ static int
 _calculate_cipher_keys (ipmipower_powercmd_t ip)
 {
   uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
-  int32_t managed_system_random_number_len;
+  int managed_system_random_number_len;
   char *username;
   char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
-  uint32_t username_len;
+  unsigned int username_len;
   char *password;
-  uint32_t password_len;
+  unsigned int password_len;
   uint8_t *k_g;
 
   assert (ip);

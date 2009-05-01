@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.43 2009-04-30 18:08:43 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.44 2009-05-01 21:13:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -37,7 +37,6 @@
 #include <errno.h>
 
 #include "ipmipower_ping.h"
-#include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
 
 #include "freeipmi-portability.h"
@@ -84,7 +83,7 @@ ipmipower_ping_process_pings (int *timeout)
 
   for (i = 0; i < ics_len; i++)
     {
-      char buf[IPMIPOWER_PACKET_BUFLEN];
+      uint8_t buf[IPMIPOWER_PACKET_BUFLEN];
       int len;
 
       if (send_pings_flag)
@@ -135,7 +134,7 @@ ipmipower_ping_process_pings (int *timeout)
 
           if ((len = assemble_rmcp_pkt (rmcp_hdr,
                                         rmcp_ping,
-                                        (uint8_t *)buf,
+                                        buf,
                                         IPMIPOWER_PACKET_BUFLEN)) < 0)
             ierr_exit ("assemble_rmcp_pkt: %s", strerror (errno));
 
@@ -154,7 +153,7 @@ ipmipower_ping_process_pings (int *timeout)
                                          ics[i].hostname,
                                          hdrbuf,
                                          NULL,
-                                         (uint8_t *)buf,
+                                         buf,
                                          len,
                                          tmpl_cmd_asf_presence_ping) < 0)
                 ierr_dbg ("ipmi_dump_rmcp_packet: %s", strerror (errno));
@@ -200,14 +199,14 @@ ipmipower_ping_process_pings (int *timeout)
                                          ics[i].hostname,
                                          hdrbuf,
                                          NULL,
-                                         (uint8_t *)buf,
+                                         buf,
                                          len,
                                          tmpl_cmd_asf_presence_pong) < 0)
                 ierr_dbg ("ipmi_dump_rmcp_packet: %s", strerror (errno));
             }
 #endif /* NDEBUG */
 
-          if (unassemble_rmcp_pkt ((uint8_t *)buf,
+          if (unassemble_rmcp_pkt (buf,
                                    len,
                                    rmcp_hdr,
                                    rmcp_pong) < 0)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.101 2009-05-01 01:55:02 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.102 2009-05-01 21:13:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -792,14 +792,15 @@ int
 ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
-  int32_t managed_system_random_number_len;
+  int managed_system_random_number_len;
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
-  int32_t managed_system_guid_len;
+  int managed_system_guid_len;
   char *username;
   char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
   char *password;
-  uint32_t username_len, password_len;
-  uint64_t managed_system_session_id;
+  unsigned int username_len, password_len;
+  uint32_t managed_system_session_id;
+  uint64_t val;
   int rv;
 
   assert (ip);
@@ -832,7 +833,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     {
       uint8_t keybuf[IPMIPOWER_PACKET_BUFLEN];
-      int32_t keybuf_len;
+      int keybuf_len;
 
       /* IPMI Workaround (achu)
        *
@@ -886,7 +887,8 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
 
   Fiid_obj_get (ip->obj_open_session_res,
                 "managed_system_session_id",
-                &managed_system_session_id);
+                &val);
+  managed_system_session_id = val;
 
   managed_system_random_number_len = Fiid_obj_get_data (ip->obj_rakp_message_2_res,
                                                         "managed_system_random_number",
@@ -912,7 +914,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
       && (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1))
     {
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
-      int32_t buf_len;
+      int buf_len;
 
       buf_len = Fiid_obj_get_data (ip->obj_rakp_message_2_res,
                                    "key_exchange_authentication_code",
@@ -962,7 +964,7 @@ int
 ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
-  int32_t managed_system_guid_len;
+  int managed_system_guid_len;
   uint32_t managed_system_session_id;
   uint8_t authentication_algorithm = 0;
   uint64_t val;
