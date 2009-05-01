@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.102 2009-05-01 21:13:58 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.103 2009-05-01 21:53:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -233,7 +233,8 @@ int
 ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   uint32_t shift_num, wrap_val;
-  uint64_t seq_num = 0;
+  uint32_t seq_num = 0;
+  uint64_t val;
   int rv = 0;
 
   assert (ip);
@@ -266,9 +267,12 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
           || pkt == CHASSIS_CONTROL_RES
           || pkt == CHASSIS_IDENTIFY_RES
           || pkt == CLOSE_SESSION_RES))
-    Fiid_obj_get (ip->obj_rmcpplus_session_hdr_res,
-                  "session_sequence_number",
-                  &seq_num);
+    {
+      Fiid_obj_get (ip->obj_rmcpplus_session_hdr_res,
+                    "session_sequence_number",
+                    &val);
+      seq_num = val;
+    }
   else /*
      pkt == ACTIVATE_SESSION_RES
      || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
@@ -278,9 +282,12 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
      || pkt == CHASSIS_IDENTIFY_RES
      || pkt == CLOSE_SESSION_RES))
        */
-    Fiid_obj_get (ip->obj_lan_session_hdr_res,
-                  "session_sequence_number",
-                  &seq_num);
+    {
+      Fiid_obj_get (ip->obj_lan_session_hdr_res,
+                    "session_sequence_number",
+                    &val);
+      seq_num = val;
+    }
 
   /* IPMI Workaround (achu)
    *
@@ -436,8 +443,9 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
 int
 ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  uint64_t session_id = 0;
-  uint64_t expected_session_id = 0;
+  uint32_t session_id = 0;
+  uint32_t expected_session_id = 0;
+  uint64_t val;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
@@ -456,10 +464,13 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
     {
       Fiid_obj_get (ip->obj_lan_session_hdr_res,
                     "session_id",
-                    &session_id);
+                    &val);
+      session_id = val;
+
       Fiid_obj_get (ip->obj_activate_session_res,
                     "session_id",
-                    &expected_session_id);
+                    &val);
+      expected_session_id = val;
     }
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
            && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
@@ -470,7 +481,8 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
     {
       Fiid_obj_get (ip->obj_rmcpplus_session_hdr_res,
                     "session_id",
-                    &session_id);
+                    &val);
+      session_id = val;
       expected_session_id = ip->remote_console_session_id;
     }
   else if (pkt == OPEN_SESSION_RES
@@ -483,7 +495,8 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
 
       Fiid_obj_get (obj_cmd,
                     "remote_console_session_id",
-                    &session_id);
+                    &val);
+      session_id = val;
       expected_session_id = ip->remote_console_session_id;
     }
 
@@ -511,8 +524,9 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
 int
 ipmipower_check_network_function (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  uint64_t netfn = 0;
-  uint64_t expected_netfn;
+  uint8_t netfn = 0;
+  uint8_t expected_netfn;
+  uint64_t val;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
@@ -521,7 +535,10 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip, packet_type_t pkt)
           && pkt != RAKP_MESSAGE_2_RES
           && pkt != RAKP_MESSAGE_4_RES);
 
-  Fiid_obj_get (ip->obj_lan_msg_hdr_res, "net_fn", &netfn);
+  Fiid_obj_get (ip->obj_lan_msg_hdr_res,
+                "net_fn",
+                &val);
+  netfn = val;
 
   if (pkt == GET_CHASSIS_STATUS_RES
       || pkt == CHASSIS_CONTROL_RES
@@ -540,8 +557,9 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip, packet_type_t pkt)
 int
 ipmipower_check_command (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  uint64_t cmd = 0;
-  uint64_t expected_cmd = 0;
+  uint8_t cmd = 0;
+  uint8_t expected_cmd = 0;
+  uint64_t val;
   fiid_obj_t obj_cmd;
 
   assert (ip);
@@ -553,7 +571,10 @@ ipmipower_check_command (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
-  Fiid_obj_get (obj_cmd, "cmd", &cmd);
+  Fiid_obj_get (obj_cmd,
+                "cmd",
+                &val);
+  cmd = val;
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
       || pkt == AUTHENTICATION_CAPABILITIES_RES)
@@ -584,8 +605,9 @@ ipmipower_check_command (ipmipower_powercmd_t ip, packet_type_t pkt)
 int
 ipmipower_check_requester_sequence_number (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  uint64_t req_seq = 0;
-  uint64_t expected_req_seq = 0;
+  uint8_t req_seq = 0;
+  uint8_t expected_req_seq = 0;
+  uint64_t val;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
@@ -596,7 +618,10 @@ ipmipower_check_requester_sequence_number (ipmipower_powercmd_t ip, packet_type_
 
   expected_req_seq = ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
 
-  Fiid_obj_get (ip->obj_lan_msg_hdr_res, "rq_seq", &req_seq);
+  Fiid_obj_get (ip->obj_lan_msg_hdr_res,
+                "rq_seq",
+                &val);
+  req_seq = val;
 
   if (req_seq != expected_req_seq)
     ierr_dbg ("ipmipower_check_requester_sequence_number(%s:%d): req_seq: %x, expected: %x",
@@ -609,8 +634,9 @@ ipmipower_check_requester_sequence_number (ipmipower_powercmd_t ip, packet_type_
 int
 ipmipower_check_completion_code (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  uint64_t comp_code = 0;
+  uint8_t comp_code = 0;
   fiid_obj_t obj_cmd;
+  uint64_t val;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
@@ -621,7 +647,10 @@ ipmipower_check_completion_code (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
-  Fiid_obj_get (obj_cmd, "comp_code", &comp_code);
+  Fiid_obj_get (obj_cmd,
+                "comp_code",
+                &val);
+  comp_code = val;
 
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
     ierr_dbg ("ipmipower_check_completion_code(%s:%d): comp_code: %x",
@@ -633,8 +662,9 @@ ipmipower_check_completion_code (ipmipower_powercmd_t ip, packet_type_t pkt)
 int
 ipmipower_check_payload_type (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  uint64_t payload_type;
+  uint8_t payload_type;
   uint8_t expected_payload_type;
+  uint64_t val;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
@@ -650,7 +680,8 @@ ipmipower_check_payload_type (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   Fiid_obj_get (ip->obj_rmcpplus_session_hdr_res,
                 "payload_type",
-                &payload_type);
+                &val);
+  payload_type = val;
 
   if (pkt == OPEN_SESSION_RES)
     expected_payload_type = IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE;
@@ -673,9 +704,10 @@ ipmipower_check_payload_type (ipmipower_powercmd_t ip, packet_type_t pkt)
 int
 ipmipower_check_message_tag (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  uint64_t message_tag;
+  uint8_t message_tag;
   uint8_t expected_message_tag;
   fiid_obj_t obj_cmd;
+  uint64_t val;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
@@ -687,7 +719,8 @@ ipmipower_check_message_tag (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   Fiid_obj_get (obj_cmd,
                 "message_tag",
-                &message_tag);
+                &val);
+  message_tag = val;
 
   expected_message_tag = ip->initial_message_tag + ip->message_tag_count;
 
@@ -704,8 +737,9 @@ ipmipower_check_message_tag (ipmipower_powercmd_t ip, packet_type_t pkt)
 int
 ipmipower_check_rmcpplus_status_code (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  uint64_t rmcpplus_status_code;
+  uint8_t rmcpplus_status_code;
   fiid_obj_t obj_cmd;
+  uint64_t val;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
@@ -717,7 +751,8 @@ ipmipower_check_rmcpplus_status_code (ipmipower_powercmd_t ip, packet_type_t pkt
 
   Fiid_obj_get (obj_cmd,
                 "rmcpplus_status_code",
-                &rmcpplus_status_code);
+                &val);
+  rmcpplus_status_code = val;
 
   if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
     ierr_dbg ("ipmipower_check_rmcpplus_status_code(%s:%d): "
@@ -731,6 +766,7 @@ ipmipower_check_rmcpplus_status_code (ipmipower_powercmd_t ip, packet_type_t pkt
 int
 ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
+  uint8_t maximum_privilege_level;
   uint64_t val;
   int rv;
 
@@ -746,6 +782,7 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip, packet
   Fiid_obj_get (ip->obj_open_session_res,
                 "maximum_privilege_level",
                 &val);
+  maximum_privilege_level = val;
 
   /* IPMI Workaround (achu)
    *
@@ -756,23 +793,23 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip, packet
    * So check that we get back what we sent.
    */
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-    rv = (val == ip->requested_maximum_privilege_level) ? 1 : 0;
+    rv = (maximum_privilege_level == ip->requested_maximum_privilege_level) ? 1 : 0;
   else
     {
       if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-          && (val == IPMI_PRIVILEGE_LEVEL_USER
-              || val == IPMI_PRIVILEGE_LEVEL_OPERATOR
-              || val == IPMI_PRIVILEGE_LEVEL_ADMIN
-              || val == IPMI_PRIVILEGE_LEVEL_OEM))
+          && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+              || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
+              || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
+              || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM))
         rv = 1;
       else if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
-               && (val == IPMI_PRIVILEGE_LEVEL_OPERATOR
-                   || val == IPMI_PRIVILEGE_LEVEL_ADMIN
-                   || val == IPMI_PRIVILEGE_LEVEL_OEM))
+               && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
+                   || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
+                   || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM))
         rv = 1;
       else if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
-               && (val == IPMI_PRIVILEGE_LEVEL_ADMIN
-                   || val == IPMI_PRIVILEGE_LEVEL_OEM))
+               && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
+                   || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM))
         rv = 1;
       else
         rv = 0;

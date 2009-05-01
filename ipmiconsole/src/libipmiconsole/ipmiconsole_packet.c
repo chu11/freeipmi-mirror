@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.41 2009-05-01 18:29:37 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.42 2009-05-01 21:53:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -546,7 +546,7 @@ ipmiconsole_packet_dump_unknown (ipmiconsole_ctx_t c,
 }
 
 
-static int32_t
+static int
 _ipmi_1_5_packet_assemble (ipmiconsole_ctx_t c,
                            ipmiconsole_packet_type_t p,
                            uint8_t authentication_type,
@@ -559,7 +559,7 @@ _ipmi_1_5_packet_assemble (ipmiconsole_ctx_t c,
                            uint8_t *buf,
                            unsigned int buflen)
 {
-  int32_t pkt_len;
+  int pkt_len;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -619,7 +619,7 @@ _ipmi_1_5_packet_assemble (ipmiconsole_ctx_t c,
   return (pkt_len);
 }
 
-static int32_t
+static int
 _ipmi_2_0_packet_assemble (ipmiconsole_ctx_t c,
                            ipmiconsole_packet_type_t p,
                            uint8_t payload_type,
@@ -983,7 +983,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
   else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3)
     {
       uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
-      int32_t managed_system_random_number_len;
+      int managed_system_random_number_len;
       uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
       int key_exchange_authentication_code_len;
       uint8_t name_only_lookup;
@@ -1332,7 +1332,7 @@ ipmiconsole_sol_packet_assemble (ipmiconsole_ctx_t c,
 int
 ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
                                ipmiconsole_packet_type_t *p,
-                               uint8_t *buf,
+                               const uint8_t *buf,
                                unsigned int buflen)
 {
   ipmiconsole_packet_type_t pkt;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.30 2009-05-01 03:21:44 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.31 2009-05-01 21:53:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -616,14 +616,14 @@ int
 ipmiconsole_check_rakp_2_key_exchange_authentication_code (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
   uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
-  int32_t managed_system_random_number_len;
+  int managed_system_random_number_len;
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
-  int32_t managed_system_guid_len;
+  int managed_system_guid_len;
   char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
   char *username;
-  uint32_t username_len;
+  unsigned int username_len;
   char *password;
-  uint32_t password_len;
+  unsigned int password_len;
   uint32_t managed_system_session_id;
   uint64_t val;
   int rv;
@@ -661,7 +661,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code (ipmiconsole_ctx_t c, 
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION)
     {
       uint8_t keybuf[IPMICONSOLE_PACKET_BUFLEN];
-      int32_t keybuf_len;
+      int keybuf_len;
 
       if ((keybuf_len = Fiid_obj_get_data (c,
                                            c->connection.obj_rakp_message_2,
@@ -728,7 +728,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code (ipmiconsole_ctx_t c, 
       && c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
-      int32_t buf_len;
+      int buf_len;
 
       buf_len = Fiid_obj_get_data (c,
                                    c->connection.obj_rakp_message_2,
@@ -813,7 +813,7 @@ int
 ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
-  int32_t managed_system_guid_len;
+  int managed_system_guid_len;
   uint32_t managed_system_session_id;
   uint8_t authentication_algorithm = 0;
   uint64_t val;

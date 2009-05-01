@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.h,v 1.8 2009-03-03 23:56:51 chu11 Exp $
+ *  $Id: ipmiconsole_packet.h,v 1.9 2009-05-01 21:53:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -41,16 +41,16 @@ fiid_obj_t ipmiconsole_packet_object (ipmiconsole_ctx_t c,
 int ipmiconsole_packet_dump (ipmiconsole_ctx_t c,
                              ipmiconsole_packet_type_t p,
                              uint8_t *buf,
-                             uint32_t buflen);
+                             unsigned int buflen);
 
 int ipmiconsole_packet_dump_unknown (ipmiconsole_ctx_t c,
                                      uint8_t *buf,
-                                     uint32_t buflen);
+                                     unsigned int buflen);
 
 int ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
                                       ipmiconsole_packet_type_t p,
                                       uint8_t *buf,
-                                      uint32_t buflen);
+                                      unsigned int buflen);
 
 int ipmiconsole_sol_packet_assemble (ipmiconsole_ctx_t c,
                                      uint8_t packet_sequence_number,
@@ -58,14 +58,14 @@ int ipmiconsole_sol_packet_assemble (ipmiconsole_ctx_t c,
                                      uint8_t accepted_character_count,
                                      uint8_t generate_break,
                                      uint8_t *character_data,
-                                     uint32_t character_data_len,
+                                     unsigned int character_data_len,
                                      uint8_t *buf,
-                                     uint32_t buflen);
+                                     unsigned int buflen);
 
 int ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
                                    ipmiconsole_packet_type_t *p,
-                                   uint8_t *buf,
-                                   uint32_t buflen);
+                                   const uint8_t *buf,
+                                   unsigned int buflen);
 
 int ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
                                   ipmiconsole_packet_type_t p);

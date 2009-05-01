@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.115 2009-05-01 21:13:58 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.116 2009-05-01 21:53:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -670,11 +670,12 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
           || pkt == CHASSIS_IDENTIFY_REQ
           || pkt == CLOSE_SESSION_REQ))
     {
-      uint64_t initial_inbound_sequence_number;
+      uint32_t initial_inbound_sequence_number;
 
       Fiid_obj_get (ip->obj_activate_session_res,
                     "initial_inbound_sequence_number",
-                    &initial_inbound_sequence_number);
+                    &val);
+      initial_inbound_sequence_number = val;
 
       sequence_number = initial_inbound_sequence_number + ip->session_inbound_count;
     }
@@ -1112,8 +1113,13 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == RAKP_MESSAGE_2_RES
       || pkt == RAKP_MESSAGE_4_RES)
     {
-      uint64_t rmcpplus_status_code;
-      Fiid_obj_get (obj_cmd, "rmcpplus_status_code", &rmcpplus_status_code);
+      uint8_t rmcpplus_status_code;
+      uint64_t val;
+
+      Fiid_obj_get (obj_cmd,
+                    "rmcpplus_status_code",
+                    &val);
+      rmcpplus_status_code = val;
 
       /* achu:
 
@@ -1151,8 +1157,11 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   else
     {
-      uint64_t comp_code;
-      Fiid_obj_get (obj_cmd, "comp_code", &comp_code);
+      uint8_t comp_code;
+      uint64_t val;
+
+      Fiid_obj_get (obj_cmd, "comp_code", &val);
+      comp_code = val;
 
       if (comp_code == IPMI_COMP_CODE_COMMAND_SUCCESS)
         ierr_exit ("ipmipower_packet_errmsg(%s:%d:%d): "

@@ -5,7 +5,7 @@
 	* ipmipower/src/ipmipower_util.h, ipmipower/src/ipmipower_util.c:
 	Removed files.
 
-	* ipmipower/src/: Various cleanup.
+	* ipmiconsole/src/, ipmipower/src/: Various cleanup.
 	
 2009-04-30  Albert Chu <chu11@llnl.gov>
 	

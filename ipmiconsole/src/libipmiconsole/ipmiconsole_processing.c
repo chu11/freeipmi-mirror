@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.86 2009-05-01 16:29:44 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.87 2009-05-01 21:53:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1750,7 +1750,7 @@ static int
 _calculate_cipher_keys (ipmiconsole_ctx_t c)
 {
   uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
-  int32_t managed_system_random_number_len;
+  int managed_system_random_number_len;
   char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
   char *username;
   unsigned int username_len;
@@ -2329,9 +2329,9 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c)
     {
       /* There is some data for the user */
       char character_data[IPMICONSOLE_MAX_CHARACTER_DATA+1];
-      int32_t character_data_len = 0;
-      int32_t character_data_len_to_write = 0;
-      int32_t character_data_index = 0;
+      int character_data_len = 0;
+      unsigned int character_data_len_to_write = 0;
+      unsigned int character_data_index = 0;
 
       memset (character_data, '\0', IPMICONSOLE_MAX_CHARACTER_DATA + 1);
 
