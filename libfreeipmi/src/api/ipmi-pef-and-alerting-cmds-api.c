@@ -721,7 +721,7 @@ ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
                                                          uint8_t string_selector,
                                                          uint8_t block_selector,
                                                          uint8_t *string_data,
-                                                         uint8_t string_data_len,
+                                                         unsigned int string_data_len,
                                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;

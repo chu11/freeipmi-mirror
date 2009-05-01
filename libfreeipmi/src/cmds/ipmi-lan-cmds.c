@@ -688,7 +688,7 @@ int
 fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                            uint8_t parameter_selector,
                                            uint8_t *configuration_parameter_data,
-                                           uint8_t configuration_parameter_data_len,
+                                           unsigned int configuration_parameter_data_len,
                                            fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
@@ -1142,7 +1142,7 @@ fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uint8_t ch
 
 int
 fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_number,
-                                                            char *community_string,
+                                                            const char *community_string,
                                                             unsigned int community_string_len,
                                                             fiid_obj_t obj_cmd_rq)
 {

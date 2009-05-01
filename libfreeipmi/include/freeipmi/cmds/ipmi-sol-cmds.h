@@ -170,7 +170,7 @@ int fill_sol_payload_data (uint8_t packet_sequence_number,
                            uint8_t accepted_character_count,
                            uint8_t operation_status,
                            uint8_t *character_data,
-                           uint32_t character_data_len,
+                           unsigned int character_data_len,
                            fiid_obj_t obj_sol_payload);
 
 int fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
@@ -184,13 +184,13 @@ int fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
                                                  uint8_t ring_wor,
                                                  uint8_t nack,
                                                  uint8_t *character_data,
-                                                 uint32_t character_data_len,
+                                                 unsigned int character_data_len,
                                                  fiid_obj_t obj_sol_payload);
 
 int fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
                                                uint8_t parameter_selector,
                                                uint8_t *configuration_parameter_data,
-                                               uint8_t configuration_parameter_data_len,
+                                               unsigned int configuration_parameter_data_len,
                                                fiid_obj_t obj_data_rq);
 
 int fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,

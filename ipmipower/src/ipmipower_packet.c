@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.111 2009-04-30 18:08:42 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.112 2009-05-01 00:07:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -869,9 +869,9 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
       int32_t managed_system_random_number_len;
       uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
-      int32_t key_exchange_authentication_code_len;
+      int key_exchange_authentication_code_len;
       uint8_t name_only_lookup;
-      uint32_t password_len;
+      unsigned int password_len;
 
       managed_system_random_number_len = Fiid_obj_get_data (ip->obj_rakp_message_2_res,
                                                             "managed_system_random_number",

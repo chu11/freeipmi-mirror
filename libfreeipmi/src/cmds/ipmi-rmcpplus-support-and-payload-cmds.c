@@ -365,7 +365,7 @@ int
 fill_cmd_activate_payload (uint8_t payload_type,
                            uint8_t payload_instance,
                            uint8_t *auxiliary_request_data,
-                           uint32_t auxiliary_request_data_len,
+                           unsigned int auxiliary_request_data_len,
                            fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_PAYLOAD_TYPE_VALID (payload_type)

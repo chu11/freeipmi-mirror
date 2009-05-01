@@ -175,7 +175,7 @@ int
 fill_cmd_set_serial_modem_configuration (uint8_t channel_number,
                                          uint8_t parameter_selector,
                                          uint8_t *configuration_parameter_data,
-                                         uint8_t configuration_parameter_data_len,
+                                         unsigned int configuration_parameter_data_len,
                                          fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)

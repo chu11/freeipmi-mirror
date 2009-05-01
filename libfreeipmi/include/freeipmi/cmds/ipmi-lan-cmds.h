@@ -196,9 +196,9 @@ extern fiid_template_t tmpl_cmd_get_ip_udp_rmcp_statistics_rs;
 int fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                                uint8_t parameter_selector,
                                                uint8_t *configuration_parameter_data,
-                                               uint8_t configuration_parameter_data_len,
+                                               unsigned int configuration_parameter_data_len,
                                                fiid_obj_t obj_cmd_rq);
-
+  
 int fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t channel_number,
                                                                            uint8_t callback_level_none,
                                                                            uint8_t callback_level_md2,
@@ -269,7 +269,7 @@ int fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uint8_
                                                                           fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_number,
-                                                                char *community_string,
+                                                                const char *community_string,
                                                                 unsigned int community_string_len,
                                                                 fiid_obj_t obj_cmd_rq);
 

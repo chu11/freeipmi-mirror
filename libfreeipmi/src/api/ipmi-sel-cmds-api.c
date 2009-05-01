@@ -552,7 +552,7 @@ int
 ipmi_cmd_set_auxiliary_log_status (ipmi_ctx_t ctx,
                                    uint8_t log_type,
                                    uint8_t *log_data,
-                                   uint8_t log_data_len,
+                                   unsigned int log_data_len,
                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;

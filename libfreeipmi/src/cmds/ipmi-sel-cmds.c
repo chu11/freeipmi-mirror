@@ -442,7 +442,7 @@ fill_cmd_get_auxiliary_log_status (uint8_t log_type,
 int
 fill_cmd_set_auxiliary_log_status (uint8_t log_type,
                                    uint8_t *log_data,
-                                   uint8_t log_data_len,
+                                   unsigned int log_data_len,
                                    fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_AUXILIARY_LOG_TYPE_VALID (log_type)

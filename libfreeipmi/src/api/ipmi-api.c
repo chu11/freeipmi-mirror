@@ -679,7 +679,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
                       int disable_auto_probe,
                       uint16_t driver_address,
                       uint8_t register_spacing,
-                      char *driver_device,
+                      const char *driver_device,
                       unsigned int workaround_flags,
                       unsigned int flags)
 {

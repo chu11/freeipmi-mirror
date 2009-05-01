@@ -773,7 +773,7 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
 int
 ipmi_cmd_set_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
                                                             uint8_t channel_number,
-                                                            char *community_string,
+                                                            const char *community_string,
                                                             unsigned int community_string_len,
                                                             fiid_obj_t obj_cmd_rs)
 {

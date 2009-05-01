@@ -611,12 +611,12 @@ fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq)
 int
 fill_cmd_set_system_boot_options (uint8_t parameter_selector,
                                   uint8_t *configuration_parameter_data,
-                                  uint8_t data_len,
+                                  unsigned int configuration_parameter_data_len,
                                   fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
       || !configuration_parameter_data
-      || !data_len
+      || !configuration_parameter_data_len
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -634,7 +634,10 @@ fill_cmd_set_system_boot_options (uint8_t parameter_selector,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED);
 
-  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "configuration_parameter_data", configuration_parameter_data, data_len);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+                          "configuration_parameter_data",
+                          configuration_parameter_data,
+                          configuration_parameter_data_len);
   return (0);
 }
 

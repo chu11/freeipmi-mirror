@@ -352,14 +352,14 @@ int fill_cmd_get_channel_cipher_suites (uint8_t channel_number,
                                         fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_get_session_challenge (uint8_t authentication_type,
-                                    char *user_name,
-                                    uint32_t user_name_len,
+                                    const char *user_name,
+                                    unsigned int user_name_len,
                                     fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_activate_session (uint8_t authentication_type,
                                uint8_t maximum_privilege_level,
                                uint8_t *challenge_string,
-                               uint32_t challenge_string_len,
+                               unsigned int challenge_string_len,
                                uint32_t initial_outbound_sequence_number,
                                fiid_obj_t obj_cmd_rq);
 
@@ -389,7 +389,7 @@ int fill_cmd_set_channel_security_keys (uint8_t channel_number,
                                         uint8_t operation,
                                         uint8_t key_id,
                                         uint8_t *key_value,
-                                        uint32_t key_value_len,
+                                        unsigned int key_value_len,
                                         fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_user_access (uint8_t channel_number,
@@ -406,7 +406,7 @@ int fill_cmd_get_user_access (uint8_t channel_number,
                               fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_user_name (uint8_t user_id,
-                            char *user_name,
+                            const char *user_name,
                             unsigned int user_name_len,
                             fiid_obj_t obj_cmd_rq);
 
@@ -414,14 +414,14 @@ int fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_user_password (uint8_t user_id,
                                 uint8_t operation,
-                                char *password,
+                                const char *password,
                                 unsigned int password_len,
                                 fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_user_password_v20 (uint8_t user_id,
                                     uint8_t password_size,
                                     uint8_t operation,
-                                    char *password,
+                                    const char *password,
                                     unsigned int password_len,
                                     fiid_obj_t obj_cmd_rq);
 

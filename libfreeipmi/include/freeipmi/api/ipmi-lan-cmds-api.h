@@ -109,7 +109,7 @@ int ipmi_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_
 
 int ipmi_cmd_set_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
                                                                 uint8_t channel_number,
-                                                                char *community_string,
+                                                                const char *community_string,
                                                                 unsigned int community_string_len,
                                                                 fiid_obj_t obj_cmd_rs);
 

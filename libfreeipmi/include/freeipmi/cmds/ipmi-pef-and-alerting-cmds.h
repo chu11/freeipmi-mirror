@@ -16,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
  */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.11 2009-04-29 00:05:48 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.12 2009-05-01 00:07:31 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H
@@ -362,7 +362,7 @@ int fill_cmd_arm_pef_postpone_timer (uint8_t pef_postpone_timeout,
 int fill_cmd_set_pef_configuration_parameters (fiid_obj_t obj_cmd_rq,
                                                uint8_t parameter_selector,
                                                uint8_t *configuration_parameter_data,
-                                               uint8_t configuration_parameter_data_len);
+                                               unsigned int configuration_parameter_data_len);
 
 int fill_cmd_set_pef_configuration_parameters_pef_control (uint8_t pef,
                                                            uint8_t pef_event_messages,
@@ -427,7 +427,7 @@ int fill_cmd_set_pef_configuration_parameters_alert_string_keys (uint8_t string_
 int fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_selector,
                                                              uint8_t block_selector,
                                                              uint8_t *string_data,
-                                                             uint32_t string_data_len,
+                                                             unsigned int string_data_len,
                                                              fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_pef_configuration_parameters_alert_policy_table (uint8_t alert_policy_entry_number,

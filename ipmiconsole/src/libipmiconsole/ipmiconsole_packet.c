@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.39 2009-04-30 19:56:42 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.40 2009-05-01 00:07:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -985,7 +985,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
       uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
       int32_t managed_system_random_number_len;
       uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
-      int32_t key_exchange_authentication_code_len;
+      int key_exchange_authentication_code_len;
       uint8_t name_only_lookup;
 
       /* IPMI Workaround

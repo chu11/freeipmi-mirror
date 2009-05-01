@@ -57,7 +57,7 @@
 #define IPMI_MAX_CONFIDENTIALITY_TRAILER_LENGTH           64
 #define IPMI_MAX_INTEGRITY_DATA_LENGTH                    32
 
-int32_t
+int
 ipmi_calculate_sik (uint8_t authentication_algorithm,
                     uint8_t *k_g,
                     unsigned int k_g_len,
@@ -77,7 +77,7 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
   unsigned int hash_data_len;
   uint8_t hash_data[IPMI_MAX_KEY_DATA_LENGTH];
   uint8_t priv_byte = 0;
-  int32_t rv = -1;
+  int rv = -1;
 
   /* k_g can be NULL, indicating a empty k_g */
   if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
@@ -190,7 +190,7 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
   return (rv);
 }
 
-static int32_t
+static int
 _calculate_k_rakp_hmac (int hash_algorithm,
                         unsigned int expected_digest_len,
                         uint8_t *sik_key,
@@ -201,7 +201,7 @@ _calculate_k_rakp_hmac (int hash_algorithm,
                         unsigned int constant_len)
 {
   int computed_digest_len;
-  int32_t crypt_digest_len;
+  int crypt_digest_len;
 
   if (!IPMI_CRYPT_HASH_ALGORITHM_VALID (hash_algorithm)
       || !sik_key
@@ -254,7 +254,7 @@ _calculate_k_rakp_hmac (int hash_algorithm,
   return (computed_digest_len);
 }
 
-static int32_t
+static int
 _calculate_k_rakp_hmac_sha1 (uint8_t *sik_key,
                              unsigned int sik_key_len,
                              uint8_t *k,
@@ -284,7 +284,7 @@ _calculate_k_rakp_hmac_sha1 (uint8_t *sik_key,
                                   constant_len));
 }
 
-static int32_t
+static int
 _calculate_k_rakp_hmac_md5 (uint8_t *sik_key,
                             unsigned int sik_key_len,
                             uint8_t *k,
@@ -314,7 +314,7 @@ _calculate_k_rakp_hmac_md5 (uint8_t *sik_key,
                                   constant_len));
 }
 
-static int32_t
+static int
 _ipmi_calculate_k (uint8_t authentication_algorithm,
                    uint8_t *sik_key,
                    unsigned int sik_key_len,
@@ -353,7 +353,7 @@ _ipmi_calculate_k (uint8_t authentication_algorithm,
                                         constant_len));
 }
 
-int32_t
+int
 ipmi_calculate_k1 (uint8_t authentication_algorithm,
                    uint8_t *sik_key,
                    unsigned int sik_key_len,
@@ -374,7 +374,7 @@ ipmi_calculate_k1 (uint8_t authentication_algorithm,
                              IPMI_KEY_CONSTANT_LENGTH));
 }
 
-int32_t
+int
 ipmi_calculate_k2 (uint8_t authentication_algorithm,
                    uint8_t *sik_key,
                    unsigned int sik_key_len,
@@ -394,7 +394,7 @@ ipmi_calculate_k2 (uint8_t authentication_algorithm,
                              IPMI_KEY_CONSTANT_LENGTH));
 }
 
-int32_t
+int
 ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
                                       uint8_t integrity_algorithm,
                                       uint8_t confidentiality_algorithm,
@@ -418,7 +418,7 @@ ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
                                       unsigned int *confidentiality_key_len)
 {
   uint8_t *sik_key_buf;
-  int32_t sik_key_buf_len;
+  unsigned int sik_key_buf_len;
   uint8_t *integrity_key_buf;
   unsigned int integrity_key_buf_len;
   uint8_t *confidentiality_key_buf;
@@ -427,11 +427,11 @@ ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
   uint8_t *k_g_ptr;
   unsigned int k_g_ptr_len;
   uint8_t sik[IPMI_MAX_SIK_KEY_LENGTH];
-  int32_t sik_len;
+  int sik_len;
   uint8_t k1[IPMI_MAX_K1_LENGTH];
-  int32_t k1_len;
+  int k1_len;
   uint8_t k2[IPMI_MAX_K2_LENGTH];
-  int32_t k2_len;
+  int k2_len;
   int32_t rv = -1;
 
   if (!IPMI_CIPHER_SUITE_COMBINATION_VALID (authentication_algorithm,
@@ -630,7 +630,7 @@ ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
   return (rv);
 }
 
-int32_t
+int
 ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_algorithm,
                                                         uint8_t *k_uid,
                                                         unsigned int k_uid_len,
@@ -653,7 +653,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
   uint8_t digest[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
   uint8_t hash_algorithm, hash_flags;
   int32_t digest_len, expected_digest_len;
-  int32_t rv = -1;
+  int rv = -1;
 
   if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
        && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1

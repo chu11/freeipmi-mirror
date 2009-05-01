@@ -563,7 +563,7 @@ int
 fill_cmd_set_pef_configuration_parameters (fiid_obj_t obj_cmd_rq,
                                            uint8_t parameter_selector,
                                            uint8_t *configuration_parameter_data,
-                                           uint8_t configuration_parameter_data_len)
+                                           unsigned int configuration_parameter_data_len)
 {
   if (!configuration_parameter_data
       || !configuration_parameter_data_len
@@ -874,7 +874,7 @@ int
 fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_selector,
                                                          uint8_t block_selector,
                                                          uint8_t *string_data,
-                                                         uint32_t string_data_len,
+                                                         unsigned int string_data_len,
                                                          fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_STRING_SELECTOR_VALID (string_selector)

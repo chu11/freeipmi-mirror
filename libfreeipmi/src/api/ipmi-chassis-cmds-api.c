@@ -504,7 +504,7 @@ int
 ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
                                   uint8_t parameter_selector,
                                   uint8_t *configuration_parameter_data,
-                                  uint8_t data_len,
+                                  unsigned int configuration_parameter_data_len,
                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -537,7 +537,7 @@ ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
 
   if (fill_cmd_set_system_boot_options (parameter_selector,
                                         configuration_parameter_data,
-                                        data_len,
+                                        configuration_parameter_data_len,
                                         obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);

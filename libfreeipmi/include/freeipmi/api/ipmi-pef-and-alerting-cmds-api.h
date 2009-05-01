@@ -16,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
  */
 
-/* $Id: ipmi-pef-and-alerting-cmds-api.h,v 1.6 2009-04-29 17:18:22 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds-api.h,v 1.7 2009-05-01 00:07:30 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_API_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_API_H
@@ -118,7 +118,7 @@ int ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
                                                              uint8_t string_selector,
                                                              uint8_t block_selector,
                                                              uint8_t *string_data,
-                                                             uint8_t string_data_len,
+                                                             unsigned int string_data_len,
                                                              fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,

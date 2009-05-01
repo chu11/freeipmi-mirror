@@ -1,5 +1,7 @@
 cleanup
 -------
+const uint8_t *'s in all APIs as needed
+
 ipmi-lan_recvfrom/sendto return
 
 ipmiconsole

@@ -332,7 +332,7 @@ ipmi_cmd_send_message (ipmi_ctx_t ctx,
                        uint8_t message_encryption,
                        uint8_t tracking_operation,
                        uint8_t *message_data,
-                       uint32_t message_data_len,
+                       unsigned int message_data_len,
                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -806,8 +806,8 @@ ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
 int
 ipmi_cmd_get_session_challenge (ipmi_ctx_t ctx,
                                 uint8_t authentication_type,
-                                char *user_name,
-                                uint32_t user_name_len,
+                                const char *user_name,
+                                unsigned int user_name_len,
                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -870,7 +870,7 @@ ipmi_cmd_activate_session (ipmi_ctx_t ctx,
                            uint8_t authentication_type,
                            uint8_t maximum_privilege_level,
                            uint8_t *challenge_string,
-                           uint32_t challenge_string_len,
+                           unsigned int challenge_string_len,
                            uint32_t initial_outbound_sequence_number,
                            fiid_obj_t obj_cmd_rs)
 {
@@ -1245,7 +1245,7 @@ ipmi_cmd_set_channel_security_keys (ipmi_ctx_t ctx,
                                     uint8_t operation,
                                     uint8_t key_id,
                                     uint8_t *key_value,
-                                    uint32_t key_value_len,
+                                    unsigned int key_value_len,
                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1445,7 +1445,7 @@ ipmi_cmd_get_user_access (ipmi_ctx_t ctx,
 int
 ipmi_cmd_set_user_name (ipmi_ctx_t ctx,
                         uint8_t user_id,
-                        char *user_name,
+                        const char *user_name,
                         unsigned int user_name_len,
                         fiid_obj_t obj_cmd_rs)
 {
@@ -1562,7 +1562,7 @@ int
 ipmi_cmd_set_user_password (ipmi_ctx_t ctx,
                             uint8_t user_id,
                             uint8_t operation,
-                            char *password,
+                            const char *password,
                             unsigned int password_len,
                             fiid_obj_t obj_cmd_rs)
 {
@@ -1627,7 +1627,7 @@ ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
                                 uint8_t user_id,
                                 uint8_t password_size,
                                 uint8_t operation,
-                                char *password,
+                                const char *password,
                                 unsigned int password_len,
                                 fiid_obj_t obj_cmd_rs)
 {

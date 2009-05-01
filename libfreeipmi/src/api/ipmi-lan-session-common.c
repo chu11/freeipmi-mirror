@@ -2935,7 +2935,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
   int32_t managed_system_guid_len;
   uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
-  int32_t key_exchange_authentication_code_len;
+  int key_exchange_authentication_code_len;
   uint8_t message_tag;
   char *username;
   char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
