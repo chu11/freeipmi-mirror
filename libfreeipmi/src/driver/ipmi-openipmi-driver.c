@@ -416,7 +416,7 @@ _openipmi_write (ipmi_openipmi_ctx_t ctx,
   assert (IPMI_BMC_LUN_VALID (lun));
   assert (IPMI_NET_FN_RQ_VALID (net_fn));
   assert (fiid_obj_valid (obj_cmd_rq));
-  assert (fiid_obj_packet_valid (obj_cmd_rq));
+  assert (fiid_obj_packet_valid (obj_cmd_rq) == 1);
 
   /* Due to API differences, we need to extract the cmd out of the
    * request.
@@ -571,7 +571,7 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
       || !IPMI_NET_FN_RQ_VALID (net_fn)
       || !fiid_obj_valid (obj_cmd_rq)
       || !fiid_obj_valid (obj_cmd_rs)
-      || !fiid_obj_packet_valid (obj_cmd_rq))
+      || fiid_obj_packet_valid (obj_cmd_rq) <= 0)
     {
       OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
       return (-1);
@@ -616,7 +616,7 @@ ipmi_openipmi_cmd_ipmb (ipmi_openipmi_ctx_t ctx,
       || !IPMI_NET_FN_RQ_VALID (net_fn)
       || !fiid_obj_valid (obj_cmd_rq)
       || !fiid_obj_valid (obj_cmd_rs)
-      || !fiid_obj_packet_valid (obj_cmd_rq))
+      || fiid_obj_packet_valid (obj_cmd_rq) <= 0)
     {
       OPENIPMI_SET_ERRNUM (ctx, IPMI_OPENIPMI_ERR_PARAMETERS);
       return (-1);

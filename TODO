@@ -1,17 +1,7 @@
 cleanup
 -------
-const uint8_t *'s in all APIs as needed
-
 ipmi-lan_recvfrom/sendto return
 
-ipmiconsole
-- uint32_t -> unsigned int
-
-ipmi_crypt_cipher_key_len
-ipmi_crypt_cipher_block_len
-ipmi_crypt_hash_digest_len
-fiid_obj_packet_valid usage
-- checkout == 1, not just !=0
 document which funcs return lens
 - raw funcs
 fiid.c internal

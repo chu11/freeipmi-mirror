@@ -827,7 +827,7 @@ _ipmi_ssif_cmd_write (ipmi_ssif_ctx_t ctx,
   assert (IPMI_BMC_LUN_VALID (lun));
   assert (IPMI_NET_FN_RQ_VALID (net_fn));
   assert (fiid_obj_valid (obj_cmd_rq));
-  assert (fiid_obj_packet_valid (obj_cmd_rq));
+  assert (fiid_obj_packet_valid (obj_cmd_rq) == 1);
 
   if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
     {
@@ -981,7 +981,7 @@ ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
       || !IPMI_NET_FN_RQ_VALID (net_fn)
       || !fiid_obj_valid (obj_cmd_rq)
       || !fiid_obj_valid (obj_cmd_rs)
-      || !fiid_obj_packet_valid (obj_cmd_rq))
+      || fiid_obj_packet_valid (obj_cmd_rq) <= 0)
     {
       SSIF_SET_ERRNUM (ctx, IPMI_SSIF_ERR_PARAMETERS);
       return (-1);

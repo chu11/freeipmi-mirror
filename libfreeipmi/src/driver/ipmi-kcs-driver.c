@@ -915,7 +915,7 @@ _ipmi_kcs_cmd_write (ipmi_kcs_ctx_t ctx,
   assert (IPMI_BMC_LUN_VALID (lun));
   assert (IPMI_NET_FN_RQ_VALID (net_fn));
   assert (fiid_obj_valid (obj_cmd_rq));
-  assert (fiid_obj_packet_valid (obj_cmd_rq));
+  assert (fiid_obj_packet_valid (obj_cmd_rq) == 1);
 
   if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
     {
@@ -1069,7 +1069,7 @@ ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
       || !IPMI_NET_FN_RQ_VALID (net_fn)
       || !fiid_obj_valid (obj_cmd_rq)
       || !fiid_obj_valid (obj_cmd_rs)
-      || !fiid_obj_packet_valid (obj_cmd_rq))
+      || fiid_obj_packet_valid (obj_cmd_rq) <= 0)
     {
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_PARAMETERS);
       return (-1);

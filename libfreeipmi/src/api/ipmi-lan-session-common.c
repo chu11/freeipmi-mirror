@@ -482,7 +482,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
           && IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type)
           && !(password && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
           && fiid_obj_valid (obj_cmd_rq)
-          && fiid_obj_packet_valid (obj_cmd_rq));
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1);
 
   if (fiid_obj_clear (ctx->io.outofband.rq.obj_rmcp_hdr) < 0)
     {
@@ -863,7 +863,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
           && IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type)
           && !(password && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
           && fiid_obj_valid (obj_cmd_rq)
-          && fiid_obj_packet_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1
           && fiid_obj_valid (obj_cmd_rs));
 
   if (!ctx->io.outofband.last_received.tv_sec
@@ -1063,7 +1063,7 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
           && IPMI_BMC_LUN_VALID (lun)
           && IPMI_NET_FN_VALID (net_fn)
           && fiid_obj_valid (obj_cmd_rq)
-          && fiid_obj_packet_valid (obj_cmd_rq));
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1);
 
   if (!(obj_ipmb_msg_hdr_rq = fiid_obj_create (tmpl_ipmb_msg_hdr_rq)))
     {
@@ -1161,7 +1161,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
               || ctx->type == IPMI_DEVICE_LAN_2_0)
           && ctx->io.outofband.sockfd
           && fiid_obj_valid (obj_cmd_rq)
-          && fiid_obj_packet_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1
           && fiid_obj_valid (obj_cmd_rs));
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
@@ -1965,7 +1965,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
           && IPMI_CONFIDENTIALITY_ALGORITHM_VALID (confidentiality_algorithm)
           && !(password && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
           && fiid_obj_valid (obj_cmd_rq)
-          && fiid_obj_packet_valid (obj_cmd_rq));
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1);
 
   if (fiid_obj_clear (ctx->io.outofband.rq.obj_rmcp_hdr) < 0)
     {
@@ -2590,7 +2590,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
           && IPMI_CONFIDENTIALITY_ALGORITHM_VALID (confidentiality_algorithm)
           && !(password && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
           && fiid_obj_valid (obj_cmd_rq)
-          && fiid_obj_packet_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1
           && fiid_obj_valid (obj_cmd_rs));
 
   if (!ctx->io.outofband.last_received.tv_sec
@@ -2783,7 +2783,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
           && ctx->type == IPMI_DEVICE_LAN_2_0
           && ctx->io.outofband.sockfd
           && fiid_obj_valid (obj_cmd_rq)
-          && fiid_obj_packet_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1
           && fiid_obj_valid (obj_cmd_rs));
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.29 2009-04-29 16:40:41 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.30 2009-05-01 03:21:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -89,7 +89,7 @@ int
 ipmiconsole_check_authentication_code (ipmiconsole_ctx_t c,
                                        ipmiconsole_packet_type_t p,
                                        uint8_t *buf,
-                                       uint32_t buflen)
+                                       unsigned int buflen)
 {
   uint8_t *password;
   int rv;

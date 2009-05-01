@@ -403,7 +403,7 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
   assert (IPMI_BMC_LUN_VALID (lun));
   assert (IPMI_NET_FN_RQ_VALID (net_fn));
   assert (fiid_obj_valid (obj_cmd_rq));
-  assert (fiid_obj_packet_valid (obj_cmd_rq));
+  assert (fiid_obj_packet_valid (obj_cmd_rq) == 1);
   assert (ctx->io_init);
   assert (ctx->putmsg_intf);
 
@@ -605,7 +605,7 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
       || !IPMI_NET_FN_RQ_VALID (net_fn)
       || !fiid_obj_valid (obj_cmd_rq)
       || !fiid_obj_valid (obj_cmd_rs)
-      || !fiid_obj_packet_valid (obj_cmd_rq))
+      || fiid_obj_packet_valid (obj_cmd_rq) <= 0)
     {
       SUNBMC_SET_ERRNUM (ctx, IPMI_SUNBMC_ERR_PARAMETERS);
       return (-1);

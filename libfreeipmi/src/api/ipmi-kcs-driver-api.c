@@ -394,7 +394,7 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
           && ctx->magic == IPMI_CTX_MAGIC
           && ctx->type == IPMI_DEVICE_KCS
           && fiid_obj_valid (obj_cmd_rq)
-          && fiid_obj_packet_valid (obj_cmd_rq));
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1);
 
   if (!(obj_ipmb_msg_hdr_rq = fiid_obj_create (tmpl_ipmb_msg_hdr_rq)))
     {
