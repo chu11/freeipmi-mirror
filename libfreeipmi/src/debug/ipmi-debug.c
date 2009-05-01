@@ -224,8 +224,8 @@ ipmi_obj_dump_ipmb (int fd,
   fiid_obj_t obj_ipmb_msg_hdr = NULL;
   fiid_obj_t obj_ipmb_cmd = NULL;
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
-  int32_t obj_ipmb_msg_trlr_len = 0;
-  int32_t obj_ipmb_cmd_len = 0;
+  int obj_ipmb_msg_trlr_len = 0;
+  unsigned int obj_ipmb_cmd_len = 0;
   int32_t ipmb_hdr_len = 0;
   int32_t ipmb_cmd_len = 0;
   int rv = -1;

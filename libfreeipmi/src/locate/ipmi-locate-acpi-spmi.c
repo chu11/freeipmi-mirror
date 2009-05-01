@@ -1140,8 +1140,8 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
 {
   uint64_t val;
 
-  int32_t acpi_table_hdr_length;
-  int32_t acpi_rsdp_descriptor_length;
+  int acpi_table_hdr_length;
+  int acpi_rsdp_descriptor_length;
 
   fiid_obj_t obj_acpi_rsdp_descriptor = NULL;
   uint64_t rsdt_xsdt_address;
@@ -1262,7 +1262,7 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
   for (i = 0, signature_table_count = 0; i < acpi_table_count; i++)
     {
       fiid_field_t *tmpl_table_address = NULL;
-      int32_t len_table;
+      int len_table;
 
       if (revision < 2)
         tmpl_table_address = &tmpl_table_address_32[0];
@@ -1377,7 +1377,7 @@ _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
   uint32_t table_data_length = 0;
   uint32_t copy_length;
   int instance;
-  int32_t acpi_spmi_table_descriptor_len;
+  int acpi_spmi_table_descriptor_len;
   int rv = -1;
 
   assert (ctx);

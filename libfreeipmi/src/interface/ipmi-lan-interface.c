@@ -260,7 +260,8 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
                        unsigned int pkt_len)
 {
   uint64_t authentication_type;
-  uint32_t indx, required_len;
+  unsigned int indx = 0;
+  int32_t required_len;
   uint8_t *authentication_code_field_ptr = NULL;
   uint8_t *checksum_data_ptr = NULL;
   uint8_t *msg_data_ptr = NULL;
@@ -349,8 +350,6 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
     }
 
   memset (pkt, 0, pkt_len);
-
-  indx = 0;
 
   if ((len = fiid_obj_get_all (obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
     {
@@ -602,7 +601,7 @@ unassemble_ipmi_lan_pkt (const uint8_t *pkt,
                          fiid_obj_t obj_lan_msg_trlr)
 {
   uint64_t authentication_type;
-  uint32_t indx;
+  unsigned int indx = 0;
   uint32_t obj_cmd_len;
   int32_t obj_lan_msg_trlr_len;
   int32_t len;

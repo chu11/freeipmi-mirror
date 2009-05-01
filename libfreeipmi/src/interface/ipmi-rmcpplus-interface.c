@@ -565,7 +565,7 @@ _construct_payload_buf (uint8_t payload_type,
 {
   int32_t obj_lan_msg_hdr_len = 0;
   int32_t obj_cmd_len = 0;
-  int32_t obj_lan_msg_trlr_len = 0;
+  int obj_lan_msg_trlr_len = 0;
   int32_t checksum_start_offset;
   unsigned int payload_len;
   uint8_t checksum;
@@ -1726,7 +1726,8 @@ _deconstruct_payload_buf (uint8_t payload_type,
                           const uint8_t *pkt,
                           unsigned int lan_msg_len)
 {
-  int32_t obj_lan_msg_trlr_len, len;
+  int obj_lan_msg_trlr_len;
+  int32_t len;
   unsigned int obj_cmd_len;
   unsigned int indx = 0;
 

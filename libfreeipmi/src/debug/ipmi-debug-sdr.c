@@ -54,7 +54,7 @@ ipmi_dump_sdr_record (int fd,
   fiid_obj_t obj_sdr_record = NULL;
   uint64_t val;
   uint8_t record_type;
-  int32_t sdr_record_header_len;
+  int sdr_record_header_len;
   int rv = -1;
 
   if (!sdr_record)

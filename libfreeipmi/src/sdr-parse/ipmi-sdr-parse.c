@@ -182,7 +182,7 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_parse_ctx_t ctx,
                                    uint8_t *record_type)
 {
   fiid_obj_t obj_sdr_record_header = NULL;
-  int32_t sdr_record_header_len;
+  int sdr_record_header_len;
   uint64_t val;
   int rv = -1;
 

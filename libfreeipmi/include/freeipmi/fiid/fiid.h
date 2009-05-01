@@ -184,7 +184,7 @@ int FIID_TEMPLATE_FIELD_LOOKUP (fiid_template_t tmpl,
  * Returns the total length (in bits) of the all the fields in the
  * template, -1 on error.
  */
-int32_t fiid_template_len (fiid_template_t tmpl);
+int fiid_template_len (fiid_template_t tmpl);
 
 /*
  * fiid_template_len_bytes
@@ -193,7 +193,7 @@ int32_t fiid_template_len (fiid_template_t tmpl);
  * template, -1 on error.  Will return an error if template bit length
  * is not a multiple of 8.
  */
-int32_t fiid_template_len_bytes (fiid_template_t tmpl);
+int fiid_template_len_bytes (fiid_template_t tmpl);
 
 /*
  * fiid_template_field_start

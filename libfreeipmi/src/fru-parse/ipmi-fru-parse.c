@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.3 2009-05-01 01:55:09 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.4 2009-05-01 05:21:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -428,7 +428,7 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   fiid_obj_t fru_get_inventory_rs = NULL;
   fiid_obj_t fru_common_header = NULL;
-  int32_t common_header_len;
+  int common_header_len;
   uint8_t format_version;
   uint64_t val;
   int rv = -1;
@@ -652,7 +652,7 @@ _parse_multirecord_header (ipmi_fru_parse_ctx_t ctx,
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1]; 
   fiid_obj_t fru_multirecord_header = NULL;
-  int32_t multirecord_header_length;
+  int multirecord_header_length;
   uint64_t val;
   int ret;
   int rv = -1;
@@ -865,7 +865,7 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1]; 
   fiid_obj_t fru_info_area_header = NULL;
-  int32_t info_area_header_length;
+  int info_area_header_length;
   unsigned int info_area_length;
   unsigned int info_area_length_bytes;
   uint8_t expected_format_version;

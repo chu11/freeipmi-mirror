@@ -138,11 +138,11 @@ _fiid_template_check_valid_flags (fiid_template_t tmpl)
   return (0);
 }
 
-static int32_t
+static int
 _fiid_template_len (fiid_template_t tmpl,
                     unsigned int *tmpl_len)
 {
-  int32_t len = 0;
+  int len = 0;
   int i;
 
   assert (tmpl);
@@ -162,11 +162,11 @@ _fiid_template_len (fiid_template_t tmpl,
   return (len);
 }
 
-static int32_t
+static int
 _fiid_template_len_bytes (fiid_template_t tmpl,
                           unsigned int *tmpl_len)
 {
-  int32_t len;
+  int len;
 
   assert (tmpl);
   assert (tmpl_len);
@@ -232,11 +232,11 @@ FIID_TEMPLATE_FIELD_LOOKUP (fiid_template_t tmpl,
   return (ret);
 }
 
-int32_t
+int
 fiid_template_len (fiid_template_t tmpl)
 {
   unsigned int temp;
-  int32_t len = 0;
+  int len = 0;
 
   if (!tmpl)
     {
@@ -252,7 +252,7 @@ fiid_template_len (fiid_template_t tmpl)
   return (len);
 }
 
-int32_t
+int
 fiid_template_len_bytes (fiid_template_t tmpl)
 {
   int32_t len;
@@ -743,7 +743,7 @@ fiid_obj_create (fiid_template_t tmpl)
 {
   fiid_obj_t obj = NULL;
   uint32_t max_pkt_len = 0;
-  int32_t data_len;
+  int data_len;
 
   int i;
 
@@ -921,7 +921,7 @@ fiid_obj_t
 fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl)
 {
   fiid_obj_t dest_obj = NULL;
-  int32_t data_len;
+  int data_len;
   unsigned int field_data_len = 0;
   uint8_t *databuf = NULL;
 

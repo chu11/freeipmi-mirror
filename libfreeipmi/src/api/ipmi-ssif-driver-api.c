@@ -134,7 +134,7 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
     uint8_t *pkt;
     unsigned int pkt_len;
     int read_len;
-    int32_t hdr_len, cmd_len;
+    int hdr_len, cmd_len;
     fiid_field_t *tmpl = NULL;
     int rv = -1;
 

@@ -1184,7 +1184,7 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
                                                         unsigned int authentication_code_data_len,
                                                         fiid_obj_t obj_rmcpplus_session_trlr)
 {
-  int32_t rmcp_header_len;
+  int rmcp_header_len;
   unsigned int hash_algorithm, hash_flags;
   unsigned int expected_digest_len, compare_digest_len, hash_data_len;
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LENGTH];
@@ -1472,7 +1472,7 @@ ipmi_rmcpplus_calculate_payload_type (const uint8_t *pkt,
                                       unsigned int pkt_len,
                                       uint8_t *payload_type)
 {
-  int32_t rmcp_hdr_len;
+  int rmcp_hdr_len;
   uint8_t auth_type;
 
   if (!pkt

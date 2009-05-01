@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.29 2009-05-01 01:55:10 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.30 2009-05-01 05:21:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -246,8 +246,8 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   fiid_obj_t obj_sdr_record_header = NULL;
-  int32_t sdr_record_header_length = 0;
-  int32_t record_length = 0;
+  int sdr_record_header_length = 0;
+  unsigned int record_length = 0;
   int rv = -1;
   uint32_t bytes_to_read = IPMI_SDR_CACHE_BYTES_TO_READ_START;
   uint32_t offset_into_record = 0;

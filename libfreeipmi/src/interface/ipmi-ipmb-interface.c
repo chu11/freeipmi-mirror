@@ -143,7 +143,7 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
                         fiid_obj_t obj_ipmb_msg)
 {
   uint8_t buf[IPMB_MAX_LEN+1];
-  uint32_t indx;
+  unsigned int indx = 0;
   uint8_t *checksum_data_ptr = NULL;
   uint32_t checksum_data_count = 0;
   int32_t len;
@@ -210,8 +210,6 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
     }
 
   memset (buf, '\0', IPMB_MAX_LEN+1);
-
-  indx = 0;
 
   if ((len = fiid_obj_get_block (obj_ipmb_msg_hdr,
                                  "rs_addr",
@@ -287,9 +285,9 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
 {
   uint8_t buf[IPMB_MAX_LEN+1];
   int32_t buf_len;
-  uint32_t indx;
+  unsigned int indx = 0;
   uint32_t ipmb_msg_len;
-  int32_t obj_ipmb_msg_trlr_len;
+  int obj_ipmb_msg_trlr_len;
   int32_t len;
 
   if (!fiid_obj_valid (obj_ipmb_msg)
@@ -319,8 +317,6 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
       FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg);
       return (-1);
     }
-
-  indx = 0;
 
   if (fiid_obj_clear (obj_ipmb_msg_hdr) < 0)
     {

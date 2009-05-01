@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-common.c,v 1.15 2009-03-05 21:47:29 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-common.c,v 1.16 2009-05-01 05:21:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -164,7 +164,7 @@ ipmi_sdr_cache_record_type_str (ipmi_sdr_cache_ctx_t ctx,
 {
   fiid_obj_t obj_sdr_record_header = NULL;
   uint64_t record_type;
-  int32_t sdr_record_header_len;
+  int sdr_record_header_len;
   char *rv = NULL;
 
   assert (ctx);

@@ -60,8 +60,9 @@ _ipmi_dump_lan_packet (int fd,
                        fiid_template_t tmpl_ipmb_msg_hdr,
                        fiid_template_t tmpl_ipmb_cmd)
 {
-  uint32_t indx = 0;
-  int32_t obj_cmd_len, obj_lan_msg_trlr_len;
+  unsigned int indx = 0;
+  int obj_lan_msg_trlr_len;
+  int32_t obj_cmd_len;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   char *rmcp_hdr =
     "RMCP Header:\n"
@@ -381,8 +382,8 @@ _ipmi_dump_lan_packet (int fd,
 
       if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
         {
-          int32_t obj_ipmb_msg_trlr_len = 0;
-          int32_t obj_ipmb_cmd_len = 0;
+          int obj_ipmb_msg_trlr_len = 0;
+          unsigned int obj_ipmb_cmd_len = 0;
           int32_t ipmb_hdr_len = 0;
           int32_t ipmb_cmd_len = 0;
 

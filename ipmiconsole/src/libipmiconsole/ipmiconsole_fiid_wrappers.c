@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.c,v 1.19 2009-04-29 23:31:59 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.c,v 1.20 2009-05-01 05:21:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -45,25 +45,6 @@
 #include "ipmiconsole_debug.h"
 
 #include "freeipmi-portability.h"
-
-int32_t
-Fiid_template_len_bytes (ipmiconsole_ctx_t c, fiid_template_t tmpl)
-{
-  int32_t rv;
-
-  assert (c);
-  assert (c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert (tmpl);
-
-  if ((rv = fiid_template_len_bytes (tmpl)) < 0)
-    {
-      IPMICONSOLE_CTX_DEBUG (c, ("fiid_template_len_bytes: %s", strerror (errno)));
-      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-
-  return (rv);
-}
 
 int32_t
 Fiid_template_block_len_bytes (ipmiconsole_ctx_t c, fiid_template_t tmpl, char *field_start, char *field_end)

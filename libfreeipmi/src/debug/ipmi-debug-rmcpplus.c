@@ -218,7 +218,8 @@ _dump_rmcpplus_payload_data (int fd,
   fiid_obj_t obj_ipmb_cmd = NULL;
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   fiid_obj_t obj_lan_msg_trlr = NULL;
-  int32_t len, obj_cmd_len, obj_lan_msg_trlr_len;
+  int obj_lan_msg_trlr_len;
+  int32_t len, obj_cmd_len;
   unsigned int indx = 0;
   int rv = -1;
 
@@ -344,8 +345,8 @@ _dump_rmcpplus_payload_data (int fd,
 
           if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
             {
-              int32_t obj_ipmb_msg_trlr_len = 0;
-              int32_t obj_ipmb_cmd_len = 0;
+              int obj_ipmb_msg_trlr_len = 0;
+              unsigned int obj_ipmb_cmd_len = 0;
               int32_t ipmb_hdr_len = 0;
               int32_t ipmb_cmd_len = 0;
 

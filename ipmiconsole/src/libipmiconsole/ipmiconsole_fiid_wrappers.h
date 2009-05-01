@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.h,v 1.10 2009-04-29 23:31:59 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.h,v 1.11 2009-05-01 05:21:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -30,7 +30,6 @@
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
 
-int32_t Fiid_template_len_bytes (ipmiconsole_ctx_t c, fiid_template_t tmpl);
 int32_t Fiid_template_block_len_bytes (ipmiconsole_ctx_t c, fiid_template_t tmpl, char *field_start, char *field_end);
 
 fiid_obj_t Fiid_obj_create (ipmiconsole_ctx_t c, fiid_template_t tmpl);

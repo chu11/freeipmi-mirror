@@ -906,7 +906,8 @@ _ipmi_kcs_cmd_write (ipmi_kcs_ctx_t ctx,
 {
   uint8_t *pkt = NULL;
   unsigned int pkt_len;
-  int32_t hdr_len, cmd_len;
+  int hdr_len;
+  int32_t cmd_len;
   fiid_obj_t obj_hdr = NULL;
   int rv = -1;
 
@@ -979,7 +980,7 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
 {
   uint8_t *pkt = NULL;
   unsigned int pkt_len;
-  int32_t hdr_len, cmd_len;
+  int hdr_len, cmd_len;
   int read_len;
   fiid_obj_t obj_hdr = NULL;
   fiid_field_t *tmpl = NULL;

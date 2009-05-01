@@ -327,7 +327,8 @@ ipmi_lan_check_packet_session_authentication_code (const uint8_t *pkt,
                                                    unsigned int authentication_code_data_len)
 {
   uint8_t authentication_type_recv;
-  int32_t rmcp_hdr_len, authentication_type_index, authentication_code_index;
+  int rmcp_hdr_len;
+  int32_t authentication_type_index, authentication_code_index;
   uint32_t authentication_type_offset, authentication_code_offset;
   uint8_t authentication_code_buf[IPMI_1_5_MAX_PASSWORD_LENGTH];
   uint8_t pwbuf[IPMI_1_5_MAX_PASSWORD_LENGTH];
@@ -388,7 +389,8 @@ ipmi_lan_check_packet_session_authentication_code (const uint8_t *pkt,
   if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
       || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
     {
-      int32_t session_id_index, session_sequence_number_index, data_index;
+      int data_index;
+      int32_t session_id_index, session_sequence_number_index;
       uint32_t session_id_offset, session_sequence_number_offset, data_offset;
       int32_t session_id_len, session_sequence_number_len;
 
@@ -674,7 +676,8 @@ ipmi_lan_check_packet_checksum (const uint8_t *pkt, unsigned int pkt_len)
 {
   uint8_t authentication_type;
   uint32_t authentication_type_offset;
-  int32_t rmcp_hdr_len, msg_hdr_len1, msg_hdr_len2, authentication_code_len;
+  int rmcp_hdr_len;
+  int32_t msg_hdr_len1, msg_hdr_len2, authentication_code_len;
   int32_t authentication_type_start_bytes;
   int32_t checksum1_block_index, checksum1_block_len,
     checksum2_block_index, checksum2_block_len;

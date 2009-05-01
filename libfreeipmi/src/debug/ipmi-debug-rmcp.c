@@ -51,7 +51,7 @@ ipmi_dump_rmcp_packet (int fd,
                        unsigned int pkt_len,
                        fiid_template_t tmpl_cmd)
 {
-  uint32_t indx = 0;
+  unsigned int indx = 0;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   char *rmcp_hdr =
     "RMCP Header:\n"

@@ -256,7 +256,8 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
   {
     uint8_t *pkt;
     unsigned int pkt_len;
-    int32_t hdr_len, cmd_len, send_len;
+    int hdr_len;
+    int32_t cmd_len, send_len;
 
     if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
       {
@@ -310,7 +311,7 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
   {
     uint8_t *pkt;
     unsigned int pkt_len;
-    int32_t hdr_len, cmd_len;
+    int hdr_len, cmd_len;
     int read_len;
     fiid_field_t *tmpl = NULL;
     int rv = -1;
@@ -676,7 +677,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   unsigned int pkt_len;
   uint8_t *readbuf = NULL;
   int bytes_read = 0;
-  int32_t hdr_len;
+  int hdr_len;
   int rv = -1;
   uint64_t cmd = 0;             /* used for debugging */
 

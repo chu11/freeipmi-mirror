@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.3 2009-05-01 01:55:09 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.4 2009-05-01 05:21:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -624,7 +624,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
                                                      unsigned int *predictive_fail_tachometer_lower_threshold)
 {
   fiid_obj_t obj_record = NULL;
-  int32_t tmpl_record_length;
+  int tmpl_record_length;
   uint64_t val;
   int rv = -1;
 
@@ -934,7 +934,7 @@ ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
                                       unsigned int *maximum_current_draw)
 {
   fiid_obj_t obj_record = NULL;
-  int32_t tmpl_record_length;
+  int tmpl_record_length;
   uint64_t val;
   int rv = -1;
 
