@@ -72,7 +72,7 @@ int32_t ipmi_crypt_hash (int hash_algorithm,
                          uint8_t *digest,
                          unsigned int digest_len);
 
-int32_t ipmi_crypt_hash_digest_len (int hash_algorithm);
+int ipmi_crypt_hash_digest_len (int hash_algorithm);
 
 int32_t ipmi_crypt_cipher_encrypt (int cipher_algorithm,
                                    int cipher_mode,

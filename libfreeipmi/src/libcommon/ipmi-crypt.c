@@ -180,7 +180,7 @@ ipmi_crypt_hash (int hash_algorithm,
   return (rv);
 }
 
-int32_t
+int
 ipmi_crypt_hash_digest_len (int hash_algorithm)
 {
   int gcry_md_algorithm;
