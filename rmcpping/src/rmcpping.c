@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.47 2009-04-30 17:54:14 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.48 2009-05-01 22:05:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -125,7 +125,8 @@ parsepacket (char * destination,
 {
   fiid_obj_t obj_rmcp_hdr = NULL;
   fiid_obj_t obj_rmcp_cmd = NULL;
-  uint64_t message_type, ipmi_supported, message_tag;
+  uint8_t message_type, message_tag;
+  uint64_t val;
   int rv = -1;
 
   assert (destination);
@@ -166,9 +167,12 @@ parsepacket (char * destination,
                            obj_rmcp_cmd) < 0)
     ipmi_ping_err_exit ("unassemble_rmcp_pkt: %s", strerror (errno));
 
-  if (FIID_OBJ_GET (obj_rmcp_cmd, "message_type", (uint64_t *)&message_type) < 0)
+  if (FIID_OBJ_GET (obj_rmcp_cmd,
+                    "message_type",
+                    &val) < 0)
     ipmi_ping_err_exit ("fiid_obj_get: 'message_type': %s",
                         fiid_obj_errormsg (obj_rmcp_cmd));
+  message_type = val;
   
   if (message_type != RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG)
     {
@@ -176,9 +180,12 @@ parsepacket (char * destination,
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_rmcp_cmd, "message_tag", (uint64_t *)&message_tag) < 0)
+  if (FIID_OBJ_GET (obj_rmcp_cmd,
+                    "message_tag",
+                    &val) < 0)
     ipmi_ping_err_exit ("fiid_obj_get: 'message_tag': %s",
                         fiid_obj_errormsg (obj_rmcp_cmd));
+  message_tag = val;
   
   if (message_tag != (sequence_number % (RMCP_ASF_MESSAGE_TAG_MAX + 1)))
     {
@@ -189,11 +196,14 @@ parsepacket (char * destination,
   printf ("pong received from %s: message_tag=%u", from, (uint32_t)message_tag);
   if (verbose)
     {
+      uint8_t ipmi_supported;
+      
       if (FIID_OBJ_GET (obj_rmcp_cmd,
                         "supported_entities.ipmi_supported",
-                        (uint64_t *)&ipmi_supported) < 0)
+                        &val) < 0)
         ipmi_ping_err_exit ("fiid_obj_get: 'supported_entities.ipmi_supported': %s",
                             fiid_obj_errormsg (obj_rmcp_cmd));
+      ipmi_supported = val;
       
       printf (", ipmi %s", _supported (ipmi_supported));
     }

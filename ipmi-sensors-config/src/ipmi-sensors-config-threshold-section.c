@@ -116,7 +116,7 @@ static config_err_t
 _decode_value (ipmi_sensors_config_state_data_t *state_data,
                uint8_t *sdr_record,
                unsigned int sdr_record_len,
-               uint64_t value_raw,
+               uint8_t value_raw,
                double *value_calc)
 {
   int8_t r_exponent, b_exponent;
@@ -248,8 +248,9 @@ threshold_checkout (const char *section_name,
   config_err_t ret;
   char *readable_str;
   char *threshold_str;
-  uint64_t readable;
-  uint64_t threshold_raw;
+  uint8_t readable;
+  uint8_t threshold_raw;
+  uint64_t val;
   double threshold_calc;
   uint8_t sensor_number;
 
@@ -349,7 +350,7 @@ threshold_checkout (const char *section_name,
     /* unknown key_name - fatal error */
     goto cleanup;
 
-  if (FIID_OBJ_GET (obj_cmd_rs, readable_str, &readable) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, readable_str, &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -358,6 +359,7 @@ threshold_checkout (const char *section_name,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  readable = val;
 
   if (!readable)
     {
@@ -372,7 +374,7 @@ threshold_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs, threshold_str, &threshold_raw) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, threshold_str, &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -381,6 +383,7 @@ threshold_checkout (const char *section_name,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  threshold_raw = val;
 
   if ((ret = _decode_value (state_data,
                             sdr_record,
