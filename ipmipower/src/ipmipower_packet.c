@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.113 2009-05-01 17:58:30 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.114 2009-05-01 18:29:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -484,7 +484,7 @@ _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
                          char *buf,
                          unsigned int buflen)
 {
-  int32_t len;
+  int len;
 
   assert (ip);
   assert (PACKET_TYPE_VALID_REQ (pkt));

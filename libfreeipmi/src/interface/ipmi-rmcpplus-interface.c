@@ -556,7 +556,7 @@ fill_rmcpplus_rakp_message_3 (uint8_t message_tag,
   return (0);
 }
 
-static int32_t
+static int
 _construct_payload_buf (uint8_t payload_type,
                         fiid_obj_t obj_lan_msg_hdr,
                         fiid_obj_t obj_cmd,
@@ -570,7 +570,7 @@ _construct_payload_buf (uint8_t payload_type,
   unsigned int payload_len;
   uint8_t checksum;
   int len;
-  int32_t rv = -1;
+  int rv = -1;
   unsigned int indx = 0;
   fiid_obj_t obj_lan_msg_trlr = NULL;
 
@@ -684,14 +684,14 @@ _construct_payload_buf (uint8_t payload_type,
   return (rv);
 }
 
-static int32_t
+static int
 _construct_payload_confidentiality_none (uint8_t payload_type,
                                          fiid_obj_t obj_lan_msg_hdr,
                                          fiid_obj_t obj_cmd,
                                          fiid_obj_t obj_rmcpplus_payload)
 {
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
-  int32_t payload_len;
+  int payload_len;
 
   assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
            || payload_type == IPMI_PAYLOAD_TYPE_SOL)
@@ -732,7 +732,7 @@ _construct_payload_confidentiality_none (uint8_t payload_type,
   return (payload_len);
 }
 
-static int32_t
+static int
 _construct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
                                                 uint8_t payload_encrypted,
                                                 fiid_obj_t obj_lan_msg_hdr,
@@ -742,10 +742,10 @@ _construct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
                                                 fiid_obj_t obj_rmcpplus_payload)
 {
   uint8_t iv[IPMI_CRYPT_AES_CBC_128_IV_LENGTH];
-  int32_t iv_len;
+  int iv_len;
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t pad_len;
-  int32_t payload_len;
+  int payload_len;
   int cipher_keylen, cipher_blocklen, encrypt_len;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
@@ -886,7 +886,7 @@ _construct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
   return (iv_len + payload_len + pad_len + 1);
 }
 
-static int32_t
+static int
 _construct_payload_rakp (uint8_t payload_type,
                          fiid_obj_t obj_cmd,
                          fiid_obj_t obj_rmcpplus_payload)
@@ -934,7 +934,7 @@ _construct_payload_rakp (uint8_t payload_type,
   return (obj_cmd_len);
 }
 
-static int32_t
+static int
 _construct_payload (uint8_t payload_type,
                     uint8_t payload_encrypted,
                     uint8_t authentication_algorithm,
@@ -1051,7 +1051,7 @@ _construct_session_trlr_pad (uint8_t integrity_algorithm,
 static int
 _calculate_authentication_code_len (uint8_t integrity_algorithm)
 {
-  int32_t authentication_code_len;
+  int authentication_code_len;
 
   assert ((integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE
            || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
@@ -1070,7 +1070,7 @@ _calculate_authentication_code_len (uint8_t integrity_algorithm)
   return (authentication_code_len);
 }
 
-static int32_t
+static int
 _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
                                              const uint8_t *integrity_key,
                                              unsigned int integrity_key_len,
@@ -1089,7 +1089,7 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
   int authentication_code_len, integrity_digest_len;
   int len;
   uint8_t pwbuf[IPMI_2_0_MAX_PASSWORD_LENGTH];
-  int32_t rv = -1;
+  int rv = -1;
 
   assert ((integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
            || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
@@ -1241,7 +1241,7 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
   return (rv);
 }
 
-int32_t
+int
 assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                             uint8_t integrity_algorithm,
                             uint8_t confidentiality_algorithm,
@@ -1261,12 +1261,14 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 {
   unsigned int indx = 0;
   int obj_rmcp_hdr_len, obj_len, oem_iana_len, oem_payload_id_len, len;
-  uint64_t payload_type, payload_authenticated, payload_encrypted, session_id, session_sequence_number;
-  int32_t payload_len;
+  uint8_t payload_type, payload_authenticated, payload_encrypted;
+  uint32_t session_id, session_sequence_number;
+  uint64_t val;
+  int payload_len;
   fiid_obj_t obj_rmcpplus_payload = NULL;
   fiid_obj_t obj_session_hdr_temp = NULL;
   fiid_obj_t obj_rmcpplus_session_trlr_temp = NULL;
-  int32_t rv = -1;
+  int rv = -1;
 
   /* achu: obj_lan_msg_hdr only needed for payload type IPMI
    *
@@ -1321,43 +1323,48 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "payload_type",
-                    &payload_type) < 0)
+                    &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
+  payload_type = val;
 
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "payload_type.authenticated",
-                    &payload_authenticated) < 0)
+                    &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
+  payload_authenticated = val;
 
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "payload_type.encrypted",
-                    &payload_encrypted) < 0)
+                    &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
+  payload_encrypted = val;
 
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "session_id",
-                    &session_id) < 0)
+                    &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
+  session_id = val;
 
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "session_sequence_number",
-                    &session_sequence_number) < 0)
+                    &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
+  session_sequence_number = val;
 
   /* Note: We don't check consider OPEN_SESSION_RESPONSE, RAKP2 or
    * RAKP4 payload types b/c they are responses, not requests.

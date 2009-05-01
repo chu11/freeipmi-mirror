@@ -37,10 +37,10 @@ int fill_hdr_ipmi_kcs (uint8_t lun,
                        uint8_t fn,
                        fiid_obj_t obj_kcs_hdr);
 
-int32_t assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
-                               fiid_obj_t obj_cmd,
-                               uint8_t *pkt,
-                               unsigned int pkt_len);
+int assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
+                           fiid_obj_t obj_cmd,
+                           uint8_t *pkt,
+                           unsigned int pkt_len);
 
 int unassemble_ipmi_kcs_pkt (const uint8_t *pkt,
                              unsigned int pkt_len,

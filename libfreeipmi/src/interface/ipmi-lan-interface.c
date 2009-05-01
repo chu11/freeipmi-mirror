@@ -175,10 +175,10 @@ fill_lan_msg_hdr (uint8_t rs_addr,
   return (0);
 }
 
-static int32_t
+static int
 _ipmi_lan_pkt_rq_min_size (uint8_t authentication_type, fiid_obj_t obj_cmd)
 {
-  uint32_t msg_len = 0;
+  unsigned int msg_len = 0;
   int len;
 
   assert (IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type) && fiid_obj_valid (obj_cmd));
@@ -249,7 +249,7 @@ _ipmi_lan_pkt_rq_min_size (uint8_t authentication_type, fiid_obj_t obj_cmd)
   +----------------------+
 */
 
-int32_t
+int
 assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
                        fiid_obj_t obj_lan_session_hdr,
                        fiid_obj_t obj_lan_msg_hdr,
@@ -259,9 +259,10 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
                        uint8_t *pkt,
                        unsigned int pkt_len)
 {
-  uint64_t authentication_type;
+  uint8_t authentication_type;
+  uint64_t val;
   unsigned int indx = 0;
-  int32_t required_len;
+  int required_len;
   uint8_t *authentication_code_field_ptr = NULL;
   uint8_t *checksum_data_ptr = NULL;
   uint8_t *msg_data_ptr = NULL;
@@ -273,7 +274,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   fiid_obj_t obj_lan_msg_trlr = NULL;
   uint8_t pwbuf[IPMI_1_5_MAX_PASSWORD_LENGTH];
   uint8_t checksum;
-  int32_t rv = -1;
+  int rv = -1;
 
   if (!fiid_obj_valid (obj_rmcp_hdr)
       || !fiid_obj_valid (obj_lan_session_hdr)
@@ -327,11 +328,12 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 
   if (fiid_obj_get (obj_lan_session_hdr,
                     "authentication_type",
-                    &authentication_type) < 0)
+                    &val) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
+  authentication_type = val;
 
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE
       && authentication_type != IPMI_AUTHENTICATION_TYPE_MD2

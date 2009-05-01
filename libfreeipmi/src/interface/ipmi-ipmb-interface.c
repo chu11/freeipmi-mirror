@@ -137,7 +137,7 @@ fill_ipmb_msg_hdr (uint8_t rs_addr,
   return (0);
 }
 
-int32_t
+int
 assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
                         fiid_obj_t obj_cmd,
                         fiid_obj_t obj_ipmb_msg)
@@ -150,7 +150,7 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
   unsigned int required_len = 0;
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   uint8_t checksum;
-  int32_t rv = -1;
+  int rv = -1;
 
   if (!fiid_obj_valid (obj_ipmb_msg_hdr)
       || !fiid_obj_valid (obj_cmd)

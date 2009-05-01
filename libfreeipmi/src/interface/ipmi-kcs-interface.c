@@ -72,7 +72,7 @@ fill_hdr_ipmi_kcs (uint8_t lun,
   return (0);
 }
 
-int32_t
+int
 assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
                        fiid_obj_t obj_cmd,
                        uint8_t *pkt,

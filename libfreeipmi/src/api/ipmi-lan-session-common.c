@@ -471,7 +471,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
   uint8_t *pkt;
   unsigned int pkt_len = 0;
   int cmd_len = 0;
-  int32_t send_len = 0;
+  int send_len = 0;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -1957,7 +1957,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
   uint8_t *pkt;
   unsigned int pkt_len = 0;
   int cmd_len = 0;
-  int32_t send_len = 0;
+  int send_len = 0;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC

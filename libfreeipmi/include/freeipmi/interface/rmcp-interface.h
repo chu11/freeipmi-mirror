@@ -69,10 +69,10 @@ int fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr);
 
 int fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr);
 
-int32_t assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr,
-                           fiid_obj_t obj_cmd,
-                           uint8_t *pkt,
-                           unsigned int pkt_len);
+int assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr,
+                       fiid_obj_t obj_cmd,
+                       uint8_t *pkt,
+                       unsigned int pkt_len);
 
 int unassemble_rmcp_pkt (const uint8_t *pkt,
                          unsigned int pkt_len,

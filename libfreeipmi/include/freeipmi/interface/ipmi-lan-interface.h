@@ -51,14 +51,14 @@ int fill_lan_msg_hdr (uint8_t rs_addr,
                       uint8_t rq_seq,
                       fiid_obj_t obj_lan_msg_hdr);
 
-int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
-                               fiid_obj_t obj_lan_session_hdr,
-                               fiid_obj_t obj_lan_msg_hdr,
-                               fiid_obj_t obj_cmd,
-                               const uint8_t *authentication_code_data,
-                               unsigned int authentication_code_data_len,
-                               uint8_t *pkt,
-                               unsigned int pkt_len);
+int assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
+                           fiid_obj_t obj_lan_session_hdr,
+                           fiid_obj_t obj_lan_msg_hdr,
+                           fiid_obj_t obj_cmd,
+                           const uint8_t *authentication_code_data,
+                           unsigned int authentication_code_data_len,
+                           uint8_t *pkt,
+                           unsigned int pkt_len);
 
 int unassemble_ipmi_lan_pkt (const uint8_t *pkt,
                              unsigned int pkt_len,

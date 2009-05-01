@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.40 2009-05-01 00:07:29 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.41 2009-05-01 18:29:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -641,7 +641,7 @@ _ipmi_2_0_packet_assemble (ipmiconsole_ctx_t c,
                            uint8_t *buf,
                            unsigned int buflen)
 {
-  int32_t pkt_len;
+  int pkt_len;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
