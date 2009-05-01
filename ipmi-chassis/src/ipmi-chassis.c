@@ -1013,8 +1013,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
   uint8_t minutes_per_counter;
-  uint64_t counts;
-  uint32_t min, hrs;
+  uint32_t counter_reading, min, hrs;
   int32_t rv = -1;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_power_on_hours_counter_rs)))
@@ -1055,10 +1054,12 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  counts = val;
+  counter_reading = val;
 
-  min = counts / minutes_per_counter;
+  min = counter_reading / minutes_per_counter;
+
   hrs = min / 60;
+
   min = min % 60;
 
   pstdout_printf (state_data->pstate,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.173 2009-05-01 21:13:59 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.174 2009-05-01 22:12:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -931,11 +931,12 @@ static int
 _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
                                              packet_type_t pkt)
 {
-  uint64_t authentication_type_none, authentication_type_md2,
+  uint8_t authentication_type_none, authentication_type_md2,
     authentication_type_md5, authentication_type_straight_password_key,
     authentication_status_anonymous_login, authentication_status_null_username,
     authentication_status_non_null_username,
     authentication_status_per_message_authentication;
+  uint64_t val;
   fiid_obj_t obj_authentication_capabilities_res;
 
   assert (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
@@ -956,28 +957,43 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
 
   Fiid_obj_get (obj_authentication_capabilities_res,
                 "authentication_type.none",
-                &authentication_type_none);
+                &val);
+  authentication_type_none = val;
+
   Fiid_obj_get (obj_authentication_capabilities_res,
                 "authentication_type.md2",
-                &authentication_type_md2);
+                &val);
+  authentication_type_md2 = val;
+
   Fiid_obj_get (obj_authentication_capabilities_res,
                 "authentication_type.md5",
-                &authentication_type_md5);
+                &val);
+  authentication_type_md5 = val;
+
   Fiid_obj_get (obj_authentication_capabilities_res,
                 "authentication_type.straight_password_key",
-                &authentication_type_straight_password_key);
+                &val);
+  authentication_type_straight_password_key = val;
+
   Fiid_obj_get (obj_authentication_capabilities_res,
                 "authentication_status.anonymous_login",
-                &authentication_status_anonymous_login);
+                &val);
+  authentication_status_anonymous_login = val;
+
   Fiid_obj_get (obj_authentication_capabilities_res,
                 "authentication_status.null_username",
-                &authentication_status_null_username);
+                &val);
+  authentication_status_null_username = val;
+
   Fiid_obj_get (obj_authentication_capabilities_res,
                 "authentication_status.non_null_username",
-                &authentication_status_non_null_username);
+                &val);
+  authentication_status_non_null_username = val;
+
   Fiid_obj_get (obj_authentication_capabilities_res,
                 "authentication_status.per_message_authentication",
-                &authentication_status_per_message_authentication);
+                &val);
+  authentication_status_per_message_authentication = val;
 
   /* IPMI Workaround (achu)
    *
@@ -1050,8 +1066,9 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
 static int
 _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
 {
-  uint64_t authentication_status_anonymous_login, authentication_status_null_username,
+  uint8_t authentication_status_anonymous_login, authentication_status_null_username,
     authentication_status_non_null_username, authentication_status_k_g;
+  uint64_t val;
 
   /* Using results from Get Authentication Capabilities Response,
    * determine:
@@ -1063,16 +1080,23 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
 
   Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
                 "authentication_status.anonymous_login",
-                &authentication_status_anonymous_login);
+                &val);
+  authentication_status_anonymous_login = val;
+
   Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
                 "authentication_status.null_username",
-                &authentication_status_null_username);
+                &val);
+  authentication_status_null_username = val;
+
   Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
                 "authentication_status.non_null_username",
-                &authentication_status_non_null_username);
+                &val);
+  authentication_status_non_null_username = val;
+
   Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
                 "authentication_status.k_g",
-                &authentication_status_k_g);
+                &val);
+  authentication_status_k_g = val;
 
   /* IPMI Workaround (achu)
    *
@@ -1124,9 +1148,10 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
 static int
 _check_ipmi_version_support (ipmipower_powercmd_t ip, int *ipmi_1_5, int *ipmi_2_0)
 {
-  uint64_t ipmi_v20_extended_capabilities_available,
+  uint8_t ipmi_v20_extended_capabilities_available,
     channel_supports_ipmi_v15_connections,
     channel_supports_ipmi_v20_connections;
+  uint64_t val;
 
   assert (ip);
   assert (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT);
@@ -1135,14 +1160,18 @@ _check_ipmi_version_support (ipmipower_powercmd_t ip, int *ipmi_1_5, int *ipmi_2
 
   Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
                 "authentication_type.ipmi_v2.0_extended_capabilities_available",
-                &ipmi_v20_extended_capabilities_available);
+                &val);
+  ipmi_v20_extended_capabilities_available = val;
+
   Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
                 "channel_supports_ipmi_v1.5_connections",
-                &channel_supports_ipmi_v15_connections);
+                &val);
+  channel_supports_ipmi_v15_connections = val;
+
   Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
                 "channel_supports_ipmi_v2.0_connections",
-                &channel_supports_ipmi_v20_connections);
-
+                &val);
+  channel_supports_ipmi_v20_connections = val;
 
   if (!ipmi_v20_extended_capabilities_available)
     {
@@ -1176,14 +1205,16 @@ _check_ipmi_version_support (ipmipower_powercmd_t ip, int *ipmi_1_5, int *ipmi_2
 static int
 _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
 {
-  uint64_t authentication_type;
+  uint8_t authentication_type;
+  uint64_t val;
 
   assert (ip);
   assert (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT);
 
   Fiid_obj_get (ip->obj_activate_session_res,
                 "authentication_type",
-                &authentication_type);
+                &val);
+  authentication_type = val;
 
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
     return (0);
@@ -1336,6 +1367,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 {
   struct timeval cur_time, end_time, result;
   unsigned int timeout;
+  uint64_t val;
   int rv;
 
   assert (ip);
@@ -1518,7 +1550,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT)
     {
-      uint64_t power_state;
+      uint8_t power_state;
 
       if ((rv = _recv_packet (ip, GET_CHASSIS_STATUS_RES)) != 1)
         {
@@ -1530,7 +1562,8 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 
       Fiid_obj_get (ip->obj_get_chassis_status_res,
                     "current_power_state.power_is_on",
-                    &power_state);
+                    &val);
+      power_state = val;
 
       if (cmd_args.wait_until_on
           && ip->cmd == POWER_CMD_POWER_ON
@@ -1572,20 +1605,22 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
         }
       else if (ip->cmd == POWER_CMD_IDENTIFY_STATUS)
         {
-          uint64_t identify_status_supported;
+          uint8_t identify_status_supported;
 
           Fiid_obj_get (ip->obj_get_chassis_status_res,
                         "misc_chassis_state.chassis_identify_command_and_state_info_supported",
-                        &identify_status_supported);
+                        &val);
+          identify_status_supported = val;
 
           if (identify_status_supported)
             {
-              uint64_t identify_status;
+              uint8_t identify_status;
 
               Fiid_obj_get (ip->obj_get_chassis_status_res,
                             "misc_chassis_state.chassis_identify_state",
-                            &identify_status);
-              
+                            &val);
+              identify_status = val;
+
               if (identify_status == IPMI_CHASSIS_IDENTIFY_STATE_OFF)
                 ipmipower_output (MSG_TYPE_OFF, ip->ic->hostname);
               else if (identify_status == IPMI_CHASSIS_IDENTIFY_STATE_TEMPORARY_ON
