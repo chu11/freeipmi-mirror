@@ -86,9 +86,9 @@ ipmi_crypt_init (void)
   return (0);
 }
 
-int32_t
-ipmi_crypt_hash (int hash_algorithm,
-                 int hash_flags,
+int
+ipmi_crypt_hash (unsigned int hash_algorithm,
+                 unsigned int hash_flags,
                  const uint8_t *key,
                  unsigned int key_len,
                  const uint8_t *hash_data,
@@ -101,7 +101,7 @@ ipmi_crypt_hash (int hash_algorithm,
   int gcry_md_algorithm, gcry_md_flags = 0;
   unsigned int gcry_md_digest_len;
   uint8_t *digestPtr;
-  int32_t rv = -1;
+  int rv = -1;
 
   if (!IPMI_CRYPT_HASH_ALGORITHM_VALID (hash_algorithm)
       || (hash_data && !hash_data_len)
@@ -181,7 +181,7 @@ ipmi_crypt_hash (int hash_algorithm,
 }
 
 int
-ipmi_crypt_hash_digest_len (int hash_algorithm)
+ipmi_crypt_hash_digest_len (unsigned int hash_algorithm)
 {
   int gcry_md_algorithm;
 
@@ -205,9 +205,9 @@ ipmi_crypt_hash_digest_len (int hash_algorithm)
   return ((int)gcry_md_get_algo_dlen (gcry_md_algorithm));
 }
 
-static int32_t
-_cipher_crypt (int cipher_algorithm,
-               int cipher_mode,
+static int
+_cipher_crypt (unsigned int cipher_algorithm,
+               unsigned int cipher_mode,
                const uint8_t *key,
                unsigned int key_len,
                const uint8_t *iv,
@@ -221,7 +221,7 @@ _cipher_crypt (int cipher_algorithm,
   int expected_cipher_key_len, expected_cipher_block_len;
   gcry_cipher_hd_t h = NULL;
   gcry_error_t e;
-  int32_t rv = -1;
+  int rv = -1;
 
   if (cipher_algorithm != IPMI_CRYPT_CIPHER_AES
       || !IPMI_CRYPT_CIPHER_MODE_VALID (cipher_mode)
@@ -352,9 +352,9 @@ _cipher_crypt (int cipher_algorithm,
   return (rv);
 }
 
-int32_t
-ipmi_crypt_cipher_encrypt (int cipher_algorithm,
-                           int cipher_mode,
+int
+ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
+                           unsigned int cipher_mode,
                            const uint8_t *key,
                            unsigned int key_len,
                            const uint8_t *iv,
@@ -373,9 +373,9 @@ ipmi_crypt_cipher_encrypt (int cipher_algorithm,
                          1));
 }
 
-int32_t
-ipmi_crypt_cipher_decrypt (int cipher_algorithm,
-                           int cipher_mode,
+int
+ipmi_crypt_cipher_decrypt (unsigned int cipher_algorithm,
+                           unsigned int cipher_mode,
                            const uint8_t *key,
                            unsigned int key_len,
                            const uint8_t *iv,
@@ -395,7 +395,7 @@ ipmi_crypt_cipher_decrypt (int cipher_algorithm,
 }
 
 static int
-_ipmi_crypt_cipher_info (int cipher_algorithm, int cipher_info)
+_ipmi_crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info)
 {
   int gcry_cipher_algorithm, gcry_crypt_cipher_info_what;
   gcry_error_t e;
@@ -436,13 +436,13 @@ _ipmi_crypt_cipher_info (int cipher_algorithm, int cipher_info)
 
 
 int
-ipmi_crypt_cipher_key_len (int cipher_algorithm)
+ipmi_crypt_cipher_key_len (unsigned int cipher_algorithm)
 {
   return (_ipmi_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH));
 }
 
 int
-ipmi_crypt_cipher_block_len (int cipher_algorithm)
+ipmi_crypt_cipher_block_len (unsigned int cipher_algorithm)
 {
   return (_ipmi_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH));
 }

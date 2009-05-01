@@ -569,7 +569,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
   return (0);
 }
 
-static int32_t
+static int
 _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                     uint8_t *pkt,
                     unsigned int pkt_len,
@@ -583,7 +583,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
   struct timeval timeout;
   fd_set read_set;
   int status = 0;
-  int32_t recv_len;
+  int recv_len;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -2087,7 +2087,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
   return (0);
 }
 
-static int32_t
+static int
 _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                         uint8_t authentication_algorithm,
                         uint8_t integrity_algorithm,
@@ -2106,7 +2106,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
   struct sockaddr_in from;
   socklen_t fromlen = 0;
   struct timeval timeout;
-  int32_t recv_len = 0;
+  int recv_len = 0;
 
   fd_set read_set;
   int status = 0;

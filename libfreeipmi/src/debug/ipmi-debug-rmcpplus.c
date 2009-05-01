@@ -624,8 +624,8 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
   uint8_t iv[IPMI_CRYPT_AES_CBC_128_IV_LENGTH];
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t pad_len;
-  int cipher_keylen, cipher_blocklen;
-  int32_t payload_data_len, decrypt_len, cmd_data_len;
+  int cipher_keylen, cipher_blocklen, decrypt_len;
+  unsigned int payload_data_len, cmd_data_len;
   fiid_obj_t obj_rmcpplus_payload = NULL;
   unsigned int indx = 0;
   int rv = -1;

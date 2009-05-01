@@ -569,7 +569,8 @@ _construct_payload_buf (uint8_t payload_type,
   int32_t checksum_start_offset;
   unsigned int payload_len;
   uint8_t checksum;
-  int32_t len, indx = 0, rv = -1;
+  int32_t len, rv = -1;
+  unsigned int indx = 0;
   fiid_obj_t obj_lan_msg_trlr = NULL;
 
   assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
@@ -1046,7 +1047,7 @@ _construct_session_trlr_pad (uint8_t integrity_algorithm,
   return (0);
 }
 
-static int32_t
+static int
 _calculate_authentication_code_len (uint8_t integrity_algorithm)
 {
   int32_t authentication_code_len;
@@ -1080,11 +1081,12 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
                                              uint8_t *authentication_code_buf,
                                              unsigned int authentication_code_buf_len)
 {
-  int hash_algorithm, hash_flags, crypt_digest_len;
-  unsigned int expected_digest_len, copy_digest_len, hash_data_len;
+  int crypt_digest_len;
+  unsigned int hash_algorithm, hash_flags, expected_digest_len, copy_digest_len, hash_data_len;
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t integrity_digest[IPMI_MAX_INTEGRITY_DATA_LENGTH];
-  int32_t len, authentication_code_len, integrity_digest_len;
+  int authentication_code_len, integrity_digest_len;
+  int32_t len;
   uint8_t pwbuf[IPMI_2_0_MAX_PASSWORD_LENGTH];
   int32_t rv = -1;
 
@@ -1899,7 +1901,8 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t pad_length;
   int cipher_keylen, cipher_blocklen;
-  int32_t payload_data_len, decrypt_len, cmd_data_len, indx = 0;
+  unsigned int payload_data_len, cmd_data_len, indx = 0;
+  int decrypt_len;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
 

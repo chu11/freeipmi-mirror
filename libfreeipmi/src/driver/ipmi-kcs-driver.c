@@ -681,7 +681,7 @@ _ipmi_kcs_clear_obf (ipmi_kcs_ctx_t ctx)
 
 int
 ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
-                uint8_t *buf,
+                const uint8_t *buf,
                 unsigned int buf_len)
 {
   uint8_t *p = buf;

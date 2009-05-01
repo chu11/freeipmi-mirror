@@ -67,7 +67,7 @@ int ipmi_kcs_ctx_set_flags (ipmi_kcs_ctx_t ctx, unsigned int flags);
 int ipmi_kcs_ctx_io_init (ipmi_kcs_ctx_t ctx);
 
 int ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
-                    uint8_t *bytes,
+                    const uint8_t *bytes,
                     unsigned int bytes_len);
 
 int ipmi_kcs_read (ipmi_kcs_ctx_t ctx,

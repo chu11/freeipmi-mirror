@@ -281,7 +281,7 @@ _ipmi_i2c_smbus_access (ipmi_ssif_ctx_t ctx,
 static int
 _ipmi_ssif_single_part_write (ipmi_ssif_ctx_t ctx,
                               int dev_fd,
-                              uint8_t *buf,
+                              const uint8_t *buf,
                               size_t buf_len)
 {
 
@@ -305,7 +305,7 @@ _ipmi_ssif_single_part_write (ipmi_ssif_ctx_t ctx,
 static int
 _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
                              int dev_fd,
-                             uint8_t *buf,
+                             const uint8_t *buf,
                              size_t buf_len)
 {
   union ipmi_i2c_smbus_data data;
@@ -699,7 +699,7 @@ ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx)
 
 int
 ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
-                 uint8_t *buf,
+                 const uint8_t *buf,
                  unsigned int buf_len)
 {
   int count;

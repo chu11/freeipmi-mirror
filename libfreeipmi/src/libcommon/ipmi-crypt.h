@@ -63,37 +63,37 @@
  */
 int ipmi_crypt_init (void);
 
-int32_t ipmi_crypt_hash (int hash_algorithm,
-                         int hash_flags,
-                         const uint8_t *key,
-                         unsigned int key_len,
-                         const uint8_t *hash_data,
-                         unsigned int hash_data_len,
-                         uint8_t *digest,
-                         unsigned int digest_len);
+int ipmi_crypt_hash (unsigned int hash_algorithm,
+                     unsigned int hash_flags,
+                     const uint8_t *key,
+                     unsigned int key_len,
+                     const uint8_t *hash_data,
+                     unsigned int hash_data_len,
+                     uint8_t *digest,
+                     unsigned int digest_len);
 
-int ipmi_crypt_hash_digest_len (int hash_algorithm);
+int ipmi_crypt_hash_digest_len (unsigned int hash_algorithm);
 
-int32_t ipmi_crypt_cipher_encrypt (int cipher_algorithm,
-                                   int cipher_mode,
-                                   const uint8_t *key,
-                                   unsigned int key_len,
-                                   const uint8_t *iv,
-                                   unsigned int iv_len,
-                                   uint8_t *data,
-                                   unsigned int data_len);
+int ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
+                               unsigned int cipher_mode,
+                               const uint8_t *key,
+                               unsigned int key_len,
+                               const uint8_t *iv,
+                               unsigned int iv_len,
+                               uint8_t *data,
+                               unsigned int data_len);
 
-int32_t ipmi_crypt_cipher_decrypt (int cipher_algorithm,
-                                   int cipher_mode,
-                                   const uint8_t *key,
-                                   unsigned int key_len,
-                                   const uint8_t *iv,
-                                   unsigned int iv_len,
-                                   uint8_t *data,
-                                   unsigned int data_len);
+int ipmi_crypt_cipher_decrypt (unsigned int cipher_algorithm,
+                               unsigned int cipher_mode,
+                               const uint8_t *key,
+                               unsigned int key_len,
+                               const uint8_t *iv,
+                               unsigned int iv_len,
+                               uint8_t *data,
+                               unsigned int data_len);
 
-int ipmi_crypt_cipher_key_len (int cipher_algorithm);
+int ipmi_crypt_cipher_key_len (unsigned int cipher_algorithm);
 
-int ipmi_crypt_cipher_block_len (int cipher_algorithm);
+int ipmi_crypt_cipher_block_len (unsigned int cipher_algorithm);
 
 #endif
