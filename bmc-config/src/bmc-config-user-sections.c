@@ -206,11 +206,12 @@ _set_user_access (bmc_config_state_data_t *state_data,
                   const char *section_name,
                   const char *key_name,
                   struct user_access *ua,
-                  uint64_t *comp_code)
+                  uint8_t *comp_code)
 {
   uint8_t userid;
   uint8_t channel_number;
   fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
 
@@ -270,7 +271,8 @@ _set_user_access (bmc_config_state_data_t *state_data,
           && IPMI_ERR_IS_BAD_COMPLETION_CODE (ipmi_ctx_errnum (state_data->ipmi_ctx)))
         {
           (*comp_code) = 0;
-          FIID_OBJ_GET (obj_cmd_rs, "comp_code", comp_code);
+          FIID_OBJ_GET (obj_cmd_rs, "comp_code", &val);
+          (*comp_code) = val;
         }
 
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
@@ -671,16 +673,18 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
                                   strlen (password),
                                   obj_cmd_rs) < 0)
     {
-      uint64_t comp_code;
+      uint8_t comp_code;
+      uint64_t val;
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "comp_code",
-                        &comp_code) < 0)
+                        &val) < 0)
         {
           if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
+      comp_code = val;
 
       if (comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT
           || comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT)
@@ -741,16 +745,18 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
                                       strlen (password),
                                       obj_cmd_rs) < 0)
     {
-      uint64_t comp_code;
+      uint8_t comp_code;
+      uint64_t val;
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "comp_code",
-                        &comp_code) < 0)
+                        &val) < 0)
         {
           if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
             rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
+      comp_code = val;
 
       if (comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT
           || comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT)
@@ -1800,7 +1806,7 @@ serial_session_limit_commit (const char *section_name,
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
   config_err_t ret;
-  uint64_t comp_code = 0;
+  uint8_t comp_code = 0;
 
   /* ignore username_not_set_yet return value, if username_not_set_yet
    * conditions arise, we should get an error appriately (b/c the user

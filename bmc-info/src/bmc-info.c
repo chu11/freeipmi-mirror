@@ -122,7 +122,8 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
 static int
 display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 {
-  uint64_t bc_maj, bc_min, pia_maj, pia_min;
+  uint8_t boot_code_major, boot_code_minor, pia_major, pia_minor;
+  uint64_t val;
   fiid_obj_t obj_intel_rs = NULL;
   int rv = -1;
 
@@ -139,54 +140,58 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 
   if (FIID_OBJ_GET (obj_intel_rs,
                     "auxiliary_firmware_revision_info.boot_code.major",
-                    &bc_maj) < 0)
+                    &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'auxiliary_firmware_revision_info.boot_code.major': %s\n",
+                       "fiid_obj_get: 'auxiliary_firmware_revision_info.boot_code.major': %s\n",
                        fiid_obj_errormsg (obj_intel_rs));
       goto cleanup;
     }
+  boot_code_major = val;
 
   if (FIID_OBJ_GET (obj_intel_rs,
                     "auxiliary_firmware_revision_info.boot_code.minor",
-                    &bc_min) < 0)
+                    &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'auxiliary_firmware_revision_info.boot_code.minor': %s\n",
+                       "fiid_obj_get: 'auxiliary_firmware_revision_info.boot_code.minor': %s\n",
                        fiid_obj_errormsg (obj_intel_rs));
       goto cleanup;
     }
+  boot_code_minor = val;
 
   if (FIID_OBJ_GET (obj_intel_rs,
                     "auxiliary_firmware_revision_info.pia.major",
-                    &pia_maj) < 0)
+                    &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'auxiliary_firmware_revision_info.pia.major': %s\n",
+                       "fiid_obj_get: 'auxiliary_firmware_revision_info.pia.major': %s\n",
                        fiid_obj_errormsg (obj_intel_rs));
       goto cleanup;
     }
+  pia_major = val;
 
   if (FIID_OBJ_GET (obj_intel_rs,
                     "auxiliary_firmware_revision_info.pia.minor",
-                    &pia_min) < 0)
+                    &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'auxiliary_firmware_revision_info.pia.minor': %s\n",
+                       "fiid_obj_get: 'auxiliary_firmware_revision_info.pia.minor': %s\n",
                        fiid_obj_errormsg (obj_intel_rs));
       goto cleanup;
     }
+  pia_minor = val;
 
   pstdout_printf (state_data->pstate,
                   "Aux Firmware Revision Info: Boot Code v%02x.%2x, PIA v%02x.%2x\n",
-                  (unsigned int) bc_maj,
-                  (unsigned int) bc_min,
-                  (unsigned int) pia_maj,
-                  (unsigned int) pia_min);
+                  (unsigned int) boot_code_major,
+                  (unsigned int) boot_code_minor,
+                  (unsigned int) pia_major,
+                  (unsigned int) pia_minor);
 
   rv = 0;
  cleanup:
@@ -198,6 +203,12 @@ static int
 display_get_device_id (bmc_info_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t device_id;
+  uint8_t revision;
+  uint8_t major, minor;
+  uint32_t manufacturer_id;
+  uint16_t product_id;
+  int flag;
   uint64_t val = 0;
   int rv = -1;
 
@@ -229,9 +240,10 @@ display_get_device_id (bmc_info_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  device_id = val;
 
   pstdout_printf (state_data->pstate,
-                  "Device ID:         %u\n", (unsigned int) val);
+                  "Device ID:         %u\n", device_id);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "device_revision.revision", &val) < 0)
     {
@@ -241,9 +253,10 @@ display_get_device_id (bmc_info_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  revision = val;
 
   pstdout_printf (state_data->pstate,
-                  "Device Revision:   %d\n", (unsigned int) val);
+                  "Device Revision:   %u\n", revision);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "device_revision.sdr_support", &val) < 0)
     {
@@ -258,33 +271,31 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "                   [SDR Support]\n");
 
-  {
-    uint64_t maj, min;
+  if (FIID_OBJ_GET (obj_cmd_rs, "firmware_revision1.major_revision", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'firmware_revision1.major_revision': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  major = val;
 
-    if (FIID_OBJ_GET (obj_cmd_rs, "firmware_revision1.major_revision", &maj) < 0)
-      {
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "fiid_obj_get: 'firmware_revision1.major_revision': %s\n",
-                         fiid_obj_errormsg (obj_cmd_rs));
-        goto cleanup;
-      }
+  if (FIID_OBJ_GET (obj_cmd_rs, "firmware_revision2.minor_revision", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'firmware_revision2.minor_revision': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  minor = val;
 
-    if (FIID_OBJ_GET (obj_cmd_rs, "firmware_revision2.minor_revision", &min) < 0)
-      {
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "fiid_obj_get: 'firmware_revision2.minor_revision': %s\n",
-                         fiid_obj_errormsg (obj_cmd_rs));
-        goto cleanup;
-      }
-
-    /* achu: minor revision is BCD encoded and is 8 bits, output w/ %x */
-    pstdout_printf (state_data->pstate,
-                    "Firmware Revision: %d.%02x\n",
-                    (unsigned int) maj,
-                    (unsigned int) min);
-  }
+  /* achu: minor revision is BCD encoded and is 8 bits, output w/ %x */
+  pstdout_printf (state_data->pstate,
+                  "Firmware Revision: %u.%02x\n",
+                  major,
+                  minor);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "firmware_revision1.device_available",
@@ -308,33 +319,31 @@ display_get_device_id (bmc_info_state_data_t *state_data)
                       "                   [firmware, SDR update or self init in progress]\n");
     }
 
-  {
-    uint64_t maj, min;
+  if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_major", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'ipmi_version_major': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  major = val;
+  
+  if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_minor", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'ipmi_version_minor': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  minor = val;
 
-    if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_major", &maj) < 0)
-      {
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "fiid_obj_get: 'ipmi_version_major': %s\n",
-                         fiid_obj_errormsg (obj_cmd_rs));
-        goto cleanup;
-      }
-
-    if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_minor", &min) < 0)
-      {
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "fiid_obj_get: 'ipmi_version_minor': %s\n",
-                         fiid_obj_errormsg (obj_cmd_rs));
-        goto cleanup;
-      }
-
-    /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
-    pstdout_printf (state_data->pstate,
-                    "IPMI Version:      %d.%d\n",
-                    (unsigned int) maj,
-                    (unsigned int) min);
-  }
+  /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
+  pstdout_printf (state_data->pstate,
+                  "IPMI Version:      %u.%u\n",
+                  major,
+                  minor);
 
   pstdout_printf (state_data->pstate,
                   "Additional Device Support:\n");
@@ -443,77 +452,75 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "                   [Chassis Device]\n");
 
-  {
-    uint64_t manufacturer_id, product_id;
-    int8_t flag;
+  if (FIID_OBJ_GET (obj_cmd_rs, "manufacturer_id.id", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'manufacturer_id.id': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  manufacturer_id = val;
 
-    if (FIID_OBJ_GET (obj_cmd_rs, "manufacturer_id.id", &manufacturer_id) < 0)
-      {
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "fiid_obj_get: 'manufacturer_id.id': %s\n",
-                         fiid_obj_errormsg (obj_cmd_rs));
-        goto cleanup;
-      }
-
-    if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
-        && ipmi_iana_enterprise_numbers[manufacturer_id])
-      pstdout_printf (state_data->pstate,
-                      "Manufacturer ID:   %s (%u)\n",
-                      ipmi_iana_enterprise_numbers[manufacturer_id],
-                      (unsigned int) manufacturer_id);
-    else
-      pstdout_printf (state_data->pstate,
-                      "Manufacturer ID:   %u\n",
-                      (unsigned int) manufacturer_id);
-
-    if (FIID_OBJ_GET (obj_cmd_rs, "product_id", &product_id) < 0)
-      {
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "fiid_obj_get: 'product_id': %s\n",
-                         fiid_obj_errormsg (obj_cmd_rs));
-        goto cleanup;
-      }
+  if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
+      && ipmi_iana_enterprise_numbers[manufacturer_id])
     pstdout_printf (state_data->pstate,
-                    "Product ID:        %u\n",
-                    (unsigned int) product_id);
+                    "Manufacturer ID:   %s (%u)\n",
+                    ipmi_iana_enterprise_numbers[manufacturer_id],
+                    manufacturer_id);
+  else
+    pstdout_printf (state_data->pstate,
+                    "Manufacturer ID:   %u\n",
+                    manufacturer_id);
 
-    /* auxiliary firmware info is optional */
-    if ((flag = fiid_obj_get (obj_cmd_rs,
-                              "auxiliary_firmware_revision_info",
-                              &val)) < 0)
-      {
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "fiid_obj_get: 'auxiliary_firmware_revision_info': %s\n",
-                         fiid_obj_errormsg (obj_cmd_rs));
-        goto cleanup;
-      }
+  if (FIID_OBJ_GET (obj_cmd_rs, "product_id", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'product_id': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  product_id = val;
 
-    if (flag)
-      {
-        switch (manufacturer_id)
-          {
-          case IPMI_MANUFACTURER_ID_INTEL:
-            switch (product_id)
-              {
-                /* I am assuming all Intel products will decode alike.
-                   -- Anand Babu <ab@gnu.org.in>  */
-              case IPMI_PRODUCT_ID_SR870BN4:
-              default:
-                if (display_intel (state_data, obj_cmd_rs) < 0)
-                  goto cleanup;
-                break;
-              }
-            break;
-          default:
-            pstdout_printf (state_data->pstate,
-                            "Aux Firmware Revision Info: %Xh\n",
-                            (unsigned int) val);
-          }
-      }
-  }
+  pstdout_printf (state_data->pstate,
+                  "Product ID:        %u\n",
+                  product_id);
+  
+  /* auxiliary firmware info is optional */
+  if ((flag = fiid_obj_get (obj_cmd_rs,
+                            "auxiliary_firmware_revision_info",
+                            &val)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'auxiliary_firmware_revision_info': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (flag)
+    {
+      switch (manufacturer_id)
+        {
+        case IPMI_MANUFACTURER_ID_INTEL:
+          switch (product_id)
+            {
+              /* I am assuming all Intel products will decode alike.
+                 -- Anand Babu <ab@gnu.org.in>  */
+            case IPMI_PRODUCT_ID_SR870BN4:
+            default:
+              if (display_intel (state_data, obj_cmd_rs) < 0)
+                goto cleanup;
+              break;
+            }
+          break;
+        default:
+          pstdout_printf (state_data->pstate,
+                          "Aux Firmware Revision Info: %Xh\n",
+                          (unsigned int) val);
+        }
+    }
 
   rv = 0;
  cleanup:

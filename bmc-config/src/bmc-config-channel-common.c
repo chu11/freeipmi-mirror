@@ -246,13 +246,14 @@ _set_channel_access (bmc_config_state_data_t *state_data,
                      const char *section_name,
                      const char *key_name,
                      struct channel_access *ch,
-                     uint64_t *comp_code)
+                     uint8_t *comp_code)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
   uint8_t set_type;
+  uint64_t val;
 
   assert (state_data);
   assert (section_name);
@@ -303,7 +304,8 @@ _set_channel_access (bmc_config_state_data_t *state_data,
           && IPMI_ERR_IS_BAD_COMPLETION_CODE (ipmi_ctx_errnum (state_data->ipmi_ctx)))
         {
           (*comp_code) = 0;
-          FIID_OBJ_GET (obj_cmd_rs, "comp_code", comp_code);
+          FIID_OBJ_GET (obj_cmd_rs, "comp_code", &val);
+          (*comp_code) = val;
         }
 
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
@@ -399,7 +401,7 @@ _enable_user_level_authentication_commit (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   struct channel_access ch;
   config_err_t ret;
-  uint64_t comp_code = 0;
+  uint8_t comp_code = 0;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
