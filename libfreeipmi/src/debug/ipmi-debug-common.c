@@ -44,14 +44,14 @@
 #define IPMI_DEBUG_DEFAULT_FD STDERR_FILENO
 
 static int
-_write (int fd, void *buf, size_t n)
+_write (int fd, const void *buf, size_t n)
 {
   /* chu: by Chris Dunlap <dunlap6 at llnl dot gov> */
   size_t nleft;
   ssize_t nwritten;
   unsigned char *p;
 
-  p = buf;
+  p = (unsigned char *)buf;
   nleft = n;
   while (nleft > 0)
     {
@@ -69,7 +69,7 @@ _write (int fd, void *buf, size_t n)
 }
 
 int
-ipmi_debug_dprintf (int fd, char *fmt, ...)
+ipmi_debug_dprintf (int fd, const char *fmt, ...)
 {
   va_list ap;
   int len, rv;
@@ -159,7 +159,7 @@ ipmi_debug_output_str (int fd, const char *prefix, const char *str)
 }
 
 int
-ipmi_debug_output_byte_array (int fd, const char *prefix, uint8_t *buf, uint32_t buf_len)
+ipmi_debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, uint32_t buf_len)
 {
   uint32_t count = 0;
 

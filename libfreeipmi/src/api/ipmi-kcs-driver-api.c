@@ -74,7 +74,7 @@ fiid_template_t tmpl_kcs_raw =
 
 static void
 _ipmi_kcs_dump (ipmi_ctx_t ctx,
-                uint8_t *pkt,
+                const uint8_t *pkt,
                 unsigned int pkt_len,
                 uint8_t cmd,
                 uint8_t net_fn,
@@ -130,7 +130,7 @@ _ipmi_kcs_dump (ipmi_ctx_t ctx,
 
 static void
 _ipmi_kcs_dump_rq (ipmi_ctx_t ctx,
-                   uint8_t *pkt,
+                   const uint8_t *pkt,
                    unsigned int pkt_len,
                    uint8_t cmd,
                    uint8_t net_fn,
@@ -155,7 +155,7 @@ _ipmi_kcs_dump_rq (ipmi_ctx_t ctx,
 
 static void
 _ipmi_kcs_dump_rs (ipmi_ctx_t ctx,
-                   uint8_t *pkt,
+                   const uint8_t *pkt,
                    unsigned int pkt_len,
                    uint8_t cmd,
                    uint8_t net_fn,
@@ -180,7 +180,7 @@ _ipmi_kcs_dump_rs (ipmi_ctx_t ctx,
 
 static void
 _ipmi_kcs_dump_raw_rq (ipmi_ctx_t ctx,
-                       uint8_t *pkt,
+                       const uint8_t *pkt,
                        unsigned int pkt_len,
                        uint8_t cmd,
                        uint8_t net_fn)
@@ -198,7 +198,7 @@ _ipmi_kcs_dump_raw_rq (ipmi_ctx_t ctx,
 
 static void
 _ipmi_kcs_dump_raw_rs (ipmi_ctx_t ctx,
-                       uint8_t *pkt,
+                       const uint8_t *pkt,
                        unsigned int pkt_len,
                        uint8_t cmd,
                        uint8_t net_fn)
@@ -667,7 +667,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 
 int
 ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
-                      uint8_t *buf_rq,
+                      const uint8_t *buf_rq,
                       unsigned int buf_rq_len,
                       uint8_t *buf_rs,
                       unsigned int buf_rs_len)

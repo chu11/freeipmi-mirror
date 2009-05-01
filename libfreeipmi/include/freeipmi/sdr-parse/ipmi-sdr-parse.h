@@ -55,34 +55,34 @@ int ipmi_sdr_parse_ctx_set_flags (ipmi_sdr_parse_ctx_t ctx, unsigned int flags);
 
 /* For all SDR records */
 int ipmi_sdr_parse_record_id_and_type (ipmi_sdr_parse_ctx_t ctx,
-                                       uint8_t *sdr_record,
+                                       const uint8_t *sdr_record,
                                        unsigned int sdr_record_len,
                                        uint16_t *record_id,
                                        uint8_t *record_type);
 
 /* For Full, Compact, Event SDR records */
 int ipmi_sdr_parse_sensor_owner_id (ipmi_sdr_parse_ctx_t ctx,
-                                    uint8_t *sdr_record,
+                                    const uint8_t *sdr_record,
                                     unsigned int sdr_record_len,
                                     uint8_t *sensor_owner_id_type,
                                     uint8_t *sensor_owner_id);
 
 /* For Full, Compact, Event SDR records */
 int ipmi_sdr_parse_sensor_owner_lun (ipmi_sdr_parse_ctx_t ctx,
-                                     uint8_t *sdr_record,
+                                     const uint8_t *sdr_record,
                                      unsigned int sdr_record_len,
                                      uint8_t *sensor_owner_lun,
                                      uint8_t *channel_number);
 
 /* For Full, Compact, Event SDR records */
 int ipmi_sdr_parse_sensor_number (ipmi_sdr_parse_ctx_t ctx,
-                                  uint8_t *sdr_record,
+                                  const uint8_t *sdr_record,
                                   unsigned int sdr_record_len,
                                   uint8_t *sensor_number);
 
 /* For Full, Compact, Event SDR records */
 int ipmi_sdr_parse_entity_id_instance_type (ipmi_sdr_parse_ctx_t ctx,
-                                            uint8_t *sdr_record,
+                                            const uint8_t *sdr_record,
                                             unsigned int sdr_record_len,
                                             uint8_t *entity_id,
                                             uint8_t *entity_instance,
@@ -90,26 +90,26 @@ int ipmi_sdr_parse_entity_id_instance_type (ipmi_sdr_parse_ctx_t ctx,
 
 /* For Full, Compact, Event SDR records */
 int ipmi_sdr_parse_sensor_type (ipmi_sdr_parse_ctx_t ctx,
-                                uint8_t *sdr_record,
+                                const uint8_t *sdr_record,
                                 unsigned int sdr_record_len,
                                 uint8_t *sensor_type);
 
 /* For Full, Compact, Event SDR records */
 int ipmi_sdr_parse_event_reading_type_code (ipmi_sdr_parse_ctx_t ctx,
-                                            uint8_t *sdr_record,
+                                            const uint8_t *sdr_record,
                                             unsigned int sdr_record_len,
                                             uint8_t *event_reading_type_code);
 
 /* For Full, Compact, Event SDR records */
 int ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
-                              uint8_t *sdr_record,
+                              const uint8_t *sdr_record,
                               unsigned int sdr_record_len,
                               char *id_string,
                               unsigned int id_string_len);
 
 /* For Full, Compact SDR records */
 int ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
-                                 uint8_t *sdr_record,
+                                 const uint8_t *sdr_record,
                                  unsigned int sdr_record_len,
                                  uint8_t *sensor_units_percentage,
                                  uint8_t *sensor_units_modifier,
@@ -119,7 +119,7 @@ int ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
 
 /* For Full, Compact SDR records */
 int ipmi_sdr_parse_sensor_capabilities (ipmi_sdr_parse_ctx_t ctx,
-                                        uint8_t *sdr_record,
+                                        const uint8_t *sdr_record,
                                         unsigned int sdr_record_len,
                                         uint8_t *event_message_control_support,
                                         uint8_t *threshold_access_support,
@@ -130,7 +130,7 @@ int ipmi_sdr_parse_sensor_capabilities (ipmi_sdr_parse_ctx_t ctx,
 /* For Full, Compact SDR records */
 /* event reading type must indicate a discrete sensor */
 int ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
-                                        uint8_t *sdr_record,
+                                        const uint8_t *sdr_record,
                                         unsigned int sdr_record_len,
                                         uint8_t *event_state_0,
                                         uint8_t *event_state_1,
@@ -151,7 +151,7 @@ int ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 /* For Full, Compact SDR records */
 /* event reading type must indicate a discrete sensor */
 int ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
-                                          uint8_t *sdr_record,
+                                          const uint8_t *sdr_record,
                                           unsigned int sdr_record_len,
                                           uint8_t *event_state_0,
                                           uint8_t *event_state_1,
@@ -172,7 +172,7 @@ int ipmi_sdr_parse_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 /* For Full SDR records */
 /* event reading type must indicate a threshold sensor */
 int ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
-                                                  uint8_t *sdr_record,
+                                                  const uint8_t *sdr_record,
                                                   unsigned int sdr_record_len,
                                                   uint8_t *lower_non_critical_going_low,
                                                   uint8_t *lower_non_critical_going_high,
@@ -190,7 +190,7 @@ int ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
 /* For Full SDR records */
 /* event reading type must indicate a threshold sensor */
 int ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
-                                                    uint8_t *sdr_record,
+                                                    const uint8_t *sdr_record,
                                                     unsigned int sdr_record_len,
                                                     uint8_t *lower_non_critical_going_low,
                                                     uint8_t *lower_non_critical_going_high,
@@ -208,7 +208,7 @@ int ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
 /* For Full SDR records */
 /* event reading type must indicate a threshold sensor */
 int ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
-                                       uint8_t *sdr_record,
+                                       const uint8_t *sdr_record,
                                        unsigned int sdr_record_len,
                                        uint8_t *lower_non_critical_threshold,
                                        uint8_t *lower_critical_threshold,
@@ -220,7 +220,7 @@ int ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
 /* For Full SDR records */
 /* event reading type must indicate a threshold sensor */
 int ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
-                                       uint8_t *sdr_record,
+                                       const uint8_t *sdr_record,
                                        unsigned int sdr_record_len,
                                        uint8_t *lower_non_critical_threshold,
                                        uint8_t *lower_critical_threshold,
@@ -231,7 +231,7 @@ int ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
 
 /* For Full SDR records */
 int ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
-                                         uint8_t *sdr_record,
+                                         const uint8_t *sdr_record,
                                          unsigned int sdr_record_len,
                                          int8_t *r_exponent,
                                          int8_t *b_exponent,
@@ -244,7 +244,7 @@ int ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
 /* Returns NULL for pointers if not available */
 /* Results must be freed by user */
 int ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
-                                          uint8_t *sdr_record,
+                                          const uint8_t *sdr_record,
                                           unsigned int sdr_record_len,
                                           double **nominal_reading,
                                           double **normal_maximum,
@@ -254,7 +254,7 @@ int ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
 
 /* For Full SDR records */
 int ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
-                               uint8_t *sdr_record,
+                               const uint8_t *sdr_record,
                                unsigned int sdr_record_len,
                                double **lower_non_critical_threshold,
                                double **lower_critical_threshold,
@@ -266,7 +266,7 @@ int ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
 
 /* For Full SDR records */
 int ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
-                                   uint8_t *sdr_record,
+                                   const uint8_t *sdr_record,
                                    unsigned int sdr_record_len,
                                    uint8_t *lower_non_critical_threshold,
                                    uint8_t *lower_critical_threshold,
@@ -277,7 +277,7 @@ int ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
 
 /* For Full SDR records */
 int ipmi_sdr_parse_hysteresis (ipmi_sdr_parse_ctx_t ctx,
-                               uint8_t *sdr_record,
+                               const uint8_t *sdr_record,
                                unsigned int sdr_record_len,
                                uint8_t *positive_going_threshold_hysteresis,
                                uint8_t *negative_going_threshold_hysteresis);
@@ -285,7 +285,7 @@ int ipmi_sdr_parse_hysteresis (ipmi_sdr_parse_ctx_t ctx,
 /* For Entity Association, Device Relative Entity Association SDR
    records */
 int ipmi_sdr_parse_container_entity (ipmi_sdr_parse_ctx_t ctx,
-                                     uint8_t *sdr_record,
+                                     const uint8_t *sdr_record,
                                      unsigned int sdr_record_len,
                                      uint8_t *container_entity_id,
                                      uint8_t *container_entity_instance);
@@ -293,28 +293,28 @@ int ipmi_sdr_parse_container_entity (ipmi_sdr_parse_ctx_t ctx,
 /* For Generic Device Locator, FRU Device Locator, Management
    Controller Device Locator SDR records */
 int ipmi_sdr_parse_device_id_string (ipmi_sdr_parse_ctx_t ctx,
-                                     uint8_t *sdr_record,
+                                     const uint8_t *sdr_record,
                                      unsigned int sdr_record_len,
                                      char *device_id_string,
                                      unsigned int device_id_string_len);
 
 /* For Generic Device Locator, FRU Device Locator SDR records */
 int ipmi_sdr_parse_device_type (ipmi_sdr_parse_ctx_t ctx,
-                                uint8_t *sdr_record,
+                                const uint8_t *sdr_record,
                                 unsigned int sdr_record_len,
                                 uint8_t *device_type,
                                 uint8_t *device_type_modifier);
 
 /* For Generic Device Locator, Management Controller Device Locator SDR records */
 int ipmi_sdr_parse_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
-                                           uint8_t *sdr_record,
+                                           const uint8_t *sdr_record,
                                            unsigned int sdr_record_len,
                                            uint8_t *entity_id,
                                            uint8_t *entity_instance);
 
 /* For Generic Device Locator SDR records */
 int ipmi_sdr_parse_general_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
-                                                      uint8_t *sdr_record,
+                                                      const uint8_t *sdr_record,
                                                       unsigned int sdr_record_len,
                                                       uint8_t *direct_access_address,
                                                       uint8_t *channel_number,
@@ -325,7 +325,7 @@ int ipmi_sdr_parse_general_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
 
 /* For FRU Device Locator SDR records */
 int ipmi_sdr_parse_fru_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
-                                                  uint8_t *sdr_record,
+                                                  const uint8_t *sdr_record,
                                                   unsigned int sdr_record_len,
                                                   uint8_t *direct_access_address,
                                                   uint8_t *logical_fru_device_device_slave_address,
@@ -336,14 +336,14 @@ int ipmi_sdr_parse_fru_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
 
 /* For FRU Device Locator SDR records */
 int ipmi_sdr_parse_fru_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
-                                               uint8_t *sdr_record,
+                                               const uint8_t *sdr_record,
                                                unsigned int sdr_record_len,
                                                uint8_t *fru_entity_id,
                                                uint8_t *fru_entity_instance);
 
 /* For Management Controller Device Locator SDR records */
 int ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
-                                                                    uint8_t *sdr_record,
+                                                                    const uint8_t *sdr_record,
                                                                     unsigned int sdr_record_len,
                                                                     uint8_t *device_slave_address,
                                                                     uint8_t *channel_number);
@@ -351,19 +351,19 @@ int ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_par
 
 /* For Management Controller Confirmation, OEM SDR records */
 int ipmi_sdr_parse_manufacturer_id (ipmi_sdr_parse_ctx_t ctx,
-                                    uint8_t *sdr_record,
+                                    const uint8_t *sdr_record,
                                     unsigned int sdr_record_len,
                                     uint32_t *manufacturer_id);
 
 /* For Management Controller Confirmation SDR records */
 int ipmi_sdr_parse_product_id (ipmi_sdr_parse_ctx_t ctx,
-                               uint8_t *sdr_record,
+                               const uint8_t *sdr_record,
                                unsigned int sdr_record_len,
                                uint16_t *product_id);
 
 /* For OEM SDR records */
 int ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
-                             uint8_t *sdr_record,
+                             const uint8_t *sdr_record,
                              unsigned int sdr_record_len,
                              uint8_t *oem_data,
                              unsigned int oem_data_len);

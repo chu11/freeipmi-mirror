@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.28 2009-03-12 17:57:55 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.29 2009-05-01 01:55:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -550,7 +550,7 @@ _sdr_cache_record_write (ipmi_sdr_cache_ctx_t ctx,
 int
 ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                        ipmi_ctx_t ipmi_ctx,
-                       char *filename,
+                       const char *filename,
                        int create_flags,
                        int validation_flags,
                        Sdr_Create_Callback create_callback,

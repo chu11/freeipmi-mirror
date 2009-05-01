@@ -687,7 +687,7 @@ fiid_template_t tmpl_cmd_get_ip_udp_rmcp_statistics_rs =
 int
 fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                            uint8_t parameter_selector,
-                                           uint8_t *configuration_parameter_data,
+                                           const uint8_t *configuration_parameter_data,
                                            unsigned int configuration_parameter_data_len,
                                            fiid_obj_t obj_cmd_rq)
 {

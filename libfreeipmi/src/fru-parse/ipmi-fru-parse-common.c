@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-common.c,v 1.3 2009-04-30 17:48:22 chu11 Exp $
+ *  $Id: ipmi-fru-parse-common.c,v 1.4 2009-05-01 01:55:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -72,7 +72,7 @@
 
 int
 ipmi_fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,
-                         uint8_t *frubuf,
+                         const uint8_t *frubuf,
                          unsigned int length_in_bytes,
                          const char *debug_hdr)
 {

@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.2 2009-04-17 23:50:40 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.3 2009-05-01 01:55:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1215,7 +1215,7 @@ ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
 
 static int
 _get_type_length_bytes (ipmi_fru_parse_ctx_t ctx,
-                        uint8_t *type_length_buf,
+                        const uint8_t *type_length_buf,
                         unsigned int type_length_buflen,
                         uint8_t type_code,
                         uint8_t number_of_data_bytes,
@@ -1400,7 +1400,7 @@ _bcd_to_ascii (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
-                                            uint8_t *type_length_buf,
+                                            const uint8_t *type_length_buf,
                                             unsigned int type_length_buflen,
                                             uint8_t language_code,
                                             char *strbuf,

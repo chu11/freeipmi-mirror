@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.h,v 1.5 2009-03-03 23:57:09 chu11 Exp $
+ *  $Id: ipmi-md2.h,v 1.6 2009-05-01 01:55:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -47,7 +47,7 @@ typedef struct __md2 {
 
 int md2_init (md2_t *ctx);
 
-int md2_update_data (md2_t *ctx, uint8_t *buf, unsigned int buflen);
+int md2_update_data (md2_t *ctx, const uint8_t *buf, unsigned int buflen);
 
 int md2_finish (md2_t *ctx, uint8_t *digest, unsigned int digestlen);
 

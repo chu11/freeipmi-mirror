@@ -62,7 +62,7 @@ int ipmi_cmd_get_system_restart_cause (ipmi_ctx_t ctx,
 
 int ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
                                       uint8_t parameter_selector,
-                                      uint8_t *configuration_parameter_data,
+                                      const uint8_t *configuration_parameter_data,
                                       unsigned int configuration_parameter_data_len,
                                       fiid_obj_t obj_cmd_rs);
 

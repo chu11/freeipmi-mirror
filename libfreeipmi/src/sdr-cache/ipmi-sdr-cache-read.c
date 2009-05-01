@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.24 2009-03-04 19:41:32 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.25 2009-05-01 01:55:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -61,7 +61,7 @@
 int
 ipmi_sdr_cache_open (ipmi_sdr_cache_ctx_t ctx,
                      ipmi_ctx_t ipmi_ctx,
-                     char *filename)
+                     const char *filename)
 {
   uint8_t sdr_version;
   uint16_t record_count;

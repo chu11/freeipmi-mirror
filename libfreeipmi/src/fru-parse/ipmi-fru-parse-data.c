@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.2 2009-04-17 23:50:39 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.3 2009-05-01 01:55:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -79,7 +79,7 @@
 
 static int
 _parse_type_length (ipmi_fru_parse_ctx_t ctx,
-                    uint8_t *areabuf,
+                    const uint8_t *areabuf,
                     unsigned int areabuflen,
                     unsigned int current_area_offset,
                     uint8_t *number_of_data_bytes,
@@ -130,7 +130,7 @@ _parse_type_length (ipmi_fru_parse_ctx_t ctx,
                     
 int
 ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
-                                  uint8_t *areabuf,
+                                  const uint8_t *areabuf,
                                   unsigned int areabuflen,
                                   uint8_t *chassis_type,
                                   ipmi_fru_parse_field_t *chassis_part_number,
@@ -236,7 +236,7 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
-                                uint8_t *areabuf,
+                                const uint8_t *areabuf,
                                 unsigned int areabuflen,
                                 uint8_t *language_code,
                                 uint32_t *mfg_date_time,
@@ -417,7 +417,7 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
-                                  uint8_t *areabuf,
+                                  const uint8_t *areabuf,
                                   unsigned int areabuflen,
                                   uint8_t *language_code,
                                   ipmi_fru_parse_field_t *product_manufacturer_name,
@@ -598,7 +598,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
-                                                     uint8_t *areabuf,
+                                                     const uint8_t *areabuf,
                                                      unsigned int areabuflen,
                                                      unsigned int *overall_capacity,
                                                      unsigned int *peak_va,
@@ -922,7 +922,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
-                                      uint8_t *areabuf,
+                                      const uint8_t *areabuf,
                                       unsigned int areabuflen,
                                       unsigned int *output_number,
                                       unsigned int *standby,
@@ -1078,7 +1078,7 @@ ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
-                                    uint8_t *areabuf,
+                                    const uint8_t *areabuf,
                                     unsigned int areabuflen,
                                     unsigned int *output_number,
                                     unsigned int *standby,
@@ -1234,7 +1234,7 @@ ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
-                                                     uint8_t *areabuf,
+                                                     const uint8_t *areabuf,
                                                      unsigned int areabuflen,
                                                      uint8_t *sub_record_type,
                                                      uint8_t *sub_record_data,
@@ -1324,7 +1324,7 @@ ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
-                                                      uint8_t *areabuf,
+                                                      const uint8_t *areabuf,
                                                       unsigned int areabuflen,
                                                       uint32_t *manufacturer_id,
                                                       unsigned int *entity_id_code,
@@ -1453,7 +1453,7 @@ ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t ctx,
-                                                          uint8_t *areabuf,
+                                                          const uint8_t *areabuf,
                                                           unsigned int areabuflen,
                                                           uint32_t *manufacturer_id,
                                                           unsigned int *entity_id_code,
@@ -1582,7 +1582,7 @@ ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t c
 
 int
 ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
-                                       uint8_t *areabuf,
+                                       const uint8_t *areabuf,
                                        unsigned int areabuflen,
                                        uint32_t *manufacturer_id,
                                        uint8_t *oem_data,

@@ -610,7 +610,7 @@ fill_cmd_get_system_restart_cause (fiid_obj_t obj_cmd_rq)
 
 int
 fill_cmd_set_system_boot_options (uint8_t parameter_selector,
-                                  uint8_t *configuration_parameter_data,
+                                  const uint8_t *configuration_parameter_data,
                                   unsigned int configuration_parameter_data_len,
                                   fiid_obj_t obj_cmd_rq)
 {

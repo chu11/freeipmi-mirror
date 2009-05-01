@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.h,v 1.15 2009-03-03 23:56:55 chu11 Exp $
+ *  $Id: ipmipower_check.h,v 1.16 2009-05-01 01:55:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -43,8 +43,8 @@ int ipmipower_check_checksum (ipmipower_powercmd_t ip, packet_type_t pkt);
  */
 int ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
                                          packet_type_t pkt,
-                                         uint8_t *buffer,
-                                         uint32_t buffer_len);
+                                         const uint8_t *buf,
+                                         unsigned int buflen);
 
 /* ipmipower_check_outbound_sequence_number
  * - Check for valid outbound sequence number

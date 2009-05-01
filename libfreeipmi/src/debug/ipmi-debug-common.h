@@ -28,13 +28,13 @@
 #define IPMI_DEBUG_MAX_PKT_LEN 65536
 
 /* Portable version of the extremely unportable Linux dprintf() */
-int ipmi_debug_dprintf (int fd, char *fmt, ...);
+int ipmi_debug_dprintf (int fd, const char *fmt, ...);
 
 int ipmi_debug_set_prefix (char *buf, unsigned int buflen, const char *prefix);
 
 int ipmi_debug_output_str (int fd, const char *prefix, const char *str);
 
-int ipmi_debug_output_byte_array (int fd, const char *prefix, uint8_t *buf, unsigned int buf_len);
+int ipmi_debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, unsigned int buf_len);
 
 #endif /* ipmi-debug-common.h */
 

@@ -85,7 +85,10 @@ fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr)
 }
 
 int32_t
-assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_t pkt_len)
+assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr,
+                   fiid_obj_t obj_cmd,
+                   uint8_t *pkt,
+                   unsigned int pkt_len)
 {
   int32_t obj_cmd_len, obj_rmcp_hdr_len;
 
@@ -152,7 +155,10 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
 }
 
 int
-unassemble_rmcp_pkt (uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd)
+unassemble_rmcp_pkt (const uint8_t *pkt,
+                     unsigned int pkt_len,
+                     fiid_obj_t obj_rmcp_hdr,
+                     fiid_obj_t obj_cmd)
 {
   uint32_t indx = 0;
   int32_t len;

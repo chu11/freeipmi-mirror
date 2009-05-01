@@ -32,8 +32,8 @@
 
 int
 sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
-                                char *fmt,
-                                uint8_t *record_buf,
+                                const char *fmt,
+                                const uint8_t *record_buf,
                                 unsigned int record_buflen,
                                 char *buf,
                                 unsigned int buflen,

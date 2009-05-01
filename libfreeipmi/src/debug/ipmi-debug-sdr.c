@@ -46,7 +46,7 @@ ipmi_dump_sdr_record (int fd,
                       const char *prefix,
                       const char *hdr,
                       const char *trlr,
-                      uint8_t *sdr_record,
+                      const uint8_t *sdr_record,
                       unsigned int sdr_record_len)
 {
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];

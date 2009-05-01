@@ -551,7 +551,7 @@ ipmi_cmd_get_auxiliary_log_status (ipmi_ctx_t ctx,
 int
 ipmi_cmd_set_auxiliary_log_status (ipmi_ctx_t ctx,
                                    uint8_t log_type,
-                                   uint8_t *log_data,
+                                   const uint8_t *log_data,
                                    unsigned int log_data_len,
                                    fiid_obj_t obj_cmd_rs)
 {

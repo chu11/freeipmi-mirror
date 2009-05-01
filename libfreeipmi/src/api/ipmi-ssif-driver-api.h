@@ -33,7 +33,7 @@ int ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
                        fiid_obj_t obj_cmd_rs);
 
 int ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
-                           uint8_t *buf_rq,
+                           const uint8_t *buf_rq,
                            unsigned int buf_rq_len,
                            uint8_t *buf_rs,
                            unsigned int buf_rs_len);

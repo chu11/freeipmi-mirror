@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-delete.c,v 1.8 2009-03-04 18:07:37 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-delete.c,v 1.9 2009-05-01 01:55:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -47,7 +47,7 @@
 #include "freeipmi-portability.h"
 
 int
-ipmi_sdr_cache_delete (ipmi_sdr_cache_ctx_t ctx, char *filename)
+ipmi_sdr_cache_delete (ipmi_sdr_cache_ctx_t ctx, const char *filename)
 {
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.100 2009-04-29 16:40:42 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.101 2009-05-01 01:55:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -83,8 +83,8 @@ ipmipower_check_checksum (ipmipower_powercmd_t ip, packet_type_t pkt)
 int
 ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
                                      packet_type_t pkt,
-                                     uint8_t *buffer,
-                                     uint32_t buffer_len)
+                                     const uint8_t *buf,
+                                     unsigned int buflen)
 {
   char *password;
   int rv = -1;
@@ -100,7 +100,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
           || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
           || pkt == CHASSIS_IDENTIFY_RES /* IPMI 1.5 or 2.0 */
           || pkt == CLOSE_SESSION_RES); /* IPMI 1.5 or 2.0 */
-  assert (buffer && buffer_len);
+  assert (buf && buflen);
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
       || pkt == AUTHENTICATION_CAPABILITIES_RES
@@ -144,8 +144,8 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
       else
         password = NULL;
 
-      if ((rv = ipmi_lan_check_packet_session_authentication_code (buffer,
-                                                                   buffer_len,
+      if ((rv = ipmi_lan_check_packet_session_authentication_code (buf,
+                                                                   buflen,
                                                                    authentication_type,
                                                                    (uint8_t *)password,
                                                                    password ? strlen (password) : 0)) < 0)
@@ -177,8 +177,8 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
           else
             password = NULL;
 
-          if ((rv = ipmi_lan_check_packet_session_authentication_code (buffer,
-                                                                       buffer_len,
+          if ((rv = ipmi_lan_check_packet_session_authentication_code (buf,
+                                                                       buflen,
                                                                        authentication_type,
                                                                        (uint8_t *)password,
                                                                        password ? strlen (password) : 0)) < 0)
@@ -209,8 +209,8 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
       password = cmd_args.common.password;
 
       if ((rv = ipmi_rmcpplus_check_packet_session_authentication_code (integrity_algorithm,
-                                                                        buffer,
-                                                                        buffer_len,
+                                                                        buf,
+                                                                        buflen,
                                                                         ip->integrity_key_ptr,
                                                                         ip->integrity_key_len,
                                                                         (uint8_t *)password,

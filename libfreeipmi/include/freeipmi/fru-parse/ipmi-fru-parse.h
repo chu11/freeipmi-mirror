@@ -130,7 +130,7 @@ int ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
 /* Functions assume record headers have been stripped out */
 
 int ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
-                                      uint8_t *areabuf,
+                                      const uint8_t *areabuf,
                                       unsigned int areabuflen,
                                       uint8_t *chassis_type,
                                       ipmi_fru_parse_field_t *chassis_part_number,
@@ -140,7 +140,7 @@ int ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
 
 /* mfg_date_time returned in seconds since unix epoch, not FRU defined epoch */
 int ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
-                                    uint8_t *areabuf,
+                                    const uint8_t *areabuf,
                                     unsigned int areabuflen,
                                     uint8_t *language_code,
                                     uint32_t *mfg_date_time,
@@ -153,7 +153,7 @@ int ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
                                     unsigned int chassis_custom_fields_len);
 
 int ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
-                                      uint8_t *areabuf,
+                                      const uint8_t *areabuf,
                                       unsigned int areabuflen,
                                       uint8_t *language_code,
                                       ipmi_fru_parse_field_t *product_manufacturer_name,
@@ -168,7 +168,7 @@ int ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
 
 /* 10 mV multipliers factored in return voltages */
 int ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
-                                                         uint8_t *areabuf,
+                                                         const uint8_t *areabuf,
                                                          unsigned int areabuflen,
                                                          unsigned int *overall_capacity,
                                                          unsigned int *peak_va,
@@ -195,7 +195,7 @@ int ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ct
 
 /* 10 mV multipliers factored in return voltages */
 int ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
-                                          uint8_t *areabuf,
+                                          const uint8_t *areabuf,
                                           unsigned int areabuflen,
                                           unsigned int *output_number,
                                           unsigned int *standby,
@@ -208,7 +208,7 @@ int ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
 
 /* 10 mV multipliers factored in return voltages */
 int ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
-                                        uint8_t *areabuf,
+                                        const uint8_t *areabuf,
                                         unsigned int areabuflen,
                                         unsigned int *output_number,
                                         unsigned int *standby,
@@ -220,14 +220,14 @@ int ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
                                         unsigned int *maximum_current_load);
 
 int ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
-                                                         uint8_t *areabuf,
+                                                         const uint8_t *areabuf,
                                                          unsigned int areabuflen,
                                                          uint8_t *sub_record_type,
                                                          uint8_t *sub_record_data,
                                                          unsigned int *sub_record_data_len);
 
 int ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
-                                                          uint8_t *areabuf,
+                                                          const uint8_t *areabuf,
                                                           unsigned int areabuflen,
                                                           uint32_t *manufacturer_id,
                                                           unsigned int *entity_id_code,
@@ -237,7 +237,7 @@ int ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t c
                                                           unsigned int *code_range_mask_len);
 
 int ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t ctx,
-                                                              uint8_t *areabuf,
+                                                              const uint8_t *areabuf,
                                                               unsigned int areabuflen,
                                                               uint32_t *manufacturer_id,
                                                               unsigned int *entity_id_code,
@@ -247,7 +247,7 @@ int ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx
                                                               unsigned int *code_range_mask_len);
 
 int ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
-                                           uint8_t *areabuf,
+                                           const uint8_t *areabuf,
                                            unsigned int areabuflen,
                                            uint32_t *manufacturer_id,
                                            uint8_t *oem_data,
@@ -261,7 +261,7 @@ int ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
  * buffer.
  */
 int ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
-                                                uint8_t *type_length_buf,
+                                                const uint8_t *type_length_buf,
                                                 unsigned int type_length_buflen,
                                                 uint8_t language_code,
                                                 char *strbuf,

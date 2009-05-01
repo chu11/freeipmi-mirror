@@ -119,9 +119,9 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
                                 obj_cmd_rs));
 }
 
-int32_t
+int
 ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
-                  uint8_t *buf_rq,
+                  const uint8_t *buf_rq,
                   size_t buf_rq_len,
                   uint8_t *buf_rs,
                   size_t buf_rs_len)
@@ -210,8 +210,8 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
-  rv = len;
 
+  rv = len;
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);
   fiid_obj_destroy (obj_cmd_rs);
@@ -290,9 +290,9 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
                                     obj_cmd_rs));
 }
 
-int32_t
+int
 ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
-                      uint8_t *buf_rq,
+                      const uint8_t *buf_rq,
                       size_t buf_rq_len,
                       uint8_t *buf_rs,
                       size_t buf_rs_len)

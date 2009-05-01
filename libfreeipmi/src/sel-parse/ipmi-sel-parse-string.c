@@ -76,7 +76,7 @@ static int
 _SNPRINTF (char *buf,
            unsigned int buflen,
            unsigned int *wlen,
-           char *fmt,
+           const char *fmt,
            ...)
 {
   va_list ap;
@@ -1760,8 +1760,8 @@ _output_oem (ipmi_sel_parse_ctx_t ctx,
 
 int
 sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
-                                char *fmt,
-                                uint8_t *record_buf,
+                                const char *fmt,
+                                const uint8_t *record_buf,
                                 unsigned int record_buflen,
                                 char *buf,
                                 unsigned int buflen,

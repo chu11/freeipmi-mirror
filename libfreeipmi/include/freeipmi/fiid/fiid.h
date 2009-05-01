@@ -547,8 +547,8 @@ int FIID_OBJ_GET (fiid_obj_t obj, const char *field, uint64_t *val);
  */
 int32_t fiid_obj_set_data (fiid_obj_t obj,
                            const char *field,
-                           uint8_t *data,
-                           uint32_t data_len);
+                           const uint8_t *data,
+                           unsigned int data_len);
 
 /*
  * fiid_obj_get_data
@@ -561,7 +561,7 @@ int32_t fiid_obj_set_data (fiid_obj_t obj,
 int32_t fiid_obj_get_data (fiid_obj_t obj,
                            const char *field,
                            uint8_t *data,
-                           uint32_t data_len);
+                           unsigned int data_len);
 
 /*
  * fiid_obj_set_all
@@ -573,7 +573,7 @@ int32_t fiid_obj_get_data (fiid_obj_t obj,
  * given.  Will write as much as possible if data is not large enough
  * to fill the entire object.
  */
-int32_t fiid_obj_set_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
+int32_t fiid_obj_set_all (fiid_obj_t obj, const uint8_t *data, unsigned int data_len);
 
 /*
  * fiid_obj_get_all
@@ -581,7 +581,7 @@ int32_t fiid_obj_set_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
  * Get an array of all data in the object.  Returns length of data
  * read on success, -1 on error.
  */
-int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
+int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, unsigned int data_len);
 
 /*
  * fiid_obj_set_block
@@ -597,8 +597,8 @@ int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
 int32_t fiid_obj_set_block (fiid_obj_t obj,
                             const char *field_start,
                             const char *field_end,
-                            uint8_t *data,
-                            uint32_t data_len);
+                            const uint8_t *data,
+                            unsigned int data_len);
 
 /*
  * fiid_obj_get_block
@@ -611,7 +611,7 @@ int32_t fiid_obj_get_block (fiid_obj_t obj,
                             const char *field_start,
                             const char *field_end,
                             uint8_t *data,
-                            uint32_t data_len);
+                            unsigned int data_len);
 
 /*****************************
 * FIID Iterator API         *
@@ -704,7 +704,7 @@ int32_t fiid_iterator_get (fiid_iterator_t iter, uint64_t *val);
  */
 int32_t fiid_iterator_get_data (fiid_iterator_t iter,
                                 uint8_t *data,
-                                uint32_t data_len);
+                                unsigned int data_len);
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.h,v 1.13 2009-04-27 21:20:23 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.h,v 1.14 2009-05-01 01:55:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -106,7 +106,7 @@ int ipmi_sdr_cache_ctx_set_debug_prefix (ipmi_sdr_cache_ctx_t ctx, const char *d
 /* SDR Cache Creation Functions */
 int ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                            ipmi_ctx_t ipmi_ctx,
-                           char *filename,
+                           const char *filename,
                            int create_flags,
                            int validation_flags,
                            Sdr_Create_Callback create_callback,
@@ -115,7 +115,7 @@ int ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
 /* SDR Cache Reading Functions */
 int ipmi_sdr_cache_open (ipmi_sdr_cache_ctx_t ctx,
                          ipmi_ctx_t ipmi_ctx,
-                         char *filename);
+                         const char *filename);
 
 int ipmi_sdr_cache_sdr_version (ipmi_sdr_cache_ctx_t ctx, uint8_t *sdr_version);
 int ipmi_sdr_cache_record_count (ipmi_sdr_cache_ctx_t ctx, uint16_t *record_count);
@@ -138,7 +138,7 @@ int ipmi_sdr_cache_record_read (ipmi_sdr_cache_ctx_t ctx,
 int ipmi_sdr_cache_close (ipmi_sdr_cache_ctx_t ctx);
 
 /* SDR Cache Delete Functions */
-int ipmi_sdr_cache_delete (ipmi_sdr_cache_ctx_t ctx, char *filename);
+int ipmi_sdr_cache_delete (ipmi_sdr_cache_ctx_t ctx, const char *filename);
 
 #ifdef __cplusplus
 }

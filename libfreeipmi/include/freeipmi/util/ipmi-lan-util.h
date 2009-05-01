@@ -37,14 +37,14 @@ int ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_r
                                                 fiid_obj_t obj_cmd,
                                                 fiid_obj_t obj_lan_msg_trlr_rs,
                                                 uint8_t authentication_type,
-                                                uint8_t *authentication_code_data,
-                                                uint32_t authentication_code_data_len);
+                                                const uint8_t *authentication_code_data,
+                                                unsigned int authentication_code_data_len);
 
-int ipmi_lan_check_packet_session_authentication_code (uint8_t *pkt,
-                                                       uint64_t pkt_len,
+int ipmi_lan_check_packet_session_authentication_code (const uint8_t *pkt,
+                                                       unsigned int pkt_len,
                                                        uint8_t authentication_type,
-                                                       uint8_t *authentication_code_data,
-                                                       uint32_t authentication_code_data_len);
+                                                       const uint8_t *authentication_code_data,
+                                                       unsigned int authentication_code_data_len);
 
 int ipmi_lan_check_net_fn (fiid_obj_t obj_lan_msg_hdr, uint8_t net_fn);
 
@@ -54,7 +54,7 @@ int ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
                              fiid_obj_t obj_cmd,
                              fiid_obj_t obj_lan_msg_trlr);
 
-int ipmi_lan_check_packet_checksum (uint8_t *pkt, uint64_t pkt_len);
+int ipmi_lan_check_packet_checksum (const uint8_t *pkt, unsigned int pkt_len);
 
 #ifdef __cplusplus
 }

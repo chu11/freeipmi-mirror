@@ -60,15 +60,15 @@
 #include "freeipmi-portability.h"
 
 uint8_t
-ipmi_checksum (uint8_t *buf, uint64_t len)
+ipmi_checksum (const uint8_t *buf, unsigned int buflen)
 {
-  register uint64_t i = 0;
+  register unsigned int i = 0;
   register int8_t checksum = 0;
 
-  if (buf == NULL || len == 0)
+  if (buf == NULL || buflen == 0)
     return (checksum);
 
-  for (; i < len; i++)
+  for (; i < buflen; i++)
     checksum = (checksum + buf[i]) % 256;
 
   return (-checksum);
@@ -170,7 +170,7 @@ ipmi_get_random (uint8_t *buf, uint32_t buflen)
 }
 
 int
-ipmi_is_ipmi_1_5_packet (uint8_t *pkt, unsigned int pkt_len)
+ipmi_is_ipmi_1_5_packet (const uint8_t *pkt, unsigned int pkt_len)
 {
   int32_t rmcp_hdr_len;
   uint8_t auth_type;
@@ -193,7 +193,7 @@ ipmi_is_ipmi_1_5_packet (uint8_t *pkt, unsigned int pkt_len)
 }
 
 int
-ipmi_is_ipmi_2_0_packet (uint8_t *pkt, unsigned int pkt_len)
+ipmi_is_ipmi_2_0_packet (const uint8_t *pkt, unsigned int pkt_len)
 {
   int32_t rmcp_hdr_len;
   uint8_t auth_type;

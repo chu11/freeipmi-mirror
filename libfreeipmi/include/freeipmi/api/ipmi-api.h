@@ -175,7 +175,7 @@ int ipmi_cmd_ipmb (ipmi_ctx_t ctx,
 int ipmi_cmd_raw (ipmi_ctx_t ctx,
                   uint8_t lun,
                   uint8_t net_fn,
-                  uint8_t *in,
+                  const uint8_t *in,
                   unsigned int in_len,
                   uint8_t *out,
                   unsigned int out_len);
