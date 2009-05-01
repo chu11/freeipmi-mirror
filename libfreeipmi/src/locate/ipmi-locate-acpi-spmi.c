@@ -1459,6 +1459,7 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
   fiid_obj_t obj_acpi_table_hdr = NULL;
   fiid_obj_t obj_acpi_spmi_table_descriptor = NULL;
   struct ipmi_locate_info linfo;
+  uint64_t val;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
@@ -1503,37 +1504,49 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
   /* I don't see any reason to perform this check now -- Anand Babu */
   /* This field must always be 01h to be compatible with any software
      that implements previous versions of this spec. */
-  /*
-    {
-    uint64_t ipmi_legacy;
-    fiid_obj_get (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor, "ipmi_legacy", &ipmi_legacy);
+#if 0
+  {
+    uint8_t ipmi_legacy;
+    
+    if (FIID_OBJ_GET (obj_acpi_spmi_table_descriptor,
+                      tmpl_acpi_spmi_table_descriptor,
+                      "ipmi_legacy",
+                      &val) < 0)
+      {
+        LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM (ctx, obj_acpi_spmi_table_descriptor);
+        goto cleanup;
+      }
+    ipmi_legacy = val;
+    
     if (ipmi_legacy != 1)
-    {
-    errno = ENODEV;
-    return (NULL);
-    }
-    }
-  */
+      {
+        LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+        goto cleanup;
+      }
+  }
+#endif
 
   /* IPMI version */
   {
-    uint64_t ipmi_version_major, ipmi_version_minor;
+    uint8_t ipmi_version_major, ipmi_version_minor;
 
     if (FIID_OBJ_GET (obj_acpi_spmi_table_descriptor,
                       "specification_revision.major",
-                      &ipmi_version_major) < 0)
+                      &val) < 0)
       {
         LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM (ctx, obj_acpi_spmi_table_descriptor);
         goto cleanup;
       }
-
+    ipmi_version_major = val;
+    
     if (FIID_OBJ_GET (obj_acpi_spmi_table_descriptor,
                       "specification_revision.minor",
-                      &ipmi_version_minor) < 0)
+                      &val) < 0)
       {
         LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM (ctx, obj_acpi_spmi_table_descriptor);
         goto cleanup;
       }
+    ipmi_version_minor = val;
 
     linfo.ipmi_version_major = ipmi_version_major;
     linfo.ipmi_version_minor = ipmi_version_minor;
@@ -1541,15 +1554,16 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
 
   /* Interface type - KCS, SMIC, SSIF, BT */
   {
-    uint64_t interface_type;
+    uint8_t interface_type;
 
     if (FIID_OBJ_GET (obj_acpi_spmi_table_descriptor,
                       "interface_type",
-                      &interface_type) < 0)
+                      &val) < 0)
       {
         LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM (ctx, obj_acpi_spmi_table_descriptor);
         goto cleanup;
       }
+    interface_type = val;
 
     if (!IPMI_INTERFACE_TYPE_VALID (interface_type))
       {
@@ -1562,24 +1576,26 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
 
   /* Address space id (memory mapped, IO mapped, SMBus) and IO base address */
   {
-    uint64_t address_space_id;
+    uint8_t address_space_id;
     uint64_t base_address;
 
     if (FIID_OBJ_GET (obj_acpi_spmi_table_descriptor,
                       "base_address.address_space_id",
-                      &address_space_id) < 0)
+                      &val) < 0)
       {
         LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM (ctx, obj_acpi_spmi_table_descriptor);
         goto cleanup;
       }
+    address_space_id = val;
 
     if (FIID_OBJ_GET (obj_acpi_spmi_table_descriptor,
                       "base_address.address",
-                      &base_address) < 0)
+                      &val) < 0)
       {
         LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM (ctx, obj_acpi_spmi_table_descriptor);
         goto cleanup;
       }
+    base_address = val;
 
     switch (address_space_id)
       {
@@ -1609,16 +1625,18 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
 
   /* Register spacing */
   {
-    uint64_t reg_bit_width;
+    uint8_t register_bit_width;
 
     if (FIID_OBJ_GET (obj_acpi_spmi_table_descriptor,
                       "base_address.register_bit_width",
-                      &reg_bit_width) < 0)
+                      &val) < 0)
       {
         LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM (ctx, obj_acpi_spmi_table_descriptor);
         goto cleanup;
       }
-    linfo.register_spacing = (reg_bit_width / 8);
+    register_bit_width = val;
+
+    linfo.register_spacing = (register_bit_width / 8);
   }
 
   memcpy (info, &linfo, sizeof (struct ipmi_locate_info));
