@@ -349,21 +349,21 @@ ipmi_open (const char *progname,
 
 /* Check if kg len is decent */
 int
-check_kg_len (const char *instr)
+check_kg_len (const char *in)
 {
-  assert (instr != NULL);
+  assert (in);
 
-  if (strlen (instr) == 0)
+  if (strlen (in) == 0)
     return (0);
 
-  if (strncasecmp (instr, "0x", 2) == 0)
+  if (strncasecmp (in, "0x", 2) == 0)
     {
-      if (strlen (instr) > IPMI_MAX_K_G_LENGTH*2+2)
+      if (strlen (in) > IPMI_MAX_K_G_LENGTH*2+2)
         return (-1);
     }
   else
     {
-      if (strlen (instr) > IPMI_MAX_K_G_LENGTH)
+      if (strlen (in) > IPMI_MAX_K_G_LENGTH)
         return (-1);
     }
 
@@ -373,26 +373,26 @@ check_kg_len (const char *instr)
 /* a k_g key is interpreted as ascii text unless it is prefixed with
    "0x", in which case is it interpreted as hexadecimal */
 int
-parse_kg (unsigned char *outbuf, int outsz, const char *instr)
+parse_kg (uint8_t *out, unsigned int outlen, const char *in)
 {
   char *p, *q;
   int i, j;
   char buf[3] = { 0, 0, 0};
   int rv = 0;
 
-  assert (outbuf != NULL);
-  assert (instr != NULL);
-  assert (outsz > IPMI_MAX_K_G_LENGTH);
+  assert (out);
+  assert (in);
+  assert (outlen > IPMI_MAX_K_G_LENGTH);
 
-  if (strlen (instr) == 0)
+  if (strlen (in) == 0)
     return (0);
 
-  if (strncasecmp (instr, "0x", 2) == 0)
+  if (strncasecmp (in, "0x", 2) == 0)
     {
-      if (strlen (instr) > IPMI_MAX_K_G_LENGTH*2+2)
+      if (strlen (in) > IPMI_MAX_K_G_LENGTH*2+2)
         return (-1);
-      p = (char *)instr + 2;
-      memset (outbuf, 0, IPMI_MAX_K_G_LENGTH);
+      p = (char *)in + 2;
+      memset (out, 0, IPMI_MAX_K_G_LENGTH);
       for (i = j = 0; i < strlen (p); i+=2, j++)
         {
           if (!isxdigit (p[i])
@@ -405,7 +405,7 @@ parse_kg (unsigned char *outbuf, int outsz, const char *instr)
             buf[1] = 0;
           buf[2] = '\0';
           errno = 0;
-          outbuf[j] = strtoul (buf, &q, 16);
+          out[j] = strtoul (buf, &q, 16);
           if (errno
               || ((p[i+1] && (q != buf + 2))
                   || (!p[i+1] && (q != buf + 1))))
@@ -415,27 +415,27 @@ parse_kg (unsigned char *outbuf, int outsz, const char *instr)
     }
   else
     {
-      if (strlen (instr) > IPMI_MAX_K_G_LENGTH)
+      if (strlen (in) > IPMI_MAX_K_G_LENGTH)
         return (-1);
-      memset (outbuf, 0, IPMI_MAX_K_G_LENGTH);
-      memcpy (outbuf, instr, strlen (instr));
-      rv = strlen (instr);
+      memset (out, 0, IPMI_MAX_K_G_LENGTH);
+      memcpy (out, in, strlen (in));
+      rv = strlen (in);
     }
 
   return (rv);
 }
 
 char *
-format_kg (char *outstr, int outsz, const unsigned char *k_g)
+format_kg (char *out, unsigned int outlen, const uint8_t *k_g)
 {
   int i;
   int printable = 1;
   int foundnull = 0;
   char *p;
 
-  assert (outstr != NULL);
-  assert (outsz > IPMI_MAX_K_G_LENGTH*2+2);
-  assert (k_g != NULL);
+  assert (out);
+  assert (outlen > IPMI_MAX_K_G_LENGTH*2+2);
+  assert (k_g);
 
   /* Are there any characters that would prevent printing this as a
      string on a single line? */
@@ -465,9 +465,9 @@ format_kg (char *outstr, int outsz, const unsigned char *k_g)
 
   if (printable)
     {
-      if (outsz < IPMI_MAX_K_G_LENGTH+1)
+      if (outlen < IPMI_MAX_K_G_LENGTH+1)
         return (NULL);
-      p = outstr;
+      p = out;
       for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
         {
           if (k_g[i] == '\0')
@@ -478,14 +478,14 @@ format_kg (char *outstr, int outsz, const unsigned char *k_g)
     }
   else
     {
-      if (outsz < IPMI_MAX_K_G_LENGTH*2+3)
+      if (outlen < IPMI_MAX_K_G_LENGTH*2+3)
         return (NULL);
-      p = outstr;
+      p = out;
       p[0] = '0'; p[1] = 'x';
       p+=2;
       for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++, p+=2)
         sprintf (p, "%02x", k_g[i]);
     }
 
-  return (outstr);
+  return (out);
 }

@@ -73,7 +73,7 @@ cmdline_config_file_parse (int key, char *arg, struct argp_state *state)
 }
 
 int
-parse_inband_driver_type (char *str)
+parse_inband_driver_type (const char *str)
 {
   if (!str)
     return (-1);
@@ -99,7 +99,7 @@ parse_inband_driver_type (char *str)
 }
 
 int
-parse_outofband_driver_type (char *str)
+parse_outofband_driver_type (const char *str)
 {
   if (!str)
     return (-1);
@@ -121,7 +121,7 @@ parse_outofband_driver_type (char *str)
 }
 
 int
-parse_driver_type (char *str)
+parse_driver_type (const char *str)
 {
   int ret;
 
@@ -135,7 +135,7 @@ parse_driver_type (char *str)
 }
 
 int
-parse_authentication_type (char *str)
+parse_authentication_type (const char *str)
 {
   if (!str)
     return (-1);
@@ -153,8 +153,9 @@ parse_authentication_type (char *str)
 
   return (-1);
 }
+
 int
-parse_privilege_level (char *str)
+parse_privilege_level (const char *str)
 {
   if (!str)
     return (-1);
@@ -171,7 +172,7 @@ parse_privilege_level (char *str)
 }
 
 int
-parse_workaround_flags (char *str)
+parse_workaround_flags (const char *str)
 {
   char buf[WORKAROUND_FLAG_BUFLEN+1];
   char *tok;

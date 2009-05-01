@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.12 2009-04-30 17:54:14 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.13 2009-05-01 02:41:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -167,7 +167,7 @@ _strncpy (char *dest, char *src, unsigned int len)
 }
 
 static void
-_output_usage (char *options)
+_output_usage (const char *options)
 {
   assert (_progname);
 
@@ -206,7 +206,7 @@ _cmdline_parse (int argc,
                 char **argv,
                 unsigned int min_sequence_number,
                 unsigned int max_sequence_number,
-                char *options)
+                const char *options)
 {
   char c, *ptr;
 
@@ -513,7 +513,7 @@ ipmi_ping_setup (int argc,
                  char **argv,
                  unsigned int min_sequence_number,
                  unsigned int max_sequence_number,
-                 char *options)
+                 const char *options)
 {
   char *valid_options = "hVciItvrsd:";
   char *ptr;
@@ -526,7 +526,7 @@ ipmi_ping_setup (int argc,
     }
 
   /* Check for valid options */
-  ptr = options;
+  ptr = (char *)options;
   while ((c = *ptr))
     {
       if (!strchr (valid_options, c))

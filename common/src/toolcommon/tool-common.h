@@ -19,6 +19,7 @@
 #ifndef _TOOL_COMMON_H
 #define _TOOL_COMMON_H
 
+#include <stdint.h>
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
@@ -36,12 +37,12 @@ ipmi_ctx_t ipmi_open (const char *progname,
                       unsigned int errmsglen);
 
 /* Check if kg len is decent */
-int check_kg_len (const char *instr);
+int check_kg_len (const char *in);
 
 /* Turn an input string into a 20-byte binary k_g key */
-int parse_kg (unsigned char *outbuf, int outsz, const char *instr);
+int parse_kg (uint8_t *out, unsigned int outlen, const char *in);
 
 /* Turn a 20-byte binary k_g key into an output string */
-char *format_kg (char *outstr, int outsz, const unsigned char *k_g);
+char *format_kg (char *out, unsigned int outlen, const uint8_t *k_g);
 
 #endif

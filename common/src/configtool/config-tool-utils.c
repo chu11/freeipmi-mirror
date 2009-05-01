@@ -34,7 +34,7 @@
 #include "pstdout.h"
 
 int
-config_keypair_parse_string (char *str,
+config_keypair_parse_string (const char *str,
                              char **section_name,
                              char **key_name,
                              char **value)
@@ -247,7 +247,7 @@ config_keypair_destroy (struct config_keypair *keypair)
 }
 
 struct config_section_str *
-config_section_str_create (char *section_name)
+config_section_str_create (const char *section_name)
 {
   struct config_section_str *sstr = NULL;
 
@@ -319,7 +319,7 @@ config_section_str_destroy (struct config_section_str *section_str)
 
 int8_t
 config_ipv4_address_string2int (pstdout_state_t pstate,
-                                char *src,
+                                const char *src,
                                 uint32_t *dest)
 {
   unsigned int b1, b2, b3, b4;
@@ -361,7 +361,7 @@ config_ipv4_address_string2int (pstdout_state_t pstate,
 
 int8_t
 config_mac_address_string2int (pstdout_state_t pstate,
-                               char *src,
+                               const char *src,
                                uint64_t *dest)
 {
   unsigned int b1, b2, b3, b4, b5, b6;

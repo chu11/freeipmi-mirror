@@ -299,17 +299,17 @@ struct hostrange_cmd_args
 #define IPMI_PRIVILEGE_LEVEL_ADMIN_STR                                  "admin"
 #define IPMI_PRIVILEGE_LEVEL_ADMIN_STR2                                 "administrator"
 
-int parse_inband_driver_type (char *str);
+int parse_inband_driver_type (const char *str);
 
-int parse_outofband_driver_type (char *str);
+int parse_outofband_driver_type (const char *str);
 
-int parse_driver_type (char *str);
+int parse_driver_type (const char *str);
 
-int parse_authentication_type (char *str);
+int parse_authentication_type (const char *str);
 
-int parse_privilege_level (char *str);
+int parse_privilege_level (const char *str);
 
-int parse_workaround_flags (char *str);
+int parse_workaround_flags (const char *str);
 
 error_t common_parse_opt (int key,
                           char *arg,

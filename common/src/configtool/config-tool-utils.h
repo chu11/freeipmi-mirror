@@ -27,7 +27,7 @@
 
 /* note: keypair and section_str functions for argp parsing, no pstate involved */
 
-int config_keypair_parse_string (char *str,
+int config_keypair_parse_string (const char *str,
                                  char **section_name,
                                  char **key_name,
                                  char **value);
@@ -47,7 +47,7 @@ void config_keypair_destroy (struct config_keypair *keypair);
 
 /* no config_section_strs_create, responsibility of config tool to create list */
 
-struct config_section_str *config_section_str_create (char *section_name);
+struct config_section_str *config_section_str_create (const char *section_name);
 
 int config_section_str_append (struct config_section_str **section_strs,
                                struct config_section_str *section_str);
@@ -55,11 +55,11 @@ int config_section_str_append (struct config_section_str **section_strs,
 void config_section_str_destroy (struct config_section_str *section_str);
 
 int8_t config_ipv4_address_string2int (pstdout_state_t pstate,
-                                       char *src,
+                                       const char *src,
                                        uint32_t *dest);
 
 int8_t config_mac_address_string2int (pstdout_state_t pstate,
-                                      char *src,
+                                      const char *src,
                                       uint64_t *dest);
 
 struct config_section *config_find_section (pstdout_state_t pstate,

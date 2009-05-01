@@ -32,9 +32,9 @@ void config_sections_destroy (pstdout_state_t pstate,
                               struct config_section *sections);
 
 struct config_section *config_section_create (pstdout_state_t pstate,
-                                              char *section_name,
-                                              char *section_comment_section_name,
-                                              char *section_comment,
+                                              const char *section_name,
+                                              const char *section_comment_section_name,
+                                              const char *section_comment,
                                               unsigned int flags,
                                               Section_Pre_Commit section_pre_commit,
                                               Section_Post_Commit section_post_commit);

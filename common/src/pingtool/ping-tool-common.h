@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.h,v 1.5 2009-04-30 17:54:14 chu11 Exp $
+ *  $Id: ping-tool-common.h,v 1.6 2009-05-01 02:41:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -81,7 +81,7 @@ void ipmi_ping_setup (int argc,
                       char **argv,
                       unsigned int min_sequence_number,
                       unsigned int max_sequence_number,
-                      char *options);
+                      const char *options);
 
 /* ipmi_ping_loop
  * - handle looping ping code

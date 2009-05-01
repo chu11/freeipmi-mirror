@@ -24,7 +24,7 @@
 #include "pstdout.h"
 
 int config_section_comments (pstdout_state_t pstate,
-                             char *section_name,
-                             char *in,
+                             const char *section_name,
+                             const char *in,
                              FILE *fp);
 #endif
