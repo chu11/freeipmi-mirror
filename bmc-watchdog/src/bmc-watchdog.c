@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.118 2009-04-29 18:29:50 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.119 2009-05-01 22:19:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -633,7 +633,7 @@ _cmd (char *str,
       fiid_obj_t cmd_rq,
       fiid_obj_t cmd_rs)
 {
-  uint64_t comp_code;
+  uint8_t comp_code;
   int retry_count = 0;
   int ret = 0;
 
@@ -1077,15 +1077,17 @@ _get_watchdog_timer_cmd (int retry_wait_time,
 }
 
 static int
-_get_channel_number (int retry_wait_time, int retry_attempt)
+_get_channel_number (int retry_wait_time, int retry_attempt, uint8_t *channel_number)
 {
   fiid_obj_t dev_id_cmd_rq = NULL;
   fiid_obj_t dev_id_cmd_rs = NULL;
   fiid_obj_t channel_info_cmd_rq = NULL;
   fiid_obj_t channel_info_cmd_rs = NULL;
-  uint64_t manufacturer_id, product_id;
-  uint64_t val;
+  uint32_t manufacturer_id;
+  uint16_t product_id;
   int i, ret, rv = -1;
+
+  assert (channel_number);
 
   if (!(dev_id_cmd_rq = fiid_obj_create (tmpl_cmd_get_device_id_rq)))
     {
@@ -1153,6 +1155,8 @@ _get_channel_number (int retry_wait_time, int retry_attempt)
   /* Channel numbers range from 0 - 7 */
   for (i = 0; i < 8; i++)
     {
+      uint8_t channel_medium_type;
+
       if (fill_cmd_get_channel_info (i, channel_info_cmd_rq) < 0)
         {
           _bmclog ("fill_cmd_get_channel_info: %s", strerror (errno));
@@ -1170,16 +1174,21 @@ _get_channel_number (int retry_wait_time, int retry_attempt)
 
       BMC_WATCHDOG_FIID_OBJ_GET (channel_info_cmd_rs,
                                  "channel_medium_type",
-                                 &val,
+                                 &channel_medium_type,
                                  "_get_channel_number");
 
-      if ((uint8_t)val == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
+      if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
         {
+          uint8_t actual_channel_number;
+
           BMC_WATCHDOG_FIID_OBJ_GET (channel_info_cmd_rs,
                                      "actual_channel_number",
-                                     &val,
+                                     &actual_channel_number,
                                      "_get_channel_number");
-          rv = (int)val;
+
+          (*channel_number) = actual_channel_number;
+
+          rv = 0;
           goto cleanup;
         }
     }
@@ -1202,7 +1211,7 @@ _suspend_bmc_arps_cmd (int retry_wait_time,
   fiid_obj_t cmd_rq = NULL;
   fiid_obj_t cmd_rs = NULL;
   int rv = -1;
-  int8_t num;
+  uint8_t channel_number;
 
   if (!(cmd_rq = fiid_obj_create (tmpl_cmd_suspend_bmc_arps_rq)))
     {
@@ -1218,11 +1227,12 @@ _suspend_bmc_arps_cmd (int retry_wait_time,
       goto cleanup;
     }
 
-  num = _get_channel_number (retry_wait_time, retry_attempt);
-  if (num < 0)
+  if (_get_channel_number (retry_wait_time,
+                           retry_attempt,
+                           &channel_number) < 0)
     goto cleanup;
 
-  if (fill_cmd_suspend_bmc_arps (num,
+  if (fill_cmd_suspend_bmc_arps (channel_number,
                                  gratuitous_arp,
                                  arp_response,
                                  cmd_rq) < 0)
