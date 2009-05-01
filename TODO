@@ -19,6 +19,8 @@ lan send funcs
 ipmi-raw - ipmi_raw_stream and ipmi-oem arg checks
 use of _SC_ARG_MAX correct? no likely, need to fix
 
+uint64_t - only get vals, don't store
+
 
 freeipmi tools
 --------------
