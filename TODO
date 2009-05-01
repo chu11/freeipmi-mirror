@@ -14,8 +14,7 @@ debug funcs
 assemble funcs
 hash/crypto funcs
 fiid funcs
-
-_ipmi_lan_2_0_cmd_send/_ipmi_lan_cmd_send - don't assume buffer length
+lan send funcs
 
 ipmi-raw - ipmi_raw_stream and ipmi-oem arg checks
 use of _SC_ARG_MAX correct? no likely, need to fix

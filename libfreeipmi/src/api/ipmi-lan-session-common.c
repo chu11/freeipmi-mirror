@@ -469,7 +469,8 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                     fiid_obj_t obj_cmd_rq)
 {
   uint8_t *pkt;
-  unsigned int pkt_len = 1024;
+  unsigned int pkt_len = 0;
+  int32_t cmd_len = 0;
   int32_t send_len = 0;
 
   assert (ctx
@@ -499,6 +500,15 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_lan_msg_hdr);
       return (-1);
     }
+
+  if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+      return (-1);
+    }
+
+  /* variable based on authentication, etc. 1024 is enough */
+  pkt_len = cmd_len + 1024;
 
   pkt = alloca (pkt_len);
   if (!pkt)
@@ -1946,7 +1956,8 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                         fiid_obj_t obj_cmd_rq)
 {
   uint8_t *pkt;
-  unsigned int pkt_len = 1024;
+  unsigned int pkt_len = 0;
+  int32_t cmd_len = 0;
   int32_t send_len = 0;
 
   assert (ctx
@@ -1987,6 +1998,15 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_rmcpplus_session_trlr);
       return (-1);
     }
+
+  if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+      return (-1);
+    }
+
+  /* variable based on authentication, etc. 1024 is enough */
+  pkt_len = cmd_len + 1024;
 
   pkt = alloca (pkt_len);
   if (!pkt)
