@@ -128,8 +128,7 @@ ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  int rv = -1;
-  int32_t len;
+  int len, rv = -1;
   uint8_t authentication_type;
   unsigned int internal_workaround_flags = 0;
 
@@ -301,8 +300,7 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
   uint8_t payload_encrypted;
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  int rv = -1;
-  int32_t len;
+  int len, rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

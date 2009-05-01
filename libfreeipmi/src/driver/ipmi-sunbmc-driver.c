@@ -393,8 +393,8 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
   uint8_t rq_buf_temp[IPMI_SUNBMC_BUFLEN];
   uint8_t rq_buf[IPMI_SUNBMC_BUFLEN];
   uint8_t rq_cmd;
-  int32_t rq_buf_len;
-  int32_t len;
+  unsigned int rq_buf_len;
+  int len;
 #endif /* !(defined(HAVE_BMC_INTF_H) && defined(HAVE_SYS_STROPTS_H)) */
   int rv = -1;
 
@@ -637,9 +637,9 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
       uint8_t rq_buf_temp[IPMI_SUNBMC_BUFLEN];
       uint8_t rq_buf[IPMI_SUNBMC_BUFLEN];
       uint8_t rq_cmd;
-      int32_t rq_buf_len;
+      unsigned int rq_buf_len;
       uint8_t rs_buf[IPMI_SUNBMC_BUFLEN];
-      int32_t len;
+      int len;
 
       memset (&istr, '\0', sizeof (struct strioctl));
       memset (&reqrsp, '\0', sizeof (bmc_reqrsp_t));

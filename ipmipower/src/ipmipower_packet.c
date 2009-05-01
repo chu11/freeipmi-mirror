@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.112 2009-05-01 00:07:29 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.113 2009-05-01 17:58:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -810,7 +810,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   else if (pkt == ACTIVATE_SESSION_REQ)
     {
       uint8_t challenge_string[IPMI_CHALLENGE_STRING_LENGTH];
-      int32_t challenge_string_len;
+      int challenge_string_len;
 
       if ((challenge_string_len = fiid_obj_get_data (ip->obj_get_session_challenge_res,
                                                      "challenge_string",

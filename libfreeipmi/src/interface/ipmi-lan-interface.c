@@ -133,7 +133,7 @@ fill_lan_msg_hdr (uint8_t rs_addr,
                   fiid_obj_t obj_lan_msg_hdr)
 {
   uint8_t checksum_buf[1024];
-  int32_t checksum_len;
+  int checksum_len;
   uint8_t checksum;
 
   if (!IPMI_NET_FN_VALID (net_fn)
@@ -268,7 +268,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   uint8_t *ipmi_msg_len_ptr = NULL;
   uint32_t msg_data_count = 0;
   uint32_t checksum_data_count = 0;
-  int32_t len;
+  int len;
   uint8_t ipmi_msg_len;
   fiid_obj_t obj_lan_msg_trlr = NULL;
   uint8_t pwbuf[IPMI_1_5_MAX_PASSWORD_LENGTH];
@@ -505,7 +505,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
             {
               uint8_t session_id_buf[1024];
               uint8_t session_sequence_number_buf[1024];
-              int32_t session_id_len, session_sequence_number_len;
+              int session_id_len, session_sequence_number_len;
 
               if ((session_id_len = fiid_obj_get_data (obj_lan_session_hdr,
                                                        "session_id",
@@ -600,11 +600,11 @@ unassemble_ipmi_lan_pkt (const uint8_t *pkt,
                          fiid_obj_t obj_cmd,
                          fiid_obj_t obj_lan_msg_trlr)
 {
-  uint64_t authentication_type;
+  uint8_t authentication_type;
   unsigned int indx = 0;
-  uint32_t obj_cmd_len;
-  int32_t obj_lan_msg_trlr_len;
-  int32_t len;
+  unsigned int obj_cmd_len;
+  int obj_lan_msg_trlr_len, len;
+  uint64_t val;
 
   if (!pkt
       || !fiid_obj_valid (obj_rmcp_hdr)
@@ -659,6 +659,7 @@ unassemble_ipmi_lan_pkt (const uint8_t *pkt,
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_session_hdr);
       return (-1);
     }
+
   if ((len = fiid_obj_set_block (obj_lan_session_hdr,
                                  "authentication_type",
                                  "session_id",
@@ -672,11 +673,12 @@ unassemble_ipmi_lan_pkt (const uint8_t *pkt,
 
   if (FIID_OBJ_GET (obj_lan_session_hdr,
                     "authentication_type",
-                    &authentication_type) < 0)
+                    &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_session_hdr);
       return (-1);
     }
+  authentication_type = val;
 
   if (!IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type))
     {

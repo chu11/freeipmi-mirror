@@ -388,7 +388,7 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
   fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
   fiid_obj_t obj_ipmb_msg_rq = NULL;
   fiid_obj_t obj_send_cmd_rs = NULL;
-  int32_t len;
+  int len;
   int rv = -1;
 
   assert (ctx
@@ -472,8 +472,7 @@ _ipmi_kcs_ipmb_recv (ipmi_ctx_t ctx,
   uint8_t buf[IPMI_MAX_PKT_LEN];
   fiid_obj_t obj_ipmb_msg_rs = NULL;
   fiid_obj_t obj_get_cmd_rs = NULL;
-  int32_t len;
-  int rv = -1;
+  int len, rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC

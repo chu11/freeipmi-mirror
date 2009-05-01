@@ -790,7 +790,7 @@ ipmi_rmcpplus_check_payload_pad (uint8_t confidentiality_algorithm,
   else /* IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 */
     {
       uint8_t confidentiality_trailer[IPMI_MAX_CONFIDENTIALITY_TRAILER_LENGTH];
-      int32_t confidentiality_trailer_len;
+      int confidentiality_trailer_len;
       uint8_t pad_len;
       int i;
 
@@ -899,8 +899,8 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
   unsigned int hash_algorithm = 0, hash_flags = 0;
   int digest_len = 0;
   uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
-  int32_t key_exchange_authentication_code_len;
-  int32_t compare_len = 0;
+  int key_exchange_authentication_code_len;
+  unsigned int compare_len = 0;
   int rv = -1;
 
   if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
@@ -1060,9 +1060,9 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorit
   uint8_t digest[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
   unsigned int hash_algorithm = 0, hash_flags = 0;
   int digest_len = 0;
-  int compare_len = 0;
+  unsigned int compare_len = 0;
   uint8_t integrity_check_value[IPMI_MAX_INTEGRITY_CHECK_VALUE_LENGTH];
-  int32_t integrity_check_value_len;
+  int integrity_check_value_len;
   int rv = -1;
 
   if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
@@ -1184,14 +1184,12 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
                                                         unsigned int authentication_code_data_len,
                                                         fiid_obj_t obj_rmcpplus_session_trlr)
 {
-  int rmcp_header_len;
   unsigned int hash_algorithm, hash_flags;
   unsigned int expected_digest_len, compare_digest_len, hash_data_len;
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t integrity_digest[IPMI_MAX_INTEGRITY_DATA_LENGTH];
   uint8_t authentication_code[IPMI_MAX_INTEGRITY_DATA_LENGTH];
-  int32_t authentication_code_len;
-  int integrity_digest_len, crypt_digest_len;
+  int rmcp_header_len, authentication_code_len, integrity_digest_len, crypt_digest_len;
   uint8_t pwbuf[IPMI_2_0_MAX_PASSWORD_LENGTH];
   int rv = -1;
 

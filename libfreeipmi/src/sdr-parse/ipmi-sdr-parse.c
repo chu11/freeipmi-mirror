@@ -781,7 +781,7 @@ ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
-  int32_t len = 0;
+  int len = 0;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
@@ -3286,7 +3286,7 @@ ipmi_sdr_parse_device_id_string (ipmi_sdr_parse_ctx_t ctx,
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
-  int32_t len = 0;
+  int len = 0;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
@@ -3918,7 +3918,7 @@ ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
-  int32_t len = 0;
+  int len = 0;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)

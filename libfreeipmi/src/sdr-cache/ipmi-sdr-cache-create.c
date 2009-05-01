@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.30 2009-05-01 05:21:25 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.31 2009-05-01 17:58:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -249,8 +249,8 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
   int sdr_record_header_length = 0;
   unsigned int record_length = 0;
   int rv = -1;
-  uint32_t bytes_to_read = IPMI_SDR_CACHE_BYTES_TO_READ_START;
-  uint32_t offset_into_record = 0;
+  unsigned int bytes_to_read = IPMI_SDR_CACHE_BYTES_TO_READ_START;
+  unsigned int offset_into_record = 0;
   unsigned int reservation_id_retry_count = 0;
   uint64_t val;
 
@@ -376,7 +376,7 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
   reservation_id_retry_count = 0;
   while (offset_into_record < record_length)
     {
-      int32_t record_data_len;
+      int record_data_len;
 
       if ((record_length - offset_into_record) < bytes_to_read)
         bytes_to_read = record_length - offset_into_record;

@@ -99,8 +99,7 @@ ipmi_sunbmc_cmd_raw_api (ipmi_ctx_t ctx,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  int32_t len;
-  int rv = -1;
+  int len, rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

@@ -318,7 +318,7 @@ sel_parse_get_oem (ipmi_sel_parse_ctx_t ctx,
   fiid_obj_t obj_sel_record = NULL;
   uint8_t record_type;
   int record_type_class;
-  int32_t len;
+  int len;
   int rv = -1;
 
   assert (ctx);

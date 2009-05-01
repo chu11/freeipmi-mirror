@@ -1401,7 +1401,7 @@ fiid_obj_clear (fiid_obj_t obj)
 int
 fiid_obj_clear_field (fiid_obj_t obj, const char *field)
 {
-  int32_t bits_len;
+  int bits_len;
   int key_index = -1;
 
   if (!obj || obj->magic != FIID_OBJ_MAGIC)
@@ -1431,8 +1431,8 @@ fiid_obj_clear_field (fiid_obj_t obj, const char *field)
     }
   else
     {
-      int32_t field_start, field_offset;
-      int32_t bytes_len;
+      int field_start;
+      unsigned int field_offset, bytes_len;
 
       /* achu: We assume the field must start on a byte boundary and end
        * on a byte boundary.
@@ -1826,15 +1826,14 @@ FIID_OBJ_GET (fiid_obj_t obj,
   return (ret);
 }
 
-int32_t
+int
 fiid_obj_set_data (fiid_obj_t obj,
                    const char *field,
                    const uint8_t *data,
                    unsigned int data_len)
 {
-  int32_t bits_len, bytes_len, field_start;
-  int field_offset;
-  int key_index = -1;
+  unsigned int field_offset, bytes_len;
+  int bits_len, field_start, key_index = -1;
 
   if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
@@ -1882,15 +1881,14 @@ fiid_obj_set_data (fiid_obj_t obj,
   return (data_len);
 }
 
-int32_t
+int
 fiid_obj_get_data (fiid_obj_t obj,
                    const char *field,
                    uint8_t *data,
                    unsigned int data_len)
 {
-  int32_t bits_len, bytes_len, field_start;
-  int field_offset;
-  int key_index = -1;
+  unsigned int field_offset, bytes_len;
+  int bits_len, field_start, key_index = -1;
 
   if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
@@ -1949,14 +1947,13 @@ fiid_obj_get_data (fiid_obj_t obj,
   return (bytes_len);
 }
 
-int32_t
+int
 fiid_obj_set_all (fiid_obj_t obj,
                   const uint8_t *data,
                   unsigned int data_len)
 {
-  int key_index_end = -1;
-  int bits_counter, data_bits_len;
-  int i;
+  unsigned int bits_counter, data_bits_len;
+  int i, key_index_end = -1;
 
   if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
@@ -2016,7 +2013,7 @@ fiid_obj_set_all (fiid_obj_t obj,
   return (data_len);
 }
 
-int32_t
+int
 fiid_obj_get_all (fiid_obj_t obj,
                   uint8_t *data,
                   unsigned int data_len)
@@ -2053,13 +2050,14 @@ fiid_obj_get_all (fiid_obj_t obj,
     memcpy (data, obj->data, bytes_len);
   else
     {
-      int i, bytes_written = 0, max_bits_counter = 0, set_bits_counter = 0,
-    optional_bits_counter = 0, data_index = 0, obj_data_index = 0;
+      unsigned int bytes_written = 0, max_bits_counter = 0, set_bits_counter = 0,
+        optional_bits_counter = 0, data_index = 0, obj_data_index = 0;
+      int i;
 
       for (i = 0; i < obj->field_data_len; i++)
         {
-          int32_t max_field_len = obj->field_data[i].max_field_len;
-          int32_t set_field_len = obj->field_data[i].set_field_len;
+          unsigned int max_field_len = obj->field_data[i].max_field_len;
+          unsigned int set_field_len = obj->field_data[i].set_field_len;
 
           max_bits_counter += max_field_len;
 
@@ -2086,8 +2084,8 @@ fiid_obj_get_all (fiid_obj_t obj,
               set_bits_counter += set_field_len;
               if (!(set_bits_counter % 8))
                 {
-                  int32_t max_bytes_count = BITS_ROUND_BYTES (max_bits_counter);
-                  int32_t set_bytes_count = BITS_ROUND_BYTES (set_bits_counter);
+                  unsigned int max_bytes_count = BITS_ROUND_BYTES (max_bits_counter);
+                  unsigned int set_bytes_count = BITS_ROUND_BYTES (set_bits_counter);
 
                   memcpy (data + data_index,
                           obj->data + obj_data_index,
@@ -2154,7 +2152,7 @@ fiid_obj_get_all (fiid_obj_t obj,
   return (-1);
 }
 
-static int32_t
+static int
 _fiid_obj_max_block_len (fiid_obj_t obj,
                          const char *field_start,
                          const char *field_end)
@@ -2182,17 +2180,17 @@ _fiid_obj_max_block_len (fiid_obj_t obj,
   return (end - start);
 }
 
-int32_t
+int
 fiid_obj_set_block (fiid_obj_t obj,
                     const char *field_start,
                     const char *field_end,
                     const uint8_t *data,
                     unsigned int data_len)
 {
-  int32_t block_bits_start, block_bits_len, block_bytes_len;
+  int block_bits_start, block_bits_len;
   int key_index_start = -1, key_index_end = -1;
-  int bits_counter, data_bits_len;
-  int i, field_offset;
+  unsigned int block_bytes_len, bits_counter, data_bits_len, field_offset;
+  int i;
 
   if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
@@ -2249,6 +2247,7 @@ fiid_obj_set_block (fiid_obj_t obj,
   if (data_len < block_bits_len)
     {
       bits_counter = 0;
+
       for (i = key_index_start; i <= key_index_end; i++)
         {
           bits_counter += obj->field_data[i].max_field_len;
@@ -2289,17 +2288,16 @@ fiid_obj_set_block (fiid_obj_t obj,
   return (data_len);
 }
 
-int32_t
+int
 fiid_obj_get_block (fiid_obj_t obj,
                     const char *field_start,
                     const char *field_end,
                     uint8_t *data,
                     unsigned int data_len)
 {
-  int32_t block_bits_start, block_bits_max_len, block_bits_set_len,
-    block_bytes_max_len, block_bytes_set_len;
+  int block_bits_start, block_bits_max_len, block_bits_set_len;
+  unsigned int block_bytes_max_len, block_bytes_set_len, field_offset;
   int key_index_start = -1, key_index_end = -1;
-  int field_offset;
 
   if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
@@ -2370,13 +2368,14 @@ fiid_obj_get_block (fiid_obj_t obj,
     memcpy (data, (obj->data + field_offset), block_bytes_set_len);
   else
     {
-      int i, bytes_written = 0, max_bits_counter = 0, set_bits_counter = 0,
-    optional_bits_counter = 0, data_index = 0, obj_data_index = field_offset;
+      unsigned int bytes_written = 0, max_bits_counter = 0, set_bits_counter = 0,
+        optional_bits_counter = 0, data_index = 0, obj_data_index = field_offset;
+      int i;
 
       for (i = key_index_start; i <= key_index_end; i++)
         {
-          int32_t max_field_len = obj->field_data[i].max_field_len;
-          int32_t set_field_len = obj->field_data[i].set_field_len;
+          unsigned int max_field_len = obj->field_data[i].max_field_len;
+          unsigned int set_field_len = obj->field_data[i].set_field_len;
 
           max_bits_counter += max_field_len;
 
@@ -2403,8 +2402,8 @@ fiid_obj_get_block (fiid_obj_t obj,
               set_bits_counter += set_field_len;
               if (!(set_bits_counter % 8))
                 {
-                  int32_t max_bytes_count = BITS_ROUND_BYTES (max_bits_counter);
-                  int32_t set_bytes_count = BITS_ROUND_BYTES (set_bits_counter);
+                  unsigned int max_bytes_count = BITS_ROUND_BYTES (max_bits_counter);
+                  unsigned int set_bytes_count = BITS_ROUND_BYTES (set_bits_counter);
 
                   memcpy (data + data_index,
                           obj->data + obj_data_index,
@@ -2574,7 +2573,7 @@ fiid_iterator_end (fiid_iterator_t iter)
   return ((iter->current_index == iter->last_index) ? 1 : 0);
 }
 
-int32_t
+int
 fiid_iterator_field_len (fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
@@ -2594,7 +2593,7 @@ fiid_iterator_key (fiid_iterator_t iter)
   return (iter->obj->field_data[iter->current_index].key);
 }
 
-int32_t
+int
 fiid_iterator_get (fiid_iterator_t iter, uint64_t *val)
 {
   char *key;
@@ -2606,16 +2605,16 @@ fiid_iterator_get (fiid_iterator_t iter, uint64_t *val)
   key = iter->obj->field_data[iter->current_index].key;
   rv = fiid_obj_get (iter->obj, key, val);
   iter->errnum = (iter->obj->errnum);
-  return ((int32_t)rv);
+  return (rv);
 }
 
-int32_t
+int
 fiid_iterator_get_data (fiid_iterator_t iter,
                         uint8_t *data,
                         unsigned int data_len)
 {
   char *key;
-  int32_t rv;
+  int rv;
 
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
     return (-1);

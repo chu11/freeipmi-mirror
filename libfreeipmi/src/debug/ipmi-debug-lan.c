@@ -100,8 +100,7 @@ _ipmi_dump_lan_packet (int fd,
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   fiid_obj_t obj_lan_msg_trlr = NULL;
   fiid_obj_t obj_unexpected_data = NULL;
-  int32_t len;
-  int rv = -1;
+  int len, rv = -1;
   uint64_t authentication_type;
 
   assert (pkt);
@@ -339,7 +338,7 @@ _ipmi_dump_lan_packet (int fd,
   if (obj_cmd_len)
     {
       uint8_t ipmb_buf[IPMI_DEBUG_MAX_PKT_LEN];
-      int32_t ipmb_buf_len = 0;
+      int ipmb_buf_len = 0;
 
       if ((len = fiid_obj_set_all (obj_cmd,
                                    pkt + indx,
@@ -384,8 +383,8 @@ _ipmi_dump_lan_packet (int fd,
         {
           int obj_ipmb_msg_trlr_len = 0;
           unsigned int obj_ipmb_cmd_len = 0;
-          int32_t ipmb_hdr_len = 0;
-          int32_t ipmb_cmd_len = 0;
+          int ipmb_hdr_len = 0;
+          int ipmb_cmd_len = 0;
 
           if ((obj_ipmb_msg_trlr_len = fiid_template_len_bytes (tmpl_ipmb_msg_trlr)) < 0)
             {

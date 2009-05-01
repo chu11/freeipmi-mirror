@@ -65,8 +65,7 @@ ipmi_dump_rmcp_packet (int fd,
   fiid_obj_t obj_rmcp_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
   fiid_obj_t obj_unexpected_data = NULL;
-  int32_t len;
-  int rv = -1;
+  int len, rv = -1;
 
   if (!pkt || !tmpl_cmd)
     {

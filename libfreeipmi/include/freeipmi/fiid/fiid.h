@@ -545,10 +545,10 @@ int FIID_OBJ_GET (fiid_obj_t obj, const char *field, uint64_t *val);
  * length that is a multiple of 8.  Will truncate the data written
  * if the field maximum length is smaller than the data given.
  */
-int32_t fiid_obj_set_data (fiid_obj_t obj,
-                           const char *field,
-                           const uint8_t *data,
-                           unsigned int data_len);
+int fiid_obj_set_data (fiid_obj_t obj,
+                       const char *field,
+                       const uint8_t *data,
+                       unsigned int data_len);
 
 /*
  * fiid_obj_get_data
@@ -558,10 +558,10 @@ int32_t fiid_obj_set_data (fiid_obj_t obj,
  * specified must begin on a byte boundary and have a data bit length
  * that is a multiple of 8.
  */
-int32_t fiid_obj_get_data (fiid_obj_t obj,
-                           const char *field,
-                           uint8_t *data,
-                           unsigned int data_len);
+int fiid_obj_get_data (fiid_obj_t obj,
+                       const char *field,
+                       uint8_t *data,
+                       unsigned int data_len);
 
 /*
  * fiid_obj_set_all
@@ -573,7 +573,7 @@ int32_t fiid_obj_get_data (fiid_obj_t obj,
  * given.  Will write as much as possible if data is not large enough
  * to fill the entire object.
  */
-int32_t fiid_obj_set_all (fiid_obj_t obj, const uint8_t *data, unsigned int data_len);
+int fiid_obj_set_all (fiid_obj_t obj, const uint8_t *data, unsigned int data_len);
 
 /*
  * fiid_obj_get_all
@@ -581,7 +581,7 @@ int32_t fiid_obj_set_all (fiid_obj_t obj, const uint8_t *data, unsigned int data
  * Get an array of all data in the object.  Returns length of data
  * read on success, -1 on error.
  */
-int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, unsigned int data_len);
+int fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, unsigned int data_len);
 
 /*
  * fiid_obj_set_block
@@ -594,11 +594,11 @@ int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, unsigned int data_len);
  * write as much as possible if data is not large enough to fill the
  * entire block.
  */
-int32_t fiid_obj_set_block (fiid_obj_t obj,
-                            const char *field_start,
-                            const char *field_end,
-                            const uint8_t *data,
-                            unsigned int data_len);
+int fiid_obj_set_block (fiid_obj_t obj,
+                        const char *field_start,
+                        const char *field_end,
+                        const uint8_t *data,
+                        unsigned int data_len);
 
 /*
  * fiid_obj_get_block
@@ -607,11 +607,11 @@ int32_t fiid_obj_set_block (fiid_obj_t obj,
  * ending with 'field_end'.  Returns length of data read on success,
  * -1 on error.  Data being read must fall on a byte boundary.
  */
-int32_t fiid_obj_get_block (fiid_obj_t obj,
-                            const char *field_start,
-                            const char *field_end,
-                            uint8_t *data,
-                            unsigned int data_len);
+int fiid_obj_get_block (fiid_obj_t obj,
+                        const char *field_start,
+                        const char *field_end,
+                        uint8_t *data,
+                        unsigned int data_len);
 
 /*****************************
 * FIID Iterator API         *
@@ -676,7 +676,7 @@ int fiid_iterator_end (fiid_iterator_t iter);
  * Returns the number of bits set for the current field.  Returns -1
  * on error.
  */
-int32_t fiid_iterator_field_len (fiid_iterator_t iter);
+int fiid_iterator_field_len (fiid_iterator_t iter);
 
 /*
  * fiid_iterator_key
@@ -692,7 +692,7 @@ char *fiid_iterator_key (fiid_iterator_t iter);
  * if data was available and returned, 0 if no data was available, -1
  * on error.
  */
-int32_t fiid_iterator_get (fiid_iterator_t iter, uint64_t *val);
+int fiid_iterator_get (fiid_iterator_t iter, uint64_t *val);
 
 /*
  * fiid_iterator_get_data
@@ -702,9 +702,9 @@ int32_t fiid_iterator_get (fiid_iterator_t iter, uint64_t *val);
  * must begin on a byte boundary and have a data bit length that is a
  * multiple of 8.
  */
-int32_t fiid_iterator_get_data (fiid_iterator_t iter,
-                                uint8_t *data,
-                                unsigned int data_len);
+int fiid_iterator_get_data (fiid_iterator_t iter,
+                            uint8_t *data,
+                            unsigned int data_len);
 
 #ifdef __cplusplus
 }

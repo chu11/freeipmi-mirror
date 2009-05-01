@@ -1062,8 +1062,7 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
   fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
   fiid_obj_t obj_ipmb_msg_rq = NULL;
   fiid_obj_t obj_send_cmd_rs = NULL;
-  int rv = -1;
-  int32_t len;
+  int len, rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -2951,9 +2950,9 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   uint8_t rmcpplus_status_code;
   uint8_t remote_console_random_number[IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH];
   uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
-  int32_t managed_system_random_number_len;
+  int managed_system_random_number_len;
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
-  int32_t managed_system_guid_len;
+  int managed_system_guid_len;
   uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
   int key_exchange_authentication_code_len;
   uint8_t message_tag;
@@ -3438,7 +3437,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     {
       uint8_t keybuf[IPMI_MAX_PKT_LEN];
-      int32_t keybuf_len;
+      int keybuf_len;
 
       /* IPMI Workaround (achu)
        *
@@ -3510,7 +3509,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       && (ctx->io.outofband.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1))
     {
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
-      int32_t buf_len;
+      int buf_len;
 
       if ((buf_len = fiid_obj_get_data (obj_cmd_rs,
                                         "key_exchange_authentication_code",

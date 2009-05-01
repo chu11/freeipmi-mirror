@@ -161,7 +161,7 @@ unassemble_rmcp_pkt (const uint8_t *pkt,
                      fiid_obj_t obj_cmd)
 {
   unsigned int indx = 0;
-  int32_t len;
+  int len;
 
   if (!pkt
       || !fiid_obj_valid (obj_rmcp_hdr)

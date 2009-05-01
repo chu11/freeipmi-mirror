@@ -61,8 +61,7 @@ _dump_rmcpplus_session_hdr (int fd,
 {
   fiid_obj_t obj_rmcpplus_session_hdr = NULL;
   unsigned int indx = 0;
-  int32_t obj_len;
-  int rv = -1;
+  int obj_len, rv = -1;
   uint64_t val;
 
   assert (pkt
@@ -218,8 +217,8 @@ _dump_rmcpplus_payload_data (int fd,
   fiid_obj_t obj_ipmb_cmd = NULL;
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   fiid_obj_t obj_lan_msg_trlr = NULL;
-  int obj_lan_msg_trlr_len;
-  int32_t len, obj_cmd_len;
+  int obj_lan_msg_trlr_len, len;
+  unsigned int obj_cmd_len;
   unsigned int indx = 0;
   int rv = -1;
 
@@ -290,7 +289,7 @@ _dump_rmcpplus_payload_data (int fd,
       if (obj_cmd_len)
         {
           uint8_t ipmb_buf[IPMI_DEBUG_MAX_PKT_LEN];
-          int32_t ipmb_buf_len = 0;
+          int ipmb_buf_len = 0;
 
           if (!(obj_cmd = fiid_obj_create (tmpl_cmd)))
             {
@@ -347,8 +346,8 @@ _dump_rmcpplus_payload_data (int fd,
             {
               int obj_ipmb_msg_trlr_len = 0;
               unsigned int obj_ipmb_cmd_len = 0;
-              int32_t ipmb_hdr_len = 0;
-              int32_t ipmb_cmd_len = 0;
+              int ipmb_hdr_len = 0;
+              int ipmb_cmd_len = 0;
 
               if ((obj_ipmb_msg_trlr_len = fiid_template_len_bytes (tmpl_ipmb_msg_trlr)) < 0)
                 {
@@ -1201,7 +1200,7 @@ _ipmi_dump_rmcpplus_packet (int fd,
                             fiid_template_t tmpl_ipmb_msg_hdr,
                             fiid_template_t tmpl_ipmb_cmd)
 {
-  int32_t obj_rmcp_hdr_len, obj_len;
+  int obj_rmcp_hdr_len, obj_len;
   uint8_t payload_type = 0, payload_authenticated = 0, payload_encrypted = 0;
   uint32_t session_id = 0;
   uint16_t ipmi_payload_len = 0;

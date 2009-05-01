@@ -106,7 +106,7 @@ ipmi_obj_dump (int fd,
 
   while (!fiid_iterator_end (iter))
     {
-      int32_t field_len;
+      int field_len;
       char *key = NULL;
 
       if (!(key = fiid_iterator_key (iter)))
@@ -219,15 +219,15 @@ ipmi_obj_dump_ipmb (int fd,
     "---------------------";
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   uint8_t ipmb_buf[IPMI_DEBUG_MAX_PKT_LEN];
-  int32_t ipmb_buf_len;
+  int ipmb_buf_len;
   fiid_obj_t obj_cmd = NULL;
   fiid_obj_t obj_ipmb_msg_hdr = NULL;
   fiid_obj_t obj_ipmb_cmd = NULL;
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   int obj_ipmb_msg_trlr_len = 0;
   unsigned int obj_ipmb_cmd_len = 0;
-  int32_t ipmb_hdr_len = 0;
-  int32_t ipmb_cmd_len = 0;
+  int ipmb_hdr_len = 0;
+  int ipmb_cmd_len = 0;
   int rv = -1;
 
   if (!fiid_obj_valid (obj)

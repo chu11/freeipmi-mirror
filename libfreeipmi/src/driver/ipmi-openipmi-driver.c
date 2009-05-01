@@ -405,8 +405,8 @@ _openipmi_write (ipmi_openipmi_ctx_t ctx,
   uint8_t rq_buf_temp[IPMI_OPENIPMI_BUFLEN];
   uint8_t rq_buf[IPMI_OPENIPMI_BUFLEN];
   uint8_t rq_cmd;
-  int32_t rq_buf_len;
-  int32_t len;
+  unsigned int rq_buf_len;
+  int len;
   struct ipmi_system_interface_addr system_interface_addr;
   struct ipmi_ipmb_addr ipmb_addr;
   struct ipmi_req rq_packet;

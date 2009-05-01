@@ -112,7 +112,7 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
 {
   uint8_t authentication_code_recv[IPMI_1_5_MAX_PASSWORD_LENGTH];
   uint8_t authentication_code_calc[IPMI_1_5_MAX_PASSWORD_LENGTH];
-  int32_t authentication_code_recv_len;
+  int authentication_code_recv_len;
   uint8_t pwbuf[IPMI_1_5_MAX_PASSWORD_LENGTH];
   uint64_t val;
   int rv = -1;
@@ -197,12 +197,11 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
   else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
            || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
     {
-      int obj_lan_msg_hdr_len, obj_cmd_len, obj_lan_msg_trlr_len;
-      int32_t obj_len;
+      int obj_lan_msg_hdr_len, obj_cmd_len, obj_lan_msg_trlr_len, obj_len;
       unsigned int len = 0;
       uint8_t session_id_buf[1024];
       uint8_t session_sequence_number_buf[1024];
-      int32_t session_id_len, session_sequence_number_len;
+      int session_id_len, session_sequence_number_len;
       uint8_t *buf;
       unsigned int buflen;
 
@@ -565,8 +564,7 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
                          fiid_obj_t obj_cmd,
                          fiid_obj_t obj_lan_msg_trlr)
 {
-  int obj_lan_msg_hdr_len, obj_cmd_len;
-  int32_t obj_len;
+  int obj_lan_msg_hdr_len, obj_cmd_len, obj_len;
   unsigned int len = 0;
   uint8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;
   uint8_t *buf = NULL;

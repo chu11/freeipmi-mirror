@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.5 2009-05-01 16:29:45 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.6 2009-05-01 17:58:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1302,7 +1302,7 @@ ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
 
   if (sub_record_data && sub_record_data_len && (*sub_record_data_len))
     {
-      int32_t len;
+      int len;
       
       if ((len = fiid_obj_get_data (obj_record,
                                     "record",
@@ -1431,7 +1431,7 @@ ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
 
   if (code_range_mask && code_range_mask_len && (*code_range_mask_len))
     {
-      int32_t len;
+      int len;
       
       if ((len = fiid_obj_get_data (obj_record,
                                     "code_range_mask",
@@ -1560,7 +1560,7 @@ ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t c
 
   if (code_range_mask && code_range_mask_len && (*code_range_mask_len))
     {
-      int32_t len;
+      int len;
       
       if ((len = fiid_obj_get_data (obj_record,
                                     "code_range_mask",
@@ -1650,7 +1650,7 @@ ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
 
   if (oem_data && oem_data_len && (*oem_data_len))
     {
-      int32_t len;
+      int len;
       
       if ((len = fiid_obj_get_data (obj_record,
                                     "oem_data",
