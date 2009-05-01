@@ -197,7 +197,9 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
   else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
            || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
     {
-      int32_t obj_lan_msg_hdr_len, obj_cmd_len, obj_lan_msg_trlr_len, obj_len, len;
+      int obj_lan_msg_hdr_len, obj_cmd_len, obj_lan_msg_trlr_len;
+      int32_t obj_len;
+      unsigned int len = 0;
       uint8_t session_id_buf[1024];
       uint8_t session_sequence_number_buf[1024];
       int32_t session_id_len, session_sequence_number_len;
@@ -252,7 +254,6 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
           return (-1);
         }
 
-      len = 0;
       if ((obj_len = fiid_obj_get_all (obj_lan_msg_hdr_rs, buf + len, buflen - len)) < 0)
         {
           FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr_rs);
@@ -564,7 +565,9 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
                          fiid_obj_t obj_cmd,
                          fiid_obj_t obj_lan_msg_trlr)
 {
-  int32_t obj_lan_msg_hdr_len, obj_cmd_len, obj_len, len;
+  int obj_lan_msg_hdr_len, obj_cmd_len;
+  int32_t obj_len;
+  unsigned int len = 0;
   uint8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;
   uint8_t *buf = NULL;
   unsigned int buflen;
@@ -614,16 +617,16 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
       return (-1);
     }
 
-  if ((len = fiid_obj_get_block (obj_lan_msg_hdr,
-                                 "rq_addr",
-                                 "net_fn",
-                                 buf,
-                                 obj_lan_msg_hdr_len)) < 0)
+  if ((obj_len = fiid_obj_get_block (obj_lan_msg_hdr,
+                                     "rq_addr",
+                                     "net_fn",
+                                     buf,
+                                     obj_lan_msg_hdr_len)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
       return (-1);
     }
-  checksum1_calc = ipmi_checksum (buf, len);
+  checksum1_calc = ipmi_checksum (buf, obj_len);
 
   if (checksum1_recv != checksum1_calc)
     return (0);
@@ -643,7 +646,6 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
       return (-1);
     }
 
-  len = 0;
   if ((obj_len = fiid_obj_get_block (obj_lan_msg_hdr,
                                      "rs_addr",
                                      "rq_seq",

@@ -90,7 +90,7 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr,
                    uint8_t *pkt,
                    unsigned int pkt_len)
 {
-  int32_t obj_cmd_len, obj_rmcp_hdr_len;
+  int obj_cmd_len, obj_rmcp_hdr_len;
 
   if (!fiid_obj_valid (obj_rmcp_hdr)
       || !fiid_obj_valid (obj_cmd)

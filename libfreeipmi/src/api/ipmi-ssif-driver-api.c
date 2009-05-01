@@ -82,7 +82,8 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
   {
     uint8_t *pkt;
     unsigned int pkt_len;
-    int32_t hdr_len, cmd_len, send_len;
+    int hdr_len, cmd_len;
+    int32_t send_len;
 
     if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
       {

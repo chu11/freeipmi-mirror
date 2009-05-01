@@ -563,8 +563,8 @@ _construct_payload_buf (uint8_t payload_type,
                         uint8_t *payload_buf,
                         unsigned int payload_buf_len)
 {
-  int32_t obj_lan_msg_hdr_len = 0;
-  int32_t obj_cmd_len = 0;
+  int obj_lan_msg_hdr_len = 0;
+  int obj_cmd_len = 0;
   int obj_lan_msg_trlr_len = 0;
   int checksum_start_offset;
   unsigned int payload_len;
@@ -1259,14 +1259,13 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                             unsigned int pkt_len)
 {
   unsigned int indx = 0;
-  int32_t obj_rmcp_hdr_len;
+  int obj_rmcp_hdr_len, obj_len, oem_iana_len, oem_payload_id_len;
   uint64_t payload_type, payload_authenticated, payload_encrypted, session_id, session_sequence_number;
   int32_t payload_len;
   fiid_obj_t obj_rmcpplus_payload = NULL;
   fiid_obj_t obj_session_hdr_temp = NULL;
   fiid_obj_t obj_rmcpplus_session_trlr_temp = NULL;
-  int32_t obj_len, len;
-  int32_t oem_iana_len, oem_payload_id_len;
+  int32_t len;
   int32_t rv = -1;
 
   /* achu: obj_lan_msg_hdr only needed for payload type IPMI

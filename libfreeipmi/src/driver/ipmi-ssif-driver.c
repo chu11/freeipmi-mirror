@@ -818,8 +818,7 @@ _ipmi_ssif_cmd_write (ipmi_ssif_ctx_t ctx,
 {
   uint8_t *pkt = NULL;
   unsigned int pkt_len;
-  int hdr_len;
-  int32_t cmd_len;
+  int hdr_len, cmd_len;
   fiid_obj_t obj_hdr = NULL;
   int rv = -1;
 

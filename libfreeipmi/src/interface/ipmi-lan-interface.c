@@ -179,7 +179,7 @@ static int32_t
 _ipmi_lan_pkt_rq_min_size (uint8_t authentication_type, fiid_obj_t obj_cmd)
 {
   uint32_t msg_len = 0;
-  int32_t len;
+  int len;
 
   assert (IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type) && fiid_obj_valid (obj_cmd));
 

@@ -423,7 +423,7 @@ char *fiid_obj_errormsg (fiid_obj_t obj);
  * Returns the total length (in bits) of data stored within the
  * object, -1 on error.
  */
-int32_t fiid_obj_len (fiid_obj_t obj);
+int fiid_obj_len (fiid_obj_t obj);
 
 /*
  * fiid_obj_len_bytes
@@ -432,7 +432,7 @@ int32_t fiid_obj_len (fiid_obj_t obj);
  * object, -1 on error.  Will return an error if the total bit length
  * of data is not a multiple of 8.
  */
-int32_t fiid_obj_len_bytes (fiid_obj_t obj);
+int fiid_obj_len_bytes (fiid_obj_t obj);
 
 /*
  * fiid_obj_field_len
@@ -440,7 +440,7 @@ int32_t fiid_obj_len_bytes (fiid_obj_t obj);
  * Returns the length (in bits) of data stored within the
  * specified field, -1 on error.
  */
-int32_t fiid_obj_field_len (fiid_obj_t obj, const char *field);
+int fiid_obj_field_len (fiid_obj_t obj, const char *field);
 
 /*
  * fiid_obj_field_len_bytes
@@ -449,7 +449,7 @@ int32_t fiid_obj_field_len (fiid_obj_t obj, const char *field);
  * field, -1 on error.  Will return an error if the bit length of data
  * is not a multiple of 8.
  */
-int32_t fiid_obj_field_len_bytes (fiid_obj_t obj, const char *field);
+int fiid_obj_field_len_bytes (fiid_obj_t obj, const char *field);
 
 /*
  * fiid_obj_block_len
@@ -458,9 +458,9 @@ int32_t fiid_obj_field_len_bytes (fiid_obj_t obj, const char *field);
  * fields beginning at 'field_start' and ending at 'field_end'.
  * Returns -1 on error.
  */
-int32_t fiid_obj_block_len (fiid_obj_t obj,
-                            const char *field_start,
-                            const char *field_end);
+int fiid_obj_block_len (fiid_obj_t obj,
+                        const char *field_start,
+                        const char *field_end);
 
 /*
  * fiid_obj_block_len_bytes
@@ -470,9 +470,9 @@ int32_t fiid_obj_block_len (fiid_obj_t obj,
  * Returns -1 on error.  Will return an error if the calculated bit
  * length is not a multiple of 8.
  */
-int32_t fiid_obj_block_len_bytes (fiid_obj_t obj,
-                                  const char *field_start,
-                                  const char *field_end);
+int fiid_obj_block_len_bytes (fiid_obj_t obj,
+                              const char *field_start,
+                              const char *field_end);
 
 /*
  * fiid_obj_clear

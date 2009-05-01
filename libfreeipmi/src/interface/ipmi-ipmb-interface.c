@@ -147,7 +147,7 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
   uint8_t *checksum_data_ptr = NULL;
   uint32_t checksum_data_count = 0;
   int32_t len;
-  int32_t required_len = 0;
+  unsigned int required_len = 0;
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   uint8_t checksum;
   int32_t rv = -1;
