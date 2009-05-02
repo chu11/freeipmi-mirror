@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.c,v 1.12 2009-05-01 01:55:09 chu11 Exp $
+ *  $Id: ipmi-md5.c,v 1.13 2009-05-02 02:01:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -57,8 +57,8 @@ static uint8_t padding[64] =
 
   for (i = 1; i <= 64; i++)
   {
-  double n = 4294967296 * ((sin(i) > 0) ? sin(i) : (sin(i) * -1));
-  printf("0x%08X\n", (uint32_t)n);
+    double n = 4294967296 * ((sin(i) > 0) ? sin(i) : (sin(i) * -1));
+    printf("0x%08X\n", (uint32_t)n);
   }
 */
 static uint32_t T[64] =

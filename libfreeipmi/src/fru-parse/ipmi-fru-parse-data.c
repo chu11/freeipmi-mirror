@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.7 2009-05-01 23:52:13 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.8 2009-05-02 02:01:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -680,7 +680,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*overall_capacity) = (unsigned int)val;
+      (*overall_capacity) = val;
     }
   if (peak_va)
     {
@@ -691,7 +691,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*peak_va) = (unsigned int)val;
+      (*peak_va) = val;
     }
   if (inrush_current)
     {
@@ -702,7 +702,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*inrush_current) = (unsigned int)val;
+      (*inrush_current) = val;
     }
   if (inrush_interval)
     {
@@ -713,7 +713,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*inrush_interval) = (unsigned int)val;
+      (*inrush_interval) = val;
     }
   if (low_end_input_voltage_range_1)
     {
@@ -768,7 +768,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*low_end_input_frequency_range) = (unsigned int)val;
+      (*low_end_input_frequency_range) = val;
     }
   if (high_end_input_frequency_range)
     {
@@ -779,7 +779,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*high_end_input_frequency_range) = (unsigned int)val;
+      (*high_end_input_frequency_range) = val;
     }
   if (ac_dropout_tolerance)
     {
@@ -790,7 +790,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*ac_dropout_tolerance) = (unsigned int)val;
+      (*ac_dropout_tolerance) = val;
     }
   if (predictive_fail_support)
     {
@@ -801,7 +801,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*predictive_fail_support) = (unsigned int)val;
+      (*predictive_fail_support) = val;
     }
   if (power_factor_correction)
     {
@@ -812,7 +812,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*power_factor_correction) = (unsigned int)val;
+      (*power_factor_correction) = val;
     }
   if (autoswitch)
     {
@@ -823,7 +823,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*autoswitch) = (unsigned int)val;
+      (*autoswitch) = val;
     }
   if (hot_swap_support)
     {
@@ -834,7 +834,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*hot_swap_support) = (unsigned int)val;
+      (*hot_swap_support) = val;
     }
   if (tachometer_pulses_per_rotation_predictive_fail_polarity)
     {
@@ -845,7 +845,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*tachometer_pulses_per_rotation_predictive_fail_polarity) = (unsigned int)val;
+      (*tachometer_pulses_per_rotation_predictive_fail_polarity) = val;
     }
   if (peak_capacity)
     {
@@ -856,7 +856,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*peak_capacity) = (unsigned int)val;
+      (*peak_capacity) = val;
     }
   if (hold_up_time)
     {
@@ -867,7 +867,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*hold_up_time) = (unsigned int)val;
+      (*hold_up_time) = val;
     }
   if (voltage_1)
     {
@@ -878,7 +878,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*voltage_1) = (unsigned int)val;
+      (*voltage_1) = val;
     }
   if (voltage_2)
     {
@@ -889,7 +889,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*voltage_2) = (unsigned int)val;
+      (*voltage_2) = val;
     }
   if (total_combined_wattage)
     {
@@ -900,7 +900,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*total_combined_wattage) = (unsigned int)val;
+      (*total_combined_wattage) = val;
     }
   if (predictive_fail_tachometer_lower_threshold)
     {
@@ -911,7 +911,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*predictive_fail_tachometer_lower_threshold) = (unsigned int)val;
+      (*predictive_fail_tachometer_lower_threshold) = val;
     }
 
   rv = 0;
@@ -990,7 +990,7 @@ ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*output_number) = (unsigned int)val;
+      (*output_number) = val;
     }
   if (standby)
     {
@@ -1001,7 +1001,7 @@ ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*standby) = (unsigned int)val;
+      (*standby) = val;
     }
   if (nominal_voltage)
     {
@@ -1045,7 +1045,7 @@ ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*ripple_and_noise_pk_pk) = (unsigned int)val;
+      (*ripple_and_noise_pk_pk) = val;
     }
   if (minimum_current_draw)
     {
@@ -1056,7 +1056,7 @@ ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*minimum_current_draw) = (unsigned int)val;
+      (*minimum_current_draw) = val;
     }
   if (maximum_current_draw)
     {
@@ -1067,7 +1067,7 @@ ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*maximum_current_draw) = (unsigned int)val;
+      (*maximum_current_draw) = val;
     }
 
   rv = 0;
@@ -1146,7 +1146,7 @@ ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*output_number) = (unsigned int)val;
+      (*output_number) = val;
     }
   if (standby)
     {
@@ -1157,7 +1157,7 @@ ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*standby) = (unsigned int)val;
+      (*standby) = val;
     }
   if (nominal_voltage)
     {
@@ -1201,7 +1201,7 @@ ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*specd_ripple_and_noise_pk_pk) = (unsigned int)val;
+      (*specd_ripple_and_noise_pk_pk) = val;
     }
   if (minimum_current_load)
     {
@@ -1212,7 +1212,7 @@ ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*minimum_current_load) = (unsigned int)val;
+      (*minimum_current_load) = val;
     }
   if (maximum_current_load)
     {
@@ -1223,7 +1223,7 @@ ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*maximum_current_load) = (unsigned int)val;
+      (*maximum_current_load) = val;
     }
 
   rv = 0;
@@ -1313,7 +1313,7 @@ ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
           goto cleanup;
         }
 
-      (*sub_record_data_len) = (unsigned int)len;
+      (*sub_record_data_len) = len;
     }
 
   rv = 0;
@@ -1390,7 +1390,7 @@ ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*manufacturer_id) = (uint32_t)val;
+      (*manufacturer_id) = val;
     }
 
   if (entity_id_code)
@@ -1402,7 +1402,7 @@ ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*entity_id_code) = (unsigned int)val;
+      (*entity_id_code) = val;
     }
 
   if (compatibility_base)
@@ -1414,7 +1414,7 @@ ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*compatibility_base) = (unsigned int)val;
+      (*compatibility_base) = val;
     }
 
   if (compatibility_code_start_value)
@@ -1426,7 +1426,7 @@ ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*compatibility_code_start_value) = (unsigned int)val;
+      (*compatibility_code_start_value) = val;
     }
 
   if (code_range_mask && code_range_mask_len && (*code_range_mask_len))
@@ -1442,7 +1442,7 @@ ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
           goto cleanup;
         }
 
-      (*code_range_mask_len) = (unsigned int)len;
+      (*code_range_mask_len) = len;
     }
 
   rv = 0;
@@ -1519,7 +1519,7 @@ ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t c
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*manufacturer_id) = (uint32_t)val;
+      (*manufacturer_id) = val;
     }
 
   if (entity_id_code)
@@ -1531,7 +1531,7 @@ ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t c
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*entity_id_code) = (unsigned int)val;
+      (*entity_id_code) = val;
     }
 
   if (compatibility_base)
@@ -1543,7 +1543,7 @@ ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t c
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*compatibility_base) = (unsigned int)val;
+      (*compatibility_base) = val;
     }
 
   if (compatibility_code_start_value)
@@ -1555,7 +1555,7 @@ ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t c
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*compatibility_code_start_value) = (unsigned int)val;
+      (*compatibility_code_start_value) = val;
     }
 
   if (code_range_mask && code_range_mask_len && (*code_range_mask_len))
@@ -1571,7 +1571,7 @@ ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t c
           goto cleanup;
         }
 
-      (*code_range_mask_len) = (unsigned int)len;
+      (*code_range_mask_len) = len;
     }
 
   rv = 0;
@@ -1645,7 +1645,7 @@ ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
           FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*manufacturer_id) = (uint32_t)val;
+      (*manufacturer_id) = val;
     }
 
   if (oem_data && oem_data_len && (*oem_data_len))
@@ -1661,7 +1661,7 @@ ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
           goto cleanup;
         }
 
-      (*oem_data_len) = (unsigned int)len;
+      (*oem_data_len) = len;
     }
 
   rv = 0;

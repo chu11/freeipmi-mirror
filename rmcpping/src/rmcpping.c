@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.49 2009-05-02 00:08:00 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.50 2009-05-02 02:01:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -193,7 +193,7 @@ parsepacket (const char *destination,
       goto cleanup;
     }
 
-  printf ("pong received from %s: message_tag=%u", from, (uint32_t)message_tag);
+  printf ("pong received from %s: message_tag=%u", from, message_tag);
   if (verbose)
     {
       uint8_t ipmi_supported;

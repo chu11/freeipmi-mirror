@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.68 2009-05-02 00:07:59 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.69 2009-05-02 02:01:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -296,7 +296,7 @@ parsepacket (const char *destination,
       goto cleanup;
     }
 
-  printf ("response received from %s: rq_seq=%u", from, (uint32_t)req_seq);
+  printf ("response received from %s: rq_seq=%u", from, req_seq);
   if (verbose)
     {
       if (FIID_OBJ_GET (obj_cmd,

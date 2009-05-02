@@ -30,7 +30,7 @@ casts
 X (uint8_T)
 X (uint8_t *)
 X (uint16_t)
-(uint32_t)
+X (uint32_t)
 (int)
 (unsigned int)
 

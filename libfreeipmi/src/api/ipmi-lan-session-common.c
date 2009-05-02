@@ -813,7 +813,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
       rs_session_sequence_number = val;
 
       if ((ret = _ipmi_check_session_sequence_number (ctx,
-                                                      (uint32_t)rs_session_sequence_number)) < 0)
+                                                      rs_session_sequence_number)) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
@@ -1605,7 +1605,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             IPMI_NET_FN_APP_RQ,
                             ctx->io.outofband.authentication_type,
                             NULL,
-                            (uint32_t)temp_session_id,
+                            temp_session_id,
                             &(ctx->io.outofband.rq_seq),
                             ctx->io.outofband.password,
                             IPMI_1_5_MAX_PASSWORD_LENGTH,
