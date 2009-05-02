@@ -317,7 +317,7 @@ config_section_str_destroy (struct config_section_str *section_str)
     }
 }
 
-int8_t
+int
 config_ipv4_address_string2int (pstdout_state_t pstate,
                                 const char *src,
                                 uint32_t *dest)
@@ -359,7 +359,7 @@ config_ipv4_address_string2int (pstdout_state_t pstate,
   return (0);
 }
 
-int8_t
+int
 config_mac_address_string2int (pstdout_state_t pstate,
                                const char *src,
                                uint64_t *dest)
