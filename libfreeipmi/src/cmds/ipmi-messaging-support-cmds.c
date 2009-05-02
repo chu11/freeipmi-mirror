@@ -1174,7 +1174,7 @@ fill_cmd_set_channel_security_keys (uint8_t channel_number,
   if (operation == IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY)
     {
       uint8_t buf[IPMI_MAX_K_LENGTH];
-      uint32_t buf_len;
+      unsigned int buf_len;
 
       memset (buf, '\0', IPMI_MAX_K_LENGTH);
 
@@ -1421,7 +1421,7 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
       || operation == IPMI_PASSWORD_OPERATION_TEST_PASSWORD)
     {
       uint8_t buf[IPMI_2_0_MAX_PASSWORD_LENGTH];
-      uint32_t buf_max_len;
+      unsigned int buf_max_len;
 
       if (password_size == IPMI_PASSWORD_SIZE_16_BYTES)
         buf_max_len = IPMI_1_5_MAX_PASSWORD_LENGTH;

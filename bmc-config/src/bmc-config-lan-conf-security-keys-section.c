@@ -40,7 +40,7 @@ static config_err_t
 _get_key (bmc_config_state_data_t *state_data,
           uint8_t key_type,
           uint8_t *key,
-          uint32_t key_len)
+          unsigned int key_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t buf[CONFIG_PARSE_BUFLEN];
@@ -116,7 +116,7 @@ static config_err_t
 _set_key (bmc_config_state_data_t *state_data,
           uint8_t key_type,
           uint8_t *key,
-          uint32_t key_len)
+          unsigned int key_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;

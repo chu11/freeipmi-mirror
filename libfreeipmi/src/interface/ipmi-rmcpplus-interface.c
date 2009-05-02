@@ -986,7 +986,7 @@ _construct_payload (uint8_t payload_type,
 
 static int
 _construct_session_trlr_pad (uint8_t integrity_algorithm,
-                             uint32_t ipmi_msg_len,
+                             unsigned int ipmi_msg_len,
                              fiid_obj_t obj_rmcpplus_session_trlr)
 {
   int pad_length_field_len, next_header_field_len;

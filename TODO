@@ -19,10 +19,6 @@ lan send funcs
 ipmi-raw - ipmi_raw_stream and ipmi-oem arg checks
 use of _SC_ARG_MAX correct? no likely, need to fix
 
-uint8_t *
-char *
-uint32_t
-
 ipmi-locate
 -----------
 (TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi

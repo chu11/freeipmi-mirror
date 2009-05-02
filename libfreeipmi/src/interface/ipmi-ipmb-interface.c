@@ -286,7 +286,7 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
   uint8_t buf[IPMB_MAX_LEN+1];
   int buf_len;
   unsigned int indx = 0;
-  uint32_t ipmb_msg_len;
+  unsigned int ipmb_msg_len;
   int obj_ipmb_msg_trlr_len;
   int len;
 

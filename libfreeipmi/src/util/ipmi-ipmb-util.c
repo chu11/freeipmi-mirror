@@ -79,7 +79,7 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
   int obj_ipmb_msg_hdr_len, obj_cmd_len, obj_len;
   uint8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;
   uint8_t *buf = NULL;
-  uint32_t buflen;
+  unsigned int buflen;
   unsigned int len = 0;
   uint64_t val;
 

@@ -159,9 +159,9 @@ ipmi_debug_output_str (int fd, const char *prefix, const char *str)
 }
 
 int
-ipmi_debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, uint32_t buf_len)
+ipmi_debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, unsigned int buf_len)
 {
-  uint32_t count = 0;
+  unsigned int count = 0;
 
   assert (buf);
 

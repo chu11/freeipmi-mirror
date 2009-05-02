@@ -334,7 +334,7 @@ ipmi_lan_check_packet_session_authentication_code (const uint8_t *pkt,
 {
   uint8_t authentication_type_recv;
   int rmcp_hdr_len, authentication_type_index, authentication_code_index;
-  uint32_t authentication_type_offset, authentication_code_offset;
+  unsigned int authentication_type_offset, authentication_code_offset;
   uint8_t authentication_code_buf[IPMI_1_5_MAX_PASSWORD_LENGTH];
   uint8_t pwbuf[IPMI_1_5_MAX_PASSWORD_LENGTH];
   int rv = -1;
@@ -683,7 +683,7 @@ int
 ipmi_lan_check_packet_checksum (const uint8_t *pkt, unsigned int pkt_len)
 {
   uint8_t authentication_type;
-  uint32_t authentication_type_offset;
+  unsigned int authentication_type_offset;
   int rmcp_hdr_len, msg_hdr_len1, msg_hdr_len2, authentication_type_start_bytes, checksum1_block_len;
   unsigned int authentication_code_len, checksum1_block_index, checksum2_block_index, checksum2_block_len;
   uint8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;

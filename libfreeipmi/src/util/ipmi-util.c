@@ -137,7 +137,7 @@ ipmi_check_completion_code_success (fiid_obj_t obj_cmd)
 }
 
 int
-ipmi_get_random (uint8_t *buf, uint32_t buflen)
+ipmi_get_random (uint8_t *buf, unsigned int buflen)
 {
 #if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
   int fd, rv;

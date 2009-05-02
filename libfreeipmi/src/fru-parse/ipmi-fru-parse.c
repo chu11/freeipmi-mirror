@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.6 2009-05-01 23:09:05 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.7 2009-05-02 05:36:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -301,7 +301,7 @@ _read_fru_data (ipmi_fru_parse_ctx_t ctx,
                 unsigned int fru_read_bytes)
 {
   fiid_obj_t fru_read_data_rs = NULL;
-  uint32_t num_bytes_read = 0;
+  unsigned int num_bytes_read = 0;
   int len = 0;
   int rv = -1;
 
