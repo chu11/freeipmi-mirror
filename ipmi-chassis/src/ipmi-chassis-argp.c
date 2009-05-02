@@ -149,6 +149,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->args.boot_option_args.bios_boot_type = value;
+      cmd_args->args.boot_option_args.bios_boot_type_set++;;
       break;
 
     case SET_BOOT_FLAGS_LOCK_OUT_RESET_BUTTON_KEY:
@@ -163,6 +164,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->args.boot_option_args.lock_out_reset_button = value;
+      cmd_args->args.boot_option_args.lock_out_reset_button_set++;;
       break;
 
     case SET_BOOT_FLAGS_SCREEN_BLANK_KEY:
@@ -177,6 +179,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->args.boot_option_args.screen_blank = value;
+      cmd_args->args.boot_option_args.screen_blank_set++;;
       break;
 
     case SET_BOOT_FLAGS_BOOT_DEVICE_KEY:
@@ -207,6 +210,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->args.boot_option_args.boot_device = value;
+      cmd_args->args.boot_option_args.boot_device_set++;;
       break;
 
     case SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY:
@@ -221,6 +225,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->args.boot_option_args.lock_keyboard = value;
+      cmd_args->args.boot_option_args.lock_keyboard_set++;;
       break;
 
     case SET_BOOT_FLAGS_CMOS_CLEAR_KEY:
@@ -235,6 +240,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->args.boot_option_args.cmos_clear = value;
+      cmd_args->args.boot_option_args.cmos_clear_set++;;
       break;
 
     case SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY:
@@ -251,6 +257,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->args.boot_option_args.console_redirection = value;
+      cmd_args->args.boot_option_args.console_redirection_set++;;
       break;
 
     case SET_BOOT_FLAGS_USER_PASSWORD_BYPASS_KEY:
@@ -265,6 +272,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->args.boot_option_args.user_password_bypass = value;
+      cmd_args->args.boot_option_args.user_password_bypass_set++;;
       break;
 
     case SET_BOOT_FLAGS_FORCE_PROGRESS_EVENT_TRAPS_KEY:
@@ -279,6 +287,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->args.boot_option_args.force_progress_event_traps = value;
+      cmd_args->args.boot_option_args.force_progress_event_traps_set++;;
       break;
 
     case SET_BOOT_FLAGS_FIRMWARE_BIOS_VERBOSITY_KEY:
@@ -295,6 +304,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->args.boot_option_args.firmware_bios_verbosity = value;
+      cmd_args->args.boot_option_args.firmware_bios_verbosity_set++;;
       break;
 
     default:
@@ -536,16 +546,16 @@ ipmi_chassis_argp_parse (int argc,
   cmd_args->args.identify_args.force_identify = 0;
   cmd_args->args.identify_args.force_identify_set = 0;
 
-  cmd_args->args.boot_option_args.bios_boot_type = -1;
-  cmd_args->args.boot_option_args.lock_out_reset_button = -1;
-  cmd_args->args.boot_option_args.screen_blank = -1;
-  cmd_args->args.boot_option_args.boot_device = -1;
-  cmd_args->args.boot_option_args.lock_keyboard = -1;
-  cmd_args->args.boot_option_args.cmos_clear = -1;
-  cmd_args->args.boot_option_args.console_redirection = -1;
-  cmd_args->args.boot_option_args.user_password_bypass = -1;
-  cmd_args->args.boot_option_args.force_progress_event_traps = -1;
-  cmd_args->args.boot_option_args.firmware_bios_verbosity = -1;
+  cmd_args->args.boot_option_args.bios_boot_type_set = 0;
+  cmd_args->args.boot_option_args.lock_out_reset_button_set = 0;
+  cmd_args->args.boot_option_args.screen_blank_set = 0;
+  cmd_args->args.boot_option_args.boot_device_set = 0;
+  cmd_args->args.boot_option_args.lock_keyboard_set = 0;
+  cmd_args->args.boot_option_args.cmos_clear_set = 0;
+  cmd_args->args.boot_option_args.console_redirection_set = 0;
+  cmd_args->args.boot_option_args.user_password_bypass_set = 0;
+  cmd_args->args.boot_option_args.force_progress_event_traps_set = 0;
+  cmd_args->args.boot_option_args.firmware_bios_verbosity_set = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,

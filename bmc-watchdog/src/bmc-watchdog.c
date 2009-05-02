@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.120 2009-05-02 02:17:35 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.121 2009-05-02 05:50:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1211,7 +1211,7 @@ _suspend_bmc_arps_cmd (int retry_wait_time,
   fiid_obj_t cmd_rq = NULL;
   fiid_obj_t cmd_rs = NULL;
   int rv = -1;
-  uint8_t channel_number;
+  uint8_t channel_number = 0;
 
   if (!(cmd_rq = fiid_obj_create (tmpl_cmd_suspend_bmc_arps_rq)))
     {

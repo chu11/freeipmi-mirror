@@ -1,7 +1,5 @@
 cleanup
 -------
-ipmi-lan_recvfrom/sendto return
-
 document which funcs return lens
 - raw funcs
 fiid.c internal

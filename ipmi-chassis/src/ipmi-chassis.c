@@ -1557,7 +1557,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (args->args.boot_option_args.bios_boot_type == -1)
+  if (args->args.boot_option_args.bios_boot_type_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "bios_boot_type", &val) < 0)
         {
@@ -1575,7 +1575,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   boot_flags_persistent = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_VALID_FOR_NEXT_BOOT;
   boot_flags_valid = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_VALID;
 
-  if (args->args.boot_option_args.lock_out_reset_button == -1)
+  if (args->args.boot_option_args.lock_out_reset_button_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "lock_out_reset_button", &val) < 0)
         {
@@ -1590,7 +1590,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   else
     lock_out_reset_button = args->args.boot_option_args.lock_out_reset_button;
 
-  if (args->args.boot_option_args.screen_blank == -1)
+  if (args->args.boot_option_args.screen_blank_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "screen_blank", &val) < 0)
         {
@@ -1605,7 +1605,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   else
     screen_blank = args->args.boot_option_args.screen_blank;
 
-  if (args->args.boot_option_args.boot_device == -1)
+  if (args->args.boot_option_args.boot_device_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "boot_device", &val) < 0)
         {
@@ -1620,7 +1620,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   else
     boot_device = args->args.boot_option_args.boot_device;
 
-  if (args->args.boot_option_args.lock_keyboard == -1)
+  if (args->args.boot_option_args.lock_keyboard_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "lock_keyboard", &val) < 0)
         {
@@ -1635,7 +1635,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   else
     lock_keyboard = args->args.boot_option_args.lock_keyboard;
 
-  if (args->args.boot_option_args.cmos_clear == -1)
+  if (args->args.boot_option_args.cmos_clear_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "cmos_clear", &val) < 0)
         {
@@ -1650,7 +1650,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   else
     cmos_clear = args->args.boot_option_args.cmos_clear;
 
-  if (args->args.boot_option_args.console_redirection == -1)
+  if (args->args.boot_option_args.console_redirection_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "console_redirection", &val) < 0)
         {
@@ -1675,7 +1675,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   lock_out_sleep_button = val;
 
-  if (args->args.boot_option_args.user_password_bypass == -1)
+  if (args->args.boot_option_args.user_password_bypass_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "user_password_bypass", &val) < 0)
         {
@@ -1690,7 +1690,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   else
     user_password_bypass = args->args.boot_option_args.user_password_bypass;
 
-  if (args->args.boot_option_args.force_progress_event_traps == -1)
+  if (args->args.boot_option_args.force_progress_event_traps_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "force_progress_event_traps", &val) < 0)
         {
@@ -1705,7 +1705,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
   else
     force_progress_event_traps = args->args.boot_option_args.force_progress_event_traps;
 
-  if (args->args.boot_option_args.firmware_bios_verbosity == -1)
+  if (args->args.boot_option_args.firmware_bios_verbosity_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "firmware_bios_verbosity", &val) < 0)
         {

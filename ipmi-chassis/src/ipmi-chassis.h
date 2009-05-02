@@ -65,15 +65,25 @@ enum ipmi_chassis_cmds
 struct cmd_boot_option
 {
   uint8_t bios_boot_type;
+  int bios_boot_type_set;
   uint8_t lock_out_reset_button;
+  int lock_out_reset_button_set;
   uint8_t screen_blank;
+  int screen_blank_set;
   uint8_t boot_device;
+  int boot_device_set;
   uint8_t lock_keyboard;
+  int lock_keyboard_set;
   uint8_t cmos_clear;
+  int cmos_clear_set;
   uint8_t console_redirection;
+  int console_redirection_set;
   uint8_t user_password_bypass;
+  int user_password_bypass_set;
   uint8_t force_progress_event_traps;
+  int force_progress_event_traps_set;
   uint8_t firmware_bios_verbosity;
+  int firmware_bios_verbosity_set;
 };
 
 struct cmd_identify

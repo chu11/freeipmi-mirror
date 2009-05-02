@@ -684,7 +684,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
                 const uint8_t *buf,
                 unsigned int buf_len)
 {
-  uint8_t *p = buf;
+  const uint8_t *p = buf;
   int count = 0;
   int lock_flag = 0;
 
