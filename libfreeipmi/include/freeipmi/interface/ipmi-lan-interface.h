@@ -73,14 +73,14 @@ ssize_t ipmi_lan_sendto (int s,
                          size_t len,
                          int flags,
                          const struct sockaddr *to,
-                         unsigned int tolen);
+                         socklen_t tolen);
 
 ssize_t ipmi_lan_recvfrom (int s,
                            void *buf,
                            size_t len,
                            int flags,
                            struct sockaddr *from,
-                           unsigned int *fromlen);
+                           socklen_t *fromlen);
 
 #ifdef __cplusplus
 }

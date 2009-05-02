@@ -782,7 +782,7 @@ ipmi_lan_sendto (int s,
                  size_t len,
                  int flags,
                  const struct sockaddr *to,
-                 unsigned int tolen)
+                 socklen_t tolen)
 {
   void *_buf;
   ssize_t bytes_sent;
@@ -833,11 +833,9 @@ ipmi_lan_recvfrom (int s,
                    size_t len,
                    int flags,
                    struct sockaddr *from,
-                   unsigned int *fromlen)
+                   socklen_t *fromlen)
 {
-  ssize_t bytes_recvd = 0;
-  void *recv_buf;
-  size_t recv_buf_len;
+  ssize_t rv;
 
   if (!buf
       || !len)
@@ -846,20 +844,12 @@ ipmi_lan_recvfrom (int s,
       return (-1);
     }
 
-  if (len < 1024)
-    recv_buf_len = 1024;
-  else
-    recv_buf_len = len;
-
-  recv_buf = alloca (recv_buf_len);
-
-  if ((bytes_recvd = recvfrom (s, recv_buf, recv_buf_len, flags, from, fromlen)) < 0)
+  if ((rv = recvfrom (s, buf, len, flags, from, fromlen)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-
-  memcpy (buf, recv_buf, bytes_recvd);
-  return (bytes_recvd);
+  
+  return (rv);
 }
 
