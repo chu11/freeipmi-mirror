@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.119 2009-05-01 22:19:57 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.120 2009-05-02 02:17:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -813,7 +813,7 @@ _cmd (char *str,
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
     _bmclog ("%s: cmd error: %Xh", str, comp_code);
 
-  return ((int)comp_code);
+  return (comp_code);
 
  cleanup:
   return (-1);

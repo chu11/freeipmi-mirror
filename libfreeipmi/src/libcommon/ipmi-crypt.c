@@ -202,7 +202,7 @@ ipmi_crypt_hash_digest_len (unsigned int hash_algorithm)
   else
     gcry_md_algorithm = GCRY_MD_MD5;
 
-  return ((int)gcry_md_get_algo_dlen (gcry_md_algorithm));
+  return (gcry_md_get_algo_dlen (gcry_md_algorithm));
 }
 
 static int
@@ -431,7 +431,7 @@ _ipmi_crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info
       return (-1);
     }
 
-  return ((int)len);
+  return (len);
 }
 
 

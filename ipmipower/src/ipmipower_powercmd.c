@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.175 2009-05-02 00:08:00 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.176 2009-05-02 02:17:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1737,7 +1737,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
         timeout = retransmission_timeout;
     }
 
-  return ((int)timeout);
+  return (timeout);
 }
 
 int

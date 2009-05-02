@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.45 2009-05-01 21:53:08 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.46 2009-05-02 02:17:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -283,5 +283,5 @@ ipmipower_ping_process_pings (int *timeout)
 
   timeval_sub (&next_ping_sends_time, &cur_time, &result);
   timeval_millisecond_calc (&result, &ms_time);
-  *timeout = (int)ms_time;
+  *timeout = ms_time;
 }

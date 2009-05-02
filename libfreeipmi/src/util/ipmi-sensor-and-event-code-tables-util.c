@@ -2106,6 +2106,7 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
           { 0, "", 0}
         };
       uint64_t val;
+      uint8_t user_id;
       fiid_obj_t obj = NULL;
       int rv = -1;
 
@@ -2126,11 +2127,12 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
           FIID_OBJECT_ERROR_TO_ERRNO (obj);
           goto cleanup;
         }
+      user_id = val;
 
-      if (val == 0x0)
+      if (user_id == 0)
         rv = _snprintf (buf, buflen, "User ID for user that activated session = Unspecified");
       else
-        rv = _snprintf (buf, buflen, "User ID for user that activated session #%d", (int) val);
+        rv = _snprintf (buf, buflen, "User ID for user that activated session #%u", user_id);
 
     cleanup:
       fiid_obj_destroy (obj);

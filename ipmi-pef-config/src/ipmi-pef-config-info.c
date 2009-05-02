@@ -39,8 +39,10 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  uint64_t val, val1, val2;
-  int alert_action_support = 0;
+  uint8_t major, minor;
+  uint8_t number_of_event_filter_table_entries;
+  uint8_t alert_action_support = 0;
+  uint64_t val;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_pef_capabilities_rs)))
     {
@@ -66,7 +68,7 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs, "pef_version_major", &val1) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "pef_version_major", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -74,8 +76,9 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  major = val;
 
-  if (FIID_OBJ_GET (obj_cmd_rs, "pef_version_minor", &val2) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "pef_version_minor", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -83,12 +86,13 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  minor = val;
 
   /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
   pstdout_printf (state_data->pstate,
-                  "PEF version:                            %d.%d\n",
-                  (int)val1,
-                  (int)val2);
+                  "PEF version:                            %u.%u\n",
+                  major,
+                  minor);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "action_support.alert", &val) < 0)
     {
@@ -102,6 +106,7 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
   pstdout_printf (state_data->pstate,
                   "Alert action support:                   %s\n",
                   (val ? "Yes" : "No"));
+
   alert_action_support = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs, "action_support.power_down", &val) < 0)
@@ -190,13 +195,18 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  number_of_event_filter_table_entries = val;
 
   pstdout_printf (state_data->pstate,
                   "Number of Event Filter Table entries:   %u\n",
-                  (unsigned int)val);
+                  number_of_event_filter_table_entries);
 
   if (alert_action_support)
     {
+      uint8_t number_of_event_filters;
+      uint8_t number_of_alert_policy_entries;
+      uint8_t number_of_alert_strings;
+
       fiid_obj_destroy (obj_cmd_rs);
 
       if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))
@@ -235,10 +245,11 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
+      number_of_event_filters = val;
 
       pstdout_printf (state_data->pstate,
                       "Number of Event Filters:                %u\n",
-                      (unsigned int)val);
+                      number_of_event_filters);
 
       fiid_obj_destroy (obj_cmd_rs);
 
@@ -278,10 +289,11 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
+      number_of_alert_policy_entries = val;
 
       pstdout_printf (state_data->pstate,
                       "Number of Alert Policy entries:         %u\n",
-                      (unsigned int)val);
+                      number_of_alert_policy_entries);
 
       fiid_obj_destroy (obj_cmd_rs);
 
@@ -321,10 +333,11 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
+      number_of_alert_strings = val;
 
       pstdout_printf (state_data->pstate,
                       "Number of Alert Strings:                %u\n",
-                      (unsigned int)val);
+                      number_of_alert_strings);
     }
 
   rv = CONFIG_ERR_SUCCESS;

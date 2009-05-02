@@ -145,7 +145,7 @@ string2bytes (ipmi_raw_state_data_t *state_data,
 
   for (i = 0, count = 0; line[i]; i++)
     {
-      if (strchr ((const char*)delim, (int) line[i]))
+      if (strchr ((const char*)delim, line[i]))
         count++;
     }
   count++;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.70 2009-04-21 20:33:43 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.71 2009-05-02 02:17:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -167,7 +167,7 @@ _store_sensor_reading (ipmi_monitoring_ctx_t c,
   s->sensor_units = sensor_units;
   s->sensor_reading_type = sensor_reading_type;
   s->sensor_bitmask_type = sensor_bitmask_type;
-  s->sensor_bitmask = (int)sensor_bitmask;
+  s->sensor_bitmask = sensor_bitmask;
 
   if (s->sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
     s->sensor_reading.bool_val = *((uint8_t *)sensor_reading);

@@ -40,7 +40,7 @@ get_lan_channel_number (struct ipmi_pef_config_state_data *state_data, uint8_t *
   uint8_t channel_number;
 
   assert (state_data);
-  assert (channel_number);
+  assert (channel_num);
 
   if (state_data->lan_channel_number_initialized)
     {
