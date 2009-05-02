@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.87 2009-05-01 21:53:08 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.88 2009-05-02 02:41:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -3008,7 +3008,7 @@ _process_protocol_state_activate_payload_sent (ipmiconsole_ctx_t c)
        * behavior?
        */
 
-      IPMICONSOLE_CTX_DEBUG (c, ("new port indicated: %X", c->session.console_port));
+      IPMICONSOLE_CTX_DEBUG (c, ("new port indicated: %Xh", c->session.console_port));
       c->session.try_new_port_flag++;
       if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         {
@@ -3430,7 +3430,7 @@ _process_protocol_state_close_session_sent (ipmiconsole_ctx_t c)
 
       c->session.console_port = console_port;
 
-      IPMICONSOLE_CTX_DEBUG (c, ("trying new port: %X", c->session.console_port));
+      IPMICONSOLE_CTX_DEBUG (c, ("trying new port: %Xh", c->session.console_port));
 
       if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ) < 0)
         /* Session is closed, just exit on error */

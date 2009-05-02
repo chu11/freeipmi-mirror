@@ -188,10 +188,10 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 
   pstdout_printf (state_data->pstate,
                   "Aux Firmware Revision Info: Boot Code v%02x.%2x, PIA v%02x.%2x\n",
-                  (unsigned int) boot_code_major,
-                  (unsigned int) boot_code_minor,
-                  (unsigned int) pia_major,
-                  (unsigned int) pia_minor);
+                  boot_code_major,
+                  boot_code_minor,
+                  pia_major,
+                  pia_minor);
 
   rv = 0;
  cleanup:
@@ -208,6 +208,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
   uint8_t major, minor;
   uint32_t manufacturer_id;
   uint16_t product_id;
+  uint32_t auxiliary_firmware_revision_info;
   int flag;
   uint64_t val = 0;
   int rv = -1;
@@ -498,6 +499,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  auxiliary_firmware_revision_info = val;
 
   if (flag)
     {
@@ -518,7 +520,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
         default:
           pstdout_printf (state_data->pstate,
                           "Aux Firmware Revision Info: %Xh\n",
-                          (unsigned int) val);
+                          auxiliary_firmware_revision_info);
         }
     }
 

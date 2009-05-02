@@ -167,7 +167,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
                     "Fatal hardware error (system should consider BMC inoperative).  Controller hardware may need to be repaired or replaced.\n");
   else
     pstdout_printf (state_data->pstate,
-                    "Device-specific error: 0x%X\n",
+                    "Device-specific error: %Xh\n",
                     val);
 
   if (val == IPMI_SELF_TEST_RESULT_CORRUPTED_OR_INACCESSIBLE_DATA_OR_DEVICES)
@@ -303,6 +303,8 @@ static int
 get_acpi_power_state (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t system_power_state_enumeration;
+  uint8_t device_power_state_enumeration;
   uint64_t val;
   char *statestr = NULL;
   char statestrbuf[1024];
@@ -340,8 +342,9 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  system_power_state_enumeration = val;
 
-  switch (val)
+  switch (system_power_state_enumeration)
     {
     case IPMI_ACPI_SYSTEM_POWER_STATE_S0_G0:
       statestr = "S0/G0";
@@ -403,7 +406,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
     default:
       snprintf (statestrbuf, 1024, "UNSPECIFIED");
       statestr = statestrbuf;
-      snprintf (verbosestrbuf, 1024, "0x%X", (unsigned int)val);
+      snprintf (verbosestrbuf, 1024, "%Xh", system_power_state_enumeration);
       verbosestr = verbosestrbuf;
       break;
     }
@@ -431,8 +434,9 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  device_power_state_enumeration = val;
 
-  switch (val)
+  switch (device_power_state_enumeration)
     {
     case IPMI_ACPI_DEVICE_POWER_STATE_D0:
       statestr = "D0";
@@ -453,7 +457,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
     default:
       snprintf (statestrbuf, 1024, "UNSPECIFIED");
       statestr = statestrbuf;
-      snprintf (verbosestrbuf, 1024, "0x%X", (unsigned int)val);
+      snprintf (verbosestrbuf, 1024, "%Xh", device_power_state_enumeration);
       verbosestr = verbosestrbuf;
       break;
     }
@@ -1029,7 +1033,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_cmd_get_auxiliary_log_status: invalid log type returned: 0x%X\n",
+                       "ipmi_cmd_get_auxiliary_log_status: invalid log type returned: %Xh\n",
                        log_type);
       goto cleanup;
     }
@@ -1088,6 +1092,11 @@ static int
 get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t ssif_version;
+  uint8_t pec_support;
+  uint8_t transaction_support;
+  uint8_t input_message_size;
+  uint8_t output_message_size;
   uint64_t val;
   int rv = -1;
 
@@ -1120,14 +1129,15 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  ssif_version = val;
 
   /* achu: for some stupid reason 000b == "version 1" */
-  if (val == IPMI_SSIF_SYSTEM_INTERFACE_VERSION_1)
+  if (ssif_version == IPMI_SSIF_SYSTEM_INTERFACE_VERSION_1)
     pstdout_printf (state_data->pstate,
-                    "SSIF Version:                     %X (version 1)\n", (unsigned int) val);
+                    "SSIF Version:                     %Xh (version 1)\n", ssif_version);
   else
     pstdout_printf (state_data->pstate,
-                    "SSIF Version:                     %X\n", (unsigned int) val);
+                    "SSIF Version:                     %Xh\n", ssif_version);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "pec_support", &val) < 0)
     {
@@ -1137,10 +1147,12 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  pec_support = val;
 
   pstdout_printf (state_data->pstate,
                   "SSIF PEC Support:                 ");
-  switch (val)
+
+  switch (pec_support)
     {
     case IPMI_SSIF_SYSTEM_INTERFACE_IMPLEMENTS_PEC:
       pstdout_printf (state_data->pstate, "Yes\n");
@@ -1161,10 +1173,11 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  transaction_support = val;
 
   pstdout_printf (state_data->pstate,
                   "SSIF Transaction Support:         ");
-  switch (val)
+  switch (transaction_support)
     {
     case IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_SINGLE_PART_READS_WRITES_SUPPORTED:
       pstdout_printf (state_data->pstate, "Only single-part reads/writes supported.\n");
@@ -1188,10 +1201,11 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  input_message_size = val;
 
   pstdout_printf (state_data->pstate,
                   "SSIF Maximum Input Message Size:  %u bytes\n",
-                  val);
+                  input_message_size);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "output_message_size", &val) < 0)
     {
@@ -1201,10 +1215,11 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  output_message_size = val;
 
   pstdout_printf (state_data->pstate,
                   "SSIF Maximum Output Message Size: %u bytes\n",
-                  val);
+                  output_message_size);
 
   rv = 0;
  cleanup:
@@ -1216,6 +1231,8 @@ static int
 get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t system_interface_version;
+  uint8_t input_maximum_message_size;
   uint64_t val;
   int rv = -1;
 
@@ -1248,14 +1265,15 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  system_interface_version = val;
 
   /* achu: for some stupid reason 000b == "version 1" */
-  if (val == IPMI_KCS_SYSTEM_INTERFACE_VERSION_1)
+  if (system_interface_version == IPMI_KCS_SYSTEM_INTERFACE_VERSION_1)
     pstdout_printf (state_data->pstate,
-                    "KCS Version:                    %X (version 1)\n", (unsigned int) val);
+                    "KCS Version:                    %Xh (version 1)\n", system_interface_version);
   else
     pstdout_printf (state_data->pstate,
-                    "KCS Version:                    %X\n", (unsigned int) val);
+                    "KCS Version:                    %Xh\n", system_interface_version);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "input_maximum_message_size", &val) < 0)
     {
@@ -1265,10 +1283,11 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  input_maximum_message_size = val;
 
   pstdout_printf (state_data->pstate,
                   "KCS Maximum Input Message Size: %u bytes\n",
-                  val);
+                  input_maximum_message_size);
 
   rv = 0;
  cleanup:

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.h,v 1.10 2009-03-03 23:56:51 chu11 Exp $
+ *  $Id: ipmiconsole_debug.h,v 1.11 2009-05-02 02:41:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -75,7 +75,7 @@
                       IPMICONSOLE_DEBUG_ERROR_BUFLEN,                           \
                       "(%s, %s, %d): "                                          \
                       "hostname=%s; "                                           \
-                      "protocol_state=0x%X: ",                                  \
+                      "protocol_state=%Xh: ",                                   \
                       __FILE__,                                                 \
                       __FUNCTION__,                                             \
                       __LINE__,                                                 \

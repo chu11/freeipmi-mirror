@@ -65,7 +65,9 @@ static int
 _display_sel_info (ipmi_sel_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t val, val1, val2;
+  uint8_t major, minor;
+  uint32_t entries, free_space;
+  uint64_t val;
   char str[512];
   int rv = -1;
   time_t t;
@@ -91,7 +93,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs, "sel_version_major", &val1) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "sel_version_major", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -99,8 +101,9 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  major = val;
 
-  if (FIID_OBJ_GET (obj_cmd_rs, "sel_version_minor", &val2) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "sel_version_minor", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -108,12 +111,13 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  minor = val;
 
   /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
   pstdout_printf (state_data->pstate,
-                  "SEL version:                                      %d.%d\n",
-                  val1,
-                  val2);
+                  "SEL version:                                      %u.%u\n",
+                  major,
+                  minor);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "entries", &val) < 0)
     {
@@ -123,10 +127,11 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  entries = val;
 
   pstdout_printf (state_data->pstate,
                   "Number of log entries:                            %u\n",
-                  (unsigned int)val);
+                  entries);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "free_space", &val) < 0)
     {
@@ -136,10 +141,11 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  free_space = val;
 
   pstdout_printf (state_data->pstate,
                   "Free space remaining:                             %u bytes\n",
-                  (unsigned int)val);
+                  free_space);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val) < 0)
     {

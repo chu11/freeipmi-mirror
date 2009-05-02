@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.103 2009-05-01 21:53:08 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.104 2009-05-02 02:41:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -434,7 +434,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
  out:
   if (!rv)
     ierr_dbg ("ipmipower_check_outbound_sequence_number(%s:%d): seq_num: %u, high: %u",
-              ip->ic->hostname, ip->protocol_state, (unsigned int)seq_num,
+              ip->ic->hostname, ip->protocol_state, seq_num,
               ip->highest_received_sequence_number);
 
   return (rv);
@@ -501,9 +501,9 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
     }
 
   if (session_id != expected_session_id)
-    ierr_dbg ("ipmipower_check_session_id(%s:%d): session id: %x expected: %x",
-              ip->ic->hostname, ip->protocol_state, (unsigned int)session_id,
-              (unsigned int)expected_session_id);
+    ierr_dbg ("ipmipower_check_session_id(%s:%d): session id: %Xh expected: %Xh",
+              ip->ic->hostname, ip->protocol_state, session_id,
+              expected_session_id);
 
   /* IPMI Workaround (achu)
    *
@@ -548,8 +548,8 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_netfn = IPMI_NET_FN_APP_RS;
 
   if (netfn != expected_netfn)
-    ierr_dbg ("ipmipower_check_network_function(%s:%d): netfn: %x, expected: %x",
-              ip->ic->hostname, ip->protocol_state, (unsigned int)netfn, expected_netfn);
+    ierr_dbg ("ipmipower_check_network_function(%s:%d): netfn: %Xh, expected: %Xh",
+              ip->ic->hostname, ip->protocol_state, netfn, expected_netfn);
 
   return ((netfn == expected_netfn) ? 1 : 0);
 }
@@ -595,9 +595,9 @@ ipmipower_check_command (ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_cmd = IPMI_CMD_CLOSE_SESSION;
 
   if (cmd != expected_cmd)
-    ierr_dbg ("ipmipower_check_command(%s:%d): cmd: %x, expected: %x",
+    ierr_dbg ("ipmipower_check_command(%s:%d): cmd: %Xh, expected: %Xh",
               ip->ic->hostname, ip->protocol_state,
-              (unsigned int)cmd, (unsigned int)expected_cmd);
+              cmd, expected_cmd);
 
   return ((cmd == expected_cmd) ? 1 : 0);
 }
@@ -624,9 +624,9 @@ ipmipower_check_requester_sequence_number (ipmipower_powercmd_t ip, packet_type_
   req_seq = val;
 
   if (req_seq != expected_req_seq)
-    ierr_dbg ("ipmipower_check_requester_sequence_number(%s:%d): req_seq: %x, expected: %x",
+    ierr_dbg ("ipmipower_check_requester_sequence_number(%s:%d): req_seq: %Xh, expected: %Xh",
               ip->ic->hostname, ip->protocol_state,
-              (unsigned int)req_seq, (unsigned int)expected_req_seq);
+              req_seq, expected_req_seq);
 
   return ((req_seq == expected_req_seq) ? 1 : 0);
 }
@@ -653,8 +653,8 @@ ipmipower_check_completion_code (ipmipower_powercmd_t ip, packet_type_t pkt)
   comp_code = val;
 
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
-    ierr_dbg ("ipmipower_check_completion_code(%s:%d): comp_code: %x",
-              ip->ic->hostname, ip->protocol_state, (unsigned int)comp_code);
+    ierr_dbg ("ipmipower_check_completion_code(%s:%d): comp_code: %Xh",
+              ip->ic->hostname, ip->protocol_state, comp_code);
 
   return ((comp_code == IPMI_COMP_CODE_COMMAND_SUCCESS) ? 1 : 0);
 }
@@ -694,9 +694,9 @@ ipmipower_check_payload_type (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   if (payload_type != expected_payload_type)
     ierr_dbg ("ipmipower_check_payload_type(%s:%d): "
-              "payload_type: %x, expected: %x",
+              "payload_type: %Xh, expected: %Xh",
               ip->ic->hostname, ip->protocol_state,
-              (unsigned int)payload_type, (unsigned int)expected_payload_type);
+              payload_type, expected_payload_type);
 
   return ((payload_type == expected_payload_type) ? 1 : 0);
 }
@@ -726,10 +726,10 @@ ipmipower_check_message_tag (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   if (message_tag != expected_message_tag)
     ierr_dbg ("ipmipower_check_message_tag(%s:%d): "
-              "message_tag: %x, expected: %x",
+              "message_tag: %Xh, expected: %Xh",
               ip->ic->hostname, ip->protocol_state,
-              (unsigned int)message_tag,
-              (unsigned int)expected_message_tag);
+              message_tag,
+              expected_message_tag);
 
   return ((message_tag == expected_message_tag) ? 1 : 0);
 }
@@ -756,9 +756,9 @@ ipmipower_check_rmcpplus_status_code (ipmipower_powercmd_t ip, packet_type_t pkt
 
   if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
     ierr_dbg ("ipmipower_check_rmcpplus_status_code(%s:%d): "
-              "rmcpplus_status_code: %x",
+              "rmcpplus_status_code: %Xh",
               ip->ic->hostname, ip->protocol_state,
-              (unsigned int)rmcpplus_status_code);
+              rmcpplus_status_code);
 
   return ((rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS) ? 1 : 0);
 }
@@ -817,10 +817,10 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip, packet
 
   if (!rv)
     ierr_dbg ("ipmipower_check_open_session_response_privilege(%s:%d): "
-              "invalid privilege: %x, expected: %x",
+              "invalid privilege: %Xh, expected: %Xh",
               ip->ic->hostname, ip->protocol_state,
-              (unsigned int)val,
-              (unsigned int)ip->requested_maximum_privilege_level);
+              maximum_privilege_level,
+              ip->requested_maximum_privilege_level);
 
   return (rv);
 }

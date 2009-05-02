@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.31 2009-05-01 21:53:07 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.32 2009-05-02 02:41:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -307,7 +307,7 @@ ipmiconsole_check_session_id (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
     }
 
   if (session_id != expected_session_id)
-    IPMICONSOLE_CTX_DEBUG (c, ("session id check failed; p = %d; session_id = %X; expected_session_id = %X", p, session_id, expected_session_id));
+    IPMICONSOLE_CTX_DEBUG (c, ("session id check failed; p = %d; session_id = %Xh; expected_session_id = %Xh", p, session_id, expected_session_id));
 
   return ((session_id == expected_session_id) ? 1 : 0);
 }
@@ -339,7 +339,7 @@ ipmiconsole_check_network_function (ipmiconsole_ctx_t c, ipmiconsole_packet_type
   expected_netfn = IPMI_NET_FN_APP_RS;
 
   if (netfn != expected_netfn)
-    IPMICONSOLE_CTX_DEBUG (c, ("network function check failed; p = %d; netfn = %X; expected_netfn = %X", p, netfn, expected_netfn));
+    IPMICONSOLE_CTX_DEBUG (c, ("network function check failed; p = %d; netfn = %Xh; expected_netfn = %Xh", p, netfn, expected_netfn));
 
   return ((netfn == expected_netfn) ? 1 : 0);
 }
@@ -389,7 +389,7 @@ ipmiconsole_check_command (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
     expected_cmd = IPMI_CMD_CLOSE_SESSION;
 
   if (cmd != expected_cmd)
-    IPMICONSOLE_CTX_DEBUG (c, ("command check failed; p = %d; cmd = %X; expected_cmd = %X", p, cmd, expected_cmd));
+    IPMICONSOLE_CTX_DEBUG (c, ("command check failed; p = %d; cmd = %Xh; expected_cmd = %Xh", p, cmd, expected_cmd));
 
   return ((cmd == expected_cmd) ? 1 : 0);
 }
@@ -421,7 +421,7 @@ ipmiconsole_check_requester_sequence_number (ipmiconsole_ctx_t c, ipmiconsole_pa
   expected_req_seq = c->session.requester_sequence_number;
 
   if (req_seq != expected_req_seq)
-    IPMICONSOLE_CTX_DEBUG (c, ("requester sequence number check failed; p = %d; req_seq = %X; expected_req_seq = %X", p, req_seq, expected_req_seq));
+    IPMICONSOLE_CTX_DEBUG (c, ("requester sequence number check failed; p = %d; req_seq = %Xh; expected_req_seq = %Xh", p, req_seq, expected_req_seq));
 
   return ((req_seq == expected_req_seq) ? 1 : 0);
 }
@@ -454,7 +454,7 @@ ipmiconsole_check_completion_code (ipmiconsole_ctx_t c, ipmiconsole_packet_type_
   comp_code = val;
 
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
-    IPMICONSOLE_CTX_DEBUG (c, ("completion code check failed; p = %d; comp_code = %X", p, comp_code));
+    IPMICONSOLE_CTX_DEBUG (c, ("completion code check failed; p = %d; comp_code = %Xh", p, comp_code));
 
   return ((comp_code == IPMI_COMP_CODE_COMMAND_SUCCESS) ? 1 : 0);
 }
@@ -499,7 +499,7 @@ ipmiconsole_check_payload_type (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p
     expected_payload_type = IPMI_PAYLOAD_TYPE_IPMI;
 
   if (payload_type != expected_payload_type)
-    IPMICONSOLE_CTX_DEBUG (c, ("payload type check failed; p = %d; payload_type = %X; expected_payload_type = %X", p, payload_type, expected_payload_type));
+    IPMICONSOLE_CTX_DEBUG (c, ("payload type check failed; p = %d; payload_type = %Xh; expected_payload_type = %Xh", p, payload_type, expected_payload_type));
 
   return ((payload_type == expected_payload_type) ? 1 : 0);
 }

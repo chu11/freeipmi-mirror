@@ -26,13 +26,7 @@ uint8_t *
 char *
 uint32_t
 
-casts
-X (uint8_T)
-X (uint8_t *)
-X (uint16_t)
-X (uint32_t)
-(int)
-(unsigned int)
+val
 
 ipmi-locate
 -----------

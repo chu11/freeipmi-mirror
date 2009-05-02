@@ -67,7 +67,7 @@ typedef uint8_t bitstr_t;
 /* allocate a bitstring */
 #define BITSTR_ALLOC(nbits)                                             \
   (bitstr_t *)calloc (1,                                                \
-                      (unsigned int)bitstr_size (nbits) * sizeof (bitstr_t))
+                      (size_t)bitstr_size (nbits) * sizeof (bitstr_t))
 
 /* allocate a bitstring on the stack */
 #define BITSTR_DECL(name, nbits)                        \
