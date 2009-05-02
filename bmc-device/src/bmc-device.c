@@ -519,6 +519,9 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
 static int
 get_lan_statistics (bmc_device_state_data_t *state_data)
 {
+  uint16_t ip_packets_received, received_ip_header_errors, received_ip_address_errors;
+  uint16_t fragmented_ip_packets_received, ip_packets_transmitted, udp_packets_received;
+  uint16_t valid_rmcp_packets_received, udp_proxy_packets_received, udp_proxy_packets_dropped;
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t lan_channel_number;
   uint64_t val;
@@ -568,10 +571,11 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  ip_packets_received = val;
 
   pstdout_printf (state_data->pstate,
                   "IP Packets Received: %u\n",
-                  (uint16_t)val);
+                  ip_packets_received);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "received_ip_header_errors",
@@ -583,10 +587,11 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  received_ip_header_errors = val;
 
   pstdout_printf (state_data->pstate,
                   "Received IP Header Errors: %u\n",
-                  (uint16_t)val);
+                  received_ip_header_errors);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "received_ip_address_errors",
@@ -598,10 +603,11 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  received_ip_address_errors = val;
 
   pstdout_printf (state_data->pstate,
                   "Received IP Address Errors: %u\n",
-                  (uint16_t)val);
+                  received_ip_address_errors);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "fragmented_ip_packets_received",
@@ -613,10 +619,11 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  fragmented_ip_packets_received = val;
 
   pstdout_printf (state_data->pstate,
                   "Fragmented IP Packets Received: %u\n",
-                  (uint16_t)val);
+                  fragmented_ip_packets_received);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "ip_packets_transmitted",
@@ -628,10 +635,11 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  ip_packets_transmitted = val;
 
   pstdout_printf (state_data->pstate,
                   "IP Packets Transmitted: %u\n",
-                  (uint16_t)val);
+                  ip_packets_transmitted);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "udp_packets_received",
@@ -643,10 +651,11 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  udp_packets_received = val;
 
   pstdout_printf (state_data->pstate,
                   "UDP Packets Received: %u\n",
-                  (uint16_t)val);
+                  udp_packets_received);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "valid_rmcp_packets_received",
@@ -658,10 +667,11 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  valid_rmcp_packets_received = val;
 
   pstdout_printf (state_data->pstate,
                   "Valid RMCP Packets Received: %u\n",
-                  (uint16_t)val);
+                  valid_rmcp_packets_received);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "udp_proxy_packets_received",
@@ -673,10 +683,11 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-
+  udp_proxy_packets_received = val;
+  
   pstdout_printf (state_data->pstate,
                   "UDP Proxy Packets Received: %u\n",
-                  (uint16_t)val);
+                  udp_proxy_packets_received);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "udp_proxy_packets_dropped",
@@ -688,10 +699,11 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  udp_proxy_packets_dropped = val;
 
   pstdout_printf (state_data->pstate,
                   "UDP Proxy Packets Dropped: %u\n",
-                  (uint16_t)val);
+                  udp_proxy_packets_dropped);
 
   rv = 0;
  cleanup:

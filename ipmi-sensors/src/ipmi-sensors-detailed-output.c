@@ -801,6 +801,9 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
   uint64_t val;
   uint8_t event_reading_type_code;
   uint8_t sensor_type;
+  uint8_t all_event_messages;
+  uint8_t scanning_on_this_sensor;
+  uint16_t event_bitmask;
   char **assertion_event_message_list = NULL;
   unsigned int assertion_event_message_list_len = 0;
   char **deassertion_event_message_list = NULL;
@@ -923,8 +926,9 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  all_event_messages = val;
 
-  if (val == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE)
+  if (all_event_messages == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE)
     {
       if (state_data->prog_data->args->legacy_output)
         {
@@ -962,8 +966,9 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  scanning_on_this_sensor = val;
 
-  if (val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
+  if (scanning_on_this_sensor == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
     {
       if (state_data->prog_data->args->legacy_output)
         {
@@ -995,6 +1000,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  event_bitmask = val;
 
   if (field_flag)
     {
@@ -1005,7 +1011,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                               &assertion_event_message_list,
                                               &assertion_event_message_list_len,
                                               event_reading_type_code,
-                                              (uint16_t)val,
+                                              event_bitmask,
                                               IPMI_SENSORS_NONE_STRING) < 0)
             goto cleanup;
         }
@@ -1015,7 +1021,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                                       &assertion_event_message_list,
                                                       &assertion_event_message_list_len,
                                                       sensor_type,
-                                                      (uint16_t)val,
+                                                      event_bitmask,
                                                       IPMI_SENSORS_NONE_STRING) < 0)
             goto cleanup;
         }
@@ -1038,6 +1044,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  event_bitmask = val;
 
   if (field_flag)
     {
@@ -1048,7 +1055,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                               &deassertion_event_message_list,
                                               &deassertion_event_message_list_len,
                                               event_reading_type_code,
-                                              (uint16_t)val,
+                                              event_bitmask,
                                               IPMI_SENSORS_NONE_STRING) < 0)
             goto cleanup;
         }
@@ -1058,7 +1065,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                                       &deassertion_event_message_list,
                                                       &deassertion_event_message_list_len,
                                                       sensor_type,
-                                                      (uint16_t)val,
+                                                      event_bitmask,
                                                       IPMI_SENSORS_NONE_STRING) < 0)
             goto cleanup;
         }

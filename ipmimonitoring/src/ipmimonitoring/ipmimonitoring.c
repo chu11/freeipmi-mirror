@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.112 2009-04-21 20:33:43 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.113 2009-05-02 00:21:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -514,7 +514,7 @@ _output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
                         int sensor_bitmask,
                         int sensor_bitmask_type)
 {
-  uint16_t sensor_bitmask_value = (uint16_t)sensor_bitmask;
+  uint16_t sensor_bitmask_value = sensor_bitmask;
   int rv = -1;
 
   assert (state_data);
@@ -574,7 +574,7 @@ _output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
                                      stderr,
                                      "ipmi_monitoring_bitmask_string: %s: invalid bitmask likely: %X\n",
                                      ipmi_monitoring_ctx_errormsg (state_data->ctx),
-                                     (uint16_t)sensor_bitmask_value);
+                                     sensor_bitmask_value);
 
                   if (!state_data->prog_data->args->comma_separated_output)
                     pstdout_printf (state_data->pstate, " ");

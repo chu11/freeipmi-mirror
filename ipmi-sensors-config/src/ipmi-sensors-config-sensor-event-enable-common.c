@@ -540,10 +540,9 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
       goto cleanup;
     }
 
-
   /* assertion event bitmask need not be returned */
   if (field_flag)
-    data->assertion_bits = (uint16_t)val;
+    data->assertion_bits = val;
   else
     data->assertion_bits = 0;
 
@@ -560,7 +559,7 @@ _get_sensor_event_enable (ipmi_sensors_config_state_data_t *state_data,
 
   /* deassertion event bitmask need not be returned */
   if (field_flag)
-    data->deassertion_bits = (uint16_t)val;
+    data->deassertion_bits = val;
   else
     data->deassertion_bits = 0;
 

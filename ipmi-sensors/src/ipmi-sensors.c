@@ -472,7 +472,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
 
       if (asprintf (&event_message,
                     "OEM Event = %04Xh",
-                    (uint16_t) sensor_event_bitmask) < 0)
+                    sensor_event_bitmask) < 0)
         {
           pstdout_perror (state_data->pstate, "asprintf");
           goto cleanup;
