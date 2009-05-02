@@ -1,18 +1,4 @@
-cleanup
--------
-document which funcs return lens
-- raw funcs
-fiid.c internal
-- more in/out params?
-buffer overflow corner case unsigned > signed
-ipmi_kcs_write/read
-ipmi_ssif_write/read
-api/raw_api funcs
-debug funcs
-assemble funcs
-hash/crypto funcs
-fiid funcs
-lan send funcs
+bug
 
 ipmi-raw - ipmi_raw_stream and ipmi-oem arg checks
 use of _SC_ARG_MAX correct? no likely, need to fix
@@ -32,7 +18,19 @@ libfreeipmi
 * more detailed debug output for ssif interface like KCS interface
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
-* entity ids
+document which funcs return lens
+- raw funcs
+fiid.c internal
+- more in/out params?
+buffer overflow corner case unsigned > signed
+ipmi_kcs_write/read
+ipmi_ssif_write/read
+api/raw_api funcs
+debug funcs
+assemble funcs
+hash/crypto funcs
+fiid funcs
+lan send funcs
 
 ipmi-fru
 --------

@@ -11,6 +11,8 @@
 	config_section_update_keyvalue_output_int to
 	config_section_update_keyvalue_output_unsigned_int.
 	
+	* tagged post_int_cleanup
+
 2009-04-30  Albert Chu <chu11@llnl.gov>
 	
 	* Cleanup APIs.  Return 'int' instead of 'int32_t'.  Make
