@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.42 2009-05-01 21:53:08 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.43 2009-05-02 00:07:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -711,7 +711,7 @@ _ipmi_2_0_packet_assemble (ipmiconsole_ctx_t c,
                                              c->connection.obj_lan_msg_hdr_rq,
                                              obj_cmd_rq,
                                              c->connection.obj_rmcpplus_session_trlr_rq,
-                                             (uint8_t *)buf,
+                                             buf,
                                              buflen)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("assemble_ipmi_rmcpplus_pkt: p = %d; %s", p, strerror (errno)));

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.h,v 1.6 2009-05-01 02:41:20 chu11 Exp $
+ *  $Id: ping-tool-common.h,v 1.7 2009-05-02 00:07:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -34,8 +34,8 @@
  * - Create a ping request packet and store it in the buffer
  * - Return length of packet created, or -1 on error.
  */
-typedef int (*Ipmi_Ping_CreatePacket)(char *destination,
-                                      char *buffer,
+typedef int (*Ipmi_Ping_CreatePacket)(const char *destination,
+                                      const uint8_t *buf,
                                       unsigned int buflen,
                                       unsigned int sequence_number,
                                       int version,
@@ -47,8 +47,8 @@ typedef int (*Ipmi_Ping_CreatePacket)(char *destination,
  * - Return 1 if packet matches sequence number, 0 if packet does not,
  *   -1 on error.
  */
-typedef int (*Ipmi_Ping_ParsePacket)(char *destination,
-                                     char *buffer,
+typedef int (*Ipmi_Ping_ParsePacket)(const char *destination,
+                                     const uint8_t *buf,
                                      unsigned int buflen,
                                      const char *from,
                                      unsigned int sequence_number,

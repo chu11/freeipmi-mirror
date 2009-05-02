@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.48 2009-05-01 22:05:27 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.49 2009-05-02 00:08:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -48,8 +48,8 @@
 #define _supported(x)   (x) ? "supported" : "not-supported"
 
 int
-createpacket (char *destination,
-              char *buffer,
+createpacket (const char *destination,
+              uint8_t *buf,
               unsigned int buflen,
               unsigned int sequence_number,
               int version,
@@ -60,7 +60,7 @@ createpacket (char *destination,
   int len;
 
   assert (destination);
-  assert (buffer);
+  assert (buf);
 
   if (!buflen)
     return (0);
@@ -84,7 +84,7 @@ createpacket (char *destination,
 
   if ((len = assemble_rmcp_pkt (obj_rmcp_hdr,
                                 obj_rmcp_cmd,
-                                (uint8_t *)buffer,
+                                buf,
                                 buflen)) < 0)
     ipmi_ping_err_exit ("assemble_rmcp_pkt: %s", strerror (errno));
 
@@ -102,7 +102,7 @@ createpacket (char *destination,
                                  destination,
                                  hdrbuf,
                                  NULL,
-                                 (uint8_t *)buffer,
+                                 buf,
                                  len,
                                  tmpl_cmd_asf_presence_ping) < 0)
         ipmi_ping_err_exit ("ipmi_dump_rmcp_packet: %s", strerror (errno));
@@ -114,8 +114,8 @@ createpacket (char *destination,
 }
 
 int
-parsepacket (char * destination,
-             char *buffer,
+parsepacket (const char *destination,
+             const uint8_t *buf,
              unsigned int buflen,
              const char *from,
              unsigned int sequence_number,
@@ -130,7 +130,7 @@ parsepacket (char * destination,
   int rv = -1;
 
   assert (destination);
-  assert (buffer);
+  assert (buf);
   assert (from);
 
   if (!buflen)
@@ -155,13 +155,13 @@ parsepacket (char * destination,
                                  destination,
                                  hdrbuf,
                                  NULL,
-                                 (uint8_t *)buffer,
+                                 buf,
                                  buflen,
                                  tmpl_cmd_asf_presence_pong) < 0)
         ipmi_ping_err_exit ("ipmi_dump_rmcp_packet: %s", strerror (errno));
     }
 
-  if (unassemble_rmcp_pkt ((uint8_t *)buffer,
+  if (unassemble_rmcp_pkt (buf,
                            buflen,
                            obj_rmcp_hdr,
                            obj_rmcp_cmd) < 0)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.16 2009-03-12 17:57:52 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.17 2009-05-02 00:07:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -252,7 +252,7 @@ _ipmidetectd_setup (void)
 }
 
 static int
-_ipmi_ping_build (struct ipmidetectd_info *info, char *buf, unsigned int buflen)
+_ipmi_ping_build (struct ipmidetectd_info *info, uint8_t *buf, unsigned int buflen)
 {
   fiid_obj_t obj_rmcp_hdr = NULL;
   fiid_obj_t obj_lan_session_hdr = NULL;
@@ -300,7 +300,7 @@ _ipmi_ping_build (struct ipmidetectd_info *info, char *buf, unsigned int buflen)
                                     obj_cmd,
                                     NULL,
                                     0,
-                                    (uint8_t *)buf,
+                                    buf,
                                     buflen)) < 0)
     IPMIDETECTD_EXIT (("assemble_ipmi_lan_pkt: %s", strerror (errno)));
 
@@ -311,7 +311,7 @@ _ipmi_ping_build (struct ipmidetectd_info *info, char *buf, unsigned int buflen)
       if (ipmi_dump_lan_packet (STDERR_FILENO,
                                 info->hostname,
                                 NULL,
-                                (uint8_t *)buf,
+                                buf,
                                 len,
                                 tmpl_lan_msg_hdr_rq,
                                 tmpl_cmd_get_channel_authentication_capabilities_rq) < 0)
@@ -332,7 +332,7 @@ _ipmi_ping_build (struct ipmidetectd_info *info, char *buf, unsigned int buflen)
 static void
 _ipmidetectd_send_pings (void)
 {
-  char buf[IPMIDETECTD_BUFLEN];
+  uint8_t buf[IPMIDETECTD_BUFLEN];
   int len;
   struct ipmidetectd_info *info;
   ListIterator itr;
@@ -391,7 +391,7 @@ _receive_ping (int fd)
 {
   struct sockaddr_in from;
   struct ipmidetectd_info *info;
-  char buf[IPMIDETECTD_BUFLEN];
+  uint8_t buf[IPMIDETECTD_BUFLEN];
   int len;
   socklen_t fromlen = sizeof (struct sockaddr_in);
   char *tmpstr;

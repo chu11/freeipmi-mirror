@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.174 2009-05-01 22:12:47 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.175 2009-05-02 00:08:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -494,7 +494,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 
       if (!ipmipower_check_authentication_code (ip,
                                                 pkt,
-                                                (uint8_t *)recv_buf,
+                                                recv_buf,
                                                 (unsigned int)recv_len))
         {
           rv = 0;
@@ -669,7 +669,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 
           if (!ipmipower_check_authentication_code (ip,
                                                     pkt,
-                                                    (uint8_t *)recv_buf,
+                                                    recv_buf,
                                                     (unsigned int)recv_len))
             {
               rv = 0;

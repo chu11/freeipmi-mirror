@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.67 2009-05-01 22:05:26 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.68 2009-05-02 00:07:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -52,8 +52,8 @@
 #define IPMI_RQ_SEQ_MAX  0x3F
 
 int
-createpacket (char *destination,
-              char *buffer,
+createpacket (const char *destination,
+              uint8_t *buf,
               unsigned int buflen,
               unsigned int sequence_number,
               int version,
@@ -67,7 +67,7 @@ createpacket (char *destination,
   int len;
 
   assert (destination);
-  assert (buffer);
+  assert (buf);
   assert (version == IPMI_PING_VERSION_1_5 || version == IPMI_PING_VERSION_2_0);
 
   if (!buflen)
@@ -125,7 +125,7 @@ createpacket (char *destination,
                                     obj_cmd,
                                     NULL,
                                     0,
-                                    (uint8_t *)buffer,
+                                    buf,
                                     buflen)) < 0)
     ipmi_ping_err_exit ("assemble_ipmi_lan_pkt: %s", strerror (errno));
 
@@ -144,7 +144,7 @@ createpacket (char *destination,
                                 destination,
                                 hdrbuf,
                                 NULL,
-                                (uint8_t *)buffer,
+                                buf,
                                 len,
                                 tmpl_lan_msg_hdr_rq,
                                 tmpl_cmd_get_channel_authentication_capabilities_ptr) < 0)
@@ -160,8 +160,8 @@ createpacket (char *destination,
 }
 
 int
-parsepacket (char *destination,
-             char *buffer,
+parsepacket (const char *destination,
+             const uint8_t *buf,
              unsigned int buflen,
              const char *from,
              unsigned int sequence_number,
@@ -183,7 +183,7 @@ parsepacket (char *destination,
   int ret, rv = -1;
 
   assert (destination);
-  assert (buffer);
+  assert (buf);
   assert (from);
   assert (version == IPMI_PING_VERSION_1_5 || version == IPMI_PING_VERSION_2_0);
 
@@ -221,14 +221,14 @@ parsepacket (char *destination,
                                 destination,
                                 hdrbuf,
                                 NULL,
-                                (uint8_t *)buffer,
+                                buf,
                                 buflen,
                                 tmpl_lan_msg_hdr_rs,
                                 tmpl_cmd_get_channel_authentication_capabilities_ptr) < 0)
         ipmi_ping_err_exit ("ipmi_dump_lan_packet: %s", strerror (errno));
     }
 
-  if ((ret = ipmi_lan_check_packet_checksum ((uint8_t *)buffer, buflen)) < 0)
+  if ((ret = ipmi_lan_check_packet_checksum (buf, buflen)) < 0)
     ipmi_ping_err_exit ("ipmi_lan_check_checksum: %s", strerror (errno));
 
   if (!ret)
@@ -239,7 +239,7 @@ parsepacket (char *destination,
       goto cleanup;
     }
 
-  if (unassemble_ipmi_lan_pkt ((uint8_t *)buffer,
+  if (unassemble_ipmi_lan_pkt (buf,
                                buflen,
                                obj_rmcp_hdr,
                                obj_lan_session_hdr,

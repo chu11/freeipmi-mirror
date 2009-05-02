@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.13 2009-05-01 02:41:20 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.14 2009-05-02 00:07:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -140,7 +140,7 @@ _err_init (char *__progname)
 void
 ipmi_ping_err_exit (char *fmt, ...)
 {
-  char buffer[IPMI_PING_MAX_ERR_LEN];
+  char buf[IPMI_PING_MAX_ERR_LEN];
 
   if (fmt == NULL || _progname == NULL)
     fprintf (stderr, "ipmi_ping_err_exit: improperly called\n");
@@ -148,8 +148,8 @@ ipmi_ping_err_exit (char *fmt, ...)
     {
       va_list ap;
       va_start (ap, fmt);
-      snprintf (buffer, IPMI_PING_MAX_ERR_LEN, "%s: %s\n", _progname, fmt);
-      vfprintf (stderr, buffer, ap);
+      snprintf (buf, IPMI_PING_MAX_ERR_LEN, "%s: %s\n", _progname, fmt);
+      vfprintf (stderr, buf, ap);
       va_end (ap);
     }
   _cleanup ();
@@ -414,7 +414,7 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
   while (_count == -1 || (_pkt_sent < _count))
     {
       int rv, len, received = 0;
-      uint8_t buffer[IPMI_PING_MAX_PKT_LEN];
+      uint8_t buf[IPMI_PING_MAX_PKT_LEN];
       time_t now;
 
       /* wait if necessary */
@@ -426,15 +426,19 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
         }
 
       if ((len = _create (_dest,
-                          (char *)buffer,
+                          buf,
                           IPMI_PING_MAX_PKT_LEN,
                           sequence_number,
                           _version,
                           _debug)) < 0)
         ipmi_ping_err_exit ("_create failed: %s", strerror (errno));
 
-      rv = ipmi_lan_sendto (_sockfd, buffer, len, 0,
-                            (struct sockaddr *)&_destaddr, sizeof (_destaddr));
+      rv = ipmi_lan_sendto (_sockfd,
+                            buf,
+                            len,
+                            0,
+                            (struct sockaddr *)&_destaddr,
+                            sizeof (_destaddr));
       if (rv < 0)
         ipmi_ping_err_exit ("ipmi_sendto: %s", strerror (errno));
 
@@ -466,7 +470,7 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
 
               fromlen = sizeof (from);
               len = ipmi_lan_recvfrom (_sockfd,
-                                       buffer,
+                                       buf,
                                        IPMI_PING_MAX_PKT_LEN,
                                        0,
                                        (struct sockaddr *)&from,
@@ -475,7 +479,7 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
                 ipmi_ping_err_exit ("ipmi_recvfrom: %s", strerror (errno));
 
               if ((rv = _parse (_dest,
-                                (char *)buffer,
+                                buf,
                                 len,
                                 inet_ntoa (from.sin_addr),
                                 sequence_number,

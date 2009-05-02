@@ -21,6 +21,7 @@ use of _SC_ARG_MAX correct? no likely, need to fix
 
 uint64_t - only get vals, don't store
 int8_t, int32_t, uint8_t *, char * checks
+
 casts
 (uint8_t *)
 (uint8_T)
