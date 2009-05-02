@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.105 2009-05-01 21:13:59 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.106 2009-05-02 03:55:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -750,11 +750,11 @@ _cmd_config (void)
 
 static void
 _cmd_set_unsigned_int (char **argv,
-                       unsigned int *val,
+                       unsigned int *value,
                        const char *str,
                        int allow_zero)
 {
-  assert (argv && val && str);
+  assert (argv && value && str);
 
   if (!argv[1])
     cbuf_printf (ttyout, "%s not specified\n", str);
@@ -766,8 +766,8 @@ _cmd_set_unsigned_int (char **argv,
         cbuf_printf (ttyout, "invalid %s input\n", str);
       else if (allow_zero && !temp)
         {
-          *val = temp;
-          cbuf_printf (ttyout, "%s is now %d\n", str, *val);
+          *value = temp;
+          cbuf_printf (ttyout, "%s is now %d\n", str, *value);
         }
       else
         cbuf_printf (ttyout, "invalid %s input\n", str);
@@ -776,13 +776,13 @@ _cmd_set_unsigned_int (char **argv,
 
 static void
 _cmd_set_unsigned_int_ranged (char **argv,
-                              unsigned int *val,
+                              unsigned int *value,
                               const char *str,
                               int allow_zero,
                               int min,
                               int max)
 {
-  assert (argv && val && str);
+  assert (argv && value && str);
 
   if (!argv[1])
     cbuf_printf (ttyout, "%s not specified\n", str);
@@ -793,8 +793,8 @@ _cmd_set_unsigned_int_ranged (char **argv,
       if (ptr != (argv[1] + strlen (argv[1])))
         cbuf_printf (ttyout, "invalid %s input\n", str);
       else if ((allow_zero && !temp) || (temp <= max && temp >= min)) {
-    *val = temp;
-    cbuf_printf (ttyout, "%s is now %d\n", str, *val);
+    *value = temp;
+    cbuf_printf (ttyout, "%s is now %d\n", str, *value);
       }
       else
         cbuf_printf (ttyout, "invalid %s input, range is %d <=> %d\n",

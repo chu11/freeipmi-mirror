@@ -118,6 +118,7 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
   uint8_t authentication_code_calc[IPMI_1_5_MAX_PASSWORD_LENGTH];
   int authentication_code_recv_len;
   uint8_t pwbuf[IPMI_1_5_MAX_PASSWORD_LENGTH];
+  uint8_t l_authentication_type;
   uint64_t val;
   int rv = -1;
 
@@ -172,8 +173,9 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_session_hdr_rs);
       return (-1);
     }
+  l_authentication_type = val;
 
-  if (authentication_type != val)
+  if (authentication_type != l_authentication_type)
     return (0);
 
   memset (authentication_code_recv, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);

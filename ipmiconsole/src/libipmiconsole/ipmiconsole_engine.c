@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.84 2009-03-12 17:57:52 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.85 2009-05-02 03:55:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -574,13 +574,13 @@ _ipmi_sendto (ipmiconsole_ctx_t c)
 static int
 _asynccomm (ipmiconsole_ctx_t c)
 {
-  uint8_t val;
+  uint8_t tmpbyte;
   ssize_t len;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  if ((len = read (c->connection.asynccomm[0], (void *)&val, 1)) < 0)
+  if ((len = read (c->connection.asynccomm[0], (void *)&tmpbyte, 1)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("read: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
@@ -597,7 +597,7 @@ _asynccomm (ipmiconsole_ctx_t c)
   /* User may have requested several break conditions in a
    * row quickly.  We assume it means just one
    */
-  if (val == IPMICONSOLE_PIPE_GENERATE_BREAK_CODE)
+  if (tmpbyte == IPMICONSOLE_PIPE_GENERATE_BREAK_CODE)
     {
       if (!(c->session.break_requested))
         {

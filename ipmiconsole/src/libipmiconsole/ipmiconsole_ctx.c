@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.49 2009-03-12 17:57:52 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.50 2009-05-02 03:55:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -670,17 +670,17 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
   if (c->blocking.blocking_submit_requested
       && !c->blocking.sol_session_established)
     {
-      uint8_t val;
+      uint8_t tmpbyte;
 
       blocking_requested++;
 
       if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY
           && c->session.deactivate_only_succeeded_flag)
-        val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED;
+        tmpbyte = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED;
       else
-        val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR;
+        tmpbyte = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR;
 
-      if (write (c->blocking.blocking_notification[1], &val, 1) < 0)
+      if (write (c->blocking.blocking_notification[1], &tmpbyte, 1) < 0)
         IPMICONSOLE_CTX_DEBUG (c, ("write: %s", strerror (errno)));
     }
 

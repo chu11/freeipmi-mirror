@@ -1340,6 +1340,7 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
 int
 ipmi_rmcpplus_check_payload_type (fiid_obj_t obj_rmcpplus_session_hdr, uint8_t payload_type)
 {
+  uint8_t l_payload_type;
   uint64_t val;
 
   if (!IPMI_PAYLOAD_TYPE_VALID (payload_type)
@@ -1360,14 +1361,16 @@ ipmi_rmcpplus_check_payload_type (fiid_obj_t obj_rmcpplus_session_hdr, uint8_t p
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
+  l_payload_type = val;
 
-  return ((payload_type == val) ? 1 : 0);
+  return ((payload_type == l_payload_type) ? 1 : 0);
 }
 
 int
 ipmi_rmcpplus_check_status_code (fiid_obj_t obj_cmd,
                                  uint8_t status_code)
 {
+  uint8_t l_rmcpplus_status_code;
   uint64_t val;
 
   if (!fiid_obj_valid (obj_cmd)
@@ -1386,13 +1389,15 @@ ipmi_rmcpplus_check_status_code (fiid_obj_t obj_cmd,
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
+  l_rmcpplus_status_code = val;
 
-  return ((status_code == val) ? 1 : 0);
+  return ((status_code == l_rmcpplus_status_code) ? 1 : 0);
 }
 
 int
 ipmi_rmcpplus_check_message_tag (fiid_obj_t obj_cmd, uint8_t message_tag)
 {
+  uint8_t l_message_tag;
   uint64_t val;
 
   if (!fiid_obj_valid (obj_cmd)
@@ -1412,13 +1417,15 @@ ipmi_rmcpplus_check_message_tag (fiid_obj_t obj_cmd, uint8_t message_tag)
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
+  l_message_tag = val;
 
-  return ((message_tag == val) ? 1 : 0);
+  return ((message_tag == l_message_tag) ? 1 : 0);
 }
 
 int
 ipmi_rmcpplus_check_remote_console_session_id (fiid_obj_t obj_cmd, uint32_t remote_console_session_id)
 {
+  uint32_t l_remote_console_session_id;
   uint64_t val;
 
   if (!fiid_obj_valid (obj_cmd)
@@ -1436,14 +1443,16 @@ ipmi_rmcpplus_check_remote_console_session_id (fiid_obj_t obj_cmd, uint32_t remo
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
+  l_remote_console_session_id = val;
 
-  return ((remote_console_session_id == val) ? 1 : 0);
+  return ((remote_console_session_id == l_remote_console_session_id) ? 1 : 0);
 }
 
 int
 ipmi_rmcpplus_check_session_id (fiid_obj_t obj_rmcpplus_session_hdr,
                                 uint32_t session_id)
 {
+  uint32_t l_session_id;
   uint64_t val;
 
   if (!fiid_obj_valid (obj_rmcpplus_session_hdr))
@@ -1463,8 +1472,9 @@ ipmi_rmcpplus_check_session_id (fiid_obj_t obj_rmcpplus_session_hdr,
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
       return (-1);
     }
+  l_session_id = val;
 
-  return ((session_id == val) ? 1 : 0);
+  return ((session_id == l_session_id) ? 1 : 0);
 }
 
 int

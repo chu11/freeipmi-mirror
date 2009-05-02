@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.88 2009-05-02 02:41:46 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.89 2009-05-02 03:55:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -3066,14 +3066,14 @@ _process_protocol_state_activate_payload_sent (ipmiconsole_ctx_t c)
   /* Wake up code waiting for SOL to be established */
   if (c->blocking.blocking_submit_requested)
     {
-      uint8_t val;
+      uint8_t tmpbyte;
 
       blocking_requested++;
 
       c->blocking.sol_session_established++;
 
-      val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED;
-      if (write (c->blocking.blocking_notification[1], &val, 1) < 0)
+      tmpbyte = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED;
+      if (write (c->blocking.blocking_notification[1], &tmpbyte, 1) < 0)
         {
           /* unlock before setting errnum */
           if ((perr = pthread_mutex_unlock (&(c->blocking.blocking_mutex))) != 0)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.96 2009-05-02 03:55:18 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.97 2009-05-02 03:57:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -369,7 +369,7 @@ _ipmiconsole_block (ipmiconsole_ctx_t c)
         goto success;
       else
         {
-          IPMICONSOLE_CTX_DEBUG (c, ("blocking_notification returned invalid data: %d", val));
+          IPMICONSOLE_CTX_DEBUG (c, ("blocking_notification returned invalid data: %u", tmpbyte));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           goto cleanup;
         }

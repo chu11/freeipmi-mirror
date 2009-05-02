@@ -34,6 +34,7 @@
 int
 ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag)
 {
+  uint8_t l_message_tag;
   uint64_t val;
 
   if (!fiid_obj_valid (pong))
@@ -53,9 +54,11 @@ ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag)
       ERRNO_TRACE (errno);
       return (-1);
     }
+  l_message_tag = val;
 
-  if (message_tag == val)
+  if (message_tag == l_message_tag)
     return (1);
+
   return (0);
 }
 

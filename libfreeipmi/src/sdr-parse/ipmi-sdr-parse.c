@@ -907,11 +907,10 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-
-      if (!IPMI_SENSOR_UNIT_VALID (val))
-        val = IPMI_SENSOR_UNIT_UNSPECIFIED;
-
       *sensor_base_unit_type = val;
+
+      if (!IPMI_SENSOR_UNIT_VALID (*sensor_base_unit_type))
+        *sensor_base_unit_type = IPMI_SENSOR_UNIT_UNSPECIFIED;
     }
 
   if (sensor_modifier_unit_type)
@@ -923,11 +922,10 @@ ipmi_sdr_parse_sensor_units (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-
-      if (!IPMI_SENSOR_UNIT_VALID (val))
-        val = IPMI_SENSOR_UNIT_UNSPECIFIED;
-
       *sensor_modifier_unit_type = val;
+
+      if (!IPMI_SENSOR_UNIT_VALID (*sensor_modifier_unit_type))
+        *sensor_modifier_unit_type = IPMI_SENSOR_UNIT_UNSPECIFIED;
     }
 
   rv = 0;
@@ -2411,7 +2409,7 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      *r_exponent = (int8_t) val;
+      *r_exponent = val;
       if (*r_exponent & 0x08)
         *r_exponent |= 0xF0;
     }
@@ -2425,7 +2423,7 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      *b_exponent = (int8_t) val;
+      *b_exponent = val;
       if (*b_exponent & 0x08)
         *b_exponent |= 0xF0;
     }
@@ -2446,8 +2444,8 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      *m = (int16_t)val1;
-      *m |= ((val2 & 0x3) << 8);
+      *m = val1;
+      *m |= (((int16_t)val2 & 0x3) << 8);
       if (*m & 0x200)
         *m |= 0xFE00;
     }
@@ -2468,8 +2466,8 @@ ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      *b = (int16_t)val1;
-      *b |= ((val2 & 0x3) << 8);
+      *b = val1;
+      *b |= (((int16_t)val2 & 0x3) << 8);
       if (*b & 0x200)
         *b |= 0xFE00;
     }
@@ -2567,7 +2565,7 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
   uint32_t acceptable_record_types;
   int8_t r_exponent, b_exponent;
   int16_t m, b;
-  uint8_t linearization, analog_data_format;
+  uint8_t reading_raw, linearization, analog_data_format;
   double *tmp_nominal_reading = NULL;
   double *tmp_normal_maximum = NULL;
   double *tmp_normal_minimum = NULL;
@@ -2639,6 +2637,7 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
+      reading_raw = val;
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2647,7 +2646,7 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
                                 b,
                                 linearization,
                                 analog_data_format,
-                                val,
+                                reading_raw,
                                 &tmp_nominal_reading) < 0)
         goto cleanup;
     }
@@ -2660,6 +2659,7 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
+      reading_raw = val;
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2668,7 +2668,7 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
                                 b,
                                 linearization,
                                 analog_data_format,
-                                val,
+                                reading_raw,
                                 &tmp_normal_maximum) < 0)
         goto cleanup;
     }
@@ -2681,6 +2681,7 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
+      reading_raw = val;
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2689,7 +2690,7 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
                                 b,
                                 linearization,
                                 analog_data_format,
-                                val,
+                                reading_raw,
                                 &tmp_normal_minimum) < 0)
         goto cleanup;
     }
@@ -2702,6 +2703,7 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
+      reading_raw = val;
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2710,7 +2712,7 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
                                 b,
                                 linearization,
                                 analog_data_format,
-                                val,
+                                reading_raw,
                                 &tmp_sensor_maximum_reading) < 0)
         goto cleanup;
     }
@@ -2723,6 +2725,7 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
+      reading_raw = val;
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2731,7 +2734,7 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
                                 b,
                                 linearization,
                                 analog_data_format,
-                                val,
+                                reading_raw,
                                 &tmp_sensor_minimum_reading) < 0)
         goto cleanup;
     }
@@ -2782,7 +2785,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
   uint32_t acceptable_record_types;
   int8_t r_exponent, b_exponent;
   int16_t m, b;
-  uint8_t linearization, analog_data_format;
+  uint8_t threshold_raw, linearization, analog_data_format;
   double *tmp_lower_non_critical_threshold = NULL;
   double *tmp_lower_critical_threshold = NULL;
   double *tmp_lower_non_recoverable_threshold = NULL;
@@ -2857,6 +2860,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
+      threshold_raw = val;
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2865,7 +2869,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
                                 b,
                                 linearization,
                                 analog_data_format,
-                                val,
+                                threshold_raw,
                                 &tmp_lower_non_critical_threshold) < 0)
         goto cleanup;
     }
@@ -2878,6 +2882,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
+      threshold_raw = val;
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2886,7 +2891,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
                                 b,
                                 linearization,
                                 analog_data_format,
-                                val,
+                                threshold_raw,
                                 &tmp_lower_critical_threshold) < 0)
         goto cleanup;
     }
@@ -2899,6 +2904,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
+      threshold_raw = val;
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2907,7 +2913,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
                                 b,
                                 linearization,
                                 analog_data_format,
-                                val,
+                                threshold_raw,
                                 &tmp_lower_non_recoverable_threshold) < 0)
         goto cleanup;
     }
@@ -2920,6 +2926,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
+      threshold_raw = val;
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2928,7 +2935,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
                                 b,
                                 linearization,
                                 analog_data_format,
-                                val,
+                                threshold_raw,
                                 &tmp_upper_non_critical_threshold) < 0)
         goto cleanup;
     }
@@ -2941,6 +2948,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
+      threshold_raw = val;
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2949,7 +2957,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
                                 b,
                                 linearization,
                                 analog_data_format,
-                                val,
+                                threshold_raw,
                                 &tmp_upper_critical_threshold) < 0)
         goto cleanup;
     }
@@ -2962,6 +2970,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
+      threshold_raw = val;
 
       if (_sensor_decode_value (ctx,
                                 r_exponent,
@@ -2970,7 +2979,7 @@ ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
                                 b,
                                 linearization,
                                 analog_data_format,
-                                val,
+                                threshold_raw,
                                 &tmp_upper_non_recoverable_threshold) < 0)
         goto cleanup;
     }
@@ -3520,7 +3529,7 @@ ipmi_sdr_parse_general_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      *channel_number = (val1 << 3) | val2;
+      *channel_number = ((uint8_t)val1 << 3) | (uint8_t)val2;
     }
   if (device_slave_address)
     {

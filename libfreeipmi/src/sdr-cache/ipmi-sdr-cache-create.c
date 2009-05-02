@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.31 2009-05-01 17:58:32 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.32 2009-05-02 03:55:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -300,6 +300,8 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
             }
           else
             {
+              uint8_t comp_code;
+
               if (FIID_OBJ_GET (obj_cmd_rs,
                                 "comp_code",
                                 &val) < 0)
@@ -307,8 +309,9 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
                   SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM (ctx, obj_cmd_rs);
                   goto cleanup;
                 }
+              comp_code = val;
 
-              if (val == IPMI_COMP_CODE_RESERVATION_CANCELLED
+              if (comp_code == IPMI_COMP_CODE_RESERVATION_CANCELLED
                   && (reservation_id_retry_count < IPMI_SDR_CACHE_MAX_RESERVATION_ID_RETRY))
                 {
                   if (_sdr_cache_reservation_id (ctx,
@@ -395,6 +398,8 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
             }
           else
             {
+              uint8_t comp_code;
+
               if (FIID_OBJ_GET (obj_cmd_rs,
                                 "comp_code",
                                 &val) < 0)
@@ -402,8 +407,9 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
                   SDR_CACHE_FIID_OBJECT_ERROR_TO_SDR_CACHE_ERRNUM (ctx, obj_cmd_rs);
                   goto cleanup;
                 }
+              comp_code = val;
 
-              if (val == IPMI_COMP_CODE_RESERVATION_CANCELLED
+              if (comp_code == IPMI_COMP_CODE_RESERVATION_CANCELLED
                   && (reservation_id_retry_count < IPMI_SDR_CACHE_MAX_RESERVATION_ID_RETRY))
                 {
                   if (_sdr_cache_reservation_id (ctx,
@@ -413,7 +419,7 @@ _sdr_cache_get_record (ipmi_sdr_cache_ctx_t ctx,
                   reservation_id_retry_count++;
                   continue;
                 }
-              else if  (val == IPMI_COMP_CODE_CANNOT_RETURN_REQUESTED_NUMBER_OF_BYTES
+              else if  (comp_code == IPMI_COMP_CODE_CANNOT_RETURN_REQUESTED_NUMBER_OF_BYTES
                         && bytes_to_read > sdr_record_header_length)
                 {
                   bytes_to_read -= IPMI_SDR_CACHE_BYTES_TO_READ_DECREMENT;
