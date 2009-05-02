@@ -1364,7 +1364,7 @@ ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_read_record_string (ipmi_sel_parse_ctx_t ctx,
-                                   char *fmt,
+                                   const char *fmt,
                                    char *buf,
                                    unsigned int buflen,
                                    unsigned int flags)
@@ -2268,7 +2268,7 @@ ipmi_sel_parse_record_oem (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
-                                     char *fmt,
+                                     const char *fmt,
                                      const uint8_t *record_buf,
                                      unsigned int record_buflen,
                                      char *buf,
