@@ -20,11 +20,15 @@ ipmi-raw - ipmi_raw_stream and ipmi-oem arg checks
 use of _SC_ARG_MAX correct? no likely, need to fix
 
 uint64_t - only get vals, don't store
-int8_t, int32_t, uint8_t *, char * checks
+int8_t
+int32_t
+uint8_t *
+char *
+uint32_t
 
 casts
-(uint8_t *)
-(uint8_T)
+X (uint8_T)
+X (uint8_t *)
 (uint16_t)
 (uint32_t)
 (int)
@@ -32,7 +36,7 @@ casts
 
 ipmi-locate
 -----------
-ensure no breakage on itanium, dell, sun machine
+(TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi
 
 freeipmi tools
 --------------
@@ -49,26 +53,26 @@ libfreeipmi
 
 ipmi-fru
 --------
-test multirecord stuff against a FRU
+(TEST) multirecord stuff against a FRU
 
 bmc-config
 ----------
-test that ipmi 2.0 (> 20 char) password not possible on ipmi 1.5 only mobo
+(TEST) that ipmi 2.0 (> 20 char) password not possible on ipmi 1.5 only mobo
 copy ipmi-oem stuff in
 - inventec mac/shared nic stuff
 - into lan_conf?  or into new section?
 
 sensors/monitoring
 ------------------
-make sure bridging still works w/ sensor-read lib
-make sure oem still outputs fine
+(TEST) make sure bridging still works w/ sensor-read lib
+(TEST) make sure oem still outputs fine
 make sensor-raw equivalent API func (i.e. don't need to do IPMI to get raw reading)
-output via entity_id organization
+option output via entity_id organization
 
 ipmi-chassis-config
 -------------------
 * conf.5 manpage
-- panel button config (need to test against hardware)
+(NEVER TESTED) panel button config - need hardware w/ this
 
 general
 -------
@@ -88,9 +92,8 @@ coverity check
 
 bmc-device
 --------
-get auxiliary log status
-- not tested, don't have a machine with this support
-ensure get-lan-statistics and clear-lan-statistics still work
+(NEVER TESTED) get auxiliary log status - not tested, don't have a machine with this support
+(TEST) ensure get-lan-statistics and clear-lan-statistics still work
 
 ipmi-pef-config
 -----------
@@ -98,7 +101,7 @@ ipmi-pef-config
 
 inband code
 -----------
-retry/resent code?
+retry/resend code?
 
 ipmi-sensors-config
 -------------------
@@ -112,8 +115,8 @@ this for now.  Just watch for it in the future.
 
 ipmb
 ----
-ipmi 2.0 bridging - untested
-openipmi ipmb - untested
+(NEVER TESTED) ipmi 2.0 bridging
+(NEVER TESTED) openipmi ipmb
 
 libs
 ----
