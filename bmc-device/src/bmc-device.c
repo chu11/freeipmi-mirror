@@ -117,6 +117,7 @@ static int
 get_self_test_results (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t self_test_result;
   uint64_t val;
   int rv = -1;
 
@@ -150,27 +151,28 @@ get_self_test_results (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-
+  self_test_result = val;
+  
   pstdout_printf (state_data->pstate,
                   "Self Test Result: ");
-  if (val == IPMI_SELF_TEST_RESULT_NO_ERROR)
+  if (self_test_result == IPMI_SELF_TEST_RESULT_NO_ERROR)
     pstdout_printf (state_data->pstate,
                     "No Error\n");
-  else if (val == IPMI_SELF_TEST_RESULT_SELF_TEST_FUNCTION_NOT_IMPLEMENTED_IN_THIS_CONTROLLER)
+  else if (self_test_result == IPMI_SELF_TEST_RESULT_SELF_TEST_FUNCTION_NOT_IMPLEMENTED_IN_THIS_CONTROLLER)
     pstdout_printf (state_data->pstate,
                     "Self Test function not implemented in this controller.\n");
-  else if (val == IPMI_SELF_TEST_RESULT_CORRUPTED_OR_INACCESSIBLE_DATA_OR_DEVICES)
+  else if (self_test_result == IPMI_SELF_TEST_RESULT_CORRUPTED_OR_INACCESSIBLE_DATA_OR_DEVICES)
     pstdout_printf (state_data->pstate,
                     "Corrupted or inaccessible data or devices\n");
-  else if (val == IPMI_SELF_TEST_RESULT_FATAL_HARDWARE_ERROR)
+  else if (self_test_result == IPMI_SELF_TEST_RESULT_FATAL_HARDWARE_ERROR)
     pstdout_printf (state_data->pstate,
                     "Fatal hardware error (system should consider BMC inoperative).  Controller hardware may need to be repaired or replaced.\n");
   else
     pstdout_printf (state_data->pstate,
                     "Device-specific error: %Xh\n",
-                    val);
+                    self_test_result);
 
-  if (val == IPMI_SELF_TEST_RESULT_CORRUPTED_OR_INACCESSIBLE_DATA_OR_DEVICES)
+  if (self_test_result == IPMI_SELF_TEST_RESULT_CORRUPTED_OR_INACCESSIBLE_DATA_OR_DEVICES)
     {
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "controller_operation_firmware_corrupted",
@@ -197,6 +199,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
+
       if (val)
         pstdout_printf (state_data->pstate,
                         "                  [Controller update 'boot block' firmware corrupted]\n");
@@ -1299,6 +1302,11 @@ static int
 get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t number_of_outstanding_requests_supported;
+  uint8_t input_buffer_size;
+  uint8_t output_buffer_size;
+  uint8_t bmc_request_to_response_time;
+  uint8_t recommended_retries;
   uint64_t val;
   int rv = -1;
 
@@ -1331,10 +1339,11 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  number_of_outstanding_requests_supported = val;
 
   pstdout_printf (state_data->pstate,
                   "BT Number of Outstanding Requests Supported: %u\n",
-                  val);
+                  number_of_outstanding_requests_supported);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "input_buffer_size", &val) < 0)
     {
@@ -1344,10 +1353,11 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  input_buffer_size = val;
 
   pstdout_printf (state_data->pstate,
                   "BT Input Buffer Size:                        %u bytes\n",
-                  val);
+                  input_buffer_size);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "output_buffer_size", &val) < 0)
     {
@@ -1357,10 +1367,11 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  output_buffer_size = val;
 
   pstdout_printf (state_data->pstate,
                   "BT Output Buffer Size:                       %u bytes\n",
-                  val);
+                  output_buffer_size);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "bmc_request_to_response_time", &val) < 0)
     {
@@ -1370,10 +1381,11 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  bmc_request_to_response_time = val;
 
   pstdout_printf (state_data->pstate,
                   "BT Request to Response Time:                 %u seconds\n",
-                  val);
+                  bmc_request_to_response_time);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "recommended_retries", &val) < 0)
     {
@@ -1383,10 +1395,11 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  recommended_retries = val;
 
   pstdout_printf (state_data->pstate,
                   "BT Recommended Retries:                      %u\n",
-                  val);
+                  recommended_retries);
 
   rv = 0;
  cleanup:

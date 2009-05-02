@@ -560,9 +560,9 @@ character_accumulate_interval_checkout (const char *section_name,
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 it.character_accumulate_interval) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          it.character_accumulate_interval) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);
@@ -597,9 +597,9 @@ character_send_threshold_checkout (const char *section_name,
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 it.character_send_threshold) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          it.character_send_threshold) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);
@@ -758,9 +758,9 @@ sol_retry_count_checkout (const char *section_name,
   if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 sr.retry_count) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          sr.retry_count) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);
@@ -796,9 +796,9 @@ sol_retry_interval_checkout (const char *section_name,
   if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 sr.retry_interval) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          sr.retry_interval) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);
@@ -828,6 +828,7 @@ non_volatile_bit_rate_checkout (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t bit_rate;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
@@ -873,10 +874,11 @@ non_volatile_bit_rate_checkout (const char *section_name,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  bit_rate = val;
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
-                                             sol_bit_rate_string (val)) < 0)
+                                             sol_bit_rate_string (bit_rate)) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
@@ -946,6 +948,7 @@ volatile_bit_rate_checkout (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t bit_rate;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
@@ -991,10 +994,11 @@ volatile_bit_rate_checkout (const char *section_name,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  bit_rate = val;
 
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
-                                             sol_bit_rate_string (val)) < 0)
+                                             sol_bit_rate_string (bit_rate)) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
@@ -1064,6 +1068,7 @@ sol_payload_port_checkout (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
+  uint16_t port_number;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
@@ -1109,10 +1114,11 @@ sol_payload_port_checkout (const char *section_name,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  port_number = val;
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 val) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          port_number) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;

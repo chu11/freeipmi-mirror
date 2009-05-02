@@ -888,9 +888,9 @@ alert_policy_number_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 eft.alert_policy_number) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          eft.alert_policy_number) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);
@@ -931,9 +931,9 @@ group_control_selector_checkout (const char *section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 eft.group_control_selector) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          eft.group_control_selector) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);

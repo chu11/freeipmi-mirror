@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.95 2009-03-12 17:57:52 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.96 2009-05-02 03:55:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -343,10 +343,10 @@ _ipmiconsole_block (ipmiconsole_ctx_t c)
 
   if (FD_ISSET (c->blocking.blocking_notification[0], &rds))
     {
-      uint8_t val;
+      uint8_t tmpbyte;
       ssize_t len;
 
-      if ((len = read (c->blocking.blocking_notification[0], (void *)&val, 1)) < 0)
+      if ((len = read (c->blocking.blocking_notification[0], (void *)&tmpbyte, 1)) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("read: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
@@ -360,12 +360,12 @@ _ipmiconsole_block (ipmiconsole_ctx_t c)
           goto cleanup;
         }
 
-      if (val == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED)
+      if (tmpbyte == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED)
         goto success;
-      else if (val == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR)
+      else if (tmpbyte == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR)
         goto cleanup;
       else if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY
-               && val == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED)
+               && tmpbyte == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED)
         goto success;
       else
         {
@@ -651,7 +651,7 @@ ipmiconsole_ctx_fd (ipmiconsole_ctx_t c)
 int
 ipmiconsole_ctx_generate_break (ipmiconsole_ctx_t c)
 {
-  uint8_t val;
+  uint8_t tmpbyte;
 
   if (!c
       || c->magic != IPMICONSOLE_CTX_MAGIC
@@ -664,8 +664,8 @@ ipmiconsole_ctx_generate_break (ipmiconsole_ctx_t c)
       return (-1);
     }
 
-  val = IPMICONSOLE_PIPE_GENERATE_BREAK_CODE;
-  if (write (c->fds.asynccomm[1], &val, 1) < 0)
+  tmpbyte = IPMICONSOLE_PIPE_GENERATE_BREAK_CODE;
+  if (write (c->fds.asynccomm[1], &tmpbyte, 1) < 0)
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);

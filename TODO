@@ -26,8 +26,6 @@ uint8_t *
 char *
 uint32_t
 
-val
-
 ipmi-locate
 -----------
 (TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi

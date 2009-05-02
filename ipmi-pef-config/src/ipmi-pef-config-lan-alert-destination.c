@@ -312,9 +312,9 @@ alert_acknowledge_timeout_checkout (const char *section_name,
                                     &dt)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 dt.alert_acknowledge_timeout) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          dt.alert_acknowledge_timeout) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);
@@ -355,9 +355,9 @@ alert_retries_checkout (const char *section_name,
                                     &dt)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 dt.alert_retries) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          dt.alert_retries) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);

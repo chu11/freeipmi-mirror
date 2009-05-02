@@ -38,12 +38,18 @@
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
 
-static int32_t
+static int
 get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int32_t rv = -1;
+  uint8_t fru_info_device_address;
+  uint8_t sdr_device_address;
+  uint8_t sel_device_address;
+  uint8_t system_management_device_address;
+  uint8_t bridge_device_address;
+  int flag;
   uint64_t val = 0;
+  int rv = -1;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_capabilities_rs)))
     {
@@ -133,10 +139,11 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  fru_info_device_address = val;
 
   pstdout_printf (state_data->pstate,
                   "FRU Info Device Address    : %Xh %s\n",
-                  (unsigned char) val,
+                  fru_info_device_address,
                   (val ? "" : "(Unspecified)"));
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -149,10 +156,11 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-
+  sdr_device_address = val;
+ 
   pstdout_printf (state_data->pstate,
                   "SDR Device Address         : %Xh\n",
-                  (unsigned char) val);
+                  sdr_device_address);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "sel_device_address",
@@ -164,10 +172,11 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  sel_device_address = val;
 
   pstdout_printf (state_data->pstate,
                   "SEL Device Address         : %Xh\n",
-                  (unsigned char) val);
+                  sel_device_address);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "system_management_device_address",
@@ -179,15 +188,26 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  system_management_device_address = val;
 
   pstdout_printf (state_data->pstate,
                   "Sys Mgmt Device Address    : %Xh\n",
-                  (unsigned char) val);
+                  system_management_device_address);
 
-  if (fiid_obj_get (obj_cmd_rs, "bridge_device_address", &val) > 0)
+  if ((flag = fiid_obj_get (obj_cmd_rs, "bridge_device_address", &val)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'system_management_device_address': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  bridge_device_address = val;
+
+  if (flag)
     pstdout_printf (state_data->pstate,
                     "Bridge Device Address      : %Xh\n",
-                    (unsigned char) val);
+                    bridge_device_address);
   else
     pstdout_printf (state_data->pstate,
                     "Bridge Device Address      : 20h (assuming default)\n");
@@ -198,13 +218,13 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
   return (rv);
 }
 
-static int32_t
+static int
 get_chassis_status (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0, temp_val;
   uint8_t front_panel_capabilities = 0, misc_chassis_status = 0;
-  int32_t rv = -1;
+  int rv = -1;
   int flag;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_status_rs)))
@@ -323,6 +343,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     }
 
   temp_val = IPMI_LAST_POWER_EVENT_UNKNOWN;
+
   if (FIID_OBJ_GET (obj_cmd_rs, "last_power_event.ac_failed", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -397,6 +418,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
  print:
   pstdout_printf (state_data->pstate, "Last Power Event           : ");
+
   switch (temp_val)
     {
     case IPMI_LAST_POWER_EVENT_AC_FAILED:
@@ -528,6 +550,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
       pstdout_printf (state_data->pstate,
                       "\nChassis Identify state     : ");
+
       switch (val)
         {
         case IPMI_CHASSIS_IDENTIFY_STATE_OFF:
@@ -571,7 +594,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       if (val)
         {
-          front_panel_capabilities  = 1;
+          front_panel_capabilities = 1;
           pstdout_printf (state_data->pstate,
                           " Power off button disabled");
         }
@@ -719,11 +742,11 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
   return (rv);
 }
 
-static int32_t
+static int
 chassis_control (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int32_t rv = -1;
+  int rv = -1;
   struct ipmi_chassis_arguments *args;
 
   args = state_data->prog_data->args;
@@ -754,11 +777,11 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
   return (rv);
 }
 
-static int32_t
+static int
 chassis_identify (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int32_t rv = -1;
+  int rv = -1;
   struct ipmi_chassis_arguments *args;
 
   args = state_data->prog_data->args;
@@ -790,12 +813,12 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
   return (rv);
 }
 
-static int32_t
+static int
 set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
-  int32_t rv = -1;
+  int rv = -1;
   struct ipmi_chassis_arguments *args;
 
   args = state_data->prog_data->args;
@@ -872,11 +895,11 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
   return (rv);
 }
 
-static int32_t
+static int
 set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int32_t rv = -1;
+  int rv = -1;
   struct ipmi_chassis_arguments *args;
 
   args = state_data->prog_data->args;
@@ -907,13 +930,13 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
   return (rv);
 }
 
-static int32_t
+static int
 get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
   char restart_cause[256];
-  int32_t rv = -1;
+  int rv = -1;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_restart_cause_rs)))
     {
@@ -1007,14 +1030,14 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
   return (rv);
 }
 
-static int32_t
+static int
 get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
   uint8_t minutes_per_counter;
   uint32_t counter_reading, min, hrs;
-  int32_t rv = -1;
+  int rv = -1;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_power_on_hours_counter_rs)))
     {
@@ -1073,12 +1096,12 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   return (rv);
 }
 
-static int32_t
+static int
 get_boot_flags (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
-  int32_t rv = -1;
+  int rv = -1;
   char tmp[256];
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_boot_options_boot_flags_rs)))
@@ -1477,7 +1500,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   return (rv);
 }
 
-static int32_t
+static int
 set_boot_flags (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1490,7 +1513,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
     user_password_bypass, force_progress_event_traps, firmware_bios_verbosity,
     lock_out_via_power_button, bios_mux_control_override, bios_shared_mode_override;
   uint64_t val =0;
-  int32_t rv = -1;
+  int rv = -1;
   struct ipmi_chassis_arguments *args;
 
   args = state_data->prog_data->args;

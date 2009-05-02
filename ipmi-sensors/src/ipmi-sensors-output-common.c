@@ -381,6 +381,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
   int16_t m, b;
   uint8_t linearization, analog_data_format;
   uint8_t sensor_number;
+  uint8_t threshold_raw;
   fiid_obj_t obj_cmd_rs = NULL;
   double *tmp_lower_non_critical_threshold = NULL;
   double *tmp_lower_critical_threshold = NULL;
@@ -599,6 +600,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                fiid_obj_errormsg (obj_cmd_rs));
               goto cleanup;
             }
+          threshold_raw = val;
 
           if (ipmi_sensor_decode_value (r_exponent,
                                         b_exponent,
@@ -606,7 +608,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                         b,
                                         linearization,
                                         analog_data_format,
-                                        val,
+                                        threshold_raw,
                                         &threshold) < 0)
             {
               pstdout_fprintf (state_data->pstate,
@@ -649,6 +651,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                fiid_obj_errormsg (obj_cmd_rs));
               goto cleanup;
             }
+          threshold_raw = val;
 
           if (ipmi_sensor_decode_value (r_exponent,
                                         b_exponent,
@@ -656,7 +659,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                         b,
                                         linearization,
                                         analog_data_format,
-                                        val,
+                                        threshold_raw,
                                         &threshold) < 0)
             {
               pstdout_fprintf (state_data->pstate,
@@ -699,6 +702,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                fiid_obj_errormsg (obj_cmd_rs));
               goto cleanup;
             }
+          threshold_raw = val;
 
           if (ipmi_sensor_decode_value (r_exponent,
                                         b_exponent,
@@ -706,7 +710,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                         b,
                                         linearization,
                                         analog_data_format,
-                                        val,
+                                        threshold_raw,
                                         &threshold) < 0)
             {
               pstdout_fprintf (state_data->pstate,
@@ -749,6 +753,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                fiid_obj_errormsg (obj_cmd_rs));
               goto cleanup;
             }
+          threshold_raw = val;
 
           if (ipmi_sensor_decode_value (r_exponent,
                                         b_exponent,
@@ -756,7 +761,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                         b,
                                         linearization,
                                         analog_data_format,
-                                        val,
+                                        threshold_raw,
                                         &threshold) < 0)
             {
               pstdout_fprintf (state_data->pstate,
@@ -799,6 +804,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                fiid_obj_errormsg (obj_cmd_rs));
               goto cleanup;
             }
+          threshold_raw = val;
 
           if (ipmi_sensor_decode_value (r_exponent,
                                         b_exponent,
@@ -806,7 +812,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                         b,
                                         linearization,
                                         analog_data_format,
-                                        val,
+                                        threshold_raw,
                                         &threshold) < 0)
             {
               pstdout_fprintf (state_data->pstate,
@@ -849,6 +855,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                fiid_obj_errormsg (obj_cmd_rs));
               goto cleanup;
             }
+          threshold_raw = val;
 
           if (ipmi_sensor_decode_value (r_exponent,
                                         b_exponent,
@@ -856,7 +863,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                                         b,
                                         linearization,
                                         analog_data_format,
-                                        val,
+                                        threshold_raw,
                                         &threshold) < 0)
             {
               pstdout_fprintf (state_data->pstate,

@@ -794,6 +794,7 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
                             struct config_arguments *cmd_args)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t pef_startup_delay;
   uint64_t val = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
@@ -834,10 +835,11 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  pef_startup_delay = val;
 
-  if (config_section_update_keyvalue_output_int (pstate,
-                                                 kv,
-                                                 val) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (pstate,
+                                                          kv,
+                                                          pef_startup_delay) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
@@ -904,6 +906,7 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
                                   struct config_arguments *cmd_args)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t pef_alert_startup_delay;
   uint64_t val = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
@@ -944,10 +947,11 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  pef_alert_startup_delay = val;
 
-  if (config_section_update_keyvalue_output_int (pstate,
-                                                 kv,
-                                                 val) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (pstate,
+                                                          kv,
+                                                          val) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;

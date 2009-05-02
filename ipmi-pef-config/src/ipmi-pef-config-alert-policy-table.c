@@ -331,9 +331,9 @@ policy_number_checkout (const char *section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 apt.policy_number) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          apt.policy_number) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);
@@ -374,9 +374,9 @@ destination_selector_checkout (const char *section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 apt.destination_selector) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          apt.destination_selector) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);
@@ -417,9 +417,9 @@ channel_number_checkout (const char *section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 apt.channel_number) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          apt.channel_number) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);
@@ -460,9 +460,9 @@ alert_string_set_selector_checkout (const char *section_name,
                                       &apt)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 apt.alert_string_set_selector) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          apt.alert_string_set_selector) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);

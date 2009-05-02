@@ -180,9 +180,9 @@ event_filter_number_checkout (const char *section_name,
                                      &ask)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 ask.event_filter_number) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          ask.event_filter_number) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);
@@ -223,9 +223,9 @@ alert_string_set_checkout (const char *section_name,
                                      &ask)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 ask.alert_string_set) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          ask.alert_string_set) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);

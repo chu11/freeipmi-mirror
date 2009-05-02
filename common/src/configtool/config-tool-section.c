@@ -354,9 +354,9 @@ config_section_update_keyvalue_output (pstdout_state_t pstate,
 }
 
 int
-config_section_update_keyvalue_output_int (pstdout_state_t pstate,
-                                           struct config_keyvalue *keyvalue,
-                                           unsigned int value_output)
+config_section_update_keyvalue_output_unsigned_int (pstdout_state_t pstate,
+                                                    struct config_keyvalue *keyvalue,
+                                                    unsigned int value_output)
 {
   char buf[CONFIG_PARSE_BUFLEN];
 

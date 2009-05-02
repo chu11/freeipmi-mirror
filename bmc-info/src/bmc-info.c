@@ -309,7 +309,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (val == 0)
+  if (!val)
     pstdout_printf (state_data->pstate,
                     "                   [Device Available (normal operation)]\n");
   else

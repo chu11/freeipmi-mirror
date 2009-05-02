@@ -58,7 +58,9 @@ static int
 _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t val, val1, val2;
+  uint8_t major, minor;
+  uint16_t record_count, free_space;
+  uint64_t val;
   char str[512];
   time_t t;
   struct tm tmp;
@@ -84,7 +86,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs, "sdr_version_major", &val1) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "sdr_version_major", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -92,8 +94,9 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  major = val;
 
-  if (FIID_OBJ_GET (obj_cmd_rs, "sdr_version_minor", &val2) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "sdr_version_minor", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -101,11 +104,12 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  minor = val;
 
   pstdout_printf (state_data->pstate,
                   "SDR version:                     %u.%u\n",
-                  val1,
-                  val2);
+                  major,
+                  minor);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "record_count", &val) < 0)
     {
@@ -115,10 +119,11 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  record_count = val;
 
   pstdout_printf (state_data->pstate,
                   "SDR record count:                %u\n",
-                  val);
+                  record_count);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "free_space", &val) < 0)
     {
@@ -128,10 +133,11 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  free_space = val;
 
   pstdout_printf (state_data->pstate,
                   "Free space remaining:            %u bytes\n",
-                  val);
+                  free_space);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val) < 0)
     {

@@ -52,6 +52,7 @@ ip_address_source_checkout (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t ip_address_source;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
@@ -97,10 +98,11 @@ ip_address_source_checkout (const char *section_name,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-
+  ip_address_source = val;
+  
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
-                                             ip_address_source_string (val)) < 0)
+                                             ip_address_source_string (ip_address_source)) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
@@ -1270,9 +1272,9 @@ vlan_id_checkout (const char *section_name,
   if ((ret = _get_vlan_id (state_data, &vi)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 vi.vlan_id) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          vi.vlan_id) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   return (CONFIG_ERR_SUCCESS);
@@ -1348,6 +1350,7 @@ vlan_priority_checkout (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t vlan_priority;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
@@ -1393,10 +1396,11 @@ vlan_priority_checkout (const char *section_name,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  vlan_priority = val;
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 val) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          val) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;

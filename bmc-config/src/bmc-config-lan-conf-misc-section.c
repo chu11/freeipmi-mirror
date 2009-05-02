@@ -245,6 +245,7 @@ gratuitous_arp_interval_checkout (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+  uint8_t gratuitous_arp_interval;
   uint64_t val;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs)))
@@ -287,10 +288,11 @@ gratuitous_arp_interval_checkout (const char *section_name,
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+  gratuitous_arp_interval = val;
 
-  if (config_section_update_keyvalue_output_int (state_data->pstate,
-                                                 kv,
-                                                 (uint8_t)val) < 0)
+  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+                                                          kv,
+                                                          gratuitous_arp_interval) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;
