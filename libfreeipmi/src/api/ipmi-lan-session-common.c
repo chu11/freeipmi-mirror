@@ -862,7 +862,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
   int ret;
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
-  int32_t recv_len;
+  int recv_len;
   struct socket_to_close *sockets = NULL;
   uint8_t cmd = 0;             /* used for debugging */
   uint64_t val;
@@ -1166,7 +1166,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   int ret;
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
-  int32_t recv_len;
+  int recv_len;
   uint8_t cmd = 0;             /* used for debugging */
   uint8_t rq_seq_orig;
   uint64_t val;
@@ -2622,7 +2622,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
   int ret;
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
-  int32_t recv_len;
+  int recv_len;
   uint8_t cmd = 0;             /* used for debugging */
   uint64_t val;
 
@@ -2829,7 +2829,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   int ret;
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
-  int32_t recv_len;
+  int recv_len;
   uint8_t cmd = 0;             /* used for debugging */
   uint8_t rq_seq_orig;
   uint64_t val;

@@ -431,7 +431,7 @@ ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
   int k1_len;
   uint8_t k2[IPMI_MAX_K2_LENGTH];
   int k2_len;
-  int32_t rv = -1;
+  int rv = -1;
 
   if (!IPMI_CIPHER_SUITE_COMBINATION_VALID (authentication_algorithm,
                                             integrity_algorithm,

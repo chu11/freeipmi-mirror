@@ -1643,7 +1643,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   if (session_id && payload_authenticated == IPMI_PAYLOAD_FLAG_AUTHENTICATED)
     {
       uint8_t authentication_code_buf[IPMI_MAX_PAYLOAD_LENGTH];
-      int32_t authentication_code_len;
+      int authentication_code_len;
 
       if (!(obj_rmcpplus_session_trlr_temp = fiid_obj_dup (obj_rmcpplus_session_trlr)))
         {

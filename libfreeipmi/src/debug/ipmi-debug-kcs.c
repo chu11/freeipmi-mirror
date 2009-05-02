@@ -59,7 +59,7 @@ _ipmi_dump_kcs_packet (int fd,
                        fiid_template_t tmpl_ipmb_cmd)
 {
   unsigned int indx = 0;
-  int32_t obj_cmd_len;
+  unsigned int obj_cmd_len;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   char *kcs_hdr =
     "KCS Header:\n"

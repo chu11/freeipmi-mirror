@@ -464,7 +464,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
    */
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {
-      int32_t authentication_len;
+      int authentication_len;
 
       memset (pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
 

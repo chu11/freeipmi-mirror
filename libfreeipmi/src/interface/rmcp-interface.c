@@ -84,7 +84,7 @@ fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr)
   return (fill_rmcp_hdr (RMCP_HDR_MESSAGE_CLASS_ASF, obj_rmcp_hdr));
 }
 
-int32_t
+int
 assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr,
                    fiid_obj_t obj_cmd,
                    uint8_t *pkt,

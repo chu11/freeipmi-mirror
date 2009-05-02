@@ -1003,7 +1003,7 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
   fiid_obj_t obj_acpi_table_hdr = NULL;
   uint8_t *acpi_table_buf;
   uint32_t table_length = 0;
-  int32_t acpi_table_hdr_length;
+  int acpi_table_hdr_length;
   uint8_t *table;
   int len;
   int rv = -1;

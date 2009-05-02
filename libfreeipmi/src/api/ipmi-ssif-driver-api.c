@@ -207,7 +207,7 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
   unsigned int pkt_len;
   uint8_t *readbuf = NULL;
   int bytes_read = 0;
-  int32_t hdr_len;
+  int hdr_len;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)

@@ -62,7 +62,7 @@ _ipmi_dump_lan_packet (int fd,
 {
   unsigned int indx = 0;
   int obj_lan_msg_trlr_len;
-  int32_t obj_cmd_len;
+  unsigned int obj_cmd_len;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   char *rmcp_hdr =
     "RMCP Header:\n"

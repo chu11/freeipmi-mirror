@@ -891,8 +891,7 @@ _ipmi_ssif_cmd_read (ipmi_ssif_ctx_t ctx,
 {
   uint8_t *pkt = NULL;
   unsigned int pkt_len;
-  int hdr_len, cmd_len;
-  int32_t read_len;
+  int hdr_len, cmd_len, read_len;
   fiid_obj_t obj_hdr = NULL;
   fiid_field_t *tmpl = NULL;
   int rv = -1;

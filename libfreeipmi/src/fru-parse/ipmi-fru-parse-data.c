@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.8 2009-05-02 02:01:55 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.9 2009-05-02 05:10:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1090,7 +1090,7 @@ ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
                                     unsigned int *maximum_current_load)
 {
   fiid_obj_t obj_record = NULL;
-  int32_t tmpl_record_length;
+  int tmpl_record_length;
   uint64_t val;
   int rv = -1;
 
