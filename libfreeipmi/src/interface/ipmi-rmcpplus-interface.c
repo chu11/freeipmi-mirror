@@ -2298,6 +2298,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       return (-1);
     }
 
+#if 0
   /*
    * Extract OEM IANA and OEM Payload ID
    */
@@ -2321,6 +2322,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       if (pkt_len <= indx)
         return (0);
     }
+#endif
 
   /*
    * Extract Session ID, Session Sequence Number, and Payload Length
