@@ -1,6 +1,8 @@
 2009-05-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/, ipmi-oem/: Fix glibc portability bugs.
+
+	* ipmi-oem/: Fix debug output corner case.
 	
 2009-05-02  Albert Chu <chu11@llnl.gov>
 
