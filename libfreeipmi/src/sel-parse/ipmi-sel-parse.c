@@ -461,6 +461,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
                 Ipmi_Sel_Parse_Callback callback,
                 void *callback_data)
 {
+  struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
   uint16_t reservation_id = 0;
   uint16_t record_id = 0;
   uint16_t next_record_id = 0;
@@ -485,7 +486,6 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
        record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
        record_id = next_record_id)
     {
-      struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
       unsigned int reservation_id_retry_count = 0;
       unsigned int reservation_canceled = 0;
       uint64_t val;
@@ -508,6 +508,8 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
        * I don't think using a reservation ID all of the time hurts
        * anything, so we'll just use it all of the time.
        */
+      
+      sel_parse_entry = NULL;
 
       while (1)
         {
@@ -600,6 +602,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
               goto cleanup;
             }
 
+          sel_parse_entry = NULL;
           break;
         }
     }
@@ -619,6 +622,8 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
  cleanup:
   ctx->callback_sel_entry = NULL;
+  if (sel_parse_entry)
+    free (sel_parse_entry);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }

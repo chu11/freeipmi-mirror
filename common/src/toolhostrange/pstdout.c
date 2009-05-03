@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.4 2009-03-03 23:56:44 chu11 Exp $
+ *  $Id: pstdout.c,v 1.5 2009-05-03 04:29:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1317,7 +1317,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
         fprintf(stderr, "h_count = %d\n", h_count);
       pstdout_errnum = PSTDOUT_ERR_INTERNAL;
-      return -1;
+      goto cleanup;
     }
 
   /* Special case */
