@@ -178,6 +178,7 @@ o libfreeipmi
     - Fix function naming inconsistencies.
     - Fix API inconsistencies.
     - Appropriately indicate const pointers in parameters.
+    - Make buffers void * instead of uint8_t * consistently.
   - Various fixes to maintain consistency between sub library APIs.
   - Add IANA Enterprise Numbers definitions.
   - Add Entity IDs definitions.
