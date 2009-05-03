@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.106 2009-05-02 03:55:18 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.107 2009-05-03 05:13:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -829,13 +829,13 @@ _cmd_set_flag (char **argv, int *flag, const char *str)
  *   If no commands are available, return a null-terminated empty string.
  */
 static void
-_readcmd (char *buf, int maxlen)
+_readcmd (char *buf, int buflen)
 {
   int dropped, bytes_peeked, len = 0;
 
   /* Don't use Cbuf_peek(), we may not want to cbuf_drop data */
   buf[0] = '\0';
-  if ((bytes_peeked = cbuf_peek (ttyin, buf, maxlen)) <= 0)
+  if ((bytes_peeked = cbuf_peek (ttyin, buf, buflen)) <= 0)
     {
       if (bytes_peeked < 0)
         ierr_exit ("_readcmd: cbuf_peek returned %d", bytes_peeked);
@@ -850,9 +850,13 @@ _readcmd (char *buf, int maxlen)
           break;
         }
     }
+
   if (len == bytes_peeked)
     return;
-  if ((dropped = cbuf_drop (ttyin, ++len)) != len)
+
+  len++;
+
+  if ((dropped = cbuf_drop (ttyin, len)) != len)
     ierr_dbg ("warning: _readcmd: cbuf_drop returned %d (!= %d)", dropped, len);
 }
 
