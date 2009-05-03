@@ -44,7 +44,7 @@ ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
                                              uint8_t cmd,
                                              uint8_t netfn)
 {
-  uint8_t bytes_rs_ptr = bytes_rs;
+  uint8_t *bytes_rs_ptr = bytes_rs;
 
   assert (state_data);
   assert (bytes_rs);
