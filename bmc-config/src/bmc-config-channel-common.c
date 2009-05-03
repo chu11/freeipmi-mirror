@@ -304,7 +304,14 @@ _set_channel_access (bmc_config_state_data_t *state_data,
           && IPMI_ERR_IS_BAD_COMPLETION_CODE (ipmi_ctx_errnum (state_data->ipmi_ctx)))
         {
           (*comp_code) = 0;
-          FIID_OBJ_GET (obj_cmd_rs, "comp_code", &val);
+          if (FIID_OBJ_GET (obj_cmd_rs, "comp_code", &val) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "fiid_obj_get: 'comp_code': %s\n",
+                               fiid_obj_errormsg (obj_cmd_rs));
+              goto cleanup;
+            }
           (*comp_code) = val;
         }
 

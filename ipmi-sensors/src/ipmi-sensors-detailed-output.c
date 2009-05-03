@@ -75,10 +75,9 @@ _get_record_type_string (ipmi_sensors_state_data_t *state_data,
     case IPMI_SDR_FORMAT_OEM_RECORD:
       return (IPMI_SDR_FORMAT_OEM_RECORD_NAME);
     default:
-      return "Unknown Record";
+      break;
     }
 
-  /* NOT REACHED - avoid compiler warning */
   return "Unknown Record";
 }
 
@@ -1132,7 +1131,7 @@ _linearization_string (ipmi_sensors_state_data_t *state_data, uint8_t linearizat
     case IPMI_SDR_LINEARIZATION_CUBERT:
       return (IPMI_SDR_LINEARIZATION_CUBERT_STRING);
     default:
-      return (IPMI_SDR_LINEARIZATION_NON_LINEAR_STRING);
+      break;
     }
 
   return (IPMI_SDR_LINEARIZATION_NON_LINEAR_STRING);
@@ -1150,7 +1149,7 @@ _analog_data_format_string (ipmi_sensors_state_data_t *state_data, uint8_t analo
     case IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT:
       return (IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT_STRING);
     default:
-      return (IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG_STRING);
+      break;
     }
 
   return (IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG_STRING);

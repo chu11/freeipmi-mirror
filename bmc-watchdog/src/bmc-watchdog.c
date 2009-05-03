@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.121 2009-05-02 05:50:53 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.122 2009-05-03 04:07:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1958,22 +1958,6 @@ _daemon_cmd (void)
           _daemon_cmd_error_noexit ("Reset Watchdog Timer", ret);
           goto sleep_now;
         }
-      if (ret)
-        {
-          char buf[BMC_WATCHDOG_STR_BUFLEN];
-
-          if (ipmi_completion_code_strerror_r (IPMI_CMD_RESET_WATCHDOG_TIMER,
-                                               IPMI_NET_FN_APP_RQ,
-                                               ret,
-                                               buf,
-                                               BMC_WATCHDOG_STR_BUFLEN) < 0)
-            _bmclog ("Reset Watchdog Timer IPMI Error: %Xh", ret);
-          else
-            _bmclog ("Reset Watchdog Timer IPMI Error: %s", buf);
-        }
-      else
-        _bmclog ("BMC-Watchdog Timer Reset");
-
 
     sleep_now:
       if (gettimeofday (&end_tv, NULL) < 0)

@@ -1,3 +1,7 @@
+2009-05-02  Albert Chu <chu11@llnl.gov>
+
+	* Fix coverity discovered errors.
+	
 2009-05-01  Albert Chu <chu11@llnl.gov>
 
 	* Continued lib cleanup.

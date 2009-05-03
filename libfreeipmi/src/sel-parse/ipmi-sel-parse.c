@@ -442,11 +442,15 @@ _sel_entry_dump (ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_pars
                  hdrbuf,
                  DEBUG_UTIL_HDR_BUFLEN);
 
-  ipmi_obj_dump (STDERR_FILENO,
-                 ctx->debug_prefix,
-                 hdrbuf,
-                 NULL,
-                 obj_sel_record);
+  if (ipmi_obj_dump (STDERR_FILENO,
+                     ctx->debug_prefix,
+                     hdrbuf,
+                     NULL,
+                     obj_sel_record) < 0)
+    {
+      SEL_PARSE_ERRNO_TO_SEL_PARSE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
 
  cleanup:
   fiid_obj_destroy (obj_sel_record);
@@ -767,7 +771,7 @@ _parse_read_common (ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry **sel_
       *sel_parse_entry = ctx->current_sel_entry;
     }
 
-  if (!sel_parse_entry)
+  if (!(*sel_parse_entry))
     {
       ctx->errnum = IPMI_SEL_PARSE_ERR_SEL_ENTRIES_LIST_END;
       return (-1);

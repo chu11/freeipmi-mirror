@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-common.c,v 1.4 2009-05-01 01:55:08 chu11 Exp $
+ *  $Id: ipmi-fru-parse-common.c,v 1.5 2009-05-03 04:07:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -92,12 +92,16 @@ ipmi_fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
 
-      ipmi_dump_hex (STDERR_FILENO,
-                     ctx->debug_prefix,
-                     hdrbuf,
-                     NULL,
-                     frubuf,
-                     length_in_bytes);
+      if (ipmi_dump_hex (STDERR_FILENO,
+                         ctx->debug_prefix,
+                         hdrbuf,
+                         NULL,
+                         frubuf,
+                         length_in_bytes) < 0)
+        {
+          FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+          return (-1);
+        }
     }
 
   return (0);
@@ -123,11 +127,15 @@ ipmi_fru_parse_dump_obj (ipmi_fru_parse_ctx_t ctx,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
 
-      ipmi_obj_dump (STDERR_FILENO,
-                     ctx->debug_prefix,
-                     hdrbuf,
-                     NULL,
-                     obj);
+      if (ipmi_obj_dump (STDERR_FILENO,
+                         ctx->debug_prefix,
+                         hdrbuf,
+                         NULL,
+                         obj) < 0)
+        {
+          FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+          return (-1);
+        }
     }
 
   return (0);
