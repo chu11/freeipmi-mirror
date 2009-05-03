@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.c,v 1.21 2009-05-01 21:53:08 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.c,v 1.22 2009-05-03 17:44:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -175,7 +175,7 @@ int
 Fiid_obj_get_data (ipmiconsole_ctx_t c,
                    fiid_obj_t obj,
                    const char *field,
-                   uint8_t *data,
+                   void *data,
                    unsigned int data_len)
 {
   int rv;
@@ -224,7 +224,7 @@ int
 Fiid_obj_set_data (ipmiconsole_ctx_t c,
                    fiid_obj_t obj,
                    const char *field,
-                   const uint8_t *data,
+                   const void *data,
                    unsigned int data_len)
 {
   int rv;
@@ -249,7 +249,7 @@ Fiid_obj_set_data (ipmiconsole_ctx_t c,
 int
 Fiid_obj_set_all (ipmiconsole_ctx_t c,
                   fiid_obj_t obj,
-                  const uint8_t *data,
+                  const void *data,
                   unsigned int data_len)
 {
   int rv;

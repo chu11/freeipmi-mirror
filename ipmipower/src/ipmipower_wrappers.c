@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.41 2009-05-01 21:14:00 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.42 2009-05-03 17:44:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -225,7 +225,7 @@ Fiid_obj_get (fiid_obj_t obj,
 int
 Fiid_obj_get_data (fiid_obj_t obj,
                    const char *field,
-                   uint8_t *data,
+                   void *data,
                    unsigned int data_len)
 {
   int rv;
@@ -241,7 +241,7 @@ Fiid_obj_get_data (fiid_obj_t obj,
 int
 Fiid_obj_set_data (fiid_obj_t obj,
                    const char *field,
-                   uint8_t *data,
+                   const void *data,
                    unsigned int data_len)
 {
   int rv;
