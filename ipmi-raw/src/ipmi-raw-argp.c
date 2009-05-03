@@ -171,23 +171,21 @@ _ipmi_raw_config_file_parse(struct ipmi_raw_arguments *cmd_args)
 void 
 ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
 {
-  long arg_max;
-
   init_common_cmd_args_user (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->cmd_file = NULL;
   errno = 0;
-  if ((arg_max = sysconf(_SC_ARG_MAX)) < 0)
+  if ((cmd_args->arg_max = sysconf(_SC_ARG_MAX)) <= 0)
     {
       if (errno)
         {
           perror("sysconf");
           exit(1);
         }
-      arg_max = LONG_MAX;
+      cmd_args->arg_max = LONG_MAX;
     }
-  if (!(cmd_args->cmd = calloc(arg_max, sizeof(uint8_t))))
+  if (!(cmd_args->cmd = calloc(cmd_args->arg_max, sizeof(uint8_t))))
     {
       perror("calloc");
       exit(1);

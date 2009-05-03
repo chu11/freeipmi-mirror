@@ -38,6 +38,7 @@ struct ipmi_oem_arguments
   char *oem_command;
   char **oem_options;
   unsigned int oem_options_count;
+  long arg_max;
 };
 
 typedef struct ipmi_oem_prog_data

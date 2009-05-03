@@ -120,7 +120,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           }
         else 
           {
-            if (cmd_args->oem_options_count < _SC_ARG_MAX)
+            if (cmd_args->oem_options_count < cmd_args->arg_max)
               {
                 if (!(cmd_args->oem_options[cmd_args->oem_options_count] = strdup(arg)))
                   {
@@ -165,8 +165,6 @@ _ipmi_oem_config_file_parse(struct ipmi_oem_arguments *cmd_args)
 void 
 ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
 {
-  long arg_max;
-
   init_common_cmd_args_admin (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
@@ -174,16 +172,16 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
   cmd_args->oem_id = NULL;
   cmd_args->oem_command = NULL;
   errno = 0;
-  if ((arg_max = sysconf(_SC_ARG_MAX)) < 0)
+  if ((cmd_args->arg_max = sysconf(_SC_ARG_MAX)) <= 0)
     {
       if (errno)
         {
           perror("sysconf");
           exit(1);
         }
-      arg_max = LONG_MAX;
+      cmd_args->arg_max = LONG_MAX;
     }
-  if (!(cmd_args->oem_options = (char **)calloc(arg_max, sizeof(char *))))
+  if (!(cmd_args->oem_options = (char **)calloc(cmd_args->arg_max, sizeof(char *))))
     {
       perror("calloc");
       exit(1);
