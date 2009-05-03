@@ -466,8 +466,8 @@ fill_cmd_chassis_control (uint8_t chassis_control,
 }
 
 int
-fill_cmd_chassis_identify (uint8_t *identify_interval,
-                           uint8_t *force_identify,
+fill_cmd_chassis_identify (const uint8_t *identify_interval,
+                           const uint8_t *force_identify,
                            fiid_obj_t obj_cmd_rq)
 {
   if ((force_identify
@@ -672,11 +672,11 @@ fill_cmd_set_system_boot_options_set_in_progress (uint8_t value,
 }
 
 int
-fill_cmd_set_system_boot_options_boot_info_acknowledge (uint8_t *bios_or_post_handled_boot_info,
-                                                        uint8_t *os_loader_handled_boot_info,
-                                                        uint8_t *os_or_service_partition_handled_boot_info,
-                                                        uint8_t *sms_handled_boot_info,
-                                                        uint8_t *oem_handled_boot_info,
+fill_cmd_set_system_boot_options_boot_info_acknowledge (const uint8_t *bios_or_post_handled_boot_info,
+                                                        const uint8_t *os_loader_handled_boot_info,
+                                                        const uint8_t *os_or_service_partition_handled_boot_info,
+                                                        const uint8_t *sms_handled_boot_info,
+                                                        const uint8_t *oem_handled_boot_info,
                                                         fiid_obj_t obj_cmd_rq)
 {
   if ((bios_or_post_handled_boot_info

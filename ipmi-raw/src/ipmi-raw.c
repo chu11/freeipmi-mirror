@@ -107,7 +107,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
 
 static int
 string2bytes (ipmi_raw_state_data_t *state_data,
-              char *line,
+              const char *line,
               unsigned char **buf,
               unsigned int *len)
 {
