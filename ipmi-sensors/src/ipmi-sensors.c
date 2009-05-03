@@ -329,7 +329,7 @@ _output_setup (ipmi_sensors_state_data_t *state_data)
 
 static int
 _output_sensor (ipmi_sensors_state_data_t *state_data,
-                uint8_t *sdr_record,
+                const void *sdr_record,
                 unsigned int sdr_record_len)
 {
   double *sensor_reading = NULL;

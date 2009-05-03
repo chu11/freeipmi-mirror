@@ -64,7 +64,7 @@ int sensor_group_strcmp (pstdout_state_t pstate,
 
 int get_sensor_units_output_string (pstdout_state_t pstate,
                                     ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                                    const uint8_t *sdr_record,
+                                    const void *sdr_record,
                                     unsigned int sdr_record_len,
                                     char *sensor_units_buf,
                                     unsigned int sensor_units_buflen,
@@ -72,7 +72,7 @@ int get_sensor_units_output_string (pstdout_state_t pstate,
 
 int is_sdr_sensor_group_listed (pstdout_state_t pstate,
                                 ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                                const uint8_t *sdr_record,
+                                const void *sdr_record,
                                 unsigned int sdr_record_len,
                                 char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
                                 unsigned int groups_length);

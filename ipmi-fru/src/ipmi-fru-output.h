@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-output.h,v 1.2 2009-04-17 23:50:24 chu11 Exp $
+ *  $Id: ipmi-fru-output.h,v 1.3 2009-05-03 18:21:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -51,43 +51,43 @@
     || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_FRU_SENTINEL_VALUE_NOT_FOUND) ? 1 : 0)
 
 int ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
-                                       uint8_t *areabuf,
+                                       const void *areabuf,
                                        unsigned int area_length);
 
 int ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
-                                     uint8_t *areabuf,
+                                     const void *areabuf,
                                      unsigned int area_length);
 
 int ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
-                                       uint8_t *areabuf,
+                                       const void *areabuf,
                                        unsigned int area_length);
 
 int ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
-                                              uint8_t *areabuf,
+                                              const void *areabuf,
                                               uint8_t area_length);
 
 int ipmi_fru_output_dc_output (ipmi_fru_state_data_t *state_data,
-                               uint8_t *areabuf,
+                               const void *areabuf,
                                uint8_t area_length);
 
 int ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
-                             uint8_t *areabuf,
+                             const void *areabuf,
                              uint8_t area_length);
 
 int ipmi_fru_output_management_access_record (ipmi_fru_state_data_t *state_data,
-                                              uint8_t *areabuf,
+                                              const void *areabuf,
                                               uint8_t area_length);
 
 int ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
-                                               uint8_t *areabuf,
+                                               const void *areabuf,
                                                uint8_t area_length);
 
 int ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
-                                                   uint8_t *areabuf,
+                                                   const void *areabuf,
                                                    uint8_t area_length);
 
 int ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
-                                uint8_t *areabuf,
+                                const void *areabuf,
                                 uint8_t area_length);
 
 #endif

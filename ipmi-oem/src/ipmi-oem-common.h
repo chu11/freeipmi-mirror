@@ -25,7 +25,7 @@
 #define IPMI_OEM_ERR_BUFLEN     1024
 
 int ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
-                                                 uint8_t *bytes_rs,
+                                                 const void *bytes_rs,
                                                  unsigned int bytes_rs_len,
                                                  unsigned int expected_bytes_rs_len,
                                                  uint8_t cmd,

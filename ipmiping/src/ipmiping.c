@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.69 2009-05-02 02:01:55 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.70 2009-05-03 18:21:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -53,7 +53,7 @@
 
 int
 createpacket (const char *destination,
-              uint8_t *buf,
+              void *buf,
               unsigned int buflen,
               unsigned int sequence_number,
               int version,
@@ -161,7 +161,7 @@ createpacket (const char *destination,
 
 int
 parsepacket (const char *destination,
-             const uint8_t *buf,
+             const void *buf,
              unsigned int buflen,
              const char *from,
              unsigned int sequence_number,

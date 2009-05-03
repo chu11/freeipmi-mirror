@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-output.c,v 1.2 2009-04-17 23:50:24 chu11 Exp $
+ *  $Id: ipmi-fru-output.c,v 1.3 2009-05-03 18:21:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -113,7 +113,7 @@ _output_field (ipmi_fru_state_data_t *state_data,
 
 int
 ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
-                                   uint8_t *areabuf,
+                                   const void *areabuf,
                                    unsigned int area_length)
 {
   uint8_t chassis_type;
@@ -193,7 +193,7 @@ ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
 
 int
 ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
-                                 uint8_t *areabuf,
+                                 const void *areabuf,
                                  unsigned int area_length)
 {
   uint8_t language_code;
@@ -315,7 +315,7 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
 
 int
 ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
-                                   uint8_t *areabuf,
+                                   const void *areabuf,
                                    unsigned int area_length)
 {
   uint8_t language_code;
@@ -457,7 +457,7 @@ _voltage_str (uint8_t voltage)
 
 int
 ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
-                                          uint8_t *areabuf,
+                                          const void *areabuf,
                                           uint8_t area_length)
 {
   unsigned int overall_capacity;
@@ -616,7 +616,7 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
 
 int
 ipmi_fru_output_dc_output (ipmi_fru_state_data_t *state_data,
-                           uint8_t *areabuf,
+                           const void *areabuf,
                            uint8_t area_length)
 {
   unsigned int output_number;
@@ -689,7 +689,7 @@ ipmi_fru_output_dc_output (ipmi_fru_state_data_t *state_data,
 
 int
 ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
-                         uint8_t *areabuf,
+                         const void *areabuf,
                          uint8_t area_length)
 {
   unsigned int output_number;
@@ -759,7 +759,7 @@ ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
 
 int
 ipmi_fru_output_management_access_record (ipmi_fru_state_data_t *state_data,
-                                          uint8_t *areabuf,
+                                          const void *areabuf,
                                           uint8_t area_length)
 {
   uint8_t sub_record_type;
@@ -856,7 +856,7 @@ ipmi_fru_output_management_access_record (ipmi_fru_state_data_t *state_data,
 
 int
 ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
-                                           uint8_t *areabuf,
+                                           const void *areabuf,
                                            uint8_t area_length)
 {
   uint32_t manufacturer_id;
@@ -942,7 +942,7 @@ ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
 
 int
 ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
-                                               uint8_t *areabuf,
+                                               const void *areabuf,
                                                uint8_t area_length)
 {
   uint32_t manufacturer_id;
@@ -1028,7 +1028,7 @@ ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data
 
 int
 ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
-                            uint8_t *areabuf,
+                            const void *areabuf,
                             uint8_t area_length)
 {
   uint32_t manufacturer_id;

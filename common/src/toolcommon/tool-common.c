@@ -373,7 +373,7 @@ check_kg_len (const char *in)
 /* a k_g key is interpreted as ascii text unless it is prefixed with
    "0x", in which case is it interpreted as hexadecimal */
 int
-parse_kg (uint8_t *out, unsigned int outlen, const char *in)
+parse_kg (void *out, unsigned int outlen, const char *in)
 {
   char *p, *q;
   int i, j;
@@ -405,7 +405,7 @@ parse_kg (uint8_t *out, unsigned int outlen, const char *in)
             buf[1] = 0;
           buf[2] = '\0';
           errno = 0;
-          out[j] = strtoul (buf, &q, 16);
+          (((uint8_t *)out)[j]) = (uint8_t)strtoul (buf, &q, 16);
           if (errno
               || ((p[i+1] && (q != buf + 2))
                   || (!p[i+1] && (q != buf + 1))))
@@ -426,12 +426,13 @@ parse_kg (uint8_t *out, unsigned int outlen, const char *in)
 }
 
 char *
-format_kg (char *out, unsigned int outlen, const uint8_t *k_g)
+format_kg (char *out, unsigned int outlen, const void *k_g)
 {
   int i;
   int printable = 1;
   int foundnull = 0;
   char *p;
+  uint8_t *k_g_ptr = k_g;
 
   assert (out);
   assert (outlen > IPMI_MAX_K_G_LENGTH*2+2);
@@ -441,12 +442,12 @@ format_kg (char *out, unsigned int outlen, const uint8_t *k_g)
      string on a single line? */
   for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
     {
-      if (k_g[i] == '\0')
+      if (k_g_ptr[i] == '\0')
         {
           ++foundnull;
           continue;
         }
-      if (!(isgraph (k_g[i]) || k_g[i] == ' ') || foundnull)
+      if (!(isgraph (k_g_ptr[i]) || k_g_ptr[i] == ' ') || foundnull)
         {
           printable = 0;
           break;
@@ -460,7 +461,7 @@ format_kg (char *out, unsigned int outlen, const uint8_t *k_g)
 
   /* don't print out a key starting with a literal '0x' as a string,
      since parse_kg will try to interpret such strings as hex */
-  if (k_g[0] == '0' && k_g[1] == 'x')
+  if (k_g_ptr[0] == '0' && k_g_ptr[1] == 'x')
     printable = 0;
 
   if (printable)
@@ -470,9 +471,9 @@ format_kg (char *out, unsigned int outlen, const uint8_t *k_g)
       p = out;
       for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
         {
-          if (k_g[i] == '\0')
+          if (k_g_ptr[i] == '\0')
             break;
-          p[i] = k_g[i];
+          p[i] = k_g_ptr[i];
         }
       p[i] = 0;
     }
@@ -484,7 +485,7 @@ format_kg (char *out, unsigned int outlen, const uint8_t *k_g)
       p[0] = '0'; p[1] = 'x';
       p+=2;
       for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++, p+=2)
-        sprintf (p, "%02x", k_g[i]);
+        sprintf (p, "%02x", k_g_ptr[i]);
     }
 
   return (out);

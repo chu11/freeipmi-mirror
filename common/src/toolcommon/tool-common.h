@@ -40,9 +40,9 @@ ipmi_ctx_t ipmi_open (const char *progname,
 int check_kg_len (const char *in);
 
 /* Turn an input string into a 20-byte binary k_g key */
-int parse_kg (uint8_t *out, unsigned int outlen, const char *in);
+int parse_kg (void *out, unsigned int outlen, const char *in);
 
 /* Turn a 20-byte binary k_g key into an output string */
-char *format_kg (char *out, unsigned int outlen, const uint8_t *k_g);
+char *format_kg (char *out, unsigned int outlen, const void *k_g);
 
 #endif
