@@ -281,7 +281,7 @@ _ipmi_i2c_smbus_access (ipmi_ssif_ctx_t ctx,
 static int
 _ipmi_ssif_single_part_write (ipmi_ssif_ctx_t ctx,
                               int dev_fd,
-                              const uint8_t *buf,
+                              const void *buf,
                               size_t buf_len)
 {
 
@@ -293,7 +293,7 @@ _ipmi_ssif_single_part_write (ipmi_ssif_ctx_t ctx,
 
   data.block[0] = buf_len;
   for (i = 0; i < buf_len; i++)
-    data.block[i + 1] = buf[i];
+    data.block[i + 1] = ((uint8_t *)buf)[i];
 
   return (_ipmi_i2c_smbus_access (ctx,
                                   dev_fd,
@@ -305,7 +305,7 @@ _ipmi_ssif_single_part_write (ipmi_ssif_ctx_t ctx,
 static int
 _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
                              int dev_fd,
-                             const uint8_t *buf,
+                             const void *buf,
                              size_t buf_len)
 {
   union ipmi_i2c_smbus_data data;
@@ -339,7 +339,7 @@ _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
 
   data.block[0] = IPMI_I2C_SMBUS_BLOCK_MAX;
   for (i = 0; i < IPMI_I2C_SMBUS_BLOCK_MAX; i++)
-    data.block[i + 1] = buf[i];
+    data.block[i + 1] = ((uint8_t *)buf)[i];
   if (_ipmi_i2c_smbus_access (ctx,
                               dev_fd,
                               IPMI_I2C_SMBUS_WRITE,
@@ -352,7 +352,7 @@ _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
       index = mpart * IPMI_I2C_SMBUS_BLOCK_MAX;
       data.block[0] = IPMI_I2C_SMBUS_BLOCK_MAX;
       for (i = 0; i < IPMI_I2C_SMBUS_BLOCK_MAX; i++)
-        data.block[i + 1] = buf[index + i];
+        data.block[i + 1] = ((uint8_t *)buf)[index + i];
       if (_ipmi_i2c_smbus_access (ctx,
                                   dev_fd,
                                   IPMI_I2C_SMBUS_WRITE,
@@ -364,7 +364,8 @@ _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
   index = (middle_parts + 1) * IPMI_I2C_SMBUS_BLOCK_MAX;
   data.block[0] = buf_len % IPMI_I2C_SMBUS_BLOCK_MAX;
   for (i = 0; i < data.block[0]; i++)
-    data.block[i + 1] = buf[index + i];
+    data.block[i + 1] = ((uint8_t *)buf)[index + i];
+
   return (_ipmi_i2c_smbus_access (ctx,
                                   dev_fd,
                                   IPMI_I2C_SMBUS_WRITE,
@@ -375,7 +376,7 @@ _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
 static int
 _ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
                  int dev_fd,
-                 uint8_t *buf,
+                 void *buf,
                  size_t buf_len)
 {
   union ipmi_i2c_smbus_data data;
@@ -416,7 +417,7 @@ _ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
     length = buf_len;
 
   for (i = 0; i < length; i++)
-    buf[i] = data.block[sindex + i];
+    ((uint8_t *)buf)[i] = data.block[sindex + i];
 
   bytes_copied = length;
 
@@ -437,7 +438,7 @@ _ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
         length = buf_len - bytes_copied;
 
       for (i = 0; i < length; i++)
-        buf[bytes_copied + i] = data.block[i + 2];
+        ((uint8_t *)buf)[bytes_copied + i] = data.block[i + 2];
 
       bytes_copied += length;
 
@@ -699,7 +700,7 @@ ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx)
 
 int
 ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
-                 const uint8_t *buf,
+                 const void *buf,
                  unsigned int buf_len)
 {
   int count;
@@ -769,7 +770,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 
 int
 ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
-                uint8_t* buf,
+                void *buf,
                 unsigned int buf_len)
 {
   int count = 0;

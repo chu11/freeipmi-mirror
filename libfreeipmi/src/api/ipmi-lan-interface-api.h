@@ -28,9 +28,9 @@ int ipmi_lan_cmd (ipmi_ctx_t ctx,
                   fiid_obj_t obj_cmd_rs);
 
 int ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
-                      const uint8_t *buf_rq,
+                      const void *buf_rq,
                       size_t buf_rq_len,
-                      uint8_t *buf_rs,
+                      void *buf_rs,
                       size_t buf_rs_len);
 
 int ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
@@ -38,9 +38,9 @@ int ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
                       fiid_obj_t obj_cmd_rs);
 
 int ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
-                          const uint8_t *buf_rq,
+                          const void *buf_rq,
                           size_t buf_rq_len,
-                          uint8_t *buf_rs,
+                          void *buf_rs,
                           size_t buf_rs_len);
 
 #endif /* ipmi-lan-interface.h */

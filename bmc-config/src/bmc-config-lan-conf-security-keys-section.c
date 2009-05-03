@@ -39,7 +39,7 @@
 static config_err_t
 _get_key (bmc_config_state_data_t *state_data,
           uint8_t key_type,
-          uint8_t *key,
+          void *key,
           unsigned int key_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -115,7 +115,7 @@ _get_key (bmc_config_state_data_t *state_data,
 static config_err_t
 _set_key (bmc_config_state_data_t *state_data,
           uint8_t key_type,
-          uint8_t *key,
+          const void *key,
           unsigned int key_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -178,7 +178,7 @@ k_r_checkout (const char *section_name,
 
   if ((ret = _get_key (state_data,
                        IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
-                       (uint8_t *)k_r,
+                       k_r,
                        IPMI_MAX_K_R_LENGTH)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
@@ -201,7 +201,7 @@ k_r_commit (const char *section_name,
 
   return (_set_key (state_data,
                     IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
-                    (uint8_t *)kv->value_input,
+                    kv->value_input,
                     strlen (kv->value_input)));
 }
 

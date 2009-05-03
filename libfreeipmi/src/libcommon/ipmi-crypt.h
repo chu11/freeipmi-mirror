@@ -65,31 +65,31 @@ int ipmi_crypt_init (void);
 
 int ipmi_crypt_hash (unsigned int hash_algorithm,
                      unsigned int hash_flags,
-                     const uint8_t *key,
+                     const void *key,
                      unsigned int key_len,
-                     const uint8_t *hash_data,
+                     const void *hash_data,
                      unsigned int hash_data_len,
-                     uint8_t *digest,
+                     void *digest,
                      unsigned int digest_len);
 
 int ipmi_crypt_hash_digest_len (unsigned int hash_algorithm);
 
 int ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
                                unsigned int cipher_mode,
-                               const uint8_t *key,
+                               const void *key,
                                unsigned int key_len,
-                               const uint8_t *iv,
+                               const void *iv,
                                unsigned int iv_len,
-                               uint8_t *data,
+                               void *data,
                                unsigned int data_len);
 
 int ipmi_crypt_cipher_decrypt (unsigned int cipher_algorithm,
                                unsigned int cipher_mode,
-                               const uint8_t *key,
+                               const void *key,
                                unsigned int key_len,
-                               const uint8_t *iv,
+                               const void *iv,
                                unsigned int iv_len,
-                               uint8_t *data,
+                               void *data,
                                unsigned int data_len);
 
 int ipmi_crypt_cipher_key_len (unsigned int cipher_algorithm);

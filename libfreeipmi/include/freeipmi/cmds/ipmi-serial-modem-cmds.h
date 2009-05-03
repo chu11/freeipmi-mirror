@@ -111,7 +111,7 @@ extern fiid_template_t tmpl_cmd_get_serial_modem_configuration_call_retry_interv
 
 int fill_cmd_set_serial_modem_configuration (uint8_t channel_number,
                                              uint8_t parameter_selector,
-                                             const uint8_t *configuration_parameter_data,
+                                             const void *configuration_parameter_data,
                                              unsigned int configuration_parameter_data_len,
                                              fiid_obj_t obj_cmd_rq);
 

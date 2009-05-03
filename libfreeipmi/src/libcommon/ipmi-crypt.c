@@ -89,18 +89,18 @@ ipmi_crypt_init (void)
 int
 ipmi_crypt_hash (unsigned int hash_algorithm,
                  unsigned int hash_flags,
-                 const uint8_t *key,
+                 const void *key,
                  unsigned int key_len,
-                 const uint8_t *hash_data,
+                 const void *hash_data,
                  unsigned int hash_data_len,
-                 uint8_t *digest,
+                 void *digest,
                  unsigned int digest_len)
 {
   gcry_md_hd_t h = NULL;
   gcry_error_t e;
   int gcry_md_algorithm, gcry_md_flags = 0;
   unsigned int gcry_md_digest_len;
-  uint8_t *digestPtr;
+  void *digestPtr;
   int rv = -1;
 
   if (!IPMI_CRYPT_HASH_ALGORITHM_VALID (hash_algorithm)
@@ -208,11 +208,11 @@ ipmi_crypt_hash_digest_len (unsigned int hash_algorithm)
 static int
 _cipher_crypt (unsigned int cipher_algorithm,
                unsigned int cipher_mode,
-               const uint8_t *key,
+               const void *key,
                unsigned int key_len,
-               const uint8_t *iv,
+               const void *iv,
                unsigned int iv_len,
-               uint8_t *data,
+               void *data,
                unsigned int data_len,
                int encrypt_flag)
 {
@@ -355,11 +355,11 @@ _cipher_crypt (unsigned int cipher_algorithm,
 int
 ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
                            unsigned int cipher_mode,
-                           const uint8_t *key,
+                           const void *key,
                            unsigned int key_len,
-                           const uint8_t *iv,
+                           const void *iv,
                            unsigned int iv_len,
-                           uint8_t *data,
+                           void *data,
                            unsigned int data_len)
 {
   return (_cipher_crypt (cipher_algorithm,
@@ -376,11 +376,11 @@ ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
 int
 ipmi_crypt_cipher_decrypt (unsigned int cipher_algorithm,
                            unsigned int cipher_mode,
-                           const uint8_t *key,
+                           const void *key,
                            unsigned int key_len,
-                           const uint8_t *iv,
+                           const void *iv,
                            unsigned int iv_len,
-                           uint8_t *data,
+                           void *data,
                            unsigned int data_len)
 {
   return (_cipher_crypt (cipher_algorithm,

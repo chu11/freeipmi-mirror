@@ -71,10 +71,10 @@ int fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr);
 
 int assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr,
                        fiid_obj_t obj_cmd,
-                       uint8_t *pkt,
+                       void *pkt,
                        unsigned int pkt_len);
 
-int unassemble_rmcp_pkt (const uint8_t *pkt,
+int unassemble_rmcp_pkt (const void *pkt,
                          unsigned int pkt_len,
                          fiid_obj_t obj_rmcp_hdr,
                          fiid_obj_t obj_cmd);

@@ -44,12 +44,12 @@ int ipmi_cmd_get_sensor_hysteresis (ipmi_ctx_t ctx,
 
 int ipmi_cmd_set_sensor_thresholds (ipmi_ctx_t ctx,
                                     uint8_t sensor_number,
-                                    uint8_t *lower_non_critical_threshold,
-                                    uint8_t *lower_critical_threshold,
-                                    uint8_t *lower_non_recoverable_threshold,
-                                    uint8_t *upper_non_critical_threshold,
-                                    uint8_t *upper_critical_threshold,
-                                    uint8_t *upper_non_recoverable_threshold,
+                                    const uint8_t *lower_non_critical_threshold,
+                                    const uint8_t *lower_critical_threshold,
+                                    const uint8_t *lower_non_recoverable_threshold,
+                                    const uint8_t *upper_non_critical_threshold,
+                                    const uint8_t *upper_critical_threshold,
+                                    const uint8_t *upper_non_recoverable_threshold,
                                     fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_sensor_thresholds (ipmi_ctx_t ctx,

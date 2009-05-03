@@ -47,7 +47,7 @@ ipmi_dump_rmcp_packet (int fd,
                        const char *prefix,
                        const char *hdr,
                        const char *trlr,
-                       const uint8_t *pkt,
+                       const void *pkt,
                        unsigned int pkt_len,
                        fiid_template_t tmpl_cmd)
 {

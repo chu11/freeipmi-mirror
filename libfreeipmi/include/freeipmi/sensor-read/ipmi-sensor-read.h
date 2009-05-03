@@ -89,7 +89,7 @@ int ipmi_sensor_read_ctx_set_flags (ipmi_sensor_read_ctx_t ctx, unsigned int fla
  * if reading returned, must be free'd by caller
  */
 int ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
-                      uint8_t *sdr_record,
+                      void *sdr_record,
                       unsigned int sdr_record_len,
                       double **sensor_reading,
                       uint16_t *sensor_event_bitmask);

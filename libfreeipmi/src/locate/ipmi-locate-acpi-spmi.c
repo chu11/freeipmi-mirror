@@ -1056,7 +1056,7 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
 
   if (fiid_obj_get_data (obj_acpi_table_hdr,
                          "signature",
-                         (uint8_t *)table_signature,
+                         table_signature,
                          table_signature_length) < 0)
     {
       LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM (ctx, obj_acpi_table_hdr);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.44 2009-05-01 21:13:58 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.45 2009-05-03 17:40:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -154,11 +154,11 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 
   /* if ipmi_get_random fails, use junk sitting on stack */
 
-  if (ipmi_get_random ((uint8_t *)&ic->ipmi_requester_sequence_number_counter,
+  if (ipmi_get_random (&ic->ipmi_requester_sequence_number_counter,
                        sizeof (ic->ipmi_requester_sequence_number_counter)) < 0)
     ierr_dbg ("ipmi_get_random: %s", strerror(errno));
   
-  if (ipmi_get_random ((uint8_t *)&ic->ping_sequence_number_counter,
+  if (ipmi_get_random (&ic->ping_sequence_number_counter,
                        sizeof (ic->ping_sequence_number_counter)) < 0)
     ierr_dbg ("ipmi_get_random: %s", strerror(errno));
 

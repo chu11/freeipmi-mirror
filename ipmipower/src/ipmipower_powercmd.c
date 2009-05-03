@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.177 2009-05-02 02:41:47 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.178 2009-05-03 17:40:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -262,7 +262,7 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
       ip->confidentiality_key_len = IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH;
 
       /* if ipmi_get_random fails, use junk sitting on stack */
-      if (ipmi_get_random ((uint8_t *)&ip->initial_message_tag,
+      if (ipmi_get_random (&ip->initial_message_tag,
                            sizeof (ip->initial_message_tag)) < 0)
         ierr_dbg ("ipmi_get_random: %s", strerror(errno));
 
@@ -274,7 +274,7 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
       do
         {
           /* if ipmi_get_random fails, use junk sitting on stack */
-          if (ipmi_get_random ((uint8_t *)&ip->remote_console_session_id,
+          if (ipmi_get_random (&ip->remote_console_session_id,
                                sizeof (ip->remote_console_session_id)) < 0)
             ierr_dbg ("ipmi_get_random: %s", strerror(errno));
         } while (!ip->remote_console_session_id);

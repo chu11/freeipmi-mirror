@@ -135,7 +135,7 @@ _invalid_sel_entry_common (ipmi_sel_parse_ctx_t ctx,
 static int
 _find_sdr_record (ipmi_sel_parse_ctx_t ctx,
                   struct ipmi_sel_system_event_record_data *system_event_record_data,
-                  uint8_t *sdr_record,
+                  void *sdr_record,
                   unsigned int *sdr_record_len)
 {
   uint8_t tmp_sdr_record[SDR_RECORD_LENGTH];
@@ -1761,7 +1761,7 @@ _output_oem (ipmi_sel_parse_ctx_t ctx,
 int
 sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
                                 const char *fmt,
-                                const uint8_t *record_buf,
+                                const void *record_buf,
                                 unsigned int record_buflen,
                                 char *buf,
                                 unsigned int buflen,

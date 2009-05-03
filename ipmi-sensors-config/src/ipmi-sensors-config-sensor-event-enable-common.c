@@ -404,7 +404,7 @@ struct sensor_event_enable_data {
 #define KEY_NAME_MAX_LEN 1024
 
 typedef int (*Sdr_event_flags_func)(ipmi_sdr_parse_ctx_t ctx,
-                                    const uint8_t *sdr_record,
+                                    const void *sdr_record,
                                     unsigned int sdr_record_len,
                                     uint8_t *event_state_0,
                                     uint8_t *event_state_1,
@@ -423,7 +423,7 @@ typedef int (*Sdr_event_flags_func)(ipmi_sdr_parse_ctx_t ctx,
                                     uint8_t *event_state_14);
 
 typedef int (*Sdr_threshold_event_flags_func)(ipmi_sdr_parse_ctx_t ctx,
-                                              const uint8_t *sdr_record,
+                                              const void *sdr_record,
                                               unsigned int sdr_record_len,
                                               uint8_t *lower_non_critical_going_low,
                                               uint8_t *lower_non_critical_going_high,

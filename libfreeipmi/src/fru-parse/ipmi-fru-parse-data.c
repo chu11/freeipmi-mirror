@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.9 2009-05-02 05:10:56 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.10 2009-05-03 17:40:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -79,12 +79,13 @@
 
 static int
 _parse_type_length (ipmi_fru_parse_ctx_t ctx,
-                    const uint8_t *areabuf,
+                    const void *areabuf,
                     unsigned int areabuflen,
                     unsigned int current_area_offset,
                     uint8_t *number_of_data_bytes,
                     ipmi_fru_parse_field_t *field)
 {
+  const uint8_t *areabufptr = areabuf;
   uint8_t type_length;
   uint8_t type_code;
 
@@ -94,7 +95,7 @@ _parse_type_length (ipmi_fru_parse_ctx_t ctx,
   assert (areabuflen);
   assert (number_of_data_bytes);
   
-  type_length = areabuf[current_area_offset];
+  type_length = areabufptr[current_area_offset];
   type_code = (type_length & IPMI_FRU_TYPE_LENGTH_TYPE_CODE_MASK) >> IPMI_FRU_TYPE_LENGTH_TYPE_CODE_SHIFT;
   (*number_of_data_bytes) = type_length & IPMI_FRU_TYPE_LENGTH_NUMBER_OF_DATA_BYTES_MASK;
 
@@ -120,7 +121,7 @@ _parse_type_length (ipmi_fru_parse_ctx_t ctx,
               '\0',
               IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX);
       memcpy (field->type_length_field,
-              &areabuf[current_area_offset],
+              &areabufptr[current_area_offset],
               1 + (*number_of_data_bytes));
       field->type_length_field_length = 1 + (*number_of_data_bytes);
     }
@@ -130,7 +131,7 @@ _parse_type_length (ipmi_fru_parse_ctx_t ctx,
                     
 int
 ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
-                                  const uint8_t *areabuf,
+                                  const void *areabuf,
                                   unsigned int areabuflen,
                                   uint8_t *chassis_type,
                                   ipmi_fru_parse_field_t *chassis_part_number,
@@ -138,6 +139,7 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
                                   ipmi_fru_parse_field_t *chassis_custom_fields,
                                   unsigned int chassis_custom_fields_len)
 {
+  const uint8_t *areabufptr = areabuf;
   unsigned int area_offset = 0;
   unsigned int custom_fields_index = 0;
   uint8_t number_of_data_bytes;
@@ -169,11 +171,11 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
             sizeof (ipmi_fru_parse_field_t) * chassis_custom_fields_len);
 
   if (chassis_type)
-    (*chassis_type) = areabuf[area_offset];
+    (*chassis_type) = areabufptr[area_offset];
   area_offset++;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -183,7 +185,7 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -193,7 +195,7 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   while (area_offset < areabuflen
-         && areabuf[area_offset] != IPMI_FRU_SENTINEL_VALUE)
+         && areabufptr[area_offset] != IPMI_FRU_SENTINEL_VALUE)
     {
       ipmi_fru_parse_field_t *field_ptr = NULL;
 
@@ -209,7 +211,7 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
         }
 
       if (_parse_type_length (ctx,
-                              areabuf,
+                              areabufptr,
                               areabuflen,
                               area_offset,
                               &number_of_data_bytes,
@@ -236,7 +238,7 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
-                                const uint8_t *areabuf,
+                                const void *areabuf,
                                 unsigned int areabuflen,
                                 uint8_t *language_code,
                                 uint32_t *mfg_date_time,
@@ -248,6 +250,7 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
                                 ipmi_fru_parse_field_t *board_custom_fields,
                                 unsigned int board_custom_fields_len)
 {
+  const uint8_t *areabufptr = areabuf;
   uint32_t mfg_date_time_tmp = 0;
   unsigned int area_offset = 0;
   unsigned int custom_fields_index = 0;
@@ -292,17 +295,17 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
             sizeof (ipmi_fru_parse_field_t) * board_custom_fields_len);
 
   if (language_code)
-    (*language_code) = areabuf[area_offset];
+    (*language_code) = areabufptr[area_offset];
   area_offset++;
 
   if (mfg_date_time)
     {
       /* mfg_date_time is little endian - see spec */
-      mfg_date_time_tmp |= areabuf[area_offset];
+      mfg_date_time_tmp |= areabufptr[area_offset];
       area_offset++;
-      mfg_date_time_tmp |= (areabuf[area_offset] << 8);
+      mfg_date_time_tmp |= (areabufptr[area_offset] << 8);
       area_offset++;
-      mfg_date_time_tmp |= (areabuf[area_offset] << 16);
+      mfg_date_time_tmp |= (areabufptr[area_offset] << 16);
       area_offset++;
       
       /* mfg_date_time is in minutes, so multiple by 60 to get seconds */
@@ -324,7 +327,7 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
     area_offset += 3;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -334,7 +337,7 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -344,7 +347,7 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -354,7 +357,7 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -364,7 +367,7 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -374,7 +377,7 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   while (area_offset < areabuflen
-         && areabuf[area_offset] != IPMI_FRU_SENTINEL_VALUE)
+         && areabufptr[area_offset] != IPMI_FRU_SENTINEL_VALUE)
     {
       ipmi_fru_parse_field_t *field_ptr = NULL;
 
@@ -390,7 +393,7 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
         }
 
       if (_parse_type_length (ctx,
-                              areabuf,
+                              areabufptr,
                               areabuflen,
                               area_offset,
                               &number_of_data_bytes,
@@ -417,7 +420,7 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
-                                  const uint8_t *areabuf,
+                                  const void *areabuf,
                                   unsigned int areabuflen,
                                   uint8_t *language_code,
                                   ipmi_fru_parse_field_t *product_manufacturer_name,
@@ -430,6 +433,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
                                   ipmi_fru_parse_field_t *product_custom_fields,
                                   unsigned int product_custom_fields_len)
 {
+  const uint8_t *areabufptr = areabuf;
   unsigned int area_offset = 0;
   unsigned int custom_fields_index = 0;
   uint8_t number_of_data_bytes;
@@ -481,11 +485,11 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
             sizeof (ipmi_fru_parse_field_t) * product_custom_fields_len);
 
   if (language_code)
-    (*language_code) = areabuf[area_offset];
+    (*language_code) = areabufptr[area_offset];
   area_offset++;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -495,7 +499,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -505,7 +509,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -515,7 +519,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -525,7 +529,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -535,7 +539,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -545,7 +549,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   if (_parse_type_length (ctx,
-                          areabuf,
+                          areabufptr,
                           areabuflen,
                           area_offset,
                           &number_of_data_bytes,
@@ -555,7 +559,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += number_of_data_bytes;
 
   while (area_offset < areabuflen
-         && areabuf[area_offset] != IPMI_FRU_SENTINEL_VALUE)
+         && areabufptr[area_offset] != IPMI_FRU_SENTINEL_VALUE)
     {
       ipmi_fru_parse_field_t *field_ptr = NULL;
 
@@ -571,7 +575,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
         }
 
       if (_parse_type_length (ctx,
-                              areabuf,
+                              areabufptr,
                               areabuflen,
                               area_offset,
                               &number_of_data_bytes,
@@ -598,7 +602,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
-                                                     const uint8_t *areabuf,
+                                                     const void *areabuf,
                                                      unsigned int areabuflen,
                                                      unsigned int *overall_capacity,
                                                      unsigned int *peak_va,
@@ -922,7 +926,7 @@ ipmi_fru_parse_multirecord_power_supply_information (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
-                                      const uint8_t *areabuf,
+                                      const void *areabuf,
                                       unsigned int areabuflen,
                                       unsigned int *output_number,
                                       unsigned int *standby,
@@ -1078,7 +1082,7 @@ ipmi_fru_parse_multirecord_dc_output (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
-                                    const uint8_t *areabuf,
+                                    const void *areabuf,
                                     unsigned int areabuflen,
                                     unsigned int *output_number,
                                     unsigned int *standby,
@@ -1234,10 +1238,10 @@ ipmi_fru_parse_multirecord_dc_load (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
-                                                     const uint8_t *areabuf,
+                                                     const void *areabuf,
                                                      unsigned int areabuflen,
                                                      uint8_t *sub_record_type,
-                                                     uint8_t *sub_record_data,
+                                                     void *sub_record_data,
                                                      unsigned int *sub_record_data_len)
 {
   fiid_obj_t obj_record = NULL;
@@ -1324,7 +1328,7 @@ ipmi_fru_parse_multirecord_management_access_record (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
-                                                      const uint8_t *areabuf,
+                                                      const void *areabuf,
                                                       unsigned int areabuflen,
                                                       uint32_t *manufacturer_id,
                                                       unsigned int *entity_id_code,
@@ -1453,7 +1457,7 @@ ipmi_fru_parse_multirecord_base_compatibility_record (ipmi_fru_parse_ctx_t ctx,
 
 int
 ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t ctx,
-                                                          const uint8_t *areabuf,
+                                                          const void *areabuf,
                                                           unsigned int areabuflen,
                                                           uint32_t *manufacturer_id,
                                                           unsigned int *entity_id_code,
@@ -1582,10 +1586,10 @@ ipmi_fru_parse_multirecord_extended_compatibility_record (ipmi_fru_parse_ctx_t c
 
 int
 ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
-                                       const uint8_t *areabuf,
+                                       const void *areabuf,
                                        unsigned int areabuflen,
                                        uint32_t *manufacturer_id,
-                                       uint8_t *oem_data,
+                                       void *oem_data,
                                        unsigned int *oem_data_len)
 {
   fiid_obj_t obj_record = NULL;

@@ -710,7 +710,7 @@ fill_cmd_send_message (uint8_t channel_number,
                        uint8_t message_authentication,
                        uint8_t message_encryption,
                        uint8_t tracking_operation,
-                       const uint8_t *message_data,
+                       const void *message_data,
                        unsigned int message_data_len,
                        fiid_obj_t obj_cmd_rq)
 {
@@ -907,7 +907,7 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
                                 unsigned int user_name_len,
                                 fiid_obj_t obj_cmd_rq)
 {
-  uint8_t buf[IPMI_MAX_USER_NAME_LENGTH];
+  char buf[IPMI_MAX_USER_NAME_LENGTH];
 
   /* achu: user_name can be IPMI_MAX_USER_NAME_LENGTH length.  Null
    * termination in IPMI packet not required
@@ -934,7 +934,7 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
   /* achu: user_name must be zero extended */
   memset (buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (user_name)
-    strncpy ((char *)buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
+    strncpy (buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
 
   FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "user_name", buf, IPMI_MAX_USER_NAME_LENGTH);
 
@@ -944,7 +944,7 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
 int
 fill_cmd_activate_session (uint8_t authentication_type,
                            uint8_t maximum_privilege_level,
-                           const uint8_t *challenge_string,
+                           const void *challenge_string,
                            unsigned int challenge_string_len,
                            uint32_t initial_outbound_sequence_number,
                            fiid_obj_t obj_cmd_rq)
@@ -1139,7 +1139,7 @@ int
 fill_cmd_set_channel_security_keys (uint8_t channel_number,
                                     uint8_t operation,
                                     uint8_t key_id,
-                                    const uint8_t *key_value,
+                                    const void *key_value,
                                     unsigned int key_value_len,
                                     fiid_obj_t obj_cmd_rq)
 {
@@ -1272,7 +1272,7 @@ fill_cmd_set_user_name (uint8_t user_id,
                         unsigned int user_name_len,
                         fiid_obj_t obj_cmd_rq)
 {
-  uint8_t buf[IPMI_MAX_USER_NAME_LENGTH];
+  char buf[IPMI_MAX_USER_NAME_LENGTH];
 
   /* achu: user_name can be IPMI_MAX_USER_NAME_LENGTH length.  Null
    * termination in IPMI packet not required
@@ -1298,7 +1298,7 @@ fill_cmd_set_user_name (uint8_t user_id,
   /* achu: user_name must be zero extended */
   memset (buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (user_name)
-    strncpy ((char *)buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
+    strncpy (buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
 
   FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "user_name", buf, IPMI_MAX_USER_NAME_LENGTH);
 
@@ -1362,12 +1362,12 @@ fill_cmd_set_user_password (uint8_t user_id,
   if (operation == IPMI_PASSWORD_OPERATION_SET_PASSWORD
       || operation == IPMI_PASSWORD_OPERATION_TEST_PASSWORD)
     {
-      uint8_t buf[IPMI_1_5_MAX_PASSWORD_LENGTH];
+      char buf[IPMI_1_5_MAX_PASSWORD_LENGTH];
 
       /* achu: password must be zero extended */
       memset (buf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
       if (password)
-        strncpy ((char *)buf, password, IPMI_1_5_MAX_PASSWORD_LENGTH);
+        strncpy (buf, password, IPMI_1_5_MAX_PASSWORD_LENGTH);
 
       FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, IPMI_1_5_MAX_PASSWORD_LENGTH);
     }
@@ -1420,7 +1420,7 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
   if (operation == IPMI_PASSWORD_OPERATION_SET_PASSWORD
       || operation == IPMI_PASSWORD_OPERATION_TEST_PASSWORD)
     {
-      uint8_t buf[IPMI_2_0_MAX_PASSWORD_LENGTH];
+      char buf[IPMI_2_0_MAX_PASSWORD_LENGTH];
       unsigned int buf_max_len;
 
       if (password_size == IPMI_PASSWORD_SIZE_16_BYTES)
@@ -1431,7 +1431,7 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
       /* achu: password must be zero extended */
       memset (buf, '\0', buf_max_len);
       if (password)
-        strncpy ((char *)buf, password, buf_max_len);
+        strncpy (buf, password, buf_max_len);
 
       FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, buf_max_len);
     }

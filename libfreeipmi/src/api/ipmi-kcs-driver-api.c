@@ -74,7 +74,7 @@ fiid_template_t tmpl_kcs_raw =
 
 static void
 _ipmi_kcs_dump (ipmi_ctx_t ctx,
-                const uint8_t *pkt,
+                const void *pkt,
                 unsigned int pkt_len,
                 uint8_t cmd,
                 uint8_t net_fn,
@@ -130,7 +130,7 @@ _ipmi_kcs_dump (ipmi_ctx_t ctx,
 
 static void
 _ipmi_kcs_dump_rq (ipmi_ctx_t ctx,
-                   const uint8_t *pkt,
+                   const void *pkt,
                    unsigned int pkt_len,
                    uint8_t cmd,
                    uint8_t net_fn,
@@ -155,7 +155,7 @@ _ipmi_kcs_dump_rq (ipmi_ctx_t ctx,
 
 static void
 _ipmi_kcs_dump_rs (ipmi_ctx_t ctx,
-                   const uint8_t *pkt,
+                   const void *pkt,
                    unsigned int pkt_len,
                    uint8_t cmd,
                    uint8_t net_fn,
@@ -180,7 +180,7 @@ _ipmi_kcs_dump_rs (ipmi_ctx_t ctx,
 
 static void
 _ipmi_kcs_dump_raw_rq (ipmi_ctx_t ctx,
-                       const uint8_t *pkt,
+                       const void *pkt,
                        unsigned int pkt_len,
                        uint8_t cmd,
                        uint8_t net_fn)
@@ -198,7 +198,7 @@ _ipmi_kcs_dump_raw_rq (ipmi_ctx_t ctx,
 
 static void
 _ipmi_kcs_dump_raw_rs (ipmi_ctx_t ctx,
-                       const uint8_t *pkt,
+                       const void *pkt,
                        unsigned int pkt_len,
                        uint8_t cmd,
                        uint8_t net_fn)
@@ -669,9 +669,9 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
 
 int
 ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
-                      const uint8_t *buf_rq,
+                      const void *buf_rq,
                       unsigned int buf_rq_len,
-                      uint8_t *buf_rs,
+                      void *buf_rs,
                       unsigned int buf_rs_len)
 {
   uint8_t *pkt = NULL;
@@ -704,7 +704,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
-    cmd = buf_rq[0];
+    cmd = ((uint8_t *)buf_rq)[0];
 
   if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
     {

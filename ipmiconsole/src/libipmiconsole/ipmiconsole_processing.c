@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.89 2009-05-02 03:55:18 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.90 2009-05-03 17:40:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -2338,7 +2338,7 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c)
       if ((character_data_len = Fiid_obj_get_data (c,
                                                    c->connection.obj_sol_payload_data_rs,
                                                    "character_data",
-                                                   (uint8_t *)character_data,
+                                                   character_data,
                                                    IPMICONSOLE_MAX_CHARACTER_DATA)) < 0)
         goto cleanup;
 

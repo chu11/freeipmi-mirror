@@ -603,7 +603,7 @@ enable_user_commit (const char *section_name,
           /* Force the password to be filled in with a length */
           if (fiid_obj_set_data (obj_cmd_rq,
                                  "password",
-                                 (uint8_t *)password,
+                                 password,
                                  IPMI_1_5_MAX_PASSWORD_LENGTH) < 0)
             {
               pstdout_fprintf (state_data->pstate,

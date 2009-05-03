@@ -119,7 +119,7 @@ extern fiid_template_t tmpl_cmd_get_channel_oem_payload_info_rs;
 
 int fill_cmd_activate_payload (uint8_t payload_type,
                                uint8_t payload_instance,
-                               const uint8_t *auxiliary_request_data,
+                               const void *auxiliary_request_data,
                                unsigned int auxiliary_request_data_len,
                                fiid_obj_t obj_cmd_rq);
 

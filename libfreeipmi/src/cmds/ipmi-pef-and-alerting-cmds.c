@@ -562,7 +562,7 @@ fill_cmd_arm_pef_postpone_timer (uint8_t pef_postpone_timeout, fiid_obj_t obj_cm
 int
 fill_cmd_set_pef_configuration_parameters (fiid_obj_t obj_cmd_rq,
                                            uint8_t parameter_selector,
-                                           const uint8_t *configuration_parameter_data,
+                                           const void *configuration_parameter_data,
                                            unsigned int configuration_parameter_data_len)
 {
   if (!configuration_parameter_data

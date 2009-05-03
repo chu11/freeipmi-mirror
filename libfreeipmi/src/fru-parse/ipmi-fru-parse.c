@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.7 2009-05-02 05:36:46 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.8 2009-05-03 17:40:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -295,7 +295,7 @@ ipmi_fru_parse_ctx_set_debug_prefix (ipmi_fru_parse_ctx_t ctx, const char *debug
 
 static int
 _read_fru_data (ipmi_fru_parse_ctx_t ctx,
-                uint8_t *frubuf,
+                void *frubuf,
                 unsigned int frubuflen,
                 unsigned int offset_in_bytes,
                 unsigned int fru_read_bytes)
@@ -862,7 +862,7 @@ static int
 _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
                       unsigned int *area_type,
                       unsigned int *area_length,
-                      uint8_t *areabuf,
+                      void *areabuf,
                       unsigned int areabuflen)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1]; 
@@ -1052,7 +1052,7 @@ static int
 _read_multirecord_area_data (ipmi_fru_parse_ctx_t ctx,
                              unsigned int *area_type,
                              unsigned int *area_length,
-                             uint8_t *areabuf,
+                             void *areabuf,
                              unsigned int areabuflen)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
@@ -1163,7 +1163,7 @@ int
 ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
                                unsigned int *area_type,
                                unsigned int *area_length,
-                               uint8_t *areabuf,
+                               void *areabuf,
                                unsigned int areabuflen)
 {
   int rv = -1;

@@ -325,7 +325,7 @@ int fill_cmd_send_message (uint8_t channel_number,
                            uint8_t message_authentication,
                            uint8_t message_encryption,
                            uint8_t tracking_operation,
-                           const uint8_t *message_data,
+                           const void *message_data,
                            uint32_t message_data_len,
                            fiid_obj_t obj_cmd_rq);
 
@@ -358,7 +358,7 @@ int fill_cmd_get_session_challenge (uint8_t authentication_type,
 
 int fill_cmd_activate_session (uint8_t authentication_type,
                                uint8_t maximum_privilege_level,
-                               const uint8_t *challenge_string,
+                               const void *challenge_string,
                                unsigned int challenge_string_len,
                                uint32_t initial_outbound_sequence_number,
                                fiid_obj_t obj_cmd_rq);
@@ -388,7 +388,7 @@ int fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq);
 int fill_cmd_set_channel_security_keys (uint8_t channel_number,
                                         uint8_t operation,
                                         uint8_t key_id,
-                                        const uint8_t *key_value,
+                                        const void *key_value,
                                         unsigned int key_value_len,
                                         fiid_obj_t obj_cmd_rq);
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.71 2009-04-30 19:56:42 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.72 2009-05-03 17:40:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -362,13 +362,13 @@ struct ipmiconsole_ctx_session {
   uint8_t remote_console_random_number[IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH];
 
   uint8_t sik_key[IPMI_MAX_SIK_KEY_LENGTH];
-  uint8_t *sik_key_ptr;
+  void *sik_key_ptr;
   unsigned int sik_key_len;
   uint8_t integrity_key[IPMI_MAX_INTEGRITY_KEY_LENGTH];
-  uint8_t *integrity_key_ptr;
+  void *integrity_key_ptr;
   unsigned int integrity_key_len;
   uint8_t confidentiality_key[IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH];
-  uint8_t *confidentiality_key_ptr;
+  void *confidentiality_key_ptr;
   unsigned int confidentiality_key_len;
 
   uint8_t sol_payload_instance;

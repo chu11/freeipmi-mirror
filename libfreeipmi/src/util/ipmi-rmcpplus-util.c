@@ -59,17 +59,17 @@
 
 int
 ipmi_calculate_sik (uint8_t authentication_algorithm,
-                    const uint8_t *k_g,
+                    const void *k_g,
                     unsigned int k_g_len,
-                    const uint8_t *remote_console_random_number,
+                    const void *remote_console_random_number,
                     unsigned int remote_console_random_number_len,
-                    const uint8_t *managed_system_random_number,
+                    const void *managed_system_random_number,
                     unsigned int managed_system_random_number_len,
                     uint8_t name_only_lookup,
                     uint8_t requested_privilege_level,
                     const char *user_name,
                     unsigned int user_name_len,
-                    uint8_t *sik,
+                    void *sik,
                     unsigned int sik_len)
 {
   int expected_digest_len, crypt_digest_len, computed_digest_len;
@@ -192,11 +192,11 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
 static int
 _calculate_k_rakp_hmac (unsigned int hash_algorithm,
                         unsigned int expected_digest_len,
-                        const uint8_t *sik_key,
+                        const void *sik_key,
                         unsigned int sik_key_len,
-                        uint8_t *k,
+                        void *k,
                         unsigned int k_len,
-                        const uint8_t *constant,
+                        const void *constant,
                         unsigned int constant_len)
 {
   int computed_digest_len;
@@ -254,11 +254,11 @@ _calculate_k_rakp_hmac (unsigned int hash_algorithm,
 }
 
 static int
-_calculate_k_rakp_hmac_sha1 (const uint8_t *sik_key,
+_calculate_k_rakp_hmac_sha1 (const void *sik_key,
                              unsigned int sik_key_len,
-                             uint8_t *k,
+                             void *k,
                              unsigned int k_len,
-                             const uint8_t *constant,
+                             const void *constant,
                              unsigned int constant_len)
 {
   if (!sik_key
@@ -284,11 +284,11 @@ _calculate_k_rakp_hmac_sha1 (const uint8_t *sik_key,
 }
 
 static int
-_calculate_k_rakp_hmac_md5 (const uint8_t *sik_key,
+_calculate_k_rakp_hmac_md5 (const void *sik_key,
                             unsigned int sik_key_len,
-                            uint8_t *k,
+                            void *k,
                             unsigned int k_len,
-                            const uint8_t *constant,
+                            const void *constant,
                             unsigned int constant_len)
 {
   if (!sik_key
@@ -315,11 +315,11 @@ _calculate_k_rakp_hmac_md5 (const uint8_t *sik_key,
 
 static int
 _ipmi_calculate_k (uint8_t authentication_algorithm,
-                   const uint8_t *sik_key,
+                   const void *sik_key,
                    unsigned int sik_key_len,
-                   uint8_t *k,
+                   void *k,
                    unsigned int k_len,
-                   const uint8_t *constant,
+                   const void *constant,
                    unsigned int constant_len)
 {
   if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
@@ -354,9 +354,9 @@ _ipmi_calculate_k (uint8_t authentication_algorithm,
 
 int
 ipmi_calculate_k1 (uint8_t authentication_algorithm,
-                   const uint8_t *sik_key,
+                   const void *sik_key,
                    unsigned int sik_key_len,
-                   uint8_t *k1,
+                   void *k1,
                    unsigned int k1_len)
 {
   uint8_t constant[IPMI_KEY_CONSTANT_LENGTH] = { 0x01, 0x01, 0x01, 0x01, 0x01,
@@ -375,9 +375,9 @@ ipmi_calculate_k1 (uint8_t authentication_algorithm,
 
 int
 ipmi_calculate_k2 (uint8_t authentication_algorithm,
-                   const uint8_t *sik_key,
+                   const void *sik_key,
                    unsigned int sik_key_len,
-                   uint8_t *k1,
+                   void *k1,
                    unsigned int k1_len)
 {
   uint8_t constant[IPMI_KEY_CONSTANT_LENGTH] = { 0x02, 0x02, 0x02, 0x02, 0x02,
@@ -397,33 +397,33 @@ int
 ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
                                       uint8_t integrity_algorithm,
                                       uint8_t confidentiality_algorithm,
-                                      const uint8_t *authentication_code_data,
+                                      const void *authentication_code_data,
                                       unsigned int authentication_code_data_len,
-                                      const uint8_t *k_g,
+                                      const void *k_g,
                                       unsigned int k_g_len,
-                                      const uint8_t *remote_console_random_number,
+                                      const void *remote_console_random_number,
                                       unsigned int remote_console_random_number_len,
-                                      const uint8_t *managed_system_random_number,
+                                      const void *managed_system_random_number,
                                       unsigned int managed_system_random_number_len,
                                       uint8_t name_only_lookup,
                                       uint8_t requested_privilege_level,
                                       const char *user_name,
                                       uint8_t user_name_len,
-                                      uint8_t **sik_key,
+                                      void **sik_key,
                                       unsigned int *sik_key_len,
-                                      uint8_t **integrity_key,
+                                      void **integrity_key,
                                       unsigned int *integrity_key_len,
-                                      uint8_t **confidentiality_key,
+                                      void **confidentiality_key,
                                       unsigned int *confidentiality_key_len)
 {
-  uint8_t *sik_key_buf;
+  void *sik_key_buf;
   unsigned int sik_key_buf_len;
-  uint8_t *integrity_key_buf;
+  void *integrity_key_buf;
   unsigned int integrity_key_buf_len;
-  uint8_t *confidentiality_key_buf;
+  void *confidentiality_key_buf;
   unsigned int confidentiality_key_buf_len;
   uint8_t k_g_buf[IPMI_2_0_MAX_PASSWORD_LENGTH];
-  uint8_t *k_g_ptr;
+  void *k_g_ptr;
   unsigned int k_g_ptr_len;
   uint8_t sik[IPMI_MAX_SIK_KEY_LENGTH];
   int sik_len;
@@ -492,14 +492,14 @@ ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
 
       if (k_g && k_g_len)
         {
-          k_g_ptr = (uint8_t *)k_g;
+          k_g_ptr = (void *)k_g;
           k_g_ptr_len = k_g_len;
         }
       else
         {
           if (authentication_code_data && authentication_code_data_len)
             {
-              k_g_ptr = (uint8_t *)authentication_code_data;
+              k_g_ptr = (void *)authentication_code_data;
               k_g_ptr_len = authentication_code_data_len;
             }
           else
@@ -631,21 +631,21 @@ ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
 
 int
 ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_algorithm,
-                                                        const uint8_t *k_uid,
+                                                        const void *k_uid,
                                                         unsigned int k_uid_len,
-                                                        const uint8_t *managed_system_random_number,
+                                                        const void *managed_system_random_number,
                                                         unsigned int managed_system_random_number_len,
                                                         uint32_t remote_console_session_id,
                                                         uint8_t name_only_lookup,
                                                         uint8_t requested_privilege_level,
                                                         const char *user_name,
                                                         uint8_t user_name_length,
-                                                        uint8_t *key_exchange_authentication_code,
+                                                        void *key_exchange_authentication_code,
                                                         unsigned int key_exchange_authentication_code_len)
 {
   uint8_t priv_byte = 0;
   uint8_t k_uid_buf[IPMI_2_0_MAX_PASSWORD_LENGTH];
-  uint8_t *k_uid_ptr;
+  void *k_uid_ptr;
   unsigned int k_uid_ptr_len;
   uint8_t buf[IPMI_MAX_KEY_DATA_LENGTH];
   unsigned int buf_index = 0;
@@ -728,7 +728,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
 
   if (k_uid && k_uid_len)
     {
-      k_uid_ptr = (uint8_t *)k_uid;
+      k_uid_ptr = (void *)k_uid;
       k_uid_ptr_len = k_uid_len;
     }
   else
@@ -875,15 +875,15 @@ ipmi_rmcpplus_check_integrity_pad (fiid_obj_t obj_rmcpplus_session_trlr)
 
 int
 ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authentication_algorithm,
-                                                             const uint8_t *k_uid,
+                                                             const void *k_uid,
                                                              unsigned int k_uid_len,
                                                              uint32_t remote_console_session_id,
                                                              uint32_t managed_system_session_id,
-                                                             const uint8_t *remote_console_random_number,
+                                                             const void *remote_console_random_number,
                                                              unsigned int remote_console_random_number_len,
-                                                             const uint8_t *managed_system_random_number,
+                                                             const void *managed_system_random_number,
                                                              unsigned int managed_system_random_number_len,
-                                                             const uint8_t *managed_system_guid,
+                                                             const void *managed_system_guid,
                                                              unsigned int managed_system_guid_len,
                                                              uint8_t name_only_lookup,
                                                              uint8_t requested_privilege_level,
@@ -893,7 +893,7 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
 {
   uint8_t priv_byte = 0;
   uint8_t k_uid_buf[IPMI_2_0_MAX_PASSWORD_LENGTH];
-  uint8_t *k_uid_ptr;
+  void *k_uid_ptr;
   unsigned int k_uid_ptr_len;
   uint8_t buf[IPMI_MAX_KEY_DATA_LENGTH];
   unsigned int buf_index = 0;
@@ -1008,7 +1008,7 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
 
   if (k_uid && k_uid_len)
     {
-      k_uid_ptr = (uint8_t *)k_uid;
+      k_uid_ptr = (void *)k_uid;
       k_uid_ptr_len = k_uid_len;
     }
   else
@@ -1048,12 +1048,12 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
 
 int
 ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorithm,
-                                                  const uint8_t *sik_key,
+                                                  const void *sik_key,
                                                   unsigned int sik_key_len,
-                                                  const uint8_t *remote_console_random_number,
+                                                  const void *remote_console_random_number,
                                                   unsigned int remote_console_random_number_len,
                                                   uint32_t managed_system_session_id,
-                                                  const uint8_t *managed_system_guid,
+                                                  const void *managed_system_guid,
                                                   unsigned int managed_system_guid_len,
                                                   fiid_obj_t obj_cmd)
 {
@@ -1178,11 +1178,11 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorit
 
 int
 ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algorithm,
-                                                        const uint8_t *pkt,
+                                                        const void *pkt,
                                                         unsigned int pkt_len,
-                                                        const uint8_t *integrity_key,
+                                                        const void *integrity_key,
                                                         unsigned int integrity_key_len,
-                                                        const uint8_t *authentication_code_data,
+                                                        const void *authentication_code_data,
                                                         unsigned int authentication_code_data_len,
                                                         fiid_obj_t obj_rmcpplus_session_trlr)
 {
@@ -1478,7 +1478,7 @@ ipmi_rmcpplus_check_session_id (fiid_obj_t obj_rmcpplus_session_hdr,
 }
 
 int
-ipmi_rmcpplus_calculate_payload_type (const uint8_t *pkt,
+ipmi_rmcpplus_calculate_payload_type (const void *pkt,
                                       unsigned int pkt_len,
                                       uint8_t *payload_type)
 {
@@ -1505,7 +1505,7 @@ ipmi_rmcpplus_calculate_payload_type (const uint8_t *pkt,
       return (-1);
     }
 
-  auth_type = *(pkt + rmcp_hdr_len);
+  auth_type = *((uint8_t *)pkt + rmcp_hdr_len);
 
   if (auth_type != IPMI_AUTHENTICATION_TYPE_RMCPPLUS)
     {
@@ -1513,7 +1513,7 @@ ipmi_rmcpplus_calculate_payload_type (const uint8_t *pkt,
       return (-1);
     }
 
-  (*payload_type) = *(pkt + rmcp_hdr_len + 1);
+  (*payload_type) = *((uint8_t *)pkt + rmcp_hdr_len + 1);
   (*payload_type) &= 0x3F;
 
   if (!IPMI_PAYLOAD_TYPE_VALID ((*payload_type)))

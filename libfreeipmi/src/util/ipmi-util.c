@@ -60,7 +60,7 @@
 #include "freeipmi-portability.h"
 
 uint8_t
-ipmi_checksum (const uint8_t *buf, unsigned int buflen)
+ipmi_checksum (const void *buf, unsigned int buflen)
 {
   register unsigned int i = 0;
   register int8_t checksum = 0;
@@ -69,7 +69,7 @@ ipmi_checksum (const uint8_t *buf, unsigned int buflen)
     return (checksum);
 
   for (; i < buflen; i++)
-    checksum = (checksum + buf[i]) % 256;
+    checksum = (checksum + ((uint8_t *)buf)[i]) % 256;
 
   return (-checksum);
 }
@@ -137,7 +137,7 @@ ipmi_check_completion_code_success (fiid_obj_t obj_cmd)
 }
 
 int
-ipmi_get_random (uint8_t *buf, unsigned int buflen)
+ipmi_get_random (void *buf, unsigned int buflen)
 {
 #if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
   int fd, rv;
@@ -161,7 +161,7 @@ ipmi_get_random (uint8_t *buf, unsigned int buflen)
     goto gcrypt_rand;
 #endif /* !HAVE_DEVURANDOM */
 
-  if ((rv = read (fd, (void *)buf, buflen)) < buflen)
+  if ((rv = read (fd, buf, buflen)) < buflen)
     goto gcrypt_rand;
 
   close (fd);
@@ -174,7 +174,7 @@ ipmi_get_random (uint8_t *buf, unsigned int buflen)
 }
 
 int
-ipmi_is_ipmi_1_5_packet (const uint8_t *pkt, unsigned int pkt_len)
+ipmi_is_ipmi_1_5_packet (const void *pkt, unsigned int pkt_len)
 {
   int rmcp_hdr_len;
   uint8_t auth_type;
@@ -191,13 +191,13 @@ ipmi_is_ipmi_1_5_packet (const uint8_t *pkt, unsigned int pkt_len)
       return (-1);
     }
 
-  auth_type = *(pkt + rmcp_hdr_len);
+  auth_type = *((uint8_t *)(pkt + rmcp_hdr_len));
   auth_type &= 0x0F;
   return ((auth_type != IPMI_AUTHENTICATION_TYPE_RMCPPLUS) ? 1 : 0);
 }
 
 int
-ipmi_is_ipmi_2_0_packet (const uint8_t *pkt, unsigned int pkt_len)
+ipmi_is_ipmi_2_0_packet (const void *pkt, unsigned int pkt_len)
 {
   int rmcp_hdr_len;
   uint8_t auth_type;
@@ -214,7 +214,7 @@ ipmi_is_ipmi_2_0_packet (const uint8_t *pkt, unsigned int pkt_len)
       return (-1);
     }
 
-  auth_type = *(pkt + rmcp_hdr_len);
+  auth_type = *((uint8_t *)(pkt + rmcp_hdr_len));
   auth_type &= 0x0F;
   return ((auth_type == IPMI_AUTHENTICATION_TYPE_RMCPPLUS) ? 1 : 0);
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.17 2009-05-02 00:07:59 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.18 2009-05-03 17:40:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -194,7 +194,7 @@ _nodes_setup (void)
       /* Use random number for starting sequence number to avoid probability of
        * duplicates and "hanging" BMC issue.
        */
-      if ((len = ipmi_get_random ((uint8_t *)&(info->sequence_number),
+      if ((len = ipmi_get_random (&(info->sequence_number),
                                   sizeof (info->sequence_number))) < 0)
         IPMIDETECTD_EXIT (("ipmi_get_random: %s", strerror (errno)));
       if (len != sizeof (info->sequence_number))

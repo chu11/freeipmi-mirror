@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.25 2009-05-01 01:55:10 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.26 2009-05-03 17:40:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -512,7 +512,7 @@ ipmi_sdr_cache_search_sensor (ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_number, u
 
 int
 ipmi_sdr_cache_record_read (ipmi_sdr_cache_ctx_t ctx,
-                            uint8_t *buf,
+                            void *buf,
                             unsigned int buflen)
 {
   unsigned int record_length;

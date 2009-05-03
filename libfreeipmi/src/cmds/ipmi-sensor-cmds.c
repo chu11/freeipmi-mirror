@@ -780,12 +780,12 @@ fill_cmd_get_sensor_hysteresis (uint8_t sensor_number,
 
 int
 fill_cmd_set_sensor_thresholds (uint8_t sensor_number,
-                                uint8_t *lower_non_critical_threshold,
-                                uint8_t *lower_critical_threshold,
-                                uint8_t *lower_non_recoverable_threshold,
-                                uint8_t *upper_non_critical_threshold,
-                                uint8_t *upper_critical_threshold,
-                                uint8_t *upper_non_recoverable_threshold,
+                                const uint8_t *lower_non_critical_threshold,
+                                const uint8_t *lower_critical_threshold,
+                                const uint8_t *lower_non_recoverable_threshold,
+                                const uint8_t *upper_non_critical_threshold,
+                                const uint8_t *upper_critical_threshold,
+                                const uint8_t *upper_non_recoverable_threshold,
                                 fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))

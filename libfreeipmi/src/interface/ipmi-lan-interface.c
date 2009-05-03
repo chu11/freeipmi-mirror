@@ -254,19 +254,19 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
                        fiid_obj_t obj_lan_session_hdr,
                        fiid_obj_t obj_lan_msg_hdr,
                        fiid_obj_t obj_cmd,
-                       const uint8_t *authentication_code_data,
+                       const void *authentication_code_data,
                        unsigned int authentication_code_data_len,
-                       uint8_t *pkt,
+                       void *pkt,
                        unsigned int pkt_len)
 {
   uint8_t authentication_type;
   uint64_t val;
   unsigned int indx = 0;
   int required_len;
-  uint8_t *authentication_code_field_ptr = NULL;
-  uint8_t *checksum_data_ptr = NULL;
-  uint8_t *msg_data_ptr = NULL;
-  uint8_t *ipmi_msg_len_ptr = NULL;
+  void *authentication_code_field_ptr = NULL;
+  void *checksum_data_ptr = NULL;
+  void *msg_data_ptr = NULL;
+  void *ipmi_msg_len_ptr = NULL;
   unsigned int msg_data_count = 0;
   unsigned int checksum_data_count = 0;
   int len;
@@ -594,7 +594,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 */
 
 int
-unassemble_ipmi_lan_pkt (const uint8_t *pkt,
+unassemble_ipmi_lan_pkt (const void *pkt,
                          unsigned int pkt_len,
                          fiid_obj_t obj_rmcp_hdr,
                          fiid_obj_t obj_lan_session_hdr,

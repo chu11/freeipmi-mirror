@@ -1302,7 +1302,7 @@ ipmi_sel_parse_read_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t *manufac
 }
 
 int
-ipmi_sel_parse_read_oem (ipmi_sel_parse_ctx_t ctx, uint8_t *buf, unsigned int buflen)
+ipmi_sel_parse_read_oem (ipmi_sel_parse_ctx_t ctx, void *buf, unsigned int buflen)
 {
   struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
   int rv = 0;
@@ -1334,7 +1334,7 @@ ipmi_sel_parse_read_oem (ipmi_sel_parse_ctx_t ctx, uint8_t *buf, unsigned int bu
 
 int
 ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
-                            uint8_t *buf,
+                            void *buf,
                             unsigned int buflen)
 {
   struct ipmi_sel_parse_entry *sel_parse_entry = NULL;
@@ -1572,7 +1572,7 @@ ipmi_sel_record_type_class (uint8_t record_type)
 
 int
 ipmi_sel_parse_record_record_id (ipmi_sel_parse_ctx_t ctx,
-                                 const uint8_t *record_buf,
+                                 const void *record_buf,
                                  unsigned int record_buflen,
                                  uint16_t *record_id)
 {
@@ -1610,7 +1610,7 @@ ipmi_sel_parse_record_record_id (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_record_type (ipmi_sel_parse_ctx_t ctx,
-                                   const uint8_t *record_buf,
+                                   const void *record_buf,
                                    unsigned int record_buflen,
                                    uint8_t *record_type)
 {
@@ -1648,7 +1648,7 @@ ipmi_sel_parse_record_record_type (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_timestamp (ipmi_sel_parse_ctx_t ctx,
-                                 const uint8_t *record_buf,
+                                 const void *record_buf,
                                  unsigned int record_buflen,
                                  uint32_t *timestamp)
 {
@@ -1685,7 +1685,7 @@ ipmi_sel_parse_record_timestamp (ipmi_sel_parse_ctx_t ctx,
 
 int
 _parse_record_system_event_common (ipmi_sel_parse_ctx_t ctx,
-                                   const uint8_t *record_buf,
+                                   const void *record_buf,
                                    unsigned int record_buflen,
                                    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
@@ -1713,7 +1713,7 @@ _parse_record_system_event_common (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_generator_id (ipmi_sel_parse_ctx_t ctx,
-                                    const uint8_t *record_buf,
+                                    const void *record_buf,
                                     unsigned int record_buflen,
                                     uint8_t *generator_id)
 {
@@ -1747,7 +1747,7 @@ ipmi_sel_parse_record_generator_id (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx,
-                                       const uint8_t *record_buf,
+                                       const void *record_buf,
                                        unsigned int record_buflen,
                                        uint8_t *ipmb_device_lun)
 {
@@ -1781,7 +1781,7 @@ ipmi_sel_parse_record_ipmb_device_lun (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_channel_number (ipmi_sel_parse_ctx_t ctx,
-                                      const uint8_t *record_buf,
+                                      const void *record_buf,
                                       unsigned int record_buflen,
                                       uint8_t *channel_number)
 {
@@ -1822,7 +1822,7 @@ ipmi_sel_parse_record_channel_number (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_message_format_version (ipmi_sel_parse_ctx_t ctx,
-                                                    const uint8_t *record_buf,
+                                                    const void *record_buf,
                                                     unsigned int record_buflen,
                                                     uint8_t *event_message_format_version)
 {
@@ -1856,7 +1856,7 @@ ipmi_sel_parse_record_event_message_format_version (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_sensor_type (ipmi_sel_parse_ctx_t ctx,
-                                   const uint8_t *record_buf,
+                                   const void *record_buf,
                                    unsigned int record_buflen,
                                    uint8_t *sensor_type)
 {
@@ -1890,7 +1890,7 @@ ipmi_sel_parse_record_sensor_type (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_sensor_number (ipmi_sel_parse_ctx_t ctx,
-                                     const uint8_t *record_buf,
+                                     const void *record_buf,
                                      unsigned int record_buflen,
                                      uint8_t *sensor_number)
 {
@@ -1924,7 +1924,7 @@ ipmi_sel_parse_record_sensor_number (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_direction (ipmi_sel_parse_ctx_t ctx,
-                                       const uint8_t *record_buf,
+                                       const void *record_buf,
                                        unsigned int record_buflen,
                                        uint8_t *event_direction)
 {
@@ -1958,7 +1958,7 @@ ipmi_sel_parse_record_event_direction (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_type_code (ipmi_sel_parse_ctx_t ctx,
-                                       const uint8_t *record_buf,
+                                       const void *record_buf,
                                        unsigned int record_buflen,
                                        uint8_t *event_type_code)
 {
@@ -1992,7 +1992,7 @@ ipmi_sel_parse_record_event_type_code (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_data1 (ipmi_sel_parse_ctx_t ctx,
-                                   const uint8_t *record_buf,
+                                   const void *record_buf,
                                    unsigned int record_buflen,
                                    uint8_t *event_data1)
 {
@@ -2029,7 +2029,7 @@ ipmi_sel_parse_record_event_data1 (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_data1_offset_from_event_reading_type_code (ipmi_sel_parse_ctx_t ctx,
-                                                                       const uint8_t *record_buf,
+                                                                       const void *record_buf,
                                                                        unsigned int record_buflen,
                                                                        uint8_t *event_data1_offset)
 {
@@ -2063,7 +2063,7 @@ ipmi_sel_parse_record_event_data1_offset_from_event_reading_type_code (ipmi_sel_
 
 int
 ipmi_sel_parse_record_event_data1_event_data2_flag (ipmi_sel_parse_ctx_t ctx,
-                                                    const uint8_t *record_buf,
+                                                    const void *record_buf,
                                                     unsigned int record_buflen,
                                                     uint8_t *event_data2_flag)
 {
@@ -2097,7 +2097,7 @@ ipmi_sel_parse_record_event_data1_event_data2_flag (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_data1_event_data3_flag (ipmi_sel_parse_ctx_t ctx,
-                                                    const uint8_t *record_buf,
+                                                    const void *record_buf,
                                                     unsigned int record_buflen,
                                                     uint8_t *event_data3_flag)
 {
@@ -2131,7 +2131,7 @@ ipmi_sel_parse_record_event_data1_event_data3_flag (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_data2 (ipmi_sel_parse_ctx_t ctx,
-                                   const uint8_t *record_buf,
+                                   const void *record_buf,
                                    unsigned int record_buflen,
                                    uint8_t *event_data2)
 {
@@ -2165,7 +2165,7 @@ ipmi_sel_parse_record_event_data2 (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_event_data3 (ipmi_sel_parse_ctx_t ctx,
-                                   const uint8_t *record_buf,
+                                   const void *record_buf,
                                    unsigned int record_buflen,
                                    uint8_t *event_data3)
 {
@@ -2199,7 +2199,7 @@ ipmi_sel_parse_record_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
-                                       const uint8_t *record_buf,
+                                       const void *record_buf,
                                        unsigned int record_buflen,
                                        uint32_t *manufacturer_id)
 {
@@ -2236,9 +2236,9 @@ ipmi_sel_parse_record_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
 
 int
 ipmi_sel_parse_record_oem (ipmi_sel_parse_ctx_t ctx,
-                           const uint8_t *record_buf,
+                           const void *record_buf,
                            unsigned int record_buflen,
-                           uint8_t *buf,
+                           void *buf,
                            unsigned int buflen)
 {
   struct ipmi_sel_parse_entry sel_parse_entry;
@@ -2278,7 +2278,7 @@ ipmi_sel_parse_record_oem (ipmi_sel_parse_ctx_t ctx,
 int
 ipmi_sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
                                      const char *fmt,
-                                     const uint8_t *record_buf,
+                                     const void *record_buf,
                                      unsigned int record_buflen,
                                      char *buf,
                                      unsigned int buflen,

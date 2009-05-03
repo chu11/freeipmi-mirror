@@ -687,7 +687,7 @@ fiid_template_t tmpl_cmd_get_ip_udp_rmcp_statistics_rs =
 int
 fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                            uint8_t parameter_selector,
-                                           const uint8_t *configuration_parameter_data,
+                                           const void *configuration_parameter_data,
                                            unsigned int configuration_parameter_data_len,
                                            fiid_obj_t obj_cmd_rq)
 {
@@ -1146,7 +1146,7 @@ fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_numb
                                                             unsigned int community_string_len,
                                                             fiid_obj_t obj_cmd_rq)
 {
-  uint8_t buf[IPMI_MAX_COMMUNITY_STRING_LENGTH];
+  char buf[IPMI_MAX_COMMUNITY_STRING_LENGTH];
 
   /* achu: community_string can be the max length.  Null termination in IPMI
    * packet not required.
@@ -1175,7 +1175,7 @@ fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_numb
   /* achu: community_string should be zero extended */
   memset (buf, '\0', IPMI_MAX_COMMUNITY_STRING_LENGTH);
   if (community_string)
-    strncpy ((char *)buf, community_string, IPMI_MAX_COMMUNITY_STRING_LENGTH);
+    strncpy (buf, community_string, IPMI_MAX_COMMUNITY_STRING_LENGTH);
 
   FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "community_string", buf, IPMI_MAX_COMMUNITY_STRING_LENGTH);
 

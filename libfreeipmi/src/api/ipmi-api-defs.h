@@ -135,13 +135,13 @@ struct ipmi_ctx
       uint32_t remote_console_session_id;
       uint32_t managed_system_session_id;
       uint8_t sik_key[IPMI_MAX_SIK_KEY_LENGTH];            /* not actually needed globally */
-      uint8_t *sik_key_ptr;
+      void *sik_key_ptr;
       unsigned int sik_key_len;
       uint8_t integrity_key[IPMI_MAX_INTEGRITY_KEY_LENGTH];
-      uint8_t *integrity_key_ptr;
+      void *integrity_key_ptr;
       unsigned int integrity_key_len;
       uint8_t confidentiality_key[IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH];
-      uint8_t *confidentiality_key_ptr;
+      void *confidentiality_key_ptr;
       unsigned int confidentiality_key_len;
 
       struct

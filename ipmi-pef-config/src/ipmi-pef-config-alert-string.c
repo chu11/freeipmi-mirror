@@ -258,7 +258,7 @@ alert_string_checkout (const char *section_name,
                        void *arg)
 {
   ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
-  uint8_t alert_string[PEF_ALERT_STRING_MAX_LEN+1];
+  char alert_string[PEF_ALERT_STRING_MAX_LEN+1];
   uint8_t string_selector;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -336,7 +336,7 @@ alert_string_checkout (const char *section_name,
  done:
   if (config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
-                                             (char *)alert_string) < 0)
+                                             alert_string) < 0)
     return (CONFIG_ERR_FATAL_ERROR);
 
   rv = CONFIG_ERR_SUCCESS;

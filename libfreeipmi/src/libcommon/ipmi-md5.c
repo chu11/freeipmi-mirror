@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.c,v 1.13 2009-05-02 02:01:55 chu11 Exp $
+ *  $Id: ipmi-md5.c,v 1.14 2009-05-03 17:40:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -267,7 +267,7 @@ _md5_update_count (md5_t *ctx, unsigned int buflen)
 }
 
 int
-md5_update_data (md5_t *ctx, const uint8_t *buf, unsigned int buflen)
+md5_update_data (md5_t *ctx, const void *buf, unsigned int buflen)
 {
 
   if (ctx == NULL || ctx->magic != MD5_MAGIC || buf == NULL)
@@ -344,12 +344,13 @@ _md5_append_padding_and_length (md5_t *ctx)
   length[7] = (ctx->bit_count[0] & 0xff000000) >> 24;
 
   md5_update_data (ctx, padding, padlen);
-  md5_update_data (ctx, (uint8_t *)length, 8);
+  md5_update_data (ctx, length, 8);
 }
 
 int
-md5_finish (md5_t *ctx, uint8_t *digest, unsigned int digestlen)
+md5_finish (md5_t *ctx, void *digest, unsigned int digestlen)
 {
+  uint8_t buf[MD5_DIGEST_LENGTH];
 
   if (ctx == NULL || ctx->magic != MD5_MAGIC
       || digest == NULL || digestlen < MD5_DIGEST_LENGTH)
@@ -363,24 +364,25 @@ md5_finish (md5_t *ctx, uint8_t *digest, unsigned int digestlen)
   /* Note there are no endian issues here, compiler is required to
    * handle bitmasks and shifts correctly
    */
+  
+  buf[0]  = (A & 0x000000ff);
+  buf[1]  = (A & 0x0000ff00) >> 8;
+  buf[2]  = (A & 0x00ff0000) >> 16;
+  buf[3]  = (A & 0xff000000) >> 24;
+  buf[4]  = (B & 0x000000ff);
+  buf[5]  = (B & 0x0000ff00) >> 8;
+  buf[6]  = (B & 0x00ff0000) >> 16;
+  buf[7]  = (B & 0xff000000) >> 24;
+  buf[8]  = (C & 0x000000ff);
+  buf[9]  = (C & 0x0000ff00) >> 8;
+  buf[10] = (C & 0x00ff0000) >> 16;
+  buf[11] = (C & 0xff000000) >> 24;
+  buf[12] = (D & 0x000000ff);
+  buf[13] = (D & 0x0000ff00) >> 8;
+  buf[14] = (D & 0x00ff0000) >> 16;
+  buf[15] = (D & 0xff000000) >> 24;
 
-  digest[0]  = (A & 0x000000ff);
-  digest[1]  = (A & 0x0000ff00) >> 8;
-  digest[2]  = (A & 0x00ff0000) >> 16;
-  digest[3]  = (A & 0xff000000) >> 24;
-  digest[4]  = (B & 0x000000ff);
-  digest[5]  = (B & 0x0000ff00) >> 8;
-  digest[6]  = (B & 0x00ff0000) >> 16;
-  digest[7]  = (B & 0xff000000) >> 24;
-  digest[8]  = (C & 0x000000ff);
-  digest[9]  = (C & 0x0000ff00) >> 8;
-  digest[10] = (C & 0x00ff0000) >> 16;
-  digest[11] = (C & 0xff000000) >> 24;
-  digest[12] = (D & 0x000000ff);
-  digest[13] = (D & 0x0000ff00) >> 8;
-  digest[14] = (D & 0x00ff0000) >> 16;
-  digest[15] = (D & 0xff000000) >> 24;
-
+  memcpy (digest, buf, MD5_DIGEST_LENGTH);
   ctx->magic = ~MD5_MAGIC;
   return (MD5_DIGEST_LENGTH);
 }

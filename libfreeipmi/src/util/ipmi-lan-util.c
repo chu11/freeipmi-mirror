@@ -111,7 +111,7 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
                                             fiid_obj_t obj_cmd,
                                             fiid_obj_t obj_lan_msg_trlr_rs,
                                             uint8_t authentication_type,
-                                            const uint8_t *authentication_code_data,
+                                            const void *authentication_code_data,
                                             unsigned int authentication_code_data_len)
 {
   uint8_t authentication_code_recv[IPMI_1_5_MAX_PASSWORD_LENGTH];
@@ -326,10 +326,10 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
 }
 
 int
-ipmi_lan_check_packet_session_authentication_code (const uint8_t *pkt,
+ipmi_lan_check_packet_session_authentication_code (const void *pkt,
                                                    unsigned int pkt_len,
                                                    uint8_t authentication_type,
-                                                   const uint8_t *authentication_code_data,
+                                                   const void *authentication_code_data,
                                                    unsigned int authentication_code_data_len)
 {
   uint8_t authentication_type_recv;
@@ -368,7 +368,7 @@ ipmi_lan_check_packet_session_authentication_code (const uint8_t *pkt,
   if (pkt_len < authentication_type_offset)
     return (0);
 
-  authentication_type_recv = pkt[authentication_type_offset];
+  authentication_type_recv = ((uint8_t *)pkt)[authentication_type_offset];
 
   /* authentication code check fails if authentication types do not match */
   if (authentication_type != authentication_type_recv)
@@ -680,7 +680,7 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
 }
 
 int
-ipmi_lan_check_packet_checksum (const uint8_t *pkt, unsigned int pkt_len)
+ipmi_lan_check_packet_checksum (const void *pkt, unsigned int pkt_len)
 {
   uint8_t authentication_type;
   unsigned int authentication_type_offset;
@@ -709,7 +709,7 @@ ipmi_lan_check_packet_checksum (const uint8_t *pkt, unsigned int pkt_len)
     }
 
   authentication_type_offset = rmcp_hdr_len + authentication_type_start_bytes;
-  authentication_type = pkt[authentication_type_offset];
+  authentication_type = ((uint8_t *)pkt)[authentication_type_offset];
 
   if ((msg_hdr_len1 = fiid_template_block_len_bytes (tmpl_lan_session_hdr,
                                                      "authentication_type",
@@ -744,7 +744,7 @@ ipmi_lan_check_packet_checksum (const uint8_t *pkt, unsigned int pkt_len)
     return (0);
 
   checksum1_calc = ipmi_checksum (pkt + checksum1_block_index, checksum1_block_len);
-  checksum1_recv = pkt[checksum1_block_index + checksum1_block_len];
+  checksum1_recv = ((uint8_t *)pkt)[checksum1_block_index + checksum1_block_len];
 
   if (checksum1_calc != checksum1_recv)
     return (0);
@@ -757,7 +757,7 @@ ipmi_lan_check_packet_checksum (const uint8_t *pkt, unsigned int pkt_len)
   checksum2_block_len = pkt_len - checksum2_block_index - 1;
 
   checksum2_calc = ipmi_checksum (pkt + checksum2_block_index, checksum2_block_len);
-  checksum2_recv = pkt[checksum2_block_index + checksum2_block_len];
+  checksum2_recv = ((uint8_t *)pkt)[checksum2_block_index + checksum2_block_len];
 
   if (checksum2_calc != checksum2_recv)
     return (0);

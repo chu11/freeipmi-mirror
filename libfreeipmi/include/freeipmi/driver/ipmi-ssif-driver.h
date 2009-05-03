@@ -76,11 +76,11 @@ int ipmi_ssif_ctx_set_flags (ipmi_ssif_ctx_t ctx, unsigned int flags);
 int ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx);
 
 int ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
-                     const uint8_t *buf,
+                     const void *buf,
                      unsigned int buf_len);
 
 int ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
-                    uint8_t* buf,
+                    void *buf,
                     unsigned int buf_len);
 
 int ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,

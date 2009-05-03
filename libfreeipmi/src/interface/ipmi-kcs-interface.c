@@ -75,7 +75,7 @@ fill_hdr_ipmi_kcs (uint8_t lun,
 int
 assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
                        fiid_obj_t obj_cmd,
-                       uint8_t *pkt,
+                       void *pkt,
                        unsigned int pkt_len)
 {
   int obj_cmd_len, obj_kcs_hdr_len;
@@ -142,7 +142,7 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
 }
 
 int
-unassemble_ipmi_kcs_pkt (const uint8_t *pkt,
+unassemble_ipmi_kcs_pkt (const void *pkt,
                          unsigned int pkt_len,
                          fiid_obj_t obj_kcs_hdr,
                          fiid_obj_t obj_cmd)

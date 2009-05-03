@@ -1826,7 +1826,7 @@ FIID_OBJ_GET (fiid_obj_t obj,
 int
 fiid_obj_set_data (fiid_obj_t obj,
                    const char *field,
-                   const uint8_t *data,
+                   const void *data,
                    unsigned int data_len)
 {
   unsigned int field_offset, bytes_len;
@@ -1881,7 +1881,7 @@ fiid_obj_set_data (fiid_obj_t obj,
 int
 fiid_obj_get_data (fiid_obj_t obj,
                    const char *field,
-                   uint8_t *data,
+                   void *data,
                    unsigned int data_len)
 {
   unsigned int field_offset, bytes_len;
@@ -1946,7 +1946,7 @@ fiid_obj_get_data (fiid_obj_t obj,
 
 int
 fiid_obj_set_all (fiid_obj_t obj,
-                  const uint8_t *data,
+                  const void *data,
                   unsigned int data_len)
 {
   unsigned int bits_counter, data_bits_len;
@@ -2012,7 +2012,7 @@ fiid_obj_set_all (fiid_obj_t obj,
 
 int
 fiid_obj_get_all (fiid_obj_t obj,
-                  uint8_t *data,
+                  void *data,
                   unsigned int data_len)
 {
   unsigned int bytes_len;
@@ -2181,7 +2181,7 @@ int
 fiid_obj_set_block (fiid_obj_t obj,
                     const char *field_start,
                     const char *field_end,
-                    const uint8_t *data,
+                    const void *data,
                     unsigned int data_len)
 {
   int block_bits_start, block_bits_len;
@@ -2289,7 +2289,7 @@ int
 fiid_obj_get_block (fiid_obj_t obj,
                     const char *field_start,
                     const char *field_end,
-                    uint8_t *data,
+                    void *data,
                     unsigned int data_len)
 {
   int block_bits_start, block_bits_max_len, block_bits_set_len;
@@ -2607,7 +2607,7 @@ fiid_iterator_get (fiid_iterator_t iter, uint64_t *val)
 
 int
 fiid_iterator_get_data (fiid_iterator_t iter,
-                        uint8_t *data,
+                        void *data,
                         unsigned int data_len)
 {
   char *key;

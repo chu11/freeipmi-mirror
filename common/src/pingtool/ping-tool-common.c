@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.14 2009-05-02 00:07:59 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.15 2009-05-03 17:40:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -400,7 +400,7 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
     {
       int len;
 
-      if ((len = ipmi_get_random ((uint8_t *)&_initial_sequence_number,
+      if ((len = ipmi_get_random (&_initial_sequence_number,
                                   sizeof (_initial_sequence_number))) < 0)
         ipmi_ping_err_exit ("ipmi_get_random: %s", strerror (errno));
       if (len != sizeof (_initial_sequence_number))

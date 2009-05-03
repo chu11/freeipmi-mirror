@@ -295,11 +295,11 @@ fill_rmcpplus_session_trlr (fiid_obj_t obj_rmcpplus_session_trlr)
 }
 
 int
-fill_rmcpplus_payload (const uint8_t *confidentiality_header,
+fill_rmcpplus_payload (const void *confidentiality_header,
                        unsigned int confidentiality_header_len,
-                       const uint8_t *payload_data,
+                       const void *payload_data,
                        unsigned int payload_data_len,
-                       const uint8_t *confidentiality_trailer,
+                       const void *confidentiality_trailer,
                        unsigned int confidentiality_trailer_len,
                        fiid_obj_t obj_cmd_rq)
 {
@@ -444,7 +444,7 @@ fill_rmcpplus_open_session (uint8_t message_tag,
 int
 fill_rmcpplus_rakp_message_1 (uint8_t message_tag,
                               uint32_t managed_system_session_id,
-                              const uint8_t *remote_console_random_number,
+                              const void *remote_console_random_number,
                               unsigned int remote_console_random_number_len,
                               uint8_t requested_maximum_privilege_level,
                               uint8_t name_only_lookup_flag,
@@ -503,7 +503,7 @@ fill_rmcpplus_rakp_message_1 (uint8_t message_tag,
   if (user_name && user_name_len)
     FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
                             "user_name",
-                            (uint8_t *)user_name,
+                            user_name,
                             user_name_len);
 
   return (0);
@@ -513,7 +513,7 @@ int
 fill_rmcpplus_rakp_message_3 (uint8_t message_tag,
                               uint8_t rmcpplus_status_code,
                               uint32_t managed_system_session_id,
-                              const uint8_t *key_exchange_authentication_code,
+                              const void *key_exchange_authentication_code,
                               unsigned int key_exchange_authentication_code_len,
                               fiid_obj_t obj_cmd_rq)
 {
@@ -560,7 +560,7 @@ static int
 _construct_payload_buf (uint8_t payload_type,
                         fiid_obj_t obj_lan_msg_hdr,
                         fiid_obj_t obj_cmd,
-                        uint8_t *payload_buf,
+                        void *payload_buf,
                         unsigned int payload_buf_len)
 {
   int obj_lan_msg_hdr_len = 0;
@@ -737,7 +737,7 @@ _construct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
                                                 uint8_t payload_encrypted,
                                                 fiid_obj_t obj_lan_msg_hdr,
                                                 fiid_obj_t obj_cmd,
-                                                const uint8_t *confidentiality_key,
+                                                const void *confidentiality_key,
                                                 unsigned int confidentiality_key_len,
                                                 fiid_obj_t obj_rmcpplus_payload)
 {
@@ -941,7 +941,7 @@ _construct_payload (uint8_t payload_type,
                     uint8_t confidentiality_algorithm,
                     fiid_obj_t obj_lan_msg_hdr,
                     fiid_obj_t obj_cmd,
-                    const uint8_t *confidentiality_key,
+                    const void *confidentiality_key,
                     unsigned int confidentiality_key_len,
                     fiid_obj_t obj_rmcpplus_payload)
 {
@@ -1072,14 +1072,14 @@ _calculate_authentication_code_len (uint8_t integrity_algorithm)
 
 static int
 _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
-                                             const uint8_t *integrity_key,
+                                             const void *integrity_key,
                                              unsigned int integrity_key_len,
-                                             const uint8_t *authentication_code_data,
+                                             const void *authentication_code_data,
                                              unsigned int authentication_code_data_len,
                                              fiid_obj_t obj_rmcpplus_session_trlr,
-                                             uint8_t *pkt_data,
+                                             void *pkt_data,
                                              unsigned int pkt_data_len,
-                                             uint8_t *authentication_code_buf,
+                                             void *authentication_code_buf,
                                              unsigned int authentication_code_buf_len)
 {
   int crypt_digest_len;
@@ -1245,18 +1245,18 @@ int
 assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                             uint8_t integrity_algorithm,
                             uint8_t confidentiality_algorithm,
-                            const uint8_t *integrity_key,
+                            const void *integrity_key,
                             unsigned int integrity_key_len,
-                            const uint8_t *confidentiality_key,
+                            const void *confidentiality_key,
                             unsigned int confidentiality_key_len,
-                            const uint8_t *authentication_code_data,
+                            const void *authentication_code_data,
                             unsigned int authentication_code_data_len,
                             fiid_obj_t obj_rmcp_hdr,
                             fiid_obj_t obj_rmcpplus_session_hdr,
                             fiid_obj_t obj_lan_msg_hdr,
                             fiid_obj_t obj_cmd,
                             fiid_obj_t obj_rmcpplus_session_trlr,
-                            uint8_t *pkt,
+                            void *pkt,
                             unsigned int pkt_len)
 {
   unsigned int indx = 0;
@@ -1729,7 +1729,7 @@ _deconstruct_payload_buf (uint8_t payload_type,
                           fiid_obj_t obj_lan_msg_hdr,
                           fiid_obj_t obj_cmd,
                           fiid_obj_t obj_lan_msg_trlr,
-                          const uint8_t *pkt,
+                          const void *pkt,
                           unsigned int lan_msg_len)
 {
   int obj_lan_msg_trlr_len, len;
@@ -1839,7 +1839,7 @@ _deconstruct_payload_confidentiality_none (uint8_t payload_type,
                                            fiid_obj_t obj_lan_msg_hdr,
                                            fiid_obj_t obj_cmd,
                                            fiid_obj_t obj_lan_msg_trlr,
-                                           const uint8_t *pkt,
+                                           const void *pkt,
                                            uint16_t ipmi_payload_len)
 {
   assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
@@ -1898,9 +1898,9 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
                                                   fiid_obj_t obj_lan_msg_hdr,
                                                   fiid_obj_t obj_cmd,
                                                   fiid_obj_t obj_lan_msg_trlr,
-                                                  const uint8_t *confidentiality_key,
+                                                  const void *confidentiality_key,
                                                   unsigned int confidentiality_key_len,
-                                                  const uint8_t *pkt,
+                                                  const void *pkt,
                                                   uint16_t ipmi_payload_len)
 {
   uint8_t iv[IPMI_CRYPT_AES_CBC_128_IV_LENGTH];
@@ -2058,7 +2058,7 @@ static int
 _deconstruct_payload_rakp (uint8_t payload_type,
                            fiid_obj_t obj_rmcpplus_payload,
                            fiid_obj_t obj_cmd,
-                           const uint8_t *pkt,
+                           const void *pkt,
                            uint16_t ipmi_payload_len)
 {
   assert ((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
@@ -2115,9 +2115,9 @@ _deconstruct_payload (uint8_t payload_type,
                       fiid_obj_t obj_lan_msg_hdr,
                       fiid_obj_t obj_cmd,
                       fiid_obj_t obj_lan_msg_trlr,
-                      const uint8_t *confidentiality_key,
+                      const void *confidentiality_key,
                       unsigned int confidentiality_key_len,
-                      const uint8_t *pkt,
+                      const void *pkt,
                       uint16_t ipmi_payload_len)
 {
   assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
@@ -2173,11 +2173,11 @@ int
 unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                               uint8_t integrity_algorithm,
                               uint8_t confidentiality_algorithm,
-                              const uint8_t *integrity_key,
+                              const void *integrity_key,
                               unsigned int integrity_key_len,
-                              const uint8_t *confidentiality_key,
+                              const void *confidentiality_key,
                               unsigned int confidentiality_key_len,
-                              const uint8_t *pkt,
+                              const void *pkt,
                               unsigned int pkt_len,
                               fiid_obj_t obj_rmcp_hdr,
                               fiid_obj_t obj_rmcpplus_session_hdr,

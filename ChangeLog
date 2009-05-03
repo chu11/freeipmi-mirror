@@ -1,7 +1,15 @@
 2009-05-03  Albert Chu <chu11@llnl.gov>
 
 	* Various code cleanup.
+
+	* tagged pre_void_lib_cleanup
+
+	* Cleanup libfreeipmi, use void * instead of uint8_t * or char *
+	when appropriate.
+
+	* Various code cleanup.
 	
+
 2009-05-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/, ipmi-oem/: Fix glibc portability bugs.

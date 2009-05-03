@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.50 2009-05-02 03:55:18 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.51 2009-05-03 17:40:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1002,7 +1002,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   /* In IPMI 2.0, session_ids of 0 are special */
   do
     {
-      if (ipmi_get_random ((uint8_t *)&(c->session.remote_console_session_id),
+      if (ipmi_get_random (&(c->session.remote_console_session_id),
                            sizeof (c->session.remote_console_session_id)) < 0)
         {
           IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));

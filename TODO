@@ -1,7 +1,6 @@
 bug
 
-ipmi-raw - ipmi_raw_stream and ipmi-oem arg checks
-use of _SC_ARG_MAX correct? no likely, need to fix
+check for uint8_t *, void *, and char * casting
 
 ipmi-locate
 -----------

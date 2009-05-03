@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.c,v 1.12 2009-05-01 01:55:09 chu11 Exp $
+ *  $Id: ipmi-md2.c,v 1.13 2009-05-03 17:40:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -170,7 +170,7 @@ _md2_update_digest_and_checksum (md2_t *ctx)
 }
 
 int
-md2_update_data (md2_t *ctx, const uint8_t *buf, unsigned int buflen)
+md2_update_data (md2_t *ctx, const void *buf, unsigned int buflen)
 {
 
   if (ctx == NULL || ctx->magic != MD2_MAGIC || buf == NULL)
@@ -220,15 +220,14 @@ _md2_append_padding_and_checksum (md2_t *ctx)
   padlen = MD2_PADDING_LENGTH - Mlen;
   padindex = padlen - 1;
 
-  md2_update_data (ctx, (uint8_t *)padding[padindex], (int)padlen);
+  md2_update_data (ctx, padding[padindex], padlen);
 
   md2_update_data (ctx, C, MD2_CHKSUM_LENGTH);
 }
 
 int
-md2_finish (md2_t *ctx, uint8_t *digest, unsigned int digestlen)
+md2_finish (md2_t *ctx, void *digest, unsigned int digestlen)
 {
-
   if (ctx == NULL || ctx->magic != MD2_MAGIC
       || digest == NULL || digestlen < MD2_DIGEST_LENGTH)
     {
