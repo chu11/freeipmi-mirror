@@ -28,7 +28,6 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
-#include <limits.h>
 #include <errno.h>
 #include <assert.h>
 
@@ -51,7 +50,6 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
   unsigned int send_len;
   int i;
   uint8_t *bytes_rs = NULL;
-  long arg_max;
   int rs_len;
   int rv = -1;
 
@@ -72,18 +70,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
       goto cleanup;
     }
 
-  errno = 0;
-  if ((arg_max = sysconf (_SC_ARG_MAX)) < 0)
-    {
-      if (errno)
-        {
-          pstdout_perror (state_data->pstate, "sysconf");
-          goto cleanup;
-        }
-      arg_max = LONG_MAX;
-    }
-
-  if (!(bytes_rs = calloc (arg_max, sizeof (uint8_t))))
+  if (!(bytes_rs = calloc (state_data->prog_data->args->arg_max, sizeof (uint8_t))))
     {
       pstdout_perror (state_data->pstate, "calloc");
       goto cleanup;
@@ -95,7 +82,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
                               &bytes_rq[2],
                               send_len - 2,
                               bytes_rs,
-                              arg_max)) >= 0)
+                              state_data->prog_data->args->arg_max)) >= 0)
     {
       pstdout_printf (state_data->pstate, "rcvd: ");
       for (i = 0; i < rs_len; i++)
@@ -134,11 +121,10 @@ string2bytes (ipmi_raw_state_data_t *state_data,
   int value = 0;
   int rv = -1;
 
-  if (state_data == NULL
-      || line == NULL
-      || buf == NULL
-      || len == NULL)
-    return (-1);
+  assert (state_data);
+  assert (line);
+  assert (buf);
+  assert (len);
 
   *buf = NULL;
   *len = 0;
@@ -237,7 +223,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
   size_t n = 0;
   uint8_t *bytes_rq = NULL;
   unsigned int send_len;
-  uint8_t bytes_rs[_SC_ARG_MAX];
+  uint8_t *bytes_rs = NULL;
   int rs_len;
   int i, rv = -1;
 
@@ -267,13 +253,19 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
           goto end_loop;
         }
 
+      if (!(bytes_rs = calloc (state_data->prog_data->args->arg_max, sizeof (uint8_t))))
+        {
+          pstdout_perror (state_data->pstate, "calloc");
+          goto cleanup;
+        }
+      
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                                   bytes_rq[0],
                                   bytes_rq[1],
                                   &bytes_rq[2],
                                   send_len - 2,
                                   bytes_rs,
-                                  _SC_ARG_MAX)) < 0)
+                                  state_data->prog_data->args->arg_max)) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -299,6 +291,11 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
           free (bytes_rq);
           bytes_rq = NULL;
         }
+      if (bytes_rs)
+        {
+          free (bytes_rs);
+          bytes_rs = NULL;
+        }
       send_len = 0;
     }
 
@@ -308,6 +305,8 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
     free (line);
   if (bytes_rq)
     free (bytes_rq);
+  if (bytes_rs)
+    free (bytes_rs);
   return (rv);
 }
 

@@ -34,6 +34,7 @@ struct ipmi_raw_arguments
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
   char *cmd_file;
+  long arg_max;
   uint8_t *cmd;
   int cmd_length;
 };
