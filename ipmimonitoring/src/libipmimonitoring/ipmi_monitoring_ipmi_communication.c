@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.30 2009-04-08 20:47:07 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.31 2009-05-03 05:26:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -182,10 +182,10 @@ _inband_init (ipmi_monitoring_ctx_t c,
 
       if (ipmi_ctx_open_inband (c->ipmi_ctx,
                                 driver_type,
-                                (config) ? config->disable_auto_probe : 0,
-                                (config) ? config->driver_address : 0,
-                                (config) ? config->register_spacing : 0,
-                                (config) ? config->driver_device : NULL,
+                                config->disable_auto_probe,
+                                config->driver_address,
+                                config->register_spacing,
+                                config->driver_device,
                                 workaround_flags,
                                 flags) < 0)
         {

@@ -110,7 +110,7 @@ _fiid_template_check_valid_keys (fiid_template_t tmpl)
     {
       unsigned int len;
 
-      if (!tmpl[i].key)
+      if (!(tmpl[i].key))
         return (-1);
 
       len = strlen (tmpl[i].key);

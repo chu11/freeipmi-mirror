@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.53 2009-04-30 15:41:39 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.54 2009-05-03 05:26:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -932,9 +932,12 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
 
       switch (bitmask_type)
         {
+#if 0
+          /* handled above */
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD:
           event_reading_type_code = 0x01;
           break;
+#endif
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION:
           event_reading_type_code = 0x02;
           break;

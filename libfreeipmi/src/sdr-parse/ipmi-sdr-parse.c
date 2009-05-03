@@ -2757,15 +2757,15 @@ ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
   if (rv < 0)
     {
       if (tmp_nominal_reading)
-        free (nominal_reading);
+        free (tmp_nominal_reading);
       if (tmp_normal_maximum)
-        free (normal_maximum);
+        free (tmp_normal_maximum);
       if (tmp_normal_minimum)
-        free (normal_minimum);
+        free (tmp_normal_minimum);
       if (tmp_sensor_maximum_reading)
-        free (sensor_maximum_reading);
+        free (tmp_sensor_maximum_reading);
       if (tmp_sensor_minimum_reading)
-        free (sensor_minimum_reading);
+        free (tmp_sensor_minimum_reading);
     }
   return (rv);
 }
