@@ -303,7 +303,7 @@ username_checkout (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   uint8_t userid;
   /* achu: *2 b/c of CONFIG_USERNAME_NOT_SET_YET_STR length */
-  uint8_t username[IPMI_MAX_USER_NAME_LENGTH*2+1];
+  char username[IPMI_MAX_USER_NAME_LENGTH*2+1];
 
   userid = atoi (section_name + strlen ("User"));
 
@@ -345,7 +345,7 @@ username_checkout (const char *section_name,
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
         {
-          strcpy ((char *)username, CONFIG_USERNAME_NOT_SET_YET_STR);
+          strcpy (username, CONFIG_USERNAME_NOT_SET_YET_STR);
           goto got_data;
         }
 
@@ -354,7 +354,7 @@ username_checkout (const char *section_name,
 
   /* achu: check user_id == 1 after ipmi call to ensure the command can succeed */
   if (userid == 1)
-    strcpy ((char *)username, "NULL");
+    strcpy (username, "NULL");
   else
     {
       if (fiid_obj_get_data (obj_cmd_rs,
@@ -386,7 +386,7 @@ username_checkout (const char *section_name,
     {
       if (config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
-                                                 (char *)username) < 0)
+                                                 username) < 0)
         return (CONFIG_ERR_FATAL_ERROR);
     }
 

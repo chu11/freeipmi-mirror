@@ -372,7 +372,7 @@ alert_string_commit (const char *section_name,
       goto cleanup;
     }
 
-  alert_string_len = strlen ((char *)kv->value_input);
+  alert_string_len = strlen (kv->value_input);
 
   /* We need to write a nul char, so count it as part of the buflen */
   alert_string_buf_len = alert_string_len + 1;

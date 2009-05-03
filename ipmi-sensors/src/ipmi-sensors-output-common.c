@@ -130,7 +130,7 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
  */
 static int
 _get_sdr_sensor_thresholds (ipmi_sensors_state_data_t *state_data,
-                            uint8_t *sdr_record,
+                            const void *sdr_record,
                             unsigned int sdr_record_len,
                             fiid_obj_t obj_get_sensor_thresholds_rs)
 {
@@ -368,7 +368,7 @@ _get_sdr_sensor_thresholds (ipmi_sensors_state_data_t *state_data,
 
 int
 ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
-                             uint8_t *sdr_record,
+                             const void *sdr_record,
                              unsigned int sdr_record_len,
                              double **lower_non_critical_threshold,
                              double **lower_critical_threshold,

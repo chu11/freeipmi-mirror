@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.h,v 1.9 2009-05-01 03:21:44 chu11 Exp $
+ *  $Id: ipmiconsole_checks.h,v 1.10 2009-05-03 18:09:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -34,7 +34,7 @@
 int ipmiconsole_check_checksum (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
 int ipmiconsole_check_authentication_code (ipmiconsole_ctx_t c,
                                            ipmiconsole_packet_type_t p,
-                                           uint8_t *buf,
+                                           void *buf,
                                            unsigned int buflen);
 int ipmiconsole_check_outbound_sequence_number (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
 int ipmiconsole_check_session_id (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);

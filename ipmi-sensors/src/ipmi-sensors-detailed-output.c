@@ -122,7 +122,7 @@ _detailed_output_record_type_and_id (ipmi_sensors_state_data_t *state_data,
 
 static int
 _detailed_output_header (ipmi_sensors_state_data_t *state_data,
-                         uint8_t *sdr_record,
+                         const void *sdr_record,
                          unsigned int sdr_record_len,
                          uint8_t record_type,
                          uint16_t record_id)
@@ -285,7 +285,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
 
 static int
 _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
-                             uint8_t *sdr_record,
+                             const void *sdr_record,
                              unsigned int sdr_record_len,
                              char *sensor_units_str)
 {
@@ -405,7 +405,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
 
 static int
 _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
-                                        uint8_t *sdr_record,
+                                        const void *sdr_record,
                                         unsigned int sdr_record_len,
                                         char *sensor_units_str)
 {
@@ -522,7 +522,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
 
 static int
 _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
-                             uint8_t *sdr_record,
+                             const void *sdr_record,
                              unsigned int sdr_record_len,
                              uint8_t record_type)
 {
@@ -790,7 +790,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
 
 static int
 _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
-                               uint8_t *sdr_record,
+                               const void *sdr_record,
                                unsigned int sdr_record_len,
                                uint8_t record_type)
 {
@@ -1157,7 +1157,7 @@ _analog_data_format_string (ipmi_sensors_state_data_t *state_data, uint8_t analo
 
 static int
 _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
-                              uint8_t *sdr_record,
+                              const void *sdr_record,
                               unsigned int sdr_record_len,
                               uint8_t record_type,
                               uint16_t record_id,
@@ -1319,7 +1319,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
 
 static int
 _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
-                                 uint8_t *sdr_record,
+                                 const void *sdr_record,
                                  unsigned int sdr_record_len,
                                  uint8_t record_type,
                                  uint16_t record_id,
@@ -1365,7 +1365,7 @@ _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
 
 static int
 _detailed_output_event_only_record (ipmi_sensors_state_data_t *state_data,
-                                    uint8_t *sdr_record,
+                                    const void *sdr_record,
                                     unsigned int sdr_record_len,
                                     uint8_t record_type,
                                     uint16_t record_id)
@@ -1389,7 +1389,7 @@ _detailed_output_event_only_record (ipmi_sensors_state_data_t *state_data,
 
 static int
 _detailed_output_entity_association_record (ipmi_sensors_state_data_t *state_data,
-                                            uint8_t *sdr_record,
+                                            const void *sdr_record,
                                             unsigned int sdr_record_len,
                                             uint8_t record_type,
                                             uint16_t record_id)
@@ -1434,7 +1434,7 @@ _detailed_output_entity_association_record (ipmi_sensors_state_data_t *state_dat
 
 static int
 _detailed_output_device_relative_entity_association_record (ipmi_sensors_state_data_t *state_data,
-                                                            uint8_t *sdr_record,
+                                                            const void *sdr_record,
                                                             unsigned int sdr_record_len,
                                                             uint8_t record_type,
                                                             uint16_t record_id)
@@ -1479,7 +1479,7 @@ _detailed_output_device_relative_entity_association_record (ipmi_sensors_state_d
 
 static int
 _detailed_output_header2 (ipmi_sensors_state_data_t *state_data,
-                          uint8_t *sdr_record,
+                          const void *sdr_record,
                           unsigned int sdr_record_len,
                           uint8_t record_type,
                           uint16_t record_id)
@@ -1520,7 +1520,7 @@ _detailed_output_header2 (ipmi_sensors_state_data_t *state_data,
 
 static int
 _output_device_type_and_modifier (ipmi_sensors_state_data_t *state_data,
-                                  uint8_t *sdr_record,
+                                  const void *sdr_record,
                                   unsigned int sdr_record_len)
 {
   uint8_t device_type;
@@ -1558,7 +1558,7 @@ _output_device_type_and_modifier (ipmi_sensors_state_data_t *state_data,
 
 static int
 _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
-                                uint8_t *sdr_record,
+                                const void *sdr_record,
                                 unsigned int sdr_record_len)
 {
   uint8_t entity_id;
@@ -1595,7 +1595,7 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
 
 static int
 _detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state_data,
-                                                uint8_t *sdr_record,
+                                                const void *sdr_record,
                                                 unsigned int sdr_record_len,
                                                 uint8_t record_type,
                                                 uint16_t record_id)
@@ -1672,7 +1672,7 @@ _detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state
 
 static int
 _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_data,
-                                            uint8_t *sdr_record,
+                                            const void *sdr_record,
                                             unsigned int sdr_record_len,
                                             uint8_t record_type,
                                             uint16_t record_id)
@@ -1774,7 +1774,7 @@ _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_dat
 
 static int
 _detailed_output_management_controller_device_locator_record (ipmi_sensors_state_data_t *state_data,
-                                                              uint8_t *sdr_record,
+                                                              const void *sdr_record,
                                                               unsigned int sdr_record_len,
                                                               uint8_t record_type,
                                                               uint16_t record_id)
@@ -1827,7 +1827,7 @@ _detailed_output_management_controller_device_locator_record (ipmi_sensors_state
 
 static int
 _output_manufacturer_id (ipmi_sensors_state_data_t *state_data,
-                         uint8_t *sdr_record,
+                         const void *sdr_record,
                          unsigned int sdr_record_len)
 {
   uint32_t manufacturer_id;
@@ -1866,7 +1866,7 @@ _output_manufacturer_id (ipmi_sensors_state_data_t *state_data,
 
 static int
 _detailed_output_management_controller_confirmation_record (ipmi_sensors_state_data_t *state_data,
-                                                            uint8_t *sdr_record,
+                                                            const void *sdr_record,
                                                             unsigned int sdr_record_len,
                                                             uint8_t record_type,
                                                             uint16_t record_id)
@@ -1911,7 +1911,7 @@ _detailed_output_management_controller_confirmation_record (ipmi_sensors_state_d
 
 static int
 _detailed_output_bmc_message_channel_info_record (ipmi_sensors_state_data_t *state_data,
-                                                  uint8_t *sdr_record,
+                                                  const void *sdr_record,
                                                   unsigned int sdr_record_len,
                                                   uint8_t record_type,
                                                   uint16_t record_id)
@@ -1933,7 +1933,7 @@ _detailed_output_bmc_message_channel_info_record (ipmi_sensors_state_data_t *sta
 
 static int
 _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
-                             uint8_t *sdr_record,
+                             const void *sdr_record,
                              unsigned int sdr_record_len,
                              uint8_t record_type,
                              uint16_t record_id)
@@ -1987,7 +1987,7 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data,
 
 int
 ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
-                              uint8_t *sdr_record,
+                              const void *sdr_record,
                               unsigned int sdr_record_len,
                               double *reading,
                               char **event_message_list,

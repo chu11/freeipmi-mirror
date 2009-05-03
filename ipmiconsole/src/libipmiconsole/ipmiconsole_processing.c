@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.90 2009-05-03 17:40:28 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.91 2009-05-03 18:09:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1756,7 +1756,7 @@ _calculate_cipher_keys (ipmiconsole_ctx_t c)
   unsigned int username_len;
   char *password;
   unsigned int password_len;
-  uint8_t *k_g;
+  void *k_g;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -1829,7 +1829,7 @@ _calculate_cipher_keys (ipmiconsole_ctx_t c)
   if (ipmi_calculate_rmcpplus_session_keys (c->config.authentication_algorithm,
                                             c->config.integrity_algorithm,
                                             c->config.confidentiality_algorithm,
-                                            (uint8_t *)password,
+                                            password,
                                             password_len,
                                             k_g,
                                             (k_g) ? c->config.k_g_len : 0,

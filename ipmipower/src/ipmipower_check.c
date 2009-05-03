@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.104 2009-05-02 02:41:47 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.105 2009-05-03 18:09:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -83,7 +83,7 @@ ipmipower_check_checksum (ipmipower_powercmd_t ip, packet_type_t pkt)
 int
 ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
                                      packet_type_t pkt,
-                                     const uint8_t *buf,
+                                     const void *buf,
                                      unsigned int buflen)
 {
   char *password;
@@ -147,7 +147,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
       if ((rv = ipmi_lan_check_packet_session_authentication_code (buf,
                                                                    buflen,
                                                                    authentication_type,
-                                                                   (uint8_t *)password,
+                                                                   password,
                                                                    password ? strlen (password) : 0)) < 0)
         ierr_exit ("ipmipower_check_authentication_code(%s:%d): "
                    "ipmi_lan_check_packet_session_authentication_code: %s",
@@ -180,7 +180,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
           if ((rv = ipmi_lan_check_packet_session_authentication_code (buf,
                                                                        buflen,
                                                                        authentication_type,
-                                                                       (uint8_t *)password,
+                                                                       password,
                                                                        password ? strlen (password) : 0)) < 0)
             ierr_exit ("ipmipower_check_authentication_code(%s:%d): "
                        "ipmi_lan_check_session_authentication_code: %s",
@@ -213,7 +213,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
                                                                         buflen,
                                                                         ip->integrity_key_ptr,
                                                                         ip->integrity_key_len,
-                                                                        (uint8_t *)password,
+                                                                        password,
                                                                         (password) ? strlen (password) : 0,
                                                                         ip->obj_rmcpplus_session_trlr_res)) < 0)
         ierr_exit ("ipmipower_check_authentication_code(%s:%d): "
@@ -970,7 +970,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
     }
 
   if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (ip->authentication_algorithm,
-                                                                         (uint8_t *)password,
+                                                                         password,
                                                                          password_len,
                                                                          ip->remote_console_session_id,
                                                                          managed_system_session_id,

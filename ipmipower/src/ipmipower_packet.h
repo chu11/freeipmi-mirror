@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.h,v 1.20 2009-05-01 21:13:59 chu11 Exp $
+ *  $Id: ipmipower_packet.h,v 1.21 2009-05-03 18:09:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -48,7 +48,7 @@ fiid_obj_t ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
  */
 int ipmipower_packet_store (ipmipower_powercmd_t ip,
                             packet_type_t pkt,
-                            const uint8_t *buf,
+                            const void *buf,
                             unsigned int buflen);
 
 /* ipmipower_packet_dump
@@ -56,7 +56,7 @@ int ipmipower_packet_store (ipmipower_powercmd_t ip,
  */
 void ipmipower_packet_dump (ipmipower_powercmd_t ip,
                             packet_type_t pkt,
-                            const uint8_t *buf,
+                            const void *buf,
                             unsigned int buflen);
 
 /* ipmipower_packet_create
@@ -66,7 +66,7 @@ void ipmipower_packet_dump (ipmipower_powercmd_t ip,
  */
 int ipmipower_packet_create (ipmipower_powercmd_t ip,
                              packet_type_t pkt,
-                             uint8_t *buf,
+                             void *buf,
                              unsigned int buflen);
 
 /* ipmipower_packet_errmsg

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.116 2009-05-01 21:53:08 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.117 2009-05-03 18:09:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -169,7 +169,7 @@ ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
 
 void
 ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
-                       const uint8_t *buf,
+                       const void *buf,
                        unsigned int buflen)
 {
   assert (ip);
@@ -314,7 +314,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
 int
 ipmipower_packet_store (ipmipower_powercmd_t ip,
                         packet_type_t pkt,
-                        const uint8_t *buf,
+                        const void *buf,
                         unsigned int buflen)
 {
   fiid_obj_t obj;
@@ -409,11 +409,11 @@ _ipmi_1_5_packet_create (ipmipower_powercmd_t ip,
                          uint8_t authentication_type,
                          uint32_t inbound_sequence_number,
                          uint32_t session_id,
-                         uint8_t *authentication_code_data,
+                         void *authentication_code_data,
                          unsigned int authentication_code_data_len,
                          uint8_t net_fn,
                          fiid_obj_t obj_cmd_req,
-                         uint8_t *buf,
+                         void *buf,
                          unsigned int buflen)
 {
   int len;
@@ -470,18 +470,18 @@ _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
                          uint8_t payload_encrypted,
                          uint32_t session_id,
                          uint32_t session_sequence_number,
-                         uint8_t *authentication_code_data,
+                         void *authentication_code_data,
                          unsigned int authentication_code_data_len,
                          uint8_t net_fn,
                          uint8_t authentication_algorithm,
                          uint8_t integrity_algorithm,
                          uint8_t confidentiality_algorithm,
-                         uint8_t *integrity_key,
+                         void *integrity_key,
                          unsigned int integrity_key_len,
-                         uint8_t *confidentiality_key,
+                         void *confidentiality_key,
                          unsigned int confidentiality_key_len,
                          fiid_obj_t obj_cmd_req,
-                         uint8_t *buf,
+                         void *buf,
                          unsigned int buflen)
 {
   int len;
@@ -550,13 +550,13 @@ _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
 int
 ipmipower_packet_create (ipmipower_powercmd_t ip,
                          packet_type_t pkt,
-                         uint8_t *buf,
+                         void *buf,
                          unsigned int buflen)
 {
   char *username = NULL;
   char *password = NULL;
-  uint8_t *integrity_key = NULL;
-  uint8_t *confidentiality_key = NULL;
+  void *integrity_key = NULL;
+  void *confidentiality_key = NULL;
   char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
   unsigned int username_len;
   uint32_t session_id, managed_system_session_id = 0;
@@ -926,7 +926,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
         password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
 
       if ((key_exchange_authentication_code_len = ipmi_calculate_rakp_3_key_exchange_authentication_code (ip->authentication_algorithm,
-                                                                                                          (uint8_t *)password,
+                                                                                                          password,
                                                                                                           password_len,
                                                                                                           managed_system_random_number,
                                                                                                           managed_system_random_number_len,
@@ -1057,7 +1057,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                                   authentication_type,
                                   sequence_number,
                                   session_id,
-                                  (uint8_t *)password,
+                                  password,
                                   (password) ? strlen (password) : 0,
                                   net_fn,
                                   obj_cmd_req,
@@ -1079,7 +1079,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                                   payload_encrypted,
                                   session_id,
                                   sequence_number,
-                                  (uint8_t *)password,
+                                  password,
                                   (password) ? strlen (password) : 0,
                                   net_fn,
                                   authentication_algorithm,

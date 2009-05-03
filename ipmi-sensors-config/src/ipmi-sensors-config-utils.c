@@ -56,7 +56,7 @@ convert_id_string (ipmi_sensors_config_state_data_t *state_data,
 
 config_err_t
 create_section_name (ipmi_sensors_config_state_data_t *state_data,
-                     uint8_t *sdr_record,
+                     const void *sdr_record,
                      unsigned int sdr_record_len,
                      char *section_name,
                      unsigned int section_name_len)
@@ -139,7 +139,7 @@ create_section_name (ipmi_sensors_config_state_data_t *state_data,
 config_err_t
 get_sdr_record (ipmi_sensors_config_state_data_t *state_data,
                 const char *section_name,
-                uint8_t *sdr_record,
+                void *sdr_record,
                 unsigned int *sdr_record_len)
 {
   uint16_t record_id;

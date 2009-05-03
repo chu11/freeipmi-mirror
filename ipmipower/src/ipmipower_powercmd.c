@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.178 2009-05-03 17:40:29 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.179 2009-05-03 18:09:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1273,7 +1273,7 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
   unsigned int username_len;
   char *password;
   unsigned int password_len;
-  uint8_t *k_g;
+  void *k_g;
 
   assert (ip);
   assert (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT);
@@ -1291,7 +1291,7 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
     {
       memset (username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (cmd_args.common.username)
-        strcpy (username_buf, (char *)cmd_args.common.username);
+        strcpy (username_buf, cmd_args.common.username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
@@ -1332,7 +1332,7 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
   if (ipmi_calculate_rmcpplus_session_keys (ip->authentication_algorithm,
                                             ip->integrity_algorithm,
                                             ip->confidentiality_algorithm,
-                                            (uint8_t *)password,
+                                            password,
                                             password_len,
                                             k_g,
                                             (k_g) ? cmd_args.common.k_g_len : 0,

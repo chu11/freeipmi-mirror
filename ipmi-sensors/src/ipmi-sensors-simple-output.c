@@ -78,7 +78,7 @@ _round_double2 (double d)
 
 static int
 _legacy_simple_output_header (ipmi_sensors_state_data_t *state_data,
-                              uint8_t *sdr_record,
+                              const void *sdr_record,
                               unsigned int sdr_record_len,
                               uint16_t record_id)
 {
@@ -136,7 +136,7 @@ _legacy_simple_output_header (ipmi_sensors_state_data_t *state_data,
 
 static int
 _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
-                                   uint8_t *sdr_record,
+                                   const void *sdr_record,
                                    unsigned int sdr_record_len,
                                    uint16_t record_id,
                                    double *reading,
@@ -282,7 +282,7 @@ _legacy_simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 
 static int
 _legacy_simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
-                                      uint8_t *sdr_record,
+                                      const void *sdr_record,
                                       unsigned int sdr_record_len,
                                       uint16_t record_id,
                                       char **event_message_list,
@@ -310,7 +310,7 @@ _legacy_simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
 
 static int
 _simple_output_header (ipmi_sensors_state_data_t *state_data,
-                       uint8_t *sdr_record,
+                       const void *sdr_record,
                        unsigned int sdr_record_len,
                        uint16_t record_id)
 {
@@ -373,7 +373,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
 
 static int
 _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
-                            uint8_t *sdr_record,
+                            const void *sdr_record,
                             unsigned int sdr_record_len,
                             uint16_t record_id,
                             double *reading,
@@ -522,7 +522,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 
 static int
 _simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
-                               uint8_t *sdr_record,
+                               const void *sdr_record,
                                unsigned int sdr_record_len,
                                uint16_t record_id,
                                char **event_message_list,
@@ -579,7 +579,7 @@ _simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
 
 int
 ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
-                            uint8_t *sdr_record,
+                            const void *sdr_record,
                             unsigned int sdr_record_len,
                             double *reading,
                             char **event_message_list,

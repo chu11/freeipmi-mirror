@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.32 2009-05-02 02:41:46 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.33 2009-05-03 18:09:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -88,10 +88,10 @@ ipmiconsole_check_checksum (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 int
 ipmiconsole_check_authentication_code (ipmiconsole_ctx_t c,
                                        ipmiconsole_packet_type_t p,
-                                       uint8_t *buf,
+                                       void *buf,
                                        unsigned int buflen)
 {
-  uint8_t *password;
+  char *password;
   int rv;
 
   assert (c);
@@ -109,7 +109,7 @@ ipmiconsole_check_authentication_code (ipmiconsole_ctx_t c,
   assert (buflen);
 
   if (strlen (c->config.password))
-    password = (uint8_t *)c->config.password;
+    password = c->config.password;
   else
     password = NULL;
 
@@ -119,7 +119,7 @@ ipmiconsole_check_authentication_code (ipmiconsole_ctx_t c,
                                                                     c->session.integrity_key_ptr,
                                                                     c->session.integrity_key_len,
                                                                     password,
-                                                                    (password) ? strlen ((char *)password) : 0,
+                                                                    (password) ? strlen (password) : 0,
                                                                     c->connection.obj_rmcpplus_session_trlr_rs)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_rmcpplus_check_packet_session_authentication_code: p = %d; %s", p, strerror (errno)));
@@ -786,7 +786,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code (ipmiconsole_ctx_t c, 
     }
 
   if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (c->config.authentication_algorithm,
-                                                                         (uint8_t *)password,
+                                                                         password,
                                                                          password_len,
                                                                          c->session.remote_console_session_id,
                                                                          managed_system_session_id,

@@ -45,7 +45,7 @@
 
 static config_err_t
 _get_sdr_decoding_data (ipmi_sensors_config_state_data_t *state_data,
-                        uint8_t *sdr_record,
+                        const void *sdr_record,
                         unsigned int sdr_record_len,
                         int8_t *r_exponent,
                         int8_t *b_exponent,
@@ -114,7 +114,7 @@ _get_sdr_decoding_data (ipmi_sensors_config_state_data_t *state_data,
 
 static config_err_t
 _decode_value (ipmi_sensors_config_state_data_t *state_data,
-               uint8_t *sdr_record,
+               const void *sdr_record,
                unsigned int sdr_record_len,
                uint8_t value_raw,
                double *value_calc)
@@ -168,7 +168,7 @@ _decode_value (ipmi_sensors_config_state_data_t *state_data,
 
 static config_err_t
 _decode_value_raw (ipmi_sensors_config_state_data_t *state_data,
-                   uint8_t *sdr_record,
+                   const void *sdr_record,
                    unsigned int sdr_record_len,
                    const char *threshold_input,
                    uint8_t *threshold_raw)
@@ -1059,7 +1059,7 @@ _setup_threshold_key (ipmi_sensors_config_state_data_t *state_data,
 
 static int
 _setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
-                         uint8_t *sdr_record,
+                         const void *sdr_record,
                          unsigned int sdr_record_len,
                          struct config_section *section,
                          const char *description,
@@ -1191,7 +1191,7 @@ _setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
 
 static int
 _setup_threshold_hysteresis_fields (ipmi_sensors_config_state_data_t *state_data,
-                                    uint8_t *sdr_record,
+                                    const void *sdr_record,
                                     unsigned int sdr_record_len,
                                     struct config_section *section,
                                     const char *description,
@@ -1265,7 +1265,7 @@ _setup_threshold_hysteresis_fields (ipmi_sensors_config_state_data_t *state_data
 
 config_err_t
 ipmi_sensors_config_threshold_section (ipmi_sensors_config_state_data_t *state_data,
-                                       uint8_t *sdr_record,
+                                       const void *sdr_record,
                                        unsigned int sdr_record_len,
                                        struct config_section **section_ptr)
 {

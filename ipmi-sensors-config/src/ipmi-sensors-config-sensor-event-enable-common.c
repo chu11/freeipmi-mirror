@@ -1025,7 +1025,7 @@ threshold_event_enable_commit (const char *section_name,
 
 static int
 _setup_threshold_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_data,
-                                       uint8_t *sdr_record,
+                                       const void *sdr_record,
                                        unsigned int sdr_record_len,
                                        struct config_section *section,
                                        const char *type_str,
@@ -1113,7 +1113,7 @@ _setup_threshold_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_d
 
 int
 _setup_threshold_event_enable (ipmi_sensors_config_state_data_t *state_data,
-                               uint8_t *sdr_record,
+                               const void *sdr_record,
                                unsigned int sdr_record_len,
                                struct config_section *section)
 {
@@ -1147,7 +1147,7 @@ _setup_threshold_event_enable (ipmi_sensors_config_state_data_t *state_data,
 
 static int
 _get_event_state_bitmask (ipmi_sensors_config_state_data_t *state_data,
-                          uint8_t *sdr_record,
+                          const void *sdr_record,
                           unsigned int sdr_record_len,
                           Sdr_event_flags_func sdr_call,
                           uint16_t *bitmask)
@@ -1495,7 +1495,7 @@ generic_event_enable_commit (const char *section_name,
 
 static int
 _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_data,
-                                     uint8_t *sdr_record,
+                                     const void *sdr_record,
                                      unsigned int sdr_record_len,
                                      struct config_section *section,
                                      const char *type_str,
@@ -1561,7 +1561,7 @@ _setup_generic_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_dat
 
 int
 _setup_generic_event_enable (ipmi_sensors_config_state_data_t *state_data,
-                             uint8_t *sdr_record,
+                             const void *sdr_record,
                              unsigned int sdr_record_len,
                              struct config_section *section,
                              uint8_t event_reading_type_code)
@@ -1917,7 +1917,7 @@ sensor_specific_event_enable_commit (const char *section_name,
 
 static int
 _setup_sensor_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *state_data,
-                                             uint8_t *sdr_record,
+                                             const void *sdr_record,
                                              unsigned int sdr_record_len,
                                              struct config_section *section,
                                              const char *type_str,
@@ -2022,7 +2022,7 @@ _setup_sensor_specific_event_enable_wrapper (ipmi_sensors_config_state_data_t *s
 
 int
 _setup_sensor_specific_event_enable (ipmi_sensors_config_state_data_t *state_data,
-                                     uint8_t *sdr_record,
+                                     const void *sdr_record,
                                      unsigned int sdr_record_len,
                                      struct config_section *section,
                                      uint8_t event_reading_type_code)
@@ -2057,7 +2057,7 @@ _setup_sensor_specific_event_enable (ipmi_sensors_config_state_data_t *state_dat
 
 int
 setup_sensor_event_enable_fields (ipmi_sensors_config_state_data_t *state_data,
-                                  uint8_t *sdr_record,
+                                  const void *sdr_record,
                                   unsigned int sdr_record_len,
                                   struct config_section *section)
 {

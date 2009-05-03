@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.43 2009-05-02 00:07:59 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.44 2009-05-03 18:09:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -277,7 +277,7 @@ _packet_dump_hdr (ipmiconsole_ctx_t c,
 int
 ipmiconsole_packet_dump (ipmiconsole_ctx_t c,
                          ipmiconsole_packet_type_t p,
-                         uint8_t *buf,
+                         const void *buf,
                          unsigned int buflen)
 {
   fiid_field_t *tmpl_lan_msg_hdr;
@@ -392,7 +392,7 @@ ipmiconsole_packet_dump (ipmiconsole_ctx_t c,
 
 static int
 _packet_dump_unknown_hdr (ipmiconsole_ctx_t c,
-                          uint8_t *buf,
+                          const void *buf,
                           unsigned int buflen,
                           char *hdr,
                           unsigned int hdrlen)
@@ -471,7 +471,7 @@ _packet_dump_unknown_hdr (ipmiconsole_ctx_t c,
 
 int
 ipmiconsole_packet_dump_unknown (ipmiconsole_ctx_t c,
-                                 uint8_t *buf,
+                                 const void *buf,
                                  unsigned int buflen)
 {
   char hdr[IPMICONSOLE_MAX_PACKET_DUMP_HDR_LEN];
@@ -552,11 +552,11 @@ _ipmi_1_5_packet_assemble (ipmiconsole_ctx_t c,
                            uint8_t authentication_type,
                            uint32_t inbound_sequence_number,
                            uint32_t session_id,
-                           uint8_t *authentication_code_data,
+                           void *authentication_code_data,
                            unsigned int authentication_code_data_len,
                            uint8_t net_fn,
                            fiid_obj_t obj_cmd_rq,
-                           uint8_t *buf,
+                           void *buf,
                            unsigned int buflen)
 {
   int pkt_len;
@@ -627,18 +627,18 @@ _ipmi_2_0_packet_assemble (ipmiconsole_ctx_t c,
                            uint8_t payload_encrypted,
                            uint32_t session_id,
                            uint32_t session_sequence_number,
-                           uint8_t *authentication_code_data,
+                           void *authentication_code_data,
                            unsigned int authentication_code_data_len,
                            uint8_t net_fn,
                            uint8_t authentication_algorithm,
                            uint8_t integrity_algorithm,
                            uint8_t confidentiality_algorithm,
-                           uint8_t *integrity_key,
+                           void *integrity_key,
                            unsigned int integrity_key_len,
-                           uint8_t *confidentiality_key,
+                           void *confidentiality_key,
                            unsigned int confidentiality_key_len,
                            fiid_obj_t obj_cmd_rq,
-                           uint8_t *buf,
+                           void *buf,
                            unsigned int buflen)
 {
   int pkt_len;
@@ -726,7 +726,7 @@ _ipmi_2_0_packet_assemble (ipmiconsole_ctx_t c,
 int
 ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
                                   ipmiconsole_packet_type_t p,
-                                  uint8_t *buf,
+                                  void *buf,
                                   unsigned int buflen)
 {
   char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
@@ -742,10 +742,10 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
   uint8_t payload_type = 0;
   uint8_t authentication_algorithm = 0;
   uint8_t integrity_algorithm = 0;
-  uint8_t *integrity_key = NULL;
+  void *integrity_key = NULL;
   unsigned int integrity_key_len = 0;
   uint8_t confidentiality_algorithm = 0;
-  uint8_t *confidentiality_key = NULL;
+  void *confidentiality_key = NULL;
   unsigned int confidentiality_key_len = 0;
   uint8_t payload_authenticated = 0;
   uint8_t payload_encrypted = 0;
@@ -1011,7 +1011,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         }
 
       if ((key_exchange_authentication_code_len = ipmi_calculate_rakp_3_key_exchange_authentication_code (c->config.authentication_algorithm,
-                                                                                                          (uint8_t *)password,
+                                                                                                          password,
                                                                                                           password_len,
                                                                                                           managed_system_random_number,
                                                                                                           managed_system_random_number_len,
@@ -1170,7 +1170,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
                                                 authentication_type,
                                                 session_sequence_number,
                                                 session_id,
-                                                (uint8_t *)password,
+                                                password,
                                                 password_len,
                                                 net_fn,
                                                 obj_cmd_rq,
@@ -1187,7 +1187,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
                                                 payload_encrypted,
                                                 session_id,
                                                 session_sequence_number,
-                                                (uint8_t *)password,
+                                                password,
                                                 password_len,
                                                 net_fn,
                                                 authentication_algorithm,
@@ -1212,9 +1212,9 @@ ipmiconsole_sol_packet_assemble (ipmiconsole_ctx_t c,
                                  uint8_t packet_ack_nack_sequence_number,
                                  uint8_t accepted_character_count,
                                  uint8_t generate_break,
-                                 uint8_t *character_data,
+                                 void *character_data,
                                  unsigned int character_data_len,
-                                 uint8_t *buf,
+                                 void *buf,
                                  unsigned int buflen)
 {
   char *password = NULL;
@@ -1306,7 +1306,7 @@ ipmiconsole_sol_packet_assemble (ipmiconsole_ctx_t c,
                                             payload_encrypted,
                                             session_id,
                                             c->session.session_sequence_number,
-                                            (uint8_t *)password,
+                                            password,
                                             (password) ? strlen (password) : 0,
                                             0,
                                             c->config.authentication_algorithm,
@@ -1332,7 +1332,7 @@ ipmiconsole_sol_packet_assemble (ipmiconsole_ctx_t c,
 int
 ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
                                ipmiconsole_packet_type_t *p,
-                               const uint8_t *buf,
+                               const void *buf,
                                unsigned int buflen)
 {
   ipmiconsole_packet_type_t pkt;

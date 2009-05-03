@@ -243,7 +243,7 @@ _get_sdr_id_string (ipmi_sel_parse_ctx_t ctx,
   if (ipmi_sdr_parse_id_string (ctx->sdr_parse_ctx,
                                 sdr_record,
                                 sdr_record_len,
-                                (char *)id_string,
+                                id_string,
                                 id_string_len) < 0)
     {
       if (ipmi_sdr_parse_ctx_errnum (ctx->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_INVALID_SDR_RECORD

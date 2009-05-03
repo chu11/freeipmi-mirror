@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.h,v 1.16 2009-05-01 01:55:02 chu11 Exp $
+ *  $Id: ipmipower_check.h,v 1.17 2009-05-03 18:09:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -43,7 +43,7 @@ int ipmipower_check_checksum (ipmipower_powercmd_t ip, packet_type_t pkt);
  */
 int ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
                                          packet_type_t pkt,
-                                         const uint8_t *buf,
+                                         const void *buf,
                                          unsigned int buflen);
 
 /* ipmipower_check_outbound_sequence_number
