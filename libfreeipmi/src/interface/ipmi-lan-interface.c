@@ -269,12 +269,11 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   void *ipmi_msg_len_ptr = NULL;
   unsigned int msg_data_count = 0;
   unsigned int checksum_data_count = 0;
-  int len;
   uint8_t ipmi_msg_len;
   fiid_obj_t obj_lan_msg_trlr = NULL;
   uint8_t pwbuf[IPMI_1_5_MAX_PASSWORD_LENGTH];
   uint8_t checksum;
-  int rv = -1;
+  int len, rv = -1;
 
   if (!fiid_obj_valid (obj_rmcp_hdr)
       || !fiid_obj_valid (obj_lan_session_hdr)

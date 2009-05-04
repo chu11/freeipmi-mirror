@@ -72,11 +72,10 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
                     void *sik,
                     unsigned int sik_len)
 {
-  int expected_digest_len, crypt_digest_len, computed_digest_len;
+  int expected_digest_len, crypt_digest_len, computed_digest_len, rv = -1;
   unsigned int hash_algorithm, hash_flags, hash_data_len;
   uint8_t hash_data[IPMI_MAX_KEY_DATA_LENGTH];
   uint8_t priv_byte = 0;
-  int rv = -1;
 
   /* k_g can be NULL, indicating a empty k_g */
   if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
@@ -199,8 +198,7 @@ _calculate_k_rakp_hmac (unsigned int hash_algorithm,
                         const void *constant,
                         unsigned int constant_len)
 {
-  int computed_digest_len;
-  int crypt_digest_len;
+  int computed_digest_len, crypt_digest_len;
 
   if (!IPMI_CRYPT_HASH_ALGORITHM_VALID (hash_algorithm)
       || !sik_key
@@ -1064,8 +1062,7 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorit
   int digest_len = 0;
   unsigned int compare_len = 0;
   uint8_t integrity_check_value[IPMI_MAX_INTEGRITY_CHECK_VALUE_LENGTH];
-  int integrity_check_value_len;
-  int rv = -1;
+  int integrity_check_value_len, rv = -1;
 
   if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
        && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
@@ -1191,9 +1188,8 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t integrity_digest[IPMI_MAX_INTEGRITY_DATA_LENGTH];
   uint8_t authentication_code[IPMI_MAX_INTEGRITY_DATA_LENGTH];
-  int rmcp_header_len, authentication_code_len, integrity_digest_len, crypt_digest_len;
+  int rmcp_header_len, authentication_code_len, integrity_digest_len, crypt_digest_len, rv = -1;
   uint8_t pwbuf[IPMI_2_0_MAX_PASSWORD_LENGTH];
-  int rv = -1;
 
   if ((integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_NONE
        && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96

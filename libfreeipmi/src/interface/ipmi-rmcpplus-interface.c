@@ -566,11 +566,9 @@ _construct_payload_buf (uint8_t payload_type,
   int obj_lan_msg_hdr_len = 0;
   int obj_cmd_len = 0;
   int obj_lan_msg_trlr_len = 0;
-  int checksum_start_offset;
+  int checksum_start_offset, len, rv = -1;
   unsigned int payload_len;
   uint8_t checksum;
-  int len;
-  int rv = -1;
   unsigned int indx = 0;
   fiid_obj_t obj_lan_msg_trlr = NULL;
 
@@ -745,8 +743,7 @@ _construct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
   int iv_len;
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t pad_len;
-  int payload_len;
-  int cipher_keylen, cipher_blocklen, encrypt_len;
+  int payload_len, cipher_keylen, cipher_blocklen, encrypt_len;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
 
@@ -1082,14 +1079,11 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
                                              void *authentication_code_buf,
                                              unsigned int authentication_code_buf_len)
 {
-  int crypt_digest_len;
+  int crypt_digest_len, authentication_code_len, integrity_digest_len, len, rv = -1;
   unsigned int hash_algorithm, hash_flags, expected_digest_len, copy_digest_len, hash_data_len;
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t integrity_digest[IPMI_MAX_INTEGRITY_DATA_LENGTH];
-  int authentication_code_len, integrity_digest_len;
-  int len;
   uint8_t pwbuf[IPMI_2_0_MAX_PASSWORD_LENGTH];
-  int rv = -1;
 
   assert ((integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
            || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
@@ -1260,15 +1254,13 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                             unsigned int pkt_len)
 {
   unsigned int indx = 0;
-  int obj_rmcp_hdr_len, obj_len, oem_iana_len, oem_payload_id_len, len;
+  int obj_rmcp_hdr_len, obj_len, oem_iana_len, oem_payload_id_len, payload_len, len, rv = -1;
   uint8_t payload_type, payload_authenticated, payload_encrypted;
   uint32_t session_id, session_sequence_number;
   uint64_t val;
-  int payload_len;
   fiid_obj_t obj_rmcpplus_payload = NULL;
   fiid_obj_t obj_session_hdr_temp = NULL;
   fiid_obj_t obj_rmcpplus_session_trlr_temp = NULL;
-  int rv = -1;
 
   /* achu: obj_lan_msg_hdr only needed for payload type IPMI
    *
@@ -1733,8 +1725,7 @@ _deconstruct_payload_buf (uint8_t payload_type,
                           unsigned int lan_msg_len)
 {
   int obj_lan_msg_trlr_len, len;
-  unsigned int obj_cmd_len;
-  unsigned int indx = 0;
+  unsigned int obj_cmd_len, indx = 0;
 
   assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
            || payload_type == IPMI_PAYLOAD_TYPE_SOL)
@@ -1906,9 +1897,8 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
   uint8_t iv[IPMI_CRYPT_AES_CBC_128_IV_LENGTH];
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t pad_length;
-  int cipher_keylen, cipher_blocklen;
+  int cipher_keylen, cipher_blocklen, decrypt_len;
   unsigned int payload_data_len, cmd_data_len, indx = 0;
-  int decrypt_len;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
 
