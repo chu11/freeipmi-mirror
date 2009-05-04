@@ -122,9 +122,9 @@ ipmi_lan_cmd (ipmi_ctx_t ctx,
 int
 ipmi_lan_cmd_raw (ipmi_ctx_t ctx,
                   const void *buf_rq,
-                  size_t buf_rq_len,
+                  unsigned int buf_rq_len,
                   void *buf_rs,
-                  size_t buf_rs_len)
+                  unsigned int buf_rs_len)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -292,9 +292,9 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
 int
 ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
                       const void *buf_rq,
-                      size_t buf_rq_len,
+                      unsigned int buf_rq_len,
                       void *buf_rs,
-                      size_t buf_rs_len)
+                      unsigned int buf_rs_len)
 {
   uint8_t payload_authenticated;
   uint8_t payload_encrypted;
