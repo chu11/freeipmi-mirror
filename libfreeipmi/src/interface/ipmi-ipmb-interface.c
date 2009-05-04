@@ -146,11 +146,10 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
   unsigned int indx = 0;
   uint8_t *checksum_data_ptr = NULL;
   unsigned int checksum_data_count = 0;
-  int len;
   unsigned int required_len = 0;
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   uint8_t checksum;
-  int rv = -1;
+  int len, rv = -1;
 
   if (!fiid_obj_valid (obj_ipmb_msg_hdr)
       || !fiid_obj_valid (obj_cmd)
@@ -284,11 +283,9 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
                           fiid_obj_t obj_ipmb_msg_trlr)
 {
   uint8_t buf[IPMB_MAX_LEN+1];
-  int buf_len;
+  int buf_len, obj_ipmb_msg_trlr_len, len;
   unsigned int indx = 0;
   unsigned int ipmb_msg_len;
-  int obj_ipmb_msg_trlr_len;
-  int len;
 
   if (!fiid_obj_valid (obj_ipmb_msg)
       || !fiid_obj_valid (obj_ipmb_msg_hdr)

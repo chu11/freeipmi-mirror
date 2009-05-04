@@ -858,11 +858,9 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                       fiid_obj_t obj_cmd_rq,
                       fiid_obj_t obj_cmd_rs)
 {
-  int rv = -1;
-  int ret;
+  int recv_len, ret, rv = -1;
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
-  int recv_len;
   struct socket_to_close *sockets = NULL;
   uint8_t cmd = 0;             /* used for debugging */
   uint64_t val;
@@ -1162,11 +1160,9 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
                            fiid_obj_t obj_cmd_rq,
                            fiid_obj_t obj_cmd_rs)
 {
-  int rv = -1;
-  int ret;
+  int recv_len, ret, rv = -1;
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
-  int recv_len;
   uint8_t cmd = 0;             /* used for debugging */
   uint8_t rq_seq_orig;
   uint64_t val;
@@ -1310,8 +1306,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   uint8_t challenge_string[IPMI_CHALLENGE_STRING_LENGTH];
   uint32_t initial_outbound_sequence_number = 0;
   unsigned int seedp;
-  int rv = -1;
-  int ret;
+  int ret, rv = -1;
   uint64_t val;
 
   assert (ctx
@@ -2143,9 +2138,8 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
   struct sockaddr_in from;
   socklen_t fromlen = 0;
   struct timeval timeout;
-  int recv_len = 0;
-
   fd_set read_set;
+  int recv_len = 0;
   int status = 0;
 
   assert (ctx
@@ -2287,8 +2281,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
   uint8_t rs_session_sequence_number;
   uint8_t rmcpplus_status_code;
   uint64_t val;
-  int rv = -1;
-  int ret;
+  int ret, rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -2618,11 +2611,9 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                           fiid_obj_t obj_cmd_rq,
                           fiid_obj_t obj_cmd_rs)
 {
-  int rv = -1;
-  int ret;
+  int recv_len, ret, rv = -1;
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
-  int recv_len;
   uint8_t cmd = 0;             /* used for debugging */
   uint64_t val;
 
@@ -2825,11 +2816,9 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
                                fiid_obj_t obj_cmd_rq,
                                fiid_obj_t obj_cmd_rs)
 {
-  int rv = -1;
-  int ret;
+  int recv_len, ret, rv = -1;
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
-  int recv_len;
   uint8_t cmd = 0;             /* used for debugging */
   uint8_t rq_seq_orig;
   uint64_t val;
@@ -3004,9 +2993,8 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   uint8_t requested_maximum_privilege;
   uint8_t assume_rakp_4_success = 0;
   uint8_t name_only_lookup;
-  int rv = -1;
+  int ret, rv = -1;
   unsigned int seedp;
-  int ret;
   uint64_t val;
 
   assert (ctx

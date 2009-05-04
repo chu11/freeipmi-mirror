@@ -217,10 +217,9 @@ _dump_rmcpplus_payload_data (int fd,
   fiid_obj_t obj_ipmb_cmd = NULL;
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   fiid_obj_t obj_lan_msg_trlr = NULL;
-  int obj_lan_msg_trlr_len, len;
+  int obj_lan_msg_trlr_len, len, rv = -1;
   unsigned int obj_cmd_len;
   unsigned int indx = 0;
-  int rv = -1;
 
   assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
            || payload_type == IPMI_PAYLOAD_TYPE_SOL)
@@ -624,11 +623,10 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
   uint8_t iv[IPMI_CRYPT_AES_CBC_128_IV_LENGTH];
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t pad_len;
-  int cipher_keylen, cipher_blocklen, decrypt_len;
+  int cipher_keylen, cipher_blocklen, decrypt_len, rv = -1;
   unsigned int payload_data_len, cmd_data_len;
   fiid_obj_t obj_rmcpplus_payload = NULL;
   unsigned int indx = 0;
-  int rv = -1;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
 
@@ -1049,11 +1047,10 @@ _dump_rmcpplus_session_trlr (int fd,
                              const void *pkt,
                              unsigned int pkt_len)
 {
-  int pad_length_field_len, next_header_field_len;
+  int pad_length_field_len, next_header_field_len, rv = -1;
   unsigned int pad_length, authentication_code_len = 0;
   fiid_obj_t obj_rmcpplus_session_trlr = NULL;
   unsigned int indx = 0;
-  int rv = -1;
 
   assert (IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm));
 
@@ -1200,7 +1197,7 @@ _ipmi_dump_rmcpplus_packet (int fd,
                             fiid_template_t tmpl_ipmb_msg_hdr,
                             fiid_template_t tmpl_ipmb_cmd)
 {
-  int obj_rmcp_hdr_len, obj_len;
+  int obj_rmcp_hdr_len, obj_len, rv = -1;
   uint8_t payload_type = 0, payload_authenticated = 0, payload_encrypted = 0;
   uint32_t session_id = 0;
   uint16_t ipmi_payload_len = 0;
@@ -1241,7 +1238,6 @@ _ipmi_dump_rmcpplus_packet (int fd,
     "Unexpected Data:\n"
     "----------------";
   unsigned int indx = 0;
-  int rv = -1;
 
   assert (pkt);
   assert (IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm));

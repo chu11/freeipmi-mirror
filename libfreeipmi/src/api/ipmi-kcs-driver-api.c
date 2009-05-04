@@ -313,10 +313,8 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
   {
     uint8_t *pkt;
     unsigned int pkt_len;
-    int hdr_len, cmd_len;
-    int read_len;
+    int hdr_len, cmd_len, read_len, rv = -1;
     fiid_field_t *tmpl = NULL;
-    int rv = -1;
 
     if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
       {
@@ -390,8 +388,7 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
   fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
   fiid_obj_t obj_ipmb_msg_rq = NULL;
   fiid_obj_t obj_send_cmd_rs = NULL;
-  int len;
-  int rv = -1;
+  int len, rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -545,8 +542,7 @@ ipmi_kcs_cmd_api_ipmb (ipmi_ctx_t ctx,
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
   unsigned retransmission_count = 0;
   unsigned reread_count = 0;
-  int rv = -1;
-  int ret;
+  int ret, rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -678,8 +674,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   unsigned int pkt_len;
   uint8_t *readbuf = NULL;
   int bytes_read = 0;
-  int hdr_len;
-  int rv = -1;
+  int hdr_len, rv = -1;
   uint8_t cmd = 0;             /* used for debugging */
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)

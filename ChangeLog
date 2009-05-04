@@ -1,3 +1,7 @@
+2009-05-04  Albert Chu <chu11@llnl.gov>
+
+	* Various code cleanup.
+
 2009-05-03  Albert Chu <chu11@llnl.gov>
 
 	* Various code cleanup.
@@ -9,7 +13,6 @@
 
 	* Various code cleanup.
 	
-
 2009-05-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/, ipmi-oem/: Fix glibc portability bugs.

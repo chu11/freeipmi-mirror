@@ -232,8 +232,7 @@ _ipmi_i2c_smbus_access (ipmi_ssif_ctx_t ctx,
   struct ipmi_i2c_smbus_ioctl_data args;
   fd_set read_fds;
   struct timeval tv;
-  int n;
-  int rv;
+  int n, rv;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SSIF_CTX_MAGIC);
@@ -281,7 +280,7 @@ _ipmi_i2c_smbus_access (ipmi_ssif_ctx_t ctx,
 static int
 _ipmi_ssif_single_part_write (ipmi_ssif_ctx_t ctx,
                               int dev_fd,
-                              const void *buf,
+                              const uint8_t *buf,
                               size_t buf_len)
 {
 
@@ -293,7 +292,7 @@ _ipmi_ssif_single_part_write (ipmi_ssif_ctx_t ctx,
 
   data.block[0] = buf_len;
   for (i = 0; i < buf_len; i++)
-    data.block[i + 1] = ((uint8_t *)buf)[i];
+    data.block[i + 1] = buf[i];
 
   return (_ipmi_i2c_smbus_access (ctx,
                                   dev_fd,
@@ -305,14 +304,11 @@ _ipmi_ssif_single_part_write (ipmi_ssif_ctx_t ctx,
 static int
 _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
                              int dev_fd,
-                             const void *buf,
+                             const uint8_t *buf,
                              size_t buf_len)
 {
   union ipmi_i2c_smbus_data data;
-  int middle_parts;
-  int i;
-  int mpart;
-  int index;
+  int middle_parts, mpart, index, i;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SSIF_CTX_MAGIC);
@@ -339,7 +335,7 @@ _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
 
   data.block[0] = IPMI_I2C_SMBUS_BLOCK_MAX;
   for (i = 0; i < IPMI_I2C_SMBUS_BLOCK_MAX; i++)
-    data.block[i + 1] = ((uint8_t *)buf)[i];
+    data.block[i + 1] = buf[i];
   if (_ipmi_i2c_smbus_access (ctx,
                               dev_fd,
                               IPMI_I2C_SMBUS_WRITE,
@@ -352,7 +348,7 @@ _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
       index = mpart * IPMI_I2C_SMBUS_BLOCK_MAX;
       data.block[0] = IPMI_I2C_SMBUS_BLOCK_MAX;
       for (i = 0; i < IPMI_I2C_SMBUS_BLOCK_MAX; i++)
-        data.block[i + 1] = ((uint8_t *)buf)[index + i];
+        data.block[i + 1] = buf[index + i];
       if (_ipmi_i2c_smbus_access (ctx,
                                   dev_fd,
                                   IPMI_I2C_SMBUS_WRITE,
@@ -364,7 +360,7 @@ _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
   index = (middle_parts + 1) * IPMI_I2C_SMBUS_BLOCK_MAX;
   data.block[0] = buf_len % IPMI_I2C_SMBUS_BLOCK_MAX;
   for (i = 0; i < data.block[0]; i++)
-    data.block[i + 1] = ((uint8_t *)buf)[index + i];
+    data.block[i + 1] = buf[index + i];
 
   return (_ipmi_i2c_smbus_access (ctx,
                                   dev_fd,
@@ -376,15 +372,15 @@ _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
 static int
 _ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
                  int dev_fd,
-                 void *buf,
+                 uint8_t *buf,
                  size_t buf_len)
 {
   union ipmi_i2c_smbus_data data;
   int bytes_read = 0;
   int bytes_copied = 0;
-  int length;
-  int block_number;
-  int sindex;
+  int length = 0;
+  int block_number = 0;
+  int sindex = 0;
   int multi_read_start = 0;
   int i;
 
@@ -417,7 +413,7 @@ _ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
     length = buf_len;
 
   for (i = 0; i < length; i++)
-    ((uint8_t *)buf)[i] = data.block[sindex + i];
+    buf[i] = data.block[sindex + i];
 
   bytes_copied = length;
 
@@ -438,7 +434,7 @@ _ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
         length = buf_len - bytes_copied;
 
       for (i = 0; i < length; i++)
-        ((uint8_t *)buf)[bytes_copied + i] = data.block[i + 2];
+        buf[bytes_copied + i] = data.block[i + 2];
 
       bytes_copied += length;
 
@@ -703,8 +699,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
                  const void *buf,
                  unsigned int buf_len)
 {
-  int count;
-  int lock_flag = 0;
+  int count, lock_flag = 0;
 
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
     {
@@ -773,8 +768,7 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
                 void *buf,
                 unsigned int buf_len)
 {
-  int count = 0;
-  int rv = -1;
+  int count, rv = -1;
 
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
     {
@@ -819,9 +813,8 @@ _ipmi_ssif_cmd_write (ipmi_ssif_ctx_t ctx,
 {
   uint8_t *pkt = NULL;
   unsigned int pkt_len;
-  int hdr_len, cmd_len;
+  int hdr_len, cmd_len, rv = -1
   fiid_obj_t obj_hdr = NULL;
-  int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SSIF_CTX_MAGIC);
@@ -892,10 +885,9 @@ _ipmi_ssif_cmd_read (ipmi_ssif_ctx_t ctx,
 {
   uint8_t *pkt = NULL;
   unsigned int pkt_len;
-  int hdr_len, cmd_len, read_len;
+  int hdr_len, cmd_len, read_len, rv = -1;
   fiid_obj_t obj_hdr = NULL;
   fiid_field_t *tmpl = NULL;
-  int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SSIF_CTX_MAGIC);

@@ -133,10 +133,8 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
   {
     uint8_t *pkt;
     unsigned int pkt_len;
-    int read_len;
-    int hdr_len, cmd_len;
+    int hdr_len, cmd_len, read_len, rv = -1;
     fiid_field_t *tmpl = NULL;
-    int rv = -1;
 
     if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
       {
@@ -207,8 +205,7 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
   unsigned int pkt_len;
   uint8_t *readbuf = NULL;
   int bytes_read = 0;
-  int hdr_len;
-  int rv = -1;
+  int hdr_len, rv = -1;
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
