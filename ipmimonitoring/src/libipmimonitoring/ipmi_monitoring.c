@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.54 2009-05-03 05:26:43 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.55 2009-05-05 18:02:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -498,6 +498,20 @@ ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
+    }
+
+  if (record_ids && record_ids_len)
+    {
+      int i;
+
+      for (i = 0; i < record_ids_len; i++)
+        {
+          if (record_ids[i] > IPMI_SDR_RECORD_ID_LAST)
+            {
+              c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+              return (-1);
+            }
+        }
     }
 
   c->callback = callback;
