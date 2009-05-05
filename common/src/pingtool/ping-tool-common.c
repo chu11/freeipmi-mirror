@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.15 2009-05-03 17:40:27 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.16 2009-05-05 21:54:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -142,7 +142,7 @@ ipmi_ping_err_exit (char *fmt, ...)
 {
   char buf[IPMI_PING_MAX_ERR_LEN];
 
-  if (fmt == NULL || _progname == NULL)
+  if (!fmt || !_progname)
     fprintf (stderr, "ipmi_ping_err_exit: improperly called\n");
   else
     {
@@ -233,14 +233,14 @@ _cmdline_parse (int argc,
           _count = strtol (optarg, &ptr, 10);
           if (ptr != (optarg + strlen (optarg)))
             ipmi_ping_err_exit ("count argument invalid");
-          if (_count == 0)
+          if (!_count)
             ipmi_ping_err_exit ("count must be > 0");
           break;
         case 'i':
           _interval = strtol (optarg, &ptr, 10);
           if (ptr != (optarg + strlen (optarg)))
             ipmi_ping_err_exit ("interval argument invalid");
-          if (_interval == 0)
+          if (!_interval)
             ipmi_ping_err_exit ("interval must be > 0");
           break;
         case 'I':
@@ -250,7 +250,7 @@ _cmdline_parse (int argc,
           _timeout = strtol (optarg, &ptr, 10);
           if (ptr != (optarg + strlen (optarg)))
             ipmi_ping_err_exit ("timeout argument invalid");
-          if (_timeout == 0)
+          if (!_timeout)
             ipmi_ping_err_exit ("timeout must be > 0");
           break;
         case 'v':
@@ -327,20 +327,20 @@ _setup (void)
   _srcaddr.sin_family = AF_INET;
   _srcaddr.sin_port = htons (0);
 
-  if (_interface == NULL)
+  if (!_interface)
     _srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
   else
     {
       /* If there is a period, assume user input an IP address.  No
        * period, assume user input an interface name
        */
-      if (strchr (_interface, '.') != NULL)
+      if (strchr (_interface, '.'))
         {
           int rv;
 
           if ((rv = inet_pton (AF_INET, _interface, &_srcaddr.sin_addr)) < 0)
             ipmi_ping_err_exit ("inet_pton: %s", strerror (errno));
-          if (rv == 0)
+          if (!rv)
             ipmi_ping_err_exit ("invalid interface address");
         }
       else
@@ -366,7 +366,7 @@ _setup (void)
   _destaddr.sin_family = AF_INET;
   _destaddr.sin_port = htons (RMCP_PRIMARY_RMCP_PORT);
 
-  if ((hptr = gethostbyname (_dest)) == NULL)
+  if (!(hptr = gethostbyname (_dest)))
     {
 #if HAVE_HSTRERROR
       ipmi_ping_err_exit ("gethostbyname: %s", hstrerror (h_errno));
@@ -492,7 +492,7 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
                * we'll wait some more for the latest packet we sent
                * out.
                */
-              if (rv == 0)
+              if (!rv)
                 continue;
 
               received++;
@@ -501,7 +501,7 @@ _main_loop (Ipmi_Ping_CreatePacket _create,
             }
         }
 
-      if (received == 0)
+      if (!received)
         _late (sequence_number);
 
       sequence_number++;
