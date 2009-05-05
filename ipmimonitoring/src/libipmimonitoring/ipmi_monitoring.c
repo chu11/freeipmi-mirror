@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.55 2009-05-05 18:02:08 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.56 2009-05-05 18:18:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -494,7 +494,8 @@ ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
       return (-1);
     }
 
-  if (sensor_reading_flags & ~IPMI_MONITORING_SENSOR_READING_FLAGS_MASK)
+  if ((sensor_reading_flags & ~IPMI_MONITORING_SENSOR_READING_FLAGS_MASK)
+      || (record_ids && !record_ids_len))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
@@ -656,6 +657,20 @@ ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
+    }
+
+  if (sensor_groups && sensor_groups_len)
+    {
+      int i;
+
+      for (i = 0; i < sensor_groups_len; i++)
+        {
+          if (sensor_groups[i] >= IPMI_MONITORING_SENSOR_GROUP_UNKNOWN)
+            {
+              c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+              return (-1);
+            }
+        }
     }
 
   c->callback = callback;

@@ -9,6 +9,9 @@
 	* common/src/toolcommon/, ipmimonitoring/src/libipmimonitoring/:
 	Check for valid record_id inputs.
 
+	* ipmimonitoring/src/libipmimonitoring/: Check for valid sensor
+	group inputs.
+	
 	* ipmi-fru/: Check for valid range of device id input.
 	
 	* Various code cleanup.
