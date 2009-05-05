@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.26 2009-04-17 23:50:23 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.27 2009-05-05 18:10:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -106,23 +106,26 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   struct ipmi_fru_arguments *cmd_args = state->input;
   error_t ret;
   char *ptr;
+  int tmp;
 
   switch (key)
     {
     case DEVICE_ID_KEY:
-      cmd_args->device_id = strtoul (arg, &ptr, 0);
+      tmp = strtol (arg, &ptr, 0);
       if (ptr != (arg + strlen (arg)))
         {
           fprintf (stderr, "invalid device id\n");
           exit (1);
         }
-
-      if (cmd_args->device_id == IPMI_FRU_DEVICE_ID_RESERVED)
+      
+      if (tmp == IPMI_FRU_DEVICE_ID_RESERVED
+          || tmp < IPMI_FRU_DEVICE_ID_MIN
+          || tmp > IPMI_FRU_DEVICE_ID_MAX)
         {
           fprintf (stderr, "invalid device id\n");
           exit(1);
         }
-
+      cmd_args->device_id = tmp;
       cmd_args->device_id_set++;
       break;
     case VERBOSE_KEY:

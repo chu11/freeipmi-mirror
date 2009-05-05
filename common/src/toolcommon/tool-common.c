@@ -432,7 +432,7 @@ format_kg (char *out, unsigned int outlen, const void *k_g)
   int printable = 1;
   int foundnull = 0;
   char *p;
-  uint8_t *k_g_ptr = k_g;
+  const uint8_t *k_g_ptr = k_g;
 
   assert (out);
   assert (outlen > IPMI_MAX_K_G_LENGTH*2+2);

@@ -16,7 +16,7 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 /*****************************************************************************\
-*  $Id: ipmi-fru-inventory-device-cmds.h,v 1.10 2009-05-03 17:40:30 chu11 Exp $
+*  $Id: ipmi-fru-inventory-device-cmds.h,v 1.11 2009-05-05 18:10:48 chu11 Exp $
 *****************************************************************************
 *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 *  Copyright (C) 2007 The Regents of the University of California.
@@ -55,6 +55,8 @@ extern "C" {
 
 #define IPMI_FRU_DEVICE_ID_DEFAULT         0x00  /* FRU for Management Controller - Chap 38 */
 #define IPMI_FRU_DEVICE_ID_RESERVED        0xFF
+#define IPMI_FRU_DEVICE_ID_MIN             0x00
+#define IPMI_FRU_DEVICE_ID_MAX             0xFE
 #define IPMI_FRU_INVENTORY_AREA_SIZE_MAX   65536 /* 16 bit field for length */
 #define IPMI_FRU_DATA_MAX                  255
 
