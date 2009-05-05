@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.42 2009-04-21 20:33:43 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.43 2009-05-05 17:54:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -175,7 +175,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               || ptr[0] != '\0'
               || value < 0
               || value < IPMI_SDR_RECORD_ID_FIRST
-          || value > IPMI_SDR_RECORD_ID_LAST)
+              || value > IPMI_SDR_RECORD_ID_LAST)
             {
               fprintf (stderr, "invalid sensor record id: %d\n", value);
               exit (1);
