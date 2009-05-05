@@ -48,21 +48,7 @@ enum ipmi_chassis_argp_option_keys
     SET_POWER_RESTORE_POLICY_KEY = 'X',
   };
 
-enum ipmi_chassis_cmds
-  {
-    CHASSIS_CMD_GET_CHASSIS_CAPABILITIES = 0,
-    CHASSIS_CMD_GET_CHASSIS_STATUS = 1,
-    CHASSIS_CMD_CHASSIS_CONTROL = 2,
-    CHASSIS_CMD_CHASSIS_IDENTIFY = 3,
-    CHASSIS_CMD_SET_POWER_RESTORE_POLICY = 4,
-    CHASSIS_CMD_SET_POWER_CYCLE_INTERVAL = 5,
-    CHASSIS_CMD_GET_SYSTEM_RESTART_CAUSE = 6,
-    CHASSIS_CMD_GET_POWER_ON_HOURS_COUNTER = 7,
-    CHASSIS_CMD_SET_SYSTEM_BOOT_OPTIONS = 8,
-    CHASSIS_CMD_GET_SYSTEM_BOOT_OPTIONS = 9,
-  };
-
-struct cmd_boot_option
+struct cmd_set_system_boot_options
 {
   uint8_t bios_boot_type;
   int bios_boot_type_set;
@@ -86,7 +72,7 @@ struct cmd_boot_option
   int firmware_bios_verbosity_set;
 };
 
-struct cmd_identify
+struct cmd_chassis_identify
 {
   uint8_t identify_interval;
   uint8_t identify_interval_set;
@@ -98,16 +84,21 @@ struct ipmi_chassis_arguments
 {
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
-  int cmd;
-
-  union cmd_args {
-    uint8_t chassis_control;
-    uint8_t power_restore_policy;
-    uint8_t power_cycle_interval;
-
-    struct cmd_identify identify_args;
-    struct cmd_boot_option boot_option_args;
-  } args;
+  int get_chassis_capabilities;
+  int get_chassis_status;
+  int chassis_control;
+  uint8_t chassis_control_arg;
+  int chassis_identify;
+  struct cmd_chassis_identify chassis_identify_args;
+  int set_power_restore_policy;
+  uint8_t set_power_restore_policy_arg;
+  int set_power_cycle_interval;
+  uint8_t set_power_cycle_interval_arg;
+  int get_system_restart_cause;
+  int set_system_boot_options;
+  struct cmd_set_system_boot_options set_system_boot_options_args;
+  int get_system_boot_options;
+  int get_power_on_hours_counter;
 };
 
 typedef struct ipmi_chassis_prog_data

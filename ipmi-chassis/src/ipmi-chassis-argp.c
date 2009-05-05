@@ -86,32 +86,32 @@ static struct argp_option cmdline_options[] =
       "Set Power cycle interval in seconds.", 35},
     { "get-system-restart-cause", GET_SYSTEM_RESTART_CAUSE_KEY, NULL, 0,
       "Get system restart cause.", 36},
-    { "get-power-on-hours-counter", GET_POWER_ON_HOURS_COUNTER_KEY, NULL, 0,
-      "Get power on hours (POH) counter.", 37},
-    { "get-boot-flags", GET_BOOT_FLAGS_KEY, NULL, OPTION_HIDDEN,
-      "Get system boot-flags.", 38},
     { "set-boot-flags", SET_BOOT_FLAGS_KEY, NULL, OPTION_HIDDEN,
-      "Set system boot flags.", 39},
+      "Set system boot flags.", 37},
     { "boot-type", SET_BOOT_FLAGS_BOOT_TYPE_KEY, "BOOT_TYPE", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Set BIOS boot type to BOOT_TYPE.", 40},
+      "Set BIOS boot type to BOOT_TYPE.", 38},
     { "lock-out-reset-button", SET_BOOT_FLAGS_LOCK_OUT_RESET_BUTTON_KEY, "LOCK_OUT_RESET_BUTTON", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Modify lock out reset button support.", 41},
+      "Modify lock out reset button support.", 39},
     { "blank-screen", SET_BOOT_FLAGS_SCREEN_BLANK_KEY, "BLANK_SCREEN", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Modify blank screen support.", 42},
+      "Modify blank screen support.", 40},
     { "boot-device", SET_BOOT_FLAGS_BOOT_DEVICE_KEY, "BOOT_DEVICE", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Set device to boot from to BOOT_DEVICE.", 43},
+      "Set device to boot from to BOOT_DEVICE.", 41},
     { "lock-keyboard", SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Modify lock keyboard support.", 44},
+      "Modify lock keyboard support.", 42},
     { "clear-cmos", SET_BOOT_FLAGS_CMOS_CLEAR_KEY, "CMOS_CLEAR", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Modify clear CMOS support.", 45},
+      "Modify clear CMOS support.", 43},
     { "console-redirection", SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY, "CONSOLE_REDIRECTION", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Set console redirection type.", 46},
+      "Set console redirection type.", 44},
     { "user-password-bypass", SET_BOOT_FLAGS_USER_PASSWORD_BYPASS_KEY, "USER_PASSWORD_BYPASS", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Modify user password bypass support.", 47},
+      "Modify user password bypass support.", 44},
     { "force-progress-event-traps", SET_BOOT_FLAGS_FORCE_PROGRESS_EVENT_TRAPS_KEY, "FORCE_PROGRESS_EVENT_TRAPS", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Modify force progress event traps support.", 48},
+      "Modify force progress event traps support.", 45},
     { "firmware-bios-verbosity", SET_BOOT_FLAGS_FIRMWARE_BIOS_VERBOSITY_KEY, "FIRMWARE_BIOS_VERBOSITY", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Set firmware verbosity.", 49},
+      "Set firmware verbosity.", 46},
+    { "get-boot-flags", GET_BOOT_FLAGS_KEY, NULL, OPTION_HIDDEN,
+      "Get system boot-flags.", 47},
+    { "get-power-on-hours-counter", GET_POWER_ON_HOURS_COUNTER_KEY, NULL, 0,
+      "Get power on hours (POH) counter.", 48},
     { 0 }
   };
 
@@ -148,8 +148,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit (1);
         }
 
-      cmd_args->args.boot_option_args.bios_boot_type = value;
-      cmd_args->args.boot_option_args.bios_boot_type_set++;;
+      cmd_args->set_system_boot_options_args.bios_boot_type = value;
+      cmd_args->set_system_boot_options_args.bios_boot_type_set++;;
       break;
 
     case SET_BOOT_FLAGS_LOCK_OUT_RESET_BUTTON_KEY:
@@ -163,8 +163,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit (1);
         }
 
-      cmd_args->args.boot_option_args.lock_out_reset_button = value;
-      cmd_args->args.boot_option_args.lock_out_reset_button_set++;;
+      cmd_args->set_system_boot_options_args.lock_out_reset_button = value;
+      cmd_args->set_system_boot_options_args.lock_out_reset_button_set++;;
       break;
 
     case SET_BOOT_FLAGS_SCREEN_BLANK_KEY:
@@ -178,8 +178,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit (1);
         }
 
-      cmd_args->args.boot_option_args.screen_blank = value;
-      cmd_args->args.boot_option_args.screen_blank_set++;;
+      cmd_args->set_system_boot_options_args.screen_blank = value;
+      cmd_args->set_system_boot_options_args.screen_blank_set++;;
       break;
 
     case SET_BOOT_FLAGS_BOOT_DEVICE_KEY:
@@ -209,8 +209,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit (1);
         }
 
-      cmd_args->args.boot_option_args.boot_device = value;
-      cmd_args->args.boot_option_args.boot_device_set++;;
+      cmd_args->set_system_boot_options_args.boot_device = value;
+      cmd_args->set_system_boot_options_args.boot_device_set++;;
       break;
 
     case SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY:
@@ -224,8 +224,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit (1);
         }
 
-      cmd_args->args.boot_option_args.lock_keyboard = value;
-      cmd_args->args.boot_option_args.lock_keyboard_set++;;
+      cmd_args->set_system_boot_options_args.lock_keyboard = value;
+      cmd_args->set_system_boot_options_args.lock_keyboard_set++;;
       break;
 
     case SET_BOOT_FLAGS_CMOS_CLEAR_KEY:
@@ -239,8 +239,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit (1);
         }
 
-      cmd_args->args.boot_option_args.cmos_clear = value;
-      cmd_args->args.boot_option_args.cmos_clear_set++;;
+      cmd_args->set_system_boot_options_args.cmos_clear = value;
+      cmd_args->set_system_boot_options_args.cmos_clear_set++;;
       break;
 
     case SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY:
@@ -256,8 +256,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit (1);
         }
 
-      cmd_args->args.boot_option_args.console_redirection = value;
-      cmd_args->args.boot_option_args.console_redirection_set++;;
+      cmd_args->set_system_boot_options_args.console_redirection = value;
+      cmd_args->set_system_boot_options_args.console_redirection_set++;;
       break;
 
     case SET_BOOT_FLAGS_USER_PASSWORD_BYPASS_KEY:
@@ -271,8 +271,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit (1);
         }
 
-      cmd_args->args.boot_option_args.user_password_bypass = value;
-      cmd_args->args.boot_option_args.user_password_bypass_set++;;
+      cmd_args->set_system_boot_options_args.user_password_bypass = value;
+      cmd_args->set_system_boot_options_args.user_password_bypass_set++;;
       break;
 
     case SET_BOOT_FLAGS_FORCE_PROGRESS_EVENT_TRAPS_KEY:
@@ -286,8 +286,8 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit (1);
         }
 
-      cmd_args->args.boot_option_args.force_progress_event_traps = value;
-      cmd_args->args.boot_option_args.force_progress_event_traps_set++;;
+      cmd_args->set_system_boot_options_args.force_progress_event_traps = value;
+      cmd_args->set_system_boot_options_args.force_progress_event_traps_set++;;
       break;
 
     case SET_BOOT_FLAGS_FIRMWARE_BIOS_VERBOSITY_KEY:
@@ -303,15 +303,15 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
           exit (1);
         }
 
-      cmd_args->args.boot_option_args.firmware_bios_verbosity = value;
-      cmd_args->args.boot_option_args.firmware_bios_verbosity_set++;;
+      cmd_args->set_system_boot_options_args.firmware_bios_verbosity = value;
+      cmd_args->set_system_boot_options_args.firmware_bios_verbosity_set++;;
       break;
 
     default:
       return (ARGP_ERR_UNKNOWN);
     }
 
-  if ((cmd_args->cmd != CHASSIS_CMD_SET_SYSTEM_BOOT_OPTIONS))
+  if (!cmd_args->set_system_boot_options)
     {
       fprintf (stderr, "please specify set-boot-flags option\n");
       exit (1);
@@ -329,161 +329,107 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case GET_CHASSIS_CAPABILITIES_KEY:
-      if (cmd_args->cmd != -1)
-        {
-          fprintf (stderr, "Error: Multiple commands specified\n");
-          exit (EXIT_FAILURE);
-        }
-      cmd_args->cmd = CHASSIS_CMD_GET_CHASSIS_CAPABILITIES;
+      cmd_args->get_chassis_capabilities++;
       break;
 
     case GET_CHASSIS_STATUS_KEY:
-      if (cmd_args->cmd != -1)
-        {
-          fprintf (stderr, "Error: Multiple commands specified\n");
-          exit (EXIT_FAILURE);
-        }
-      cmd_args->cmd = CHASSIS_CMD_GET_CHASSIS_STATUS;
+      cmd_args->get_chassis_status++;
       break;
 
     case CHASSIS_CONTROL_KEY:
-      if (cmd_args->cmd != -1)
-        {
-          fprintf (stderr, "Error: Multiple commands specified\n");
-          exit (EXIT_FAILURE);
-        }
-      cmd_args->cmd = CHASSIS_CMD_CHASSIS_CONTROL;
       if (!strcasecmp (arg, "power-down"))
-        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_DOWN;
+        cmd_args->chassis_control_arg = IPMI_CHASSIS_CONTROL_POWER_DOWN;
       else if (!strcasecmp (arg, "power-up"))
-        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_UP;
+        cmd_args->chassis_control_arg = IPMI_CHASSIS_CONTROL_POWER_UP;
       else if (!strcasecmp (arg, "power-cycle"))
-        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_POWER_CYCLE;
+        cmd_args->chassis_control_arg = IPMI_CHASSIS_CONTROL_POWER_CYCLE;
       else if (!strcasecmp (arg, "hard-reset"))
-        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_HARD_RESET;
+        cmd_args->chassis_control_arg = IPMI_CHASSIS_CONTROL_HARD_RESET;
       else if (!strcasecmp (arg, "diagnostic-interrupt"))
-        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_PULSE_DIAGNOSTIC_INTERRUPT;
+        cmd_args->chassis_control_arg = IPMI_CHASSIS_CONTROL_PULSE_DIAGNOSTIC_INTERRUPT;
       else if (!strcasecmp (arg, "soft-shutdown"))
-        cmd_args->args.chassis_control = IPMI_CHASSIS_CONTROL_INITIATE_SOFT_SHUTDOWN;
+        cmd_args->chassis_control_arg = IPMI_CHASSIS_CONTROL_INITIATE_SOFT_SHUTDOWN;
       else
         {
           fprintf (stderr, "invalid value for chassis control\n");
           exit (1);
         }
+      cmd_args->chassis_control++;
       break;
 
     case CHASSIS_IDENTIFY_KEY:
-      if (cmd_args->cmd != -1)
-        {
-          fprintf (stderr, "Error: Multiple commands specified\n");
-          exit (EXIT_FAILURE);
-        }
-
-      cmd_args->cmd = CHASSIS_CMD_CHASSIS_IDENTIFY;
       if (!strcasecmp (arg, "turn-off"))
         {
-          cmd_args->args.identify_args.identify_interval = 0;
-          cmd_args->args.identify_args.identify_interval_set = 1;
+          cmd_args->chassis_identify_args.identify_interval = 0;
+          cmd_args->chassis_identify_args.identify_interval_set = 1;
 
-          cmd_args->args.identify_args.force_identify_set = 0;
+          cmd_args->chassis_identify_args.force_identify_set = 0;
         }
       else if (!strcasecmp (arg, "force"))
         {
-          cmd_args->args.identify_args.force_identify = IPMI_CHASSIS_FORCE_IDENTIFY_ON;
-          cmd_args->args.identify_args.force_identify_set = 1;
+          cmd_args->chassis_identify_args.force_identify = IPMI_CHASSIS_FORCE_IDENTIFY_ON;
+          cmd_args->chassis_identify_args.force_identify_set = 1;
 
           /* Need to have identify_interval set if force_identify is set */
-          cmd_args->args.identify_args.identify_interval = 0xFF;
-          cmd_args->args.identify_args.identify_interval_set = 1;
+          cmd_args->chassis_identify_args.identify_interval = 0xFF;
+          cmd_args->chassis_identify_args.identify_interval_set = 1;
         }
       else
         {
-          cmd_args->args.identify_args.identify_interval = strtol (arg, &ptr, 10);
+          cmd_args->chassis_identify_args.identify_interval = strtol (arg, &ptr, 10);
           if (*ptr != '\0')
             {
               fprintf (stderr, "invalid value for chassis-identify\n");
               exit (1);
             }
-          cmd_args->args.identify_args.force_identify_set = 0;
+          cmd_args->chassis_identify_args.force_identify_set = 0;
         }
-
-      break;
-
-    case GET_SYSTEM_RESTART_CAUSE_KEY:
-      if (cmd_args->cmd != -1)
-        {
-          fprintf (stderr, "Error: Multiple commands specified\n");
-          exit (EXIT_FAILURE);
-        }
-      cmd_args->cmd = CHASSIS_CMD_GET_SYSTEM_RESTART_CAUSE;
-      break;
-
-    case GET_POWER_ON_HOURS_COUNTER_KEY:
-      if (cmd_args->cmd != -1)
-        {
-          fprintf (stderr, "Error: Multiple commands specified\n");
-          exit (EXIT_FAILURE);
-        }
-      cmd_args->cmd = CHASSIS_CMD_GET_POWER_ON_HOURS_COUNTER;
-      break;
-
-    case SET_POWER_CYCLE_INTERVAL_KEY:
-      if (cmd_args->cmd != -1)
-        {
-          fprintf (stderr, "Error: Multiple commands specified\n");
-          exit (EXIT_FAILURE);
-        }
-
-      cmd_args->cmd = CHASSIS_CMD_SET_POWER_CYCLE_INTERVAL;
-      cmd_args->args.power_cycle_interval = strtol (arg, &ptr, 10);
-      if (*ptr != '\0')
-        {
-          fprintf (stderr, "invalid value for power cycle interval\n");
-          exit (1);
-        }
-      break;
-
-    case GET_BOOT_FLAGS_KEY:
-      if (cmd_args->cmd != -1)
-        {
-          fprintf (stderr, "Error: Multiple commands specified\n");
-          exit (EXIT_FAILURE);
-        }
-      cmd_args->cmd = CHASSIS_CMD_GET_SYSTEM_BOOT_OPTIONS;
-      break;
-
-    case SET_BOOT_FLAGS_KEY:
-      if (cmd_args->cmd != -1)
-        {
-          fprintf (stderr, "Error: Multiple commands specified\n");
-          exit (EXIT_FAILURE);
-        }
-
-      cmd_args->cmd = CHASSIS_CMD_SET_SYSTEM_BOOT_OPTIONS;
+      cmd_args->chassis_identify++;
       break;
 
     case SET_POWER_RESTORE_POLICY_KEY:
-      if (cmd_args->cmd != -1)
-        {
-          fprintf (stderr, "Error: Multiple commands specified\n");
-          exit (EXIT_FAILURE);
-        }
-      cmd_args->cmd = CHASSIS_CMD_SET_POWER_RESTORE_POLICY;
-
       if (!strcasecmp (arg, "always-on"))
-        cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_ALWAYS_POWER_UP_AFTER_AC_IS_LOST;
+        cmd_args->set_power_restore_policy_arg = IPMI_POWER_RESTORE_POLICY_ALWAYS_POWER_UP_AFTER_AC_IS_LOST;
       else if (!strcasecmp (arg, "always-off"))
-        cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWERED_OFF;
+        cmd_args->set_power_restore_policy_arg = IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWERED_OFF;
       else if (!strcasecmp (arg, "restore"))
-        cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_RESTORE_POWER_TO_STATE_WHEN_AC_WAS_LOST;
+        cmd_args->set_power_restore_policy_arg = IPMI_POWER_RESTORE_POLICY_RESTORE_POWER_TO_STATE_WHEN_AC_WAS_LOST;
       else if (!strcasecmp (arg, "list-supported-policies"))
-        cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_NO_CHANGE;
+        cmd_args->set_power_restore_policy_arg = IPMI_POWER_RESTORE_POLICY_NO_CHANGE;
       else
         {
           fprintf (stderr, "invalid value for power restore policy\n");
           exit (1);
         }
+      cmd_args->set_power_restore_policy++;
       break;
+
+    case SET_POWER_CYCLE_INTERVAL_KEY:
+      cmd_args->set_power_cycle_interval_arg = strtol (arg, &ptr, 10);
+      if (*ptr != '\0')
+        {
+          fprintf (stderr, "invalid value for power cycle interval\n");
+          exit (1);
+        }
+      cmd_args->set_power_cycle_interval++;
+      break;
+
+    case GET_SYSTEM_RESTART_CAUSE_KEY:
+      cmd_args->get_system_restart_cause++;
+      break;
+
+    case SET_BOOT_FLAGS_KEY:
+      cmd_args->set_system_boot_options++;
+      break;
+
+    case GET_BOOT_FLAGS_KEY:
+      cmd_args->get_system_boot_options++;
+      break;
+
+    case GET_POWER_ON_HOURS_COUNTER_KEY:
+      cmd_args->get_power_on_hours_counter++;
+      break;
+
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -522,12 +468,37 @@ _ipmi_chassis_config_file_parse (struct ipmi_chassis_arguments *cmd_args)
 }
 
 static void
-_ipmi_chassis_args_validate (struct ipmi_chassis_arguments *args)
+_ipmi_chassis_args_validate (struct ipmi_chassis_arguments *cmd_args)
 {
-  if (args->cmd < 0)
+  if (!cmd_args->get_chassis_capabilities
+      && !cmd_args->get_chassis_status
+      && !cmd_args->chassis_control
+      && !cmd_args->chassis_identify
+      && !cmd_args->set_power_restore_policy
+      && !cmd_args->set_power_cycle_interval
+      && !cmd_args->get_system_restart_cause
+      && !cmd_args->set_system_boot_options
+      && !cmd_args->get_system_boot_options
+      && !cmd_args->get_power_on_hours_counter)
     {
       fprintf (stderr,
-               "Error: No command specified\n");
+               "No command specified.\n");
+      exit (1);
+    }
+
+  if ((cmd_args->get_chassis_capabilities
+       + cmd_args->get_chassis_status
+       + cmd_args->chassis_control
+       + cmd_args->chassis_identify
+       + cmd_args->set_power_restore_policy
+       + cmd_args->set_power_cycle_interval
+       + cmd_args->get_system_restart_cause
+       + cmd_args->set_system_boot_options
+       + cmd_args->get_system_boot_options
+       + cmd_args->get_power_on_hours_counter) > 1)
+    {
+      fprintf (stderr,
+               "Multiple commands specified.\n");
       exit (1);
     }
 }
@@ -539,23 +510,34 @@ ipmi_chassis_argp_parse (int argc,
 {
   init_common_cmd_args_admin (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
-  cmd_args->cmd = -1;
 
-  cmd_args->args.identify_args.identify_interval = 0;
-  cmd_args->args.identify_args.identify_interval_set = 0;
-  cmd_args->args.identify_args.force_identify = 0;
-  cmd_args->args.identify_args.force_identify_set = 0;
-
-  cmd_args->args.boot_option_args.bios_boot_type_set = 0;
-  cmd_args->args.boot_option_args.lock_out_reset_button_set = 0;
-  cmd_args->args.boot_option_args.screen_blank_set = 0;
-  cmd_args->args.boot_option_args.boot_device_set = 0;
-  cmd_args->args.boot_option_args.lock_keyboard_set = 0;
-  cmd_args->args.boot_option_args.cmos_clear_set = 0;
-  cmd_args->args.boot_option_args.console_redirection_set = 0;
-  cmd_args->args.boot_option_args.user_password_bypass_set = 0;
-  cmd_args->args.boot_option_args.force_progress_event_traps_set = 0;
-  cmd_args->args.boot_option_args.firmware_bios_verbosity_set = 0;
+  cmd_args->get_chassis_capabilities = 0;
+  cmd_args->get_chassis_status = 0;
+  cmd_args->chassis_control = 0;
+  cmd_args->chassis_control_arg = 0;
+  cmd_args->chassis_identify = 0;
+  cmd_args->chassis_identify_args.identify_interval = 0;
+  cmd_args->chassis_identify_args.identify_interval_set = 0;
+  cmd_args->chassis_identify_args.force_identify = 0;
+  cmd_args->chassis_identify_args.force_identify_set = 0;
+  cmd_args->set_power_restore_policy = 0;
+  cmd_args->set_power_restore_policy_arg = 0;
+  cmd_args->set_power_cycle_interval = 0;
+  cmd_args->set_power_cycle_interval_arg = 0;
+  cmd_args->get_system_restart_cause = 0;
+  cmd_args->get_power_on_hours_counter = 0;
+  cmd_args->set_system_boot_options = 0;
+  cmd_args->set_system_boot_options_args.bios_boot_type_set = 0;
+  cmd_args->set_system_boot_options_args.lock_out_reset_button_set = 0;
+  cmd_args->set_system_boot_options_args.screen_blank_set = 0;
+  cmd_args->set_system_boot_options_args.boot_device_set = 0;
+  cmd_args->set_system_boot_options_args.lock_keyboard_set = 0;
+  cmd_args->set_system_boot_options_args.cmos_clear_set = 0;
+  cmd_args->set_system_boot_options_args.console_redirection_set = 0;
+  cmd_args->set_system_boot_options_args.user_password_bypass_set = 0;
+  cmd_args->set_system_boot_options_args.force_progress_event_traps_set = 0;
+  cmd_args->set_system_boot_options_args.firmware_bios_verbosity_set = 0;
+  cmd_args->get_system_boot_options = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,

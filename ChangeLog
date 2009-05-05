@@ -1,5 +1,9 @@
 2009-05-04  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-chassis/: Code cleanup for consistency to other tools.
+	
+2009-05-04  Albert Chu <chu11@llnl.gov>
+
 	* Various code cleanup.
 
 	* tagged post_void_lib_cleanup

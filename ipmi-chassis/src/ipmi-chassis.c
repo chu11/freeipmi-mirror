@@ -761,7 +761,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
     }
 
   if (ipmi_cmd_chassis_control (state_data->ipmi_ctx,
-                                args->args.chassis_control,
+                                args->chassis_control_arg,
                                 obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -796,8 +796,8 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
     }
 
   if (ipmi_cmd_chassis_identify (state_data->ipmi_ctx,
-                                 (args->args.identify_args.identify_interval_set) ? &args->args.identify_args.identify_interval : NULL,
-                                 (args->args.identify_args.force_identify_set) ? &args->args.identify_args.force_identify : NULL,
+                                 (args->chassis_identify_args.identify_interval_set) ? &args->chassis_identify_args.identify_interval : NULL,
+                                 (args->chassis_identify_args.force_identify_set) ? &args->chassis_identify_args.force_identify : NULL,
                                  obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -833,7 +833,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
     }
 
   if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
-                                         args->args.power_restore_policy,
+                                         args->set_power_restore_policy_arg,
                                          obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -843,7 +843,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (args->args.power_restore_policy == IPMI_POWER_RESTORE_POLICY_NO_CHANGE)
+  if (args->set_power_restore_policy_arg == IPMI_POWER_RESTORE_POLICY_NO_CHANGE)
     {
       char policy_supported[100];
       memset (policy_supported, 0, sizeof (policy_supported));
@@ -914,7 +914,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
     }
 
   if (ipmi_cmd_set_power_cycle_interval (state_data->ipmi_ctx,
-                                         args->args.power_cycle_interval,
+                                         args->set_power_cycle_interval_arg,
                                          obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -1557,7 +1557,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (args->args.boot_option_args.bios_boot_type_set)
+  if (args->set_system_boot_options_args.bios_boot_type_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "bios_boot_type", &val) < 0)
         {
@@ -1570,12 +1570,12 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       bios_boot_type = val;
     }
   else
-    bios_boot_type = args->args.boot_option_args.bios_boot_type;
+    bios_boot_type = args->set_system_boot_options_args.bios_boot_type;
 
   boot_flags_persistent = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_VALID_FOR_NEXT_BOOT;
   boot_flags_valid = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_VALID;
 
-  if (args->args.boot_option_args.lock_out_reset_button_set)
+  if (args->set_system_boot_options_args.lock_out_reset_button_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "lock_out_reset_button", &val) < 0)
         {
@@ -1588,9 +1588,9 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       lock_out_reset_button = val;
     }
   else
-    lock_out_reset_button = args->args.boot_option_args.lock_out_reset_button;
+    lock_out_reset_button = args->set_system_boot_options_args.lock_out_reset_button;
 
-  if (args->args.boot_option_args.screen_blank_set)
+  if (args->set_system_boot_options_args.screen_blank_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "screen_blank", &val) < 0)
         {
@@ -1603,9 +1603,9 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       screen_blank = val;
     }
   else
-    screen_blank = args->args.boot_option_args.screen_blank;
+    screen_blank = args->set_system_boot_options_args.screen_blank;
 
-  if (args->args.boot_option_args.boot_device_set)
+  if (args->set_system_boot_options_args.boot_device_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "boot_device", &val) < 0)
         {
@@ -1618,9 +1618,9 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       boot_device = val;
     }
   else
-    boot_device = args->args.boot_option_args.boot_device;
+    boot_device = args->set_system_boot_options_args.boot_device;
 
-  if (args->args.boot_option_args.lock_keyboard_set)
+  if (args->set_system_boot_options_args.lock_keyboard_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "lock_keyboard", &val) < 0)
         {
@@ -1633,9 +1633,9 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       lock_keyboard = val;
     }
   else
-    lock_keyboard = args->args.boot_option_args.lock_keyboard;
+    lock_keyboard = args->set_system_boot_options_args.lock_keyboard;
 
-  if (args->args.boot_option_args.cmos_clear_set)
+  if (args->set_system_boot_options_args.cmos_clear_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "cmos_clear", &val) < 0)
         {
@@ -1648,9 +1648,9 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       cmos_clear = val;
     }
   else
-    cmos_clear = args->args.boot_option_args.cmos_clear;
+    cmos_clear = args->set_system_boot_options_args.cmos_clear;
 
-  if (args->args.boot_option_args.console_redirection_set)
+  if (args->set_system_boot_options_args.console_redirection_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "console_redirection", &val) < 0)
         {
@@ -1663,7 +1663,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       console_redirection = val;
     }
   else
-    console_redirection = args->args.boot_option_args.console_redirection;
+    console_redirection = args->set_system_boot_options_args.console_redirection;
 
   if (FIID_OBJ_GET (get_boot_flags_rs, "lock_out_sleep_button", &val) < 0)
     {
@@ -1675,7 +1675,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
     }
   lock_out_sleep_button = val;
 
-  if (args->args.boot_option_args.user_password_bypass_set)
+  if (args->set_system_boot_options_args.user_password_bypass_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "user_password_bypass", &val) < 0)
         {
@@ -1688,9 +1688,9 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       user_password_bypass = val;
     }
   else
-    user_password_bypass = args->args.boot_option_args.user_password_bypass;
+    user_password_bypass = args->set_system_boot_options_args.user_password_bypass;
 
-  if (args->args.boot_option_args.force_progress_event_traps_set)
+  if (args->set_system_boot_options_args.force_progress_event_traps_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "force_progress_event_traps", &val) < 0)
         {
@@ -1703,9 +1703,9 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       force_progress_event_traps = val;
     }
   else
-    force_progress_event_traps = args->args.boot_option_args.force_progress_event_traps;
+    force_progress_event_traps = args->set_system_boot_options_args.force_progress_event_traps;
 
-  if (args->args.boot_option_args.firmware_bios_verbosity_set)
+  if (args->set_system_boot_options_args.firmware_bios_verbosity_set)
     {
       if (FIID_OBJ_GET (get_boot_flags_rs, "firmware_bios_verbosity", &val) < 0)
         {
@@ -1718,7 +1718,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       firmware_bios_verbosity = val;
     }
   else
-    firmware_bios_verbosity = args->args.boot_option_args.firmware_bios_verbosity;
+    firmware_bios_verbosity = args->set_system_boot_options_args.firmware_bios_verbosity;
 
   if (FIID_OBJ_GET (get_boot_flags_rs, "lock_out_via_power_button", &val) < 0)
     {
@@ -1802,68 +1802,42 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 static int
 run_cmd_args (ipmi_chassis_state_data_t *state_data)
 {
+  struct ipmi_chassis_arguments *args;
   int rv = -1;
 
   assert (state_data);
 
-  switch (state_data->prog_data->args->cmd)
-    {
-    case CHASSIS_CMD_GET_CHASSIS_CAPABILITIES:
-      if (get_chassis_capabilities (state_data) < 0)
-        goto cleanup;
-      break;
+  args = state_data->prog_data->args;
 
-    case CHASSIS_CMD_GET_CHASSIS_STATUS:
-      if (get_chassis_status (state_data) < 0)
-        goto cleanup;
-      break;
+  if (args->get_chassis_capabilities)
+    return (get_chassis_capabilities (state_data));
+            
+  if (args->get_chassis_status)
+    return (get_chassis_status (state_data));
 
-    case CHASSIS_CMD_CHASSIS_CONTROL:
-      if (chassis_control (state_data) < 0)
-        goto cleanup;
-      break;
+  if (args->chassis_control)
+    return (chassis_control (state_data));
 
-    case CHASSIS_CMD_CHASSIS_IDENTIFY:
-      if (chassis_identify (state_data) < 0)
-        goto cleanup;
-      break;
+  if (args->chassis_identify)
+    return (chassis_identify (state_data));
 
-    case CHASSIS_CMD_SET_POWER_RESTORE_POLICY:
-      if (set_power_restore_policy (state_data) < 0)
-        goto cleanup;
-      break;
+  if (args->set_power_restore_policy)
+    return (set_power_restore_policy (state_data));
 
-    case CHASSIS_CMD_SET_POWER_CYCLE_INTERVAL:
-      if (set_power_cycle_interval (state_data) < 0)
-        goto cleanup;
-      break;
+  if (args->set_power_cycle_interval)
+    return (set_power_cycle_interval (state_data));
 
-    case CHASSIS_CMD_GET_SYSTEM_RESTART_CAUSE:
-      if (get_system_restart_cause (state_data) < 0)
-        goto cleanup;
-      break;
+  if (args->get_system_restart_cause)
+    return (get_system_restart_cause (state_data));
 
-    case CHASSIS_CMD_GET_POWER_ON_HOURS_COUNTER:
-      if (get_power_on_hours_counter (state_data) < 0)
-        goto cleanup;
-      break;
+  if (args->set_system_boot_options)
+    return (set_boot_flags (state_data));
 
-    case CHASSIS_CMD_SET_SYSTEM_BOOT_OPTIONS:
-      if (set_boot_flags (state_data) < 0)
-        goto cleanup;
-      break;
+  if (args->get_system_boot_options)
+    return (get_boot_flags (state_data));
 
-    case CHASSIS_CMD_GET_SYSTEM_BOOT_OPTIONS:
-      if (get_boot_flags (state_data) < 0)
-        goto cleanup;
-      break;
-
-    default:
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "Error: No commands given\n");
-      goto cleanup;
-    }
+  if (args->get_power_on_hours_counter)
+    return (get_power_on_hours_counter (state_data));
 
   rv = 0;
  cleanup:
