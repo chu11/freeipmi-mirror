@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.113 2009-05-02 00:21:29 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.114 2009-05-05 00:14:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -927,7 +927,7 @@ static int
 run_cmd_args (ipmimonitoring_state_data_t *state_data)
 {
   struct ipmimonitoring_arguments *args;
-  unsigned int sensor_reading_flags;
+  unsigned int sensor_reading_flags = 0;
   unsigned int record_ids[IPMIMONITORING_RECORD_IDS_MAX];
   unsigned int record_ids_len = 0;
   unsigned int *record_ids_ptr = NULL;
@@ -959,20 +959,28 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   if (_output_setup (state_data) < 0)
     return (-1);
 
-  if (!args->record_ids_length
-      && !args->ipmimonitoring_groups_length
-      && !args->verbose_count)
+  if (!args->legacy_output)
     {
-      /* achu: for consistent output to ipmi-sensors, find all full
-       * and compact sensor records and build an array to pass in.
-       */
-      if (_calculate_record_ids (state_data,
-                                 record_ids,
-                                 &record_ids_len) < 0)
-        return (-1);
-
-      if (record_ids_len)
-        record_ids_ptr = record_ids;
+      if (!args->record_ids_length
+          && !args->ipmimonitoring_groups_length
+          && !args->verbose_count)
+        {
+          /* achu: for consistent output to ipmi-sensors, find all full
+           * and compact sensor records and build an array to pass in.
+           */
+          if (_calculate_record_ids (state_data,
+                                     record_ids,
+                                     &record_ids_len) < 0)
+            return (-1);
+          
+          if (record_ids_len)
+            record_ids_ptr = record_ids;
+        }
+    }
+  else
+    {
+      if (!args->verbose_count)
+        sensor_reading_flags = IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS;
     }
 
   /* At this point in time we no longer need sdr_cache b/c
@@ -993,9 +1001,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   state_data->ipmi_ctx = NULL;
 
   if (args->ignore_non_interpretable_sensors)
-    sensor_reading_flags = IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS;
-  else
-    sensor_reading_flags = 0;
+    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS;
   
   if (args->bridge_sensors)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS;

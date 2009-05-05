@@ -1,6 +1,8 @@
 2009-05-04  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-chassis/: Code cleanup for consistency to other tools.
+
+	* ipmimonitoring/src/ipmimonitoring/: Fix --legacy-output.
 	
 2009-05-04  Albert Chu <chu11@llnl.gov>
 
