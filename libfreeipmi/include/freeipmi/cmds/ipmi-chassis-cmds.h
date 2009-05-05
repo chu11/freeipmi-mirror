@@ -64,6 +64,14 @@ extern "C" {
 #define IPMI_CHASSIS_IDENTIFY_STATE_TEMPORARY_ON                            0x01
 #define IPMI_CHASSIS_IDENTIFY_STATE_INDEFINITE_ON                           0x02
 
+/* min is degenerate "off" case */
+#define IPMI_CHASSIS_IDENTIFY_INTERVAL_MIN                                  0x00
+#define IPMI_CHASSIS_IDENTIFY_INTERVAL_MAX                                  0xFF
+
+/* min is degenerate "no delay" case */
+#define IPMI_CHASSIS_POWER_CYCLE_INTERVAL_MIN                                  0x00
+#define IPMI_CHASSIS_POWER_CYCLE_INTERVAL_MAX                                  0xFF
+
 /* achu: it's backwards on buttons, I don't know why */
 #define IPMI_CHASSIS_BUTTON_ENABLE                                          0x00
 #define IPMI_CHASSIS_BUTTON_DISABLE                                         0x01

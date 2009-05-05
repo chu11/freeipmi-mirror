@@ -132,6 +132,7 @@ o ipmi-chassis
     still supported.
   - Rename --get-capabilities option to --get-chassis-capabilities.
     Legacy option still supported.
+  - Check interval input ranges.
 o bmc-config
   - Collapse "Password20" field into "Password" field so "Password"
     supports both IPMI 1.5 and IPMI 2.0 length passwords.

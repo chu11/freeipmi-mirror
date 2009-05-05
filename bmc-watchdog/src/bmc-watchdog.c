@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.122 2009-05-03 04:07:06 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.123 2009-05-05 17:46:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1295,17 +1295,17 @@ _set_cmd (void)
                         "Reset Watchdog Timer Error");
     }
 
-  timer_use = (cmd_args.timer_use) ? cmd_args.timer_use_val : timer_use;
-  stop_timer = (cmd_args.stop_timer) ? cmd_args.stop_timer_val : timer_state;
-  log = (cmd_args.log) ? cmd_args.log_val : log;
+  timer_use = (cmd_args.timer_use) ? cmd_args.timer_use_arg : timer_use;
+  stop_timer = (cmd_args.stop_timer) ? cmd_args.stop_timer_arg : timer_state;
+  log = (cmd_args.log) ? cmd_args.log_arg : log;
   timeout_action = (cmd_args.timeout_action) ?
-    cmd_args.timeout_action_val : timeout_action;
+    cmd_args.timeout_action_arg : timeout_action;
   pre_timeout_interrupt = (cmd_args.pre_timeout_interrupt) ?
-    cmd_args.pre_timeout_interrupt_val : pre_timeout_interrupt;
+    cmd_args.pre_timeout_interrupt_arg : pre_timeout_interrupt;
   pre_timeout_interval = (cmd_args.pre_timeout_interval) ?
-    cmd_args.pre_timeout_interval_val : pre_timeout_interval;
+    cmd_args.pre_timeout_interval_arg : pre_timeout_interval;
   initial_countdown_seconds = (cmd_args.initial_countdown_seconds) ?
-    cmd_args.initial_countdown_seconds_val : initial_countdown_seconds;
+    cmd_args.initial_countdown_seconds_arg : initial_countdown_seconds;
 
   if ((pre_timeout_interrupt != IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
       && (pre_timeout_interval > initial_countdown_seconds))
@@ -1548,12 +1548,12 @@ _start_cmd (void)
       uint8_t gratuitous_arp, arp_response;
 
       if (cmd_args.gratuitous_arp)
-        gratuitous_arp = cmd_args.gratuitous_arp_val;
+        gratuitous_arp = cmd_args.gratuitous_arp_arg;
       else
         gratuitous_arp = IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND;
 
       if (cmd_args.arp_response)
-        arp_response = cmd_args.arp_response_val;
+        arp_response = cmd_args.arp_response_arg;
       else
         arp_response = IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND;
 
@@ -1766,22 +1766,22 @@ _daemon_setup (void)
   if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_RUNNING)
     _err_exit ("watchdog timer must be stopped before running daemon");
 
-  timer_use = (cmd_args.timer_use) ? cmd_args.timer_use_val : timer_use;
-  log = (cmd_args.log) ? cmd_args.log_val : log;
+  timer_use = (cmd_args.timer_use) ? cmd_args.timer_use_arg : timer_use;
+  log = (cmd_args.log) ? cmd_args.log_arg : log;
   timeout_action = (cmd_args.timeout_action) ?
-    cmd_args.timeout_action_val : timeout_action;
+    cmd_args.timeout_action_arg : timeout_action;
   pre_timeout_interrupt = (cmd_args.pre_timeout_interrupt) ?
-    cmd_args.pre_timeout_interrupt_val : pre_timeout_interrupt;
+    cmd_args.pre_timeout_interrupt_arg : pre_timeout_interrupt;
   pre_timeout_interval = (cmd_args.pre_timeout_interval) ?
-    cmd_args.pre_timeout_interval_val : pre_timeout_interval;
+    cmd_args.pre_timeout_interval_arg : pre_timeout_interval;
   initial_countdown_seconds = (cmd_args.initial_countdown_seconds) ?
-    cmd_args.initial_countdown_seconds_val : initial_countdown_seconds;
+    cmd_args.initial_countdown_seconds_arg : initial_countdown_seconds;
 
   if ((pre_timeout_interrupt != IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
       && (pre_timeout_interval > initial_countdown_seconds))
     _err_exit ("pre-timeout interval greater than initial countdown seconds");
   if (cmd_args.reset_period)
-    reset_period = cmd_args.reset_period_val;
+    reset_period = cmd_args.reset_period_arg;
   if (reset_period > initial_countdown_seconds)
     _err_exit ("reset-period interval greater than initial countdown seconds");
 
@@ -1825,12 +1825,12 @@ _daemon_setup (void)
       uint8_t gratuitous_arp, arp_response;
 
       if (cmd_args.gratuitous_arp)
-        gratuitous_arp = cmd_args.gratuitous_arp_val;
+        gratuitous_arp = cmd_args.gratuitous_arp_arg;
       else
         gratuitous_arp = IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND;
 
       if (cmd_args.arp_response)
-        arp_response = cmd_args.gratuitous_arp_val;
+        arp_response = cmd_args.gratuitous_arp_arg;
       else
         arp_response = IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND;
 
@@ -1894,7 +1894,7 @@ _daemon_cmd (void)
   _daemon_setup ();
 
   if (cmd_args.reset_period)
-    reset_period = cmd_args.reset_period_val;
+    reset_period = cmd_args.reset_period_arg;
 
   if (signal (SIGTERM, _signal_handler) == SIG_ERR)
     _err_exit ("signal: %s", strerror (errno));

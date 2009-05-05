@@ -52,8 +52,8 @@ enum bmc_device_set_acpi_power_state_options
 
 struct bmc_device_set_acpi_power_state
 {
-  int system_power_state;
-  int device_power_state;
+  uint8_t system_power_state;
+  uint8_t device_power_state;
 };
 
 struct bmc_device_arguments

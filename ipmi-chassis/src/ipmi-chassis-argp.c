@@ -320,6 +320,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   error_t ret;
   char *ptr = NULL;
   struct ipmi_chassis_arguments *cmd_args = state->input;
+  int tmp;
 
   switch (key)
     {
@@ -371,12 +372,19 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         }
       else
         {
-          cmd_args->chassis_identify_args.identify_interval = strtol (arg, &ptr, 10);
+          tmp = strtol (arg, &ptr, 10);
           if (*ptr != '\0')
             {
               fprintf (stderr, "invalid value for chassis-identify\n");
               exit (1);
             }
+          if (tmp < IPMI_CHASSIS_IDENTIFY_INTERVAL_MIN
+              || tmp > IPMI_CHASSIS_IDENTIFY_INTERVAL_MAX)
+            {
+              fprintf (stderr, "chassis-identify interval out of range\n");
+              exit (1);
+            }
+          cmd_args->chassis_identify_args.identify_interval = tmp;
           cmd_args->chassis_identify_args.force_identify_set = 0;
         }
       cmd_args->chassis_identify++;
@@ -400,12 +408,19 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
 
     case SET_POWER_CYCLE_INTERVAL_KEY:
-      cmd_args->set_power_cycle_interval_arg = strtol (arg, &ptr, 10);
+      tmp = strtol (arg, &ptr, 10);
       if (*ptr != '\0')
         {
           fprintf (stderr, "invalid value for power cycle interval\n");
           exit (1);
         }
+      if (tmp < IPMI_CHASSIS_POWER_CYCLE_INTERVAL_MIN
+          || tmp > IPMI_CHASSIS_POWER_CYCLE_INTERVAL_MAX)
+        {
+          fprintf (stderr, "power-cycle interval out of range\n");
+          exit (1);
+        }
+      cmd_args->set_power_cycle_interval_arg = tmp;
       cmd_args->set_power_cycle_interval++;
       break;
 

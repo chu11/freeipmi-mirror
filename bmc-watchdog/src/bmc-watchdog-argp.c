@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.18 2009-05-01 23:52:13 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.19 2009-05-05 17:46:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -340,7 +340,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid timer use\n");
           exit (1);
         }
-      cmd_args->timer_use_val = tmp;
+      cmd_args->timer_use_arg = tmp;
       break;
     case STOP_TIMER_KEY:
       cmd_args->stop_timer++;
@@ -351,7 +351,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid stop timer value\n");
           exit (1);
         }
-      cmd_args->stop_timer_val = tmp;
+      cmd_args->stop_timer_arg = tmp;
       break;
     case LOG_KEY:
       cmd_args->log++;
@@ -362,7 +362,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid log value\n");
           exit (1);
         }
-      cmd_args->log_val = tmp;
+      cmd_args->log_arg = tmp;
       break;
     case TIMEOUT_ACTION_KEY:
       cmd_args->timeout_action++;
@@ -373,7 +373,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid timeout action value\n");
           exit (1);
         }
-      cmd_args->timeout_action_val = tmp;
+      cmd_args->timeout_action_arg = tmp;
       break;
     case PRE_TIMEOUT_INTERRUPT_KEY:
       cmd_args->pre_timeout_interrupt++;
@@ -384,7 +384,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid pre timeout interrupt value\n");
           exit (1);
         }
-      cmd_args->pre_timeout_interrupt_val = tmp;
+      cmd_args->pre_timeout_interrupt_arg = tmp;
       break;
     case PRE_TIMEOUT_INTERVAL_KEY:
       cmd_args->pre_timeout_interval++;
@@ -394,13 +394,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid pre timeout interval\n");
           exit (1);
         }
-      if (tmp < IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS
-          || tmp > IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MAX_SECS)
+      if (tmp < IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN
+          || tmp > IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MAX)
         {
           fprintf (stderr, "pre timeout interval out of range\n");
           exit (1);
         }
-      cmd_args->pre_timeout_interval_val = tmp;
+      cmd_args->pre_timeout_interval_arg = tmp;
       break;
     case CLEAR_BIOS_FRB2_KEY:
       cmd_args->clear_bios_frb2++;
@@ -425,13 +425,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid initial countdown\n");
           exit (1);
         }
-      if (tmp < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS
-          || tmp > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
+      if (tmp < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECONDS
+          || tmp > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECONDS)
         {
           fprintf (stderr, "initial countdown out of range\n");
           exit (1);
         }
-      cmd_args->initial_countdown_seconds_val = tmp;
+      cmd_args->initial_countdown_seconds_arg = tmp;
       break;
     case START_AFTER_SET_KEY:
       cmd_args->start_after_set++;
@@ -453,7 +453,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid gratuitous arp value\n");
           exit (1);
         }
-      cmd_args->gratuitous_arp_val = tmp;
+      cmd_args->gratuitous_arp_arg = tmp;
       break;
     case ARP_RESPONSE_KEY:
       cmd_args->arp_response++;
@@ -464,7 +464,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid arp response value\n");
           exit (1);
         }
-      cmd_args->arp_response_val = tmp;
+      cmd_args->arp_response_arg = tmp;
       break;
     case RESET_PERIOD_KEY:
       cmd_args->reset_period++;
@@ -474,13 +474,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid reset period\n");
           exit (1);
         }
-      if (tmp < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS
-          || tmp > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
+      if (tmp < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECONDS
+          || tmp > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECONDS)
         {
           fprintf (stderr, "reset period out of range\n");
           exit (1);
         }
-      cmd_args->reset_period_val = tmp;
+      cmd_args->reset_period_arg = tmp;
       break;
       /* do not output default argp help, do internal help */
     case HELP_KEY:
@@ -607,34 +607,34 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
   cmd_args->logfile = NULL;
   cmd_args->no_logging = 0;
   cmd_args->timer_use = 0;
-  cmd_args->timer_use_val = 0;
+  cmd_args->timer_use_arg = 0;
   cmd_args->stop_timer = 0;
-  cmd_args->stop_timer_val = 0;
+  cmd_args->stop_timer_arg = 0;
   cmd_args->log = 0;
-  cmd_args->log_val = 0;
+  cmd_args->log_arg = 0;
   cmd_args->timeout_action = 0;
-  cmd_args->timeout_action_val = 0;
+  cmd_args->timeout_action_arg = 0;
   cmd_args->pre_timeout_interrupt = 0;
-  cmd_args->pre_timeout_interrupt_val = 0;
+  cmd_args->pre_timeout_interrupt_arg = 0;
   cmd_args->pre_timeout_interval = 0;
-  cmd_args->pre_timeout_interval_val = 0;
+  cmd_args->pre_timeout_interval_arg = 0;
   cmd_args->clear_bios_frb2 = 0;
   cmd_args->clear_bios_post = 0;
   cmd_args->clear_os_load = 0;
   cmd_args->clear_sms_os = 0;
   cmd_args->clear_oem = 0;
   cmd_args->initial_countdown_seconds = 0;
-  cmd_args->initial_countdown_seconds_val = 0;
+  cmd_args->initial_countdown_seconds_arg = 0;
   cmd_args->start_after_set = 0;
   cmd_args->reset_after_set = 0;
   cmd_args->start_if_stopped = 0;
   cmd_args->reset_if_running = 0;
   cmd_args->gratuitous_arp = 0;
-  cmd_args->gratuitous_arp_val = 0;
+  cmd_args->gratuitous_arp_arg = 0;
   cmd_args->arp_response = 0;
-  cmd_args->arp_response_val = 0;
+  cmd_args->arp_response_arg = 0;
   cmd_args->reset_period = 0;
-  cmd_args->reset_period_val = 0;
+  cmd_args->reset_period_arg = 0;
   cmd_args->help = 0;
 
   argp_parse (&cmdline_config_file_argp,

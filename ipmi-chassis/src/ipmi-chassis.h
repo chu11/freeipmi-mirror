@@ -75,9 +75,9 @@ struct cmd_set_system_boot_options
 struct cmd_chassis_identify
 {
   uint8_t identify_interval;
-  uint8_t identify_interval_set;
+  int identify_interval_set;
   uint8_t force_identify;
-  uint8_t force_identify_set;
+  int force_identify_set;
 };
 
 struct ipmi_chassis_arguments
