@@ -311,11 +311,6 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       return (ARGP_ERR_UNKNOWN);
     }
 
-  if (!cmd_args->set_system_boot_options)
-    {
-      fprintf (stderr, "please specify set-boot-flags option\n");
-      exit (1);
-    }
   return (0);
 }
 
