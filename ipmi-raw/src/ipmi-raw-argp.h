@@ -19,6 +19,8 @@
 #ifndef _IPMI_RAW_ARGP_H
 #define _IPMI_RAW_ARGP_H
 
+#include "ipmi-raw.h"
+
 void ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args);
 
 #endif

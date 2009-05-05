@@ -19,6 +19,8 @@
 #ifndef _IPMI_OEM_ARGP_H
 #define _IPMI_OEM_ARGP_H
 
+#include "ipmi-oem.h"
+
 void ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args);
 
 #endif

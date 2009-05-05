@@ -19,6 +19,8 @@
 #ifndef _IPMI_CHASSIS_ARGP_H
 #define _IPMI_CHASSIS_ARGP_H
 
+#include "ipmi-chassis.h"
+
 void ipmi_chassis_argp_parse (int argc, char **argv, struct ipmi_chassis_arguments *cmd_args);
 
 #endif

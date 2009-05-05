@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.h,v 1.4 2009-03-03 23:56:50 chu11 Exp $
+ *  $Id: ipmiconsole-argp.h,v 1.5 2009-05-05 23:38:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -26,6 +26,8 @@
 
 #ifndef _IPMICONSOLE_ARGP_H
 #define _IPMICONSOLE_ARGP_H
+
+#include "ipmiconsole.h"
 
 void ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd_args);
 

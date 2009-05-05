@@ -19,6 +19,8 @@
 #ifndef _BMC_INFO_ARGP_H
 #define _BMC_INFO_ARGP_H
 
+#include "bmc-info.h"
+
 void bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args);
 
 #endif

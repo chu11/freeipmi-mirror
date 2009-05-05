@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.h,v 1.2 2009-01-13 01:02:09 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.h,v 1.3 2009-05-05 23:38:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -27,6 +27,8 @@
 
 #ifndef _BMC_WATCHDOG_ARGP_H
 #define _BMC_WATCHDOG_ARGP_H
+
+#include "bmc-watchdog.h"
 
 void bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *cmd_args);
 
