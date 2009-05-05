@@ -782,7 +782,8 @@ _config_file_sensor_record_ids (struct conffile_data *data,
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      if (data->intlist[i] < 0)
+      if (data->intlist[i] < 0
+          || data->intlist[i] > IPMI_SDR_RECORD_ID_LAST)
         {
           fprintf (stderr, "Config File Error: invalid value '%d' for %s\n",
                    data->intlist[i],

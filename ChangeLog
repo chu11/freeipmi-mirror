@@ -6,8 +6,8 @@
 	libfreeipmi/include/freeipmi/cmds/: Check interval ranges on
 	inputs.
 
-	* ipmimonitoring/src/libipmimonitoring/: Check for valid record_id
-	input.
+	* common/src/toolcommon/, ipmimonitoring/src/libipmimonitoring/:
+	Check for valid record_id inputs.
 
 	* Various code cleanup.
 	
