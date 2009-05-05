@@ -74,7 +74,7 @@ Clear IP, UDP, and RMCP statistics.
 \fB\-\-get\-sdr\-repository\-time\fR
 Get SDR repository time.
 .TP
-\fB\-\-set\-sdr\-repository\-time=TIME\fR
+\fB\-\-set\-sdr\-repository\-time\fR=\fITIME\fR
 Set SDR repository time.  Input format = "MM/DD/YYYY - HH:MM:SS".
 Note that hours are input in 24 hour form.  Alternatively, the local
 system time can be specified with "now".
