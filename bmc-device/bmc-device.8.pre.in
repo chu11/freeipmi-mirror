@@ -82,7 +82,7 @@ system time can be specified with "now".
 \fB\-\-get\-sel\-time\fR
 Get SEL time.
 .TP
-\fB\-\-set\-sel\-time=TIME\fR
+\fB\-\-set\-sel\-time\fR=\fITIME\fR
 Set SEL time.  Input format = "MM/DD/YYYY - HH:MM:SS".  Note that
 hours are input in 24 hour form.  Alternatively, the local
 system time can be specified with "now".
