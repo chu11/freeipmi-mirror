@@ -65,9 +65,9 @@ struct bmc_device_arguments
   int get_self_test_results;
   int get_acpi_power_state;
   int set_acpi_power_state;
+  struct bmc_device_set_acpi_power_state set_acpi_power_state_args;
   int get_lan_statistics;
   int clear_lan_statistics;
-  struct bmc_device_set_acpi_power_state set_acpi_power_state_args;
   int get_sdr_repository_time;
   int set_sdr_repository_time;
   char *set_sdr_repository_time_arg;
