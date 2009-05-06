@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.h,v 1.5 2009-05-05 17:46:56 chu11 Exp $
+ *  $Id: bmc-watchdog.h,v 1.6 2009-05-06 17:44:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -67,11 +67,6 @@ enum bmc_watchdog_argp_option_keys
     HELP3_KEY = 'H',               /* legacy */
   };
 
-/* achu
- *
- * many of the fields can be '0', so there are various "_arg" to store
- * the actual value.
- */
 struct bmc_watchdog_arguments
 {
   struct common_cmd_args common;
