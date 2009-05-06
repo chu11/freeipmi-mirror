@@ -103,6 +103,16 @@ module for snmptrapd to parse ipmi traps
 zenoss
 - request from someone
 
+oem-isms
+--------
+what OEM vendors can add
+- bmc-info - device specific info
+- ipmi-oem - any oemi-sms
+- ipmi-dcmi - oem exception actions
+- ipmi-fru/fru-parse - oem fru specifics
+- ipmi-sel/sel-parse - oem sel specifics
+- ipmi-sensors/ipmi-sensors-config/ipmimonitoring/sensor-read/libipmimonitoring - oem sensor specifics
+
 DCMI functionality
 ------------------
 http://www.intel.com/technology/product/DCMI/index.htm
