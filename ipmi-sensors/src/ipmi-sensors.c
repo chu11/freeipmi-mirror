@@ -61,7 +61,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
   uint8_t major, minor;
   uint16_t record_count, free_space;
   uint64_t val;
-  char str[512];
+  char timestr[512];
   time_t t;
   struct tm tmp;
   int rv = -1;
@@ -150,10 +150,10 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
 
   t = val;
   localtime_r (&t, &tmp);
-  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tmp);
+  strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tmp);
   pstdout_printf (state_data->pstate,
                   "Most recent addition timestamp:  %s\n",
-                  str);
+                  timestr);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val) < 0)
     {
@@ -166,10 +166,10 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
 
   t = val;
   localtime_r (&t, &tmp);
-  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tmp);
+  strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tmp);
   pstdout_printf (state_data->pstate,
                   "Most recent erase timestamp:     %s\n",
-                  str);
+                  timestr);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "get_sdr_repository_allocation_info_command_supported", &val) < 0)
     {

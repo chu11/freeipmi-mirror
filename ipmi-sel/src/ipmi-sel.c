@@ -68,7 +68,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   uint8_t major, minor;
   uint32_t entries, free_space;
   uint64_t val;
-  char str[512];
+  char timestr[512];
   int rv = -1;
   time_t t;
   struct tm tm;
@@ -158,10 +158,10 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
 
   t = val;
   localtime_r (&t, &tm);
-  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
+  strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
   pstdout_printf (state_data->pstate,
                   "Recent addition timestamp:                        %s\n",
-                  str);
+                  timestr);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val) < 0)
     {
@@ -174,10 +174,10 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
 
   t = val;
   localtime_r (&t, &tm);
-  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
+  strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
   pstdout_printf (state_data->pstate,
                   "Recent erase timestamp:                           %s\n",
-                  str);
+                  timestr);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "get_sel_allocation_info_command_supported", &val) < 0)
     {

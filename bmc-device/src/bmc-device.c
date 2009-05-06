@@ -770,7 +770,7 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  char str[512];
+  char timestr[512];
   int rv = -1;
   time_t t;
   struct tm tm;
@@ -806,10 +806,10 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
 
   t = val;
   localtime_r (&t, &tm);
-  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
+  strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
   pstdout_printf (state_data->pstate,
                   "SDR Repository Time: %s\n",
-                  str);
+                  timestr);
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -880,7 +880,7 @@ get_sel_time (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  char str[512];
+  char timestr[512];
   int rv = -1;
   time_t t;
   struct tm tm;
@@ -916,10 +916,10 @@ get_sel_time (bmc_device_state_data_t *state_data)
 
   t = val;
   localtime_r (&t, &tm);
-  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
+  strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
   pstdout_printf (state_data->pstate,
                   "SEL Time: %s\n",
-                  str);
+                  timestr);
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -993,7 +993,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
   uint8_t log_type;
   uint32_t mca_log_entry_count;
   uint64_t val;
-  char str[512];
+  char timestr[512];
   int rv = -1;
   time_t t;
   struct tm tm;
@@ -1063,10 +1063,10 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
 
   t = val;
   localtime_r (&t, &tm);
-  strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", &tm);
+  strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
   pstdout_printf (state_data->pstate,
                   "Last Entry Added to MCA Log: %s\n",
-                  str);
+                  timestr);
 
   if (FIID_OBJ_GET (mca_obj_cmd_rs,
                     "mca_log_entry_count",
