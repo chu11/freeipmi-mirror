@@ -32,6 +32,14 @@ extern "C" {
 #define IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX    0x3F /* 111111b */
 
 /* 
+ * fill* functions return 0 on success, -1 on error.
+ *
+ * object must be for the fill function's respective fiid
+ * template.
+ *
+ * assemble/unassemble functions must be passed fiid objects of the
+ * respective expected header/trailer templates.
+ *
  * see freeipmi/templates/ for template definitions 
  */
 

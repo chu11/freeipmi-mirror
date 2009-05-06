@@ -169,6 +169,14 @@ extern "C" {
 #define IPMI_CIPHER_SUITE_ID_MAX                          14
 
 /* 
+ * fill* functions return 0 on success, -1 on error.
+ *
+ * object must be for the fill function's respective fiid
+ * template.
+ *
+ * assemble/unassemble functions must be passed fiid objects of the
+ * respective expected header/trailer templates.
+ *
  * see freeipmi/templates/ for template definitions 
  */
 
