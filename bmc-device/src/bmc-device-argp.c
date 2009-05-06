@@ -308,6 +308,15 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
                "Multiple commands specified.\n");
       exit (1);
     }
+  
+  if (cmd_args->set_acpi_power_state
+      && (cmd_args->set_acpi_power_state_args.system_power_state == IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE
+          && cmd_args->set_acpi_power_state_args.device_power_state == IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE))
+    {
+      fprintf (stderr,
+               "No acpi power state configuration changes specified\n");
+      exit (1);
+    }
 }
 
 void

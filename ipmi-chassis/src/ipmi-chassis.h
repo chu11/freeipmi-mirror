@@ -50,34 +50,34 @@ enum ipmi_chassis_argp_option_keys
 
 struct cmd_set_system_boot_options
 {
-  uint8_t bios_boot_type;
-  int bios_boot_type_set;
-  uint8_t lock_out_reset_button;
-  int lock_out_reset_button_set;
-  uint8_t screen_blank;
-  int screen_blank_set;
-  uint8_t boot_device;
-  int boot_device_set;
-  uint8_t lock_keyboard;
-  int lock_keyboard_set;
-  uint8_t cmos_clear;
-  int cmos_clear_set;
-  uint8_t console_redirection;
-  int console_redirection_set;
-  uint8_t user_password_bypass;
-  int user_password_bypass_set;
-  uint8_t force_progress_event_traps;
-  int force_progress_event_traps_set;
-  uint8_t firmware_bios_verbosity;
-  int firmware_bios_verbosity_set;
+  int bios_boot_type;
+  uint8_t bios_boot_type_arg;
+  int lock_out_reset_button;
+  uint8_t lock_out_reset_button_arg;
+  int screen_blank;
+  uint8_t screen_blank_arg;
+  int boot_device;
+  uint8_t boot_device_arg;
+  int lock_keyboard;
+  uint8_t lock_keyboard_arg;
+  int cmos_clear;
+  uint8_t cmos_clear_arg;
+  int console_redirection;
+  uint8_t console_redirection_arg;
+  int user_password_bypass;
+  uint8_t user_password_bypass_arg;
+  int force_progress_event_traps;
+  uint8_t force_progress_event_traps_arg;
+  int firmware_bios_verbosity;
+  uint8_t firmware_bios_verbosity_arg;
 };
 
 struct cmd_chassis_identify
 {
-  uint8_t identify_interval;
-  int identify_interval_set;
-  uint8_t force_identify;
-  int force_identify_set;
+  int identify_interval;
+  uint8_t identify_interval_arg;
+  int force_identify;
+  uint8_t force_identify_arg;
 };
 
 struct ipmi_chassis_arguments
