@@ -308,7 +308,7 @@ _get_sensor_reading_ipmb (ipmi_sensor_read_ctx_t ctx,
 
 int
 ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
-                  void *sdr_record,
+                  const void *sdr_record,
                   unsigned int sdr_record_len,
                   double **sensor_reading,
                   uint16_t *sensor_event_bitmask)

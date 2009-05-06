@@ -25,6 +25,7 @@
 
 #include "freeipmi/util/ipmi-channel-util.h"
 #include "freeipmi/api/ipmi-device-global-cmds-api.h"
+#include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
 #include "freeipmi/cmds/ipmi-device-global-cmds.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"

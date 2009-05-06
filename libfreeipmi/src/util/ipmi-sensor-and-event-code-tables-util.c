@@ -2461,8 +2461,6 @@ _get_event_message (uint16_t offset,
                     uint16_t offset_max,
                     char *string_array[])
 {
-  int rv;
-
   assert (buf && buflen);
 
   if (offset > offset_max)
