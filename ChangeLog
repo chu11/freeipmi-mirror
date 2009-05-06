@@ -1,3 +1,18 @@
+2009-05-06  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipm/: Add various header comments.
+
+	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c:
+	Make functions return > 0 value instead of ENOSPC if buffer too
+	small.
+
+	* libfreeipmi/include/freeipmi/util/ipmi-channel-util.h,
+	libfreeipmi/include/freeipmi/util/ipmi-channel-util.c: New files.
+
+	* libfreeipmi/include/freeipmi/api/ipmi-messaging-support-cmds-api.h,
+	libfreeipmi/src/api/ipmi-messaging-support-cmds-api.c
+	(ipmi_get_channel_number): Moved into util.
+	
 2009-05-05  Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.8.pre.in: Add more examples and fix typos.

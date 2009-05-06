@@ -95,6 +95,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-slave-address-spec.h>
 #include <freeipmi/spec/ipmi-sol-parameter-spec.h>
 #include <freeipmi/spec/ipmi-system-software-id-spec.h>
+#include <freeipmi/util/ipmi-channel-util.h>
 #include <freeipmi/util/ipmi-cipher-suite-util.h>
 #include <freeipmi/util/ipmi-error-util.h>
 #include <freeipmi/util/ipmi-ipmb-util.h>
