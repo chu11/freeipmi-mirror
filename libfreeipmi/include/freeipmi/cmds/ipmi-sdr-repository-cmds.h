@@ -41,6 +41,11 @@ extern "C" {
 #define IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ  0xFF
 
 /* 
+ * fill* functions return 0 on success, -1 on error.
+ *
+ * obj_cmd_rq must be for the fill function's respective fiid
+ * template request.
+ *
  * see freeipmi/templates/ for template definitions 
  */
 

@@ -16,7 +16,7 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 /*****************************************************************************\
-*  $Id: ipmi-fru-inventory-device-cmds.h,v 1.11 2009-05-05 18:10:48 chu11 Exp $
+*  $Id: ipmi-fru-inventory-device-cmds.h,v 1.12 2009-05-06 21:59:15 chu11 Exp $
 *****************************************************************************
 *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 *  Copyright (C) 2007 The Regents of the University of California.
@@ -61,6 +61,11 @@ extern "C" {
 #define IPMI_FRU_DATA_MAX                  255
 
 /* 
+ * fill* functions return 0 on success, -1 on error.
+ *
+ * obj_cmd_rq must be for the fill function's respective fiid
+ * template request.
+ *
  * see freeipmi/templates/ for template definitions 
  */
 

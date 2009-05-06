@@ -241,6 +241,11 @@ extern "C" {
 #define IPMI_USER_ID_ENABLE_STATUS_DISABLED    0x2
 
 /* 
+ * fill* functions return 0 on success, -1 on error.
+ *
+ * obj_cmd_rq must be for the fill function's respective fiid
+ * template request.
+ *
  * see freeipmi/templates/ for template definitions 
  */
 

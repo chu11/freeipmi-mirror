@@ -172,6 +172,7 @@ int ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                    fiid_obj_t obj_cmd_rq,
                    fiid_obj_t obj_cmd_rs);
 
+/* returns length written into buf_fs on success, -1 on error */
 int ipmi_cmd_raw (ipmi_ctx_t ctx,
                   uint8_t lun,
                   uint8_t net_fn,

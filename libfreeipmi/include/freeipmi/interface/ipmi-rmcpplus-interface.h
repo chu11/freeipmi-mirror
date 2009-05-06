@@ -237,6 +237,7 @@ int fill_rmcpplus_rakp_message_3 (uint8_t message_tag,
                                   unsigned int key_exchange_authentication_code_len,
                                   fiid_obj_t obj_cmd_rq);
 
+/* returns length written to pkt on success, -1 on error */
 int assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                                 uint8_t integrity_algorithm,
                                 uint8_t confidentiality_algorithm,

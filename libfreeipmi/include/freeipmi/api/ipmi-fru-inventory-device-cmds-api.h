@@ -16,7 +16,7 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-inventory-device-cmds-api.h,v 1.7 2009-04-29 17:18:22 chu11 Exp $
+ *  $Id: ipmi-fru-inventory-device-cmds-api.h,v 1.8 2009-05-06 21:59:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -52,6 +52,14 @@ extern "C" {
 
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
+
+/* 
+ * ipmi_cmd* functions return 0 on success, -1 on error.
+ *
+ * obj_cmd_rs must be for the fill function's respective fiid
+ * template response.
+ *
+ */
 
 int ipmi_cmd_get_fru_inventory_area_info (ipmi_ctx_t ctx,
                                           uint8_t fru_device_id,

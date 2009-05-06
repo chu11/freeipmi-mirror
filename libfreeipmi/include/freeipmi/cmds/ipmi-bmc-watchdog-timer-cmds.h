@@ -95,6 +95,11 @@ extern "C" {
 #define IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECONDS  (IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX/100)
 
 /* 
+ * fill* functions return 0 on success, -1 on error.
+ *
+ * obj_cmd_rq must be for the fill function's respective fiid
+ * template request.
+ *
  * see freeipmi/templates/ for template definitions 
  */
 

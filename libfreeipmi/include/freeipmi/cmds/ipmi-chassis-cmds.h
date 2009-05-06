@@ -197,6 +197,11 @@ extern "C" {
     || (__bios_mux_control) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_SET_MUX_TO_SYSTEM) ? 1 : 0)
 
 /* 
+ * fill* functions return 0 on success, -1 on error.
+ *
+ * obj_cmd_rq must be for the fill function's respective fiid
+ * template request.
+ *
  * see freeipmi/templates/ for template definitions 
  */
  

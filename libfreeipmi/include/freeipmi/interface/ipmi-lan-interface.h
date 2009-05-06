@@ -51,6 +51,7 @@ int fill_lan_msg_hdr (uint8_t rs_addr,
                       uint8_t rq_seq,
                       fiid_obj_t obj_lan_msg_hdr);
 
+/* returns length written to pkt on success, -1 on error */
 int assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
                            fiid_obj_t obj_lan_session_hdr,
                            fiid_obj_t obj_lan_msg_hdr,
@@ -68,6 +69,7 @@ int unassemble_ipmi_lan_pkt (const void *pkt,
                              fiid_obj_t obj_cmd,
                              fiid_obj_t obj_lan_msg_trlr);
 
+/* returns length sent on success, -1 on error */
 ssize_t ipmi_lan_sendto (int s,
                          const void *buf,
                          size_t len,
@@ -75,6 +77,7 @@ ssize_t ipmi_lan_sendto (int s,
                          const struct sockaddr *to,
                          socklen_t tolen);
 
+/* returns length received on success, 0 on orderly shutdown, -1 on error */
 ssize_t ipmi_lan_recvfrom (int s,
                            void *buf,
                            size_t len,

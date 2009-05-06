@@ -16,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
  */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.14 2009-05-03 17:40:30 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.15 2009-05-06 21:59:15 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H
@@ -306,6 +306,11 @@ extern "C" {
     || (__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_YES) ? 1 : 0)
 
 /* 
+ * fill* functions return 0 on success, -1 on error.
+ *
+ * obj_cmd_rq must be for the fill function's respective fiid
+ * template request.
+ *
  * see freeipmi/templates/ for template definitions 
  */
 

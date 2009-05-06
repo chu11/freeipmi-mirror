@@ -28,6 +28,14 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
+/* 
+ * ipmi_cmd* functions return 0 on success, -1 on error.
+ *
+ * obj_cmd_rs must be for the fill function's respective fiid
+ * template response.
+ *
+ */
+
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
 int ipmi_cmd_set_sensor_hysteresis (ipmi_ctx_t ctx,
                                     uint8_t sensor_number,

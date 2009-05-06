@@ -26,6 +26,7 @@ extern "C" {
 
 #include <stdint.h>
 
+/* returns length written into buffer on success, -1 on error */
 int ipmi_sensor_units_string (uint8_t sensor_units_percentage,
                               uint8_t sensor_units_modifier,
                               uint8_t sensor_units_rate,

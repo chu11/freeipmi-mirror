@@ -37,6 +37,7 @@ int fill_hdr_ipmi_kcs (uint8_t lun,
                        uint8_t fn,
                        fiid_obj_t obj_kcs_hdr);
 
+/* returns length written to pkt on success, -1 on error */
 int assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
                            fiid_obj_t obj_cmd,
                            void *pkt,

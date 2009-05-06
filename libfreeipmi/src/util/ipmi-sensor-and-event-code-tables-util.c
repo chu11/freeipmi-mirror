@@ -1528,13 +1528,7 @@ _snprintf (char *buf, unsigned int buflen, char *fmt, ...)
   rv = vsnprintf (buf, buflen, fmt, ap);
   va_end (ap);
 
-  /* -1 to account for '\0' */
-  if (rv >= (buflen - 1))
-    {
-      SET_ERRNO (ENOSPC);
-      return (-1);
-    }
-  return (0);
+  return (rv);
 }
 
 static int
@@ -2477,16 +2471,7 @@ _get_event_message (uint16_t offset,
       return (-1);
     }
 
-  rv = snprintf (buf, buflen, string_array[offset]);
-
-  /* -1 to account for '\0' */
-  if (rv >= (buflen - 1))
-    {
-      SET_ERRNO (ENOSPC);
-      return (-1);
-    }
-
-  return (0);
+  return snprintf (buf, buflen, string_array[offset]);
 }
 
 int

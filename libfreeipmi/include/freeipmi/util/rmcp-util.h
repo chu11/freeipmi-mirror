@@ -28,6 +28,7 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
+/* returns 1 on pass, 0 on fail, -1 on error */
 int ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag);
 
 #ifdef __cplusplus

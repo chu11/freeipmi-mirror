@@ -33,34 +33,40 @@ extern "C" {
 
 int ipmi_event_reading_type_code_class (uint8_t event_reading_type_code);
 
+/* return length of string written into buffer on success, -1 on error */
 int ipmi_get_generic_event_message (uint8_t event_reading_type_code,
                                     uint16_t offset,
                                     char *buf,
                                     unsigned int buflen);
 
+/* return length of string written into buffer on success, -1 on error */
 int ipmi_get_sensor_type_code_message (int sensor_type_code,
                                        int offset,
                                        char *buf,
                                        unsigned int buflen);
 
+/* return length of string written into buffer on success, -1 on error */
 /* identical to above but returns "short" strings when appropriate */
 int ipmi_get_generic_event_message_short (uint8_t event_reading_type_code,
                                           uint16_t offset,
                                           char *buf,
                                           unsigned int buflen);
 
+/* return length of string written into buffer on success, -1 on error */
 /* identical to above but returns "short" strings when appropriate */
 int ipmi_get_sensor_type_code_message_short (int sensor_type_code,
                                              int offset,
                                              char *buf,
                                              unsigned int buflen);
 
+/* return length of string written into buffer on success, -1 on error */
 int ipmi_get_event_data2_message (int sensor_type_code,
                                   int offset,
                                   uint8_t event_data2,
                                   char *buf,
                                   unsigned int buflen);
 
+/* return length of string written into buffer on success, -1 on error */
 int ipmi_get_event_data3_message (int sensor_type_code,
                                   int offset,
                                   uint8_t event_data2,

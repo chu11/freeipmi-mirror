@@ -27,6 +27,14 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
+/* 
+ * ipmi_cmd* functions return 0 on success, -1 on error.
+ *
+ * obj_cmd_rs must be for the fill function's respective fiid
+ * template response.
+ *
+ */
+
 int ipmi_cmd_get_sel_info (ipmi_ctx_t ctx,
                            fiid_obj_t obj_cmd_rs);
 

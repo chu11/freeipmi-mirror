@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.h,v 1.15 2009-05-03 17:40:32 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.h,v 1.16 2009-05-06 21:59:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -131,6 +131,7 @@ int ipmi_sdr_cache_search_record_id (ipmi_sdr_cache_ctx_t ctx, uint16_t record_i
 /* sensor owner id is 8bit field - 7 bit slave or system software id + 1 bit indicating type */
 int ipmi_sdr_cache_search_sensor (ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_number, uint8_t sensor_owner_id);
 
+/* return length of data read into buffer on success, -1 on error */
 int ipmi_sdr_cache_record_read (ipmi_sdr_cache_ctx_t ctx,
                                 void *buf,
                                 unsigned int buflen);

@@ -78,6 +78,11 @@ extern "C" {
 #define IPMI_SENSOR_THRESHOLD_NOT_SET 0x0
 
 /* 
+ * fill* functions return 0 on success, -1 on error.
+ *
+ * obj_cmd_rq must be for the fill function's respective fiid
+ * template request.
+ *
  * see freeipmi/templates/ for template definitions 
  */
 

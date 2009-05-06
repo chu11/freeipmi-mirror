@@ -75,10 +75,12 @@ int ipmi_ssif_ctx_set_flags (ipmi_ssif_ctx_t ctx, unsigned int flags);
 
 int ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx);
 
+/* returns length written on success, -1 on error */
 int ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
                      const void *buf,
                      unsigned int buf_len);
 
+/* returns length read on success, -1 on error */
 int ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
                     void *buf,
                     unsigned int buf_len);

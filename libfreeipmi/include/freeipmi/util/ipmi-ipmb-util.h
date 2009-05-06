@@ -26,8 +26,10 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
+/* returns 1 on pass, 0 on fail, -1 on error */
 int ipmi_ipmb_check_rq_seq (fiid_obj_t obj_ipmb_msg_hdr, uint8_t rq_seq);
 
+/* returns 1 on pass, 0 on fail, -1 on error */
 int ipmi_ipmb_check_checksum (uint8_t rq_addr,
                               fiid_obj_t obj_ipmb_msg_hdr,
                               fiid_obj_t obj_cmd,

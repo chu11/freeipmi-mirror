@@ -30,17 +30,20 @@ extern "C" {
 
 #define IPMI_ERR_STR_MAX_LEN                 2048
 
+/* returns 0 on success, -1 on error */
 int ipmi_completion_code_strerror_r (uint8_t cmd,
                                      uint8_t netfn,
                                      uint8_t comp_code,
                                      char *errstr,
                                      size_t len);
 
+/* returns 0 on success, -1 on error */
 int ipmi_completion_code_strerror_cmd_r (fiid_obj_t obj_cmd,
                                          uint8_t netfn,
                                          char *errstr,
                                          size_t len);
 
+/* returns 0 on success, -1 on error */
 int ipmi_rmcpplus_status_strerror_r (uint8_t rmcpplus_status_code,
                                      char *errstr,
                                      size_t len);

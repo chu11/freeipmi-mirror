@@ -66,10 +66,12 @@ int ipmi_kcs_ctx_set_flags (ipmi_kcs_ctx_t ctx, unsigned int flags);
 
 int ipmi_kcs_ctx_io_init (ipmi_kcs_ctx_t ctx);
 
+/* returns length written on success, -1 on error */
 int ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
                     const void *buf,
                     unsigned int buf_len);
 
+/* returns length read on success, -1 on error */
 int ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
                    void *buf,
                    unsigned int buf_len);

@@ -16,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
  */
 
-/* $Id: ipmi-pef-and-alerting-cmds-api.h,v 1.8 2009-05-01 01:55:03 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds-api.h,v 1.9 2009-05-06 21:59:14 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_API_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_API_H
@@ -28,6 +28,14 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
+
+/* 
+ * ipmi_cmd* functions return 0 on success, -1 on error.
+ *
+ * obj_cmd_rs must be for the fill function's respective fiid
+ * template response.
+ *
+ */
 
 int ipmi_cmd_get_pef_capabilities (ipmi_ctx_t ctx,
                                    fiid_obj_t obj_cmd_rs);

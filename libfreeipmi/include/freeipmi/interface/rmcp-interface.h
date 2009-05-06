@@ -69,6 +69,7 @@ int fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr);
 
 int fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr);
 
+/* returns length written to pkt on success, -1 on error */
 int assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr,
                        fiid_obj_t obj_cmd,
                        void *pkt,

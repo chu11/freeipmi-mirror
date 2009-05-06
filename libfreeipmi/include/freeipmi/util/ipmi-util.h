@@ -29,16 +29,21 @@ extern "C" {
 
 uint8_t ipmi_checksum (const void *buf, unsigned int buflen);
 
+/* returns 1 on pass, 0 on fail, -1 on error */
 int ipmi_check_cmd (fiid_obj_t obj_cmd, uint8_t cmd);
 
+/* returns 1 on pass, 0 on fail, -1 on error */
 int ipmi_check_completion_code (fiid_obj_t obj_cmd, uint8_t completion_code);
 
+/* returns 1 on pass, 0 on fail, -1 on error */
 int ipmi_check_completion_code_success (fiid_obj_t obj_cmd);
 
 int ipmi_get_random (void *buf, unsigned int buflen);
 
+/* returns 1 on pass, 0 on fail, -1 on error */
 int ipmi_is_ipmi_1_5_packet (const void *pkt, unsigned int pkt_len);
 
+/* returns 1 on pass, 0 on fail, -1 on error */
 int ipmi_is_ipmi_2_0_packet (const void *pkt, unsigned int pkt_len);
 
 const char *ipmi_cmd_str (uint8_t net_fn, uint8_t cmd);

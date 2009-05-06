@@ -101,6 +101,7 @@ int ipmi_sdr_parse_event_reading_type_code (ipmi_sdr_parse_ctx_t ctx,
                                             uint8_t *event_reading_type_code);
 
 /* For Full, Compact, Event SDR records */
+/* return length of data read into buffer on success, -1 on error */
 int ipmi_sdr_parse_id_string (ipmi_sdr_parse_ctx_t ctx,
                               const void *sdr_record,
                               unsigned int sdr_record_len,
@@ -292,6 +293,7 @@ int ipmi_sdr_parse_container_entity (ipmi_sdr_parse_ctx_t ctx,
 
 /* For Generic Device Locator, FRU Device Locator, Management
    Controller Device Locator SDR records */
+/* return length of data read into buffer on success, -1 on error */
 int ipmi_sdr_parse_device_id_string (ipmi_sdr_parse_ctx_t ctx,
                                      const void *sdr_record,
                                      unsigned int sdr_record_len,
@@ -362,6 +364,7 @@ int ipmi_sdr_parse_product_id (ipmi_sdr_parse_ctx_t ctx,
                                uint16_t *product_id);
 
 /* For OEM SDR records */
+/* return length of data read into buffer on success, -1 on error */
 int ipmi_sdr_parse_oem_data (ipmi_sdr_parse_ctx_t ctx,
                              const void *sdr_record,
                              unsigned int sdr_record_len,
