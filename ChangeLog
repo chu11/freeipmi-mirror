@@ -1,3 +1,7 @@
+2009-05-05  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-chassis/src/: Fix chassis-identify parameter parsing bug.
+
 2009-05-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/, ipmi-oem/: Fix glibc portability bugs.

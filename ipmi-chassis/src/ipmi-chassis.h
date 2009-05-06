@@ -90,14 +90,11 @@ struct ipmi_chassis_arguments
   struct hostrange_cmd_args hostrange;
   int32_t cmd;
 
-  union cmd_args {
-    uint8_t chassis_control;
-    uint8_t power_restore_policy;
-    uint8_t power_cycle_interval;
-    
-    struct cmd_identify identify_args;
-    struct cmd_boot_option boot_option_args;
-  } args;
+  uint8_t chassis_control;
+  uint8_t power_restore_policy;
+  uint8_t power_cycle_interval;
+  struct cmd_identify identify_args;
+  struct cmd_boot_option boot_option_args;
 };
 
 typedef struct ipmi_chassis_prog_data

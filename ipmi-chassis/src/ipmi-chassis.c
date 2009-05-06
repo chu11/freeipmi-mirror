@@ -454,7 +454,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_chassis_control_rs);
 
   if (ipmi_cmd_chassis_control (state_data->ipmi_ctx, 
-                                args->args.chassis_control, 
+                                args->chassis_control, 
                                 cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
@@ -482,8 +482,8 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_chassis_identify_rs);
 
   if (ipmi_cmd_chassis_identify (state_data->ipmi_ctx, 
-                                 (args->args.identify_args.identify_interval_set) ? &args->args.identify_args.identify_interval : NULL, 
-                                 (args->args.identify_args.force_identify_set) ? &args->args.identify_args.force_identify : NULL, 
+                                 (args->identify_args.identify_interval_set) ? &args->identify_args.identify_interval : NULL, 
+                                 (args->identify_args.force_identify_set) ? &args->identify_args.force_identify : NULL, 
                                  cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
@@ -512,7 +512,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_power_restore_policy_rs);
 
   if (ipmi_cmd_set_power_restore_policy (state_data->ipmi_ctx,
-                                         args->args.power_restore_policy, 
+                                         args->power_restore_policy, 
                                          cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
@@ -522,7 +522,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (args->args.power_restore_policy == IPMI_POWER_RESTORE_POLICY_NO_CHANGE)
+  if (args->power_restore_policy == IPMI_POWER_RESTORE_POLICY_NO_CHANGE)
     {
       char policy_supported[100];
       memset(policy_supported, 0, sizeof (policy_supported));
@@ -562,7 +562,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
   _FIID_OBJ_CREATE(cmd_rs, tmpl_cmd_set_power_cycle_interval_rs);
 
   if (ipmi_cmd_set_power_cycle_interval (state_data->ipmi_ctx, 
-                                         args->args.power_cycle_interval, 
+                                         args->power_cycle_interval, 
                                          cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
@@ -1034,91 +1034,91 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (args->args.boot_option_args.bios_boot_type == -1)
+  if (args->boot_option_args.bios_boot_type == -1)
     {
       _FIID_OBJ_GET (get_boot_flags_rs, "bios_boot_type", &val);
       bios_boot_type = val;
     }
   else
-    bios_boot_type = args->args.boot_option_args.bios_boot_type;
+    bios_boot_type = args->boot_option_args.bios_boot_type;
 
   boot_flags_persistent = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_VALID_FOR_NEXT_BOOT;
   boot_flags_valid = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_VALID;
 
-  if (args->args.boot_option_args.lock_out_reset_button == -1)
+  if (args->boot_option_args.lock_out_reset_button == -1)
     {
       _FIID_OBJ_GET (get_boot_flags_rs, "lock_out_reset_button", &val);
       lock_out_reset_button = val;
     }
   else
-    lock_out_reset_button = args->args.boot_option_args.lock_out_reset_button;
+    lock_out_reset_button = args->boot_option_args.lock_out_reset_button;
 
-  if (args->args.boot_option_args.screen_blank == -1)
+  if (args->boot_option_args.screen_blank == -1)
     {
       _FIID_OBJ_GET (get_boot_flags_rs, "screen_blank", &val);
       screen_blank = val;
     }
   else
-    screen_blank = args->args.boot_option_args.screen_blank;
+    screen_blank = args->boot_option_args.screen_blank;
 
-  if (args->args.boot_option_args.boot_device == -1)
+  if (args->boot_option_args.boot_device == -1)
     {
       _FIID_OBJ_GET (get_boot_flags_rs, "boot_device", &val);
       boot_device = val;
     }
   else
-    boot_device = args->args.boot_option_args.boot_device;
+    boot_device = args->boot_option_args.boot_device;
 
-  if (args->args.boot_option_args.lock_keyboard == -1)
+  if (args->boot_option_args.lock_keyboard == -1)
     {
       _FIID_OBJ_GET (get_boot_flags_rs, "lock_keyboard", &val);
       lock_keyboard = val;
     }
   else
-    lock_keyboard = args->args.boot_option_args.lock_keyboard;
+    lock_keyboard = args->boot_option_args.lock_keyboard;
 
-  if (args->args.boot_option_args.cmos_clear == -1)
+  if (args->boot_option_args.cmos_clear == -1)
     {
       _FIID_OBJ_GET (get_boot_flags_rs, "cmos_clear", &val);
       cmos_clear = val;
     }
   else
-    cmos_clear = args->args.boot_option_args.cmos_clear;
+    cmos_clear = args->boot_option_args.cmos_clear;
 
-  if (args->args.boot_option_args.console_redirection == -1)
+  if (args->boot_option_args.console_redirection == -1)
     {
       _FIID_OBJ_GET (get_boot_flags_rs, "console_redirection", &val);
       console_redirection = val;
     }
   else
-    console_redirection = args->args.boot_option_args.console_redirection;
+    console_redirection = args->boot_option_args.console_redirection;
 
   _FIID_OBJ_GET (get_boot_flags_rs, "lock_out_sleep_button", &val);
   lock_out_sleep_button = val;
 
-  if (args->args.boot_option_args.user_password_bypass == -1)
+  if (args->boot_option_args.user_password_bypass == -1)
     {
       _FIID_OBJ_GET (get_boot_flags_rs, "user_password_bypass", &val);
       user_password_bypass = val;
     }
   else
-    user_password_bypass = args->args.boot_option_args.user_password_bypass;
+    user_password_bypass = args->boot_option_args.user_password_bypass;
 
-  if (args->args.boot_option_args.force_progress_event_traps == -1)
+  if (args->boot_option_args.force_progress_event_traps == -1)
     {
       _FIID_OBJ_GET (get_boot_flags_rs, "force_progress_event_traps", &val);
       force_progress_event_traps = val;
     }
   else
-    force_progress_event_traps = args->args.boot_option_args.force_progress_event_traps;
+    force_progress_event_traps = args->boot_option_args.force_progress_event_traps;
 
-  if (args->args.boot_option_args.firmware_bios_verbosity == -1)
+  if (args->boot_option_args.firmware_bios_verbosity == -1)
     {
       _FIID_OBJ_GET (get_boot_flags_rs, "firmware_bios_verbosity", &val);
       firmware_bios_verbosity = val;
     }
   else
-    firmware_bios_verbosity = args->args.boot_option_args.firmware_bios_verbosity;
+    firmware_bios_verbosity = args->boot_option_args.firmware_bios_verbosity;
 
   _FIID_OBJ_GET (get_boot_flags_rs, "lock_out_via_power_button", &val);
   lock_out_via_power_button = val;
