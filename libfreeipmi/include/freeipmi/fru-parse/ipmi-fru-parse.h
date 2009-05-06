@@ -119,7 +119,9 @@ int ipmi_fru_parse_close_device_id (ipmi_fru_parse_ctx_t ctx);
 int ipmi_fru_parse_first (ipmi_fru_parse_ctx_t ctx);
 /* returns 1 if iterator can continue, 0 if at end, -1 on error */
 int ipmi_fru_parse_next (ipmi_fru_parse_ctx_t ctx);
+
 /* area read will not include record headers */
+/* utiliize area_type and area_length in/out parameters for later parsing */
 int ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
                                    unsigned int *area_type,
                                    unsigned int *area_length,
