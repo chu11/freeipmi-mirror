@@ -883,7 +883,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
   switch (val)
     {
     case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_UNKNOWN:
-      sprintf (restart_cause,"unknown\n");
+      sprintf (restart_cause, "unknown\n");
       break;
 
     case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_CHASSIS_CONTROL_COMMAND:
