@@ -223,7 +223,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0, temp_val;
-  uint8_t front_panel_capabilities = 0, misc_chassis_status = 0;
+  int front_panel_capabilities_indent = 0, misc_chassis_status_indent = 0;
   int rv = -1;
   int flag;
 
@@ -459,7 +459,11 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   if (val)
     {
-      misc_chassis_status = 1;
+      if (misc_chassis_status_indent)
+        pstdout_printf (state_data->pstate,
+                        "\n                            ");
+      
+      misc_chassis_status_indent = 1;
       pstdout_printf (state_data->pstate, " Chassis Intrusion Active");
     }
 
@@ -474,11 +478,11 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   if (val)
     {
-      if (misc_chassis_status)
+      if (misc_chassis_status_indent)
         pstdout_printf (state_data->pstate,
                         "\n                            ");
 
-      misc_chassis_status = 1;
+      misc_chassis_status_indent = 1;
       pstdout_printf (state_data->pstate,
                       " Front panel lockout active");
     }
@@ -494,10 +498,11 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   if (val)
     {
-      if (misc_chassis_status)
+      if (misc_chassis_status_indent)
         pstdout_printf (state_data->pstate,
                         "\n                            ");
-      misc_chassis_status = 1;
+
+      misc_chassis_status_indent = 1;
       pstdout_printf (state_data->pstate,
                       " Drive Fault");
     }
@@ -513,10 +518,11 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   if (val)
     {
-      if (misc_chassis_status)
+      if (misc_chassis_status_indent)
         pstdout_printf (state_data->pstate,
                         "\n                            ");
-      misc_chassis_status = 1;
+
+      misc_chassis_status_indent = 1;
       pstdout_printf (state_data->pstate,
                       " Cooling fan fault detected");
     }
@@ -532,10 +538,11 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   if (val)
     {
-      if (misc_chassis_status)
+      if (misc_chassis_status_indent)
         pstdout_printf (state_data->pstate,
                         "\n                            ");
-      misc_chassis_status = 1;
+
+      misc_chassis_status_indent = 1;
       pstdout_printf (state_data->pstate,
                       " Chassis Identify Command and State Info supported");
 
@@ -570,10 +577,10 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
           break;
         }
     }
-  else if (misc_chassis_status)
+  else if (misc_chassis_status_indent)
     pstdout_printf (state_data->pstate, "\n");
 
-  if (!misc_chassis_status)
+  if (!misc_chassis_status_indent)
     pstdout_printf (state_data->pstate, "\n");
 
   pstdout_printf (state_data->pstate,
@@ -594,7 +601,11 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       if (val)
         {
-          front_panel_capabilities = 1;
+          if (front_panel_capabilities_indent)
+            pstdout_printf (state_data->pstate,
+                            "\n                            ");
+          
+          front_panel_capabilities_indent = 1;
           pstdout_printf (state_data->pstate,
                           " Power off button disabled");
         }
@@ -610,11 +621,11 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
       if (val)
         {
-          if (front_panel_capabilities)
+          if (front_panel_capabilities_indent)
             pstdout_printf (state_data->pstate,
                             "\n                            ");
 
-          front_panel_capabilities = 1;
+          front_panel_capabilities_indent = 1;
           pstdout_printf (state_data->pstate,
                           " Reset button disabled");
         }
@@ -630,10 +641,10 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
       if (val)
         {
-          if (front_panel_capabilities)
+          if (front_panel_capabilities_indent)
             pstdout_printf (state_data->pstate,
                             "\n                            ");
-          front_panel_capabilities = 1;
+          front_panel_capabilities_indent = 1;
           pstdout_printf (state_data->pstate,
                           " Diagnostic Interrupt Button disabled");
         }
@@ -649,10 +660,10 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
       if (val)
         {
-          if (front_panel_capabilities)
+          if (front_panel_capabilities_indent)
             pstdout_printf (state_data->pstate,
                             "\n                            ");
-          front_panel_capabilities = 1;
+          front_panel_capabilities_indent = 1;
           pstdout_printf (state_data->pstate,
                           "                            Standby button disabled");
         }
@@ -668,10 +679,10 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
       if (val)
         {
-          if (front_panel_capabilities)
+          if (front_panel_capabilities_indent)
             pstdout_printf (state_data->pstate,
                             "\n                            ");
-          front_panel_capabilities = 1;
+          front_panel_capabilities_indent = 1;
           pstdout_printf (state_data->pstate,
                           " Power off button disable allowed");
         }
@@ -687,10 +698,10 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
       if (val)
         {
-          if (front_panel_capabilities)
+          if (front_panel_capabilities_indent)
             pstdout_printf (state_data->pstate,
                             "\n                            ");
-          front_panel_capabilities = 1;
+          front_panel_capabilities_indent = 1;
           pstdout_printf (state_data->pstate,
                           " Reset button disable allowed");
         }
@@ -706,10 +717,10 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
       if (val)
         {
-          if (front_panel_capabilities)
+          if (front_panel_capabilities_indent)
             pstdout_printf (state_data->pstate,
                             "\n                            ");
-          front_panel_capabilities = 1;
+          front_panel_capabilities_indent = 1;
           pstdout_printf (state_data->pstate,
                           " Diagnostic interrupt button disable allowed");
         }
@@ -725,10 +736,10 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
       if (val)
         {
-          if (front_panel_capabilities)
+          if (front_panel_capabilities_indent)
             pstdout_printf (state_data->pstate,
                             "\n                            ");
-          front_panel_capabilities = 1;
+          front_panel_capabilities_indent = 1;
           pstdout_printf (state_data->pstate,
                           " Standby button disable allowed");
         }
