@@ -138,6 +138,12 @@ additions.
   - these 4 commands seem like the only maybe potentially useful
     additions.
 
+ipmi proxy daemon
+-----------------
+capture lan and do inband, maybe useful if you have dedicated port
+that can't be seen by the network, and you don't have enough switch
+ports to have both plugged up to the network.
+
 PmBus functionality
 -------------------
 pmbus.org
