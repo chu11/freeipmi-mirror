@@ -1,3 +1,8 @@
+2009-05-07  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-chassis/src/ipmi-chassis (get_chassis_status): Fix output
+	corner cases.
+
 2009-05-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-chassis/src/: Fix chassis-identify parameter parsing bug.
