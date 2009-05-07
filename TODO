@@ -1,3 +1,9 @@
+consistent output
+bmc-info
+ipmi-chassis
+bmc-device
+all tools that output "info"
+
 ipmi-locate
 -----------
 (TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi
