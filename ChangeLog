@@ -4,6 +4,12 @@
 	Output format more cleanly.  Output all frields from
 	--get-chassis-status.
 
+	* libfreeipmi/src/cmds/ipmi-device-global-cmds.c: Fix template
+	field names "info" -> "information".
+
+	* bmc-info/: Output text more consistently to IPMI spec.  Output
+	all field information.
+
 	* Additional code cleanup.
 	
 2009-05-06  Albert Chu <chu11@llnl.gov>
