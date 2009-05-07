@@ -132,6 +132,7 @@ o bmc-info
   - When querying active/inactive, allowed/unallowed, true/false,
     etc. status fields output all fields instead of only the
     active/allowed/true/etc. fields.
+  - Output GUID by default.
   - Output manufacturer name with "Manufacturer ID" if name available.
 o ipmi-chassis
   - When querying active/inactive, allowed/unallowed, true/false,

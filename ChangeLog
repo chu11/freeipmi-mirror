@@ -8,7 +8,7 @@
 	field names "info" -> "information".
 
 	* bmc-info/: Output text more consistently to IPMI spec.  Output
-	all field information.
+	all field information.  Output GUID by default.
 
 	* Additional code cleanup.
 	
