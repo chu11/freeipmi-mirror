@@ -343,11 +343,6 @@ display_get_device_id (bmc_info_state_data_t *state_data)
                   major,
                   minor);
 
-  pstdout_printf (state_data->pstate, "\n");
-
-  pstdout_printf(state_data->pstate,
-                 "Additional Device Support:\n");
-
   if (FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.sensor_device", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -452,8 +447,6 @@ display_get_device_id (bmc_info_state_data_t *state_data)
                   "Chassis Device:        %s\n",
                   val ? "supported" : "unsupported");
 
-  pstdout_printf (state_data->pstate, "\n");
-
   if (FIID_OBJ_GET (obj_cmd_rs, "manufacturer_id.id", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -504,9 +497,6 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 
   if (flag)
     {
-      
-      pstdout_printf (state_data->pstate, "\n");
-
       switch (manufacturer_id)
         {
         case IPMI_MANUFACTURER_ID_INTEL:
@@ -631,7 +621,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
         continue;
 
       pstdout_printf (state_data->pstate,
-                      "Channel Number: %d\n",
+                      "     Channel Number: %d\n",
                       channel_info_list[i].channel_number);
 
       if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED (channel_info_list[i].medium_type))
@@ -686,12 +676,12 @@ display_channel_info (bmc_info_state_data_t *state_data)
 
       if (medium_type)
         pstdout_printf (state_data->pstate,
-                        "   Medium Type: %s\n",
+                        "        Medium Type: %s\n",
                         medium_type);
 
       if (protocol_type)
         pstdout_printf (state_data->pstate,
-                        " Protocol Type: %s\n",
+                        "      Protocol Type: %s\n",
                         protocol_type);
     }
 
@@ -713,8 +703,6 @@ run_cmd_args (bmc_info_state_data_t *state_data)
 
   if (display_get_device_id (state_data) < 0)
     goto cleanup;
-
-  pstdout_printf (state_data->pstate, "\n");
 
   if (display_channel_info (state_data) < 0)
     goto cleanup;
