@@ -6,6 +6,9 @@ o Make output of ipmi-sel, ipmi-sensors, and ipmimonitoring easier to
   read and consistent to each other.  Under default output, sensors
   listed in ipmi-sensors and ipmimonitoring are identical.  Legacy
   output is supported through the --legacy-output option.
+o When querying active/inactive, allowed/unallowed, true/false,
+  etc. status fields in ipmi-chassis, bmc-info, and bmc-device, output
+  all fields instead of only the active/allowed/true/etc. fields.
 o Support sensor unit percentages, rates, and modifiers (i.e. "%
   hit", "gigabyte per minute", "pounds / cu in") in most tools.
 o Support non-abbreviated units (i.e. "Amps" instead of "A") in most
@@ -128,6 +131,11 @@ o bmc-device
 o bmc-info
   - Output manufacturer name with "Manufacturer ID" if name available.
 o ipmi-chassis
+  - When querying active/inactive, allowed/unallowed, true/false,
+    etc. status fields output all fields instead of only the
+    active/allowed/true/etc. fields.
+  - Output some text more consistently to IPMI specification.
+  - Cleanup output formats.
   - Rename --get-status option to --get-chassis-status.  Legacy option
     still supported.
   - Rename --get-capabilities option to --get-chassis-capabilities.

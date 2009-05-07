@@ -1,5 +1,9 @@
 2009-05-07  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-chassis/src/: Output text more consistently to IPMI spec.
+	Output format more cleanly.  Output all frields from
+	--get-chassis-status.
+
 	* Additional code cleanup.
 	
 2009-05-06  Albert Chu <chu11@llnl.gov>

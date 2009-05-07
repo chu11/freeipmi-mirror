@@ -81,8 +81,8 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Intrusion Sensor           : %s\n",
-                  (val ? "Provided" : "Not Provided"));
+                  "Intrusion sensor        : %s\n",
+                  (val ? "provided" : "not provided"));
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "capabilities_flags.provides_front_panel_lockout",
@@ -96,8 +96,8 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Front Panel Lockout        : %s\n",
-                  (val ? "Provided" : "Not Provided"));
+                  "Front Panel Lockout     : %s\n",
+                  (val ? "provided" : "not provided"));
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "capabilities_flags.provides_diagnostic_interrupt",
@@ -111,8 +111,8 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Diagnostic Interrupt       : %s\n",
-                  (val ? "Provided" : "Not Provided"));
+                  "Diagnostic Interrupt    : %s\n",
+                  (val ? "provided" : "not provided"));
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "capabilities_flags.provides_power_interlock",
@@ -126,8 +126,8 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Power Interlock            : %s\n",
-                  (val ? "Provided" : "Not Provided"));
+                  "Power interlock         : %s\n",
+                  (val ? "provided" : "not provided"));
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "fru_info_device_address",
@@ -142,7 +142,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
   fru_info_device_address = val;
 
   pstdout_printf (state_data->pstate,
-                  "FRU Info Device Address    : %Xh %s\n",
+                  "FRU Info Device Address : %Xh %s\n",
                   fru_info_device_address,
                   (val ? "" : "(Unspecified)"));
 
@@ -159,7 +159,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
   sdr_device_address = val;
  
   pstdout_printf (state_data->pstate,
-                  "SDR Device Address         : %Xh\n",
+                  "SDR Device Address      : %Xh\n",
                   sdr_device_address);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -175,7 +175,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
   sel_device_address = val;
 
   pstdout_printf (state_data->pstate,
-                  "SEL Device Address         : %Xh\n",
+                  "SEL Device Address      : %Xh\n",
                   sel_device_address);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -191,7 +191,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
   system_management_device_address = val;
 
   pstdout_printf (state_data->pstate,
-                  "Sys Mgmt Device Address    : %Xh\n",
+                  "Sys Mgmt Device Address : %Xh\n",
                   system_management_device_address);
 
   if ((flag = fiid_obj_get (obj_cmd_rs, "bridge_device_address", &val)) < 0)
@@ -206,11 +206,11 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
 
   if (flag)
     pstdout_printf (state_data->pstate,
-                    "Bridge Device Address      : %Xh\n",
+                    "Bridge Device Address   : %Xh\n",
                     bridge_device_address);
   else
     pstdout_printf (state_data->pstate,
-                    "Bridge Device Address      : 20h (assuming default)\n");
+                    "Bridge Device Address   : 20h (assuming default)\n");
 
   rv = 0;
  cleanup:
@@ -223,7 +223,6 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0, temp_val;
-  int front_panel_capabilities_indent = 0, misc_chassis_status_indent = 0;
   int rv = -1;
   int flag;
 
@@ -255,7 +254,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "System Power               : %s\n",
+                  "System Power                        : %s\n",
                   val ? "on" : "off");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_overload", &val) < 0)
@@ -268,7 +267,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "System Power Overload      : %s\n",
+                  "Power overload                      : %s\n",
                   val ? "true" : "false");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "current_power_state.interlock", &val) < 0)
@@ -281,8 +280,8 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Interlock switch           : %s\n",
-                  val ? "active" : "Inactive");
+                  "Interlock                           : %s\n",
+                  val ? "active" : "inactive");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_fault", &val) < 0)
     {
@@ -294,7 +293,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Power fault detected       : %s\n",
+                  "Power fault                         : %s\n",
                   val ? "true" : "false");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_control_fault", &val) < 0)
@@ -307,7 +306,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Power control fault        : %s\n",
+                  "Power control fault                 : %s\n",
                   val ? "true" : "false");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_restore_policy", &val) < 0)
@@ -320,25 +319,25 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Power restore policy       :");
+                  "Power restore policy                : ");
 
   switch (val)
     {
     case IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS:
-      pstdout_printf (state_data->pstate, " Always off\n");
+      pstdout_printf (state_data->pstate, "Always off\n");
       break;
 
     case IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE:
-      pstdout_printf (state_data->pstate, " Restore\n");
+      pstdout_printf (state_data->pstate, "Restore\n");
       break;
 
     case IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS:
-      pstdout_printf (state_data->pstate, " Always on\n");
+      pstdout_printf (state_data->pstate, "Always on\n");
       break;
 
     case IPMI_POWER_RESTORE_POLICY_UNKNOWN:
     default:
-      pstdout_printf (state_data->pstate, " Unknown\n");
+      pstdout_printf (state_data->pstate, "unknown\n");
       break;
     }
 
@@ -417,7 +416,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     temp_val = IPMI_LAST_POWER_EVENT_POWER_ON_VIA_IPMI;
 
  print:
-  pstdout_printf (state_data->pstate, "Last Power Event           : ");
+  pstdout_printf (state_data->pstate, "Last Power Event                    : ");
 
   switch (temp_val)
     {
@@ -442,11 +441,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      pstdout_printf (state_data->pstate, "unknown power event\n");
+      pstdout_printf (state_data->pstate, "unknown\n");
       break;
     }
-
-  pstdout_printf (state_data->pstate, "Misc Chassis status        :");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "misc_chassis_state.chassis_intrusion_active", &val) < 0)
     {
@@ -457,15 +454,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (val)
-    {
-      if (misc_chassis_status_indent)
-        pstdout_printf (state_data->pstate,
-                        "\n                            ");
-      
-      misc_chassis_status_indent = 1;
-      pstdout_printf (state_data->pstate, " Chassis Intrusion Active");
-    }
+  pstdout_printf (state_data->pstate,
+                  "Chassis intrusion                   : %s\n",
+                  val ? "active" : "inactive");
 
   if (FIID_OBJ_GET (obj_cmd_rs,  "misc_chassis_state.front_panel_lockout_active", &val) < 0)
     {
@@ -476,16 +467,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (val)
-    {
-      if (misc_chassis_status_indent)
-        pstdout_printf (state_data->pstate,
-                        "\n                            ");
-
-      misc_chassis_status_indent = 1;
-      pstdout_printf (state_data->pstate,
-                      " Front panel lockout active");
-    }
+  pstdout_printf (state_data->pstate,
+                  "Front panel lockout                 : %s\n",
+                  val ? "active" : "inactive");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "misc_chassis_state.drive_fault", &val) < 0)
     {
@@ -496,16 +480,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (val)
-    {
-      if (misc_chassis_status_indent)
-        pstdout_printf (state_data->pstate,
-                        "\n                            ");
-
-      misc_chassis_status_indent = 1;
-      pstdout_printf (state_data->pstate,
-                      " Drive Fault");
-    }
+  pstdout_printf (state_data->pstate,
+                  "Drive Fault                         : %s\n",
+                  val ? "true" : "false");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "misc_chassis_state.cooling_fan_fault_detected", &val) < 0)
     {
@@ -516,16 +493,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (val)
-    {
-      if (misc_chassis_status_indent)
-        pstdout_printf (state_data->pstate,
-                        "\n                            ");
-
-      misc_chassis_status_indent = 1;
-      pstdout_printf (state_data->pstate,
-                      " Cooling fan fault detected");
-    }
+  pstdout_printf (state_data->pstate,
+                  "Cooling/fan fault                   : %s\n",
+                  val ? "true" : "false");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "misc_chassis_state.chassis_identify_command_and_state_info_supported", &val) < 0)
     {
@@ -538,14 +508,6 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   if (val)
     {
-      if (misc_chassis_status_indent)
-        pstdout_printf (state_data->pstate,
-                        "\n                            ");
-
-      misc_chassis_status_indent = 1;
-      pstdout_printf (state_data->pstate,
-                      " Chassis Identify Command and State Info supported");
-
       if (FIID_OBJ_GET (obj_cmd_rs, "misc_chassis_state.chassis_identify_state", &val) < 0)
         {
           pstdout_fprintf (state_data->pstate,
@@ -556,7 +518,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
         }
 
       pstdout_printf (state_data->pstate,
-                      "\nChassis Identify state     : ");
+                      "Chassis Identify state              : ");
 
       switch (val)
         {
@@ -573,18 +535,10 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
           break;
 
         default:
-          pstdout_printf (state_data->pstate, "Unknown\n");
+          pstdout_printf (state_data->pstate, "unknown\n");
           break;
         }
     }
-  else if (misc_chassis_status_indent)
-    pstdout_printf (state_data->pstate, "\n");
-
-  if (!misc_chassis_status_indent)
-    pstdout_printf (state_data->pstate, "\n");
-
-  pstdout_printf (state_data->pstate,
-                  "Front panel capabilities   :");
 
   if ((flag = fiid_obj_get (obj_cmd_rs,
                             "front_panel.power_off_button_disabled",
@@ -599,16 +553,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   if (flag)
     {
-      if (val)
-        {
-          if (front_panel_capabilities_indent)
-            pstdout_printf (state_data->pstate,
-                            "\n                            ");
-          
-          front_panel_capabilities_indent = 1;
-          pstdout_printf (state_data->pstate,
-                          " Power off button disabled");
-        }
+      pstdout_printf (state_data->pstate,
+                      "Power off button                    : %s\n",
+                      val ? "disabled" : "enabled");
 
       if (FIID_OBJ_GET (obj_cmd_rs, "front_panel.reset_button_disabled", &val) < 0)
         {
@@ -619,16 +566,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        {
-          if (front_panel_capabilities_indent)
-            pstdout_printf (state_data->pstate,
-                            "\n                            ");
-
-          front_panel_capabilities_indent = 1;
-          pstdout_printf (state_data->pstate,
-                          " Reset button disabled");
-        }
+      pstdout_printf (state_data->pstate,
+                      "Reset button                        : %s\n",
+                      val ? "disabled" : "enabled");
 
       if (FIID_OBJ_GET (obj_cmd_rs, "front_panel.diagnostic_interrupt_button_disabled", &val) < 0)
         {
@@ -639,15 +579,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        {
-          if (front_panel_capabilities_indent)
-            pstdout_printf (state_data->pstate,
-                            "\n                            ");
-          front_panel_capabilities_indent = 1;
-          pstdout_printf (state_data->pstate,
-                          " Diagnostic Interrupt Button disabled");
-        }
+      pstdout_printf (state_data->pstate,
+                      "Diagnostic Interrupt button         : %s\n",
+                      val ? "disabled" : "enabled");
 
       if (FIID_OBJ_GET (obj_cmd_rs, "front_panel.standby_button_disabled", &val) < 0)
         {
@@ -658,15 +592,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        {
-          if (front_panel_capabilities_indent)
-            pstdout_printf (state_data->pstate,
-                            "\n                            ");
-          front_panel_capabilities_indent = 1;
-          pstdout_printf (state_data->pstate,
-                          " Standby button disabled");
-        }
+      pstdout_printf (state_data->pstate,
+                      "Standby button                      : %s\n",
+                      val ? "disabled" : "enabled");
 
       if (FIID_OBJ_GET (obj_cmd_rs, "front_panel.power_off_button_disable_allowed", &val) < 0)
         {
@@ -677,15 +605,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        {
-          if (front_panel_capabilities_indent)
-            pstdout_printf (state_data->pstate,
-                            "\n                            ");
-          front_panel_capabilities_indent = 1;
-          pstdout_printf (state_data->pstate,
-                          " Power off button disable allowed");
-        }
+      pstdout_printf (state_data->pstate,
+                      "Power off button disable            : %s\n",
+                      val ? "allowed" : "unallowed");
 
       if (FIID_OBJ_GET (obj_cmd_rs, "front_panel.reset_button_disable_allowed", &val) < 0)
         {
@@ -696,15 +618,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        {
-          if (front_panel_capabilities_indent)
-            pstdout_printf (state_data->pstate,
-                            "\n                            ");
-          front_panel_capabilities_indent = 1;
-          pstdout_printf (state_data->pstate,
-                          " Reset button disable allowed");
-        }
+      pstdout_printf (state_data->pstate,
+                      "Reset button disable                : %s\n",
+                      val ? "allowed" : "unallowed");
 
       if (FIID_OBJ_GET (obj_cmd_rs, "front_panel.diagnostic_interrupt_button_disable_allowed", &val) < 0)
         {
@@ -715,15 +631,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        {
-          if (front_panel_capabilities_indent)
-            pstdout_printf (state_data->pstate,
-                            "\n                            ");
-          front_panel_capabilities_indent = 1;
-          pstdout_printf (state_data->pstate,
-                          " Diagnostic interrupt button disable allowed");
-        }
+      pstdout_printf (state_data->pstate,
+                      "Diagnostic interrupt button disable : %s\n",
+                      val ? "allowed" : "unallowed");
 
       if (FIID_OBJ_GET (obj_cmd_rs, "front_panel.standby_button_disable_allowed", &val) < 0)
         {
@@ -734,15 +644,9 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        {
-          if (front_panel_capabilities_indent)
-            pstdout_printf (state_data->pstate,
-                            "\n                            ");
-          front_panel_capabilities_indent = 1;
-          pstdout_printf (state_data->pstate,
-                          " Standby button disable allowed");
-        }
+      pstdout_printf (state_data->pstate,
+                      "Standby button disable              : %s\n",
+                      val ? "allowed" : "unallowed");
     }
 
   pstdout_printf (state_data->pstate, "\n");
@@ -979,7 +883,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
   switch (val)
     {
     case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_UNKNOWN:
-      sprintf (restart_cause,"Unknown\n");
+      sprintf (restart_cause,"unknown\n");
       break;
 
     case IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_CHASSIS_CONTROL_COMMAND:
@@ -1027,12 +931,12 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      sprintf (restart_cause, "Unknown\n");
+      sprintf (restart_cause, "unknown\n");
       break;
     }
 
   pstdout_printf (state_data->pstate,
-                  "Restart cause              : %s\n",
+                  "Restart cause : %s\n",
                   restart_cause);
 
   rv = 0;
@@ -1097,7 +1001,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   min = min % 60;
 
   pstdout_printf (state_data->pstate,
-                  "Power on hours             : %u Hours %u Minutes\n",
+                  "Power on hours : %u Hours %u Minutes\n",
                   hrs,
                   min);
   rv = 0;
@@ -1157,7 +1061,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -1183,7 +1087,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -1209,7 +1113,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -1259,7 +1163,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -1285,7 +1189,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -1311,7 +1215,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -1341,7 +1245,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -1367,7 +1271,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -1393,7 +1297,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -1419,7 +1323,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -1445,7 +1349,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -1475,7 +1379,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
@@ -1501,7 +1405,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       break;
 
     default:
-      strcat (tmp, "Unknown");
+      strcat (tmp, "unknown");
       break;
     }
   pstdout_printf (state_data->pstate, "%s\n", tmp);
