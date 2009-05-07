@@ -665,7 +665,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                             "\n                            ");
           front_panel_capabilities_indent = 1;
           pstdout_printf (state_data->pstate,
-                          "                            Standby button disabled");
+                          " Standby button disabled");
         }
 
       if (FIID_OBJ_GET (obj_cmd_rs, "front_panel.power_off_button_disable_allowed", &val) < 0)
