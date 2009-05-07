@@ -6,6 +6,8 @@ o Make output of ipmi-sel, ipmi-sensors, and ipmimonitoring easier to
   read and consistent to each other.  Under default output, sensors
   listed in ipmi-sensors and ipmimonitoring are identical.  Legacy
   output is supported through the --legacy-output option.
+o Make output of ipmi-chassis, bmc-info, and bmc-device consistent to
+  each other.
 o When querying active/inactive, allowed/unallowed, true/false,
   etc. status fields in ipmi-chassis, bmc-info, and bmc-device, output
   all fields instead of only the active/allowed/true/etc. fields.
@@ -14,6 +16,7 @@ o Support sensor unit percentages, rates, and modifiers (i.e. "%
 o Support non-abbreviated units (i.e. "Amps" instead of "A") in most
   tools.
 o Output IANA Manufacturer Name when appropriate in most tools.
+o Output additional information in bmc-info.
 o "Library-ize" much of the functionality originally only inside the
   tools.
 o Re-work libipmimonitoring to return sensor events for all sensors,
@@ -126,18 +129,24 @@ o ipmi-fru
   - Check for valid device ID inputs.
   - Support additional options in FreeIPMI config file.
 o bmc-device
+  - Make output of ipmi-chassis, bmc-info, and bmc-device consistent to
+    each other.
   - Indicate hex code output consistently with 'h' suffix instead of
     '0x' prefix.
 o bmc-info
   - When querying active/inactive, allowed/unallowed, true/false,
     etc. status fields output all fields instead of only the
     active/allowed/true/etc. fields.
+  - Make output of ipmi-chassis, bmc-info, and bmc-device consistent to
+    each other.
   - Output GUID by default.
   - Rename --guid to --get-device-guid.  Legacy option still supported.
   - Support --get-channel-info.
   - Support --get-device-id.
   - Output manufacturer name with "Manufacturer ID" if name available.
 o ipmi-chassis
+  - Make output of ipmi-chassis, bmc-info, and bmc-device consistent to
+    each other.
   - When querying active/inactive, allowed/unallowed, true/false,
     etc. status fields output all fields instead of only the
     active/allowed/true/etc. fields.

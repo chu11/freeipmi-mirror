@@ -41,9 +41,12 @@
 
 typedef struct channel_info
 {
-  uint8_t channel_number;
-  uint8_t medium_type;
-  uint8_t protocol_type;
+  uint8_t actual_channel_number;
+  uint8_t channel_medium_type;
+  uint8_t channel_protocol_type;
+  uint8_t active_session_count;
+  uint8_t session_support;
+  uint32_t vendor_id;
 } channel_info_t;
 
 #define NUM_CHANNELS 8
@@ -96,7 +99,7 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
    * supposed to be output in most significant byte order.
    */
   pstdout_printf (state_data->pstate,
-                  "GUID: %02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X\n",
+                  "GUID : %02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X\n",
                   guidbuf[15],  /* time low */
                   guidbuf[14],
                   guidbuf[13],
@@ -187,9 +190,9 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
   pia_minor = val;
 
   pstdout_printf (state_data->pstate,
-                  "Auxiliary Firmware Revision Information:\n",
-                  "Boot Code: v%02x.%2x\n"
-                  "      PIA: v%02x.%2x\n",
+                  "Auxiliary Firmware Revision Information :\n",
+                  "Boot Code : v%02x.%2x\n"
+                  "PIA       : v%02x.%2x\n",
                   boot_code_major,
                   boot_code_minor,
                   pia_major,
@@ -246,7 +249,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
   device_id = val;
 
   pstdout_printf (state_data->pstate,
-                  "Device ID:             %u\n", device_id);
+                  "Device ID             : %u\n", device_id);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "device_revision.revision", &val) < 0)
     {
@@ -259,7 +262,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
   revision = val;
 
   pstdout_printf (state_data->pstate,
-                  "Device Revision:       %u\n",
+                  "Device Revision       : %u\n",
                   revision);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "device_revision.sdr_support", &val) < 0)
@@ -272,7 +275,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Device SDRs:           %s\n",
+                  "Device SDRs           : %s\n",
                   val ? "supported" : "unsupported");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "firmware_revision1.major_revision", &val) < 0)
@@ -297,7 +300,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 
   /* achu: minor revision is BCD encoded and is 8 bits, output w/ %x */
   pstdout_printf (state_data->pstate,
-                  "Firmware Revision:     %u.%02x\n",
+                  "Firmware Revision     : %u.%02x\n",
                   major,
                   minor);
 
@@ -314,7 +317,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 
   /* The "yes" vs. "no" is backwards from normal logic */
   pstdout_printf (state_data->pstate,
-                  "Device Available:      %s\n",
+                  "Device Available      : %s\n",
                   val ? "no (device firmware, SDR Repository update or self initilization in progress)" : "yes (normal operation)");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_major", &val) < 0)
@@ -339,7 +342,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 
   /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
   pstdout_printf (state_data->pstate,
-                  "IPMI Version:          %u.%u\n",
+                  "IPMI Version          : %u.%u\n",
                   major,
                   minor);
 
@@ -353,7 +356,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Sensor Device:         %s\n",
+                  "Sensor Device         : %s\n",
                   val ? "supported" : "unsupported");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.sdr_repository_device", &val) < 0)
@@ -366,7 +369,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "SDR Repository Device: %s\n",
+                  "SDR Repository Device : %s\n",
                   val ? "supported" : "unsupported");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.sel_device", &val) < 0)
@@ -379,7 +382,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "SEL Device:            %s\n",
+                  "SEL Device            : %s\n",
                   val ? "supported" : "unsupported");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.fru_inventory_device", &val) < 0)
@@ -392,7 +395,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "FRU Inventory Device:  %s\n",
+                  "FRU Inventory Device  : %s\n",
                   val ? "supported" : "unsupported");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.ipmb_event_receiver", &val) < 0)
@@ -405,7 +408,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "IPMB Event Receiver:   %s\n",
+                  "IPMB Event Receiver   : %s\n",
                   val ? "supported" : "unsupported");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.ipmb_event_generator", &val) < 0)
@@ -418,7 +421,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "IPMB Event Generator:  %s\n",
+                  "IPMB Event Generator  : %s\n",
                   val ? "supported" : "unsupported");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.bridge", &val) < 0)
@@ -431,7 +434,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Bridge:                %s\n",
+                  "Bridge                : %s\n",
                   val ? "supported" : "unsupported");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "additional_device_support.chassis_device", &val) < 0)
@@ -444,7 +447,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Chassis Device:        %s\n",
+                  "Chassis Device        : %s\n",
                   val ? "supported" : "unsupported");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "manufacturer_id.id", &val) < 0)
@@ -460,12 +463,12 @@ display_get_device_id (bmc_info_state_data_t *state_data)
   if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
       && ipmi_iana_enterprise_numbers[manufacturer_id])
     pstdout_printf (state_data->pstate,
-                    "Manufacturer ID:       %s (%u)\n",
+                    "Manufacturer ID       : %s (%u)\n",
                     ipmi_iana_enterprise_numbers[manufacturer_id],
                     manufacturer_id);
   else
     pstdout_printf (state_data->pstate,
-                    "Manufacturer ID:       %u\n",
+                    "Manufacturer ID       : %u\n",
                     manufacturer_id);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "product_id", &val) < 0)
@@ -479,7 +482,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
   product_id = val;
 
   pstdout_printf (state_data->pstate,
-                  "Product ID:            %u\n",
+                  "Product ID            : %u\n",
                   product_id);
 
   /* auxiliary firmware info is optional */
@@ -512,7 +515,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
           break;
         default:
           pstdout_printf (state_data->pstate,
-                          "Auxiliary Firmware Revision Information: %08Xh\n",
+                          "Auxiliary Firmware Revision Information : %08Xh\n",
                           auxiliary_firmware_revision_information);
         }
     }
@@ -562,7 +565,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
           goto cleanup;
         }
 
-      channel_info_list[ci].channel_number = val;
+      channel_info_list[ci].actual_channel_number = val;
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "channel_medium_type",
@@ -575,7 +578,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
           goto cleanup;
         }
 
-      channel_info_list[ci].medium_type = val;
+      channel_info_list[ci].channel_medium_type = val;
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "channel_protocol_type",
@@ -588,7 +591,46 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
           goto cleanup;
         }
 
-      channel_info_list[ci].protocol_type = val;
+      channel_info_list[ci].channel_protocol_type = val;
+
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "active_session_count",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'active_session_count': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
+      channel_info_list[ci].active_session_count = val;
+
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "session_support",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'session_support': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
+      channel_info_list[ci].session_support = val;
+
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "vendor_id",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'vendor_id': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
+      channel_info_list[ci].vendor_id = val;
 
       ci++;
     }
@@ -611,78 +653,112 @@ display_channel_info (bmc_info_state_data_t *state_data)
   if (get_channel_info_list (state_data, channel_info_list) < 0)
     return (-1);
 
-  pstdout_printf (state_data->pstate, "Channel Information:\n");
+  pstdout_printf (state_data->pstate, "Channel Information :\n");
   for (i = 0; i < NUM_CHANNELS; i++)
     {
-      char *medium_type = NULL;
-      char *protocol_type = NULL;
+      char *medium_type_str = NULL;
+      char *protocol_type_str = NULL;
+      char *session_support_str = NULL;
 
-      if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED (channel_info_list[i].medium_type))
+      if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED (channel_info_list[i].channel_medium_type))
         continue;
 
+      if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED (channel_info_list[i].channel_medium_type))
+        medium_type_str = "Reserved";
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_IPMB)
+        medium_type_str = "IPMB (I2C)";
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_ICMB_10)
+        medium_type_str = "ICMB v1.0";
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_ICMB_09)
+        medium_type_str = "ICMB v0.9";
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
+        medium_type_str = "802.3 LAN";
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_RS232)
+        medium_type_str = "Asynch. Serial/Modem (RS-232)";
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_OTHER_LAN)
+        medium_type_str = "Other LAN";
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_PCI_SMBUS)
+        medium_type_str = "PCI SMBus";
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_10_11)
+        medium_type_str = "SMBus v1.0/1.1";
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_20)
+        medium_type_str = "SMBus v2.0";
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_1X)
+        medium_type_str = "USB 1.x";
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_2X)
+        medium_type_str = "USB 2.x";
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SYS_IFACE)
+        medium_type_str = "System Interface (KCS, SMIC, or BT)";
+      else if (IPMI_CHANNEL_MEDIUM_TYPE_IS_OEM (channel_info_list[i].channel_medium_type))
+        medium_type_str = "OEM";
+      else
+        medium_type_str = "unknown";
+
+      if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_RESERVED (channel_info_list[i].channel_protocol_type))
+        protocol_type_str = "Reserved";
+      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_IPMB)
+        protocol_type_str = "IPMB-1.0";
+      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10)
+        protocol_type_str = "ICMB-1.0";
+      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X)
+        protocol_type_str = "IPMI-SMBus";
+      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_KCS)
+        protocol_type_str = "KCS";
+      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_SMIC)
+        protocol_type_str = "SMIC";
+      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_BT_10)
+        protocol_type_str = "BT-10";
+      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_BT_15)
+        protocol_type_str = "BT-15";
+      else if (channel_info_list[i].channel_protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_TMODE)
+        protocol_type_str = "TMODE";
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_OEM (channel_info_list[i].channel_protocol_type))
+        protocol_type_str = "OEM";
+      else
+        protocol_type_str = "unknown";
+
+      if (channel_info_list[i].session_support == IPMI_SESSION_SUPPORT_SESSION_LESS)
+        session_support_str = "session-less";
+      else if (channel_info_list[i].session_support == IPMI_SESSION_SUPPORT_SINGLE_SESSION)
+        session_support_str = "single-session";
+      else if (channel_info_list[i].session_support == IPMI_SESSION_SUPPORT_MULTI_SESSION)
+        session_support_str = "multi-session";
+      else
+        session_support_str = "session-based";
+        
+      pstdout_printf (state_data->pstate, "\n");
+
       pstdout_printf (state_data->pstate,
-                      "     Channel Number: %d\n",
-                      channel_info_list[i].channel_number);
+                      "Channel Number       : %u\n",
+                      channel_info_list[i].actual_channel_number);
 
-      if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED (channel_info_list[i].medium_type))
-        medium_type = "Reserved";
-      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_IPMB)
-        medium_type = "IPMB (I2C)";
-      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_ICMB_10)
-        medium_type = "ICMB v1.0";
-      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_ICMB_09)
-        medium_type = "ICMB v0.9";
-      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
-        medium_type = "802.3 LAN";
-      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_RS232)
-        medium_type = "Asynch. Serial/Modem (RS-232)";
-      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_OTHER_LAN)
-        medium_type = "Other LAN";
-      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_PCI_SMBUS)
-        medium_type = "PCI SMBus";
-      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_10_11)
-        medium_type = "SMBus v1.0/1.1";
-      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_20)
-        medium_type = "SMBus v2.0";
-      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_1X)
-        medium_type = "USB 1.x";
-      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_2X)
-        medium_type = "USB 2.x";
-      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SYS_IFACE)
-        medium_type = "System Interface (KCS, SMIC, or BT)";
-      else if (IPMI_CHANNEL_MEDIUM_TYPE_IS_OEM (channel_info_list[i].medium_type))
-        medium_type = "OEM";
+      pstdout_printf (state_data->pstate,
+                      "Medium Type          : %s\n",
+                      medium_type_str);
 
-      if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_RESERVED (channel_info_list[i].protocol_type))
-        protocol_type = "Reserved";
-      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_IPMB)
-        protocol_type = "IPMB-1.0";
-      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10)
-        protocol_type = "ICMB-1.0";
-      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X)
-        protocol_type = "IPMI-SMBus";
-      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_KCS)
-        protocol_type = "KCS";
-      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_SMIC)
-        protocol_type = "SMIC";
-      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_BT_10)
-        protocol_type = "BT-10";
-      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_BT_15)
-        protocol_type = "BT-15";
-      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_TMODE)
-        protocol_type = "TMODE";
-      else if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_OEM (channel_info_list[i].protocol_type))
-        protocol_type = "OEM";
+      pstdout_printf (state_data->pstate,
+                      "Protocol Type        : %s\n",
+                      protocol_type_str);
 
-      if (medium_type)
+      pstdout_printf (state_data->pstate,
+                      "Active Session Count : %u\n",
+                      channel_info_list[i].active_session_count);
+
+      pstdout_printf (state_data->pstate,
+                      "Session Support      : %s\n",
+                      session_support_str);
+
+      if (IPMI_IANA_ENTERPRISE_ID_VALID (channel_info_list[i].vendor_id)
+          && ipmi_iana_enterprise_numbers[channel_info_list[i].vendor_id])
         pstdout_printf (state_data->pstate,
-                        "        Medium Type: %s\n",
-                        medium_type);
-
-      if (protocol_type)
+                        "Vendor ID            : %s (%u)\n",
+                        ipmi_iana_enterprise_numbers[channel_info_list[i].vendor_id],
+                        channel_info_list[i].vendor_id);
+      else
         pstdout_printf (state_data->pstate,
-                        "      Protocol Type: %s\n",
-                        protocol_type);
+                        "Vendor ID             : %u\n",
+                        channel_info_list[i].vendor_id);
+                      
     }
 
   return (0);
@@ -710,8 +786,12 @@ run_cmd_args (bmc_info_state_data_t *state_data)
   if (display_get_device_id (state_data) < 0)
     goto cleanup;
 
+  pstdout_printf (state_data->pstate, "\n");
+
   if (display_get_device_guid (state_data) < 0)
     goto cleanup;
+
+  pstdout_printf (state_data->pstate, "\n");
 
   if (display_channel_info (state_data) < 0)
     goto cleanup;
