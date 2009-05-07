@@ -64,8 +64,15 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    { "guid", CMD_GUID_KEY, NULL, 0,
-      "Display device guid.", 30},
+    /* legacy */
+    { "guid", CMD_GET_DEVICE_GUID_KEY, NULL, OPTION_HIDDEN,
+      "Display only device guid.", 30},
+    { "get-device-id", CMD_GET_DEVICE_ID_KEY, NULL, 0,
+      "Display only device ID information.", 31},
+    { "get-device-guid", CMD_GET_DEVICE_GUID_KEY, NULL, 0,
+      "Display only device guid.", 31},
+    { "get-channel-info", CMD_GET_CHANNEL_INFO_KEY, NULL, 0,
+      "Display only channel information.", 31},
     { 0 }
   };
 
@@ -89,8 +96,14 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-    case CMD_GUID_KEY:
-      cmd_args->guid++;
+    case CMD_GET_DEVICE_ID_KEY:
+      cmd_args->get_device_id++;
+      break;
+    case CMD_GET_DEVICE_GUID_KEY:
+      cmd_args->get_device_guid++;
+      break;
+    case CMD_GET_CHANNEL_INFO_KEY:
+      cmd_args->get_channel_info++;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -131,7 +144,9 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
   init_common_cmd_args_user (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
-  cmd_args->guid = 0;
+  cmd_args->get_device_id = 0;
+  cmd_args->get_device_guid = 0;
+  cmd_args->get_channel_info = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,

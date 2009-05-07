@@ -30,8 +30,12 @@ support, and globally unique IDs (guids).
 The following options are specific to
 .B Bmc-info.
 .TP
-\fB\-g\fR, \fB\-\-guid\fR
-Display device guid.
+\fB\-\-get-device-id\fR
+Display only device ID information.
+\fB\-\-get-device-guid\fR
+Display only device guid.
+\fB\-\-get-channel-info\fR
+Display only channel information.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>

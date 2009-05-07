@@ -133,6 +133,9 @@ o bmc-info
     etc. status fields output all fields instead of only the
     active/allowed/true/etc. fields.
   - Output GUID by default.
+  - Rename --guid to --get-device-guid.  Legacy option still supported.
+  - Support --get-channel-info.
+  - Support --get-device-id.
   - Output manufacturer name with "Manufacturer ID" if name available.
 o ipmi-chassis
   - When querying active/inactive, allowed/unallowed, true/false,

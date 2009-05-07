@@ -8,7 +8,9 @@
 	field names "info" -> "information".
 
 	* bmc-info/: Output text more consistently to IPMI spec.  Output
-	all field information.  Output GUID by default.
+	all field information.  Output GUID by default.  Change --guid to
+	--get-device-guid.  Support --get-device-id and
+	--get-channel-info.
 
 	* Additional code cleanup.
 	

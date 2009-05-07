@@ -26,14 +26,18 @@
 
 enum bmc_info_argp_option_keys
   {
-    CMD_GUID_KEY = 'g',
+    CMD_GET_DEVICE_ID_KEY = 160,
+    CMD_GET_DEVICE_GUID_KEY = 'g',
+    CMD_GET_CHANNEL_INFO_KEY = 161,
   };
 
 struct bmc_info_arguments
 {
   struct common_cmd_args common;
   struct hostrange_cmd_args hostrange;
-  int guid;
+  int get_device_id;
+  int get_device_guid;
+  int get_channel_info;
 };
 
 typedef struct bmc_info_prog_data
