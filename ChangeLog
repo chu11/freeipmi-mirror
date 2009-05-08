@@ -1,3 +1,7 @@
+2009-05-08  Albert Chu <chu11@llnl.gov>
+
+	* bmc-device/: Fix --get-mca-auxiliary-log-status bug.
+	
 2009-05-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-chassis/src/ipmi-chassis (get_chassis_status): Fix output

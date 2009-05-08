@@ -743,19 +743,6 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
   
-  _FIID_OBJ_GET (cmd_rs,
-                 "log_type",
-                 &val);
-  
-  if (val != IPMI_AUXILIARY_LOG_TYPE_MCA)
-    {
-      pstdout_fprintf(state_data->pstate,
-                      stderr,
-                      "ipmi_cmd_get_auxiliary_log_status: invalid log type returned: 0x%X\n",
-                      (uint8_t)val);
-      goto cleanup;
-    }
-
   _FIID_OBJ_COPY(mca_cmd_rs,
                  cmd_rs,
                  tmpl_cmd_get_auxiliary_log_status_mca_rs);

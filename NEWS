@@ -13,6 +13,7 @@ o In ipmipower, support identify-on, identify-off, identify-status in
   interactive mode.
 o In ipmipower, fix closing session corner case bug.
 o Update ipmi-oem manpage with extra information.
+o Fix bmc-device --get-mca-auxiliary-log-status bug.
 o Fix debug output corner case in ipmi-oem.
 o Fix glibc 2.8 portability bug with ipmi-raw.
 
