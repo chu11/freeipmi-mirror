@@ -72,6 +72,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   int rv = -1;
   time_t t;
   struct tm tm;
+  uint8_t allocation_supported = 0;
 
   assert (state_data);
 
@@ -192,6 +193,8 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
                   "Get SEL Allocation Information Command : %s\n",
                   (val ? "supported" : "unsupported"));
 
+  allocation_supported = val;
+
   if (FIID_OBJ_GET (obj_cmd_rs, "reserve_sel_command_supported", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -244,6 +247,113 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   pstdout_printf (state_data->pstate,
                   "Events dropped due to lack of space    : %s\n",
                   (val ? "Yes" : "No"));
+
+  if (allocation_supported)
+    {
+      uint16_t number_of_possible_allocation_units;
+      uint16_t allocation_unit_size;
+      uint16_t number_of_free_allocation_units;
+      uint16_t largest_free_block;
+      uint8_t maximum_record_size;
+
+      fiid_obj_destroy (obj_cmd_rs);
+      
+      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sel_allocation_info_rs)))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_create: %s\n",
+                           strerror (errno));
+          goto cleanup;
+        }
+
+      if (ipmi_cmd_get_sel_allocation_info (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_get_sel_allocation_info: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+      
+      if (FIID_OBJ_GET (obj_cmd_rs, "number_of_possible_allocation_units", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'number_of_possible_allocation_units': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      number_of_possible_allocation_units = val;
+       
+      if (FIID_OBJ_GET (obj_cmd_rs, "allocation_unit_size", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'allocation_unit_size': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      allocation_unit_size = val;
+
+      if (FIID_OBJ_GET (obj_cmd_rs, "number_of_free_allocation_units", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'number_of_free_allocation_units': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      number_of_free_allocation_units = val;
+
+      if (FIID_OBJ_GET (obj_cmd_rs, "largest_free_block", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'largest_free_block': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      largest_free_block = val;
+
+      if (FIID_OBJ_GET (obj_cmd_rs, "maximum_record_size", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'maximum_record_size': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      maximum_record_size = val;
+
+      if (!number_of_possible_allocation_units)
+        pstdout_printf (state_data->pstate,
+                        "Number of possible allocation units    : unspecified\n");
+      else
+        pstdout_printf (state_data->pstate,
+                        "Number of possible allocation units    : %u\n",
+                        number_of_possible_allocation_units);
+      
+      if (!allocation_unit_size)
+        pstdout_printf (state_data->pstate,
+                        "Allocation unit size                   : unspecified\n");
+      else
+        pstdout_printf (state_data->pstate,
+                        "Allocation unit size                   : %u bytes\n",
+                        allocation_unit_size);
+      
+      pstdout_printf (state_data->pstate,
+                      "Number of free allocation units        : %u\n",
+                      number_of_free_allocation_units);
+      
+      pstdout_printf (state_data->pstate,
+                      "Largest free block                     : %u allocation units\n",
+                      largest_free_block);
+
+      pstdout_printf (state_data->pstate,
+                      "Maximum record size                    : %u allocation units\n",
+                      maximum_record_size);
+    }
 
   rv = 0;
  cleanup:

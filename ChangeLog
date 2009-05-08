@@ -6,6 +6,9 @@
 
 	* ipmi-sensors/, ipmi-sel/, ipmi-pef-config/: Make
 	--info/--sdr-info commands have consistent output format.
+
+	* ipmi-sensors/, ipmi-sel/: Add allocation info output to
+	--info/--sdr-info output.
 	
 2009-05-07  Albert Chu <chu11@llnl.gov>
 

@@ -45,6 +45,7 @@ o ipmi-sel
   - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
     of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
     each other.
+  - Output allocation information with --info if available.
   - Output OEM hex code in consistent format.
   - Output hex code more often if translation to string not available.
   - Re-work to use new libfreeipmi sel-parse sub library.
@@ -73,6 +74,7 @@ o ipmi-sensors
   - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
     of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
     each other.
+  - Output allocation information with --sdr-info if available.
   - Output Entity ID under verbose instead of very verbose mode.
   - Under very verbose output, "Sensor Status" is now "Sensor Event".
   - Under very verbose output, if multiple sensor states are
