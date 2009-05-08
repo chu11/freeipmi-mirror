@@ -645,6 +645,7 @@ static int
 display_channel_info (bmc_info_state_data_t *state_data)
 {
   channel_info_t channel_info_list[NUM_CHANNELS];
+  int first_newline_output = 0;
   uint8_t i;
 
   assert (state_data);
@@ -653,7 +654,9 @@ display_channel_info (bmc_info_state_data_t *state_data)
   if (get_channel_info_list (state_data, channel_info_list) < 0)
     return (-1);
 
-  pstdout_printf (state_data->pstate, "Channel Information :\n");
+  if (!state_data->prog_data->args->get_channel_info)
+    pstdout_printf (state_data->pstate, "Channel Information\n");
+
   for (i = 0; i < NUM_CHANNELS; i++)
     {
       char *medium_type_str = NULL;
@@ -726,7 +729,8 @@ display_channel_info (bmc_info_state_data_t *state_data)
       else
         session_support_str = "session-based";
         
-      pstdout_printf (state_data->pstate, "\n");
+      if (!state_data->prog_data->args->get_channel_info || first_newline_output)
+        pstdout_printf (state_data->pstate, "\n");
 
       pstdout_printf (state_data->pstate,
                       "Channel Number       : %u\n",
@@ -758,7 +762,8 @@ display_channel_info (bmc_info_state_data_t *state_data)
         pstdout_printf (state_data->pstate,
                         "Vendor ID             : %u\n",
                         channel_info_list[i].vendor_id);
-                      
+
+      first_newline_output++;
     }
 
   return (0);
