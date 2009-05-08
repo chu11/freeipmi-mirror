@@ -153,23 +153,21 @@ get_self_test_results (bmc_device_state_data_t *state_data)
     }
   self_test_result = val;
   
-  pstdout_printf (state_data->pstate,
-                  "Self Test Result: ");
   if (self_test_result == IPMI_SELF_TEST_RESULT_NO_ERROR)
     pstdout_printf (state_data->pstate,
-                    "No Error\n");
+                    "Self Test Result : No Error\n");
   else if (self_test_result == IPMI_SELF_TEST_RESULT_SELF_TEST_FUNCTION_NOT_IMPLEMENTED_IN_THIS_CONTROLLER)
     pstdout_printf (state_data->pstate,
-                    "Self Test function not implemented in this controller.\n");
+                    "Self Test Result : Self Test function not implemented in this controller.\n");
   else if (self_test_result == IPMI_SELF_TEST_RESULT_CORRUPTED_OR_INACCESSIBLE_DATA_OR_DEVICES)
     pstdout_printf (state_data->pstate,
-                    "Corrupted or inaccessible data or devices\n");
+                    "Self Test Result                                  : Corrupted or inaccessible data or devices\n");
   else if (self_test_result == IPMI_SELF_TEST_RESULT_FATAL_HARDWARE_ERROR)
     pstdout_printf (state_data->pstate,
-                    "Fatal hardware error (system should consider BMC inoperative).  Controller hardware may need to be repaired or replaced.\n");
+                    "Self Test Result : Fatal hardware error (system should consider BMC inoperative).  Controller hardware may need to be repaired or replaced.\n");
   else
     pstdout_printf (state_data->pstate,
-                    "Device-specific error: %Xh\n",
+                    "Self Test Result : Device-specific error: %Xh\n",
                     self_test_result);
 
   if (self_test_result == IPMI_SELF_TEST_RESULT_CORRUPTED_OR_INACCESSIBLE_DATA_OR_DEVICES)
@@ -185,9 +183,9 @@ get_self_test_results (bmc_device_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        pstdout_printf (state_data->pstate,
-                        "                  [Controller operation firmware corrupted]\n");
+      pstdout_printf (state_data->pstate,
+                      "Controller operation firmware corrupted           : %s\n",
+                      val ? "failed" : "unknown");
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "controller_update_boot_block_firmware_corrupted",
@@ -200,9 +198,9 @@ get_self_test_results (bmc_device_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        pstdout_printf (state_data->pstate,
-                        "                  [Controller update 'boot block' firmware corrupted]\n");
+      pstdout_printf (state_data->pstate,
+                      "Controller update 'boot block' firmware corrupted : %s\n",
+                      val ? "failed" : "unknown");
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "internal_use_area_of_bmc_fru_corrupted",
@@ -215,9 +213,9 @@ get_self_test_results (bmc_device_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        pstdout_printf (state_data->pstate,
-                        "                  [Internal Use Area of BMC FRU corrupted]\n");
+      pstdout_printf (state_data->pstate,
+                      "Internal Use Area of BMC FRU corrupted            : %s\n",
+                      val ? "failed" : "unknown");
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "sdr_repository_empty",
@@ -230,9 +228,9 @@ get_self_test_results (bmc_device_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        pstdout_printf (state_data->pstate,
-                        "                  [SDR Repository empty]\n");
+      pstdout_printf (state_data->pstate,
+                      "SDR Repository empty                              : %s\n",
+                      val ? "failed" : "unknown");
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "ipmb_signal_lines_do_not_respond",
@@ -245,9 +243,9 @@ get_self_test_results (bmc_device_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        pstdout_printf (state_data->pstate,
-                        "                  [IPMB signal lines do not respond]\n");
+      pstdout_printf (state_data->pstate,
+                      "IPMB signal lines do not respond                  : %s\n",
+                      val ? "failed" : "unknown");
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "cannot_access_bmc_fru_device",
@@ -260,9 +258,9 @@ get_self_test_results (bmc_device_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        pstdout_printf (state_data->pstate,
-                        "                  [Cannot access BMC FRU device]\n");
+      pstdout_printf (state_data->pstate,
+                      "Cannot access BMC FRU device                      : %s\n",
+                      val ? "failed" : "unknown");
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "cannot_access_sdr_repository",
@@ -275,9 +273,9 @@ get_self_test_results (bmc_device_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        pstdout_printf (state_data->pstate,
-                        "                  [Cannot access SDR Repository]\n");
+      pstdout_printf (state_data->pstate,
+                      "Cannot access SDR Repository                      : %s\n",
+                      val ? "failed" : "unknown");
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "cannot_access_sel_device",
@@ -290,9 +288,9 @@ get_self_test_results (bmc_device_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (val)
-        pstdout_printf (state_data->pstate,
-                        "                  [Cannot access SEL device]\n");
+      pstdout_printf (state_data->pstate,
+                      "Cannot access SEL device                          : %s\n",
+                      val ? "failed" : "unknown");
 
     }
 
@@ -416,12 +414,12 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
 
   if (state_data->prog_data->args->verbose && verbosestr)
     pstdout_printf (state_data->pstate,
-                    "ACPI System Power State: %s: %s\n",
+                    "ACPI System Power State : %s - %s\n",
                     statestr,
                     verbosestr);
   else
     pstdout_printf (state_data->pstate,
-                    "ACPI System Power State: %s\n",
+                    "ACPI System Power State : %s\n",
                     statestr);
 
   statestr = NULL;
@@ -467,12 +465,12 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
 
   if (state_data->prog_data->args->verbose && verbosestr)
     pstdout_printf (state_data->pstate,
-                    "ACPI Device Power State: %s: %s\n",
+                    "ACPI Device Power State : %s - %s\n",
                     statestr,
                     verbosestr);
   else
     pstdout_printf (state_data->pstate,
-                    "ACPI Device Power State: %s\n",
+                    "ACPI Device Power State : %s\n",
                     statestr);
 
   rv = 0;
@@ -581,7 +579,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
   ip_packets_received = val;
 
   pstdout_printf (state_data->pstate,
-                  "IP Packets Received: %u\n",
+                  "IP Packets Received            : %u\n",
                   ip_packets_received);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -597,7 +595,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
   received_ip_header_errors = val;
 
   pstdout_printf (state_data->pstate,
-                  "Received IP Header Errors: %u\n",
+                  "Received IP Header Errors      : %u\n",
                   received_ip_header_errors);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -613,7 +611,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
   received_ip_address_errors = val;
 
   pstdout_printf (state_data->pstate,
-                  "Received IP Address Errors: %u\n",
+                  "Received IP Address Errors     : %u\n",
                   received_ip_address_errors);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -629,7 +627,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
   fragmented_ip_packets_received = val;
 
   pstdout_printf (state_data->pstate,
-                  "Fragmented IP Packets Received: %u\n",
+                  "Fragmented IP Packets Received : %u\n",
                   fragmented_ip_packets_received);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -645,7 +643,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
   ip_packets_transmitted = val;
 
   pstdout_printf (state_data->pstate,
-                  "IP Packets Transmitted: %u\n",
+                  "IP Packets Transmitted         : %u\n",
                   ip_packets_transmitted);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -661,7 +659,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
   udp_packets_received = val;
 
   pstdout_printf (state_data->pstate,
-                  "UDP Packets Received: %u\n",
+                  "UDP Packets Received           : %u\n",
                   udp_packets_received);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -677,7 +675,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
   valid_rmcp_packets_received = val;
 
   pstdout_printf (state_data->pstate,
-                  "Valid RMCP Packets Received: %u\n",
+                  "Valid RMCP Packets Received    : %u\n",
                   valid_rmcp_packets_received);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -693,7 +691,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
   udp_proxy_packets_received = val;
   
   pstdout_printf (state_data->pstate,
-                  "UDP Proxy Packets Received: %u\n",
+                  "UDP Proxy Packets Received     : %u\n",
                   udp_proxy_packets_received);
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -709,7 +707,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
   udp_proxy_packets_dropped = val;
 
   pstdout_printf (state_data->pstate,
-                  "UDP Proxy Packets Dropped: %u\n",
+                  "UDP Proxy Packets Dropped      : %u\n",
                   udp_proxy_packets_dropped);
 
   rv = 0;
@@ -808,7 +806,7 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
   localtime_r (&t, &tm);
   strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
   pstdout_printf (state_data->pstate,
-                  "SDR Repository Time: %s\n",
+                  "SDR Repository Time : %s\n",
                   timestr);
   rv = 0;
  cleanup:
@@ -918,7 +916,7 @@ get_sel_time (bmc_device_state_data_t *state_data)
   localtime_r (&t, &tm);
   strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
   pstdout_printf (state_data->pstate,
-                  "SEL Time: %s\n",
+                  "SEL Time : %s\n",
                   timestr);
   rv = 0;
  cleanup:
@@ -990,7 +988,6 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   fiid_obj_t mca_obj_cmd_rs = NULL;
-  uint8_t log_type;
   uint32_t mca_log_entry_count;
   uint64_t val;
   char timestr[512];
@@ -1020,27 +1017,6 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "log_type",
-                    &val) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'log_type': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
-      goto cleanup;
-    }
-  log_type = val;
-  
-  if (log_type != IPMI_AUXILIARY_LOG_TYPE_MCA)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_get_auxiliary_log_status: invalid log type returned: %Xh\n",
-                       log_type);
-      goto cleanup;
-    }
-
   if (!(mca_obj_cmd_rs = fiid_obj_copy (obj_cmd_rs, tmpl_cmd_get_auxiliary_log_status_mca_rs)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -1065,7 +1041,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
   localtime_r (&t, &tm);
   strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
   pstdout_printf (state_data->pstate,
-                  "Last Entry Added to MCA Log: %s\n",
+                  "Last Entry Added to MCA Log  : %s\n",
                   timestr);
 
   if (FIID_OBJ_GET (mca_obj_cmd_rs,
@@ -1081,7 +1057,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
   mca_log_entry_count = val;
   
   pstdout_printf (state_data->pstate,
-                  "Number of entries in MCA log: %u\n",
+                  "Number of entries in MCA log : %u\n",
                   mca_log_entry_count);
 
   rv = 0;
@@ -1101,6 +1077,7 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
   uint8_t input_message_size;
   uint8_t output_message_size;
   uint64_t val;
+  char *str;
   int rv = -1;
 
   assert (state_data);
@@ -1137,10 +1114,10 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
   /* achu: for some stupid reason 000b == "version 1" */
   if (ssif_version == IPMI_SSIF_SYSTEM_INTERFACE_VERSION_1)
     pstdout_printf (state_data->pstate,
-                    "SSIF Version:                     %Xh (version 1)\n", ssif_version);
+                    "SSIF Version                     : version 1 (%Xh)\n", ssif_version);
   else
     pstdout_printf (state_data->pstate,
-                    "SSIF Version:                     %Xh\n", ssif_version);
+                    "SSIF Version                     : %Xh\n", ssif_version);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "pec_support", &val) < 0)
     {
@@ -1152,22 +1129,17 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
     }
   pec_support = val;
 
+  if (pec_support == IPMI_SSIF_SYSTEM_INTERFACE_IMPLEMENTS_PEC)
+    str = "Yes";
+  else if (pec_support == IPMI_SSIF_SYSTEM_INTERFACE_DOES_NOT_SUPPORT_PEC)
+    str = "No";
+  else
+    str = "unknown";
+
   pstdout_printf (state_data->pstate,
-                  "SSIF PEC Support:                 ");
-
-  switch (pec_support)
-    {
-    case IPMI_SSIF_SYSTEM_INTERFACE_IMPLEMENTS_PEC:
-      pstdout_printf (state_data->pstate, "Yes\n");
-      break;
-    case IPMI_SSIF_SYSTEM_INTERFACE_DOES_NOT_SUPPORT_PEC:
-      pstdout_printf (state_data->pstate, "No\n");
-      break;
-    default:
-      pstdout_printf (state_data->pstate, "Unknown\n");
-      break;
-    }
-
+                  "SSIF PEC Support                 : %s\n",
+                  str);
+  
   if (FIID_OBJ_GET (obj_cmd_rs, "transaction_support", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -1178,23 +1150,18 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
     }
   transaction_support = val;
 
+  if (transaction_support == IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_SINGLE_PART_READS_WRITES_SUPPORTED)
+    str = "Only single-part reads/writes supported.";
+  else if (transaction_support == IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_MULTI_PART_READS_WRITES_SUPPORTED_START_AND_END_ONLY)
+    str = "multi-part reads/writes upported.  Start and End transactions only.";
+  else if (transaction_support == IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_MULTI_PART_READS_WRITES_SUPPORTED_START_MIDDLE_END)
+    str = "multi-part reads/writes upported.  Start, Middle, and End transactions supported.";
+  else
+    str = "unknown";
+
   pstdout_printf (state_data->pstate,
-                  "SSIF Transaction Support:         ");
-  switch (transaction_support)
-    {
-    case IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_SINGLE_PART_READS_WRITES_SUPPORTED:
-      pstdout_printf (state_data->pstate, "Only single-part reads/writes supported.\n");
-      break;
-    case IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_MULTI_PART_READS_WRITES_SUPPORTED_START_AND_END_ONLY:
-      pstdout_printf (state_data->pstate, "multi-part reads/writes upported.  Start and End transactions only.\n");
-      break;
-    case IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_MULTI_PART_READS_WRITES_SUPPORTED_START_MIDDLE_END:
-      pstdout_printf (state_data->pstate, "multi-part reads/writes upported.  Start, Middle, and End transactions supported.\n");
-      break;
-    default:
-      pstdout_printf (state_data->pstate, "Unknown\n");
-      break;
-    }
+                  "SSIF Transaction Support         : %s\n",
+                  str);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "input_message_size", &val) < 0)
     {
@@ -1207,7 +1174,7 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
   input_message_size = val;
 
   pstdout_printf (state_data->pstate,
-                  "SSIF Maximum Input Message Size:  %u bytes\n",
+                  "SSIF Maximum Input Message Size  : %u bytes\n",
                   input_message_size);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "output_message_size", &val) < 0)
@@ -1221,7 +1188,7 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
   output_message_size = val;
 
   pstdout_printf (state_data->pstate,
-                  "SSIF Maximum Output Message Size: %u bytes\n",
+                  "SSIF Maximum Output Message Size : %u bytes\n",
                   output_message_size);
 
   rv = 0;
@@ -1273,10 +1240,10 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
   /* achu: for some stupid reason 000b == "version 1" */
   if (system_interface_version == IPMI_KCS_SYSTEM_INTERFACE_VERSION_1)
     pstdout_printf (state_data->pstate,
-                    "KCS Version:                    %Xh (version 1)\n", system_interface_version);
+                    "KCS Version                    : version 1 (%Xh)\n", system_interface_version);
   else
     pstdout_printf (state_data->pstate,
-                    "KCS Version:                    %Xh\n", system_interface_version);
+                    "KCS Version                    : %Xh\n", system_interface_version);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "input_maximum_message_size", &val) < 0)
     {
@@ -1289,7 +1256,7 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
   input_maximum_message_size = val;
 
   pstdout_printf (state_data->pstate,
-                  "KCS Maximum Input Message Size: %u bytes\n",
+                  "KCS Maximum Input Message Size : %u bytes\n",
                   input_maximum_message_size);
 
   rv = 0;
@@ -1342,7 +1309,7 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
   number_of_outstanding_requests_supported = val;
 
   pstdout_printf (state_data->pstate,
-                  "BT Number of Outstanding Requests Supported: %u\n",
+                  "BT Number of Outstanding Requests Supported : %u\n",
                   number_of_outstanding_requests_supported);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "input_buffer_size", &val) < 0)
@@ -1356,7 +1323,7 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
   input_buffer_size = val;
 
   pstdout_printf (state_data->pstate,
-                  "BT Input Buffer Size:                        %u bytes\n",
+                  "BT Input Buffer Size                        : %u bytes\n",
                   input_buffer_size);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "output_buffer_size", &val) < 0)
@@ -1370,7 +1337,7 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
   output_buffer_size = val;
 
   pstdout_printf (state_data->pstate,
-                  "BT Output Buffer Size:                       %u bytes\n",
+                  "BT Output Buffer Size                       : %u bytes\n",
                   output_buffer_size);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "bmc_request_to_response_time", &val) < 0)
@@ -1384,7 +1351,7 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
   bmc_request_to_response_time = val;
 
   pstdout_printf (state_data->pstate,
-                  "BT Request to Response Time:                 %u seconds\n",
+                  "BT Request to Response Time                 : %u seconds\n",
                   bmc_request_to_response_time);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "recommended_retries", &val) < 0)
@@ -1398,7 +1365,7 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
   recommended_retries = val;
 
   pstdout_printf (state_data->pstate,
-                  "BT Recommended Retries:                      %u\n",
+                  "BT Recommended Retries                      : %u\n",
                   recommended_retries);
 
   rv = 0;
