@@ -115,7 +115,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
 
   /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
   pstdout_printf (state_data->pstate,
-                  "SEL version:                                      %u.%u\n",
+                  "SEL version                            : %u.%u\n",
                   major,
                   minor);
 
@@ -130,7 +130,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   entries = val;
 
   pstdout_printf (state_data->pstate,
-                  "Number of log entries:                            %u\n",
+                  "Number of log entries                  : %u\n",
                   entries);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "free_space", &val) < 0)
@@ -144,7 +144,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   free_space = val;
 
   pstdout_printf (state_data->pstate,
-                  "Free space remaining:                             %u bytes\n",
+                  "Free space remaining                   : %u bytes\n",
                   free_space);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val) < 0)
@@ -160,7 +160,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   localtime_r (&t, &tm);
   strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
   pstdout_printf (state_data->pstate,
-                  "Recent addition timestamp:                        %s\n",
+                  "Recent addition timestamp              : %s\n",
                   timestr);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val) < 0)
@@ -176,7 +176,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   localtime_r (&t, &tm);
   strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
   pstdout_printf (state_data->pstate,
-                  "Recent erase timestamp:                           %s\n",
+                  "Recent erase timestamp                 : %s\n",
                   timestr);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "get_sel_allocation_info_command_supported", &val) < 0)
@@ -189,8 +189,8 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Get SEL Allocation Information Command supported: %s\n",
-                  (val ? "Yes" : "No"));
+                  "Get SEL Allocation Information Command : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "reserve_sel_command_supported", &val) < 0)
     {
@@ -202,8 +202,8 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Reserve SEL Command supported:                    %s\n",
-                  (val ? "Yes" : "No"));
+                  "Reserve SEL Command                    : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "partial_add_sel_entry_command_supported", &val) < 0)
     {
@@ -215,8 +215,8 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Partial Add SEL Entry Command supported:          %s\n",
-                  (val ? "Yes" : "No"));
+                  "Partial Add SEL Entry Command          : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "delete_sel_command_supported", &val) < 0)
     {
@@ -228,8 +228,8 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Delete SEL Command supported:                     %s\n",
-                  (val ? "Yes" : "No"));
+                  "Delete SEL Command                     : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "overflow_flag", &val) < 0)
     {
@@ -240,8 +240,9 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
       goto cleanup;
     }
 
+  /* "Events have been dropped due to lack of space in the SEL" */
   pstdout_printf (state_data->pstate,
-                  "Events drop due to lack of space in SEL:          %s\n",
+                  "Events dropped due to lack of space    : %s\n",
                   (val ? "Yes" : "No"));
 
   rv = 0;

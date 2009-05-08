@@ -6,7 +6,8 @@ o Make output of ipmi-sel, ipmi-sensors, and ipmimonitoring easier to
   read and consistent to each other.  Under default output, sensors
   listed in ipmi-sensors and ipmimonitoring are identical.  Legacy
   output is supported through the --legacy-output option.
-o Make output of ipmi-chassis, bmc-info, and bmc-device consistent to
+o Make output of ipmi-chassis, bmc-info, bmc-device, and info output
+  of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
   each other.
 o When querying active/inactive, allowed/unallowed, true/false,
   etc. status fields in ipmi-chassis, bmc-info, and bmc-device, output
@@ -41,6 +42,9 @@ o ipmi-sel
   - Output manufacturer name with "Manufacturer ID" if name available.
   - Support sensor unit percentages, rates and modifiers (i.e. "%
     hit", "gigabyte per minute", "pounds / cu in").
+  - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
+    of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
+    each other.
   - Output OEM hex code in consistent format.
   - Output hex code more often if translation to string not available.
   - Re-work to use new libfreeipmi sel-parse sub library.
@@ -66,6 +70,9 @@ o ipmi-sensors
     verbose output.
   - Support sensor unit percentages, rates and modifiers (i.e. "%
     hit", "gigabyte per minute", "pounds / cu in").
+  - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
+    of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
+    each other.
   - Output Entity ID under verbose instead of very verbose mode.
   - Under very verbose output, "Sensor Status" is now "Sensor Event".
   - Under very verbose output, if multiple sensor states are
@@ -129,7 +136,8 @@ o ipmi-fru
   - Check for valid device ID inputs.
   - Support additional options in FreeIPMI config file.
 o bmc-device
-  - Make output of ipmi-chassis, bmc-info, and bmc-device consistent to
+  - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
+    of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
     each other.
   - Indicate hex code output consistently with 'h' suffix instead of
     '0x' prefix.
@@ -137,7 +145,8 @@ o bmc-info
   - When querying active/inactive, allowed/unallowed, true/false,
     etc. status fields output all fields instead of only the
     active/allowed/true/etc. fields.
-  - Make output of ipmi-chassis, bmc-info, and bmc-device consistent to
+  - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
+    of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
     each other.
   - Output GUID by default.
   - Rename --guid to --get-device-guid.  Legacy option still supported.
@@ -145,7 +154,8 @@ o bmc-info
   - Support --get-device-id.
   - Output manufacturer name with "Manufacturer ID" if name available.
 o ipmi-chassis
-  - Make output of ipmi-chassis, bmc-info, and bmc-device consistent to
+  - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
+    of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
     each other.
   - When querying active/inactive, allowed/unallowed, true/false,
     etc. status fields output all fields instead of only the
@@ -177,6 +187,9 @@ o ipmi-sensors-config
 o ipmi-pef-config/pef-config
   - Rename pef-config to ipmi-pef-config for consistency to other
     tools.  Keep backwards compatability with symlinks and such.
+  - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
+    of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
+    each other.
   - Support ability to report read only field error.
   - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.

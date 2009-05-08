@@ -64,6 +64,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
   char timestr[512];
   time_t t;
   struct tm tmp;
+  char *str;
   int rv = -1;
 
   assert (state_data);
@@ -107,7 +108,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
   minor = val;
 
   pstdout_printf (state_data->pstate,
-                  "SDR version:                     %u.%u\n",
+                  "SDR version                                       : %u.%u\n",
                   major,
                   minor);
 
@@ -122,7 +123,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
   record_count = val;
 
   pstdout_printf (state_data->pstate,
-                  "SDR record count:                %u\n",
+                  "SDR record count                                  : %u\n",
                   record_count);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "free_space", &val) < 0)
@@ -136,7 +137,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
   free_space = val;
 
   pstdout_printf (state_data->pstate,
-                  "Free space remaining:            %u bytes\n",
+                  "Free space remaining                              : %u bytes\n",
                   free_space);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val) < 0)
@@ -152,7 +153,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
   localtime_r (&t, &tmp);
   strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tmp);
   pstdout_printf (state_data->pstate,
-                  "Most recent addition timestamp:  %s\n",
+                  "Most recent addition timestamp                    : %s\n",
                   timestr);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val) < 0)
@@ -168,7 +169,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
   localtime_r (&t, &tmp);
   strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tmp);
   pstdout_printf (state_data->pstate,
-                  "Most recent erase timestamp:     %s\n",
+                  "Most recent erase timestamp                       : %s\n",
                   timestr);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "get_sdr_repository_allocation_info_command_supported", &val) < 0)
@@ -181,8 +182,8 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Get SDR Repository Allocation Information Command supported:         %s\n",
-                  (val ? "Yes" : "No"));
+                  "Get SDR Repository Allocation Information Command : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "reserve_sdr_repository_command_supported", &val) < 0)
     {
@@ -194,8 +195,8 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Reserve SDR Repository Command supported:                            %s\n",
-                  (val ? "Yes" : "No"));
+                  "Reserve SDR Repository Command                    : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "partial_add_sdr_command_supported", &val) < 0)
     {
@@ -207,8 +208,8 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Partial Add SDR Command supported:                                   %s\n",
-                  (val ? "Yes" : "No"));
+                  "Partial Add SDR Command                           : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "delete_sdr_command_supported", &val) < 0)
     {
@@ -220,8 +221,8 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Delete SDR Command supported:                                        %s\n",
-                  (val ? "Yes" : "No"));
+                  "Delete SDR Command                                : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "modal_non_modal_sdr_repository_update_operation_supported", &val) < 0)
     {
@@ -232,26 +233,20 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
       goto cleanup;
     }
 
-  pstdout_printf (state_data->pstate,
-                  "Modal/non-modal SDR Repository Update operation supported:           ");
+  if (val == IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_UNSPECIFIED)
+    str = "unspecified";
+  else if (val == IPMI_SDR_NON_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED)
+    str = "non-Modal supported";
+  else if (val == IPMI_SDR_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED)
+    str = "modal supported";
+  else if (val == IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED)
+    str = "both supported";
+  else
+    str = "unknown";
 
-  switch (val)
-    {
-    case IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_UNSPECIFIED:
-      pstdout_printf (state_data->pstate, "Unspecified\n");
-      break;
-    case IPMI_SDR_NON_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED:
-      pstdout_printf (state_data->pstate, "Non-Modal\n");
-      break;
-    case IPMI_SDR_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED:
-      pstdout_printf (state_data->pstate, "Modal\n");
-      break;
-    case IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED:
-      pstdout_printf (state_data->pstate, "Both\n");
-      break;
-    default:
-      pstdout_printf (state_data->pstate, "Unknown\n");
-    }
+  pstdout_printf (state_data->pstate,
+                  "Modal/non-modal SDR Repository Update operation   : %s\n",
+                  str);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "overflow_flag", &val) < 0)
     {
@@ -262,8 +257,9 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
       goto cleanup;
     }
 
+  /* "SDR could not be written due to lack of space in the SDR Repository" */
   pstdout_printf (state_data->pstate,
-                  "SDR could not be written due to lack of space in the SDR Repository: %s\n",
+                  "SDR could not be written due to lack of space     : %s\n",
                   (val ? "Yes" : "No"));
 
   rv = 0;

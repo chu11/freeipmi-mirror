@@ -90,7 +90,7 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
 
   /* achu: ipmi version is BCD encoded, but major/minor are only 4 bits */
   pstdout_printf (state_data->pstate,
-                  "PEF version:                            %u.%u\n",
+                  "PEF version                            : %u.%u\n",
                   major,
                   minor);
 
@@ -104,8 +104,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Alert action support:                   %s\n",
-                  (val ? "Yes" : "No"));
+                  "Alert action                           : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   alert_action_support = val;
 
@@ -119,8 +119,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Power down action support:              %s\n",
-                  (val ? "Yes" : "No"));
+                  "Power down action                      : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "action_support.reset", &val) < 0)
     {
@@ -132,8 +132,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Power reset action support:             %s\n",
-                  (val ? "Yes" : "No"));
+                  "Power reset action                     : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "action_support.power_cycle", &val) < 0)
     {
@@ -145,8 +145,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Power cycle action support:             %s\n",
-                  (val ? "Yes" : "No"));
+                  "Power cycle action                     : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "action_support.oem_action", &val) < 0)
     {
@@ -158,8 +158,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "OEM action support:                     %s\n",
-                  (val ? "Yes" : "No"));
+                  "OEM action                             : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "action_support.diagnostic_interrupt", &val) < 0)
     {
@@ -171,8 +171,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Diagnostic interrupt action support:    %s\n",
-                  (val ? "Yes" : "No"));
+                  "Diagnostic interrupt action            : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "oem_event_record_filtering_supported", &val) < 0)
     {
@@ -184,8 +184,8 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "OEM event record filtering support:     %s\n",
-                  (val ? "Yes" : "No"));
+                  "OEM event record filtering             : %s\n",
+                  (val ? "supported" : "unsupported"));
 
   if (FIID_OBJ_GET (obj_cmd_rs, "number_of_event_filter_table_entries", &val) < 0)
     {
@@ -198,7 +198,7 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
   number_of_event_filter_table_entries = val;
 
   pstdout_printf (state_data->pstate,
-                  "Number of Event Filter Table entries:   %u\n",
+                  "Number of Event Filter Table entries   : %u\n",
                   number_of_event_filter_table_entries);
 
   if (alert_action_support)
@@ -248,7 +248,7 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
       number_of_event_filters = val;
 
       pstdout_printf (state_data->pstate,
-                      "Number of Event Filters:                %u\n",
+                      "Number of Event Filters                : %u\n",
                       number_of_event_filters);
 
       fiid_obj_destroy (obj_cmd_rs);
@@ -292,7 +292,7 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
       number_of_alert_policy_entries = val;
 
       pstdout_printf (state_data->pstate,
-                      "Number of Alert Policy entries:         %u\n",
+                      "Number of Alert Policy entries         : %u\n",
                       number_of_alert_policy_entries);
 
       fiid_obj_destroy (obj_cmd_rs);
@@ -336,7 +336,7 @@ pef_info (ipmi_pef_config_state_data_t *state_data)
       number_of_alert_strings = val;
 
       pstdout_printf (state_data->pstate,
-                      "Number of Alert Strings:                %u\n",
+                      "Number of Alert Strings                : %u\n",
                       number_of_alert_strings);
     }
 
