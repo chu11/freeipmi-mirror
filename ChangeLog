@@ -9,6 +9,9 @@
 
 	* ipmi-sensors/, ipmi-sel/: Add allocation info output to
 	--info/--sdr-info output.
+
+	* bmc-info/: Don't output "GUID : " when specifying
+	--get-device-guid.
 	
 2009-05-07  Albert Chu <chu11@llnl.gov>
 

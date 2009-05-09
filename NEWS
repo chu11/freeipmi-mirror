@@ -152,6 +152,8 @@ o bmc-info
     each other.
   - Output GUID by default.
   - Rename --guid to --get-device-guid.  Legacy option still supported.
+  - When outputting only the GUID, don't prefix "GUID : " in the
+    output.
   - Support --get-channel-info.
   - Support --get-device-id.
   - Output manufacturer name with "Manufacturer ID" if name available.
