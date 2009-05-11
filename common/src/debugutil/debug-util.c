@@ -28,7 +28,7 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "freeipmi/util/ipmi-util.h"
+#include <freeipmi/freeipmi.h>
 
 #include "debug-util.h"
 
