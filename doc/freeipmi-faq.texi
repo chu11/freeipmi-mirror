@@ -339,7 +339,7 @@ setenv CPPFLAGS ``-I/my/bmc_intf_path/''
 
 If the file is not on your system, the bmc_intf.h file may simply be
 downloaded from 
-(@uref{http://opensolaris.org/}) 
+@uref{http://opensolaris.org/} 
 and installed into any location.
 
 @node Installing FreeIPMI on FreeBSD, , SUNBMC Driver Compilation, Top
