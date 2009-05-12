@@ -1,3 +1,7 @@
+2009-05-12  Albert Chu <chu11@llnl.gov>
+
+	* doc/: Update faq.
+	
 2009-05-08  Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/: Fix --get-mca-auxiliary-log-status bug.
