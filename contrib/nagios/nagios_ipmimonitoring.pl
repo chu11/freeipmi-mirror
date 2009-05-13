@@ -175,6 +175,7 @@ if (!(-x $IPMIMONITORING_PATH))
     exit(1);
 }
 
+# note, don't need --ignore-non-interpretable-sensors, legacy output handles it
 if ($IPMI_HOSTS)
 {
     $cmd = "$IPMIMONITORING_PATH $IPMIMONITORING_ARGS -h $IPMI_HOSTS --quiet-cache --sdr-cache-recreate --always-prefix --legacy-output";
