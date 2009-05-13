@@ -1,11 +1,3 @@
-consistent output
-bmc-info
-ipmi-chassis
-bmc-device
-all tools that output "info"
-
-ipmi-sel - sel allocation info
-
 ipmi-locate
 -----------
 (TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi
@@ -46,8 +38,7 @@ sensors/monitoring
 ------------------
 (TEST) make sure bridging still works w/ sensor-read lib
 (TEST) make sure oem still outputs fine
-make sensor-raw equivalent API func (i.e. don't need to do IPMI to get raw reading)
-option output via entity_id organization
+option output via entity_id organization (i.e. groups of owners)
 
 ipmi-chassis-config
 -------------------
@@ -64,11 +55,7 @@ firmware firewall support?
 - new config tool??
 read/store username/password/k_g out of file encrypted so it's not sitting there in the clear
 configure alternate port - i.e. don't use port 623, use 722
-have funcs return int instead of int8/int32
-have funcs that need to return value return via in/out param instead of return val
-- i.e. get channel
 have funcs that return buflen return ssize_t?, input should be size_t and void *? like read(), write()?
-coverity check
 
 bmc-device
 --------
