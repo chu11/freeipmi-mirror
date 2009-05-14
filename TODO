@@ -21,6 +21,7 @@ debug funcs
 assemble funcs
 hash/crypto funcs
 fiid funcs
+- counting up fields/lengths/etc. can be unsigned overflow too
 lan send funcs
 
 ipmi-fru
