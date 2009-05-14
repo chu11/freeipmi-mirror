@@ -805,11 +805,11 @@ ipmi_lan_sendto (int s,
     packets. -- Anand Babu
   */
   _len = len;
-  if (_len == 56  ||
-      _len == 84  ||
-      _len == 112 ||
-      _len == 128 ||
-      _len == 156)
+  if (_len == 56
+      || _len == 84
+      || _len == 112
+      || _len == 128
+      || _len == 156)
     pad_len += IPMI_LAN_PKT_PAD_SIZE;
 
   _len += pad_len;
