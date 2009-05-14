@@ -1,6 +1,17 @@
 2009-05-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid/: Use unsigned ints for indexing.
+
+	* tagged pre_int_overflow
+
+	* libfreeipmi/src/fiid/: Handle int/unsigned int overflow conditions.
+
+	* libfreeipmi/src/fiid/: Fix corner case, allow fields to be up to
+	256 chars, not up to 255 chars.
+
+	* libfreeipmi/src/fiid/: Fix signed/unsigned bugs.
+
+	* Various code cleanup.
 	
 2009-05-12  Albert Chu <chu11@llnl.gov>
 
