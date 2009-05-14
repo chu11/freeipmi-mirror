@@ -20,8 +20,8 @@ api/raw_api funcs
 debug funcs
 assemble funcs
 hash/crypto funcs
-fiid funcs
-- counting up fields/lengths/etc. can be unsigned overflow too
+xfiid funcs
+x- counting up fields/lengths/etc. can be unsigned overflow too
 lan send funcs
 
 ipmi-fru
