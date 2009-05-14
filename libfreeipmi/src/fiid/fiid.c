@@ -166,10 +166,10 @@ _fiid_template_len_bytes (fiid_template_t tmpl,
   int len;
 
   assert (tmpl);
-  assert (tmpl_len);
+  assert (tmpl_field_count);
 
   if ((len = _fiid_template_len (tmpl,
-                                 tmpl_len)) < 0)
+                                 tmpl_field_count)) < 0)
     return (-1);
 
   if (len % 8 != 0)
