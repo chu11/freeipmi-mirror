@@ -568,6 +568,12 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
         }
     }
 
+  if (indx > INT_MAX)
+    {
+      SET_ERRNO (EMSGSIZE);
+      goto cleanup;
+    }
+
   rv = indx;
  cleanup:
   if (rv < 0)

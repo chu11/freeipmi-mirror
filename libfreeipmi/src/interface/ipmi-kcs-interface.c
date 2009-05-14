@@ -141,7 +141,7 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
       return (-1);
     }
 
-  utmp = obj_kcs_hdr_len + obj_cmd_len'
+  utmp = obj_kcs_hdr_len + obj_cmd_len;
   if (utmp > INT_MAX)
     {
       SET_ERRNO (EMSGSIZE);

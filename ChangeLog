@@ -10,8 +10,9 @@
 
 	* libfreeipmi/src/interface/ipmi-kcs-interface.c
 	(assemble_ipmi_kcs_pkt),
-	libfreeipmi/src/interface/ipmi-lan-interface.c (ipmi_lan_sendto):
-	Handle int/unsigned int overflow conditions.
+	libfreeipmi/src/interface/ipmi-lan-interface.c (ipmi_lan_sendto,
+	assemble_ipmi_lan_pkt): Handle int/unsigned int overflow
+	conditions.
 
 	* Various code cleanup.
 	
