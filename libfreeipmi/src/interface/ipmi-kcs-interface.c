@@ -26,6 +26,7 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <limits.h>
 #include <errno.h>
 
 #include "freeipmi/interface/ipmi-kcs-interface.h"
@@ -79,6 +80,7 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
                        unsigned int pkt_len)
 {
   int obj_cmd_len, obj_kcs_hdr_len;
+  unsigned int utmp;
 
   if (!fiid_obj_valid (obj_kcs_hdr)
       || !fiid_obj_valid (obj_cmd)
@@ -116,6 +118,7 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
       return (-1);
     }
 
+  /* int overflow not possible here */
   if (pkt_len < (obj_kcs_hdr_len + obj_cmd_len))
     {
       SET_ERRNO (EMSGSIZE);
@@ -135,6 +138,13 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
                                        pkt_len - obj_kcs_hdr_len)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
+      return (-1);
+    }
+
+  utmp = obj_kcs_hdr_len + obj_cmd_len'
+  if (utmp > INT_MAX)
+    {
+      SET_ERRNO (EMSGSIZE);
       return (-1);
     }
 
