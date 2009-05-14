@@ -172,13 +172,6 @@ _fiid_template_len_bytes (fiid_template_t tmpl,
                                  tmpl_field_count)) < 0)
     return (-1);
 
-  if (len % 8 != 0)
-    {
-      /* FIID_ERR_TEMPLATE_NOT_BYTE_ALIGNED */
-      errno = EINVAL;
-      return (-1);
-    }
-
   return (BITS_ROUND_BYTES (len));
 }
 
