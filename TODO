@@ -17,7 +17,7 @@ buffer overflow corner case unsigned > signed
 ipmi_kcs_write/read
 ipmi_ssif_write/read
 api/raw_api funcs
-debug funcs
+x debug funcs
 assemble funcs
 hash/crypto funcs
 xfiid funcs
