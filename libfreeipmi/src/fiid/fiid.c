@@ -137,13 +137,13 @@ _fiid_template_check_valid_flags (fiid_template_t tmpl)
 
 static int
 _fiid_template_len (fiid_template_t tmpl,
-                    unsigned int *tmpl_len)
+                    unsigned int *tmpl_field_count)
 {
   int len = 0;
   int i;
 
   assert (tmpl);
-  assert (tmpl_len);
+  assert (tmpl_field_count);
 
   for (i = 0; tmpl[i].max_field_len != 0; i++)
     len += tmpl[i].max_field_len;
@@ -155,13 +155,13 @@ _fiid_template_len (fiid_template_t tmpl,
       return (-1);
     }
 
-  *tmpl_len = (i + 1);
+  *tmpl_field_count = (i + 1);
   return (len);
 }
 
 static int
 _fiid_template_len_bytes (fiid_template_t tmpl,
-                          unsigned int *tmpl_len)
+                          unsigned int *tmpl_field_count)
 {
   int len;
 
