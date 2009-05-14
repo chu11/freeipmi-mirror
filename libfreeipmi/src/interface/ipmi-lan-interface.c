@@ -813,6 +813,13 @@ ipmi_lan_sendto (int s,
     pad_len += IPMI_LAN_PKT_PAD_SIZE;
 
   _len += pad_len;
+
+  if (_len < pad_len)
+    {
+      SET_ERRNO (EMSGSIZE);
+      return (-1);
+    }
+
   if (!(_buf = alloca (_len)))
     {
       ERRNO_TRACE (errno);

@@ -4,12 +4,14 @@
 
 	* tagged pre_int_overflow
 
-	* libfreeipmi/src/fiid/: Handle int/unsigned int overflow conditions.
+	* libfreeipmi/src/fiid/fiid.c: Handle int/unsigned int overflow
+	conditions. Fix corner case, allow fields to be up to 256 chars,
+	not up to 255 chars. Fix signed/unsigned bugs.
 
-	* libfreeipmi/src/fiid/: Fix corner case, allow fields to be up to
-	256 chars, not up to 255 chars.
-
-	* libfreeipmi/src/fiid/: Fix signed/unsigned bugs.
+	* libfreeipmi/src/interface/ipmi-kcs-interface.c
+	(assemble_ipmi_kcs_pkt),
+	libfreeipmi/src/interface/ipmi-lan-interface.c (ipmi_lan_sendto):
+	Handle int/unsigned int overflow conditions.
 
 	* Various code cleanup.
 	
