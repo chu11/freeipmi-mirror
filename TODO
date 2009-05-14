@@ -34,6 +34,7 @@ bmc-config
 copy ipmi-oem stuff in
 - inventec mac/shared nic stuff
 - into lan_conf?  or into new section?
+- no, oem specific and will reboot BMC
 
 sensors/monitoring
 ------------------
