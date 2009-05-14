@@ -64,8 +64,8 @@ struct fiid_iterator
 {
   uint32_t magic;
   fiid_err_t errnum;
-  int current_index;
-  int last_index;
+  unsigned int current_index;
+  unsigned int last_index;
   struct fiid_obj *obj;
 };
 
@@ -2485,7 +2485,7 @@ fiid_iterator_create (fiid_obj_t obj)
   iter->magic = FIID_ITERATOR_MAGIC;
   iter->current_index = 0;
 
-  /* The -1 below is because field_data_len is length of the array.
+  /* The - 1 below is because field_data_len is length of the array.
    * The iterator is concerned about array indexes.
    */
   iter->last_index = obj->field_data_len - 1;
