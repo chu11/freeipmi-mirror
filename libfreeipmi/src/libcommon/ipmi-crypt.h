@@ -63,6 +63,7 @@
  */
 int ipmi_crypt_init (void);
 
+/* return length of data written into buffer on success, -1 on error */
 int ipmi_crypt_hash (unsigned int hash_algorithm,
                      unsigned int hash_flags,
                      const void *key,
@@ -74,6 +75,7 @@ int ipmi_crypt_hash (unsigned int hash_algorithm,
 
 int ipmi_crypt_hash_digest_len (unsigned int hash_algorithm);
 
+/* return length of data written into buffer on success, -1 on error */
 int ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
                                unsigned int cipher_mode,
                                const void *key,
@@ -83,6 +85,7 @@ int ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
                                void *data,
                                unsigned int data_len);
 
+/* return length of data written into buffer on success, -1 on error */
 int ipmi_crypt_cipher_decrypt (unsigned int cipher_algorithm,
                                unsigned int cipher_mode,
                                const void *key,

@@ -18,16 +18,18 @@ ipmi_kcs_write/read
 ipmi_ssif_write/read
 api/raw_api funcs
 x debug funcs
-x- assemble funcs
+assemble funcs
+- recheck
 x  kcs
 x  lan
 x  rmcpplus
-hash/crypto/check funcs
+X hash/crypto/check funcs
+x crypto funcs
 xfiid funcs
 x- counting up fields/lengths/etc. can be unsigned overflow too
 x lan send funcs
-event-message util string funcs
-error string funcs
+x event-message util string funcs
+x error string funcs
 
 ipmi-fru
 --------

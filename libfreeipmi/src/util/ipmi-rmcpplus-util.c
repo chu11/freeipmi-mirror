@@ -89,6 +89,8 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
       || !IPMI_USER_NAME_LOOKUP_VALID (name_only_lookup)
       || !IPMI_PRIVILEGE_LEVEL_VALID (requested_privilege_level)
       || (user_name && !user_name_len)
+      || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
+      || (!user_name && user_name_len)
       || !sik
       || !sik_len)
     {
@@ -131,16 +133,17 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
    * Build up data for hashing.
    */
 
+  /* checks above and memcpy limits below ensure can't overflow unsigned int */
   hash_data_len = 0;
   memcpy (hash_data + hash_data_len,
           (void *)remote_console_random_number,
-          remote_console_random_number_len);
-  hash_data_len += remote_console_random_number_len;
+          IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH);
+  hash_data_len += IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH;
 
   memcpy (hash_data + hash_data_len,
           (void *)managed_system_random_number,
-          managed_system_random_number_len);
-  hash_data_len += managed_system_random_number_len;
+          IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+  hash_data_len += IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH;
 
   /* This part of the spec is wierd, gotta hack it out */
   if (name_only_lookup)
@@ -482,7 +485,9 @@ ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
           || (managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
           || !IPMI_USER_NAME_LOOKUP_VALID (name_only_lookup)
           || !IPMI_PRIVILEGE_LEVEL_VALID (requested_privilege_level)
-          || (user_name && !user_name_len))
+          || (user_name && !user_name_len)
+          || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
+          || (!user_name && user_name_len))
         {
           SET_ERRNO (EINVAL);
           goto cleanup;
@@ -637,7 +642,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
                                                         uint8_t name_only_lookup,
                                                         uint8_t requested_privilege_level,
                                                         const char *user_name,
-                                                        uint8_t user_name_length,
+                                                        unsigned int user_name_len,
                                                         void *key_exchange_authentication_code,
                                                         unsigned int key_exchange_authentication_code_len)
 {
@@ -661,8 +666,9 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
       || (managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
       || !IPMI_USER_NAME_LOOKUP_VALID (name_only_lookup)
       || !IPMI_PRIVILEGE_LEVEL_VALID (requested_privilege_level)
-      || (user_name && user_name_length > IPMI_MAX_USER_NAME_LENGTH)
-      || (!user_name && user_name_length)
+      || (user_name && !user_name_len)
+      || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
+      || (!user_name && user_name_len)
       || !key_exchange_authentication_code)
     {
       SET_ERRNO (EINVAL);
@@ -699,6 +705,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
 
+  /* checks above and memcpy limits below ensure can't overflow unsigned int */
   memset (buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
   memcpy (buf + buf_index, managed_system_random_number, IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
   buf_index += IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH;
@@ -716,12 +723,12 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
   priv_byte |= (requested_privilege_level & 0xF);
   buf[buf_index] = priv_byte;
   buf_index++;
-  buf[buf_index] = user_name_length;
+  buf[buf_index] = user_name_len;
   buf_index++;
-  if (user_name && user_name_length)
+  if (user_name && user_name_len)
     {
-      memcpy (buf + buf_index, user_name, user_name_length);
-      buf_index += user_name_length;
+      memcpy (buf + buf_index, user_name, user_name_len);
+      buf_index += user_name_len;
     }
 
   if (k_uid && k_uid_len)
@@ -886,7 +893,7 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
                                                              uint8_t name_only_lookup,
                                                              uint8_t requested_privilege_level,
                                                              const char *user_name,
-                                                             uint8_t user_name_length,
+                                                             unsigned int user_name_len,
                                                              fiid_obj_t obj_cmd)
 {
   uint8_t priv_byte = 0;
@@ -916,8 +923,9 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
       || (managed_system_guid_len < IPMI_MANAGED_SYSTEM_GUID_LENGTH)
       || !IPMI_USER_NAME_LOOKUP_VALID (name_only_lookup)
       || !IPMI_PRIVILEGE_LEVEL_VALID (requested_privilege_level)
-      || (user_name && user_name_length > IPMI_MAX_USER_NAME_LENGTH)
-      || (!user_name && user_name_length)
+      || (user_name && !user_name_len)
+      || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
+      || (!user_name && user_name_len)
       || !fiid_obj_valid (obj_cmd))
     {
       SET_ERRNO (EINVAL);
@@ -967,6 +975,7 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
       goto cleanup;
     }
 
+  /* checks above and memcpy limits below ensure we can't overflow an unsigned int */
   memset (buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
   buf[buf_index] = (remote_console_session_id & 0x000000ff);
   buf_index++;
@@ -996,12 +1005,12 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
   priv_byte |= (requested_privilege_level & 0xF);
   buf[buf_index] = priv_byte;
   buf_index++;
-  buf[buf_index] = user_name_length;
+  buf[buf_index] = user_name_len;
   buf_index++;
-  if (user_name && user_name_length)
+  if (user_name && user_name_len)
     {
-      memcpy (buf + buf_index, user_name, user_name_length);
-      buf_index += user_name_length;
+      memcpy (buf + buf_index, user_name, user_name_len);
+      buf_index += user_name_len;
     }
 
   if (k_uid && k_uid_len)
@@ -1133,6 +1142,7 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorit
       goto cleanup;
     }
 
+  /* checks above and memcpy limits below ensure can't overflow unsigned int */
   memset (buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
   memcpy (buf + buf_index, remote_console_random_number, IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH);
   buf_index += IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH;

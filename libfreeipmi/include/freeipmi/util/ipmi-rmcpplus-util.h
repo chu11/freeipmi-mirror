@@ -77,7 +77,7 @@ int ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
                                           uint8_t name_only_lookup,
                                           uint8_t requested_privilege_level,
                                           const char *user_name,
-                                          uint8_t user_name_len,
+                                          unsigned int user_name_len,
                                           void **sik_key,
                                           unsigned int *sik_key_len,
                                           void **integrity_key,
@@ -95,7 +95,7 @@ int ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authenticati
                                                             uint8_t name_only_lookup,
                                                             uint8_t requested_privilege_level,
                                                             const char *user_name,
-                                                            uint8_t user_name_length,
+                                                            unsigned int user_name_len,
                                                             void *key_exchange_authentication_code,
                                                             unsigned int key_exchange_authentication_code_len);
 
@@ -121,7 +121,7 @@ int ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authent
                                                                  uint8_t name_only_lookup,
                                                                  uint8_t requested_privilege_level,
                                                                  const char *user_name,
-                                                                 uint8_t user_name_length,
+                                                                 unsigned int user_name_len,
                                                                  fiid_obj_t obj_cmd);
 
 /* returns 1 on pass, 0 on fail, -1 on error */

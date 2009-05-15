@@ -1,6 +1,10 @@
 2009-05-15  Albert Chu <chu11@llnl.gov>
 
-	* Various signed/unsigned cleanup.  Ensure right signs used consistently.
+	* Various signed/unsigned cleanup.  Ensure right signs used
+	consistently.
+
+	* libfreeipmi/src/libcommon/ipmi-crypt.c: Handle inter overflow
+	conditions.
 
 	* Various code cleanup.
 	

@@ -29,6 +29,7 @@
 #if HAVE_PTHREAD_H
 #include <pthread.h>
 #endif /* HAVE_PTHREAD_H */
+#include <limits.h>
 #include <gcrypt.h>
 GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
@@ -169,6 +170,12 @@ ipmi_crypt_hash (unsigned int hash_algorithm,
   if (!(digestPtr = gcry_md_read (h, gcry_md_algorithm)))
     {
       SET_ERRNO (EINVAL);
+      goto cleanup;
+    }
+
+  if (gcry_md_digest_len > INT_MAX)
+    {
+      SET_ERRNO (EMSGSIZE);
       goto cleanup;
     }
 
@@ -345,6 +352,12 @@ _cipher_crypt (unsigned int cipher_algorithm,
         }
     }
 
+  if (data_len > INT_MAX)
+    {
+      SET_ERRNO (EMSGSIZE);
+      goto cleanup;
+    }
+
   rv = data_len;
  cleanup:
   if (h)
@@ -428,6 +441,12 @@ _ipmi_crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info
     {
       ERR_TRACE (gcry_strerror (e), e);
       SET_ERRNO (_gpg_error_to_errno (e));
+      return (-1);
+    }
+
+  if (len > INT_MAX)
+    {
+      SET_ERRNO (EMSGSIZE);
       return (-1);
     }
 
