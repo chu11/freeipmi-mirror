@@ -48,6 +48,7 @@ sensors/monitoring
 option output via entity_id organization (i.e. groups of owners)
 exclude groups
 exclude sensors
+- per sensor interpretation?
 
 ipmi-chassis-config
 -------------------
