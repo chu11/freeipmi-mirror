@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd.c,v 1.14 2009-03-04 19:41:29 chu11 Exp $
+ *  $Id: ipmidetectd.c,v 1.15 2009-05-15 18:02:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -57,7 +57,7 @@ _daemon_init (void)
 {
   /* Based on code in Unix network programming by R. Stevens */
   pid_t pid;
-  int i;
+  unsigned int i;
 
   if ((pid = fork ()) < 0)
     IPMIDETECTD_EXIT (("fork: %s", strerror (errno)));

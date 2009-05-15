@@ -411,7 +411,8 @@ config_file_workaround_flags (conffile_t cf,
                               int app_data)
 {
   struct cmd_args_config *cmd_args_config;
-  int i, tmp;
+  unsigned int i;
+  int tmp;
 
   assert (option_ptr);
 
@@ -650,7 +651,8 @@ config_file_tool_specific_workaround_flags (conffile_t cf,
                                             int app_data)
 {
   struct cmd_args_config *cmd_args_config;
-  int i, tmp;
+  unsigned int i;
+  int tmp;
 
   assert (option_ptr);
 
@@ -706,7 +708,7 @@ _config_file_sensor_groups (struct conffile_data *data,
                             char groups[][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1],
                             unsigned int *groups_length)
 {
-  int i;
+  unsigned int i;
 
   assert (data);
   assert (optionname);
@@ -767,7 +769,7 @@ _config_file_sensor_record_ids (struct conffile_data *data,
                                 unsigned int *record_ids,
                                 unsigned int *record_ids_length)
 {
-  int i;
+  unsigned int i;
 
   assert (data);
   assert (optionname);
@@ -918,7 +920,7 @@ config_file_ipmipower_ipmi_version (conffile_t cf,
 static void
 _ignore_options (struct conffile_option *options, unsigned int options_len)
 {
-  int i;
+  unsigned int i;
 
   assert (options && options_len);
 
@@ -932,7 +934,7 @@ _copy_options (struct conffile_option *to_options,
                struct conffile_option *from_options,
                unsigned int from_options_len)
 {
-  int i;
+  unsigned int i;
 
   assert (to_options && from_options && from_options_len);
 

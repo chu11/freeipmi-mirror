@@ -239,7 +239,7 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     cmd_args->quiet_readings = config_file_data.quiet_readings;
   if (config_file_data.groups_count && config_file_data.groups_length)
     {
-      int i;
+      unsigned int i;
 
       assert(MAX_SENSOR_GROUPS == CONFIG_FILE_MAX_SENSOR_GROUPS);
       assert(MAX_SENSOR_GROUPS_STRING_LENGTH == CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH);
@@ -252,7 +252,7 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     }
   if (config_file_data.record_ids_count && config_file_data.record_ids_count)
     {
-      int i;
+      unsigned int i;
 
       assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
 
@@ -275,7 +275,7 @@ _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 {
   if (cmd_args->groups_length)
     {
-      int i;
+      unsigned int i;
 
       for (i = 0; i < cmd_args->groups_length; i++)
         {
@@ -322,7 +322,7 @@ _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 void
 ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *cmd_args)
 {
-  int i;
+  unsigned int i;
 
   init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));

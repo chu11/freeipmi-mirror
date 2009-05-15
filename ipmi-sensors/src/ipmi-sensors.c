@@ -396,7 +396,7 @@ _flush_cache (ipmi_sensors_state_data_t *state_data)
 static int
 _display_group (ipmi_sensors_state_data_t *state_data)
 {
-  int i = 0;
+  unsigned int i = 0;
 
   assert (state_data);
 
@@ -632,7 +632,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
     free (sensor_reading);
   if (event_message_list)
     {
-      int j;
+      unsigned int j;
       for (j = 0; j < event_message_list_len; j++)
         free (event_message_list[j]);
       free (event_message_list);
@@ -644,7 +644,7 @@ static int
 _display_sensors (ipmi_sensors_state_data_t *state_data)
 {
   struct ipmi_sensors_arguments *args = NULL;
-  int i;
+  unsigned int i;
 
   assert (state_data);
 

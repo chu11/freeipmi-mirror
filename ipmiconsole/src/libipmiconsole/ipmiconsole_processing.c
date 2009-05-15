@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.91 2009-05-03 18:09:04 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.92 2009-05-15 18:02:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1895,7 +1895,7 @@ static int
 _check_sol_activated (ipmiconsole_ctx_t c)
 {
   uint64_t val;
-  int i;
+  unsigned int i;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);

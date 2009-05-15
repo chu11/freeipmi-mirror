@@ -54,7 +54,7 @@ bmc_config_sections_create (bmc_config_state_data_t *state_data)
   struct config_section *sections = NULL;
   struct config_section *section = NULL;
   uint8_t number_of_users;
-  int i;
+  unsigned int i;
 
   if (get_number_of_users (state_data, &number_of_users) != CONFIG_ERR_SUCCESS)
     {

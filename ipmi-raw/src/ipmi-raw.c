@@ -48,7 +48,6 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
   struct ipmi_raw_arguments *args;
   uint8_t *bytes_rq = NULL;
   unsigned int send_len;
-  int i;
   uint8_t *bytes_rs = NULL;
   int rs_len;
   int rv = -1;
@@ -84,6 +83,8 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
                               bytes_rs,
                               state_data->prog_data->args->arg_max)) >= 0)
     {
+      int i;
+
       pstdout_printf (state_data->pstate, "rcvd: ");
       for (i = 0; i < rs_len; i++)
         pstdout_printf (state_data->pstate, "%02X ", bytes_rs[i]);
@@ -116,9 +117,9 @@ string2bytes (ipmi_raw_state_data_t *state_data,
   char *ptr = NULL;
   char *token = NULL;
   int count = 0;
-  int i = 0;
-  int l = 0;
-  int value = 0;
+  unsigned int i = 0;
+  unsigned int l = 0;
+  long value = 0;
   int rv = -1;
 
   assert (state_data);
@@ -225,7 +226,8 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
   unsigned int send_len;
   uint8_t *bytes_rs = NULL;
   int rs_len;
-  int i, rv = -1;
+  int i;
+  int rv = -1;
 
   assert (state_data);
   assert (stream);

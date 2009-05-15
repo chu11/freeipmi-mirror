@@ -124,9 +124,9 @@ _ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
       ipmi_locate_defaults_get_device_info,
       NULL
     };
-  unsigned int things_to_try_len;
+  unsigned int i, things_to_try_len;
   struct ipmi_locate_info linfo;
-  int i, rv;
+  int rv;
 
   if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
     {

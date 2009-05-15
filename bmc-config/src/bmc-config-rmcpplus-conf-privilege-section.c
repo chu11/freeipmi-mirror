@@ -45,7 +45,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
-  int i;
+  unsigned int i;
 
   assert (state_data);
 

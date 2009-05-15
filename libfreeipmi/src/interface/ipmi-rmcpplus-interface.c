@@ -822,7 +822,7 @@ _construct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
 
   if (pad_len)
     {
-      int i;
+      unsigned int i;
       for (i = 0; i < pad_len; i++)
         payload_buf[payload_len + i] = i + 1;
       payload_buf[payload_len + pad_len] = pad_len;

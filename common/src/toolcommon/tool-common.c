@@ -376,7 +376,7 @@ int
 parse_kg (void *out, unsigned int outlen, const char *in)
 {
   char *p, *q;
-  int i, j;
+  unsigned int i, j;
   char buf[3] = { 0, 0, 0};
   int rv = 0;
 
@@ -428,7 +428,7 @@ parse_kg (void *out, unsigned int outlen, const char *in)
 char *
 format_kg (char *out, unsigned int outlen, const void *k_g)
 {
-  int i;
+  unsigned int i;
   int printable = 1;
   int foundnull = 0;
   char *p;

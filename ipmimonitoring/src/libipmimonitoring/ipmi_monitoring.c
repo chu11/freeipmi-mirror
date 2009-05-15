@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.56 2009-05-05 18:18:50 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.57 2009-05-15 18:02:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -342,7 +342,8 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
                                                unsigned int record_ids_len)
 {
   uint16_t record_count;
-  int i, rv = -1;
+  unsigned int i;
+  int rv = -1;
 
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
@@ -503,7 +504,7 @@ ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
 
   if (record_ids && record_ids_len)
     {
-      int i;
+      unsigned int i;
 
       for (i = 0; i < record_ids_len; i++)
         {
@@ -540,7 +541,8 @@ _ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
                                                   unsigned int sensor_groups_len)
 {
   uint16_t record_count;
-  int i, rv = -1;
+  unsigned int i;
+  int rv = -1;
 
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
@@ -661,7 +663,7 @@ ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
 
   if (sensor_groups && sensor_groups_len)
     {
-      int i;
+      unsigned int i;
 
       for (i = 0; i < sensor_groups_len; i++)
         {
@@ -903,7 +905,7 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
                                 unsigned int buflen)
 {
   unsigned int offset = 0;
-  int i;
+  unsigned int i;
 
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
     return (-1);

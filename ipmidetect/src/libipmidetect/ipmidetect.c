@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.17 2009-03-12 17:57:52 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.18 2009-05-15 18:02:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -120,13 +120,12 @@ struct ipmidetect {
   int load_state;
   hostlist_t detected_nodes;
   hostlist_t undetected_nodes;
-  int numnodes;
 };
 
 struct ipmidetect_config
 {
   char hostnames[IPMIDETECT_CONFIG_HOSTNAMES_MAX+1][IPMIDETECT_MAXHOSTNAMELEN+1];
-  int hostnames_len;
+  unsigned int hostnames_len;
   int hostnames_flag;
   int port;
   int port_flag;
@@ -218,7 +217,6 @@ _initialize_handle (ipmidetect_t handle)
   handle->load_state = IPMIDETECT_LOAD_STATE_UNLOADED;
   handle->detected_nodes = NULL;
   handle->undetected_nodes = NULL;
-  handle->numnodes = 0;
 }
 
 ipmidetect_t
@@ -275,7 +273,7 @@ _cb_hostnames (conffile_t cf, struct conffile_data *data, char *optionname,
                void *app_ptr, int app_data)
 {
   struct ipmidetect_config *conf = option_ptr;
-  int i;
+  unsigned int i;
 
   if (!option_ptr)
     {
@@ -309,14 +307,14 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
   struct conffile_option options[] =
     {
       { "hostnames", CONFFILE_OPTION_LIST_STRING, -1,
-    _cb_hostnames, 1, 0, &(conf->hostnames_flag),
-    conf, 0},
+        _cb_hostnames, 1, 0, &(conf->hostnames_flag),
+        conf, 0},
       { "port", CONFFILE_OPTION_INT, 0,
-    conffile_int, 1, 0, &(conf->port_flag),
-    &(conf->port), 0},
+        conffile_int, 1, 0, &(conf->port_flag),
+        &(conf->port), 0},
       { "timeout_len", CONFFILE_OPTION_INT, 0,
-    conffile_int, 1, 0, &(conf->timeout_len_flag),
-    &(conf->timeout_len), 0},
+        conffile_int, 1, 0, &(conf->timeout_len_flag),
+        &(conf->timeout_len), 0},
     };
   conffile_t cf = NULL;
   int num, rv = -1;
@@ -594,7 +592,7 @@ ipmidetect_load_data (ipmidetect_t handle,
 
   if (conffile_config.hostnames_flag)
     {
-      int i;
+      unsigned int i;
 
       for (i = 0; i < conffile_config.hostnames_len; i++)
         {

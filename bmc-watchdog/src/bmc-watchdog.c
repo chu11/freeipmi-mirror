@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.123 2009-05-05 17:46:56 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.124 2009-05-15 18:02:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1085,7 +1085,8 @@ _get_channel_number (int retry_wait_time, int retry_attempt, uint8_t *channel_nu
   fiid_obj_t channel_info_cmd_rs = NULL;
   uint32_t manufacturer_id;
   uint16_t product_id;
-  int i, ret, rv = -1;
+  unsigned int i;
+  int ret, rv = -1;
 
   assert (channel_number);
 
@@ -1668,13 +1669,13 @@ static void
 _daemon_init ()
 {
   /* Based on code in Unix network programming by R. Stevens */
-  int i;
-  pid_t pid;
-
 
   /* Run in foreground if debugging */
   if (!cmd_args.common.debug)
     {
+      unsigned int i;
+      pid_t pid;
+
       if ((pid = fork ()) < 0)
         _err_exit ("fork: %s", strerror (errno));
       if (pid)

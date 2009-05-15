@@ -262,8 +262,8 @@ alert_string_checkout (const char *section_name,
   uint8_t string_selector;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  int blocks;
-  int i;
+  unsigned int blocks;
+  unsigned int i;
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 
@@ -356,10 +356,10 @@ alert_string_commit (const char *section_name,
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   uint8_t *alert_string_buf = NULL;
-  int alert_string_len = 0;
-  int alert_string_buf_len = 0;
-  int blocks;
-  int i;
+  unsigned int alert_string_len = 0;
+  unsigned int alert_string_buf_len = 0;
+  unsigned int blocks;
+  unsigned int i;
 
   string_selector = atoi (section_name + strlen ("Alert_String_"));
 

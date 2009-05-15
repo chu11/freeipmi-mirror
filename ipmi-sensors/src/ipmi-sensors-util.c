@@ -88,9 +88,9 @@ get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
 {
   char **tmp_event_message_list = NULL;
   char *tmp_message_list[IPMI_SENSORS_MAX_LIST];
-  int num_messages = 0;
-  int count = 0;
-  int i;
+  unsigned int num_messages = 0;
+  unsigned int count = 0;
+  unsigned int i;
 
   assert (state_data);
   assert (event_message_list);
@@ -190,9 +190,9 @@ get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
 {
   char **tmp_event_message_list = NULL;
   char *tmp_message_list[IPMI_SENSORS_MAX_LIST];
-  int num_messages = 0;
-  int count = 0;
-  int i;
+  unsigned int num_messages = 0;
+  unsigned int count = 0;
+  unsigned int i;
 
   assert (state_data);
   assert (event_message_list);
@@ -286,9 +286,9 @@ get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_da
 {
   char **tmp_event_message_list = NULL;
   char *tmp_message_list[IPMI_SENSORS_MAX_LIST];
-  int num_messages = 0;
-  int count = 0;
-  int i;
+  unsigned int num_messages = 0;
+  unsigned int count = 0;
+  unsigned int i;
 
   assert (state_data);
   assert (event_message_list);

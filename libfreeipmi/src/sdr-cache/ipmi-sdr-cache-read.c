@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.26 2009-05-03 17:40:37 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.27 2009-05-15 18:02:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -364,7 +364,7 @@ int
 ipmi_sdr_cache_seek (ipmi_sdr_cache_ctx_t ctx, unsigned int index)
 {
   off_t offset;
-  int i;
+  unsigned int i;
 
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     {

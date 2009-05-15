@@ -430,7 +430,7 @@ static int
 _delete_records (ipmi_sel_state_data_t *state_data)
 {
   struct ipmi_sel_arguments *args;
-  int i;
+  unsigned int i;
 
   assert (state_data);
 
@@ -451,7 +451,7 @@ static int
 _delete_range (ipmi_sel_state_data_t *state_data)
 {
   struct ipmi_sel_arguments *args;
-  int i;
+  unsigned int i;
 
   assert (state_data);
 
@@ -1451,7 +1451,7 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
 
       if (state_data->prog_data->args->display)
         {
-          int i;
+          unsigned int i;
 
           /* achu: I know it's slow, shouldn't be that big of a deal in the grand scheme */
           for (i = 0; i < state_data->prog_data->args->display_record_list_length; i++)

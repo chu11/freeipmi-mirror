@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.8 2009-05-03 17:40:36 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.9 2009-05-15 18:02:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -412,7 +412,7 @@ _check_checksum (ipmi_fru_parse_ctx_t ctx,
   if (!(ctx->flags & IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS))
     {
       uint8_t checksum = checksum_init;
-      int i;
+      unsigned int i;
 
       for (i = 0; i < length_in_bytes; i++)
         checksum += frubuf[i];
@@ -1309,7 +1309,7 @@ _sixbitascii_to_ascii (ipmi_fru_parse_ctx_t ctx,
                        unsigned int *bytes_written)
 {
   int rv = -1;
-  int i;
+  unsigned int i;
   uint32_t c = 0;
 
   assert (ctx);
@@ -1360,7 +1360,7 @@ _bcd_to_ascii (ipmi_fru_parse_ctx_t ctx,
                unsigned int *bytes_written)
 {
   int rv = -1;
-  int i;
+  unsigned int i;
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
@@ -1417,7 +1417,6 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
   uint8_t number_of_data_bytes;
   int rv = -1;
   int ret;
-  int i;
 
   if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
     {
@@ -1468,6 +1467,7 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
   if (type_code == IPMI_FRU_TYPE_LENGTH_TYPE_CODE_BINARY)
     {
       /* Ummm - it's binary or unspecified.  I guess we'll output hex */
+      unsigned int i;
 
       /* must be atleast length of 1, b/c we check for number_of_data_bytes above */
       ret = snprintf (strtmpbuf + strtmpbuflen,

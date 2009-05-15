@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.33 2009-05-03 17:40:37 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.34 2009-05-15 18:02:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -491,7 +491,7 @@ _sdr_cache_record_write (ipmi_sdr_cache_ctx_t ctx,
   if (record_ids)
     {
       uint16_t record_id;
-      int i;
+      unsigned int i;
 
       /* Record ID stored little endian */
       record_id = ((uint16_t)buf[IPMI_SDR_CACHE_SDR_RECORD_ID_INDEX_LS] & 0xFF);
@@ -518,7 +518,7 @@ _sdr_cache_record_write (ipmi_sdr_cache_ctx_t ctx,
           || buf[IPMI_SDR_CACHE_SDR_RECORD_TYPE_INDEX] == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD))
     {
       uint8_t sensor_number;
-      int i;
+      unsigned int i;
 
       sensor_number = (uint8_t)buf[IPMI_SDR_CACHE_SDR_RECORD_SENSOR_NUMBER_INDEX];
 

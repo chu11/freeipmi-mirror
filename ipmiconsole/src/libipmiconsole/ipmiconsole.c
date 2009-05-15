@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.97 2009-05-02 03:57:21 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.98 2009-05-15 18:02:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -115,7 +115,7 @@ int
 ipmiconsole_engine_init (unsigned int thread_count, unsigned int debug_flags)
 {
   struct rlimit rlim;
-  int i;
+  unsigned int i;
 
   if (!thread_count
       || thread_count > IPMICONSOLE_THREAD_COUNT_MAX

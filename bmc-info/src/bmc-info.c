@@ -533,7 +533,7 @@ static int
 get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channel_info_list)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t i;
+  unsigned int i;
   uint8_t ci;
   uint64_t val;
   int rv = -1;
@@ -649,7 +649,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
 {
   channel_info_t channel_info_list[NUM_CHANNELS];
   int first_newline_output = 0;
-  uint8_t i;
+  unsigned int i;
 
   assert (state_data);
 

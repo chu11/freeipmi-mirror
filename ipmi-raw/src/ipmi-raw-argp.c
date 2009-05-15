@@ -104,7 +104,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case ARGP_KEY_ARG:
       {
-        int i;
+        unsigned int i;
         long value;
         
         if (strlen (arg) >= 2)

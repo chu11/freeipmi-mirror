@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.18 2009-05-03 17:40:28 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.19 2009-05-15 18:02:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -107,7 +107,7 @@ static void
 _fds_setup (void)
 {
   struct sockaddr_in addr;
-  int i;
+  unsigned int i;
 
   assert (!fds);
   assert (!fds_count);
@@ -370,7 +370,7 @@ _ipmidetectd_send_pings (void)
 static void
 _setup_pfds (struct pollfd *pfds)
 {
-  int i;
+  unsigned int i;
 
   assert (pfds);
 
@@ -475,7 +475,7 @@ void
 ipmidetectd_loop (void)
 {
   struct pollfd *pfds = NULL;
-  int i;
+  unsigned int i;
 
   _ipmidetectd_setup ();
 

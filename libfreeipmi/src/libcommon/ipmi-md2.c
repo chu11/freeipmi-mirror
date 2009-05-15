@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.c,v 1.13 2009-05-03 17:40:37 chu11 Exp $
+ *  $Id: ipmi-md2.c,v 1.14 2009-05-15 18:02:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -127,7 +127,7 @@ md2_init (md2_t *ctx)
 static void
 _md2_update_digest_and_checksum (md2_t *ctx)
 {
-  int j, k;
+  unsigned int j, k;
   uint8_t c, t;
 
   /* Update X */

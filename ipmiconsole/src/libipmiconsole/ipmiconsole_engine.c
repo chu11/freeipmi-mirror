@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.85 2009-05-02 03:55:18 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.86 2009-05-15 18:02:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -42,6 +42,7 @@
 #include <sys/types.h>
 #include <sys/poll.h>
 #include <signal.h>
+#include <limits.h>
 #include <assert.h>
 #include <errno.h>
 #include <freeipmi/freeipmi.h>
@@ -72,7 +73,7 @@
 static int console_engine_is_setup = 0;
 static pthread_mutex_t console_engine_is_setup_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static int console_engine_thread_count = 0;
+static unsigned int console_engine_thread_count = 0;
 static pthread_mutex_t console_engine_thread_count_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static int console_engine_teardown = 0;
@@ -93,7 +94,7 @@ static pthread_mutex_t console_engine_ctxs_mutex[IPMICONSOLE_THREAD_COUNT_MAX];
  * faster.
  */
 static int console_engine_ctxs_notifier[IPMICONSOLE_THREAD_COUNT_MAX][2];
-static int console_engine_ctxs_notifier_num = 0;
+static unsigned int console_engine_ctxs_notifier_num = 0;
 
 /*
  * The engine is capable of "being finished" with a context before the
@@ -172,7 +173,8 @@ _ipmiconsole_garbage_collector_create (void)
 int
 ipmiconsole_engine_setup (unsigned int thread_count)
 {
-  int i, perr;
+  unsigned int i;
+  int perr;
 
   assert (!console_engine_thread_count);
   assert (thread_count && thread_count <= IPMICONSOLE_THREAD_COUNT_MAX);
@@ -344,7 +346,10 @@ ipmiconsole_engine_thread_count (void)
       return (-1);
     }
 
-  thread_count = console_engine_thread_count;
+  if (console_engine_thread_count > INT_MAX)
+    thread_count = INT_MAX;
+  else
+    thread_count = console_engine_thread_count;
 
   if ((perr = pthread_mutex_unlock (&console_engine_thread_count_mutex)))
     {
@@ -766,8 +771,9 @@ _ipmiconsole_engine (void *arg)
   while (!teardown_flag || ctxs_count)
     {
       struct _ipmiconsole_poll_data poll_data;
-      int i, count;
+      int count;
       unsigned int timeout_len;
+      unsigned int i;
       int unlock_console_engine_ctxs_mutex_flag = 0;
       int spin_wait_flag = 0;
       char buf[IPMICONSOLE_PIPE_BUFLEN];
@@ -1130,7 +1136,8 @@ int
 ipmiconsole_engine_submit_ctx (ipmiconsole_ctx_t c)
 {
   void *ptr;
-  int i, perr, ret = -1;
+  unsigned int i;
+  int perr, ret = -1;
   unsigned int min_submitted = UINT_MAX;
   int index = 0;
 
@@ -1223,7 +1230,9 @@ ipmiconsole_engine_submit_ctx (ipmiconsole_ctx_t c)
 int
 ipmiconsole_engine_cleanup (int cleanup_sol_sessions)
 {
-  int thread_count, perr, i, rv = -1;
+  unsigned int i;
+  unsigned int thread_count;
+  int perr, rv = -1;
 
   if ((perr = pthread_mutex_lock (&console_engine_is_setup_mutex)))
     {

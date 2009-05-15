@@ -285,7 +285,7 @@ _ipmi_ssif_single_part_write (ipmi_ssif_ctx_t ctx,
 {
 
   union ipmi_i2c_smbus_data data;
-  int i;
+  size_t i;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SSIF_CTX_MAGIC);
@@ -308,7 +308,7 @@ _ipmi_ssif_multi_part_write (ipmi_ssif_ctx_t ctx,
                              size_t buf_len)
 {
   union ipmi_i2c_smbus_data data;
-  int middle_parts, mpart, index, i;
+  size_t i, middle_parts, mpart, index;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SSIF_CTX_MAGIC);
@@ -376,13 +376,13 @@ _ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
                  size_t buf_len)
 {
   union ipmi_i2c_smbus_data data;
-  int bytes_read = 0;
-  int bytes_copied = 0;
-  int length = 0;
-  int block_number = 0;
-  int sindex = 0;
-  int multi_read_start = 0;
-  int i;
+  size_t bytes_read = 0;
+  size_t bytes_copied = 0;
+  size_t length = 0;
+  unsigned int block_number = 0;
+  unsigned int sindex = 0;
+  unsigned int multi_read_start = 0;
+  size_t i;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SSIF_CTX_MAGIC);

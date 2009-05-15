@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.52 2009-04-20 22:52:22 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.53 2009-05-15 18:02:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -68,7 +68,7 @@ _flush_cache (ipmi_fru_state_data_t *state_data)
 
 static int
 _output_fru (ipmi_fru_state_data_t *state_data,
-             int *output_count,
+             unsigned int *output_count,
              uint8_t device_id,
              const char *device_id_str)
 {
@@ -253,8 +253,8 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
 {
   struct ipmi_fru_arguments *args;
   uint16_t record_count;
-  int output_count = 0;
-  int i;
+  unsigned int output_count = 0;
+  unsigned int i;
 
   assert (state_data);
 

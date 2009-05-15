@@ -598,7 +598,7 @@ static int _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
                                  uint32_t *acpi_table_length);
 static int _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
                                           char *signature,
-                                          int table_instance,
+                                          unsigned int table_instance,
                                           fiid_obj_t obj_acpi_table_hdr,
                                           uint8_t **sign_table_data,
                                           uint32_t *sign_table_data_length);
@@ -678,7 +678,7 @@ _ipmi_acpi_table_checksum (ipmi_locate_ctx_t ctx,
                            uint8_t *buffer,
                            size_t len)
 {
-  int i = 0;
+  size_t i = 0;
   uint8_t sum = 0;
 
   assert (ctx);
@@ -818,7 +818,7 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
 {
   uint8_t *memdata = NULL;
   int acpi_rsdp_descriptor_len;
-  int i;
+  size_t i;
 
   assert (ctx);
   assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
@@ -1133,7 +1133,7 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
 static int
 _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
                                char *signature,
-                               int table_instance,
+                               unsigned int table_instance,
                                fiid_obj_t obj_acpi_table_hdr,
                                uint8_t **sign_table_data,
                                uint32_t *sign_table_data_length)
@@ -1152,14 +1152,14 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
   uint32_t rsdt_xsdt_table_length;
   uint8_t *rsdt_xsdt_table_data;
   uint32_t rsdt_xsdt_table_data_length;
-  int acpi_table_count;
+  unsigned int acpi_table_count;
   uint8_t *acpi_table = NULL;
   uint32_t acpi_table_length;
 
   fiid_obj_t obj_table = NULL;
   uint64_t table_address;
-  int signature_table_count;
-  int i;
+  unsigned int signature_table_count;
+  unsigned int i;
   int rv = -1;
   fiid_template_t tmpl_table_address_32 =
     {
@@ -1376,7 +1376,7 @@ _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
   uint8_t *table_data = NULL;
   uint32_t table_data_length = 0;
   uint32_t copy_length;
-  int instance;
+  unsigned int instance;
   int acpi_spmi_table_descriptor_len;
   int rv = -1;
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.43 2009-05-05 17:54:10 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.44 2009-05-15 18:02:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -256,7 +256,7 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     cmd_args->quiet_readings = config_file_data.quiet_readings;
   if (config_file_data.groups_count && config_file_data.groups_length)
     {
-      int i;
+      unsigned int i;
 
       assert(MAX_SENSOR_GROUPS == CONFIG_FILE_MAX_SENSOR_GROUPS);
       assert(MAX_SENSOR_GROUPS_STRING_LENGTH == CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH);
@@ -269,7 +269,7 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     }
   if (config_file_data.record_ids_count && config_file_data.record_ids_count)
     {
-      int i;
+      unsigned int i;
 
       assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
 
@@ -294,7 +294,7 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
 void
 ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_arguments *cmd_args)
 {
-  int i;
+  unsigned int i;
 
   init_common_cmd_args_operator (&(cmd_args->common));
   init_sdr_cmd_args (&(cmd_args->sdr));

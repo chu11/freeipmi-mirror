@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.c,v 1.14 2009-05-03 17:40:37 chu11 Exp $
+ *  $Id: ipmi-md5.c,v 1.15 2009-05-15 18:02:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -151,7 +151,7 @@ _md5_update_digest (md5_t *ctx)
 {
   uint32_t AA, BB, CC, DD;
   uint32_t X[MD5_BLOCK_WORDS_LENGTH];
-  int j;
+  unsigned int j;
 
   /* Note there are no endian issues here, compiler is required to
    * handle shifts correctly

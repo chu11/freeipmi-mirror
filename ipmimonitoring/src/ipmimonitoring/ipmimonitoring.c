@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.114 2009-05-05 00:14:06 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.115 2009-05-15 18:02:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -410,7 +410,7 @@ _calculate_record_ids (ipmimonitoring_state_data_t *state_data,
                        unsigned int *record_ids_len)
 {
   uint16_t record_count;
-  int i;
+  unsigned int i;
 
   assert (state_data);
   assert (record_ids);
@@ -522,7 +522,7 @@ _output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
   if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
     {
       unsigned int output_count = 0;
-      int j, j_start = 0, j_end = 16, j_decr_flag = 0;
+      unsigned int j, j_start = 0, j_end = 16, j_decr_flag = 0;
 
       /* achu: multiple threshold flags can be set (i.e. if we pass the
        * critical threshold, we've also passed the non-critical threshold)
@@ -1174,7 +1174,7 @@ _ipmimonitoring (pstdout_state_t pstate,
 static void
 _convert_to_ipmimonitoring_options (struct ipmimonitoring_arguments *cmd_args)
 {
-  int i;
+  unsigned int i;
 
   assert (cmd_args);
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.62 2009-04-08 20:47:06 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.63 2009-05-15 18:02:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -125,7 +125,7 @@ _stdin (ipmiconsole_ctx_t c,
   char tbuf[IPMICONSOLE_BUFLEN];
   unsigned int tbuflen = 0;
   ssize_t n;
-  int i;
+  unsigned int i;
 
   assert (c);
   assert (fd);

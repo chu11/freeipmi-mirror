@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.72 2009-05-03 05:26:43 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.73 2009-05-15 18:02:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1050,7 +1050,7 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
 
   if (sensor_groups)
     {
-      int i, found = 0;
+      unsigned int i, found = 0;
 
       for (i = 0; i < sensor_groups_len; i++)
         {

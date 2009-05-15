@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-output.c,v 1.3 2009-05-03 18:21:05 chu11 Exp $
+ *  $Id: ipmi-fru-output.c,v 1.4 2009-05-15 18:02:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -120,7 +120,7 @@ ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
   ipmi_fru_parse_field_t chassis_part_number;
   ipmi_fru_parse_field_t chassis_serial_number;
   ipmi_fru_parse_field_t chassis_custom_fields[IPMI_FRU_CUSTOM_FIELDS];
-  int i;
+  unsigned int i;
 
   assert (state_data);
   assert (areabuf);
@@ -207,7 +207,7 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
   time_t timetmp;
   struct tm mfg_date_time_tm;
   char mfg_date_time_buf[IPMI_FRU_STR_BUFLEN + 1];
-  int i;
+  unsigned int i;
 
   assert (state_data);
   assert (areabuf);
@@ -327,7 +327,7 @@ ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
   ipmi_fru_parse_field_t product_asset_tag;
   ipmi_fru_parse_field_t product_fru_file_id;
   ipmi_fru_parse_field_t product_custom_fields[IPMI_FRU_CUSTOM_FIELDS];
-  int i;
+  unsigned int i;
 
   assert (state_data);
   assert (areabuf);
@@ -765,7 +765,7 @@ ipmi_fru_output_management_access_record (ipmi_fru_state_data_t *state_data,
   uint8_t sub_record_type;
   uint8_t sub_record_data[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1];
   unsigned int sub_record_data_len = IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX;
-  int i;
+  unsigned int i;
   
   assert (state_data);
   assert (areabuf);
@@ -920,7 +920,7 @@ ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
 
   if (code_range_mask_len)
     {
-      int i;
+      unsigned int i;
 
       pstdout_printf (state_data->pstate,
                       "  FRU Base Compatibility Code Mask:");
@@ -1006,7 +1006,7 @@ ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data
 
   if (code_range_mask_len)
     {
-      int i;
+      unsigned int i;
 
       pstdout_printf (state_data->pstate,
                       "  FRU Extended Compatibility Code Mask:");
@@ -1076,7 +1076,7 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
 
   if (oem_data_len)
     {
-      int i;
+      unsigned int i;
 
       pstdout_printf (state_data->pstate,
                       "  FRU OEM Code Mask:");

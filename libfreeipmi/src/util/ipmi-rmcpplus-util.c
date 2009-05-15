@@ -790,7 +790,7 @@ ipmi_rmcpplus_check_payload_pad (uint8_t confidentiality_algorithm,
       uint8_t confidentiality_trailer[IPMI_MAX_CONFIDENTIALITY_TRAILER_LENGTH];
       int confidentiality_trailer_len;
       uint8_t pad_len;
-      int i;
+      unsigned int i;
 
       if ((confidentiality_trailer_len = fiid_obj_get_data (obj_rmcpplus_payload,
                                                             "confidentiality_trailer",
@@ -825,7 +825,7 @@ ipmi_rmcpplus_check_integrity_pad (fiid_obj_t obj_rmcpplus_session_trlr)
   uint8_t integrity_pad[IPMI_MAX_INTEGRITY_PAD_LENGTH];
   uint8_t pad_length;
   uint64_t val;
-  int i;
+  unsigned int i;
 
   if (!fiid_obj_valid (obj_rmcpplus_session_trlr))
     {

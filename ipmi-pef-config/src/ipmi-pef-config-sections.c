@@ -51,7 +51,7 @@ ipmi_pef_config_sections_create (ipmi_pef_config_state_data_t *state_data)
     number_of_alert_strings,
     number_of_alert_policy_entries,
     number_of_event_filters;
-  int i;
+  unsigned int i;
 
   if (get_number_of_lan_alert_destinations (state_data,
                                             &number_of_lan_alert_destinations) != CONFIG_ERR_SUCCESS)

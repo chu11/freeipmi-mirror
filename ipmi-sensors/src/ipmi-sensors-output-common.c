@@ -49,7 +49,7 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                                         unsigned int each_on_newline)
 {
   char spcbuf[IPMI_SENSORS_SPACE_BUFFER + 1];
-  int i;
+  unsigned int i;
 
   assert (state_data);
 

@@ -42,7 +42,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
 {
   struct config_section *sections = NULL;
   uint16_t record_count;
-  int i;
+  unsigned int i;
 
   if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
     {
