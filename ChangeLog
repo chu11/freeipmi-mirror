@@ -8,7 +8,9 @@
 	conditions. Fix corner case, allow fields to be up to 256 chars,
 	not up to 255 chars. Fix signed/unsigned bugs.
 
-	* libfreeipmi/src/interface/ipmi-kcs-interface.c
+	* libfreeipmi/src/interface/ipmi-rmpplus-interface.c
+	(assemble_ipmi_rmcpplus_pkt),
+	libfreeipmi/src/interface/ipmi-kcs-interface.c
 	(assemble_ipmi_kcs_pkt),
 	libfreeipmi/src/interface/ipmi-lan-interface.c (ipmi_lan_sendto,
 	assemble_ipmi_lan_pkt): Handle int/unsigned int overflow

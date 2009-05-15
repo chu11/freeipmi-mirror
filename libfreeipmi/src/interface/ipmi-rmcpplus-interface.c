@@ -25,6 +25,7 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <limits.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -1704,6 +1705,12 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           memcpy (pkt + indx, authentication_code_buf, authentication_code_len);
           indx += authentication_code_len;
         }
+    }
+
+  if (indx > INT_MAX)
+    {
+      SET_ERRNO (EMSGSIZE);
+      goto cleanup;
     }
 
   rv = indx;
