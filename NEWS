@@ -16,6 +16,7 @@ o Update ipmi-oem manpage with extra information.
 o Fix bmc-device --get-mca-auxiliary-log-status bug.
 o Fix debug output corner case in ipmi-oem.
 o Fix glibc 2.8 portability bug with ipmi-raw.
+o Fix freeipmi.conf comment typos.
 
 0.7.8 - 04/10/09
 ----------------
