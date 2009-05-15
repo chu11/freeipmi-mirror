@@ -26,6 +26,8 @@ hash/crypto/check funcs
 xfiid funcs
 x- counting up fields/lengths/etc. can be unsigned overflow too
 x lan send funcs
+event-message util string funcs
+error string funcs
 
 ipmi-fru
 --------
