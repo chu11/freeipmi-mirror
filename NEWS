@@ -232,6 +232,7 @@ o libfreeipmi
   - Support ipmi_sensor_units_string utility function to support
     units, percentages, rates, and units modifiers (i.e. "% hit",
     "gigabyte per minute", "pounds / cu in").
+  - Properly handle int/unsigned int potential overflow conditions.
   - Fix several sensor units abbreviations.
   - More detailed KCS debug output with header information.
   - Always output debug key fields (i.e. 'raw_data' from ipmi-raw) in

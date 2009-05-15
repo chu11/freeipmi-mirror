@@ -18,10 +18,10 @@ ipmi_kcs_write/read
 ipmi_ssif_write/read
 api/raw_api funcs
 x debug funcs
-- assemble funcs
-  kcs
-  lan
-  rmcpplus
+x- assemble funcs
+x  kcs
+x  lan
+x  rmcpplus
 hash/crypto/check funcs
 xfiid funcs
 x- counting up fields/lengths/etc. can be unsigned overflow too
