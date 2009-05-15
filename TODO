@@ -14,12 +14,11 @@ libfreeipmi
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
 buffer overflow corner case unsigned > signed
-ipmi_kcs_write/read
-ipmi_ssif_write/read
+x ipmi_kcs_write/read
+x ipmi_ssif_write/read
 api/raw_api funcs
 x debug funcs
-assemble funcs
-- recheck
+x assemble funcs
 x  kcs
 x  lan
 x  rmcpplus

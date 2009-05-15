@@ -34,6 +34,7 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
+#include <limits.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -685,7 +686,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
                 unsigned int buf_len)
 {
   const uint8_t *p = buf;
-  int count = 0;
+  unsigned int count = 0;
   int lock_flag = 0;
 
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
@@ -797,6 +798,12 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
     exit (1);
   }
 #endif
+  
+  if (count > INT_MAX)
+    {
+      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_OVERFLOW);
+      goto cleanup;
+    }
 
   ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   return (count);
@@ -816,7 +823,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
                unsigned int buf_len)
 {
   uint8_t *p = buf;
-  int count = 0;
+  unsigned int count = 0;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
@@ -888,9 +895,18 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
     }
 
   if (count > buf_len)
-    KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_OVERFLOW);
-  else
-    ctx->errnum = IPMI_KCS_ERR_SUCCESS;
+    {
+      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_OVERFLOW);
+      goto cleanup;
+    }
+
+  if (count > INT_MAX)
+    {
+      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_OVERFLOW);
+      goto cleanup;
+    }
+
+  ctx->errnum = IPMI_KCS_ERR_SUCCESS;
   rv = count;
  cleanup:
   if (ctx && ctx->magic == IPMI_KCS_CTX_MAGIC)

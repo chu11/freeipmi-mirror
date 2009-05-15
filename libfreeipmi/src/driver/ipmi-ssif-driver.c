@@ -442,6 +442,12 @@ _ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
         break;
     }
 
+  if (bytes_read > INT_MAX)
+    {
+      SSIF_SET_ERRNUM (ctx, IPMI_SSIF_ERR_OVERFLOW);
+      return (-1);
+    }
+
   return (bytes_read);
 }
 

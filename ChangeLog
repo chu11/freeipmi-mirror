@@ -3,7 +3,9 @@
 	* Various signed/unsigned cleanup.  Ensure right signs used
 	consistently.
 
-	* libfreeipmi/src/libcommon/ipmi-crypt.c: Handle inter overflow
+	* libfreeipmi/src/libcommon/ipmi-crypt.c,
+	libfreeipmi/src/driver/ipmi-kcs-driver.c,
+	libfreeipmi/src/driver/ipmi-ssif-driver.c: Handle integer overflow
 	conditions.
 
 	* Various code cleanup.
