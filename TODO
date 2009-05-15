@@ -13,22 +13,6 @@ libfreeipmi
 * more detailed debug output for ssif interface like KCS interface
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
-buffer overflow corner case unsigned > signed
-x ipmi_kcs_write/read
-x ipmi_ssif_write/read
-api/raw_api funcs
-x debug funcs
-x assemble funcs
-x  kcs
-x  lan
-x  rmcpplus
-X hash/crypto/check funcs
-x crypto funcs
-xfiid funcs
-x- counting up fields/lengths/etc. can be unsigned overflow too
-x lan send funcs
-x event-message util string funcs
-x error string funcs
 
 ipmi-fru
 --------
