@@ -163,14 +163,14 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
       hash_data_len += user_name_len;
     }
 
-  if ((computed_digest_len =  ipmi_crypt_hash (hash_algorithm,
-                                               hash_flags,
-                                               k_g,
-                                               k_g_len,
-                                               hash_data,
-                                               hash_data_len,
-                                               sik,
-                                               sik_len)) < 0)
+  if ((computed_digest_len = ipmi_crypt_hash (hash_algorithm,
+                                              hash_flags,
+                                              k_g,
+                                              k_g_len,
+                                              hash_data,
+                                              hash_data_len,
+                                              sik,
+                                              sik_len)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
