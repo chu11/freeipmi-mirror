@@ -1526,7 +1526,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   if (len > (pkt_len - indx))
     {
       SET_ERRNO (ENOSPC);
-      return (-1);;
+      return (-1);
     }
 
   if ((len = fiid_obj_get_block (obj_rmcpplus_session_hdr,
