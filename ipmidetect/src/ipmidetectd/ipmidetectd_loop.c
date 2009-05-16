@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.19 2009-05-15 18:02:40 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.20 2009-05-16 05:29:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -468,6 +468,7 @@ _send_ping_data (void)
     }
 
   list_iterator_destroy (itr);
+  /* ignore potential error, done w/ pipe */
   close (rhost_fd);
 }
 

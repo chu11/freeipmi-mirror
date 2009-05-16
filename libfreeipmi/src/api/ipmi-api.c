@@ -479,6 +479,7 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   return (0);
 
  cleanup:
+  /* ignore potential error, cleanup path */
   if (ctx->io.outofband.sockfd)
     close (ctx->io.outofband.sockfd);
   _ipmi_outofband_free (ctx);
@@ -666,6 +667,7 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   return (0);
 
  cleanup:
+  /* ignore potential error, cleanup path */
   if (ctx->io.outofband.sockfd)
     close (ctx->io.outofband.sockfd);
   _ipmi_outofband_free (ctx);
@@ -1305,6 +1307,7 @@ _ipmi_outofband_close (ipmi_ctx_t ctx)
     goto cleanup;
 
  cleanup:
+  /* ignore potential error, destroy path */
   if (ctx->io.outofband.sockfd)
     close (ctx->io.outofband.sockfd);
   _ipmi_outofband_free (ctx);

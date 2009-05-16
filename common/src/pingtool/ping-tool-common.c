@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ping-tool-common.c,v 1.16 2009-05-05 21:54:37 chu11 Exp $
+ *  $Id: ping-tool-common.c,v 1.17 2009-05-16 05:29:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -123,6 +123,7 @@ static Ipmi_Ping_EndResult _end_result = NULL;
 static void
 _cleanup (void)
 {
+  /* ignore potential error, error path */
   close (_sockfd);
 }
 

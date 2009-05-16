@@ -294,6 +294,7 @@ ipmi_kcs_ctx_destroy (ipmi_kcs_ctx_t ctx)
   ctx->errnum = IPMI_KCS_ERR_SUCCESS;
 #ifdef __FreeBSD__
 #ifndef USE_IOPERM
+  /* ignore potential error, destroy path */
   close (ctx->dev_fd);
 #endif
 #endif /* __FreeBSD__ */

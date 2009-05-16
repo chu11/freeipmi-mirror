@@ -212,8 +212,8 @@ config_args_validate (struct config_arguments *config_args)
           else
             {
               int fd;
-              fd = open (config_args->filename, O_CREAT, 0644);
-              if (fd == -1)
+              
+              if ((fd = open (config_args->filename, O_CREAT, 0644)) < 0)
                 {
                   fprintf (stderr,
                            "Cannot open '%s': %s\n",
@@ -223,8 +223,17 @@ config_args_validate (struct config_arguments *config_args)
                 }
               else
                 {
+                  /* ignore close error, don't care right now */
                   close (fd);
-                  unlink (config_args->filename);
+
+                  if (unlink (config_args->filename) < 0)
+                    {
+                      fprintf (stderr,
+                               "Cannot remove '%s': %s\n",
+                               config_args->filename,
+                               strerror (errno));
+                      exit (1);
+                    }
                 }
             }
           break;

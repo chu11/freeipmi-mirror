@@ -1050,6 +1050,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
     *rq_seq = ((*rq_seq) + 1) % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
   while (sockets)
     {
+      /* ignore potential error, cleanup path */
       close (sockets->fd);
       sockets = sockets->next;
     }

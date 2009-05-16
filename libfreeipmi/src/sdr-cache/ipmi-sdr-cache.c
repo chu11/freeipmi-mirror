@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.16 2009-04-17 23:50:40 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.17 2009-05-16 05:29:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -104,8 +104,10 @@ ipmi_sdr_cache_ctx_destroy (ipmi_sdr_cache_ctx_t ctx)
   if (!ctx || ctx->magic != IPMI_SDR_CACHE_CTX_MAGIC)
     return;
 
+  /* ignore potential error, destroy path */
   if (ctx->fd >= 0)
     close (ctx->fd);
+  /* ignore potential error, void return func */
   if (ctx->sdr_cache)
     munmap (ctx->sdr_cache, ctx->file_size);
 

@@ -229,6 +229,7 @@ ipmi_openipmi_ctx_destroy (ipmi_openipmi_ctx_t ctx)
       free (ctx->driver_device);
       ctx->driver_device = NULL;
     }
+  /* ignore potential error, destroy path */
   close (ctx->device_fd);
   free (ctx);
 }
@@ -389,6 +390,7 @@ ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx)
   return (0);
 
  cleanup:
+  /* ignore potential error, error path */
   close (ctx->device_fd);
   ctx->device_fd = -1;
   return (-1);

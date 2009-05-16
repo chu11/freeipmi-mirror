@@ -286,6 +286,7 @@ _map_physmem (ipmi_locate_ctx_t ctx,
   uint32_t startaddress;
   uint32_t pad;
   int mem_fd = -1;
+  uint8_t *rv = NULL;
 
   assert (ctx);
   assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
@@ -313,12 +314,12 @@ _map_physmem (ipmi_locate_ctx_t ctx,
       goto cleanup;
     }
 
-  close (mem_fd);
-  return ((uint8_t*)(*startp) + pad);
+  rv = (uint8_t*)(*startp) + pad;
 
  cleanup:
+  /* ignore potential error, cleanup path */
   close (mem_fd);
-  return (NULL);
+  return (rv);
 }
 
 /* _copy_ipmi_dev_info
@@ -399,6 +400,7 @@ _copy_ipmi_dev_info (ipmi_locate_ctx_t ctx,
               dev_info_p = var_info_p + 2;
               size = dev_info_p[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET];
             }
+          /* ignore potential error, just return result */
           munmap (map_table, map_table_len);
         }
 
@@ -408,6 +410,7 @@ _copy_ipmi_dev_info (ipmi_locate_ctx_t ctx,
 
   LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
  cleanup:
+  /* ignore potential error, just return result */
   if (map_entry)
     munmap (map_entry, map_entry_len);
   return (rv);

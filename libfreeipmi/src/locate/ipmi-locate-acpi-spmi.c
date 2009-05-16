@@ -699,6 +699,7 @@ _ipmi_ioremap (ipmi_locate_ctx_t ctx,
   uint64_t startaddress;
   uint32_t pad;
   int mem_fd = -1;
+  int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
@@ -735,13 +736,12 @@ _ipmi_ioremap (ipmi_locate_ctx_t ctx,
       goto cleanup;
     }
 
-  close (mem_fd);
   *virtual_address = (*mapped_address) + pad;
-  return (0);
-
+  rv = 0;
  cleanup:
+  /* ignore potential error, cleanup path */
   close (mem_fd);
-  return (-1);
+  return (rv);
 }
 
 static void
@@ -752,6 +752,7 @@ _ipmi_iounmap (ipmi_locate_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
 
+  /* ignore potential error, void return func */
   munmap (mapped_address, mapped_address_len);
 }
 

@@ -1,6 +1,7 @@
 2009-05-15  Albert Chu <chu11@llnl.gov>
 
-	* Remove use of 'alloca'.
+	* Remove use of 'alloca', check return unlink, close, munmap as
+	needed or leave comments as to why return code not checked.
 	
 2009-05-15  Albert Chu <chu11@llnl.gov>
 

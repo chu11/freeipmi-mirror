@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: secure.c,v 1.5 2009-03-04 19:41:25 chu11 Exp $
+ *  $Id: secure.c,v 1.6 2009-05-16 05:29:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -102,12 +102,15 @@ secure_malloc (size_t len)
                    -1,
                    0)) == MAP_FAILED)
     {
+      /* ignore potential error, this is error path */
       close (fd);
       return (NULL);
     }
   if (mlock (ptr, len) < 0)
     {
+      /* ignore potential error, this is error path */
       munmap (ptr, len);
+      /* ignore potential error, this is error path */
       close (fd);
       return (NULL);
     }
@@ -126,8 +129,10 @@ secure_free (void *ptr, size_t len)
     {
       secure_memset (ptr, '\0', len);
 #if defined(MAP_ANONYMOUS) && defined(MAP_LOCK) && HAVE_MMAP
+      /* ignore potential error, void return func */
       munmap (ptr, len);
 #elif defined(MAP_ANONYMOUS) && !defined(MAP_LOCK)
+      /* ignore potential error, void return func */
       /* munlock is not necessary, munmap is sufficient */
       munmap (ptr, len);
 #else /* !defined(MAP_ANONYMOUS) */

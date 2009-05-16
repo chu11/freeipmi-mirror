@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.18 2009-05-15 18:02:41 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.19 2009-05-16 05:29:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -462,6 +462,7 @@ _low_timeout_connect (ipmidetect_t handle,
   return (fd);
 
  cleanup:
+  /* ignore potential error, error path */
   close (fd);
   return (-1);
 }
@@ -525,6 +526,7 @@ _get_data (ipmidetect_t handle,
 
   rv = 0;
  cleanup:
+  /* ignore potential error, done w/ fd */
   close (fd);
   return (rv);
 

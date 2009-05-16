@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.27 2009-05-15 18:02:42 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.28 2009-05-16 05:29:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -198,8 +198,10 @@ ipmi_sdr_cache_open (ipmi_sdr_cache_ctx_t ctx,
   return (0);
 
  cleanup:
+  /* ignore potential error, cleanup path */
   if (ctx->fd >= 0)
     close (ctx->fd);
+  /* ignore potential error, cleanup path */
   if (ctx->sdr_cache)
     munmap ((void *)ctx->sdr_cache, ctx->file_size);
   ipmi_sdr_cache_init_ctx (ctx);
@@ -588,8 +590,10 @@ ipmi_sdr_cache_close (ipmi_sdr_cache_ctx_t ctx)
       return (-1);
     }
 
+  /* ignore potential error, cleanup path */
   if (ctx->fd >= 0)
     close (ctx->fd);
+  /* ignore potential error, cleanup path */
   if (ctx->sdr_cache)
     munmap ((void *)ctx->sdr_cache, ctx->file_size);
   ipmi_sdr_cache_init_ctx (ctx);

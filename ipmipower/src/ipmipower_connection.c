@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.45 2009-05-03 17:40:29 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.46 2009-05-16 05:29:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -268,7 +268,9 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
       int i;
       for (i = 0; i < hl_count; i++)
         {
+          /* ignore potential error, error path */
           close (ics[i].ipmi_fd);
+          /* ignore potential error, error path */
           close (ics[i].ping_fd);
           if (ics[i].ipmi_in)
             cbuf_destroy (ics[i].ipmi_in);
@@ -298,7 +300,9 @@ ipmipower_connection_array_destroy (struct ipmipower_connection *ics,
 
   for (i = 0; i < ics_len; i++)
     {
+      /* ignore potential error, cleanup path */
       close (ics[i].ipmi_fd);
+      /* ignore potential error, cleanup path */
       close (ics[i].ping_fd);
       cbuf_destroy (ics[i].ipmi_in);
       cbuf_destroy (ics[i].ipmi_out);

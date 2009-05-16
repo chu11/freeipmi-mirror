@@ -164,6 +164,7 @@ ipmi_get_random (void *buf, unsigned int buflen)
   if ((rv = read (fd, buf, buflen)) < buflen)
     goto gcrypt_rand;
 
+  /* ignore potential error, cleanup path */
   close (fd);
   return (rv);
 #endif /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */

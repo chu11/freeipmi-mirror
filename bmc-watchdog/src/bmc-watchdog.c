@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.124 2009-05-15 18:02:38 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.125 2009-05-16 05:29:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -2077,7 +2077,11 @@ main (int argc, char **argv)
     ipmi_openipmi_ctx_destroy (openipmi_ctx);
   if (sunbmc_ctx)
     ipmi_sunbmc_ctx_destroy (sunbmc_ctx);
-  close (logfile_fd);
+  if (logfile_fd >= 0)
+    {
+      if (close (logfile_fd) < 0)
+        _err_exit ("close: %s", strerror (errno));
+    }
   closelog ();
   exit (0);
 }

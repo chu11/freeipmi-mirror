@@ -503,6 +503,7 @@ ipmi_ssif_ctx_destroy (ipmi_ssif_ctx_t ctx)
   ctx->errnum = IPMI_SSIF_ERR_SUCCESS;
   if (ctx->driver_device)
     free (ctx->driver_device);
+  /* ignore potential error, destroy path */
   close (ctx->device_fd);
   free (ctx);
 }
@@ -695,6 +696,7 @@ ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx)
   return (0);
 
  cleanup:
+  /* ignore potential error, error path */
   close (ctx->device_fd);
   ctx->device_fd = -1;
   return (-1);

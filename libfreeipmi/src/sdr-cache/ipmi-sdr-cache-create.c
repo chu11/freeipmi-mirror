@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.34 2009-05-15 18:02:42 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.35 2009-05-16 05:29:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -764,14 +764,22 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
       goto cleanup;
     }
 
+  if (close (fd) < 0)
+    {
+      SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  fd = -1;
+
   rv = 0;
   ctx->errnum = IPMI_SDR_CACHE_ERR_SUCCESS;
  cleanup:
   if (fd >= 0)
     {
       /* If the cache create never completed, try to remove the file */
-      if (rv < 0)
-        unlink (filename);
+      /* ignore potential error, cleanup path */
+      unlink (filename);
+      /* ignore potential error, cleanup path */
       close (fd);
     }
   if (record_ids)

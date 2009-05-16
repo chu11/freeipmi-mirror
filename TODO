@@ -10,7 +10,8 @@ if user inputs hostname of localhost, do inband not outofband?
 general
 -------
 close error
-alloca -> malloc
+close w/ fsync
+munmap
 
 freeipmi tools
 --------------
