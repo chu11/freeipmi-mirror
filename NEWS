@@ -17,12 +17,13 @@ o Support sensor unit percentages, rates, and modifiers (i.e. "%
 o Support non-abbreviated units (i.e. "Amps" instead of "A") in most
   tools.
 o Output IANA Manufacturer Name when appropriate in most tools.
-o Output additional information in bmc-info.
+o Output additional information in many tools.
 o "Library-ize" much of the functionality originally only inside the
   tools.
 o Re-work libipmimonitoring to return sensor events for all sensors,
   not just non-threshold sensors.  Resulted in an API change.
 o Rename pef-config to ipmi-pef-config for naming consistency.
+o Various minor feature enhancements and options.
 o Various bug fixes.
 o Various documentation updates.
 
