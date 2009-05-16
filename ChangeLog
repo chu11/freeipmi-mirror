@@ -10,6 +10,8 @@
 
 	* Various code cleanup.
 	
+	* tagged post_int_overflow
+
 2009-05-14  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid/: Use unsigned ints for indexing.

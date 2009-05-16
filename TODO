@@ -10,6 +10,7 @@ if user inputs hostname of localhost, do inband not outofband?
 general
 -------
 close error
+alloca -> malloc
 
 freeipmi tools
 --------------
