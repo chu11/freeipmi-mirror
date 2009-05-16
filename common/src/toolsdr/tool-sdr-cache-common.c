@@ -34,9 +34,6 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif  /* HAVE_UNISTD_H */
-#if HAVE_ALLOCA_H
-#include <alloca.h>
-#endif /* HAVE_ALLOCA_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -68,8 +65,9 @@ _get_home_directory (pstdout_state_t pstate,
   struct passwd *pwdptr = NULL;
 #endif
   long int tbuf_len;
-  char *tbuf;
+  char *tbuf = NULL;
   int ret;
+  int rv = -1;
 
   assert (buf);
   assert (buflen);
@@ -79,12 +77,12 @@ _get_home_directory (pstdout_state_t pstate,
   if (tbuf_len < 0)
     /* Variable was not implemented */
 #endif
-    tbuf_len = 1024;      /* XXX */
+    tbuf_len = 4096;      /* XXX */
 
-  if (!(tbuf = alloca (tbuf_len)))
+  if (!(tbuf = malloc (tbuf_len)))
     {
       PSTDOUT_PERROR (pstate, "alloca");
-      return (-1);
+      goto cleanup;
     }
 
   user_id = getuid ();
@@ -97,14 +95,14 @@ _get_home_directory (pstdout_state_t pstate,
                   &(pwdptr)) != 0)
     {
       PSTDOUT_PERROR (pstate, "getpwuid_r");
-      return (-1);
+      goto cleanup;
     }
 
   if (!pwdptr)
     {
       /* User not found - can't figure out cache directory */
       PSTDOUT_PERROR (pstate, "getpwuid_r");
-      return (-1);
+      goto cleanup;
     }
 #elif defined(HAVE_FUNC_GETPWUID_R_4)
   /* Jan Forch - Solaris getpwuid_r returns ptr, not integer */
@@ -114,23 +112,26 @@ _get_home_directory (pstdout_state_t pstate,
                    tbuf_len))
     {
       PSTDOUT_PERROR (pstate, "getpwuid_r");
-      return (-1);
+      goto cleanup;
     }
 #endif /* !defined(HAVE_FUNC_GETPWUID_R_4) */
 
   if (pwd.pw_dir)
     {
-      if (!access (pwd.pw_dir, R_OK|W_OK|X_OK)) {
-    if (strlen (pwd.pw_dir) > (buflen - 1))
-      {
-        PSTDOUT_FPRINTF (pstate,
-                 stderr,
-                 "internal overflow error\n");
-        return (-1);
-      }
-    strcpy (buf, pwd.pw_dir);
-    return (0);
-      }
+      if (!access (pwd.pw_dir, R_OK|W_OK|X_OK))
+        {
+          if (strlen (pwd.pw_dir) > (buflen - 1))
+            {
+              PSTDOUT_FPRINTF (pstate,
+                               stderr,
+                               "internal overflow error\n");
+              goto cleanup;
+            }
+
+          strcpy (buf, pwd.pw_dir);
+          rv = 0;
+          goto cleanup;
+        }
     }
 
   if ((ret = snprintf (buf,
@@ -140,7 +141,7 @@ _get_home_directory (pstdout_state_t pstate,
                        pwd.pw_name)) < 0)
     {
       PSTDOUT_PERROR (pstate, "snprintf");
-      return (-1);
+      goto cleanup;
     }
 
   if (ret >= buflen)
@@ -148,7 +149,7 @@ _get_home_directory (pstdout_state_t pstate,
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "snprintf invalid bytes written\n");
-      return (-1);
+      goto cleanup;
     }
 
   if (access (buf, R_OK|W_OK|X_OK) < 0)
@@ -162,7 +163,7 @@ _get_home_directory (pstdout_state_t pstate,
                                "Cannot make cache directory: %s: %s\n",
                                buf,
                                strerror (errno));
-              return (-1);
+              goto cleanup;
             }
         }
       else
@@ -171,10 +172,14 @@ _get_home_directory (pstdout_state_t pstate,
                            stderr,
                            "Cannot access cache directory: %s\n",
                            buf);
-          return (-1);
+          goto cleanup;
         }
     }
 
+  rv = 0;
+ cleanup:
+  if (tbuf)
+    free (tbuf);
   return (0);
 }
 

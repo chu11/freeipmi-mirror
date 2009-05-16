@@ -26,9 +26,6 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if HAVE_ALLOCA_H
-#include <alloca.h>
-#endif /* HAVE_ALLOCA_H */
 #include <errno.h>
 
 #include "freeipmi/util/ipmi-ipmb-util.h"
@@ -78,10 +75,12 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
 {
   int obj_ipmb_msg_hdr_len, obj_cmd_len, obj_len;
   uint8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;
-  uint8_t *buf = NULL;
+  uint8_t *buf1 = NULL;
+  uint8_t *buf2 = NULL;
   unsigned int buflen;
   unsigned int len = 0;
   uint64_t val;
+  int rv = -1;
 
   if (!fiid_obj_valid (obj_ipmb_msg_hdr)
       || !fiid_obj_valid (obj_cmd)
@@ -94,96 +93,108 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rs) < 0)
     {
       ERRNO_TRACE (errno);
-      return (-1);
+      goto cleanup;
     }
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr) < 0)
     {
       ERRNO_TRACE (errno);
-      return (-1);
+      goto cleanup;
     }
 
   if ((obj_ipmb_msg_hdr_len = fiid_obj_len_bytes (obj_ipmb_msg_hdr)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_hdr);
-      return (-1);
+      goto cleanup;
     }
   if ((obj_cmd_len = fiid_obj_len_bytes (obj_cmd)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-      return (-1);
+      goto cleanup;
     }
 
   if (FIID_OBJ_GET (obj_ipmb_msg_hdr, "checksum1", &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_hdr);
-      return (-1);
+      goto cleanup;
     }
 
   checksum1_recv = val;
 
-  if (!(buf = (uint8_t *)alloca (obj_ipmb_msg_hdr_len + 1)))
+  if (!(buf1 = malloc (obj_ipmb_msg_hdr_len + 1)))
     {
       ERRNO_TRACE (errno);
-      return (-1);
+      goto cleanup;
     }
 
   /* achu: The rq_addr isn't in the ipmb_msg_hdr response, but it's
    * part of the calculated checksum stored in the header.  If you're
    * thinking that's dumb.  I think so too.
    */
-  buf[0] = rq_addr;
+  buf1[0] = rq_addr;
 
   if ((obj_len = fiid_obj_get_block (obj_ipmb_msg_hdr,
                                     "rq_lun",
                                     "net_fn",
-                                    buf + 1,
+                                    buf1 + 1,
                                     obj_ipmb_msg_hdr_len)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_hdr);
-      return (-1);
+      goto cleanup;
     }
-  checksum1_calc = ipmi_checksum (buf, obj_len + 1);
+  checksum1_calc = ipmi_checksum (buf1, obj_len + 1);
 
   if (checksum1_recv != checksum1_calc)
-    return (0);
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   if (FIID_OBJ_GET (obj_ipmb_msg_trlr, "checksum2", &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_trlr);
-      return (-1);
+      goto cleanup;
     }
 
   checksum2_recv = val;
 
   buflen = obj_ipmb_msg_hdr_len + obj_cmd_len;
-  if (!(buf = (uint8_t *)alloca (buflen)))
+  if (!(buf2 = malloc (buflen)))
     {
       ERRNO_TRACE (errno);
-      return (-1);
+      goto cleanup;
     }
 
   if ((obj_len = fiid_obj_get_block (obj_ipmb_msg_hdr,
                                      "rs_addr",
                                      "rq_seq",
-                                     buf,
+                                     buf2,
                                      buflen - len)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_hdr);
-      return (-1);
+      goto cleanup;
     }
   len += obj_len;
 
-  if ((obj_len = fiid_obj_get_all (obj_cmd, buf + len, buflen - len)) < 0)
+  if ((obj_len = fiid_obj_get_all (obj_cmd, buf2 + len, buflen - len)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-      return (-1);
+      goto cleanup;
     }
   len += obj_len;
 
-  checksum2_calc = ipmi_checksum (buf, len);
+  checksum2_calc = ipmi_checksum (buf2, len);
 
   if (checksum2_recv != checksum2_calc)
-    return (0);
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
-  return (1);
+  rv = 1;
+ cleanup:
+  if (buf1)
+    free (buf1);
+  if (buf2)
+    free (buf2);
+  return (rv);
 }

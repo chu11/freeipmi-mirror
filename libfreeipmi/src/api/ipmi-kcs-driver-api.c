@@ -26,9 +26,6 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if HAVE_ALLOCA_H
-#include <alloca.h>
-#endif /* HAVE_ALLOCA_H */
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
@@ -214,6 +211,146 @@ _ipmi_kcs_dump_raw_rs (ipmi_ctx_t ctx,
                   ctx->tmpl_ipmb_cmd_rs);
 }
 
+static int
+_kcs_cmd_write (ipmi_ctx_t ctx, uint8_t cmd, fiid_obj_t obj_cmd_rq)
+{
+  uint8_t *pkt = NULL;
+  unsigned int pkt_len;
+  int hdr_len, cmd_len, send_len, rv = -1;
+
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && fiid_obj_valid (obj_cmd_rq));
+
+  if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  
+  if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+      goto cleanup;
+    }
+  
+  pkt_len = hdr_len + cmd_len;
+    
+  if (!(pkt = malloc (pkt_len)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  memset (pkt, '\0', pkt_len);
+
+  if (fill_hdr_ipmi_kcs (ctx->lun,
+                         ctx->net_fn,
+                         ctx->io.inband.rq.obj_hdr) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  
+  if ((send_len = assemble_ipmi_kcs_pkt (ctx->io.inband.rq.obj_hdr,
+                                         obj_cmd_rq,
+                                         pkt,
+                                         pkt_len)) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && send_len)
+    _ipmi_kcs_dump_rq (ctx, pkt, send_len, cmd, ctx->net_fn, obj_cmd_rq);
+  
+  if (ipmi_kcs_write (ctx->io.inband.kcs_ctx, pkt, send_len) < 0)
+    {
+      API_KCS_ERRNUM_TO_API_ERRNUM (ctx, ipmi_kcs_ctx_errnum (ctx->io.inband.kcs_ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  if (pkt)
+    free (pkt);
+  return (rv);
+}
+
+static int
+_kcs_cmd_read (ipmi_ctx_t ctx, uint8_t cmd, fiid_obj_t obj_cmd_rs)
+{
+  uint8_t *pkt = NULL;
+  unsigned int pkt_len;
+  int hdr_len, cmd_len, read_len;
+  fiid_field_t *tmpl = NULL;
+  int rv = -1;
+
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && fiid_obj_valid (obj_cmd_rs));
+
+  if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (!(tmpl = fiid_obj_template (obj_cmd_rs)))
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      goto cleanup;
+    }
+
+  if ((cmd_len = fiid_template_len_bytes (tmpl)) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  pkt_len = hdr_len + cmd_len;
+  
+  if (!(pkt = malloc (pkt_len)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  memset (pkt, '\0', pkt_len);
+
+  if ((read_len = ipmi_kcs_read (ctx->io.inband.kcs_ctx,
+                                 pkt,
+                                 pkt_len)) < 0)
+    {
+      API_KCS_ERRNUM_TO_API_ERRNUM (ctx, ipmi_kcs_ctx_errnum (ctx->io.inband.kcs_ctx));
+      goto cleanup;
+    }
+  
+  if (!read_len)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
+  
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && read_len)
+    _ipmi_kcs_dump_rs (ctx, pkt, read_len, cmd, ctx->net_fn, obj_cmd_rs);
+  
+  if (unassemble_ipmi_kcs_pkt (pkt,
+                               read_len,
+                               ctx->io.inband.rs.obj_hdr,
+                               obj_cmd_rs) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  
+  rv = 0;
+ cleanup:
+  if (pkt)
+    free (pkt);
+  fiid_template_free (tmpl);
+  return (rv);
+}
+
 int
 ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
                   fiid_obj_t obj_cmd_rq,
@@ -256,126 +393,11 @@ ipmi_kcs_cmd_api (ipmi_ctx_t ctx,
         cmd = val;
     }
 
-  {
-    uint8_t *pkt;
-    unsigned int pkt_len;
-    int hdr_len, cmd_len, send_len;
+  if (_kcs_cmd_write (ctx, cmd, obj_cmd_rq) < 0)
+    return (-1);
 
-    if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM (ctx, errno);
-        return (-1);
-      }
-
-    if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
-      {
-        API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-        return (-1);
-      }
-
-    pkt_len = hdr_len + cmd_len;
-
-    pkt = alloca (pkt_len);
-    if (!pkt)
-      {
-        API_ERRNO_TO_API_ERRNUM (ctx, errno);
-        return (-1);
-      }
-    memset (pkt, 0, pkt_len);
-
-    if (fill_hdr_ipmi_kcs (ctx->lun,
-                           ctx->net_fn,
-                           ctx->io.inband.rq.obj_hdr) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM (ctx, errno);
-        return (-1);
-      }
-
-    if ((send_len = assemble_ipmi_kcs_pkt (ctx->io.inband.rq.obj_hdr,
-                                           obj_cmd_rq,
-                                           pkt,
-                                           pkt_len)) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM (ctx, errno);
-        return (-1);
-      }
-
-    if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && send_len)
-      _ipmi_kcs_dump_rq (ctx, pkt, send_len, cmd, ctx->net_fn, obj_cmd_rq);
-
-    if (ipmi_kcs_write (ctx->io.inband.kcs_ctx, pkt, send_len) < 0)
-      {
-        API_KCS_ERRNUM_TO_API_ERRNUM (ctx, ipmi_kcs_ctx_errnum (ctx->io.inband.kcs_ctx));
-        return (-1);
-      }
-  }
-
-  {
-    uint8_t *pkt;
-    unsigned int pkt_len;
-    int hdr_len, cmd_len, read_len, rv = -1;
-    fiid_field_t *tmpl = NULL;
-
-    if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM (ctx, errno);
-        goto cleanup;
-      }
-
-    if (!(tmpl = fiid_obj_template (obj_cmd_rs)))
-      {
-        API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-        goto cleanup;
-      }
-
-    if ((cmd_len = fiid_template_len_bytes (tmpl)) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM (ctx, errno);
-        goto cleanup;
-      }
-
-    pkt_len = hdr_len + cmd_len;
-
-    if (!(pkt = alloca (pkt_len)))
-      {
-        API_ERRNO_TO_API_ERRNUM (ctx, errno);
-        goto cleanup;
-      }
-
-    memset (pkt, 0, pkt_len);
-
-    if ((read_len = ipmi_kcs_read (ctx->io.inband.kcs_ctx,
-                                   pkt,
-                                   pkt_len)) < 0)
-      {
-        API_KCS_ERRNUM_TO_API_ERRNUM (ctx, ipmi_kcs_ctx_errnum (ctx->io.inband.kcs_ctx));
-        goto cleanup;
-      }
-
-    if (!read_len)
-      {
-        API_SET_ERRNUM (ctx, IPMI_ERR_SYSTEM_ERROR);
-        goto cleanup;
-      }
-
-    if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && read_len)
-      _ipmi_kcs_dump_rs (ctx, pkt, read_len, cmd, ctx->net_fn, obj_cmd_rs);
-
-    if (unassemble_ipmi_kcs_pkt (pkt,
-                                 read_len,
-                                 ctx->io.inband.rs.obj_hdr,
-                                 obj_cmd_rs) < 0)
-      {
-        API_ERRNO_TO_API_ERRNUM (ctx, errno);
-        goto cleanup;
-      }
-
-    rv = 0;
-  cleanup:
-    fiid_template_free (tmpl);
-    if (rv < 0)
-      return (rv);
-  }
+  if (_kcs_cmd_read (ctx, cmd, obj_cmd_rs) < 0)
+    return (-1);
 
   return (0);
 }
@@ -695,7 +717,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   if (ctx->type != IPMI_DEVICE_KCS)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
+      goto cleanup;
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
@@ -704,22 +726,21 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
+
   pkt_len = hdr_len + buf_rq_len;
 
-  pkt = alloca (pkt_len);
-  if (!pkt)
+  if (!(pkt = malloc (pkt_len)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
-  readbuf = alloca (buf_rs_len);
-  if (!readbuf)
+  if (!(readbuf = malloc (buf_rs_len)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if (fill_hdr_ipmi_kcs (ctx->lun,
@@ -727,13 +748,13 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
                          ctx->io.inband.rq.obj_hdr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if (fiid_obj_get_all (ctx->io.inband.rq.obj_hdr, pkt, pkt_len) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.inband.rq.obj_hdr);
-      return (-1);
+      goto cleanup;
     }
   memcpy (pkt + hdr_len, buf_rq, buf_rq_len);
 
@@ -744,14 +765,14 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   if (ipmi_kcs_write (ctx->io.inband.kcs_ctx, pkt, pkt_len) < 0)
     {
       API_KCS_ERRNUM_TO_API_ERRNUM (ctx, ipmi_kcs_ctx_errnum (ctx->io.inband.kcs_ctx));
-      return (-1);
+      goto cleanup;
     }
 
   /* Response Block */
   if ((bytes_read = ipmi_kcs_read (ctx->io.inband.kcs_ctx, readbuf, buf_rs_len)) < 0)
     {
       API_KCS_ERRNUM_TO_API_ERRNUM (ctx, ipmi_kcs_ctx_errnum (ctx->io.inband.kcs_ctx));
-      return (-1);
+      goto cleanup;
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && bytes_read)
@@ -760,7 +781,7 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   if (!bytes_read)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_SYSTEM_ERROR);
-      return (-1);
+      goto cleanup;
     }
 
   if ((bytes_read - hdr_len) > 0)
@@ -771,5 +792,10 @@ ipmi_kcs_cmd_raw_api (ipmi_ctx_t ctx,
   else
     rv = 0;
 
+ cleanup:
+  if (pkt)
+    free (pkt);
+  if (readbuf)
+    free (readbuf);
   return (rv);
 }

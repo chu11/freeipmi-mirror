@@ -1,5 +1,9 @@
 2009-05-15  Albert Chu <chu11@llnl.gov>
 
+	* Remove use of 'alloca'.
+	
+2009-05-15  Albert Chu <chu11@llnl.gov>
+
 	* Various signed/unsigned cleanup.  Ensure right signs used
 	consistently.
 

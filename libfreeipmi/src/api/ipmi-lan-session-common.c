@@ -43,9 +43,6 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
-#if HAVE_ALLOCA_H
-#include <alloca.h>
-#endif /* HAVE_ALLOCA_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -468,10 +465,11 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                     uint8_t cmd, /* for debug dumping */
                     fiid_obj_t obj_cmd_rq)
 {
-  uint8_t *pkt;
+  uint8_t *pkt = NULL;
   unsigned int pkt_len = 0;
   int cmd_len = 0;
   int send_len = 0;
+  int rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -488,40 +486,39 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
   if (fiid_obj_clear (ctx->io.outofband.rq.obj_rmcp_hdr) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_rmcp_hdr);
-      return (-1);
+      goto cleanup;
     }
   if (fiid_obj_clear (ctx->io.outofband.rq.obj_lan_session_hdr) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_lan_session_hdr);
-      return (-1);
+      goto cleanup;
     }
   if (fiid_obj_clear (ctx->io.outofband.rq.obj_lan_msg_hdr) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_lan_msg_hdr);
-      return (-1);
+      goto cleanup;
     }
 
   if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
+      goto cleanup;
     }
 
-  /* variable based on authentication, etc. 1024 is enough */
+  /* variable based on authentication, etc. 1024 extra is enough */
   pkt_len = cmd_len + 1024;
 
-  pkt = alloca (pkt_len);
-  if (!pkt)
+  if (!(pkt = malloc (pkt_len)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
-  memset (pkt, 0, pkt_len);
+  memset (pkt, '\0', pkt_len);
 
   if (fill_rmcp_hdr_ipmi (ctx->io.outofband.rq.obj_rmcp_hdr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if (fill_lan_msg_hdr (IPMI_SLAVE_ADDRESS_BMC,
@@ -531,7 +528,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                         ctx->io.outofband.rq.obj_lan_msg_hdr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if (fill_lan_session_hdr (authentication_type,
@@ -540,7 +537,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                             ctx->io.outofband.rq.obj_lan_session_hdr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if ((send_len = assemble_ipmi_lan_pkt (ctx->io.outofband.rq.obj_rmcp_hdr,
@@ -553,7 +550,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                                          pkt_len)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && send_len)
@@ -567,16 +564,20 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                        sizeof (struct sockaddr_in)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if (gettimeofday (&ctx->io.outofband.last_send, NULL) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
-  return (0);
+  rv = 0;
+ cleanup:
+  if (pkt)
+    free (pkt);
+  return (rv);
 }
 
 static int
@@ -1967,10 +1968,11 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                         uint8_t cmd, /* for debug dumping */
                         fiid_obj_t obj_cmd_rq)
 {
-  uint8_t *pkt;
+  uint8_t *pkt = NULL;
   unsigned int pkt_len = 0;
   int cmd_len = 0;
   int send_len = 0;
+  int rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -1993,45 +1995,44 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
   if (fiid_obj_clear (ctx->io.outofband.rq.obj_rmcp_hdr) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_rmcp_hdr);
-      return (-1);
+      goto cleanup;
     }
   if (fiid_obj_clear (ctx->io.outofband.rq.obj_rmcpplus_session_hdr) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_rmcpplus_session_hdr);
-      return (-1);
+      goto cleanup;
     }
   if (fiid_obj_clear (ctx->io.outofband.rq.obj_lan_msg_hdr) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_lan_msg_hdr);
-      return (-1);
+      goto cleanup;
     }
   if (fiid_obj_clear (ctx->io.outofband.rq.obj_rmcpplus_session_trlr) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_rmcpplus_session_trlr);
-      return (-1);
+      goto cleanup;
     }
 
   if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
+      goto cleanup;
     }
 
-  /* variable based on authentication, etc. 1024 is enough */
+  /* variable based on authentication, etc. 1024 extra is enough */
   pkt_len = cmd_len + 1024;
 
-  pkt = alloca (pkt_len);
-  if (!pkt)
+  if (!(pkt = malloc (pkt_len)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
-  memset (pkt, 0, pkt_len);
+  memset (pkt, '\0', pkt_len);
 
   if (fill_rmcp_hdr_ipmi (ctx->io.outofband.rq.obj_rmcp_hdr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if (fill_rmcpplus_session_hdr (payload_type,
@@ -2044,7 +2045,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                                  ctx->io.outofband.rq.obj_rmcpplus_session_hdr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if (fill_lan_msg_hdr (IPMI_SLAVE_ADDRESS_BMC,
@@ -2054,13 +2055,13 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                         ctx->io.outofband.rq.obj_lan_msg_hdr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if (fill_rmcpplus_session_trlr (ctx->io.outofband.rq.obj_rmcpplus_session_trlr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if ((send_len = assemble_ipmi_rmcpplus_pkt (authentication_algorithm,
@@ -2081,7 +2082,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                                               pkt_len)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && send_len)
@@ -2107,15 +2108,19 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                        sizeof (struct sockaddr_in)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
   if (gettimeofday (&ctx->io.outofband.last_send, NULL) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
+  rv = 0;
+ cleanup:
+  if (pkt)
+    free (pkt);
   return (0);
 }
 

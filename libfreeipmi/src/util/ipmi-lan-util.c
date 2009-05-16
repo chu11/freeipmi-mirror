@@ -26,9 +26,6 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if HAVE_ALLOCA_H
-#include <alloca.h>
-#endif /* HAVE_ALLOCA_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -120,6 +117,7 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
   uint8_t pwbuf[IPMI_1_5_MAX_PASSWORD_LENGTH];
   uint8_t l_authentication_type;
   uint64_t val;
+  uint8_t *buf = NULL;
 
   if (!fiid_obj_valid (obj_lan_session_hdr_rs)
       || !fiid_obj_valid (obj_lan_msg_hdr_rs)
@@ -207,7 +205,6 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
       uint8_t session_id_buf[1024];
       uint8_t session_sequence_number_buf[1024];
       int session_id_len, session_sequence_number_len;
-      uint8_t *buf;
       unsigned int buflen;
 
       if ((session_id_len = fiid_obj_get_data (obj_lan_session_hdr_rs,
@@ -252,10 +249,10 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
         }
 
       buflen = obj_lan_msg_hdr_len + obj_cmd_len + obj_lan_msg_trlr_len;
-      if (!(buf = (uint8_t *)alloca (buflen)))
+      if (!(buf = (uint8_t *)malloc (buflen)))
         {
           ERRNO_TRACE (errno);
-          return (-1);
+          goto cleanup;
         }
 
       if ((obj_len = fiid_obj_get_all (obj_lan_msg_hdr_rs, buf + len, buflen - len)) < 0)
@@ -318,6 +315,8 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
     rv = 0;
 
  cleanup:
+  if (buf)
+    free (buf);
   secure_memset (authentication_code_recv, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   secure_memset (authentication_code_calc, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   secure_memset (pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
@@ -575,9 +574,11 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
   int obj_lan_msg_hdr_len, obj_cmd_len, obj_len;
   unsigned int len = 0;
   uint8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;
-  uint8_t *buf = NULL;
+  uint8_t *buf1 = NULL;
+  uint8_t *buf2 = NULL;
   unsigned int buflen;
   uint64_t val;
+  int rv = -1;
 
   if (!fiid_obj_valid (obj_lan_msg_hdr)
       || !fiid_obj_valid (obj_cmd)
@@ -590,91 +591,103 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs) < 0)
     {
       ERRNO_TRACE (errno);
-      return (-1);
+      goto cleanup;
     }
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_msg_trlr, tmpl_lan_msg_trlr) < 0)
     {
       ERRNO_TRACE (errno);
-      return (-1);
+      goto cleanup;
     }
 
   if ((obj_lan_msg_hdr_len = fiid_obj_len_bytes (obj_lan_msg_hdr)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
-      return (-1);
+      goto cleanup;
     }
   if ((obj_cmd_len = fiid_obj_len_bytes (obj_cmd)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-      return (-1);
+      goto cleanup;
     }
 
   if (FIID_OBJ_GET (obj_lan_msg_hdr, "checksum1", &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
-      return (-1);
+      goto cleanup;
     }
 
   checksum1_recv = val;
 
-  if (!(buf = (uint8_t *)alloca (obj_lan_msg_hdr_len)))
+  if (!(buf1 = (uint8_t *)malloc (obj_lan_msg_hdr_len)))
     {
       ERRNO_TRACE (errno);
-      return (-1);
+      goto cleanup;
     }
 
   if ((obj_len = fiid_obj_get_block (obj_lan_msg_hdr,
                                      "rq_addr",
                                      "net_fn",
-                                     buf,
+                                     buf1,
                                      obj_lan_msg_hdr_len)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
-      return (-1);
+      goto cleanup;
     }
-  checksum1_calc = ipmi_checksum (buf, obj_len);
+  checksum1_calc = ipmi_checksum (buf1, obj_len);
 
   if (checksum1_recv != checksum1_calc)
-    return (0);
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   if (FIID_OBJ_GET (obj_lan_msg_trlr, "checksum2", &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_trlr);
-      return (-1);
+      goto cleanup;
     }
 
   checksum2_recv = val;
 
   buflen = obj_lan_msg_hdr_len + obj_cmd_len;
-  if (!(buf = (uint8_t *)alloca (buflen)))
+  if (!(buf2 = malloc (buflen)))
     {
       ERRNO_TRACE (errno);
-      return (-1);
+      goto cleanup;
     }
 
   if ((obj_len = fiid_obj_get_block (obj_lan_msg_hdr,
                                      "rs_addr",
                                      "rq_seq",
-                                     buf,
+                                     buf2,
                                      buflen - len)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
-      return (-1);
+      goto cleanup;
     }
   len += obj_len;
 
-  if ((obj_len = fiid_obj_get_all (obj_cmd, buf + len, buflen - len)) < 0)
+  if ((obj_len = fiid_obj_get_all (obj_cmd, buf2 + len, buflen - len)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-      return (-1);
+      goto cleanup;
     }
   len += obj_len;
 
-  checksum2_calc = ipmi_checksum (buf, len);
+  checksum2_calc = ipmi_checksum (buf2, len);
   if (checksum2_recv != checksum2_calc)
-    return (0);
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
-  return (1);
+  rv = 1;
+ cleanup:
+  if (buf1)
+    free (buf1);
+  if (buf2)
+    free (buf2);
+  return (rv);
 }
 
 int

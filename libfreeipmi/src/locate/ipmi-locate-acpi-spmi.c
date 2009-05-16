@@ -34,9 +34,6 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
-#if HAVE_ALLOCA_H
-#include <alloca.h>
-#endif /* HAVE_ALLOCA_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -819,14 +816,19 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
   uint8_t *memdata = NULL;
   int acpi_rsdp_descriptor_len;
   size_t i;
+  int rv = -1;
 
   assert (ctx);
   assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
   assert (fiid_obj_valid (obj_acpi_rsdp_descriptor));
   assert (fiid_obj_template_compare (obj_acpi_rsdp_descriptor, tmpl_acpi_rsdp_descriptor) == 1);
 
-  memdata = alloca (rsdp_window_size);
-  memset (memdata, 0, rsdp_window_size);
+  if (!(memdata = malloc (rsdp_window_size)))
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  memset (memdata, '\0', rsdp_window_size);
 
   if ((acpi_rsdp_descriptor_len = fiid_template_len_bytes (tmpl_acpi_rsdp_descriptor)) < 0)
     {
@@ -838,7 +840,7 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
                                    rsdp_window_base_address,
                                    rsdp_window_size,
                                    memdata) < 0)
-    return (-1);
+    goto cleanup;
 
   /* Search from given start address for the requested length  */
   for (i = 0; i < rsdp_window_size; i += IPMI_ACPI_RSDP_SCAN_STEP)
@@ -914,7 +916,8 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
               {
                 /* we found RSDT/XSDT */
                 free (rsdt_xsdt_table);
-                return (0);
+                rv = 0;
+                goto cleanup;
               }
             free (rsdt_xsdt_table);
 
@@ -927,17 +930,19 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
                 goto cleanup;
               }
 
-            if (!(memdata = alloca (acpi_rsdp_descriptor_len)))
+            free (memdata);
+            if (!(memdata = malloc (acpi_rsdp_descriptor_len)))
               {
                 LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
-                return (-1);
+                goto cleanup;
               }
-            memset (memdata, 0, acpi_rsdp_descriptor_len);
+            memset (memdata, '\0', acpi_rsdp_descriptor_len);
+            
             if (_ipmi_get_physical_mem_data (ctx,
                                              rsdt_xsdt_address,
                                              acpi_rsdp_descriptor_len,
                                              memdata) < 0)
-              return (-1);
+              goto cleanup;
 
             /* check RSDP signature */
             if (strncmp ((char *)memdata,
@@ -945,7 +950,7 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
                          strlen (IPMI_ACPI_RSDP_SIG)))
               {
                 LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
-                return (-1);
+                goto cleanup;
               }
 
             /* now check the checksum */
@@ -954,18 +959,21 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
                                            IPMI_ACPI_RSDP_CHECKSUM_LENGTH) != 0)
               {
                 LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
-                return (-1);
+                goto cleanup;
               }
 
             /* we found another RSDP */
             memcpy (obj_acpi_rsdp_descriptor, memdata, acpi_rsdp_descriptor_len);
           }
 
-          return (0);
+          rv = 0;
+          goto cleanup;
         }
     }
 
  cleanup:
+  if (memdata)
+    free (memdata);
   return (-1);
 }
 
@@ -998,13 +1006,13 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
   uint64_t val;
 
   uint8_t table_signature_length;
-  char *table_signature;
+  char *table_signature = NULL;
 
   fiid_obj_t obj_acpi_table_hdr = NULL;
-  uint8_t *acpi_table_buf;
+  uint8_t *acpi_table_buf = NULL;
   uint32_t table_length = 0;
   int acpi_table_hdr_length;
-  uint8_t *table;
+  uint8_t *table = NULL;
   int len;
   int rv = -1;
 
@@ -1021,8 +1029,12 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
     }
 
   table_signature_length = len + 1;
-  table_signature = alloca (table_signature_length);
-  memset (table_signature, 0, table_signature_length);
+  if (!(table_signature = malloc (table_signature_length)))
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  memset (table_signature, '\0', table_signature_length);
 
   if ((acpi_table_hdr_length = fiid_template_len_bytes (tmpl_acpi_table_hdr)) < 0)
     {
@@ -1036,9 +1048,12 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
       goto cleanup;
     }
 
-  acpi_table_buf = alloca (acpi_table_hdr_length);
-
-  memset (acpi_table_buf, 0, acpi_table_hdr_length);
+  if (!(acpi_table_buf = malloc (acpi_table_hdr_length)))
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  memset (acpi_table_buf, '\0', acpi_table_hdr_length);
 
   if (_ipmi_get_physical_mem_data (ctx,
                                    table_address,
@@ -1078,8 +1093,13 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
     }
   table_length = val;
 
-  table = alloca (table_length);
-  memset (table, 0, table_length);
+  if (!(table = malloc (table_length)))
+    {
+      LOCATE_ERRNO_TO_LOCATE_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  memset (table, '\0', table_length);
+
   if (_ipmi_get_physical_mem_data (ctx,
                                    table_address,
                                    table_length,
@@ -1104,6 +1124,12 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
 
   rv = 0;
  cleanup:
+  if (table_signature)
+    free (table_signature);
+  if (acpi_table_buf)
+    free (acpi_table_buf);
+  if (table)
+    free (table);
   fiid_obj_destroy (obj_acpi_table_hdr);
   return (rv);
 }

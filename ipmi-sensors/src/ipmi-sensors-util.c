@@ -91,6 +91,7 @@ get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
   unsigned int num_messages = 0;
   unsigned int count = 0;
   unsigned int i;
+  int j;
 
   assert (state_data);
   assert (event_message_list);
@@ -113,16 +114,16 @@ get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
    * 'ipmi_get_generic_event_message'.
    */
 
-  for (i = 5; i >= 0; i--)
+  for (j = 5; j >= 0; j--)
     {
       char buf[IPMI_SENSORS_BUFLEN];
       uint16_t bit;
 
-      bit = 0x1 << i;
+      bit = 0x1 << j;
 
       if (sensor_event_bitmask & bit)
         {
-          if (ipmi_get_threshold_message (i,
+          if (ipmi_get_threshold_message (j,
                                           buf,
                                           IPMI_SENSORS_BUFLEN) < 0)
             continue;

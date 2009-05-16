@@ -25,9 +25,6 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if HAVE_ALLOCA_H
-#include <alloca.h>
-#endif /* HAVE_ALLOCA_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -791,10 +788,11 @@ ipmi_lan_sendto (int s,
                  const struct sockaddr *to,
                  socklen_t tolen)
 {
-  void *_buf;
+  void *_buf = NULL;
   ssize_t bytes_sent;
   size_t _len;
   size_t pad_len = 0;
+  ssize_t rv = -1;
 
   if (!buf
       || !len)
@@ -819,31 +817,35 @@ ipmi_lan_sendto (int s,
       || _len == 128
       || _len == 156)
     pad_len += IPMI_LAN_PKT_PAD_SIZE;
-
+  
   _len += pad_len;
-
+  
   if (_len < pad_len)
     {
       SET_ERRNO (EMSGSIZE);
-      return (-1);
+      goto cleanup;
     }
-
-  if (!(_buf = alloca (_len)))
+  
+  if (!(_buf = malloc (_len)))
     {
       ERRNO_TRACE (errno);
-      return (-1);
+      goto cleanup;
     }
-
+  
   memset (_buf, 0, _len);
   memcpy (_buf, buf, len);
-
+  
   if ((bytes_sent = sendto (s, _buf, _len, flags, to, tolen)) < 0)
     {
       ERRNO_TRACE (errno);
-      return (-1);
+      goto cleanup;
     }
-
-  return (bytes_sent - pad_len);
+  
+  rv = (bytes_sent - pad_len);
+ cleanup:
+  if (_buf)
+    free (_buf);
+  return (rv);
 }
 
 ssize_t
