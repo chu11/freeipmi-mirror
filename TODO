@@ -2,6 +2,11 @@ ipmi-locate
 -----------
 (TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi
 
+hostrange
+---------
+exclude hosts option
+if user inputs hostname of localhost, do inband not outofband?
+
 general
 -------
 close error
