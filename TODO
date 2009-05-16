@@ -2,6 +2,10 @@ ipmi-locate
 -----------
 (TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi
 
+general
+-------
+close error
+
 freeipmi tools
 --------------
 config via environment variables too - like config file
