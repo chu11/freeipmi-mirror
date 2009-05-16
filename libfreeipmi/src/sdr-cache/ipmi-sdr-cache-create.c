@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.35 2009-05-16 05:29:56 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.36 2009-05-16 05:36:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -761,6 +761,12 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   if (record_count_written != ctx->record_count)
     {
       SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_CREATE_INVALID_RECORD_COUNT);
+      goto cleanup;
+    }
+
+  if (fsync (fd) < 0)
+    {
+      SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM (ctx, errno);
       goto cleanup;
     }
 

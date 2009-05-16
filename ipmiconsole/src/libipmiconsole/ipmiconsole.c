@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.98 2009-05-15 18:02:40 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.99 2009-05-16 05:36:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -252,7 +252,9 @@ _ipmiconsole_blocking_notification_cleanup (ipmiconsole_ctx_t c)
 
   if (c->blocking.blocking_submit_requested)
     {
+      /* ignore potential error, cleanup path */
       close (c->blocking.blocking_notification[0]);
+      /* ignore potential error, cleanup path */
       close (c->blocking.blocking_notification[1]);
       c->blocking.blocking_notification[0] = -1;
       c->blocking.blocking_notification[1] = -1;

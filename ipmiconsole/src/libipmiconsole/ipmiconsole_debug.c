@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.c,v 1.18 2009-03-04 22:39:37 chu11 Exp $
+ *  $Id: ipmiconsole_debug.c,v 1.19 2009-05-16 05:36:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -96,6 +96,7 @@ ipmiconsole_debug_cleanup (void)
 {
   if (console_debug_flags & IPMICONSOLE_DEBUG_FILE && console_debug_fd >= 0)
     {
+      /* ignore potential error, cleanup path */
       close (console_debug_fd);
       console_debug_fd = -1;
     }

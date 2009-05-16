@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.63 2009-05-15 18:02:40 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.64 2009-05-16 05:36:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -484,6 +484,7 @@ main (int argc, char **argv)
   if (fd >= 0)
     {
       printf ("\r\n[closing the connection]\r\n");
+      /* ignore potential error, cleanup path */
       close (fd);
     }
   ipmiconsole_ctx_destroy (c);

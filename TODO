@@ -7,12 +7,6 @@ hostrange
 exclude hosts option
 if user inputs hostname of localhost, do inband not outofband?
 
-general
--------
-close error
-close w/ fsync
-munmap
-
 freeipmi tools
 --------------
 config via environment variables too - like config file

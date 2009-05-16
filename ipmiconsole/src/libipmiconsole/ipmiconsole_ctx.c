@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.51 2009-05-03 17:40:28 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.52 2009-05-16 05:36:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -323,6 +323,7 @@ ipmiconsole_ctx_debug_cleanup (ipmiconsole_ctx_t c)
 
   if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE && c->debug.debug_fd >= 0)
     {
+      /* ignore potential error, cleanup path */
       close (c->debug.debug_fd);
       c->debug.debug_fd = -1;
     }
@@ -707,15 +708,18 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
    */
   if (c->config.engine_flags & IPMICONSOLE_ENGINE_CLOSE_FD)
     {
+      /* ignore potential error, cleanup path */
       if (c->connection.user_fd >= 0)
         close (c->connection.user_fd);
     }
+  /* ignore potential error, cleanup path */
   if (c->connection.ipmiconsole_fd >= 0)
     close (c->connection.ipmiconsole_fd);
   if (c->connection.console_remote_console_to_bmc)
     scbuf_destroy (c->connection.console_remote_console_to_bmc, secure_malloc_flag);
   if (c->connection.console_bmc_to_remote_console)
     scbuf_destroy (c->connection.console_bmc_to_remote_console, secure_malloc_flag);
+  /* ignore potential error, cleanup path */
   if (c->connection.ipmi_fd >= 0)
     close (c->connection.ipmi_fd);
   if (c->connection.ipmi_from_bmc)
@@ -1091,8 +1095,11 @@ ipmiconsole_ctx_fds_cleanup (ipmiconsole_ctx_t c)
    * engine.  Closing asynccomm[1] first could result in a EPIPE
    * instead.
    */
+  /* ignore potential error, cleanup path */
   close (c->fds.user_fd);
+  /* ignore potential error, cleanup path */
   close (c->fds.asynccomm[0]);
+  /* ignore potential error, cleanup path */
   close (c->fds.asynccomm[1]);
   c->fds.user_fd = -1;
   c->fds.asynccomm[0] = -1;

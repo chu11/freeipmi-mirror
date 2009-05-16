@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.86 2009-05-15 18:02:40 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.87 2009-05-16 05:36:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -296,7 +296,9 @@ ipmiconsole_engine_setup (unsigned int thread_count)
           pthread_mutex_destroy (&console_engine_ctxs_mutex[i]);
         }
       console_engine_ctxs[i] = NULL;
+      /* ignore potential error, cleanup path */
       close (console_engine_ctxs_notifier[i][0]);
+      /* ignore potential error, cleanup path */
       close (console_engine_ctxs_notifier[i][1]);
     }
   if (console_engine_ctxs_to_destroy)
@@ -304,6 +306,7 @@ ipmiconsole_engine_setup (unsigned int thread_count)
   console_engine_ctxs_to_destroy = NULL;
   garbage_collector_notifier[0] = -1;
   garbage_collector_notifier[1] = -1;
+  /* ignore potential error, cleanup path */
   close (dummy_fd);
   dummy_fd = -1;
 
@@ -1329,10 +1332,14 @@ ipmiconsole_engine_cleanup (int cleanup_sol_sessions)
       console_engine_ctxs[i] = NULL;
       console_engine_ctxs[i] = 0;
       pthread_mutex_destroy (&console_engine_ctxs_mutex[i]);
+      /* ignore potential error, cleanup path */
       close (console_engine_ctxs_notifier[i][0]);
+      /* ignore potential error, cleanup path */
       close (console_engine_ctxs_notifier[i][1]);
     }
+  /* ignore potential error, cleanup path */
   close (garbage_collector_notifier[0]);
+  /* ignore potential error, cleanup path */
   close (garbage_collector_notifier[1]);
 
   /* Note: logic with garbage collector thread ensures it won't race
@@ -1345,6 +1352,7 @@ ipmiconsole_engine_cleanup (int cleanup_sol_sessions)
   list_destroy (console_engine_ctxs_to_destroy);
   console_engine_ctxs_to_destroy = NULL;
 
+  /* ignore potential error, cleanup path */
   close (dummy_fd);
   dummy_fd = -1;
 
