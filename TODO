@@ -80,6 +80,9 @@ IPv6
 ----
 - well, IPMI only supports IPv4, so I suppose there is no need for
 this for now.  Just watch for it in the future.
+- or make sure tools work w/ IPv6, and assume BMCs can see IPv6 mapped
+IPv4 addresses?
+- or .... and assume OEM extensions to support IPv6?
 
 ipmb
 ----
