@@ -1,3 +1,8 @@
+0.7.10 - XX/XX/XX
+-----------------
+o In bmc-config, fix bug setting volatile vs. non-volatile settings.
+
+
 0.7.9 - 05/15/09
 ----------------
 o In bmc-config, fix diff check for "Password20" field.
