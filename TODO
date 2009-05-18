@@ -49,8 +49,8 @@ sensor type = 0xc1
 sensor number = 0x81 (BIOS Start)
 event type = 0x70 (oem)
 event data 1 = 0xA0
-event data 2 = 0x01 (BIOS major version)
-event data 3 = 0x18 (BIOS minor version)
+event data 2 = 0x01 (BIOS major version) (hex output)
+event data 3 = 0x18 (BIOS minor version) (hex output)
 
 sensors/monitoring
 ------------------
