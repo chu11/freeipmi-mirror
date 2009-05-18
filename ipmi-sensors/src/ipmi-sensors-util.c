@@ -118,14 +118,14 @@ get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
     {
       char buf[IPMI_SENSORS_BUFLEN];
       uint16_t bit;
-
+      
       bit = 0x1 << j;
 
       if (sensor_event_bitmask & bit)
         {
           if (ipmi_get_threshold_message (j,
                                           buf,
-                                          IPMI_SENSORS_BUFLEN) < 0)
+                                          IPMI_SENSORS_BUFLEN) <= 0)
             continue;
 
           if (!(tmp_message_list[num_messages] = strdup (buf)))
@@ -230,10 +230,13 @@ get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
               continue;
             }
 
-          if (!(tmp_message_list[num_messages++] = strdup (buf)))
+          if (ret)
             {
-              pstdout_perror (state_data->pstate, "strdup");
-              goto cleanup;
+              if (!(tmp_message_list[num_messages++] = strdup (buf)))
+                {
+                  pstdout_perror (state_data->pstate, "strdup");
+                  goto cleanup;
+                }
             }
         }
     }
@@ -327,10 +330,13 @@ get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_da
               continue;
             }
 
-          if (!(tmp_message_list[num_messages++] = strdup (buf)))
+          if (ret)
             {
-              pstdout_perror (state_data->pstate, "strdup");
-              goto cleanup;
+              if (!(tmp_message_list[num_messages++] = strdup (buf)))
+                {
+                  pstdout_perror (state_data->pstate, "strdup");
+                  goto cleanup;
+                }
             }
         }
     }

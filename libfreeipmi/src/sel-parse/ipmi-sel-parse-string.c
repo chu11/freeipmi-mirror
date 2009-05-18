@@ -673,7 +673,7 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
                                             system_event_record_data.offset_from_event_reading_type_code,
                                             tmpbuf,
                                             EVENT_BUFFER_LENGTH);
-      if (!ret)
+      if (ret > 0)
         output_flag++;
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE:
@@ -681,7 +681,7 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
                                                system_event_record_data.offset_from_event_reading_type_code,
                                                tmpbuf,
                                                EVENT_BUFFER_LENGTH);
-      if (!ret)
+      if (ret > 0)
         output_flag++;
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
@@ -842,7 +842,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
                                               system_event_record_data.event_data2,
                                               tmpbuf,
                                               EVENT_BUFFER_LENGTH);
-          if (!ret)
+          if (ret > 0)
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
@@ -905,7 +905,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
                                                     previous_offset_from_event_reading_type_code,
                                                     tmppreviousbuf,
                                                     EVENT_BUFFER_LENGTH);
-                if (!ret)
+                if (ret > 0)
                   {
                     snprintf (tmpbuf,
                               EVENT_BUFFER_LENGTH,
@@ -920,7 +920,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
                                                       offset_from_severity_event_reading_type_code,
                                                       tmpseveritybuf,
                                                       EVENT_BUFFER_LENGTH);
-                if (!ret)
+                if (ret > 0)
                   {
                     snprintf (tmpbuf,
                               EVENT_BUFFER_LENGTH,
@@ -954,7 +954,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
                                               system_event_record_data.event_data2,
                                               tmpbuf,
                                               EVENT_BUFFER_LENGTH);
-          if (!ret)
+          if (ret > 0)
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
@@ -1126,7 +1126,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
                                               system_event_record_data.event_data3,
                                               tmpbuf,
                                               EVENT_BUFFER_LENGTH);
-          if (!ret)
+          if (ret > 0)
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
@@ -1173,7 +1173,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
                                               system_event_record_data.event_data3,
                                               tmpbuf,
                                               EVENT_BUFFER_LENGTH);
-          if (!ret)
+          if (ret > 0)
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
@@ -1494,7 +1494,7 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
                                               previous_offset_from_event_reading_type_code,
                                               tmpstatebuf,
                                               EVENT_BUFFER_LENGTH);
-          if (!ret)
+          if (ret > 0)
             {
               snprintf (tmpbuf,
                         EVENT_BUFFER_LENGTH,
@@ -1509,7 +1509,7 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
                                                 offset_from_severity_event_reading_type_code,
                                                 tmpstatebuf,
                                                 EVENT_BUFFER_LENGTH);
-          if (!ret)
+          if (ret > 0)
             {
               snprintf (tmpbuf,
                         EVENT_BUFFER_LENGTH,

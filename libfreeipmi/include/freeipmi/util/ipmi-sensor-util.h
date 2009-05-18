@@ -26,6 +26,7 @@ extern "C" {
 
 #include <stdint.h>
 
+/* return length of string written into buffer on success, -1 on error */
 int ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen);
 
 const char *ipmi_get_sensor_type_string (uint8_t sensor_type);

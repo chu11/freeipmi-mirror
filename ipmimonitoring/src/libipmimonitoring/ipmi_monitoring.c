@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.57 2009-05-15 18:02:41 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.58 2009-05-18 22:29:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -942,7 +942,7 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
 
       if (ipmi_get_threshold_message (offset,
                                       buffer,
-                                      buflen) < 0)
+                                      buflen) <= 0)
         {
           if (errno == EINVAL)
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;

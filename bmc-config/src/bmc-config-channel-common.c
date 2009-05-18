@@ -93,7 +93,7 @@ _get_key_info (bmc_config_state_data_t *state_data,
     return (ret);
 
   /* Must check for Non_Volatile b/c Volatile is a substring of the former */
-  if (stristr (section_name, "Non_Volatile"))
+  if (stristr (key_name, "Non_Volatile"))
     *access_type = IPMI_CHANNEL_ACCESS_GET_NON_VOLATILE;
   else
     *access_type = IPMI_CHANNEL_ACCESS_GET_VOLATILE;
@@ -122,7 +122,7 @@ _set_key_info (bmc_config_state_data_t *state_data,
     return (ret);
 
   /* Must check for Non_Volatile b/c Volatile is a substring of the former */
-  if (stristr (section_name, "Non_Volatile"))
+  if (stristr (key_name, "Non_Volatile"))
     *access_type = IPMI_CHANNEL_ACCESS_SET_NON_VOLATILE;
   else
     *access_type = IPMI_CHANNEL_ACCESS_SET_VOLATILE;

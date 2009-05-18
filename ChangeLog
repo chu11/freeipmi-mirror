@@ -1,3 +1,12 @@
+2009-05-18  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-config-channel-common.c (_get_key_info,
+	_set_key_info): Fix set volatile vs. set non-volatile bug.
+	
+2009-05-18  Albert Chu <chu11@llnl.gov>
+
+	* Fix API change resulting bugs.
+	
 2009-05-15  Albert Chu <chu11@llnl.gov>
 
 	* Remove use of 'alloca', check return unlink, close, munmap as

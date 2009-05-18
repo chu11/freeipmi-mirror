@@ -70,7 +70,7 @@ ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen)
       return (-1);
     }
 
-  return (0);
+  return (rv);
 }
 
 const char *
