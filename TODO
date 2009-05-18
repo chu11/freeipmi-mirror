@@ -31,6 +31,27 @@ copy ipmi-oem stuff in
 - into lan_conf?  or into new section?
 - no, oem specific and will reboot BMC
 
+ipmi-oem
+--------
+inventec disable ports
+inventec user disable
+
+sensors/monitoring/sel
+----------------------
+oem interpretation option/output
+
+sel oem
+-------
+dell
+"BMC enabled by BIOS"
+generator id = 0x01
+sensor type = 0xc1
+sensor number = 0x81 (BIOS Start)
+event type = 0x70 (oem)
+event data 1 = 0xA0
+event data 2 = 0x01 (BIOS major version)
+event data 3 = 0x18 (BIOS minor version)
+
 sensors/monitoring
 ------------------
 (TEST) make sure bridging still works w/ sensor-read lib
