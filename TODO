@@ -1,3 +1,7 @@
+inband
+------
+--file-if-ipmi-not-detected
+
 ipmi-locate
 -----------
 (TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi
