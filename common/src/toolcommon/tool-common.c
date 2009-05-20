@@ -221,7 +221,7 @@ ipmi_open (const char *progname,
            * be found via probing.  Do it before probing for KCS/SSIF,
            * because it is possible, even though the SunBMC/OpenIPMI
            * driver is installed, probing may find KCS/SSIF anyways,
-           * and try to use those.
+           * and try to use those first/instead.
            */
           if (!ipmi_ctx_open_inband (ipmi_ctx,
                                      IPMI_DEVICE_SUNBMC,
