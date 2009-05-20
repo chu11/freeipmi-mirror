@@ -1,6 +1,8 @@
 0.7.10 - XX/XX/XX
 -----------------
 o In bmc-config, fix bug setting volatile vs. non-volatile settings.
+o Fix in-band probing priority ordering to fix issues with machines
+  that support multiple drivers.
 
 
 0.7.9 - 05/15/09

@@ -204,6 +204,34 @@ ipmi_open(const char *progname,
         {
           struct ipmi_locate_info locate_info;
 
+          /* achu
+           *
+           * Try SunBMC and OpenIPMI drivers first, since they cannot
+           * be found via probing.  Do it before probing for KCS/SSIF,
+           * because it is possible, even though the SunBMC/OpenIPMI
+           * driver is installed, probing may find KCS/SSIF anyways,
+           * and try to use those.
+           */
+          if (!ipmi_ctx_open_inband (ipmi_ctx,
+                                     IPMI_DEVICE_SUNBMC,
+                                     cmd_args->disable_auto_probe,
+                                     cmd_args->driver_address,
+                                     cmd_args->register_spacing,
+                                     cmd_args->driver_device,
+                                     workaround_flags,
+                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
+            goto out;
+ 
+          if (!ipmi_ctx_open_inband (ipmi_ctx,
+                                     IPMI_DEVICE_OPENIPMI,
+                                     cmd_args->disable_auto_probe,
+                                     cmd_args->driver_address,
+                                     cmd_args->register_spacing,
+                                     cmd_args->driver_device,
+                                     workaround_flags,
+                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
+            goto out;
+
           /* achu: 
            * 
            * If one of KCS or SSIF is found, we try that one first.
@@ -243,26 +271,6 @@ ipmi_open(const char *progname,
                 goto out;
             }
           
-          if (!ipmi_ctx_open_inband (ipmi_ctx,
-                                     IPMI_DEVICE_SUNBMC,
-                                     cmd_args->disable_auto_probe,
-                                     cmd_args->driver_address,
-                                     cmd_args->register_spacing,
-                                     cmd_args->driver_device,
-                                     workaround_flags,
-                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
-            goto out;
-
-          if (!ipmi_ctx_open_inband (ipmi_ctx,
-                                     IPMI_DEVICE_OPENIPMI,
-                                     cmd_args->disable_auto_probe,
-                                     cmd_args->driver_address,
-                                     cmd_args->register_spacing,
-                                     cmd_args->driver_device,
-                                     workaround_flags,
-                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
-            goto out;
-
           if (!ipmi_ctx_open_inband (ipmi_ctx,
                                      IPMI_DEVICE_KCS,
                                      cmd_args->disable_auto_probe,
