@@ -1,3 +1,9 @@
+2009-05-19  Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolcommon/tool-common.c: Attempt OpenIPMI and SunBMC
+	drivers first, since they cannot be discovered via probing, and to
+	avoid accidently using the KCS driver first.
+	
 2009-05-18  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-config-channel-common.c (_get_key_info,
