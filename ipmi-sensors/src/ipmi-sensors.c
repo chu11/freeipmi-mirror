@@ -577,6 +577,15 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                                                   IPMI_SENSORS_NO_EVENT_STRING) < 0)
         goto cleanup;
     }
+#if 0
+  /* No OEM sensors to interpret at this moment in time */
+  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
+           && state_data->prog_data->args->interpret_oem_sensors
+           && state_data->manufacturer_id == FOO
+           && state_data->product_id == FOO)
+    {
+    }
+#endif
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM)
     {
       char *event_message = NULL;
@@ -644,14 +653,60 @@ static int
 _display_sensors (ipmi_sensors_state_data_t *state_data)
 {
   struct ipmi_sensors_arguments *args = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
   unsigned int i;
+  int rv = -1;
 
   assert (state_data);
 
   args = state_data->prog_data->args;
 
+  if (args->interpret_oem_sensors)
+    {
+      uint64_t val;
+
+      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_create: %s\n",
+                           strerror (errno));
+          goto cleanup;
+        }
+      
+      if (ipmi_cmd_get_device_id (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+        {
+          if (state_data->prog_data->args->common.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_get_device_id: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+
+      if (FIID_OBJ_GET (obj_cmd_rs, "manufacturer_id.id", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'manufacturer_id.id': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      state_data->manufacturer_id = val;
+
+      if (FIID_OBJ_GET (obj_cmd_rs, "product_id", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'product_id': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      state_data->product_id = val;
+    }
+
   if (_output_setup (state_data) < 0)
-    return (-1);
+    goto cleanup;
 
   if (args->record_ids_length)
     {
@@ -676,7 +731,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                                    stderr,
                                    "ipmi_sdr_cache_search_record_id: %s\n",
                                    ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-                  return (-1);
+                  goto cleanup;
                 }
             }
 
@@ -688,7 +743,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                                stderr,
                                "ipmi_sdr_cache_record_read: %s\n",
                                ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-              return (-1);
+              goto cleanup;
             }
 
           /* Shouldn't be possible */
@@ -698,7 +753,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
           if (_output_sensor (state_data,
                               sdr_record,
                               sdr_record_len) < 0)
-            return (-1);
+            goto cleanup;
         }
     }
   else
@@ -711,7 +766,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                            stderr,
                            "ipmi_sdr_cache_record_count: %s\n",
                            ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-          return (-1);
+          goto cleanup;
         }
 
       for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
@@ -728,7 +783,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                                stderr,
                                "ipmi_sdr_cache_record_read: %s\n",
                                ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
-              return (-1);
+              goto cleanup;
             }
 
           /* Shouldn't be possible */
@@ -743,7 +798,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                                                      sdr_record_len,
                                                      state_data->prog_data->args->groups,
                                                      state_data->prog_data->args->groups_length)) < 0)
-                return (-1);
+                goto cleanup;
             }
           else
             ret = 1;            /* accept all */
@@ -753,12 +808,15 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
               if (_output_sensor (state_data,
                                   sdr_record,
                                   sdr_record_len) < 0)
-                return (-1);
+                goto cleanup;
             }
         }
     }
 
-  return (0);
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
 }
 
 static int

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.73 2009-05-15 18:02:41 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.74 2009-05-21 22:56:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1134,6 +1134,16 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
                                     sdr_record_len) < 0)
         return (-1);
     }
+#if 0
+  /* No OEM sensors to interpret at this moment in time */
+  else if (IPMI_EVENT_READING_TYPE_CODE_IS_OEM (event_reading_type_code)
+           && (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_SENSORS)
+           && c->manufacturer_id == FOO
+           && c->product_id == FOO)
+    {
+      
+    }
+#endif
   else
     {
       IPMI_MONITORING_DEBUG (("event_reading_type_code '0x%X' not supported",

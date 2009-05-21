@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.44 2009-04-30 15:41:39 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.45 2009-05-21 22:56:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -223,6 +223,7 @@ enum ipmi_monitoring_sensor_reading_flags
     IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE                 = 0x00000001,
     IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS = 0x00000002,
     IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS                   = 0x00000004,
+    IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_SENSORS            = 0x00000008,
     IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS        = 0x00000002, /* legacy macro */
   };
 

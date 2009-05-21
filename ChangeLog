@@ -1,3 +1,11 @@
+2009-05-20  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/libipmimonitoring/: Support
+	IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_SENSORS flag.
+
+	* common/src/toolcommon, common/man/, ipmi-sensors/,
+	ipmimonitoring/src/ipmimonitoring/: Support --interpret-oem-sensors option.
+	
 2009-05-19  Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolcommon/tool-common.c: Attempt OpenIPMI and SunBMC

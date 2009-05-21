@@ -118,6 +118,8 @@ struct config_file_data_ipmi_sensors
   int record_ids_count;
   int bridge_sensors;
   int bridge_sensors_count;
+  int interpret_oem_sensors;
+  int interpret_oem_sensors_count;
   int comma_separated_output_count;
   int comma_separated_output;
   int non_abbreviated_units;
@@ -156,6 +158,8 @@ struct config_file_data_ipmimonitoring
   int record_ids_count;
   int bridge_sensors;
   int bridge_sensors_count;
+  int interpret_oem_sensors;
+  int interpret_oem_sensors_count;
   int ignore_non_interpretable_sensors;
   int ignore_non_interpretable_sensors_count;
   int comma_separated_output_count;

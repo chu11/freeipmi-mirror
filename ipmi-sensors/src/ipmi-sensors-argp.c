@@ -92,12 +92,14 @@ static struct argp_option cmdline_options[] =
       "Show sensors by record id.  Accepts space or comma separated lists", 37},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
       "Bridge addresses to read non-BMC owned sensors.", 38},
+    { "interpret-oem-sensors", INTERPRET_OEM_SENSORS, NULL, 0,
+      "Attempt to interpret data in OEM sensors.", 39},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 39},
+      "Output fields in comma separated format.", 40},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 40},
+      "Output non-abbreviated units (i.e. 'Amps' insetead of 'A').", 41},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 41},
+      "Output in legacy format.", 42},
     { 0 }
   };
 
@@ -184,6 +186,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
       break;
+    case INTERPRET_OEM_SENSORS:
+      cmd_args->interpret_oem_sensors = 1;
+      break;
     case COMMA_SEPARATED_OUTPUT_KEY:
       cmd_args->comma_separated_output = 1;
       break;
@@ -262,6 +267,8 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
+  if (config_file_data.interpret_oem_sensors_count)
+    cmd_args->interpret_oem_sensors = config_file_data.interpret_oem_sensors;
   if (config_file_data.comma_separated_output_count)
     cmd_args->comma_separated_output = config_file_data.comma_separated_output;
   if (config_file_data.non_abbreviated_units_count)
@@ -341,6 +348,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
           sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
   cmd_args->record_ids_length = 0;
   cmd_args->bridge_sensors = 0;
+  cmd_args->interpret_oem_sensors = 0;
   cmd_args->comma_separated_output = 0;
   cmd_args->non_abbreviated_units = 0;
   cmd_args->legacy_output = 0;

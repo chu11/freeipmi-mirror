@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.26 2009-04-08 20:47:07 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.27 2009-05-21 22:56:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -105,7 +105,8 @@
 #define IPMI_MONITORING_SENSOR_READING_FLAGS_MASK                   \
   (IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE            \
    | IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS \
-   | IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS)
+   | IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS            \
+   | IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_SENSORS)
 
 #define IPMI_MONITORING_AUTHENTICATION_TYPE_DEFAULT           IPMI_AUTHENTICATION_TYPE_MD5
 #define IPMI_MONITORING_PRIVILEGE_LEVEL_DEFAULT               IPMI_PRIVILEGE_LEVEL_USER
@@ -157,6 +158,9 @@ struct ipmi_monitoring_ctx {
   Ipmi_Monitoring_Sensor_Readings_Callback callback;
   void *callback_data;
   struct ipmi_monitoring_sensor_reading *callback_sensor_reading;
+
+  uint32_t manufacturer_id;
+  uint16_t product_id;
 };
 
 #endif /* _IPMI_MONITORING_DEFS_H */

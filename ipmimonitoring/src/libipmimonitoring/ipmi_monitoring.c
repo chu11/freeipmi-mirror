@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.58 2009-05-18 22:29:39 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.59 2009-05-21 22:56:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -334,6 +334,76 @@ ipmi_monitoring_sdr_cache_filenames (const char *format, int *errnum)
 }
 
 static int
+_ipmi_monitoring_sensor_readings_flags_common (ipmi_monitoring_ctx_t c,
+                                               const char *hostname,
+                                               struct ipmi_monitoring_ipmi_config *config,
+                                               unsigned int sensor_reading_flags)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (_ipmi_monitoring_initialized);
+  assert (!(sensor_reading_flags & ~IPMI_MONITORING_SENSOR_READING_FLAGS_MASK));
+
+  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE)
+    {
+      if (ipmi_monitoring_sdr_cache_flush (c, hostname) < 0)
+        goto cleanup;
+    }
+
+  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS)
+    {
+      if (ipmi_sensor_read_ctx_set_flags (c->sensor_read_ctx, IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("ipmi_sensor_read_ctx_set_flags: %s", ipmi_sensor_read_ctx_errormsg (c->sensor_read_ctx)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          goto cleanup;
+        }
+    }
+
+  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_SENSORS)
+    {
+      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
+        {
+          IPMI_MONITORING_DEBUG (("fiid_obj_create: %s", strerror(errno)));
+          c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
+          goto cleanup;
+        }
+
+      if (ipmi_cmd_get_device_id (c->ipmi_ctx, obj_cmd_rs) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("ipmi_cmd_get_device_id: %s", ipmi_ctx_errormsg (c->ipmi_ctx)));
+          ipmi_monitoring_ipmi_ctx_error_convert (c);
+          goto cleanup;
+        }
+
+      if (FIID_OBJ_GET (obj_cmd_rs, "manufacturer_id.id", &val) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("FIID_OBJ_GET: %s", fiid_obj_errormsg (obj_cmd_rs)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          goto cleanup;
+        }
+      c->manufacturer_id = val;
+          
+      if (FIID_OBJ_GET (obj_cmd_rs, "product_id", &val) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("FIID_OBJ_GET: %s", fiid_obj_errormsg (obj_cmd_rs)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          goto cleanup;
+        }
+      c->product_id = val;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
 _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
                                                const char *hostname,
                                                struct ipmi_monitoring_ipmi_config *config,
@@ -358,21 +428,11 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
   if (ipmi_monitoring_sensor_reading_init (c) < 0)
     goto cleanup;
 
-  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE)
-    {
-      if (ipmi_monitoring_sdr_cache_flush (c, hostname) < 0)
-        goto cleanup;
-    }
-
-  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS)
-    {
-      if (ipmi_sensor_read_ctx_set_flags (c->sensor_read_ctx, IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS) < 0)
-        {
-          IPMI_MONITORING_DEBUG (("ipmi_sensor_read_ctx_set_flags: %s", ipmi_sensor_read_ctx_errormsg (c->sensor_read_ctx)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          goto cleanup;
-        }
-    }
+  if (_ipmi_monitoring_sensor_readings_flags_common (c,
+                                                     hostname,
+                                                     config,
+                                                     sensor_reading_flags) < 0)
+    goto cleanup;
 
   if (ipmi_monitoring_sdr_cache_load (c, hostname) < 0)
     goto cleanup;
@@ -558,21 +618,11 @@ _ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
   if (ipmi_monitoring_sensor_reading_init (c) < 0)
     goto cleanup;
 
-  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE)
-    {
-      if (ipmi_monitoring_sdr_cache_flush (c, hostname) < 0)
-        goto cleanup;
-    }
-
-  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS)
-    {
-      if (ipmi_sensor_read_ctx_set_flags (c->sensor_read_ctx, IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS) < 0)
-        {
-          IPMI_MONITORING_DEBUG (("ipmi_sensor_read_ctx_set_flags: %s", ipmi_sensor_read_ctx_errormsg (c->sensor_read_ctx)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          goto cleanup;
-        }
-    }
+  if (_ipmi_monitoring_sensor_readings_flags_common (c,
+                                                     hostname,
+                                                     config,
+                                                     sensor_reading_flags) < 0)
+    goto cleanup;
 
   if (ipmi_monitoring_sdr_cache_load (c, hostname) < 0)
     goto cleanup;
