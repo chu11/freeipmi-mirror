@@ -790,13 +790,18 @@ manpage for available workarounds.
 Specify default verbose count to use for
 .B ipmi-sel(8).
 .TP
-\Bipmi-sel-system-event-only\fR \fIENABLE|DISABLE\fR
+\fBipmi-sel-system-event-only\fR \fIENABLE|DISABLE\fR
 Specify if output should only include system event records.
 .TP
-\Bipmi-sel-oem-only\fR \fIENABLE|DISABLE\fR
+\fBipmi-sel-oem-only\fR \fIENABLE|DISABLE\fR
 Specify if output should only include OEM event records.
 .TP
-\Bipmi-sel-comma-separated-output\fR \fIENABLE|DISABLE\fR
+\fBipmi-sel-interpret-oem-data\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-sel
+should attempt to interpret OEM data by default or not.
+.TP
+\fBipmi-sel-comma-separated-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be comma separated or not.
 .TP
 \fBipmi-sel-non-abbreviated-units\fR \fIENABLE|DISABLE\fR
@@ -890,10 +895,9 @@ Specify if non-BMC sensors should be bridged by default or not.
 \fBipmi-sensors-interpret-oem-data\fR \fIENABLE|DISABLE\fR
 Specify if
 .B ipmi-sensors
-should attempt to interpret OEM data by
-default or not.
+should attempt to interpret OEM data by default or not.
 .TP
-\Bipmi-sensors-comma-separated-output\fR \fIENABLE|DISABLE\fR
+\fBipmi-sensors-comma-separated-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be comma separated or not.
 .TP
 \fBipmi-sensors-non-abbreviated-units\fR \fIENABLE|DISABLE\fR
@@ -1125,7 +1129,7 @@ should attempt to interpret OEM data by default or not.
 \fBipmimonitoring-ignore-non-interpretable-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-interpretable sensors should be ignored by default or not.
 .TP
-\Bipmimonitoring-comma-separated-output\fR \fIENABLE|DISABLE\fR
+\fBipmimonitoring-comma-separated-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be comma separated or not.
 .TP
 \fBipmimonitoring-non-abbreviated-units\fR \fIENABLE|DISABLE\fR

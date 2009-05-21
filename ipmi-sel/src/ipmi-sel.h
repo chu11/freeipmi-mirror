@@ -40,9 +40,10 @@ enum ipmi_sel_argp_option_keys
     SYSTEM_EVENT_ONLY_KEY = 'N',
     OEM_EVENT_ONLY_KEY = 'O',
     HEX_DUMP_KEY = 'x',
-    COMMA_SEPARATED_OUTPUT_KEY = 160,
-    NON_ABBREVIATED_UNITS_KEY = 161,
-    LEGACY_OUTPUT_KEY = 162,
+    INTERPRET_OEM_DATA = 160,
+    COMMA_SEPARATED_OUTPUT_KEY = 161,
+    NON_ABBREVIATED_UNITS_KEY = 162,
+    LEGACY_OUTPUT_KEY = 163,
   };
 
 struct ipmi_sel_arguments
@@ -68,6 +69,7 @@ struct ipmi_sel_arguments
   int system_event_only;
   int oem_event_only;
   int hex_dump;
+  int interpret_oem_data;
   int comma_separated_output;
   int non_abbreviated_units;
   int legacy_output;

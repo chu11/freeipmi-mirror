@@ -95,6 +95,8 @@ ipmi_sel_parse_ctx_create (ipmi_ctx_t ipmi_ctx, ipmi_sdr_cache_ctx_t sdr_cache_c
   memset (ctx, '\0', sizeof (struct ipmi_sel_parse_ctx));
   ctx->magic = IPMI_SEL_PARSE_CTX_MAGIC;
   ctx->flags = IPMI_SEL_PARSE_FLAGS_DEFAULT;
+  ctx->manufacturer_id = 0;
+  ctx->product_id = 0;
   ctx->debug_prefix = NULL;
   ctx->separator = NULL;
 
@@ -233,6 +235,62 @@ ipmi_sel_parse_ctx_set_flags (ipmi_sel_parse_ctx_t ctx, unsigned int flags)
     }
 
   ctx->flags = flags;
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_ctx_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t *manufacturer_id)
+{
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  *manufacturer_id = ctx->manufacturer_id;
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_ctx_set_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t manufacturer_id)
+{
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  ctx->manufacturer_id = manufacturer_id;
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_ctx_get_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t *product_id)
+{
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  *product_id = ctx->product_id;
+  ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_sel_parse_ctx_set_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t product_id)
+{
+  if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  ctx->product_id = product_id;
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
   return (0);
 }

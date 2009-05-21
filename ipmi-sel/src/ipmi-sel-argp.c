@@ -91,12 +91,14 @@ static struct argp_option cmdline_options[] =
       "Output only OEM event records.", 38},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
       "Hex-dump SEL records.", 39},
+    { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
+      "Attempt to interpret OEM data.", 40},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 40},
+      "Output fields in comma separated format.", 41},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 41},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 42},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 42},
+      "Output in legacy format.", 43},
     { 0 }
   };
 
@@ -283,6 +285,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case HEX_DUMP_KEY:
       cmd_args->hex_dump = 1;
       break;
+    case INTERPRET_OEM_DATA:
+      cmd_args->interpret_oem_data = 1;
+      break;
     case COMMA_SEPARATED_OUTPUT_KEY:
       cmd_args->comma_separated_output = 1;
       break;
@@ -338,6 +343,8 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
     cmd_args->system_event_only = config_file_data.system_event_only;
   if (config_file_data.oem_event_only_count)
     cmd_args->oem_event_only = config_file_data.oem_event_only;
+  if (config_file_data.interpret_oem_data_count)
+    cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
   if (config_file_data.comma_separated_output_count)
     cmd_args->comma_separated_output = config_file_data.comma_separated_output;
   if (config_file_data.non_abbreviated_units_count)
@@ -375,6 +382,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->system_event_only = 0;
   cmd_args->oem_event_only = 0;
   cmd_args->hex_dump = 0;
+  cmd_args->interpret_oem_data = 0;
   cmd_args->comma_separated_output = 0;
   cmd_args->non_abbreviated_units = 0;
   cmd_args->legacy_output = 0;

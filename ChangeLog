@@ -3,9 +3,13 @@
 	* ipmimonitoring/src/libipmimonitoring/: Support
 	IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_SENSORS flag.
 
-	* common/src/toolcommon, ipmi-sensors/,
+	* libfreeipmi/include/freeipmi/sel-parse/,
+	libfreeipmi/src/sel-parse/:
+	IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA.
+
+	* common/src/toolcommon, ipmi-sel/, ipmi-sensors/,
 	ipmimonitoring/src/ipmimonitoring/: Support
-	--interpret-oem-sensors option.
+	--interpret-oem-data option.
 
 	* common/man/manpage-common-interpret-oem-data.man: new file.
 	

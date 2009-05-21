@@ -39,6 +39,7 @@ o ipmi-sel
   - Support --system-event-only and --oem-event-only options.
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
+  - Support --interpret-oem-data option.
   - Support --comma-separated-output option.
   - Output manufacturer name with "Manufacturer ID" if name available.
   - Support sensor unit percentages, rates and modifiers (i.e. "%
@@ -75,7 +76,7 @@ o ipmi-sensors
   - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
     of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
     each other.
-  - Support --interpret-oem-sensors option.
+  - Support --interpret-oem-data option.
   - Output allocation information with --sdr-info if available.
   - Output Entity ID under verbose instead of very verbose mode.
   - Under very verbose output, "Sensor Status" is now "Sensor Event".
@@ -119,7 +120,7 @@ o ipmimonitoring
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
   - Support --comma-separated-output option.
-  - Support --interpret-oem-sensors option.
+  - Support --interpret-oem-data option.
   - Utilize libipmimonitoring callback routines to make sensors output
     as they are read, rather than just at the end.  This removes the
     impression that the tool "hangs" on start.
@@ -254,7 +255,7 @@ o libipmimonitoring
   - Rename IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS
     to IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS.
     Legacy macro still supported.
-  - Add IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_SENSORS flag.
+  - Add IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA flag.
   - Variety of API functions reworked or renamed for new functionality.  Will
     require recompile and rework in existing code.
 

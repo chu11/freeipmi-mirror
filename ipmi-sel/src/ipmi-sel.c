@@ -1320,6 +1320,8 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
     flags |= IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE;
   if (state_data->prog_data->args->non_abbreviated_units)
     flags |= IPMI_SEL_PARSE_STRING_FLAGS_NON_ABBREVIATED_UNITS;
+  if (state_data->prog_data->args->interpret_oem_data)
+    flags |= IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
   if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
@@ -1522,7 +1524,8 @@ static int
 _display_sel_records (ipmi_sel_state_data_t *state_data)
 {
   struct ipmi_sel_arguments *args;
-
+  fiid_obj_t obj_cmd_rs = NULL;
+  int rv = -1;
   assert (state_data);
 
   args = state_data->prog_data->args;
@@ -1536,7 +1539,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                      args->sdr.sdr_cache_recreate,
                                      state_data->hostname,
                                      args->sdr.sdr_cache_directory) < 0)
-        return (-1);
+        goto cleanup;
     }
 
   if (!args->legacy_output)
@@ -1547,7 +1550,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                            stderr,
                            "ipmi_sel_parse: %s\n",
                            ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
-          return (-1);
+          goto cleanup;
         }
 
     }
@@ -1563,7 +1566,73 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                    0,
                                    !state_data->prog_data->args->non_abbreviated_units,
                                    &(state_data->column_width)) < 0)
-        return (-1);
+        goto cleanup;
+    }
+
+  if (args->interpret_oem_data)
+    {
+      uint32_t manufacturer_id;
+      uint16_t product_id;
+      uint64_t val;
+
+      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_create: %s\n",
+                           strerror (errno));
+          goto cleanup;
+        }
+      
+      if (ipmi_cmd_get_device_id (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+        {
+          if (state_data->prog_data->args->common.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_get_device_id: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+
+      if (FIID_OBJ_GET (obj_cmd_rs, "manufacturer_id.id", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'manufacturer_id.id': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      manufacturer_id = val;
+
+      if (FIID_OBJ_GET (obj_cmd_rs, "product_id", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'product_id': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      product_id = val;
+
+      if (ipmi_sel_parse_ctx_set_manufacturer_id (state_data->sel_parse_ctx,
+                                                  manufacturer_id) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse_ctx_set_manufacturer_id: %s\n",
+                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+          goto cleanup;
+        }
+      
+      if (ipmi_sel_parse_ctx_set_product_id (state_data->sel_parse_ctx,
+                                             product_id) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse_ctx_set_product_id: %s\n",
+                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+          goto cleanup;
+        }
     }
 
   if (ipmi_sel_parse (state_data->sel_parse_ctx,
@@ -1574,10 +1643,12 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                        stderr,
                        "ipmi_sel_parse: %s\n",
                        ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
-      return (-1);
+      goto cleanup;
     }
 
-  return (0);
+  rv = 0;
+ cleanup:
+  return (rv);
 }
 
 static int

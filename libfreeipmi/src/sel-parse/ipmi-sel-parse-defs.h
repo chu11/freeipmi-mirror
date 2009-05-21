@@ -57,6 +57,7 @@
    | IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH           \
    | IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING        \
    | IPMI_SEL_PARSE_STRING_FLAGS_NON_ABBREVIATED_UNITS    \
+   | IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA       \
    | IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
 
 struct ipmi_sel_parse_entry {
@@ -68,6 +69,8 @@ struct ipmi_sel_parse_ctx {
   uint32_t magic;
   int errnum;
   unsigned int flags;
+  uint32_t manufacturer_id;
+  uint16_t product_id;
   char *debug_prefix;
   char *separator;
 

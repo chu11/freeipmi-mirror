@@ -55,6 +55,7 @@ extern "C" {
 #define IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH                0x0008
 #define IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING             0x0010
 #define IPMI_SEL_PARSE_STRING_FLAGS_NON_ABBREVIATED_UNITS         0x0020
+#define IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA            0x0100
 #define IPMI_SEL_PARSE_STRING_FLAGS_LEGACY                        0x1000
 
 #define IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD               0x0
@@ -77,9 +78,15 @@ int ipmi_sel_parse_ctx_errnum (ipmi_sel_parse_ctx_t ctx);
 char * ipmi_sel_parse_ctx_strerror (int errnum);
 char * ipmi_sel_parse_ctx_errormsg (ipmi_sel_parse_ctx_t ctx);
 
-/* SEL Parse flag functions */
+/* SEL Parse flag functions and settings functions */
 int ipmi_sel_parse_ctx_get_flags (ipmi_sel_parse_ctx_t ctx, unsigned int *flags);
 int ipmi_sel_parse_ctx_set_flags (ipmi_sel_parse_ctx_t ctx, unsigned int flags);
+/* for use w/ string parsing w/ IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA */
+int ipmi_sel_parse_ctx_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t *manufacturer_id);
+int ipmi_sel_parse_ctx_set_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t manufacturer_id);
+/* for use w/ string parsing w/ IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA */
+int ipmi_sel_parse_ctx_get_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t *product_id);
+int ipmi_sel_parse_ctx_set_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t product_id);
 char *ipmi_sel_parse_ctx_get_debug_prefix (ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_ctx_set_debug_prefix (ipmi_sel_parse_ctx_t ctx, const char *debug_prefix);
 
