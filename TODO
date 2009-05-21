@@ -1,6 +1,7 @@
 inband
 ------
 --file-if-ipmi-not-detected
+and build option??
 
 ipmi-locate
 -----------
