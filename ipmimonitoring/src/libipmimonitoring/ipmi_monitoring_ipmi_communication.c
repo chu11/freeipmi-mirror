@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.31 2009-05-03 05:26:43 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.32 2009-05-21 21:43:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -119,7 +119,7 @@ _inband_init (ipmi_monitoring_ctx_t c,
                                     workaround_flags,
                                     flags) < 0)
             {
-              IPMI_MONITORING_DEBUG (("ipmi_cmd: %s", ipmi_ctx_errormsg (c->ipmi_ctx)));
+              IPMI_MONITORING_DEBUG (("ipmi_ctx_open_inband: %s", ipmi_ctx_errormsg (c->ipmi_ctx)));
 
               if (ipmi_ctx_open_inband (c->ipmi_ctx,
                                         IPMI_DEVICE_KCS,
@@ -130,7 +130,7 @@ _inband_init (ipmi_monitoring_ctx_t c,
                                         workaround_flags,
                                         flags) < 0)
                 {
-                  IPMI_MONITORING_DEBUG (("ipmi_cmd: %s", ipmi_ctx_errormsg (c->ipmi_ctx)));
+                  IPMI_MONITORING_DEBUG (("ipmi_ctx_open_inband: %s", ipmi_ctx_errormsg (c->ipmi_ctx)));
 
                   if (ipmi_ctx_open_inband (c->ipmi_ctx,
                                             IPMI_DEVICE_SSIF,
@@ -141,7 +141,7 @@ _inband_init (ipmi_monitoring_ctx_t c,
                                             workaround_flags,
                                             flags) < 0)
                     {
-                      IPMI_MONITORING_DEBUG (("ipmi_cmd: %s", ipmi_ctx_errormsg (c->ipmi_ctx)));
+                      IPMI_MONITORING_DEBUG (("ipmi_ctx_open_inband: %s", ipmi_ctx_errormsg (c->ipmi_ctx)));
 
                       if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_BMC_BUSY)
                         c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
@@ -189,7 +189,7 @@ _inband_init (ipmi_monitoring_ctx_t c,
                                 workaround_flags,
                                 flags) < 0)
         {
-          IPMI_MONITORING_DEBUG (("ipmi_cmd: %s", ipmi_ctx_errormsg (c->ipmi_ctx)));
+          IPMI_MONITORING_DEBUG (("ipmi_ctx_open_inband: %s", ipmi_ctx_errormsg (c->ipmi_ctx)));
 
           if (ipmi_ctx_errnum (c->ipmi_ctx) == IPMI_ERR_BMC_BUSY)
             c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
