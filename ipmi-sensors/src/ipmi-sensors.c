@@ -580,7 +580,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
 #if 0
   /* No OEM sensors to interpret at this moment in time */
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
-           && state_data->prog_data->args->interpret_oem_sensors
+           && state_data->prog_data->args->interpret_oem_data
            && state_data->manufacturer_id == FOO
            && state_data->product_id == FOO)
     {
@@ -661,7 +661,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (args->interpret_oem_sensors)
+  if (args->interpret_oem_data)
     {
       uint64_t val;
 

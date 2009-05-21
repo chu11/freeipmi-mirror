@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.56 2009-04-21 20:33:43 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.57 2009-05-21 23:06:42 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -87,6 +87,7 @@ The following options are specific to
 Increase verbosity in output.  This option will output additional
 sensors that are generally unreadable or uninterpretable.
 #include <@top_srcdir@/common/man/manpage-common-sensor-common.man>
+#include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 .TP
 \fB\-i\fR, \fB\-\-ignore\-non\-interpretable\-sensors\fR
 Ignore non-interpretable sensors in output.

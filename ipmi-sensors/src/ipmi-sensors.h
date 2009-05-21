@@ -37,7 +37,7 @@ enum ipmi_sensors_argp_option_keys
     SENSORS_KEY = 's',          /* legacy */
     RECORD_IDS_KEY = 'r',
     BRIDGE_SENSORS_KEY = 'b',
-    INTERPRET_OEM_SENSORS = 161,
+    INTERPRET_OEM_DATA = 161,
     COMMA_SEPARATED_OUTPUT_KEY = 162,
     NON_ABBREVIATED_UNITS_KEY = 163,
     LEGACY_OUTPUT_KEY = 164,
@@ -57,7 +57,7 @@ struct ipmi_sensors_arguments
   unsigned int record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int record_ids_length;
   int bridge_sensors;
-  int interpret_oem_sensors;
+  int interpret_oem_data;
   int comma_separated_output;
   int non_abbreviated_units;
   int legacy_output;

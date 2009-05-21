@@ -887,8 +887,10 @@ can be specified separated by whitespace.
 \fBipmi-sensors-bridge-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.
 .TP
-\fBipmi-sensors-interpret-oem-sensors\fR \fIENABLE|DISABLE\fR
-Specify if ipmi-sensors should attempt to interpret OEM sensors by
+\fBipmi-sensors-interpret-oem-data\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-sensors
+should attempt to interpret OEM data by
 default or not.
 .TP
 \Bipmi-sensors-comma-separated-output\fR \fIENABLE|DISABLE\fR
@@ -1115,9 +1117,10 @@ can be specified separated by whitespace.
 \fBipmimonitoring-bridge-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.
 .TP
-\fBipmimonitoring-interpret-oem-sensors\fR \fIENABLE|DISABLE\fR
-Specify if ipmimonitoring should attempt to interpret OEM sensors by
-default or not.
+\fBipmimonitoring-interpret-oem-data\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmimonitoring
+should attempt to interpret OEM data by default or not.
 .TP
 \fBipmimonitoring-ignore-non-interpretable-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-interpretable sensors should be ignored by default or not.

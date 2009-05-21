@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.117 2009-05-21 22:56:00 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.118 2009-05-21 23:06:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1006,8 +1006,8 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   if (args->bridge_sensors)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS;
 
-  if (args->interpret_oem_sensors)
-    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_SENSORS;
+  if (args->interpret_oem_data)
+    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA;
 
   if (!args->record_ids_length && !args->ipmimonitoring_groups_length)
     {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.45 2009-05-21 22:56:00 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.46 2009-05-21 23:06:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -97,8 +97,8 @@ static struct argp_option cmdline_options[] =
       "Show sensors by record id.  Accepts space or comma separated lists", 36},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
       "Bridge addresses to read non-BMC owned sensors.", 37},
-    { "interpret-oem-sensors", INTERPRET_OEM_SENSORS, NULL, 0,
-      "Attempt to interpret data in OEM sensors.", 38},
+    { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
+      "Attempt to interpret OEM data.", 39},
     { "ignore-non-interpretable-sensors", IGNORE_NON_INTERPRETABLE_SENSORS, NULL, 0,
       "Ignore non-interpretable sensors in output.", 39},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
@@ -191,8 +191,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
       break;
-    case INTERPRET_OEM_SENSORS:
-      cmd_args->interpret_oem_sensors = 1;
+    case INTERPRET_OEM_DATA:
+      cmd_args->interpret_oem_data = 1;
       break;
     case IGNORE_NON_INTERPRETABLE_SENSORS:
       cmd_args->ignore_non_interpretable_sensors = 1;
@@ -284,8 +284,8 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
-  if (config_file_data.interpret_oem_sensors_count)
-    cmd_args->interpret_oem_sensors = config_file_data.interpret_oem_sensors;
+  if (config_file_data.interpret_oem_data_count)
+    cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
   if (config_file_data.ignore_non_interpretable_sensors_count)
     cmd_args->ignore_non_interpretable_sensors = config_file_data.ignore_non_interpretable_sensors;
   if (config_file_data.comma_separated_output_count)
@@ -319,7 +319,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
           sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
   cmd_args->record_ids_length = 0;
   cmd_args->bridge_sensors = 0;
-  cmd_args->interpret_oem_sensors = 0;
+  cmd_args->interpret_oem_data = 0;
   cmd_args->ignore_non_interpretable_sensors = 0;
   cmd_args->comma_separated_output = 0;
   cmd_args->non_abbreviated_units = 0;

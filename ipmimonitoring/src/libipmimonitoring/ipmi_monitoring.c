@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.59 2009-05-21 22:56:00 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.60 2009-05-21 23:06:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -364,7 +364,7 @@ _ipmi_monitoring_sensor_readings_flags_common (ipmi_monitoring_ctx_t c,
         }
     }
 
-  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_SENSORS)
+  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA)
     {
       if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
         {

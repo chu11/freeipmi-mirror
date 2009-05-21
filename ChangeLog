@@ -3,8 +3,11 @@
 	* ipmimonitoring/src/libipmimonitoring/: Support
 	IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_SENSORS flag.
 
-	* common/src/toolcommon, common/man/, ipmi-sensors/,
-	ipmimonitoring/src/ipmimonitoring/: Support --interpret-oem-sensors option.
+	* common/src/toolcommon, ipmi-sensors/,
+	ipmimonitoring/src/ipmimonitoring/: Support
+	--interpret-oem-sensors option.
+
+	* common/man/manpage-common-interpret-oem-data.man: new file.
 	
 2009-05-19  Albert Chu <chu11@llnl.gov>
 
