@@ -12,6 +12,9 @@
 	--interpret-oem-data option.
 
 	* common/man/manpage-common-interpret-oem-data.man: new file.
+
+	* ipmi-sel/src/, libfreeipmi/src/sel-parse/: Support Inventec 5441
+	OEM Sel interpretations
 	
 2009-05-19  Albert Chu <chu11@llnl.gov>
 
