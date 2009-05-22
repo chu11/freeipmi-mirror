@@ -36,6 +36,7 @@ Display only device ID information.
 Display only device guid.
 \fB\-\-get-channel-info\fR
 Display only channel information.
+#include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>

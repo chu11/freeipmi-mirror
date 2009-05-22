@@ -1062,6 +1062,9 @@ config_file_parse (const char *filename,
   struct config_file_data_bmc_config bmc_config_data;
   struct config_file_data_bmc_config *bmc_config_data_ptr;
 
+  struct config_file_data_bmc_info bmc_info_data;
+  struct config_file_data_bmc_info *bmc_info_data_ptr;
+
   struct config_file_data_bmc_watchdog bmc_watchdog_data;
   struct config_file_data_bmc_watchdog *bmc_watchdog_data_ptr;
 
@@ -1657,6 +1660,17 @@ config_file_parse (const char *filename,
         &bmc_info_workaround_flags_count,
         &cmd_args_config,
         0
+      },
+      {
+        "bmc-info-interpret-oem-data",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(bmc_info_data.interpret_oem_data_count),
+        &(bmc_info_data.interpret_oem_data),
+        0,
       },
     };
 
@@ -3516,7 +3530,7 @@ config_file_parse (const char *filename,
               || ((support & CONFIG_FILE_HOSTRANGE) && hostrange_args))
           && (((tool_support & CONFIG_FILE_TOOL_BMC_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_BMC_DEVICE) && !tool_data)
-              || ((tool_support & CONFIG_FILE_TOOL_BMC_INFO) && !tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_BMC_INFO) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_BMC_WATCHDOG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG) && tool_data)
@@ -3779,6 +3793,7 @@ config_file_parse (const char *filename,
   /* clear out config file data */
 
   memset (&bmc_config_data, '\0', sizeof (struct config_file_data_bmc_config));
+  memset (&bmc_info_data, '\0', sizeof (struct config_file_data_bmc_info));
   memset (&bmc_watchdog_data, '\0', sizeof (struct config_file_data_bmc_watchdog));
   memset (&ipmi_chassis_config_data, '\0', sizeof (struct config_file_data_ipmi_chassis_config));
   memset (&ipmi_fru_data, '\0', sizeof (struct config_file_data_ipmi_fru));
@@ -3873,6 +3888,13 @@ config_file_parse (const char *filename,
       memcpy (bmc_config_data_ptr,
               &bmc_config_data,
               sizeof (struct config_file_data_bmc_config));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_BMC_INFO)
+    {
+      bmc_info_data_ptr = (struct config_file_data_bmc_info *)tool_data;
+      memcpy (bmc_info_data_ptr,
+              &bmc_info_data,
+              sizeof (struct config_file_data_bmc_info));
     }
   else if (tool_support & CONFIG_FILE_TOOL_BMC_WATCHDOG)
     {

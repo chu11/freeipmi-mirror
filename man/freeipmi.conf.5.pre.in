@@ -329,6 +329,11 @@ above.  Multiple workarounds can be specified separated by whitespace.
 Please see 
 .B bmc-info(8) 
 manpage for available workarounds.
+.TP
+\fBbmc-info-interpret-oem-data\fR \fIENABLE|DISABLE\fR
+Specify if
+.B bmc-info
+should attempt to interpret OEM data by default or not.
 
 .SH "BMC-WATCHDOG OPTIONS"
 The following options are specific to 

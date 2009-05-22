@@ -1,5 +1,9 @@
 2009-05-20  Albert Chu <chu11@llnl.gov>
 
+	* bmc-info/, common/src/toolcommon/: Support --interpret-oem-data.
+	
+2009-05-20  Albert Chu <chu11@llnl.gov>
+
 	Code cleanup.
 	
 	* libfreeipmi/include/freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h:

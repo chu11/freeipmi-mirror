@@ -161,6 +161,8 @@ o bmc-info
     output.
   - Support --get-channel-info.
   - Support --get-device-id.
+  - Support --interpret-oem-data option.  Do not automatically assume
+    OEM data is correct and output by default.
   - Output manufacturer name with "Manufacturer ID" if name available.
 o ipmi-chassis
   - Make output of ipmi-chassis, bmc-info, bmc-device, and info output

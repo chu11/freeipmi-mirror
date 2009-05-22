@@ -538,7 +538,8 @@ display_get_device_id (bmc_info_state_data_t *state_data)
        *
        * Intel SR870BN4
        */
-      if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
+      if (state_data->prog_data->args->interpret_oem_data
+          && manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
           && product_id == 256)
         {
           if (display_intel_sr870bn4 (state_data, obj_cmd_rs) < 0)
@@ -547,7 +548,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       else
         pstdout_printf (state_data->pstate,
                         "Auxiliary Firmware Revision Information : %08Xh\n",
-                          auxiliary_firmware_revision_information);
+                        auxiliary_firmware_revision_information);
     }
 
   rv = 0;

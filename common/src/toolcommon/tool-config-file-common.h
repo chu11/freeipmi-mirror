@@ -60,6 +60,12 @@ struct config_file_data_bmc_config
   int verbose_count_count;
 };
 
+struct config_file_data_bmc_info
+{
+  int interpret_oem_data;
+  int interpret_oem_data_count;
+};
+
 struct config_file_data_bmc_watchdog
 {
   char *logfile;
