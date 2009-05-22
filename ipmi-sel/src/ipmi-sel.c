@@ -1640,11 +1640,10 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
       
       if (ipmi_cmd_get_device_id (state_data->ipmi_ctx, obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->common.debug)
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "ipmi_cmd_get_device_id: %s\n",
-                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_get_device_id: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
 
