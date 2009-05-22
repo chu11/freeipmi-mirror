@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-fru.8.pre.in,v 1.38 2009-04-17 23:50:22 chu11 Exp $
+.\"$Id: ipmi-fru.8.pre.in,v 1.39 2009-05-22 02:33:38 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2007 The Regents of the University of California.
@@ -65,6 +65,7 @@ Increase verbosity in output to include additional output.
 Skip FRU checksum checks. Some FRUs have incorrect checksums, but the
 FRU data is correct.  Use this option to skip the checks checksum.
 Output may be unknown, pray for the best.
+#include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-ignore-sdr-cache.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.h,v 1.13 2009-04-17 23:50:25 chu11 Exp $
+ *  $Id: ipmi-fru.h,v 1.14 2009-05-22 02:33:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -38,7 +38,8 @@ enum ipmi_sel_argp_option_keys
   {
     DEVICE_ID_KEY = 'e',
     VERBOSE_KEY = 'v',
-    SKIP_CHECKS_KEY = 's'
+    SKIP_CHECKS_KEY = 's',
+    INTERPRET_OEM_DATA = 160,
   };
 
 struct ipmi_fru_arguments
@@ -50,6 +51,7 @@ struct ipmi_fru_arguments
   int device_id_set;
   int verbose_count;
   int skip_checks;
+  int interpret_oem_data;
 };
 
 typedef struct ipmi_fru_prog_data
@@ -67,6 +69,8 @@ typedef struct ipmi_fru_state_data
   ipmi_fru_parse_ctx_t fru_parse_ctx;
   ipmi_sdr_cache_ctx_t sdr_cache_ctx;
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
+  uint32_t manufacturer_id;
+  uint16_t product_id;
 } ipmi_fru_state_data_t;
 
 #endif

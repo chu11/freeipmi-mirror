@@ -86,6 +86,8 @@ struct config_file_data_ipmi_fru
   int verbose_count_count;
   int skip_checks;
   int skip_checks_count;
+  int interpret_oem_data;
+  int interpret_oem_data_count;
 };
 
 struct config_file_data_ipmi_pef_config

@@ -138,6 +138,7 @@ o ipmi-fru
     output as string instead of hex code.
   - Slightly alter Base/Extended Compatibility Code Mask output for
     common case.
+  - Support --interpret-oem-data option.
   - Various output changes under error conditions.
   - Re-work to use new libfreeipmi fru-parse sub library.
   - Check for valid device ID inputs.

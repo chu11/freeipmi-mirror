@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.9 2009-05-15 18:02:41 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.10 2009-05-22 02:33:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -162,6 +162,8 @@ ipmi_fru_parse_ctx_create (ipmi_ctx_t ipmi_ctx)
   memset (ctx, '\0', sizeof (struct ipmi_fru_parse_ctx));
   ctx->magic = IPMI_FRU_PARSE_CTX_MAGIC;
   ctx->flags = IPMI_FRU_PARSE_FLAGS_DEFAULT;
+  ctx->manufacturer_id = 0;
+  ctx->product_id = 0;
   ctx->debug_prefix = NULL;
   
   ctx->ipmi_ctx = ipmi_ctx;
@@ -248,6 +250,74 @@ ipmi_fru_parse_ctx_set_flags (ipmi_fru_parse_ctx_t ctx, unsigned int flags)
     }
 
   ctx->flags = flags;
+  ctx->errnum = IPMI_FRU_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_fru_parse_ctx_get_manufacturer_id (ipmi_fru_parse_ctx_t ctx, uint32_t *manufacturer_id)
+{
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!manufacturer_id)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  *manufacturer_id = ctx->manufacturer_id;
+  ctx->errnum = IPMI_FRU_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_fru_parse_ctx_set_manufacturer_id (ipmi_fru_parse_ctx_t ctx, uint32_t manufacturer_id)
+{
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  ctx->manufacturer_id = manufacturer_id;
+  ctx->errnum = IPMI_FRU_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_fru_parse_ctx_get_product_id (ipmi_fru_parse_ctx_t ctx, uint16_t *product_id)
+{
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!product_id)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  *product_id = ctx->product_id;
+  ctx->errnum = IPMI_FRU_PARSE_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_fru_parse_ctx_set_product_id (ipmi_fru_parse_ctx_t ctx, uint16_t product_id)
+{
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  ctx->product_id = product_id;
   ctx->errnum = IPMI_FRU_PARSE_ERR_SUCCESS;
   return (0);
 }

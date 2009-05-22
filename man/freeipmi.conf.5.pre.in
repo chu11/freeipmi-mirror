@@ -546,6 +546,11 @@ Specify default verbose count to use for
 .TP
 \fBipmi-fru-skip-checks\fR \fIENABLE|DISABLE\fR
 Specify if checksum checks will be skipped by default.
+.TP
+\fBipmi-fru-interpret-oem-data\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-fru
+should attempt to interpret OEM data by default or not.
 
 .SH "IPMI-OEM OPTIONS"
 The following options are specific to 

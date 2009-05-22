@@ -1999,6 +1999,17 @@ config_file_parse (const char *filename,
         &(ipmi_fru_data.skip_checks),
         0,
       },
+      {
+        "ipmi-fru-interpret-oem-data",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        config_file_bool,
+        1,
+        0,
+        &(ipmi_fru_data.interpret_oem_data_count),
+        &(ipmi_fru_data.interpret_oem_data),
+        0,
+      },
     };
 
   /*

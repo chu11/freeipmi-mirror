@@ -1,5 +1,5 @@
 /***************************************************************************** \
- *  $Id: ipmi-fru-argp.c,v 1.27 2009-05-05 18:10:48 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.28 2009-05-22 02:33:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -85,6 +85,8 @@ static struct argp_option cmdline_options[] =
       "Increase verbosity in output.", 31},
     { "skip-checks", SKIP_CHECKS_KEY, 0, 0,
       "Skip FRU checksum checks", 32},
+    { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
+      "Attempt to interpret OEM data.", 33},
     { 0 }
   };
 
@@ -134,6 +136,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case SKIP_CHECKS_KEY:
       cmd_args->skip_checks = 1;
       break;
+    case INTERPRET_OEM_DATA:
+      cmd_args->interpret_oem_data = 1;
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -178,6 +183,8 @@ _ipmi_fru_config_file_parse (struct ipmi_fru_arguments *cmd_args)
     cmd_args->verbose_count = config_file_data.verbose_count;
   if (config_file_data.skip_checks_count)
     cmd_args->skip_checks = config_file_data.skip_checks;
+  if (config_file_data.interpret_oem_data_count)
+    cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
 }
 
 void
@@ -190,6 +197,7 @@ ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
   cmd_args->device_id_set = 0;
   cmd_args->verbose_count = 0;
   cmd_args->skip_checks = 0;
+  cmd_args->interpret_oem_data = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,

@@ -32,7 +32,8 @@
 
 #define IPMI_FRU_PARSE_FLAGS_MASK \
   (IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP \
-   | IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS)
+   | IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS \
+   | IPMI_FRU_PARSE_FLAGS_INTERPRET_OEM_DATA)
 
 #define IPMI_FRU_PARSE_BUF_LEN 2048
 
@@ -40,6 +41,8 @@ struct ipmi_fru_parse_ctx {
   uint32_t magic;
   int errnum;
   unsigned int flags;
+  uint32_t manufacturer_id;
+  uint16_t product_id;
   char *debug_prefix;
 
   ipmi_ctx_t ipmi_ctx;

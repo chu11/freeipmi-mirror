@@ -248,6 +248,12 @@ ipmi_sel_parse_ctx_get_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t *manu
       return (-1);
     }
 
+  if (!manufacturer_id)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
   *manufacturer_id = ctx->manufacturer_id;
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;
   return (0);
@@ -273,6 +279,12 @@ ipmi_sel_parse_ctx_get_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t *product_i
   if (!ctx || ctx->magic != IPMI_SEL_PARSE_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_sel_parse_ctx_errormsg (ctx), ipmi_sel_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!product_id)
+    {
+      SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_PARAMETERS);
       return (-1);
     }
 

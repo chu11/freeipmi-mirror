@@ -58,6 +58,7 @@ extern "C" {
 #define IPMI_FRU_PARSE_FLAGS_DEFAULT                              0x0000
 #define IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP                           0x0001
 #define IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS                 0x0002
+#define IPMI_FRU_PARSE_FLAGS_INTERPRET_OEM_DATA                   0x0004
 
 #define IPMI_FRU_PARSE_AREA_TYPE_CHASSIS_INFO_AREA                          0
 #define IPMI_FRU_PARSE_AREA_TYPE_BOARD_INFO_AREA                            1
@@ -108,6 +109,12 @@ char * ipmi_fru_parse_ctx_errormsg (ipmi_fru_parse_ctx_t ctx);
 /* FRU Parse flag functions */
 int ipmi_fru_parse_ctx_get_flags (ipmi_fru_parse_ctx_t ctx, unsigned int *flags);
 int ipmi_fru_parse_ctx_set_flags (ipmi_fru_parse_ctx_t ctx, unsigned int flags);
+/* for use w/ IPMI_FRU_PARSE_FLAGS_INTERPRET_OEM_DATA */
+int ipmi_fru_parse_ctx_get_manufacturer_id (ipmi_fru_parse_ctx_t ctx, uint32_t *manufacturer_id);
+int ipmi_fru_parse_ctx_set_manufacturer_id (ipmi_fru_parse_ctx_t ctx, uint32_t manufacturer_id);
+/* for use w/ IPMI_FRU_PARSE_FLAGS_INTERPRET_OEM_DATA */
+int ipmi_fru_parse_ctx_get_product_id (ipmi_fru_parse_ctx_t ctx, uint16_t *product_id);
+int ipmi_fru_parse_ctx_set_product_id (ipmi_fru_parse_ctx_t ctx, uint16_t product_id);
 char *ipmi_fru_parse_ctx_get_debug_prefix (ipmi_fru_parse_ctx_t ctx);
 int ipmi_fru_parse_ctx_set_debug_prefix (ipmi_fru_parse_ctx_t ctx, const char *debug_prefix);
 
