@@ -1058,6 +1058,60 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
 
   memset (fmtbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
 
+  if (state_data->prog_data->args->interpret_oem_data)
+    {
+      uint8_t generator_id;
+      uint8_t sensor_type;
+      uint8_t sensor_number;
+      uint8_t event_data1_offset;
+
+      if (ipmi_sel_parse_read_generator_id (state_data->sel_parse_ctx, &generator_id) < 0)
+        {
+          if (_sel_parse_err_handle (state_data,
+                                     "ipmi_sel_parse_read_generator_id") < 0)
+            return (-1);
+        }
+
+      if (ipmi_sel_parse_read_sensor_type (state_data->sel_parse_ctx, &sensor_type) < 0)
+        {
+          if (_sel_parse_err_handle (state_data,
+                                     "ipmi_sel_parse_read_sensor_type") < 0)
+            return (-1);
+        }
+      
+      if (ipmi_sel_parse_read_sensor_number (state_data->sel_parse_ctx, &sensor_number) < 0)
+        {
+          if (_sel_parse_err_handle (state_data,
+                                     "ipmi_sel_parse_read_sensor_number") < 0)
+            return (-1);
+        }
+      
+      if (ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (state_data->sel_parse_ctx, &event_data1_offset) < 0)
+        {
+          if (_sel_parse_err_handle (state_data,
+                                     "ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code") < 0)
+            return (-1);
+        }
+      
+      /* OEM Interpretation
+       *
+       * Inventec 5441
+       */
+      if (state_data->manufacturer_id == 20569
+          && state_data->product_id == 51
+          && generator_id == 0x01 /* "BIOS" */
+          && sensor_type == 0xC1 /* OEM Reserved */
+          && sensor_number == 0x81 /* "BIOS Start" */
+          && event_type_code == 0x70 /* OEM */
+          && !event_data1_offset
+          && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+          && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+        {
+          strcat (fmtbuf, "%c");
+          goto output;
+        }
+    }
+
   if (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
       && event_data2_flag == IPMI_SEL_EVENT_DATA_TRIGGER_READING
       && event_data3_flag == IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE)
@@ -1093,6 +1147,8 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
            || (state_data->prog_data->args->verbose_count >= 2
                && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE))
     strcat (fmtbuf, "%h");
+
+output:
 
   fmt = fmtbuf;
 
@@ -1571,8 +1627,6 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
   if (args->interpret_oem_data)
     {
-      uint32_t manufacturer_id;
-      uint16_t product_id;
       uint64_t val;
 
       if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
@@ -1602,7 +1656,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      manufacturer_id = val;
+      state_data->manufacturer_id = val;
 
       if (FIID_OBJ_GET (obj_cmd_rs, "product_id", &val) < 0)
         {
@@ -1612,10 +1666,10 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      product_id = val;
+      state_data->product_id = val;
 
       if (ipmi_sel_parse_ctx_set_manufacturer_id (state_data->sel_parse_ctx,
-                                                  manufacturer_id) < 0)
+                                                  state_data->manufacturer_id) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -1625,7 +1679,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         }
       
       if (ipmi_sel_parse_ctx_set_product_id (state_data->sel_parse_ctx,
-                                             product_id) < 0)
+                                             state_data->product_id) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,

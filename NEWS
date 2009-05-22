@@ -40,6 +40,7 @@ o ipmi-sel
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
   - Support --interpret-oem-data option.
+  - Support Inventec 5441 OEM SEL records.
   - Support --comma-separated-output option.
   - Output manufacturer name with "Manufacturer ID" if name available.
   - Support sensor unit percentages, rates and modifiers (i.e. "%

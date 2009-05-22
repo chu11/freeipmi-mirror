@@ -597,6 +597,26 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
     }
   /* else fall through */
 
+  /* OEM Interpretation
+   *
+   * Inventec 5441
+   */
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+      && ctx->manufacturer_id == 20569
+      && ctx->product_id == 51
+      && system_event_record_data.generator_id == 0x01 /* "BIOS" */
+      && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
+      && system_event_record_data.sensor_number == 0x81 /* "BIOS Start" */
+      && system_event_record_data.event_type_code == 0x70) /* OEM */
+    {
+      if (_SNPRINTF (buf,
+                     buflen,
+                     wlen,
+                     "BIOS Start"))
+        return (1);
+      return (0);
+    }
+
   if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
     {
       if (_SNPRINTF (buf,
@@ -685,6 +705,33 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
         output_flag++;
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
+
+      /* OEM Interpretation
+       *
+       * Inventec 5441
+       *
+       * achu note: There is no official "string" defining the event
+       * from the vendor.  "BMC enabled by BIOS" is simply what
+       * occurs, so that's what I'm going to say.
+       */
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+          && ctx->manufacturer_id == 20569
+          && ctx->product_id == 51
+          && system_event_record_data.generator_id == 0x01 /* "BIOS" */
+          && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
+          && system_event_record_data.sensor_number == 0x81 /* "BIOS Start" */
+          && system_event_record_data.event_type_code == 0x70 /* OEM */
+          && !system_event_record_data.offset_from_event_reading_type_code /* no event */
+          && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+          && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+        {
+          snprintf (tmpbuf,
+                    EVENT_BUFFER_LENGTH,
+                    "BMC enabled by BIOS");
+          output_flag++;
+          break;
+        }
+
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
         snprintf (tmpbuf,
                   EVENT_BUFFER_LENGTH,
@@ -986,6 +1033,30 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
         }
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
+
+      /* OEM Interpretation
+       *
+       * Inventec 5441
+       */
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+          && ctx->manufacturer_id == 20569
+          && ctx->product_id == 51
+          && system_event_record_data.generator_id == 0x01 /* "BIOS" */
+          && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
+          && system_event_record_data.sensor_number == 0x81 /* "BIOS Start" */
+          && system_event_record_data.event_type_code == 0x70 /* OEM */
+          && !system_event_record_data.offset_from_event_reading_type_code /* no event */
+          && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+          && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+        {
+          snprintf (tmpbuf,
+                    EVENT_BUFFER_LENGTH,
+                    "BIOS Major Version %X",
+                    system_event_record_data.event_data2);
+          output_flag++;
+          break;
+        }
+      
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
         snprintf (tmpbuf,
                   EVENT_BUFFER_LENGTH,
@@ -1205,6 +1276,30 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
         }
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
+
+      /* OEM Interpretation
+       *
+       * Inventec 5441
+       */
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+          && ctx->manufacturer_id == 20569
+          && ctx->product_id == 51
+          && system_event_record_data.generator_id == 0x01 /* "BIOS" */
+          && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
+          && system_event_record_data.sensor_number == 0x81 /* "BIOS Start" */
+          && system_event_record_data.event_type_code == 0x70 /* OEM */
+          && !system_event_record_data.offset_from_event_reading_type_code /* no event */
+          && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+          && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+        {
+          snprintf (tmpbuf,
+                    EVENT_BUFFER_LENGTH,
+                    "BIOS Minor Version %02X",
+                    system_event_record_data.event_data3);
+          output_flag++;
+          break;
+        }
+
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
         snprintf (tmpbuf,
                   EVENT_BUFFER_LENGTH,
@@ -1361,6 +1456,31 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
           return (0);
         }
       /* else fall through to normal output */
+    }
+
+  /* OEM Interpretation
+   *
+   * Inventec 5441
+   */
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+      && ctx->manufacturer_id == 20569
+      && ctx->product_id == 51
+      && system_event_record_data.generator_id == 0x01 /* "BIOS" */
+      && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
+      && system_event_record_data.sensor_number == 0x81 /* "BIOS Start" */
+      && system_event_record_data.event_type_code == 0x70 /* OEM */
+      && !system_event_record_data.offset_from_event_reading_type_code /* no event */
+      && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      if (_SNPRINTF (buf,
+                     buflen,
+                     wlen,
+                     "BIOS Version %X.%02X",
+                     system_event_record_data.event_data2,
+                     system_event_record_data.event_data3))
+        return (1);
+      return (0);
     }
 
   if ((data2_ret = _output_event_data2 (ctx,

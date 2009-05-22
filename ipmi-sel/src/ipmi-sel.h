@@ -93,6 +93,8 @@ typedef struct ipmi_sel_state_data
   int output_headers;
   struct sensor_column_width column_width;
   unsigned int event_column_width;
+  uint32_t manufacturer_id;
+  uint16_t product_id;
 } ipmi_sel_state_data_t;
 
 #endif
