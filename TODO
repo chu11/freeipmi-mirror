@@ -1,6 +1,6 @@
 inband
 ------
---file-if-ipmi-not-detected
+--fail-if-ipmi-not-detected
 and build option??
 
 ipmi-locate
@@ -50,6 +50,7 @@ option output via entity_id organization (i.e. groups of owners)
 exclude groups
 exclude sensors
 - per sensor interpretation?
+support "all" "none" special case, if user wishes to override config file defaults
 
 ipmi-chassis-config
 -------------------
