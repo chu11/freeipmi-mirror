@@ -51,6 +51,7 @@ exclude groups
 exclude sensors
 - per sensor interpretation?
 support "all" "none" special case, if user wishes to override config file defaults
+not allow both record-ids & groups
 
 ipmi-chassis-config
 -------------------
