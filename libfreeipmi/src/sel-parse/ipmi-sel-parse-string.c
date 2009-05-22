@@ -602,7 +602,7 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441
    */
   if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-      && ctx->manufacturer_id == 20569
+      && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == 51
       && system_event_record_data.generator_id == 0x01 /* "BIOS" */
       && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
@@ -715,7 +715,7 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
        * occurs, so that's what I'm going to say.
        */
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-          && ctx->manufacturer_id == 20569
+          && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
           && ctx->product_id == 51
           && system_event_record_data.generator_id == 0x01 /* "BIOS" */
           && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
@@ -1039,7 +1039,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
        * Inventec 5441
        */
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-          && ctx->manufacturer_id == 20569
+          && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
           && ctx->product_id == 51
           && system_event_record_data.generator_id == 0x01 /* "BIOS" */
           && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
@@ -1282,7 +1282,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
        * Inventec 5441
        */
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-          && ctx->manufacturer_id == 20569
+          && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
           && ctx->product_id == 51
           && system_event_record_data.generator_id == 0x01 /* "BIOS" */
           && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
@@ -1463,7 +1463,7 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441
    */
   if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-      && ctx->manufacturer_id == 20569
+      && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == 51
       && system_event_record_data.generator_id == 0x01 /* "BIOS" */
       && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */

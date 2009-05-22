@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.125 2009-05-16 05:29:54 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.126 2009-05-22 01:31:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -1131,11 +1131,11 @@ _get_channel_number (int retry_wait_time, int retry_attempt, uint8_t *channel_nu
 
   switch (manufacturer_id)
     {
-    case IPMI_MANUFACTURER_ID_INTEL:
+    case IPMI_IANA_ENTERPRISE_ID_INTEL:
     case 0xB000157: /* Intel */
       switch (product_id)
         {
-        case IPMI_PRODUCT_ID_SE7501WV2:
+        case 0x1B:
           rv = 7;
           goto cleanup;
         }

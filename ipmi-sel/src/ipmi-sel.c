@@ -1097,7 +1097,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        *
        * Inventec 5441
        */
-      if (state_data->manufacturer_id == 20569
+      if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
           && state_data->product_id == 51
           && generator_id == 0x01 /* "BIOS" */
           && sensor_type == 0xC1 /* OEM Reserved */

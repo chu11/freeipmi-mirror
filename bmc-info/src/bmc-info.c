@@ -51,6 +51,37 @@ typedef struct channel_info
 
 #define NUM_CHANNELS 8
 
+fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs =
+  {
+    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,  "device_revision.revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* binary encoded */
+    { 3,  "device_revision.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "device_revision.sdr_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7,  "firmware_revision1.major_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "firmware_revision1.device_available", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "firmware_revision2.minor_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* BCD encoded */
+    { 4,  "ipmi_version.ms_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,  "ipmi_version.ls_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "additional_device_support.sensor_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "additional_device_support.sdr_repository_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "additional_device_support.sel_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "additional_device_support.fru_inventory_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "additional_device_support.ipmb_event_receiver", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "additional_device_support.ipmb_event_generator", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "additional_device_support.bridge", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "additional_device_support.chassis_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 20, "manufacturer_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,  "manufacturer_id.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "product_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "auxiliary_firmware_revision_information.boot_code.major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "auxiliary_firmware_revision_information.boot_code.minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "auxiliary_firmware_revision_information.pia.major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "auxiliary_firmware_revision_information.pia.minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0,  "", 0}
+  };
+
 static int
 display_get_device_guid (bmc_info_state_data_t *state_data)
 {
@@ -126,7 +157,7 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
 }
 
 static int
-display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
+display_intel_sr870bn4 (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
 {
   uint8_t boot_code_major, boot_code_minor, pia_major, pia_minor;
   uint64_t val;
@@ -193,7 +224,7 @@ display_intel (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
   pia_minor = val;
 
   pstdout_printf (state_data->pstate,
-                  "Auxiliary Firmware Revision Information :\n",
+                  "Auxiliary Firmware Revision Information\n",
                   "Boot Code : v%02x.%2x\n"
                   "PIA       : v%02x.%2x\n",
                   boot_code_major,
@@ -500,27 +531,23 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       goto cleanup;
     }
   auxiliary_firmware_revision_information = val;
-
+  
   if (flag)
     {
-      switch (manufacturer_id)
+      /* OEM Interpretation
+       *
+       * Intel SR870BN4
+       */
+      if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
+          && product_id == 256)
         {
-        case IPMI_MANUFACTURER_ID_INTEL:
-          switch (product_id)
-            {
-            case IPMI_PRODUCT_ID_SR870BN4:
-              if (display_intel (state_data, obj_cmd_rs) < 0)
-                goto cleanup;
-              break;
-	    default:
-              break;
-            }
-          break;
-        default:
-          pstdout_printf (state_data->pstate,
-                          "Auxiliary Firmware Revision Information : %08Xh\n",
-                          auxiliary_firmware_revision_information);
+          if (display_intel_sr870bn4 (state_data, obj_cmd_rs) < 0)
+            goto cleanup;
         }
+      else
+        pstdout_printf (state_data->pstate,
+                        "Auxiliary Firmware Revision Information : %08Xh\n",
+                          auxiliary_firmware_revision_information);
     }
 
   rv = 0;

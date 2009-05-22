@@ -29,6 +29,7 @@
 #include "freeipmi/cmds/ipmi-device-global-cmds.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
+#include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 
 #include "api/ipmi-api-defs.h"
 #include "api/ipmi-api-trace.h"
@@ -93,11 +94,11 @@ ipmi_get_channel_number (ipmi_ctx_t ctx,
 
       switch (manufacturer_id)
         {
-        case IPMI_MANUFACTURER_ID_INTEL:
+        case IPMI_IANA_ENTERPRISE_ID_INTEL:
         case 0xB000157: /* Intel */
           switch (product_id)
             {
-            case IPMI_PRODUCT_ID_SE7501WV2:
+            case 0x1B:
               rv = 7;
               goto cleanup;
             }

@@ -23,6 +23,10 @@
 extern "C" {
 #endif
 
+/* Convenience macros, will be added as needed in code */
+#define IPMI_IANA_ENTERPRISE_ID_INTEL      343
+#define IPMI_IANA_ENTERPRISE_ID_INVENTEC 20569
+
 /* As of this writing min = 0, max = 32760 */
 
 /* To avoid gcc warnings, added +1 and -1 in comparison */

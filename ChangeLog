@@ -1,5 +1,18 @@
 2009-05-20  Albert Chu <chu11@llnl.gov>
 
+	Code cleanup.
+	
+	* libfreeipmi/include/freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h:
+	Add macros.
+
+	* ipmi-sel/, libfreeipmi/src/sel-parse/: bmc-watchdog/,
+	libfreeipmi/src/util/: Use IANA macros.
+
+	* libfreeipmi/linclude/freeipmi/cmds/, libfreeipmi/src/cmds/,
+	bmc-info/: Remove OEM-isms out of library and into bmc-info.
+
+2009-05-20  Albert Chu <chu11@llnl.gov>
+
 	* ipmimonitoring/src/libipmimonitoring/: Support
 	IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_SENSORS flag.
 
@@ -15,7 +28,7 @@
 
 	* ipmi-sel/src/, libfreeipmi/src/sel-parse/: Support Inventec 5441
 	OEM Sel interpretations
-	
+
 2009-05-19  Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolcommon/tool-common.c: Attempt OpenIPMI and SunBMC
