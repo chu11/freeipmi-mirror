@@ -14,7 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
- */
+*/
 
 #ifndef _IPMI_NETFN_SPEC_H
 #define _IPMI_NETFN_SPEC_H
@@ -48,11 +48,11 @@ extern "C" {
    0x30 to 0x3F IPMI_NET_FN_CNTRLR_OEM_GRP
  */
 
-/* To avoid gcc warnings, added +1 and -1 in comparison */
+/* To avoid gcc warnings, add +1 in comparison */
 /* Include checks for possible oem network functions */
 #define IPMI_NET_FN_VALID(__net_fn)               \
   ((((__net_fn+1) >= IPMI_NET_FN_CHASSIS_RS       \
-     && (__net_fn-1) <= IPMI_NET_FN_TRANSPORT_RQ) \
+     && (__net_fn) <= IPMI_NET_FN_TRANSPORT_RS) \
     || ((__net_fn) >= 0x2C                        \
         && (__net_fn) <= 0x3F)) ? 1 : 0)
 

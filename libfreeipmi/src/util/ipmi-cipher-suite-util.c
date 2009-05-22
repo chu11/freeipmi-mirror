@@ -40,7 +40,7 @@ ipmi_cipher_suite_id_to_algorithms (uint8_t cipher_suite_id,
 
   /* To avoid gcc warnings, add +1 to comparison */
   if (!((cipher_suite_id + 1) >= 1
-        && (cipher_suite_id + 1) <= 15))
+        && cipher_suite_id <= 14))
     {
       SET_ERRNO (EINVAL);
       return (-1);

@@ -30,7 +30,7 @@ extern "C" {
 #define IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL   IPMI_CHANNEL_NUMBER_PRESENT_IF
 #define IPMI_CHANNEL_NUMBER_SYSTEM_INTERFACE  0xF
 
-/* To avoid gcc warnings, added +1 in comparison */
+/* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_CHANNEL_NUMBER_VALID(__channel_number)                   \
   ((((__channel_number + 1) >= (IPMI_CHANNEL_NUMBER_PRIMARY_IPMB + 1) \
      && (__channel_number) < IPMI_CHANNEL_NUMBER_RESERVED_MIN)        \

@@ -14,8 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
-
- */
+*/
 
 
 #ifndef _IPMI_RMCPPLUS_STATUS_SPEC_H
@@ -105,10 +104,10 @@ extern "C" {
   "Illegal or Unrecognized parameter."
 /* Reserved - all others */
 
-/* To avoid gcc warnings, added +1 and -1 in comparison */
+/* To avoid gcc warnings, add +1 in comparison */
 #define RMCPPLUS_STATUS_VALID(__status)                                          \
   (((__status + 1) >= RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION \
-    && (__status - 1) <= RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS) ? 1 : 0)
+    && (__status) <= RMCPPLUS_STATUS_ILLEGAL_OR_UNRECOGNIZED_PARAMETER) ? 1 : 0)
 
 #ifdef __cplusplus
 }

@@ -25,10 +25,10 @@ extern "C" {
 
 /* Table 5-4 */
 
-/* To avoid gcc warnings, added +1 and -1 in comparison */
+/* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_SYSTEM_SOFTWARE_TYPE_IS_BIOS(__val) \
   (((__val + 1) >= 0x01                          \
-    && (__val - 1) <= 0x0E) ? 1 : 0)
+    && (__val) <= 0x0F) ? 1 : 0)
 
 #define IPMI_SYSTEM_SOFTWARE_TYPE_IS_SMI_HANDLER(__val) \
   (((__val) >= 0x10                                     \

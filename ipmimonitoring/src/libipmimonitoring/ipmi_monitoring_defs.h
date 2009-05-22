@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.28 2009-05-21 23:06:43 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.29 2009-05-22 21:12:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -43,10 +43,10 @@
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
 
-/* +1 and -1 to avoid gcc warnings */
+/* +1 to avoid gcc warnings */
 #define IPMI_MONITORING_SENSOR_GROUP_VALID(__val)                      \
   ((((__val) + 1) >= (IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE + 1)    \
-    && ((__val) - 1) <= (IPMI_MONITORING_SENSOR_GROUP_UNKNOWN - 1)) ? 1 : 0)
+    && (__val) <= IPMI_MONITORING_SENSOR_GROUP_UNKNOWN) ? 1 : 0)
 
 #define IPMI_MONITORING_SENSOR_STATE_VALID(__val)                  \
   (((__val) == IPMI_MONITORING_SENSOR_STATE_NOMINAL                \
@@ -54,10 +54,10 @@
     || (__val) == IPMI_MONITORING_SENSOR_STATE_CRITICAL            \
     || (__val) == IPMI_MONITORING_SENSOR_STATE_UNKNOWN) ? 1 : 0)
 
-/* +1 and -1 to avoid gcc warnings */
+/* +1 to avoid gcc warnings */
 #define IPMI_MONITORING_SENSOR_UNITS_VALID(__val)                   \
   ((((__val) + 1) >= (IPMI_MONITORING_SENSOR_UNITS_NONE + 1)        \
-    && ((__val) - 1) <= (IPMI_MONITORING_SENSOR_UNITS_UNKNOWN - 1)) ? 1 : 0)
+    && (__val) <= IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) ? 1 : 0)
 
 #define IPMI_MONITORING_SENSOR_READING_TYPE_VALID(__val)                  \
   (((__val) == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL \
@@ -65,10 +65,10 @@
     || (__val) == IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE              \
     || (__val) == IPMI_MONITORING_SENSOR_READING_TYPE_UNKNOWN) ? 1 : 0)
 
-/* +1 and -1 to avoid gcc warnings */
+/* +1 to avoid gcc warnings */
 #define IPMI_MONITORING_SENSOR_BITMASK_TYPE_VALID(__val)                 \
   ((((__val) + 1) >= (IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD + 1) \
-    && ((__val) - 1) <= (IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN - 1)) ? 1 : 0)
+    && (__val) <= IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN) ? 1 : 0)
 
 #define IPMI_MONITORING_MAX_USER_NAME_LENGTH IPMI_MAX_USER_NAME_LENGTH
 

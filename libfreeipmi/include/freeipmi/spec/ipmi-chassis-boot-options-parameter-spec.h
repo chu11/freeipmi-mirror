@@ -35,10 +35,10 @@ extern "C" {
 #define IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_VALID_UNLOCKED                   0x0
 #define IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_INVALID_LOCKED                   0x1
 
-/* Add +1 and -1 to avoid compiler warnings */
+/* Add +1 to avoid compiler warnings */
 #define IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID(__parameter_selector)              \
   ((((__parameter_selector + 1)) > (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SET_IN_PROGRESS+1) && \
-    ((__parameter_selector - 1)) < (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_INITIATOR_MAILBOX-1)) ? 1 : 0)
+    (__parameter_selector) < IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_INITIATOR_MAILBOX) ? 1 : 0)
 
 #define IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR                                    0x0
 #define IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR                                  0x0

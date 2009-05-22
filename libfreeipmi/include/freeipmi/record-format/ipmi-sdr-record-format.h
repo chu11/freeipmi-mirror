@@ -128,10 +128,10 @@ extern "C" {
 #define IPMI_SDR_LINEARIZATION_CUBERT_STRING     "cube^-1(x)"
 #define IPMI_SDR_LINEARIZATION_NON_LINEAR_STRING "non-linear"
 
-/* To avoid gcc warnings, added +1 and -1 in comparison */
+/* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_SDR_LINEARIZATION_IS_LINEAR(__sensor_linearization) \
   ((((__sensor_linearization) + 1) >= IPMI_SDR_LINEARIZATION_LN  \
-    && ((__sensor_linearization) - 1) <= IPMI_SDR_LINEARIZATION_SQRT) ? 1 : 0)
+    && (__sensor_linearization) <= IPMI_SDR_LINEARIZATION_CUBERT) ? 1 : 0)
 
 #define IPMI_SDR_LINEARIZATION_IS_NON_LINEAR(__sensor_linearization) \
   (((__sensor_linearization) >= 0x70                                 \

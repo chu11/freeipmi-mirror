@@ -29,10 +29,10 @@ extern "C" {
 
 /* As of this writing min = 0, max = 32760 */
 
-/* To avoid gcc warnings, added +1 and -1 in comparison */
+/* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_IANA_ENTERPRISE_ID_VALID(__iana_enterprise_id) \
   (((__iana_enterprise_id + 1) >= (0 + 1)                   \
-    && (__iana_enterprise_id - 1) <= (32760 - 1)) ? 1 : 0)
+    && (__iana_enterprise_id) <= 32760) ? 1 : 0)
 
 /* Some fields can be NULL if they were not assigned/removed by IANA */
 extern const char *const ipmi_iana_enterprise_numbers[];

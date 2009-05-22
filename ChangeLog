@@ -2,6 +2,8 @@
 
 	* common/src/toolcommon/, ipmi-sensors/,
 	ipmimonitoring/src/ipmimonitoring/: Support --exclude-groups.
+
+	* Globally fix unsigned int/int macro issues.
 	
 2009-05-20  Albert Chu <chu11@llnl.gov>
 
