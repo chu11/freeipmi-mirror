@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.119 2009-05-22 17:44:49 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.120 2009-05-22 20:42:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -409,12 +409,19 @@ _calculate_record_ids (ipmimonitoring_state_data_t *state_data,
                        unsigned int record_ids[IPMIMONITORING_RECORD_IDS_MAX],
                        unsigned int *record_ids_len)
 {
+  struct ipmimonitoring_arguments *args = NULL;
   uint16_t record_count;
   unsigned int i;
 
   assert (state_data);
   assert (record_ids);
   assert (record_ids_len);
+
+  args = state_data->prog_data->args;
+
+  /* no need to calculate record ids, user input stuff */
+  if (args->record_ids_length)
+    return (0);
 
   if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx,
                                    &record_count) < 0)
@@ -432,7 +439,8 @@ _calculate_record_ids (ipmimonitoring_state_data_t *state_data,
       int sdr_record_len = 0;
       uint16_t record_id;
       uint8_t record_type;
-          
+      int flag = 0;
+
       if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
                                                         sdr_record,
                                                         IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
@@ -461,8 +469,60 @@ _calculate_record_ids (ipmimonitoring_state_data_t *state_data,
           return (-1);
         }
 
-      if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
-          || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+      if (args->groups_length && args->exclude_groups_length)
+        {
+          if ((flag = is_sdr_sensor_group_listed (state_data->pstate,
+                                                  state_data->sdr_parse_ctx,
+                                                  sdr_record,
+                                                  sdr_record_len,
+                                                  state_data->prog_data->args->groups,
+                                                  state_data->prog_data->args->groups_length)) < 0)
+            return (-1);
+          
+          if (flag)
+            {
+              if ((flag = is_sdr_sensor_group_listed (state_data->pstate,
+                                                      state_data->sdr_parse_ctx,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      state_data->prog_data->args->exclude_groups,
+                                                      state_data->prog_data->args->exclude_groups_length)) < 0)
+                return (-1);
+              flag = !flag;
+            }
+        }
+      else if (args->groups_length && !args->exclude_groups_length)
+        {
+          if ((flag = is_sdr_sensor_group_listed (state_data->pstate,
+                                                  state_data->sdr_parse_ctx,
+                                                  sdr_record,
+                                                  sdr_record_len,
+                                                  state_data->prog_data->args->groups,
+                                                  state_data->prog_data->args->groups_length)) < 0)
+            return (-1);
+        }
+      else if (!args->groups_length && args->exclude_groups_length)
+        {
+          if ((flag = is_sdr_sensor_group_listed (state_data->pstate,
+                                                  state_data->sdr_parse_ctx,
+                                                  sdr_record,
+                                                  sdr_record_len,
+                                                  state_data->prog_data->args->exclude_groups,
+                                                  state_data->prog_data->args->exclude_groups_length)) < 0)
+            return (-1);
+          flag = !flag;
+        }
+      else
+        flag = 1; /* accept all */
+
+      /* given verbosity, determine if we should do still do this sensor */
+      if (flag
+          && (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+              && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+          && !args->verbose_count)
+        flag = 0;
+
+      if (flag)
         {
           record_ids[(*record_ids_len)] = record_id;
           (*record_ids_len)++;
@@ -961,21 +1021,16 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
 
   if (!args->legacy_output)
     {
-      if (!args->record_ids_length
-          && !args->ipmimonitoring_groups_length
-          && !args->verbose_count)
-        {
-          /* achu: for consistent output to ipmi-sensors, find all full
-           * and compact sensor records and build an array to pass in.
-           */
-          if (_calculate_record_ids (state_data,
-                                     record_ids,
-                                     &record_ids_len) < 0)
-            return (-1);
+      /* achu: for consistent output to ipmi-sensors, calculate
+       * appropriate record IDs.
+       */
+      if (_calculate_record_ids (state_data,
+                                 record_ids,
+                                 &record_ids_len) < 0)
+        return (-1);
           
-          if (record_ids_len)
-            record_ids_ptr = record_ids;
-        }
+      if (record_ids_len)
+        record_ids_ptr = record_ids;
     }
   else
     {
@@ -1009,7 +1064,8 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   if (args->interpret_oem_data)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA;
 
-  if (!args->record_ids_length && !args->ipmimonitoring_groups_length)
+  if ((!args->record_ids_length && !args->ipmimonitoring_groups_length)
+      || record_ids_ptr)
     {
       if (ipmi_monitoring_sensor_readings_by_record_id (state_data->ctx,
                                                         state_data->hostname,

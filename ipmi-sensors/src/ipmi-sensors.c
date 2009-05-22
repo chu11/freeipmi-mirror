@@ -773,7 +773,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
         {
           uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
           int sdr_record_len = 0;
-          int ret;
+          int flag;
 
           if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
                                                             sdr_record,
@@ -790,20 +790,53 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
           if (!sdr_record_len)
             continue;
 
-          if (args->groups_length)
+          if (args->groups_length && args->exclude_groups_length)
             {
-              if ((ret = is_sdr_sensor_group_listed (state_data->pstate,
-                                                     state_data->sdr_parse_ctx,
-                                                     sdr_record,
-                                                     sdr_record_len,
-                                                     state_data->prog_data->args->groups,
-                                                     state_data->prog_data->args->groups_length)) < 0)
+              if ((flag = is_sdr_sensor_group_listed (state_data->pstate,
+                                                      state_data->sdr_parse_ctx,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      state_data->prog_data->args->groups,
+                                                      state_data->prog_data->args->groups_length)) < 0)
+                goto cleanup;
+
+              if (flag)
+                {
+                  if ((flag2 = is_sdr_sensor_group_listed (state_data->pstate,
+                                                           state_data->sdr_parse_ctx,
+                                                           sdr_record,
+                                                           sdr_record_len,
+                                                           state_data->prog_data->args->exclude_groups,
+                                                           state_data->prog_data->args->exclude_groups_length)) < 0)
+                    goto cleanup;
+                  flag = !flag;
+                }
+            }
+          else if (args->groups_length && !args->exclude_groups_length)
+            {
+              if ((flag = is_sdr_sensor_group_listed (state_data->pstate,
+                                                      state_data->sdr_parse_ctx,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      state_data->prog_data->args->groups,
+                                                      state_data->prog_data->args->groups_length)) < 0)
                 goto cleanup;
             }
+          else if (!args->groups_length && args->exclude_groups_length)
+            {
+              if ((flag = is_sdr_sensor_group_listed (state_data->pstate,
+                                                      state_data->sdr_parse_ctx,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      state_data->prog_data->args->exclude_groups,
+                                                      state_data->prog_data->args->exclude_groups_length)) < 0)
+                goto cleanup;
+              flag = !flag;
+            }
           else
-            ret = 1;            /* accept all */
+            flag = 1;            /* accept all */
 
-          if (ret)
+          if (flag)
             {
               if (_output_sensor (state_data,
                                   sdr_record,
