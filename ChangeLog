@@ -8,7 +8,8 @@
 	* ipmi-sel/, libfreeipmi/src/sel-parse/: bmc-watchdog/,
 	libfreeipmi/src/util/: Use IANA macros.
 
-	* libfreeipmi/linclude/freeipmi/cmds/, libfreeipmi/src/cmds/,
+	* libfreeipmi/include/freeipmi/cmds/,
+	libfreeipmi/include/freeipmi/templates/, libfreeipmi/src/cmds/,
 	bmc-info/: Remove OEM-isms out of library and into bmc-info.
 
 2009-05-20  Albert Chu <chu11@llnl.gov>
