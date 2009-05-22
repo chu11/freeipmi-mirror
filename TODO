@@ -42,6 +42,10 @@ ipmi-oem
 inventec disable ports
 inventec user disable
 
+sel
+---
+--exclude ..
+
 sensors/monitoring
 ------------------
 (TEST) make sure bridging still works w/ sensor-read lib
