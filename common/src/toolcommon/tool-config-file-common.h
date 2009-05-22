@@ -123,6 +123,9 @@ struct config_file_data_ipmi_sensors
   char groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
   int groups_count;
+  char exclude_groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
+  unsigned int exclude_groups_length;
+  int exclude_groups_count;
   unsigned int record_ids[CONFIG_FILE_MAX_SENSOR_RECORD_IDS];
   unsigned int record_ids_length;
   int record_ids_count;
@@ -163,6 +166,9 @@ struct config_file_data_ipmimonitoring
   char groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
   int groups_count;
+  char exclude_groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
+  unsigned int exclude_groups_length;
+  int exclude_groups_count;
   unsigned int record_ids[CONFIG_FILE_MAX_SENSOR_RECORD_IDS];
   unsigned int record_ids_length;
   int record_ids_count;

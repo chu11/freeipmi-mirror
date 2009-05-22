@@ -85,21 +85,23 @@ static struct argp_option cmdline_options[] =
       "Show sensors belonging to a specific group.", 34},
     { "groups",         GROUPS_KEY,       "GROUPS-LIST", 0,
       "Show sensors belonging to a specific group.", 35},
+    { "exclude-groups", EXCLUDE_GROUPS_KEY, "GROUPS-LIST", 0,
+      "Do not show sensors belonging to a specific group.", 36},
     /* for backwards compatability */
     { "sensors",        SENSORS_KEY, "SENSORS-LIST", OPTION_HIDDEN,
-      "Show sensors by record id.  Accepts space or comma separated lists", 36},
-    { "record-ids",     RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
       "Show sensors by record id.  Accepts space or comma separated lists", 37},
+    { "record-ids",     RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
+      "Show sensors by record id.  Accepts space or comma separated lists", 38},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
-      "Bridge addresses to read non-BMC owned sensors.", 38},
+      "Bridge addresses to read non-BMC owned sensors.", 39},
     { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
-      "Attempt to interpret OEM data.", 39},
+      "Attempt to interpret OEM data.", 40},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 40},
+      "Output fields in comma separated format.", 41},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' insetead of 'A').", 41},
+      "Output non-abbreviated units (i.e. 'Amps' insetead of 'A').", 42},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 42},
+      "Output in legacy format.", 43},
     { 0 }
   };
 
@@ -153,6 +155,17 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                    tok,
                    MAX_SENSOR_GROUPS_STRING_LENGTH);
           cmd_args->groups_length++;
+          tok = strtok (NULL, " ,");
+        }
+      break;
+    case EXCLUDE_GROUPS_KEY:
+      tok = strtok (arg, " ,");
+      while (tok && cmd_args->exclude_groups_length < MAX_SENSOR_GROUPS)
+        {
+          strncpy (cmd_args->exclude_groups[cmd_args->exclude_groups_length],
+                   tok,
+                   MAX_SENSOR_GROUPS_STRING_LENGTH);
+          cmd_args->exclude_groups_length++;
           tok = strtok (NULL, " ,");
         }
       break;
@@ -255,6 +268,19 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
                  MAX_SENSOR_GROUPS_STRING_LENGTH);
       cmd_args->groups_length = config_file_data.groups_length;
     }
+  if (config_file_data.exclude_groups_count && config_file_data.exclude_groups_length)
+    {
+      unsigned int i;
+
+      assert(MAX_SENSOR_GROUPS == CONFIG_FILE_MAX_SENSOR_GROUPS);
+      assert(MAX_SENSOR_GROUPS_STRING_LENGTH == CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH);
+
+      for (i = 0; i < config_file_data.exclude_groups_length; i++)
+        strncpy (cmd_args->exclude_groups[i],
+                 config_file_data.exclude_groups[i],
+                 MAX_SENSOR_GROUPS_STRING_LENGTH);
+      cmd_args->exclude_groups_length = config_file_data.exclude_groups_length;
+    }
   if (config_file_data.record_ids_count && config_file_data.record_ids_count)
     {
       unsigned int i;
@@ -278,52 +304,64 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
 }
 
 static void
+_ipmi_sensors_validate_groups (char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
+                               unsigned int groups_length)
+{
+  unsigned int i;
+
+  assert (groups); 
+
+  for (i = 0; i < groups_length; i++)
+    {
+      int j = 0;
+      int found = 0;
+      
+      while (ipmi_sensor_types[j])
+        {
+          char sensor_group_cmdline[MAX_SENSOR_GROUPS_STRING_LENGTH];
+          
+          strcpy (sensor_group_cmdline, ipmi_sensor_types[j]);
+          get_sensor_group_cmdline_string (sensor_group_cmdline);
+          
+          if (!strcasecmp (groups[i], ipmi_sensor_types[j])
+              || !strcasecmp (groups[i], sensor_group_cmdline))
+            {
+              found++;
+              break;
+            }
+          j++;
+        }
+      
+      if (!found)
+        {
+          char sensor_group_cmdline[MAX_SENSOR_GROUPS_STRING_LENGTH];
+          
+          strcpy (sensor_group_cmdline, ipmi_oem_sensor_type);
+          get_sensor_group_cmdline_string (sensor_group_cmdline);
+          
+          if (!strcasecmp (groups[i], ipmi_oem_sensor_type)
+              || !strcasecmp (groups[i], sensor_group_cmdline))
+            found++;
+        }
+      
+      if (!found)
+        {
+          fprintf (stderr, "invalid sensor group '%s'\n", groups[i]);
+          exit (1);
+        }
+    }
+}
+
+static void
 _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 {
   if (cmd_args->groups_length)
-    {
-      unsigned int i;
+    _ipmi_sensors_validate_groups (cmd_args->groups,
+                                   cmd_args->groups_length);
 
-      for (i = 0; i < cmd_args->groups_length; i++)
-        {
-          int j = 0;
-          int found = 0;
-
-          while (ipmi_sensor_types[j])
-            {
-              char sensor_group_cmdline[MAX_SENSOR_GROUPS_STRING_LENGTH];
-
-              strcpy (sensor_group_cmdline, ipmi_sensor_types[j]);
-              get_sensor_group_cmdline_string (sensor_group_cmdline);
-
-              if (!strcasecmp (cmd_args->groups[i], ipmi_sensor_types[j])
-                  || !strcasecmp (cmd_args->groups[i], sensor_group_cmdline))
-                {
-                  found++;
-                  break;
-                }
-              j++;
-            }
-
-          if (!found)
-            {
-              char sensor_group_cmdline[MAX_SENSOR_GROUPS_STRING_LENGTH];
-
-              strcpy (sensor_group_cmdline, ipmi_oem_sensor_type);
-              get_sensor_group_cmdline_string (sensor_group_cmdline);
-
-              if (!strcasecmp (cmd_args->groups[i], ipmi_oem_sensor_type)
-                  || !strcasecmp (cmd_args->groups[i], sensor_group_cmdline))
-                found++;
-            }
-
-          if (!found)
-            {
-              fprintf (stderr, "invalid sensor group '%s'\n", cmd_args->groups[i]);
-              exit (1);
-            }
-        }
-    }
+  if (cmd_args->exclude_groups_length)
+    _ipmi_sensors_validate_groups (cmd_args->exclude_groups,
+                                   cmd_args->exclude_groups_length);
 }
 
 void
@@ -338,11 +376,19 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->quiet_readings = 0;
   cmd_args->sdr_info = 0;
   cmd_args->list_groups = 0;
+
   for (i = 0; i < MAX_SENSOR_GROUPS; i++)
     memset (cmd_args->groups[i],
             '\0',
             MAX_SENSOR_GROUPS_STRING_LENGTH+1);
   cmd_args->groups_length = 0;
+
+  for (i = 0; i < MAX_SENSOR_GROUPS; i++)
+    memset (cmd_args->exclude_groups[i],
+            '\0',
+            MAX_SENSOR_GROUPS_STRING_LENGTH+1);
+  cmd_args->exclude_groups_length = 0;
+
   memset (cmd_args->record_ids,
           '\0',
           sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);

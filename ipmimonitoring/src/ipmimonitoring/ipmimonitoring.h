@@ -33,16 +33,17 @@ enum ipmimonitoring_argp_option_keys
     QUIET_READINGS_KEY = 'q',
     LIST_GROUPS_KEY = 'L',
     GROUPS_KEY = 'g',
+    EXCLUDE_GROUPS_KEY = 160,
     SENSORS_KEY = 's',          /* legacy */
     RECORD_IDS_KEY = 'r',
     CACHE_DIR_KEY = 'c',              /* legacy */
     BRIDGE_SENSORS_KEY = 'b',
-    INTERPRET_OEM_DATA = 160,
+    INTERPRET_OEM_DATA = 161,
     IGNORE_NON_INTERPRETABLE_SENSORS = 'i',
-    COMMA_SEPARATED_OUTPUT_KEY = 161,
-    NON_ABBREVIATED_UNITS_KEY = 162,
-    LEGACY_OUTPUT_KEY = 163,
-    SENSOR_CONFIG_FILE_KEY = 164,
+    COMMA_SEPARATED_OUTPUT_KEY = 162,
+    NON_ABBREVIATED_UNITS_KEY = 163,
+    LEGACY_OUTPUT_KEY = 164,
+    SENSOR_CONFIG_FILE_KEY = 165,
   };
 
 struct ipmimonitoring_arguments
@@ -56,6 +57,8 @@ struct ipmimonitoring_arguments
   int list_groups;
   char groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
   unsigned int groups_length;
+  char exclude_groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
+  unsigned int exclude_groups_length;
   unsigned int record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int record_ids_length;
   int bridge_sensors;
@@ -70,6 +73,8 @@ struct ipmimonitoring_arguments
   int ipmimonitoring_flags;
   unsigned int ipmimonitoring_groups[MAX_SENSOR_GROUPS];
   unsigned int ipmimonitoring_groups_length;
+  unsigned int ipmimonitoring_exclude_groups[MAX_SENSOR_GROUPS];
+  unsigned int ipmimonitoring_exclude_groups_length;
 };
 
 typedef struct ipmimonitoring_prog_data

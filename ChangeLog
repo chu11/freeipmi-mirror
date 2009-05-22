@@ -1,3 +1,8 @@
+2009-05-22  Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolcommon/, ipmi-sensors/,
+	ipmimonitoring/src/ipmimonitoring/: Support --exclude-groups.
+	
 2009-05-20  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/, common/src/toolcommon/: Support --interpret-oem-data.

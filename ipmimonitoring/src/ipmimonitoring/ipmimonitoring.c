@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.118 2009-05-21 23:06:42 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.119 2009-05-22 17:44:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1170,6 +1170,126 @@ _ipmimonitoring (pstdout_state_t pstate,
   return (exit_code);
 }
 
+static int
+_convert_to_ipmimonitoring_group (const char *group)
+{
+  int n;
+
+  assert (group);
+
+  if (sensor_group_strcmp (NULL,
+                           group,
+                           IPMI_SENSOR_TYPE_TEMPERATURE) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_VOLTAGE) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_VOLTAGE;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_CURRENT) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_CURRENT;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_FAN) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_FAN;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_PHYSICAL_SECURITY) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_PHYSICAL_SECURITY;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_PROCESSOR) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_PROCESSOR;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_POWER_SUPPLY) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_POWER_SUPPLY;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_POWER_UNIT) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_POWER_UNIT;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_MEMORY) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_MEMORY;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_DRIVE_SLOT) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_DRIVE_SLOT;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_FIRMWARE_PROGRESS;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_EVENT_LOGGING_DISABLED;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_SYSTEM_EVENT) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_EVENT;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_CRITICAL_INTERRUPT;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_MODULE_BOARD) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_MODULE_BOARD;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_SLOT_CONNECTOR) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_WATCHDOG2) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_ENTITY_PRESENCE) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_ENTITY_PRESENCE;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_MANAGEMENT_SUBSYSTEM_HEALTH;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_BATTERY) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_BATTERY;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_FRU_STATE) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_FRU_STATE;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_CABLE_INTERCONNECT) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_BOOT_ERROR) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_BUTTON_SWITCH) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_BUTTON_SWITCH;
+  else if (sensor_group_strcmp (NULL,
+                                group,
+                                IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE) == 1)
+    n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE;
+  else
+    {
+      fprintf (stderr, "invalid sensor group '%s'\n", group);
+      exit (1);
+    }
+
+  return (n);
+}
+
 /* For some ipmimonitoring library functions, we need to convert
  * cmd_args struct into the ipmimonitoring library equivalent
  * structs.
@@ -1263,123 +1383,20 @@ _convert_to_ipmimonitoring_options (struct ipmimonitoring_arguments *cmd_args)
 
   for (i = 0; i < cmd_args->groups_length; i++)
     {
-      int n = -1;
+      int n;
 
-      if (sensor_group_strcmp (NULL,
-                               cmd_args->groups[i],
-                               IPMI_SENSOR_TYPE_TEMPERATURE) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_VOLTAGE) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_VOLTAGE;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_CURRENT) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_CURRENT;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_FAN) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_FAN;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_PHYSICAL_SECURITY) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_PHYSICAL_SECURITY;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_PROCESSOR) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_PROCESSOR;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_POWER_SUPPLY) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_POWER_SUPPLY;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_POWER_UNIT) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_POWER_UNIT;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_MEMORY) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_MEMORY;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_DRIVE_SLOT) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_DRIVE_SLOT;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_FIRMWARE_PROGRESS;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_EVENT_LOGGING_DISABLED;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_SYSTEM_EVENT) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_EVENT;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_CRITICAL_INTERRUPT;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_MODULE_BOARD) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_MODULE_BOARD;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_SLOT_CONNECTOR) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_WATCHDOG2) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_ENTITY_PRESENCE) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_ENTITY_PRESENCE;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_MANAGEMENT_SUBSYSTEM_HEALTH;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_BATTERY) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_BATTERY;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_FRU_STATE) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_FRU_STATE;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_CABLE_INTERCONNECT) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_BOOT_ERROR) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_BUTTON_SWITCH) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_BUTTON_SWITCH;
-      else if (sensor_group_strcmp (NULL,
-                                    cmd_args->groups[i],
-                                    IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE) == 1)
-        n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE;
-      else
-        {
-          fprintf (stderr, "invalid sensor group '%s'\n", cmd_args->groups[i]);
-          exit (1);
-        }
+      n = _convert_to_ipmimonitoring_group (cmd_args->groups[i]);
+      cmd_args->ipmimonitoring_groups[cmd_args->ipmimonitoring_groups_length] = n;
+      cmd_args->ipmimonitoring_groups_length++;
+    }
 
-      if (n >= 0)
-        {
-          cmd_args->ipmimonitoring_groups[cmd_args->ipmimonitoring_groups_length] = n;
-          cmd_args->ipmimonitoring_groups_length++;
-        }
+  for (i = 0; i < cmd_args->exclude_groups_length; i++)
+    {
+      int n;
+
+      n = _convert_to_ipmimonitoring_group (cmd_args->exclude_groups[i]);
+      cmd_args->ipmimonitoring_exclude_groups[cmd_args->ipmimonitoring_exclude_groups_length] = n;
+      cmd_args->ipmimonitoring_exclude_groups_length++;
     }
 }
 
