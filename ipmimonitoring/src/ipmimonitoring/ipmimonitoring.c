@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.121 2009-05-23 00:08:25 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.122 2009-05-23 00:19:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -435,7 +435,7 @@ _calculate_record_ids (ipmimonitoring_state_data_t *state_data,
       return (-1);
     }
 
-  /* no need to calculate record ids, user input stuff past straight to lib */
+  /* no need to calculate record ids, user input stuff pass straight to lib */
   if (args->record_ids_length && !args->exclude_record_ids_length)
     return (0);
   else if (args->record_ids_length && args->exclude_record_ids_length)
