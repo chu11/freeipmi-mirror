@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.47 2009-05-22 17:44:49 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.48 2009-05-23 00:08:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -83,7 +83,7 @@ static struct argp_option cmdline_options[] =
       "Increase verbosity in output.", 30},
     /* maintain "cache-dir" for backwards compatability */
     { "cache-dir", CACHE_DIR_KEY, "DIRECTORY", OPTION_HIDDEN,
-      "Specify an alternate directory to read and write SDR caches..", 31},
+      "Specify an alternate directory to read and write SDR caches.", 31},
     { "quiet-readings", QUIET_READINGS_KEY,  0, 0,
       "Do not output sensor readings, only states.", 32},
     { "list-groups",    LIST_GROUPS_KEY,    0, 0,
@@ -96,21 +96,23 @@ static struct argp_option cmdline_options[] =
     { "sensors",        SENSORS_KEY, "SENSORS-LIST", OPTION_HIDDEN,
       "Show sensors by record id.  Accepts space or comma separated lists", 36},
     { "record-ids",     RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
-      "Show sensors by record id.  Accepts space or comma separated lists", 37},
+      "Show specific sensors by record id.  Accepts space or comma separated lists", 37},
+    { "exclude-record-ids", EXCLUDE_RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
+      "Do not show specific sensors by record id.  Accepts space or comma separated lists", 38},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
-      "Bridge addresses to read non-BMC owned sensors.", 38},
+      "Bridge addresses to read non-BMC owned sensors.", 39},
     { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
-      "Attempt to interpret OEM data.", 39},
+      "Attempt to interpret OEM data.", 40},
     { "ignore-non-interpretable-sensors", IGNORE_NON_INTERPRETABLE_SENSORS, NULL, 0,
-      "Ignore non-interpretable sensors in output.", 40},
+      "Ignore non-interpretable sensors in output.", 41},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 41},
+      "Output fields in comma separated format.", 42},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 42},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 43},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 43},
+      "Output in legacy format.", 44},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate sensor configuration file.", 44},
+      "Specify an alternate sensor configuration file.", 45},
     { 0 }
   };
 
@@ -199,6 +201,31 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 
           cmd_args->record_ids[cmd_args->record_ids_length] = value;
           cmd_args->record_ids_length++;
+          tok = strtok (NULL, " ,");
+        }
+      break;
+    case EXCLUDE_RECORD_IDS_KEY:
+      tok = strtok (arg, " ,");
+      while (tok && cmd_args->exclude_record_ids_length < MAX_SENSOR_RECORD_IDS)
+        {
+          value = 0;
+          ptr = NULL;
+          errno = 0;
+
+          value = strtol (tok, &ptr, 10);
+
+          if (errno
+              || ptr[0] != '\0'
+              || value < 0
+              || value < IPMI_SDR_RECORD_ID_FIRST
+              || value > IPMI_SDR_RECORD_ID_LAST)
+            {
+              fprintf (stderr, "invalid sensor record id: %d\n", value);
+              exit (1);
+            }
+
+          cmd_args->exclude_record_ids[cmd_args->exclude_record_ids_length] = value;
+          cmd_args->exclude_record_ids_length++;
           tok = strtok (NULL, " ,");
         }
       break;
@@ -309,6 +336,16 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
         cmd_args->record_ids[i] = config_file_data.record_ids[i];
       cmd_args->record_ids_length = config_file_data.record_ids_length;
     }
+  if (config_file_data.exclude_record_ids_count && config_file_data.exclude_record_ids_count)
+    {
+      unsigned int i;
+
+      assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
+
+      for (i = 0; i < config_file_data.exclude_record_ids_length; i++)
+        cmd_args->exclude_record_ids[i] = config_file_data.exclude_record_ids[i];
+      cmd_args->exclude_record_ids_length = config_file_data.exclude_record_ids_length;
+    }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
   if (config_file_data.interpret_oem_data_count)
@@ -353,6 +390,12 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
           '\0',
           sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
   cmd_args->record_ids_length = 0;
+
+  memset (cmd_args->exclude_record_ids,
+          '\0',
+          sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
+  cmd_args->exclude_record_ids_length = 0;
+
   cmd_args->bridge_sensors = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->ignore_non_interpretable_sensors = 0;
@@ -368,11 +411,6 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
           '\0',
           sizeof (unsigned int) * MAX_SENSOR_GROUPS);
   cmd_args->ipmimonitoring_groups_length = 0;
-
-  memset (cmd_args->ipmimonitoring_exclude_groups,
-          '\0',
-          sizeof (unsigned int) * MAX_SENSOR_GROUPS);
-  cmd_args->ipmimonitoring_exclude_groups_length = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,

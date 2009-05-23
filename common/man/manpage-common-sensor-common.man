@@ -19,6 +19,10 @@ eparated by commas or spaces.
 Specify sensors to show by record id.  Multiple record ids can be
 separated by commas or spaces.
 .TP
+\fB\-\-exclude\-record\-ids\fR=\fB"RECORD-IDS-LIST"\fR
+Specify sensors to not show by record id.  Multiple record ids can be
+separated by commas or spaces.
+.TP
 \fB\-b\fR, \fB\-\-bridge\-sensors\fR
 By default, sensors readings are not attempted for sensors on non-BMC
 owners.  By setting this option, sensor requests can be bridged to

@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.57 2009-05-21 23:06:42 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.58 2009-05-23 00:08:24 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -51,7 +51,7 @@ configuration file
 .B ipmi_monitoring_sensors.conf(5)
 for more information on configuring sensor interpretations.
 
-Some sensors may have a sensor reading or sensor event of "N/A" if
+Some sensors may have a sensor state, reading or event of "N/A" if
 the information is unavailable.  This is typical of a sensor that
 is not enabled or not owned by a BMC.  Please see
 \fB\-\-bridge\-sensors\fR option below to deal with sensors not owned

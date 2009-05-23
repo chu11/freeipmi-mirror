@@ -844,6 +844,28 @@ config_file_ipmi_sensors_record_ids (conffile_t cf,
                                           &(config_file_data->record_ids_length)));
 }
 
+int
+config_file_ipmi_sensors_exclude_record_ids (conffile_t cf,
+                                             struct conffile_data *data,
+                                             char *optionname,
+                                             int option_type,
+                                             void *option_ptr,
+                                             int option_data,
+                                             void *app_ptr,
+                                             int app_data)
+{
+  struct config_file_data_ipmi_sensors *config_file_data;
+
+  assert (option_ptr);
+
+  config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
+
+  return (_config_file_sensor_record_ids (data,
+                                          optionname,
+                                          config_file_data->exclude_record_ids,
+                                          &(config_file_data->exclude_record_ids_length)));
+}
+
 static int
 config_file_ipmiconsole_escape_char (conffile_t cf,
                                      struct conffile_data *data,
@@ -928,6 +950,28 @@ config_file_ipmimonitoring_record_ids (conffile_t cf,
                                           optionname,
                                           config_file_data->record_ids,
                                           &(config_file_data->record_ids_length)));
+}
+
+int
+config_file_ipmimonitoring_exclude_record_ids (conffile_t cf,
+                                               struct conffile_data *data,
+                                               char *optionname,
+                                               int option_type,
+                                               void *option_ptr,
+                                               int option_data,
+                                               void *app_ptr,
+                                               int app_data)
+{
+  struct config_file_data_ipmimonitoring *config_file_data;
+
+  assert (option_ptr);
+
+  config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
+
+  return (_config_file_sensor_record_ids (data,
+                                          optionname,
+                                          config_file_data->exclude_record_ids,
+                                          &(config_file_data->exclude_record_ids_length)));
 }
 
 int
@@ -2715,6 +2759,17 @@ config_file_parse (const char *filename,
         0,
       },
       {
+        "ipmi-sensors-exclude-record_ids",
+        CONFFILE_OPTION_LIST_INT,
+        -1,
+        config_file_ipmi_sensors_exclude_record_ids,
+        1,
+        0,
+        &(ipmi_sensors_data.exclude_record_ids_count),
+        &(ipmi_sensors_data),
+        0,
+      },
+      {
         "ipmi-sensors-bridge-sensors",
         CONFFILE_OPTION_BOOL,
         -1,
@@ -3149,6 +3204,17 @@ config_file_parse (const char *filename,
         1,
         0,
         &(ipmimonitoring_data.record_ids_count),
+        &(ipmimonitoring_data),
+        0,
+      },
+      {
+        "ipmimonitoring-exclude-record_ids",
+        CONFFILE_OPTION_LIST_INT,
+        -1,
+        config_file_ipmimonitoring_exclude_record_ids,
+        1,
+        0,
+        &(ipmimonitoring_data.exclude_record_ids_count),
         &(ipmimonitoring_data),
         0,
       },

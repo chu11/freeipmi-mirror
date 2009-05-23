@@ -899,6 +899,10 @@ option to see possible groups.
 Specify default record ids to show sensor outputs for.  Multiple record ids
 can be specified separated by whitespace.
 .TP
+\fBipmi-sensors-exclude-record-ids\fR \fRECORD-IDS-LIST\fR
+Specify default record ids to not show sensor outputs for.  Multiple
+record ids can be specified separated by whitespace.
+.TP
 \fBipmi-sensors-bridge-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.
 .TP
@@ -1127,6 +1131,10 @@ option to see possible groups.
 \fBipmimonitoring-record-ids\fR \fRECORD-IDS-LIST\fR
 Specify default record ids to show sensor outputs for.  Multiple record ids
 can be specified separated by whitespace.
+.TP
+\fBipmimonitoring-exclude-record-ids\fR \fRECORD-IDS-LIST\fR
+Specify default record ids to not show sensor outputs for.  Multiple
+record ids can be specified separated by whitespace.
 .TP
 \fBipmimonitoring-bridge-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.

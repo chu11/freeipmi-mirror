@@ -36,7 +36,8 @@
 #define SENSORS_HEADER_UNITS_STR            "Units"
 #define SENSORS_HEADER_EVENT_STR            "Event"
 
-#define MAX_SENSOR_RECORD_IDS               256
+/* record id is 16 bits - 65536 */
+#define MAX_SENSOR_RECORD_IDS               65536
 #define MAX_SENSOR_GROUPS                   256
 #define MAX_SENSOR_GROUPS_STRING_LENGTH     256
 
