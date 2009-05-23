@@ -4,6 +4,10 @@
 	ipmimonitoring/src/ipmimonitoring/: Support --exclude-groups and
 	--exclude-record-ids.
 
+	* common/src/toolsensor/, ipmi-sensors/,
+	ipmimonitoring/src/ipmimonitoring/: Move common sensor code into
+	common/src/toolsensor/.
+
 	* Globally fix unsigned int/int macro issues.
 	
 2009-05-20  Albert Chu <chu11@llnl.gov>

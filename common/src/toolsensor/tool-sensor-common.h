@@ -94,4 +94,18 @@ int calculate_column_widths (pstdout_state_t pstate,
                              unsigned int abbreviated_units,
                              struct sensor_column_width *column_width);
 
+int calculate_record_ids (pstdout_state_t pstate,
+                          ipmi_sdr_cache_ctx_t sdr_cache_ctx,
+                          ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                          char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
+                          unsigned int groups_length,
+                          char exclude_groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
+                          unsigned int exclude_groups_length,
+                          unsigned int record_ids[],
+                          unsigned int record_ids_length,
+                          unsigned int exclude_record_ids[],
+                          unsigned int exclude_record_ids_length,
+                          unsigned int output_record_ids[MAX_SENSOR_RECORD_IDS],
+                          unsigned int *output_record_ids_length);
+
 #endif
