@@ -34,15 +34,15 @@ enum ipmi_sensors_argp_option_keys
     LIST_GROUPS_KEY = 'L',
     GROUP_KEY = 160,              /* legacy */
     GROUPS_KEY = 'g',
-    EXCLUDE_GROUPS_KEY = 161,
+    EXCLUDE_GROUPS_KEY = 'G',
     SENSORS_KEY = 's',          /* legacy */
     RECORD_IDS_KEY = 'r',
-    EXCLUDE_RECORD_IDS_KEY = 162,
+    EXCLUDE_RECORD_IDS_KEY = 'R',
     BRIDGE_SENSORS_KEY = 'b',
-    INTERPRET_OEM_DATA = 163,
-    COMMA_SEPARATED_OUTPUT_KEY = 164,
-    NON_ABBREVIATED_UNITS_KEY = 165,
-    LEGACY_OUTPUT_KEY = 166,
+    INTERPRET_OEM_DATA = 161,
+    COMMA_SEPARATED_OUTPUT_KEY = 162,
+    NON_ABBREVIATED_UNITS_KEY = 163,
+    LEGACY_OUTPUT_KEY = 164,
   };
 
 struct ipmi_sensors_arguments

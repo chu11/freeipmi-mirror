@@ -11,7 +11,7 @@ List sensor groups.
 Specify groups to show sensor outputs for.  Multiple groups can be
 separated by commas or spaces.
 .TP
-\fB\-\-exclude\-groups\fR=\fIGROUP\-LIST\fR
+\fB\-G\fR GROUP-LIST, \fB\-\-exclude\-groups\fR=\fIGROUP\-LIST\fR
 Specify groups to not show sensor outputs for.  Multiple groups can be
 eparated by commas or spaces.
 .TP
@@ -19,7 +19,7 @@ eparated by commas or spaces.
 Specify sensors to show by record id.  Multiple record ids can be
 separated by commas or spaces.
 .TP
-\fB\-\-exclude\-record\-ids\fR=\fB"RECORD-IDS-LIST"\fR
+\fB\-R\fR "RECORD-IDS-LIST", \fB\-\-exclude\-record\-ids\fR=\fB"RECORD-IDS-LIST"\fR
 Specify sensors to not show by record id.  Multiple record ids can be
 separated by commas or spaces.
 .TP
@@ -28,10 +28,3 @@ By default, sensors readings are not attempted for sensors on non-BMC
 owners.  By setting this option, sensor requests can be bridged to
 non-BMC owners to obtain sensor readings (experimental).  Bridging may
 not work on some interfaces/driver types.
-.TP
-\fB\-\-interpret\-oem\-sensors\fR
-Attempt to interpret data in OEM sensors, such as event flags and the
-reading.  If an OEM interpretation is not available, the default
-output will be generated.  Correctness of OEM interpretations cannot
-be guaranteed due to potential changes OEM vendors may make in
-products, firmware, etc.

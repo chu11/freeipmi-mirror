@@ -1,3 +1,10 @@
+2009-05-25  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/, ipmimonitoring/: Support short options for
+	--exclude-groups and --exclude-record-ids.
+
+	* common/man/: update manpages appropriately.
+	
 2009-05-22  Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolcommon/, ipmi-sensors/,

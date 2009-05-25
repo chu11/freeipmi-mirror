@@ -33,18 +33,18 @@ enum ipmimonitoring_argp_option_keys
     QUIET_READINGS_KEY = 'q',
     LIST_GROUPS_KEY = 'L',
     GROUPS_KEY = 'g',
-    EXCLUDE_GROUPS_KEY = 160,
+    EXCLUDE_GROUPS_KEY = 'G',
     SENSORS_KEY = 's',          /* legacy */
     RECORD_IDS_KEY = 'r',
-    EXCLUDE_RECORD_IDS_KEY = 161,
+    EXCLUDE_RECORD_IDS_KEY = 'R',
     CACHE_DIR_KEY = 'c',              /* legacy */
     BRIDGE_SENSORS_KEY = 'b',
-    INTERPRET_OEM_DATA = 162,
+    INTERPRET_OEM_DATA = 160,
     IGNORE_NON_INTERPRETABLE_SENSORS = 'i',
-    COMMA_SEPARATED_OUTPUT_KEY = 163,
-    NON_ABBREVIATED_UNITS_KEY = 164,
-    LEGACY_OUTPUT_KEY = 165,
-    SENSOR_CONFIG_FILE_KEY = 166,
+    COMMA_SEPARATED_OUTPUT_KEY = 161,
+    NON_ABBREVIATED_UNITS_KEY = 162,
+    LEGACY_OUTPUT_KEY = 163,
+    SENSOR_CONFIG_FILE_KEY = 164,
   };
 
 struct ipmimonitoring_arguments
