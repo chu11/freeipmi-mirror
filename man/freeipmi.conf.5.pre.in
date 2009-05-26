@@ -480,6 +480,66 @@ manpage for available workarounds.
 Specify default verbose count to use for
 .B ipmi-chassis-config(8).
 
+.SH "IPMI-DCMI OPTIONS"
+The following options are specific to 
+.B ipmi-dcmi(8).
+They will be ignored by other tools.
+.TP
+\fBipmi-dcmi-username\fR \fIUSERNAME\fR
+Specify the default username to use for
+.B ipmi-dcmi(8).
+If specified, will override the general option 
+\fBusername\fR 
+above.
+.TP
+\fBipmi-dcmi-password\fR \fIPASSWORD\fR
+Specify the default password to use for
+.B ipmi-dcmi(8).
+If specified, will override the general option 
+\fBpassword\fR 
+above.
+.TP
+\fBipmi-dcmi-k_g\fR \fIstr\fR
+Specify the default BMC key (K_g) to use for
+.B ipmi-dcmi(8).  
+If specified, will override the general option 
+\fBk_g\fR 
+above.  Prefix with '0x' to enter the key in hex.
+.TP
+\fBipmi-dcmi-authentication-type\fR \fIAUTHENTICATION-TYPE\fR
+Specify the default authentication type to use for
+.B ipmi-dcmi(8).  
+If specified, will override the general option 
+\fBauthentication-type\fR 
+above.  The following authentication types are supported: NONE,
+STRAIGHT_PASSWORD_KEY, MD2, and MD5.
+.TP
+\fBipmi-dcmi-cipher-suite-id\fR \fICIPHER-SUITE-ID\fR
+Specify the default cipher suite id to use for
+.B ipmi-dcmi(8).
+If specified, will override the general option 
+\fBcipher-suite-id\fR 
+above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
+7, 8, 11, 12.
+.TP
+\fBipmi-dcmi-privilege-level\fR \fIPRIVILEGE-LEVEL\fR
+Specify the default privilege type to use for
+.B ipmi-dcmi(8).
+If specified, will override the general option 
+\fBprivilege-level\fR 
+above.  The following privilege levels are supported: USER, OPERATOR,
+ADMIN.
+.TP
+\fBipmi-dcmi-workaround-flags\fR \fIWORKAROUNDS\fR
+Specify default workaround flags to use for
+.B ipmi-dcmi(8).  
+If specified, will override the general options
+\fBworkaround-flags\fR
+above.  Multiple workarounds can be specified separated by whitespace.
+Please see 
+.B ipmi-dcmi(8) 
+manpage for available workarounds.
+
 .SH "IPMI-FRU OPTIONS"
 The following options are specific to 
 .B ipmi-fru(8).

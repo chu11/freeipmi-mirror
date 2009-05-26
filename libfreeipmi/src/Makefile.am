@@ -1,6 +1,7 @@
 SUBDIRS = \
 	api \
 	cmds \
+	dcmi \
 	debug \
 	driver \
 	fiid \
@@ -39,6 +40,7 @@ libfreeipmi_la_LIBADD = \
 	$(top_builddir)/common/src/portability/libfreeipmiportability.la \
 	$(top_builddir)/libfreeipmi/src/api/libapi.la \
 	$(top_builddir)/libfreeipmi/src/cmds/libcmds.la \
+	$(top_builddir)/libfreeipmi/src/dcmi/libdcmi.la \
 	$(top_builddir)/libfreeipmi/src/debug/libdebug.la \
 	$(top_builddir)/libfreeipmi/src/driver/libdriver.la \
 	$(top_builddir)/libfreeipmi/src/fiid/libfiid.la \
@@ -67,6 +69,9 @@ $(top_builddir)/libfreeipmi/src/api/libapi.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/cmds/libcmds.la : force-dependency-check
+	@cd `dirname $@` && $(MAKE) `basename $@`
+
+$(top_builddir)/libfreeipmi/src/dcmi/libdcmi.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 $(top_builddir)/libfreeipmi/src/debug/libdebug.la : force-dependency-check

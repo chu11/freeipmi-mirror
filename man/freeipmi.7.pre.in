@@ -89,6 +89,12 @@ A tool to configure Platform Event Filtering (PEF) information.
 A tool to configure IPMI sensors.  Supports configuration of sensor
 thresholds, sensor events, and other sensor related fields.
 .PP
+.B Ipmi-dcmi
+.PP
+A tool to perform Data Center Management Interface (DCMI) IPMI
+extension commands.  Supports extensions for asset management and
+power usage management.
+.PP
 .B Bmc-device
 .PP
 A tool to perform advanced BMC commands.

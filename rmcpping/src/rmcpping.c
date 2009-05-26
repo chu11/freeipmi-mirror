@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.51 2009-05-03 18:21:07 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.52 2009-05-26 23:29:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -94,6 +94,7 @@ createpacket (const char *destination,
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,
+		     DEBUG_UTIL_FLAGS_DEFAULT,
                      DEBUG_UTIL_RMCPPING_STR,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
@@ -147,6 +148,7 @@ parsepacket (const char *destination,
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,
+		     DEBUG_UTIL_FLAGS_DEFAULT,
                      DEBUG_UTIL_RMCPPONG_STR,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);

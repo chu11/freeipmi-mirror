@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.40 2009-05-06 22:17:35 chu11 Exp $
+## $Id: Makefile.am,v 1.41 2009-05-26 23:29:25 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -33,6 +33,7 @@ nobase_include_HEADERS = \
 	freeipmi/cmds/ipmi-serial-modem-cmds.h \
 	freeipmi/cmds/ipmi-sol-cmds.h \
 	freeipmi/cmds/rmcp-cmds.h \
+	freeipmi/dcmi/ipmi-dcmi.h \
 	freeipmi/debug/ipmi-debug.h \
 	freeipmi/driver/ipmi-kcs-driver.h \
 	freeipmi/driver/ipmi-openipmi-driver.h \
@@ -78,6 +79,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-system-software-id-spec.h \
 	freeipmi/templates/ipmi-bmc-watchdog-timer-cmds-templates.h \
 	freeipmi/templates/ipmi-chassis-cmds-templates.h \
+	freeipmi/templates/ipmi-dcmi-templates.h \
 	freeipmi/templates/ipmi-device-global-cmds-templates.h \
 	freeipmi/templates/ipmi-event-cmds-templates.h \
 	freeipmi/templates/ipmi-fru-inventory-device-cmds-templates.h \

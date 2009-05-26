@@ -96,6 +96,12 @@ Ipmi-sensors-config
 A tool to configure IPMI sensors.  Supports configuration of sensor
 thresholds, sensor events, and other sensor related fields.
 
+Ipmi-dcmi
+
+A tool to perform Data Center Management Interface (DCMI) IPMI
+extension commands.  Supports extensions for asset management and
+power usage management.
+
 Bmc-device
 
 A tool to perform advanced BMC commands.

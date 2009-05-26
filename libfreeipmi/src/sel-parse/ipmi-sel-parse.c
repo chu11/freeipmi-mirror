@@ -508,6 +508,7 @@ _sel_entry_dump (ipmi_sel_parse_ctx_t ctx, struct ipmi_sel_parse_entry *sel_pars
  output:
   debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                  DEBUG_UTIL_DIRECTION_NONE,
+		 DEBUG_UTIL_FLAGS_DEFAULT,
                  "SEL Event Record",
                  hdrbuf,
                  DEBUG_UTIL_HDR_BUFLEN);

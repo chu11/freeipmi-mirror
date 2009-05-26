@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.46 2009-05-02 02:17:37 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.47 2009-05-26 23:29:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -145,6 +145,7 @@ ipmipower_ping_process_pings (int *timeout)
 
               debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                              DEBUG_UTIL_DIRECTION_NONE,
+			     DEBUG_UTIL_FLAGS_DEFAULT,
                              DEBUG_UTIL_RMCPPING_STR,
                              hdrbuf,
                              DEBUG_UTIL_HDR_BUFLEN);
@@ -192,6 +193,7 @@ ipmipower_ping_process_pings (int *timeout)
 
               debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                              DEBUG_UTIL_DIRECTION_NONE,
+			     DEBUG_UTIL_FLAGS_DEFAULT,
                              DEBUG_UTIL_RMCPPING_STR,
                              hdrbuf,
                              DEBUG_UTIL_HDR_BUFLEN);

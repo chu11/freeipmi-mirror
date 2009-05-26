@@ -1831,6 +1831,7 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
 
           debug_hdr_str (DEBUG_UTIL_TYPE_IPMI_2_0,
                          DEBUG_UTIL_DIRECTION_REQUEST,
+			 DEBUG_UTIL_FLAGS_DEFAULT,
                          cmd_str,
                          hdrbuf,
                          DEBUG_UTIL_HDR_BUFLEN);
@@ -1922,6 +1923,7 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
 
           debug_hdr_str (DEBUG_UTIL_TYPE_IPMI_2_0,
                          DEBUG_UTIL_DIRECTION_RESPONSE,
+			 DEBUG_UTIL_FLAGS_DEFAULT,
                          cmd_str,
                          hdrbuf,
                          DEBUG_UTIL_HDR_BUFLEN);

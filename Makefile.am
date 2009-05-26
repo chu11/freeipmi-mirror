@@ -10,6 +10,7 @@ SUBDIRS = \
 	bmc-watchdog \
 	ipmi-chassis \
 	ipmi-chassis-config \
+	ipmi-dcmi \
 	ipmi-fru \
 	ipmi-oem \
 	ipmi-pef-config \
@@ -50,6 +51,7 @@ EXTRA = \
 	COPYING.pstdout \
 	COPYING.ipmidetect \
 	COPYING.ipmi-fru \
+	COPYING.ipmi-dcmi \
 	COPYING.ZRESEARCH \
 	DISCLAIMER.bmc-watchdog \
 	DISCLAIMER.ipmipower \
@@ -60,6 +62,7 @@ EXTRA = \
 	DISCLAIMER.pstdout \
 	DISCLAIMER.ipmidetect \
 	DISCLAIMER.ipmi-fru \
+	DISCLAIMER.ipmi-dcmi \
 	DISCLAIMER.bmc-watchdog.UC \
 	DISCLAIMER.ipmipower.UC \
 	DISCLAIMER.ipmiping.UC \

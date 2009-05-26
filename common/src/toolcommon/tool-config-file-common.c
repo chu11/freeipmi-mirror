@@ -1097,6 +1097,11 @@ config_file_parse (const char *filename,
     ipmi_chassis_config_cipher_suite_id_count = 0, ipmi_chassis_config_privilege_level_count = 0,
     ipmi_chassis_config_workaround_flags_count = 0;
 
+  int ipmi_dcmi_username_count = 0, ipmi_dcmi_password_count = 0,
+    ipmi_dcmi_k_g_count = 0, ipmi_dcmi_authentication_type_count = 0,
+    ipmi_dcmi_cipher_suite_id_count = 0, ipmi_dcmi_privilege_level_count = 0,
+    ipmi_dcmi_workaround_flags_count = 0;
+
   int ipmi_fru_username_count = 0, ipmi_fru_password_count = 0,
     ipmi_fru_k_g_count = 0, ipmi_fru_authentication_type_count = 0,
     ipmi_fru_cipher_suite_id_count = 0, ipmi_fru_privilege_level_count = 0,
@@ -1979,6 +1984,91 @@ config_file_parse (const char *filename,
         &(ipmi_chassis_config_data.verbose_count_count),
         &(ipmi_chassis_config_data.verbose_count),
         0,
+      },
+    };
+
+  /*
+   * Ipmi-dcmi
+   */
+
+  struct conffile_option ipmi_dcmi_options[] =
+    {
+      {
+        "ipmi-dcmi-username",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_username,
+        1,
+        0,
+        &ipmi_dcmi_username_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-dcmi-password",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_password,
+        1,
+        0,
+        &ipmi_dcmi_password_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-dcmi-k_g",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_k_g,
+        1,
+        0,
+        &ipmi_dcmi_k_g_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-dcmi-authentication-type",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_authentication_type,
+        1,
+        0,
+        &ipmi_dcmi_authentication_type_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-dcmi-cipher-suite-id",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_tool_specific_cipher_suite_id,
+        1,
+        0,
+        &ipmi_dcmi_cipher_suite_id_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-dcmi-privilege-level",
+        CONFFILE_OPTION_STRING,
+        -1,
+        config_file_tool_specific_privilege_level,
+        1,
+        0,
+        &ipmi_dcmi_privilege_level_count,
+        &cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-dcmi-workaround-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_tool_specific_workaround_flags,
+        1,
+        0,
+        &ipmi_dcmi_workaround_flags_count,
+        &cmd_args_config,
+        0
       },
     };
 
@@ -3677,6 +3767,7 @@ config_file_parse (const char *filename,
               || ((tool_support & CONFIG_FILE_TOOL_BMC_WATCHDOG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG) && tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_IPMI_DCMI) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_FRU) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_OEM) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_PEF_CONFIG) && tool_data)
@@ -3822,6 +3913,15 @@ config_file_parse (const char *filename,
                  options_len);
 
   config_file_options_len += options_len;
+
+  options_len = sizeof (ipmi_dcmi_options)/sizeof (struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_IPMI_DCMI))
+    _ignore_options (ipmi_dcmi_options, options_len);
+
+  _copy_options (config_file_options,
+                 config_file_options_len,
+                 ipmi_dcmi_options,
+                 options_len);
 
   options_len = sizeof (ipmi_fru_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_FRU))

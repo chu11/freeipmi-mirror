@@ -24,6 +24,10 @@ libfreeipmi including the 'api' sub-section and tools such as
 and 
 .B ipmiconsole(8).
 .TP
+dcmi
+.B
+Provides Data Center Management Interface (DCMI) extensions.
+.TP
 .B debug
 Provides various packet/record dumping utility functions.
 Utilized by the 'api' subsection and by tools such as 

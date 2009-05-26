@@ -25,6 +25,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
 /* ERROR CODE NOTES

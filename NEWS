@@ -2,6 +2,7 @@
 ----------------
 Tools - High Level Description of Changes
 -----------------------------------------
+o Support ipmi-dcmi, data center management interface (DCM, DCMI).
 o Make output of ipmi-sel, ipmi-sensors, and ipmimonitoring easier to
   read and consistent to each other.  Under default output, sensors
   listed in ipmi-sensors and ipmimonitoring are identical.  Legacy
@@ -22,6 +23,7 @@ o Output IANA Manufacturer Name when appropriate in most tools.
 o Output additional information in many tools.
 o "Library-ize" much of the functionality originally only inside the
   tools.
+o Support Data Center Management Interface (DCMI) extensions.
 o Re-work libipmimonitoring to return sensor events for all sensors,
   not just non-threshold sensors.  Resulted in an API change.
 o Rename pef-config to ipmi-pef-config for naming consistency.
@@ -31,6 +33,9 @@ o Various documentation updates.
 
 Tools - Detailed Enhancements/Changes/Fixes
 -------------------------------------------
+o ipmi-dcmi
+  - A new tool to support the data center managemen interface
+   (referred to as either DCM or DCMI).
 o ipmi-sel
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
@@ -223,6 +228,7 @@ o libfreeipmi
   - Add new sdr-parse sub library.
   - Add new sel-parse sub library.
   - Add new sensor-read sub library.
+  - Add new dcmi sub library.
   - The locate sub library now uses a context style API for
     consistency to the rest of libfreeipmi.
   - New freeipmi/template/ files to document fiid fields for fiid

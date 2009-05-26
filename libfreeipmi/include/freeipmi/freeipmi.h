@@ -52,6 +52,7 @@ extern "C" {
 #include <freeipmi/cmds/ipmi-serial-modem-cmds.h>
 #include <freeipmi/cmds/ipmi-sol-cmds.h>
 #include <freeipmi/cmds/rmcp-cmds.h>
+#include <freeipmi/dcmi/ipmi-dcmi.h>
 #include <freeipmi/debug/ipmi-debug.h>
 #include <freeipmi/driver/ipmi-kcs-driver.h>
 #include <freeipmi/driver/ipmi-ssif-driver.h>

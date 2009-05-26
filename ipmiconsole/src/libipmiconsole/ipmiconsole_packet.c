@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.44 2009-05-03 18:09:04 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.45 2009-05-26 23:29:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -262,6 +262,7 @@ _packet_dump_hdr (ipmiconsole_ctx_t c,
 
   if (debug_hdr_str (packet_type,
                      packet_direction,
+		     DEBUG_UTIL_FLAGS_DEFAULT,
                      str_cmd,
                      hdr,
                      hdrlen) < 0)

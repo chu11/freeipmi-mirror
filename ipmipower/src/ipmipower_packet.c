@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.117 2009-05-03 18:09:05 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.118 2009-05-26 23:29:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -234,6 +234,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
 
       debug_hdr_str (packet_type,
                      packet_direction,
+		     DEBUG_UTIL_FLAGS_DEFAULT,
                      str_cmd,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);

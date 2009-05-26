@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.28 2009-05-16 05:29:56 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.29 2009-05-26 23:29:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -557,6 +557,7 @@ ipmi_sdr_cache_record_read (ipmi_sdr_cache_ctx_t ctx,
 
           debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                          DEBUG_UTIL_DIRECTION_NONE,
+			 DEBUG_UTIL_FLAGS_DEFAULT,
                          record_str,
                          hdrbuf,
                          IPMI_SDR_CACHE_DEBUG_BUFLEN);

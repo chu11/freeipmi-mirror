@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-common.c,v 1.6 2009-05-03 17:40:36 chu11 Exp $
+ *  $Id: ipmi-fru-parse-common.c,v 1.7 2009-05-26 23:29:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -88,6 +88,7 @@ ipmi_fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,
+		     DEBUG_UTIL_FLAGS_DEFAULT,
                      debug_hdr,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
@@ -123,6 +124,7 @@ ipmi_fru_parse_dump_obj (ipmi_fru_parse_ctx_t ctx,
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,
+		     DEBUG_UTIL_FLAGS_DEFAULT,
                      debug_hdr,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);

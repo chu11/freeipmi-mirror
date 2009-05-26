@@ -37,19 +37,21 @@
 int
 debug_hdr_str (uint8_t packet_type,
                uint8_t packet_direction,
+               unsigned int packet_flags,
                const char *str,
                char *hdrbuf,
                unsigned int hdrbuf_len)
 {
   char *fmt_inband =
     "=====================================================\n"
-    "%s %s\n"
+    "%s%s %s\n"
     "=====================================================";
   char *fmt_outofband =
     "=====================================================\n"
-    "%s %s %s\n"
+    "%s %s%s %s\n"
     "=====================================================";
   char *str_direction;
+  char *str_prefix;
   int len;
 
   if (!((packet_type == DEBUG_UTIL_TYPE_NONE
@@ -73,11 +75,17 @@ debug_hdr_str (uint8_t packet_type,
   else
     str_direction = "";
 
+  if (packet_flags & DEBUG_UTIL_FLAGS_DCMI)
+    str_prefix = "DCMI - ";
+  else
+    str_prefix = "";
+  
   if (packet_type == DEBUG_UTIL_TYPE_NONE
       || packet_type == DEBUG_UTIL_TYPE_INBAND)
     len = snprintf (hdrbuf,
                     hdrbuf_len,
                     fmt_inband,
+                    str_prefix,
                     str,
                     str_direction);
   else
@@ -93,6 +101,7 @@ debug_hdr_str (uint8_t packet_type,
                       hdrbuf_len,
                       fmt_outofband,
                       str_version,
+                      str_prefix,
                       str,
                       str_direction);
     }
@@ -112,11 +121,20 @@ debug_hdr_cmd (uint8_t packet_type,
                unsigned int hdrbuf_len)
 {
   const char *str_cmd;
+  unsigned int packet_flags = 0;
 
-  str_cmd = ipmi_cmd_str (net_fn, cmd);
+  if (net_fn == IPMI_NET_FN_DCMI_RQ
+      || net_fn == IPMI_NET_FN_DCMI_RS)
+    {
+      str_cmd = ipmi_dcmi_cmd_str (cmd);
+      packet_flags = DEBUG_UTIL_FLAGS_DCMI;
+    }
+  else
+    str_cmd = ipmi_cmd_str (net_fn, cmd);
 
   return (debug_hdr_str (packet_type,
                          packet_direction,
+                         packet_flags,
                          str_cmd,
                          hdrbuf,
                          hdrbuf_len));
