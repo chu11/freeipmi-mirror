@@ -29,8 +29,8 @@
 enum ipmi_sensors_argp_option_keys
   {
     VERBOSE_KEY = 'v',
-    QUIET_READINGS_KEY = 'q',
     SDR_INFO_KEY = 'i',
+    QUIET_READINGS_KEY = 'q',
     SENSORS_KEY = 's',          /* legacy */
     RECORD_IDS_KEY = 'r',
     EXCLUDE_RECORD_IDS_KEY = 'R',
@@ -51,8 +51,8 @@ struct ipmi_sensors_arguments
   struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
   int verbose_count;
-  int quiet_readings;
   int sdr_info;
+  int quiet_readings;
   unsigned int record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int record_ids_length;
   unsigned int exclude_record_ids[MAX_SENSOR_RECORD_IDS];

@@ -133,13 +133,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case VERBOSE_KEY:
       cmd_args->verbose_count++;
       break;
-    case QUIET_READINGS_KEY:
-      cmd_args->quiet_readings = 1;
-      break;
     case SDR_INFO_KEY:
       cmd_args->sdr_info = 1;
       break;
       /* maintain -s and "--sensors" for backwards compatability */
+    case QUIET_READINGS_KEY:
+      cmd_args->quiet_readings = 1;
+      break;
     case SENSORS_KEY:
     case RECORD_IDS_KEY:
       tok = strtok (arg, " ,");
@@ -411,8 +411,8 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->verbose_count = 0;
-  cmd_args->quiet_readings = 0;
   cmd_args->sdr_info = 0;
+  cmd_args->quiet_readings = 0;
 
   memset (cmd_args->record_ids,
           '\0',
