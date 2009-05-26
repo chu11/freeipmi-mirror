@@ -78,22 +78,22 @@ static struct argp_option cmdline_options[] =
       "Show sendor data repository (SDR) information.", 31},
     { "quiet-readings", QUIET_READINGS_KEY,  0, 0,
       "Do not output sensor readings or thresholds on simple output.", 32},
-    { "list-groups",    LIST_GROUPS_KEY,    0, 0,
-      "List sensor groups.", 33},
-    /* maintain "group" for backwards compatability */
-    { "group",          GROUP_KEY,        "GROUP-NAME", OPTION_HIDDEN,
-      "Show sensors belonging to a specific group.", 34},
-    { "groups",         GROUPS_KEY,       "GROUPS-LIST", 0,
-      "Show sensors belonging to a specific group.", 35},
-    { "exclude-groups", EXCLUDE_GROUPS_KEY, "GROUPS-LIST", 0,
-      "Do not show sensors belonging to a specific group.", 36},
     /* for backwards compatability */
     { "sensors",        SENSORS_KEY, "SENSORS-LIST", OPTION_HIDDEN,
-      "Show sensors by record id.  Accepts space or comma separated lists", 37},
+      "Show sensors by record id.  Accepts space or comma separated lists", 33},
     { "record-ids",     RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
-      "Show specific sensors by record id.  Accepts space or comma separated lists", 38},
+      "Show specific sensors by record id.  Accepts space or comma separated lists", 34},
     { "exclude-record-ids", EXCLUDE_RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
-      "Do not show specific sensors by record id.  Accepts space or comma separated lists", 38},
+      "Do not show specific sensors by record id.  Accepts space or comma separated lists", 35},
+    /* maintain "group" for backwards compatability */
+    { "group",          GROUP_KEY,        "GROUP-NAME", OPTION_HIDDEN,
+      "Show sensors belonging to a specific group.", 36},
+    { "groups",         GROUPS_KEY,       "GROUPS-LIST", 0,
+      "Show sensors belonging to a specific group.", 37},
+    { "exclude-groups", EXCLUDE_GROUPS_KEY, "GROUPS-LIST", 0,
+      "Do not show sensors belonging to a specific group.", 38},
+    { "list-groups",    LIST_GROUPS_KEY,    0, 0,
+      "List sensor groups.", 39},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
       "Bridge addresses to read non-BMC owned sensors.", 40},
     { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
@@ -138,38 +138,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case SDR_INFO_KEY:
       cmd_args->sdr_info = 1;
-      break;
-    case LIST_GROUPS_KEY:
-      cmd_args->list_groups = 1;
-      break;
-      /* maintain "group" for backwards compatability */
-    case GROUP_KEY:
-      strncpy (cmd_args->groups[cmd_args->groups_length],
-               arg,
-               MAX_SENSOR_GROUPS_STRING_LENGTH);
-      cmd_args->groups_length++;
-      break;
-    case GROUPS_KEY:
-      tok = strtok (arg, " ,");
-      while (tok && cmd_args->groups_length < MAX_SENSOR_GROUPS)
-        {
-          strncpy (cmd_args->groups[cmd_args->groups_length],
-                   tok,
-                   MAX_SENSOR_GROUPS_STRING_LENGTH);
-          cmd_args->groups_length++;
-          tok = strtok (NULL, " ,");
-        }
-      break;
-    case EXCLUDE_GROUPS_KEY:
-      tok = strtok (arg, " ,");
-      while (tok && cmd_args->exclude_groups_length < MAX_SENSOR_GROUPS)
-        {
-          strncpy (cmd_args->exclude_groups[cmd_args->exclude_groups_length],
-                   tok,
-                   MAX_SENSOR_GROUPS_STRING_LENGTH);
-          cmd_args->exclude_groups_length++;
-          tok = strtok (NULL, " ,");
-        }
       break;
       /* maintain -s and "--sensors" for backwards compatability */
     case SENSORS_KEY:
@@ -223,6 +191,39 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           tok = strtok (NULL, " ,");
         }
       break;
+      /* legacy */
+    case GROUP_KEY:
+      strncpy (cmd_args->groups[cmd_args->groups_length],
+               arg,
+               MAX_SENSOR_GROUPS_STRING_LENGTH);
+      cmd_args->groups_length++;
+      break;
+    case GROUPS_KEY:
+      tok = strtok (arg, " ,");
+      while (tok && cmd_args->groups_length < MAX_SENSOR_GROUPS)
+        {
+          strncpy (cmd_args->groups[cmd_args->groups_length],
+                   tok,
+                   MAX_SENSOR_GROUPS_STRING_LENGTH);
+          cmd_args->groups_length++;
+          tok = strtok (NULL, " ,");
+        }
+      break;
+    case EXCLUDE_GROUPS_KEY:
+      tok = strtok (arg, " ,");
+      while (tok && cmd_args->exclude_groups_length < MAX_SENSOR_GROUPS)
+        {
+          strncpy (cmd_args->exclude_groups[cmd_args->exclude_groups_length],
+                   tok,
+                   MAX_SENSOR_GROUPS_STRING_LENGTH);
+          cmd_args->exclude_groups_length++;
+          tok = strtok (NULL, " ,");
+        }
+      break;
+    case LIST_GROUPS_KEY:
+      cmd_args->list_groups = 1;
+      break;
+      /* maintain "group" for backwards compatability */
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
       break;
@@ -282,6 +283,26 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     cmd_args->verbose_count = config_file_data.verbose_count;
   if (config_file_data.quiet_readings_count)
     cmd_args->quiet_readings = config_file_data.quiet_readings;
+  if (config_file_data.record_ids_count && config_file_data.record_ids_count)
+    {
+      unsigned int i;
+
+      assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
+
+      for (i = 0; i < config_file_data.record_ids_length; i++)
+        cmd_args->record_ids[i] = config_file_data.record_ids[i];
+      cmd_args->record_ids_length = config_file_data.record_ids_length;
+    }
+  if (config_file_data.exclude_record_ids_count && config_file_data.exclude_record_ids_count)
+    {
+      unsigned int i;
+
+      assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
+
+      for (i = 0; i < config_file_data.exclude_record_ids_length; i++)
+        cmd_args->exclude_record_ids[i] = config_file_data.exclude_record_ids[i];
+      cmd_args->exclude_record_ids_length = config_file_data.exclude_record_ids_length;
+    }
   if (config_file_data.groups_count && config_file_data.groups_length)
     {
       unsigned int i;
@@ -307,26 +328,6 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
                  config_file_data.exclude_groups[i],
                  MAX_SENSOR_GROUPS_STRING_LENGTH);
       cmd_args->exclude_groups_length = config_file_data.exclude_groups_length;
-    }
-  if (config_file_data.record_ids_count && config_file_data.record_ids_count)
-    {
-      unsigned int i;
-
-      assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
-
-      for (i = 0; i < config_file_data.record_ids_length; i++)
-        cmd_args->record_ids[i] = config_file_data.record_ids[i];
-      cmd_args->record_ids_length = config_file_data.record_ids_length;
-    }
-  if (config_file_data.exclude_record_ids_count && config_file_data.exclude_record_ids_count)
-    {
-      unsigned int i;
-
-      assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
-
-      for (i = 0; i < config_file_data.exclude_record_ids_length; i++)
-        cmd_args->exclude_record_ids[i] = config_file_data.exclude_record_ids[i];
-      cmd_args->exclude_record_ids_length = config_file_data.exclude_record_ids_length;
     }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
@@ -412,7 +413,16 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->verbose_count = 0;
   cmd_args->quiet_readings = 0;
   cmd_args->sdr_info = 0;
-  cmd_args->list_groups = 0;
+
+  memset (cmd_args->record_ids,
+          '\0',
+          sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
+  cmd_args->record_ids_length = 0;
+
+  memset (cmd_args->exclude_record_ids,
+          '\0',
+          sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
+  cmd_args->exclude_record_ids_length = 0;
 
   for (i = 0; i < MAX_SENSOR_GROUPS; i++)
     memset (cmd_args->groups[i],
@@ -426,15 +436,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
             MAX_SENSOR_GROUPS_STRING_LENGTH+1);
   cmd_args->exclude_groups_length = 0;
 
-  memset (cmd_args->record_ids,
-          '\0',
-          sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
-  cmd_args->record_ids_length = 0;
-
-  memset (cmd_args->exclude_record_ids,
-          '\0',
-          sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
-  cmd_args->exclude_record_ids_length = 0;
+  cmd_args->list_groups = 0;
 
   cmd_args->bridge_sensors = 0;
   cmd_args->interpret_oem_data = 0;

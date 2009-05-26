@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.123 2009-05-23 00:45:27 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.124 2009-05-26 17:13:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -417,10 +417,6 @@ _calculate_record_ids (ipmimonitoring_state_data_t *state_data,
 
   args = state_data->prog_data->args;
 
-  /* no need to calculate record ids, user input stuff pass straight to lib */
-  if (args->record_ids_length && !args->exclude_record_ids_length)
-    return (0);
-
   memset (output_record_ids, '\0', sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
   (*output_record_ids_length) = 0;
 
@@ -451,7 +447,7 @@ _calculate_record_ids (ipmimonitoring_state_data_t *state_data,
           int sdr_record_len = 0;
           uint16_t record_id;
           uint8_t record_type;
-          
+
           if (ipmi_sdr_cache_search_record_id (state_data->sdr_cache_ctx,
                                                tmp_record_ids[i]) < 0)
             {
@@ -491,7 +487,6 @@ _calculate_record_ids (ipmimonitoring_state_data_t *state_data,
               return (-1);
             }
           
-          /* given verbosity, determine if we should do still do this sensor */
           if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
               || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
             {

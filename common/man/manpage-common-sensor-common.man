@@ -7,21 +7,25 @@ cluster and want to consolidate the output.
 \fB\-L\fR, \fB\-\-list\-groups\fR
 List sensor groups.
 .TP
-\fB\-g\fR GROUP-LIST, \fB\-\-groups\fR=\fIGROUP\-LIST\fR
-Specify groups to show sensor outputs for.  Multiple groups can be
-separated by commas or spaces.
-.TP
-\fB\-G\fR GROUP-LIST, \fB\-\-exclude\-groups\fR=\fIGROUP\-LIST\fR
-Specify groups to not show sensor outputs for.  Multiple groups can be
-eparated by commas or spaces.
-.TP
 \fB\-r\fR "RECORD-IDS-LIST", \fB\-\-record\-ids\fR=\fB"RECORD-IDS-LIST"\fR
 Specify sensors to show by record id.  Multiple record ids can be
-separated by commas or spaces.
+separated by commas or spaces.  If both \fB\-\-record\-ids\fR and
+\fB\-\-groups\fR are specified, \fB\-\-record\-ids\fR takes
+precedence.
 .TP
 \fB\-R\fR "RECORD-IDS-LIST", \fB\-\-exclude\-record\-ids\fR=\fB"RECORD-IDS-LIST"\fR
 Specify sensors to not show by record id.  Multiple record ids can be
 separated by commas or spaces.
+.TP
+\fB\-g\fR GROUP-LIST, \fB\-\-groups\fR=\fIGROUP\-LIST\fR
+Specify groups to show sensor outputs for.  Multiple groups can be
+separated by commas or spaces.  If both \fB\-\-record\-ids\fR and
+\fB\-\-groups\fR are specified, \fB\-\-record\-ids\fR takes
+precedence.
+.TP
+\fB\-G\fR GROUP-LIST, \fB\-\-exclude\-groups\fR=\fIGROUP\-LIST\fR
+Specify groups to not show sensor outputs for.  Multiple groups can be
+eparated by commas or spaces.
 .TP
 \fB\-b\fR, \fB\-\-bridge\-sensors\fR
 By default, sensors readings are not attempted for sensors on non-BMC

@@ -703,6 +703,87 @@ config_file_fanout (conffile_t cf,
 }
 
 static int
+_config_file_sensor_record_ids (struct conffile_data *data,
+                                char *optionname,
+                                unsigned int *record_ids,
+                                unsigned int *record_ids_length)
+{
+  unsigned int i;
+
+  assert (data);
+  assert (optionname);
+  assert (record_ids);
+  assert (record_ids_length);
+
+  if (data->intlist_len > CONFIG_FILE_MAX_SENSOR_RECORD_IDS)
+    {
+      fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
+      exit (1);
+    }
+
+  for (i = 0; i < data->stringlist_len; i++)
+    {
+      if (data->intlist[i] < 0
+          || data->intlist[i] > IPMI_SDR_RECORD_ID_LAST)
+        {
+          fprintf (stderr, "Config File Error: invalid value '%d' for %s\n",
+                   data->intlist[i],
+                   optionname);
+          exit (1);
+        }
+      
+      record_ids[i] = (unsigned int)data->intlist[i];
+      (*record_ids_length)++;
+    }
+
+  return (0);
+}
+
+int
+config_file_ipmi_sensors_record_ids (conffile_t cf,
+                                     struct conffile_data *data,
+                                     char *optionname,
+                                     int option_type,
+                                     void *option_ptr,
+                                     int option_data,
+                                     void *app_ptr,
+                                     int app_data)
+{
+  struct config_file_data_ipmi_sensors *config_file_data;
+
+  assert (option_ptr);
+
+  config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
+
+  return (_config_file_sensor_record_ids (data,
+                                          optionname,
+                                          config_file_data->record_ids,
+                                          &(config_file_data->record_ids_length)));
+}
+
+int
+config_file_ipmi_sensors_exclude_record_ids (conffile_t cf,
+                                             struct conffile_data *data,
+                                             char *optionname,
+                                             int option_type,
+                                             void *option_ptr,
+                                             int option_data,
+                                             void *app_ptr,
+                                             int app_data)
+{
+  struct config_file_data_ipmi_sensors *config_file_data;
+
+  assert (option_ptr);
+
+  config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
+
+  return (_config_file_sensor_record_ids (data,
+                                          optionname,
+                                          config_file_data->exclude_record_ids,
+                                          &(config_file_data->exclude_record_ids_length)));
+}
+
+static int
 _config_file_sensor_groups (struct conffile_data *data,
                             char *optionname,
                             char groups[][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1],
@@ -786,87 +867,6 @@ config_file_ipmi_sensors_exclude_groups (conffile_t cf,
 }
 
 static int
-_config_file_sensor_record_ids (struct conffile_data *data,
-                                char *optionname,
-                                unsigned int *record_ids,
-                                unsigned int *record_ids_length)
-{
-  unsigned int i;
-
-  assert (data);
-  assert (optionname);
-  assert (record_ids);
-  assert (record_ids_length);
-
-  if (data->intlist_len > CONFIG_FILE_MAX_SENSOR_RECORD_IDS)
-    {
-      fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
-      exit (1);
-    }
-
-  for (i = 0; i < data->stringlist_len; i++)
-    {
-      if (data->intlist[i] < 0
-          || data->intlist[i] > IPMI_SDR_RECORD_ID_LAST)
-        {
-          fprintf (stderr, "Config File Error: invalid value '%d' for %s\n",
-                   data->intlist[i],
-                   optionname);
-          exit (1);
-        }
-      
-      record_ids[i] = (unsigned int)data->intlist[i];
-      (*record_ids_length)++;
-    }
-
-  return (0);
-}
-
-int
-config_file_ipmi_sensors_record_ids (conffile_t cf,
-                                     struct conffile_data *data,
-                                     char *optionname,
-                                     int option_type,
-                                     void *option_ptr,
-                                     int option_data,
-                                     void *app_ptr,
-                                     int app_data)
-{
-  struct config_file_data_ipmi_sensors *config_file_data;
-
-  assert (option_ptr);
-
-  config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
-
-  return (_config_file_sensor_record_ids (data,
-                                          optionname,
-                                          config_file_data->record_ids,
-                                          &(config_file_data->record_ids_length)));
-}
-
-int
-config_file_ipmi_sensors_exclude_record_ids (conffile_t cf,
-                                             struct conffile_data *data,
-                                             char *optionname,
-                                             int option_type,
-                                             void *option_ptr,
-                                             int option_data,
-                                             void *app_ptr,
-                                             int app_data)
-{
-  struct config_file_data_ipmi_sensors *config_file_data;
-
-  assert (option_ptr);
-
-  config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
-
-  return (_config_file_sensor_record_ids (data,
-                                          optionname,
-                                          config_file_data->exclude_record_ids,
-                                          &(config_file_data->exclude_record_ids_length)));
-}
-
-static int
 config_file_ipmiconsole_escape_char (conffile_t cf,
                                      struct conffile_data *data,
                                      char *optionname,
@@ -884,50 +884,6 @@ config_file_ipmiconsole_escape_char (conffile_t cf,
 
   *chr = data->string[0];
   return (0);
-}
-
-int
-config_file_ipmimonitoring_groups (conffile_t cf,
-                                   struct conffile_data *data,
-                                   char *optionname,
-                                   int option_type,
-                                   void *option_ptr,
-                                   int option_data,
-                                   void *app_ptr,
-                                   int app_data)
-{
-  struct config_file_data_ipmimonitoring *config_file_data;
-
-  assert (option_ptr);
-
-  config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
-
-  return (_config_file_sensor_groups (data,
-                                      optionname,
-                                      config_file_data->groups,
-                                      &(config_file_data->groups_length)));
-}
-
-int
-config_file_ipmimonitoring_exclude_groups (conffile_t cf,
-                                           struct conffile_data *data,
-                                           char *optionname,
-                                           int option_type,
-                                           void *option_ptr,
-                                           int option_data,
-                                           void *app_ptr,
-                                           int app_data)
-{
-  struct config_file_data_ipmimonitoring *config_file_data;
-
-  assert (option_ptr);
-
-  config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
-
-  return (_config_file_sensor_groups (data,
-                                      optionname,
-                                      config_file_data->exclude_groups,
-                                      &(config_file_data->exclude_groups_length)));
 }
 
 int
@@ -972,6 +928,50 @@ config_file_ipmimonitoring_exclude_record_ids (conffile_t cf,
                                           optionname,
                                           config_file_data->exclude_record_ids,
                                           &(config_file_data->exclude_record_ids_length)));
+}
+
+int
+config_file_ipmimonitoring_groups (conffile_t cf,
+                                   struct conffile_data *data,
+                                   char *optionname,
+                                   int option_type,
+                                   void *option_ptr,
+                                   int option_data,
+                                   void *app_ptr,
+                                   int app_data)
+{
+  struct config_file_data_ipmimonitoring *config_file_data;
+
+  assert (option_ptr);
+
+  config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
+
+  return (_config_file_sensor_groups (data,
+                                      optionname,
+                                      config_file_data->groups,
+                                      &(config_file_data->groups_length)));
+}
+
+int
+config_file_ipmimonitoring_exclude_groups (conffile_t cf,
+                                           struct conffile_data *data,
+                                           char *optionname,
+                                           int option_type,
+                                           void *option_ptr,
+                                           int option_data,
+                                           void *app_ptr,
+                                           int app_data)
+{
+  struct config_file_data_ipmimonitoring *config_file_data;
+
+  assert (option_ptr);
+
+  config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
+
+  return (_config_file_sensor_groups (data,
+                                      optionname,
+                                      config_file_data->exclude_groups,
+                                      &(config_file_data->exclude_groups_length)));
 }
 
 int
@@ -2726,28 +2726,6 @@ config_file_parse (const char *filename,
         0,
       },
       {
-        "ipmi-sensors-groups",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        config_file_ipmi_sensors_groups,
-        1,
-        0,
-        &(ipmi_sensors_data.groups_count),
-        &(ipmi_sensors_data),
-        0,
-      },
-      {
-        "ipmi-sensors-exclude-groups",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        config_file_ipmi_sensors_exclude_groups,
-        1,
-        0,
-        &(ipmi_sensors_data.exclude_groups_count),
-        &(ipmi_sensors_data),
-        0,
-      },
-      {
         "ipmi-sensors-record_ids",
         CONFFILE_OPTION_LIST_INT,
         -1,
@@ -2766,6 +2744,28 @@ config_file_parse (const char *filename,
         1,
         0,
         &(ipmi_sensors_data.exclude_record_ids_count),
+        &(ipmi_sensors_data),
+        0,
+      },
+      {
+        "ipmi-sensors-groups",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmi_sensors_groups,
+        1,
+        0,
+        &(ipmi_sensors_data.groups_count),
+        &(ipmi_sensors_data),
+        0,
+      },
+      {
+        "ipmi-sensors-exclude-groups",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmi_sensors_exclude_groups,
+        1,
+        0,
+        &(ipmi_sensors_data.exclude_groups_count),
         &(ipmi_sensors_data),
         0,
       },
@@ -3175,28 +3175,6 @@ config_file_parse (const char *filename,
         0,
       },
       {
-        "ipmimonitoring-groups",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        config_file_ipmimonitoring_groups,
-        1,
-        0,
-        &(ipmimonitoring_data.groups_count),
-        &(ipmimonitoring_data),
-        0,
-      },
-      {
-        "ipmimonitoring-exclude-groups",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        config_file_ipmimonitoring_exclude_groups,
-        1,
-        0,
-        &(ipmimonitoring_data.exclude_groups_count),
-        &(ipmimonitoring_data),
-        0,
-      },
-      {
         "ipmimonitoring-record_ids",
         CONFFILE_OPTION_LIST_INT,
         -1,
@@ -3215,6 +3193,28 @@ config_file_parse (const char *filename,
         1,
         0,
         &(ipmimonitoring_data.exclude_record_ids_count),
+        &(ipmimonitoring_data),
+        0,
+      },
+      {
+        "ipmimonitoring-groups",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmimonitoring_groups,
+        1,
+        0,
+        &(ipmimonitoring_data.groups_count),
+        &(ipmimonitoring_data),
+        0,
+      },
+      {
+        "ipmimonitoring-exclude-groups",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmimonitoring_exclude_groups,
+        1,
+        0,
+        &(ipmimonitoring_data.exclude_groups_count),
         &(ipmimonitoring_data),
         0,
       },

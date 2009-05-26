@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.48 2009-05-23 00:08:25 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.49 2009-05-26 17:13:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -86,19 +86,19 @@ static struct argp_option cmdline_options[] =
       "Specify an alternate directory to read and write SDR caches.", 31},
     { "quiet-readings", QUIET_READINGS_KEY,  0, 0,
       "Do not output sensor readings, only states.", 32},
-    { "list-groups",    LIST_GROUPS_KEY,    0, 0,
-      "List sensor groups.", 33},
-    { "groups",         GROUPS_KEY,       "GROUP-LIST", 0,
-      "Show sensors belonging to a specific group.", 34},
-    { "exclude-groups", EXCLUDE_GROUPS_KEY, "GROUP-LIST", 0,
-      "Do not show sensors belonging to a specific group.", 35},
     /* for backwards compatability */
     { "sensors",        SENSORS_KEY, "SENSORS-LIST", OPTION_HIDDEN,
-      "Show sensors by record id.  Accepts space or comma separated lists", 36},
+      "Show sensors by record id.  Accepts space or comma separated lists", 33},
     { "record-ids",     RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
-      "Show specific sensors by record id.  Accepts space or comma separated lists", 37},
+      "Show specific sensors by record id.  Accepts space or comma separated lists", 34},
     { "exclude-record-ids", EXCLUDE_RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
-      "Do not show specific sensors by record id.  Accepts space or comma separated lists", 38},
+      "Do not show specific sensors by record id.  Accepts space or comma separated lists", 35},
+    { "groups",         GROUPS_KEY,       "GROUP-LIST", 0,
+      "Show sensors belonging to a specific group.", 36},
+    { "exclude-groups", EXCLUDE_GROUPS_KEY, "GROUP-LIST", 0,
+      "Do not show sensors belonging to a specific group.", 37},
+    { "list-groups",    LIST_GROUPS_KEY,    0, 0,
+      "List sensor groups.", 38},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
       "Bridge addresses to read non-BMC owned sensors.", 39},
     { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
@@ -152,31 +152,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case QUIET_READINGS_KEY:
       cmd_args->quiet_readings = 1;
       break;
-    case LIST_GROUPS_KEY:
-      cmd_args->list_groups = 1;
-      break;
-    case GROUPS_KEY:
-      tok = strtok (arg, " ,");
-      while (tok && cmd_args->groups_length < MAX_SENSOR_GROUPS)
-        {
-          strncpy (cmd_args->groups[cmd_args->groups_length],
-                   tok,
-                   MAX_SENSOR_GROUPS_STRING_LENGTH);
-          cmd_args->groups_length++;
-          tok = strtok (NULL, " ,");
-        }
-      break;
-    case EXCLUDE_GROUPS_KEY:
-      tok = strtok (arg, " ,");
-      while (tok && cmd_args->exclude_groups_length < MAX_SENSOR_GROUPS)
-        {
-          strncpy (cmd_args->exclude_groups[cmd_args->exclude_groups_length],
-                   tok,
-                   MAX_SENSOR_GROUPS_STRING_LENGTH);
-          cmd_args->exclude_groups_length++;
-          tok = strtok (NULL, " ,");
-        }
-      break;
     /* for backwards compatability */
     case SENSORS_KEY:
     case RECORD_IDS_KEY:
@@ -228,6 +203,31 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           cmd_args->exclude_record_ids_length++;
           tok = strtok (NULL, " ,");
         }
+      break;
+    case GROUPS_KEY:
+      tok = strtok (arg, " ,");
+      while (tok && cmd_args->groups_length < MAX_SENSOR_GROUPS)
+        {
+          strncpy (cmd_args->groups[cmd_args->groups_length],
+                   tok,
+                   MAX_SENSOR_GROUPS_STRING_LENGTH);
+          cmd_args->groups_length++;
+          tok = strtok (NULL, " ,");
+        }
+      break;
+    case EXCLUDE_GROUPS_KEY:
+      tok = strtok (arg, " ,");
+      while (tok && cmd_args->exclude_groups_length < MAX_SENSOR_GROUPS)
+        {
+          strncpy (cmd_args->exclude_groups[cmd_args->exclude_groups_length],
+                   tok,
+                   MAX_SENSOR_GROUPS_STRING_LENGTH);
+          cmd_args->exclude_groups_length++;
+          tok = strtok (NULL, " ,");
+        }
+      break;
+    case LIST_GROUPS_KEY:
+      cmd_args->list_groups = 1;
       break;
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
@@ -300,6 +300,26 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     cmd_args->verbose_count = config_file_data.verbose_count;
   if (config_file_data.quiet_readings_count)
     cmd_args->quiet_readings = config_file_data.quiet_readings;
+  if (config_file_data.record_ids_count && config_file_data.record_ids_count)
+    {
+      unsigned int i;
+
+      assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
+
+      for (i = 0; i < config_file_data.record_ids_length; i++)
+        cmd_args->record_ids[i] = config_file_data.record_ids[i];
+      cmd_args->record_ids_length = config_file_data.record_ids_length;
+    }
+  if (config_file_data.exclude_record_ids_count && config_file_data.exclude_record_ids_count)
+    {
+      unsigned int i;
+
+      assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
+
+      for (i = 0; i < config_file_data.exclude_record_ids_length; i++)
+        cmd_args->exclude_record_ids[i] = config_file_data.exclude_record_ids[i];
+      cmd_args->exclude_record_ids_length = config_file_data.exclude_record_ids_length;
+    }
   if (config_file_data.groups_count && config_file_data.groups_length)
     {
       unsigned int i;
@@ -325,26 +345,6 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
                  config_file_data.exclude_groups[i],
                  MAX_SENSOR_GROUPS_STRING_LENGTH);
       cmd_args->exclude_groups_length = config_file_data.exclude_groups_length;
-    }
-  if (config_file_data.record_ids_count && config_file_data.record_ids_count)
-    {
-      unsigned int i;
-
-      assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
-
-      for (i = 0; i < config_file_data.record_ids_length; i++)
-        cmd_args->record_ids[i] = config_file_data.record_ids[i];
-      cmd_args->record_ids_length = config_file_data.record_ids_length;
-    }
-  if (config_file_data.exclude_record_ids_count && config_file_data.exclude_record_ids_count)
-    {
-      unsigned int i;
-
-      assert (MAX_SENSOR_RECORD_IDS == CONFIG_FILE_MAX_SENSOR_RECORD_IDS);
-
-      for (i = 0; i < config_file_data.exclude_record_ids_length; i++)
-        cmd_args->exclude_record_ids[i] = config_file_data.exclude_record_ids[i];
-      cmd_args->exclude_record_ids_length = config_file_data.exclude_record_ids_length;
     }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
@@ -372,7 +372,16 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->verbose_count = 0;
   cmd_args->quiet_readings = 0;
-  cmd_args->list_groups = 0;
+
+  memset (cmd_args->record_ids,
+          '\0',
+          sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
+  cmd_args->record_ids_length = 0;
+
+  memset (cmd_args->exclude_record_ids,
+          '\0',
+          sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
+  cmd_args->exclude_record_ids_length = 0;
 
   for (i = 0; i < MAX_SENSOR_GROUPS; i++)
     memset (cmd_args->groups[i],
@@ -386,15 +395,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
             MAX_SENSOR_GROUPS_STRING_LENGTH+1);
   cmd_args->exclude_groups_length = 0;
 
-  memset (cmd_args->record_ids,
-          '\0',
-          sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
-  cmd_args->record_ids_length = 0;
-
-  memset (cmd_args->exclude_record_ids,
-          '\0',
-          sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
-  cmd_args->exclude_record_ids_length = 0;
+  cmd_args->list_groups = 0;
 
   cmd_args->bridge_sensors = 0;
   cmd_args->interpret_oem_data = 0;

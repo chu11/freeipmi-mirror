@@ -31,12 +31,12 @@ enum ipmimonitoring_argp_option_keys
   {
     VERBOSE_KEY = 'v',
     QUIET_READINGS_KEY = 'q',
-    LIST_GROUPS_KEY = 'L',
-    GROUPS_KEY = 'g',
-    EXCLUDE_GROUPS_KEY = 'G',
     SENSORS_KEY = 's',          /* legacy */
     RECORD_IDS_KEY = 'r',
     EXCLUDE_RECORD_IDS_KEY = 'R',
+    GROUPS_KEY = 'g',
+    EXCLUDE_GROUPS_KEY = 'G',
+    LIST_GROUPS_KEY = 'L',
     CACHE_DIR_KEY = 'c',              /* legacy */
     BRIDGE_SENSORS_KEY = 'b',
     INTERPRET_OEM_DATA = 160,
@@ -55,15 +55,15 @@ struct ipmimonitoring_arguments
   int verbose_count;
   int regenerate_sdr_cache;
   int quiet_readings;
-  int list_groups;
-  char groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
-  unsigned int groups_length;
-  char exclude_groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
-  unsigned int exclude_groups_length;
   unsigned int record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int record_ids_length;
   unsigned int exclude_record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int exclude_record_ids_length;
+  char groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
+  unsigned int groups_length;
+  char exclude_groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
+  unsigned int exclude_groups_length;
+  int list_groups;
   int bridge_sensors;
   int interpret_oem_data;
   int ignore_non_interpretable_sensors;

@@ -1,5 +1,14 @@
 2009-05-26  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/, ipmimonitoring/, common/: Give --record-ids
+	"priority" over --groups.  Re-org code, cleanup code, redo
+	documentation to indicate this fact.
+
+	* common/src/toolsensor/tool-sensor-common.c
+	(calculate_record_ids): Allow mix-and-matching, where
+	--exclude-groups can work with --record-ids and
+	--exclude-record-ids can work with --groups.
+
 	* common/src/toolsensor/: Code cleanup.
 	
 2009-05-25  Albert Chu <chu11@llnl.gov>
