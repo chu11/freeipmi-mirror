@@ -57,29 +57,29 @@ sensors without names.
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about the SEL.
 .TP
-\fB\-o REC-LIST\fR, \fB\-\-display=REC-LIST\fR
+\fB\-o REC-LIST\fR, \fB\-\-display\fR=\fBREC\-LIST\fR
 Display records by record id.  Accepts space or comma separated lists.
 .TP
-\fB\-r START-END\fR, \fB\-\-display-range=START-END\fR
+\fB\-r START-END\fR, \fB\-\-display-range\fR=\fBSTART\-END\fR
 Display record ids from START to END.
 .TP
 \fB\-c\fR, \fB\-\-delete-all\fR
 Delete all SEL records.
 .TP
-\fB\-d REC-LIST\fR, \fB\-\-delete=REC-LIST\fR
+\fB\-d REC-LIST\fR, \fB\-\-delete\fR=\fBREC\-LIST\fR
 Delete records by record id in the SEL.  Accepts space or comma
 separated lists.
 .TP
-\fB\-R START-END\fR, \fB\-\-delete-range=START-END\fR
+\fB\-R START-END\fR, \fB\-\-delete-range\fR=\fBSTART\-END\fR
 Delete record ids from START to END in the SEL.
 .TP
-\fB\-N, \fB\-\-system-event-only\fR
+\fB\-N, \fB\-\-system\-event\-only\fR
 Output only system event records (i.e. don't output OEM records).
 .TP
-\fB\-O, \fB\-\-oem-only\fR
+\fB\-O, \fB\-\-oem\-only\fR
 Output only OEM event records.
 .TP
-\fB\-x\fR, \fB\-\-hex-dump\fR
+\fB\-x\fR, \fB\-\-hex\-dump\fR
 Hex-dump SEL entries.
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>
