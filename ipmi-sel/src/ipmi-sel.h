@@ -33,7 +33,9 @@ enum ipmi_sel_argp_option_keys
     VERBOSE_KEY = 'v',
     INFO_KEY = 'i',
     DISPLAY_KEY = 'o',
+    EXCLUDE_DISPLAY_KEY = 'G',
     DISPLAY_RANGE_KEY = 'r',
+    EXCLUDE_DISPLAY_RANGE_KEY = 'X',
     DELETE_ALL_KEY = 'c',
     DELETE_KEY = 'd',
     DELETE_RANGE_KEY = 'R',
@@ -56,9 +58,15 @@ struct ipmi_sel_arguments
   int display;
   unsigned int display_record_list[IPMI_SEL_MAX_RECORD];
   unsigned int display_record_list_length;
+  int exclude_display;
+  unsigned int exclude_display_record_list[IPMI_SEL_MAX_RECORD];
+  unsigned int exclude_display_record_list_length;
   int display_range;
   unsigned int display_range1;
   unsigned int display_range2;
+  int exclude_display_range;
+  unsigned int exclude_display_range1;
+  unsigned int exclude_display_range2;
   int delete_all;
   int delete;
   unsigned int delete_record_list[IPMI_SEL_MAX_RECORD];

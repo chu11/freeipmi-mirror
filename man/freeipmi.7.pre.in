@@ -112,9 +112,9 @@ A tool and daemon for IPMI node detection.
 .SH "Project Libraries"
 .B Libfreeipmi
 .PP
-A C library that includes KCS, SSIF, and OpenIPMI drivers, IPMI
-1.5 and IPMI 2.0 LAN communication interfaces, IPMI packet building
-utilities, IPMI command utilities, and utilities for
+A C library that includes KCS, SSIF, OpenIPMI Linux, and Solaris BMC
+drivers, IPMI 1.5 and IPMI 2.0 LAN communication interfaces, IPMI
+packet building utilities, IPMI command utilities, and utilities for
 reading/interpreting/managing IPMI.
 .PP
 .B Libipmiconsole

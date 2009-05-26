@@ -77,28 +77,32 @@ static struct argp_option cmdline_options[] =
       "Show general information about the SEL.", 31},
     { "display",     DISPLAY_KEY,     "REC-LIST", 0,
       "Display SEL records by record ids.", 32},
+    { "exclude-display", EXCLUDE_DISPLAY_KEY, "REC-LIST", 0,
+      "Exclude display of SEL records by record ids.", 33},
     { "display-range", DISPLAY_RANGE_KEY, "START-END", 0,
-      "Display record ids from START to END.", 33},
+      "Display SEL records from record id START to END.", 34},
+    { "exclude-display-range", EXCLUDE_DISPLAY_RANGE_KEY, "START-END", 0,
+      "Exclude display of SEL records from record id START to END.", 35},
     { "delete",     DELETE_KEY,     "REC-LIST", 0,
-      "Delete SEL records by record ids.", 34},
+      "Delete SEL records by record ids.", 36},
     { "delete-all", DELETE_ALL_KEY, 0, 0,
-      "Delete all SEL records.", 35},
+      "Delete all SEL records.", 37},
     { "delete-range", DELETE_RANGE_KEY, "START-END", 0,
-      "Delete record ids from START to END in the SEL.", 36},
+      "Delete record ids from START to END in the SEL.", 37},
     { "system-event-only", SYSTEM_EVENT_ONLY_KEY, 0, 0,
-      "Output only system event records (i.e. don't output OEM records).", 37},
+      "Output only system event records (i.e. don't output OEM records).", 38},
     { "oem-event-only", OEM_EVENT_ONLY_KEY, 0, 0,
-      "Output only OEM event records.", 38},
+      "Output only OEM event records.", 39},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
-      "Hex-dump SEL records.", 39},
+      "Hex-dump SEL records.", 40},
     { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
-      "Attempt to interpret OEM data.", 40},
+      "Attempt to interpret OEM data.", 41},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 41},
+      "Output fields in comma separated format.", 42},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 42},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 43},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 43},
+      "Output in legacy format.", 44},
     { 0 }
   };
 
@@ -255,10 +259,22 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                          &(cmd_args->display_record_list_length),
                          arg);
       break;
+    case EXCLUDE_DISPLAY_KEY:
+      _read_record_list (&(cmd_args->exclude_display),
+                         cmd_args->exclude_display_record_list,
+                         &(cmd_args->exclude_display_record_list_length),
+                         arg);
+      break;
     case DISPLAY_RANGE_KEY:
       _read_range (&(cmd_args->display_range),
                    &(cmd_args->display_range1),
                    &(cmd_args->display_range2),
+                   arg);
+      break;
+    case EXCLUDE_DISPLAY_RANGE_KEY:
+      _read_range (&(cmd_args->exclude_display_range),
+                   &(cmd_args->exclude_display_range1),
+                   &(cmd_args->exclude_display_range2),
                    arg);
       break;
     case DELETE_ALL_KEY:
@@ -367,9 +383,17 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
           '\0',
           sizeof (int) * IPMI_SEL_MAX_RECORD);
   cmd_args->display_record_list_length = 0;
+  cmd_args->exclude_display = 0;
+  memset (cmd_args->exclude_display_record_list,
+          '\0',
+          sizeof (int) * IPMI_SEL_MAX_RECORD);
+  cmd_args->exclude_display_record_list_length = 0;
   cmd_args->display_range = 0;
   cmd_args->display_range1 = 0;
   cmd_args->display_range2 = 0;
+  cmd_args->exclude_display_range = 0;
+  cmd_args->exclude_display_range1 = 0;
+  cmd_args->exclude_display_range2 = 0;
   cmd_args->delete_all = 0;
   cmd_args->delete = 0;
   memset (cmd_args->delete_record_list,

@@ -58,10 +58,17 @@ sensors without names.
 Show general information about the SEL.
 .TP
 \fB\-o REC-LIST\fR, \fB\-\-display\fR=\fBREC\-LIST\fR
-Display records by record id.  Accepts space or comma separated lists.
+Display SEL records by record id.  Accepts space or comma separated lists.
+.TP
+\fB\-G REC-LIST\fR, \fB\-\-exclude\-display\fR=\fBREC\-LIST\fR
+Exclude display of SEL records by record id.  Accepts space or comma
+separated lists.
 .TP
 \fB\-r START-END\fR, \fB\-\-display-range\fR=\fBSTART\-END\fR
-Display record ids from START to END.
+Display SEL records from record id START to END.
+.TP
+\fB\-X START-END\fR, \fB\-\-exclude\-display-range\fR=\fBSTART\-END\fR
+Exclude display of SEL records from record id START to END.
 .TP
 \fB\-c\fR, \fB\-\-delete-all\fR
 Delete all SEL records.

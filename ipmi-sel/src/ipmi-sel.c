@@ -1488,16 +1488,17 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
   uint8_t record_type;
   int record_type_class;
   int rv = -1;
+  int display_flag = 0;
 
   assert (ctx);
   assert (callback_data);
 
   state_data = (ipmi_sel_state_data_t *)callback_data;
 
-  if (state_data->prog_data->args->display || state_data->prog_data->args->display_range)
+  if (state_data->prog_data->args->display
+      || state_data->prog_data->args->display_range)
     {
       uint16_t record_id;
-      int found = 0;
 
       if (ipmi_sel_parse_read_record_id (state_data->sel_parse_ctx,
                                          &record_id) < 0)
@@ -1516,7 +1517,7 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
             {
               if (state_data->prog_data->args->display_record_list[i] == record_id)
                 {
-                  found++;
+                  display_flag++;
                   break;
                 }
             }
@@ -1525,12 +1526,47 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
         {
           if (record_id >= state_data->prog_data->args->display_range1
               && record_id <= state_data->prog_data->args->display_range2)
-            found++;
+            display_flag++;
+        }
+    }
+
+  if (state_data->prog_data->args->exclude_display
+      || state_data->prog_data->args->exclude_display_range)
+    {
+      uint16_t record_id;
+
+      if (ipmi_sel_parse_read_record_id (state_data->sel_parse_ctx,
+                                         &record_id) < 0)
+        {
+          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_id") < 0)
+            goto cleanup;
+          goto out;
         }
 
-      if (!found)
-        goto out;
+      if (state_data->prog_data->args->exclude_display)
+        {
+          unsigned int i;
+
+          /* achu: I know it's slow, shouldn't be that big of a deal in the grand scheme */
+          for (i = 0; i < state_data->prog_data->args->exclude_display_record_list_length; i++)
+            {
+              if (state_data->prog_data->args->exclude_display_record_list[i] == record_id)
+                {
+                  display_flag = 0;
+                  break;
+                }
+            }
+        }
+      else
+        {
+          if (record_id >= state_data->prog_data->args->exclude_display_range1
+              && record_id <= state_data->prog_data->args->exclude_display_range2)
+            display_flag = 0;
+        }
     }
+
+  if (!display_flag)
+    goto out;
 
   if (ipmi_sel_parse_read_record_type (state_data->sel_parse_ctx,
                                        &record_type) < 0)
