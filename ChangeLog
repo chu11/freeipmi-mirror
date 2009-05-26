@@ -2,6 +2,8 @@
 
 	* ipmi-sensors/, ipmimonitoring/: Support "all" and "none" for
 	command line record-ids and groups options.
+
+	* ipmi-sel/: Support --exclude-display and --exclude-display-range.
 	
 2009-05-26  Albert Chu <chu11@llnl.gov>
 
