@@ -25,11 +25,6 @@ libfreeipmi
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
 
-libipmimonitoring
------------------
-perl extensions
-python extensions
-
 ipmi-fru
 --------
 (TEST) multirecord stuff against a FRU
@@ -46,17 +41,13 @@ ipmi-oem
 --------
 inventec disable ports
 inventec user disable
-
-sel
----
---exclude ..
+inventec firmware revision
 
 sensors/monitoring
 ------------------
 (TEST) make sure bridging still works w/ sensor-read lib
 (TEST) make sure oem still outputs fine
 option output via entity_id organization (i.e. groups of owners)
-support "all" "none" special case, if user wishes to override config file defaults
 
 ipmi-chassis-config
 -------------------
