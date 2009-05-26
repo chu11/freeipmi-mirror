@@ -507,30 +507,30 @@ error_t
 sdr_parse_opt (int key,
                char *arg,
                struct argp_state *state,
-               struct sdr_cmd_args *cmd_args)
+               struct sdr_cmd_args *sdr_cmd_args)
 {
   switch (key)
     {
     case ARGP_FLUSH_CACHE_KEY:
-      cmd_args->flush_cache = 1;
+      sdr_cmd_args->flush_cache = 1;
       break;
     case ARGP_QUIET_CACHE_KEY:
-      cmd_args->quiet_cache = 1;
+      sdr_cmd_args->quiet_cache = 1;
       break;
     case ARGP_SDR_CACHE_DIRECTORY_KEY:
-      if (cmd_args->sdr_cache_directory)
-        free (cmd_args->sdr_cache_directory);
-      if (!(cmd_args->sdr_cache_directory = strdup (arg)))
+      if (sdr_cmd_args->sdr_cache_directory)
+        free (sdr_cmd_args->sdr_cache_directory);
+      if (!(sdr_cmd_args->sdr_cache_directory = strdup (arg)))
         {
           perror ("strdup");
           exit (1);
         }
       break;
     case ARGP_SDR_CACHE_RECREATE_KEY:
-      cmd_args->sdr_cache_recreate = 1;
+      sdr_cmd_args->sdr_cache_recreate = 1;
       break;
     case ARGP_IGNORE_SDR_CACHE_KEY:
-      cmd_args->ignore_sdr_cache = 1;
+      sdr_cmd_args->ignore_sdr_cache = 1;
       break;
     default:
       return (ARGP_ERR_UNKNOWN);
@@ -543,7 +543,7 @@ error_t
 hostrange_parse_opt (int key,
                      char *arg,
                      struct argp_state *state,
-                     struct hostrange_cmd_args *cmd_args)
+                     struct hostrange_cmd_args *hostrange_cmd_args)
 {
   char *ptr;
   int tmp;
@@ -551,10 +551,10 @@ hostrange_parse_opt (int key,
   switch (key)
     {
     case ARGP_BUFFER_OUTPUT_KEY:
-      cmd_args->buffer_output = 1;
+      hostrange_cmd_args->buffer_output = 1;
       break;
     case ARGP_CONSOLIDATE_OUTPUT_KEY:
-      cmd_args->consolidate_output = 1;
+      hostrange_cmd_args->consolidate_output = 1;
       break;
     case ARGP_FANOUT_KEY:
       tmp = strtol (arg, &ptr, 10);
@@ -566,13 +566,13 @@ hostrange_parse_opt (int key,
           exit (1);
           break;
         }
-      cmd_args->fanout = tmp;
+      hostrange_cmd_args->fanout = tmp;
       break;
     case ARGP_ELIMINATE_KEY:
-      cmd_args->eliminate = 1;
+      hostrange_cmd_args->eliminate = 1;
       break;
     case ARGP_ALWAYS_PREFIX_KEY:
-      cmd_args->always_prefix = 1;
+      hostrange_cmd_args->always_prefix = 1;
       break;
     default:
       return (ARGP_ERR_UNKNOWN);
