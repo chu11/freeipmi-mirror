@@ -25,6 +25,11 @@ libfreeipmi
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
 
+libipmimonitoring
+-----------------
+perl extensions
+python extensions
+
 ipmi-fru
 --------
 (TEST) multirecord stuff against a FRU
