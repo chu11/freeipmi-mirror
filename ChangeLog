@@ -1,5 +1,10 @@
 2009-05-26  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/, ipmimonitoring/: Support "all" and "none" for
+	command line record-ids and groups options.
+	
+2009-05-26  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/, ipmimonitoring/, common/: Give --record-ids
 	"priority" over --groups.  Re-org code, cleanup code, redo
 	documentation to indicate this fact.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.49 2009-05-26 17:13:19 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.50 2009-05-26 21:04:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -162,6 +162,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           ptr = NULL;
           errno = 0;
 
+          if (!strcasecmp (tok, SENSOR_PARSE_ALL_STRING))
+            {
+              cmd_args->record_ids_length = 0;
+              break;
+            }
+
           value = strtol (tok, &ptr, 10);
 
           if (errno
@@ -187,6 +193,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           ptr = NULL;
           errno = 0;
 
+          if (!strcasecmp (tok, SENSOR_PARSE_NONE_STRING))
+            {
+              cmd_args->exclude_record_ids_length = 0;
+              break;
+            }
+
           value = strtol (tok, &ptr, 10);
 
           if (errno
@@ -208,6 +220,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tok = strtok (arg, " ,");
       while (tok && cmd_args->groups_length < MAX_SENSOR_GROUPS)
         {
+          if (!strcasecmp (tok, SENSOR_PARSE_ALL_STRING))
+            {
+              cmd_args->groups_length = 0;
+              break;
+            }
           strncpy (cmd_args->groups[cmd_args->groups_length],
                    tok,
                    MAX_SENSOR_GROUPS_STRING_LENGTH);
@@ -219,6 +236,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tok = strtok (arg, " ,");
       while (tok && cmd_args->exclude_groups_length < MAX_SENSOR_GROUPS)
         {
+          if (!strcasecmp (tok, SENSOR_PARSE_NONE_STRING))
+            {
+              cmd_args->exclude_groups_length = 0;
+              break;
+            }
           strncpy (cmd_args->exclude_groups[cmd_args->exclude_groups_length],
                    tok,
                    MAX_SENSOR_GROUPS_STRING_LENGTH);

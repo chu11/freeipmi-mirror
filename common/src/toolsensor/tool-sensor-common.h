@@ -41,6 +41,9 @@
 #define MAX_SENSOR_GROUPS                   256
 #define MAX_SENSOR_GROUPS_STRING_LENGTH     256
 
+#define SENSOR_PARSE_ALL_STRING             "all"
+#define SENSOR_PARSE_NONE_STRING            "none"
+
 struct sensor_column_width
 {
   int record_id;

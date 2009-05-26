@@ -149,6 +149,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           ptr = NULL;
           errno = 0;
 
+          if (!strcasecmp (tok, SENSOR_PARSE_ALL_STRING))
+            {
+              cmd_args->record_ids_length = 0;
+              break;
+            }
+
           value = strtol (tok, &ptr, 10);
 
           if (errno
@@ -173,6 +179,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           value = 0;
           ptr = NULL;
           errno = 0;
+
+          if (!strcasecmp (tok, SENSOR_PARSE_NONE_STRING))
+            {
+              cmd_args->exclude_record_ids_length = 0;
+              break;
+            }
 
           value = strtol (tok, &ptr, 10);
 
@@ -202,6 +214,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tok = strtok (arg, " ,");
       while (tok && cmd_args->groups_length < MAX_SENSOR_GROUPS)
         {
+          if (!strcasecmp (tok, SENSOR_PARSE_ALL_STRING))
+            {
+              cmd_args->groups_length = 0;
+              break;
+            }
           strncpy (cmd_args->groups[cmd_args->groups_length],
                    tok,
                    MAX_SENSOR_GROUPS_STRING_LENGTH);
@@ -213,6 +230,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tok = strtok (arg, " ,");
       while (tok && cmd_args->exclude_groups_length < MAX_SENSOR_GROUPS)
         {
+          if (!strcasecmp (tok, SENSOR_PARSE_NONE_STRING))
+            {
+              cmd_args->exclude_groups_length = 0;
+              break;
+            }
           strncpy (cmd_args->exclude_groups[cmd_args->exclude_groups_length],
                    tok,
                    MAX_SENSOR_GROUPS_STRING_LENGTH);

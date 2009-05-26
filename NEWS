@@ -67,6 +67,7 @@ o ipmi-sensors
     units (i.e. "Amps" instead of "A").
   - Support --exclude-groups option.
   - Support --exclude-record-ids option.
+  - Support "all" and "none" inputs for groups and record-ids options.
   - Support --comma-separated-output option.
   - Rename --sensors option to --record-ids.  Maintain old options for
     backwards compatability.
@@ -112,6 +113,7 @@ o ipmimonitoring
     ipmi-sensors, including some sensors that can't be interpreted.
   - Support --exclude-groups option.
   - Support --exclude-record-ids option.
+  - Support "all" and "none" inputs for groups and record-ids options.
   - Support --ignore-non-interpretable-sensors option.
   - Rename --sensors option to --record-ids.  Maintain old options for
     backwards compatability.
