@@ -98,7 +98,7 @@ thresholds, sensor events, and other sensor related fields.
 
 Ipmi-dcmi
 
-A tool to perform Data Center Management Interface (DCMI) IPMI
+A tool to perform Data Center Manageability Interface (DCMI) IPMI
 extension commands.  Supports extensions for asset management and
 power usage management.
 
