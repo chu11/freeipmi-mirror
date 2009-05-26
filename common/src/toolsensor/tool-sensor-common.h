@@ -71,13 +71,6 @@ int get_sensor_units_output_string (pstdout_state_t pstate,
                                     unsigned int sensor_units_buflen,
                                     unsigned int abbreviated_units_flag);
 
-int is_sdr_sensor_group_listed (pstdout_state_t pstate,
-                                ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                                const void *sdr_record,
-                                unsigned int sdr_record_len,
-                                char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                                unsigned int groups_length);
-
 void output_sensor_headers (pstdout_state_t pstate,
                             int quiet_readings,
                             int output_sensor_state,

@@ -1,3 +1,7 @@
+2009-05-26  Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolsensor/: Code cleanup.
+	
 2009-05-25  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, ipmimonitoring/: Support short options for

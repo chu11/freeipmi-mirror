@@ -220,71 +220,6 @@ sensor_group_strcmp (pstdout_state_t pstate,
   return (0);
 }
 
-int
-is_sdr_sensor_group_listed (pstdout_state_t pstate,
-                            ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                            const void *sdr_record,
-                            unsigned int sdr_record_len,
-                            char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                            unsigned int groups_length)
-{
-  uint16_t record_id;
-  uint8_t record_type;
-  uint8_t sensor_type;
-  int i;
-
-  assert (sdr_parse_ctx);
-  assert (sdr_record);
-  assert (sdr_record_len);
-  assert (groups);
-  assert (groups_length);
-
-  if (ipmi_sdr_parse_record_id_and_type (sdr_parse_ctx,
-                                         sdr_record,
-                                         sdr_record_len,
-                                         &record_id,
-                                         &record_type) < 0)
-    {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "ipmi_sdr_parse_record_id_and_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
-      return (-1);
-    }
-
-  if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
-      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
-      && record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
-    return (0);
-
-  if (ipmi_sdr_parse_sensor_type (sdr_parse_ctx,
-                                  sdr_record,
-                                  sdr_record_len,
-                                  &sensor_type) < 0)
-    {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "ipmi_sdr_parse_sensor_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
-      return (-1);
-    }
-
-  for (i = 0; i < groups_length; i++)
-    {
-      int ret;
-
-      if ((ret = sensor_group_strcmp (pstate,
-                                      groups[i],
-                                      sensor_type)) < 0)
-        return (-1);
-
-      if (ret)
-        return (1);
-    }
-
-  return (0);
-}
-
 void
 output_sensor_headers (pstdout_state_t pstate,
                        int quiet_readings,
@@ -504,6 +439,71 @@ _store_column_widths (pstdout_state_t pstate,
   return (0);
 }
 
+static int
+_is_sdr_sensor_group_listed (pstdout_state_t pstate,
+                             ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                             const void *sdr_record,
+                             unsigned int sdr_record_len,
+                             char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
+                             unsigned int groups_length)
+{
+  uint16_t record_id;
+  uint8_t record_type;
+  uint8_t sensor_type;
+  int i;
+
+  assert (sdr_parse_ctx);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (groups);
+  assert (groups_length);
+
+  if (ipmi_sdr_parse_record_id_and_type (sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &record_id,
+                                         &record_type) < 0)
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "ipmi_sdr_parse_record_id_and_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+      return (-1);
+    }
+
+  if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
+    return (0);
+
+  if (ipmi_sdr_parse_sensor_type (sdr_parse_ctx,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  &sensor_type) < 0)
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+      return (-1);
+    }
+
+  for (i = 0; i < groups_length; i++)
+    {
+      int ret;
+
+      if ((ret = sensor_group_strcmp (pstate,
+                                      groups[i],
+                                      sensor_type)) < 0)
+        return (-1);
+
+      if (ret)
+        return (1);
+    }
+
+  return (0);
+}
+
 int
 calculate_column_widths (pstdout_state_t pstate,
                          ipmi_sdr_cache_ctx_t sdr_cache_ctx,
@@ -604,12 +604,12 @@ calculate_column_widths (pstdout_state_t pstate,
 
           if (groups && groups_length)
             {
-              if ((ret = is_sdr_sensor_group_listed (pstate,
-                                                     sdr_parse_ctx,
-                                                     sdr_record,
-                                                     sdr_record_len,
-                                                     groups,
-                                                     groups_length)) < 0)
+              if ((ret = _is_sdr_sensor_group_listed (pstate,
+                                                      sdr_parse_ctx,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      groups,
+                                                      groups_length)) < 0)
                 goto cleanup;
             }
           else
@@ -825,44 +825,44 @@ calculate_record_ids (pstdout_state_t pstate,
 
           if (groups_length && exclude_groups_length)
             {
-              if ((flag = is_sdr_sensor_group_listed (pstate,
-                                                      sdr_parse_ctx,
-                                                      sdr_record,
-                                                      sdr_record_len,
-                                                      groups,
-                                                      groups_length)) < 0)
+              if ((flag = _is_sdr_sensor_group_listed (pstate,
+                                                       sdr_parse_ctx,
+                                                       sdr_record,
+                                                       sdr_record_len,
+                                                       groups,
+                                                       groups_length)) < 0)
                 return (-1);
 
               if (flag)
                 {
-                  if ((flag = is_sdr_sensor_group_listed (pstate,
-                                                          sdr_parse_ctx,
-                                                          sdr_record,
-                                                          sdr_record_len,
-                                                          exclude_groups,
-                                                          exclude_groups_length)) < 0)
+                  if ((flag = _is_sdr_sensor_group_listed (pstate,
+                                                           sdr_parse_ctx,
+                                                           sdr_record,
+                                                           sdr_record_len,
+                                                           exclude_groups,
+                                                           exclude_groups_length)) < 0)
                     return (-1);
                   flag = !flag;
                 }
             }
           else if (groups_length && !exclude_groups_length)
             {
-              if ((flag = is_sdr_sensor_group_listed (pstate,
-                                                      sdr_parse_ctx,
-                                                      sdr_record,
-                                                      sdr_record_len,
-                                                      groups,
-                                                      groups_length)) < 0)
+              if ((flag = _is_sdr_sensor_group_listed (pstate,
+                                                       sdr_parse_ctx,
+                                                       sdr_record,
+                                                       sdr_record_len,
+                                                       groups,
+                                                       groups_length)) < 0)
                 return (-1);
             }
           else if (!groups_length && exclude_groups_length)
             {
-              if ((flag = is_sdr_sensor_group_listed (pstate,
-                                                      sdr_parse_ctx,
-                                                      sdr_record,
-                                                      sdr_record_len,
-                                                      exclude_groups,
-                                                      exclude_groups_length)) < 0)
+              if ((flag = _is_sdr_sensor_group_listed (pstate,
+                                                       sdr_parse_ctx,
+                                                       sdr_record,
+                                                       sdr_record_len,
+                                                       exclude_groups,
+                                                       exclude_groups_length)) < 0)
                 return (-1);
               flag = !flag;
             }
