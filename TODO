@@ -125,28 +125,8 @@ what OEM vendors can add
 
 DCMI functionality
 ------------------
-http://www.intel.com/technology/product/DCMI/index.htm
-- new FreeIPMI tool? or separate project? or contrib project?
-  - probably a contrib project
-- nothing special as a whole, mostly already IPMI 2.0 with a few new
-additions.
-- get dcmi capabilities info
-  - the typical what is dcmi supported and version info junk
-- get asset tag
-  - seems useless.  gets asset tag, but the asset tag is already
-    stored in the FRU (and output via normal FRU output in ipmi-fru.)
-  - if supported, make ipmi-fru stuff into lib or steal code 
-    from ipmi-fru for parsing.
-- get dcmi sensor info command
-  - seems useless, only gets the SDR #s of specific sensors
-    DCMI cares about?  But sensors already should be output by
-    ipmi-sensors/ipmimonitoring/etc.
-- get power reading
-- get power limit
-- set power limit
-- activate/deactive power limit
-  - these 4 commands seem like the only maybe potentially useful
-    additions.
+- test capability info > revision 1
+- test everything else
 
 ipmi proxy daemon
 -----------------
