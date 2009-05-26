@@ -1529,9 +1529,12 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
             display_flag++;
         }
     }
+  else
+    display_flag++;
 
-  if (state_data->prog_data->args->exclude_display
-      || state_data->prog_data->args->exclude_display_range)
+  if (display_flag
+      && (state_data->prog_data->args->exclude_display
+          || state_data->prog_data->args->exclude_display_range))
     {
       uint16_t record_id;
 

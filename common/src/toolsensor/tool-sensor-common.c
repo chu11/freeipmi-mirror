@@ -522,8 +522,6 @@ calculate_column_widths (pstdout_state_t pstate,
 
   assert (sdr_cache_ctx);
   assert (sdr_parse_ctx);
-  assert (groups);
-  assert (record_ids);
   assert (column_width);
 
   _sensor_column_width_init (column_width);
