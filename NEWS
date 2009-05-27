@@ -2,7 +2,8 @@
 ----------------
 Tools - High Level Description of Changes
 -----------------------------------------
-o Support ipmi-dcmi, data center management interface (DCM, DCMI).
+o Support ipmi-dcmi, Data Center Management Interface (often referred
+  to as DCM or DCMI).
 o Make output of ipmi-sel, ipmi-sensors, and ipmimonitoring easier to
   read and consistent to each other.  Under default output, sensors
   listed in ipmi-sensors and ipmimonitoring are identical.  Legacy
@@ -22,10 +23,13 @@ o Support non-abbreviated units (i.e. "Amps" instead of "A") in most
 o Output IANA Manufacturer Name when appropriate in most tools.
 o Output additional information in many tools.
 o "Library-ize" much of the functionality originally only inside the
-  tools.
-o Support Data Center Management Interface (DCMI) extensions.
+  tools.  
 o Re-work libipmimonitoring to return sensor events for all sensors,
   not just non-threshold sensors.  Resulted in an API change.
+
+o "Re-claimed" many short options by limiting short options to only
+  the most popular options.  Short options have been removed from
+  ipmipower.  See details below for specific short options removed.
 o Rename pef-config to ipmi-pef-config for naming consistency.
 o Various minor feature enhancements and options.
 o Various bug fixes.
@@ -157,6 +161,17 @@ o ipmi-fru
   - Re-work to use new libfreeipmi fru-parse sub library.
   - Check for valid device ID inputs.
   - Support additional options in FreeIPMI config file.
+o ipmipower
+  - Removed the following short options (long options remain).
+    - 't' (legacy --session-timeout)
+    - 'y' (legacy --retransmission-timeout) 
+    - 'q' (--retransmission--wait-timeout)
+    - 'b' (--retransmission-backoff-count)
+    - 'i' (--ping-interval)
+    - 'z' (--ping-timeout)
+    - 'v' (--ping-packet-count)
+    - 'w' (--ping-percent)
+    - 'x' (--ping-consec-count)
 o bmc-device
   - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
     of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to

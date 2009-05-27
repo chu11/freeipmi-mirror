@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.132 2009-05-03 17:40:28 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.133 2009-05-27 16:58:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -380,18 +380,28 @@ enum ipmi_sensors_argp_option_keys
     WAIT_UNTIL_OFF_KEY = 'A',
     WAIT_UNTIL_ON_KEY = 'G',
 
-    SESSION_TIMEOUT_KEY = 't',    /* legacy short option */
-    RETRANSMISSION_TIMEOUT_KEY = 'y',   /* legacy short option */
+    /* following are legacy short options that have been removed */
+#if 0
+    SESSION_TIMEOUT_KEY = 't', /* legacy removed */
+    RETRANSMISSION_TIMEOUT_KEY = 'y', /* legacy removed */
+    RETRANSMISSION_WAIT_TIMEOUT_KEY = 'q', /* legacy removed */
+    RETRANSMISSION_BACKOFF_COUNT_KEY = 'b', /* legacy removed */
+    PING_INTERVAL_KEY = 'i', /* legacy removed */
+    PING_TIMEOUT_KEY = 'z', /* legacy removed */
+    PING_PACKET_COUNT_KEY = 'v', /* legacy removed */
+    PING_PERCENT_KEY = 'w', /* legacy removed */
+    PING_CONSEC_COUNT_KEY = 'x', /* legacy removed */
+#endif
 
     RETRY_WAIT_TIMEOUT_KEY = 161,
-    RETRANSMISSION_WAIT_TIMEOUT_KEY = 'q',
-    RETRY_BACKOFF_COUNT_KEY = 162,
-    RETRANSMISSION_BACKOFF_COUNT_KEY = 'b',
-    PING_INTERVAL_KEY = 'i',
-    PING_TIMEOUT_KEY = 'z',
-    PING_PACKET_COUNT_KEY = 'v',
-    PING_PERCENT_KEY = 'w',
-    PING_CONSEC_COUNT_KEY = 'x',
+    RETRANSMISSION_WAIT_TIMEOUT_KEY = 162,
+    RETRY_BACKOFF_COUNT_KEY = 163,
+    RETRANSMISSION_BACKOFF_COUNT_KEY = 164,
+    PING_INTERVAL_KEY = 165,
+    PING_TIMEOUT_KEY = 166,
+    PING_PACKET_COUNT_KEY = 167,
+    PING_PERCENT_KEY = 168,
+    PING_CONSEC_COUNT_KEY = 169,
   };
 
 struct ipmipower_arguments

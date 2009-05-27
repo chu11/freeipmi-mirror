@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.12 2009-05-01 21:13:58 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.13 2009-05-27 16:58:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -81,12 +81,15 @@ static struct argp_option cmdline_options[] =
     { "ipmi-version", IPMI_VERSION_KEY, "IPMIVERSION", OPTION_HIDDEN,
       "Specify the IPMI protocol version to use.", 11},
     ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
+    /* removed legacy short options */
+#if 0
     /* maintain legacy short options to timeout/session-timeout */
     { "bogus-long-option1", SESSION_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
       "Specify the session timeout in milliseconds.", 12},
     /* maintain legacy short options to retry-timeout/retransmission-timeout */
     { "bogus-long-option2", RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
       "Specify the packet retransmission timeout in milliseconds.", 11},
+#endif
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR,
