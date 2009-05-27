@@ -3,7 +3,11 @@
 	* tagged pre_remove_legacy_options
 
 	* Remove general legacy options.
+
+	* Remove some legacy options from ipmipower and ipmimonitoring.
 	
+	* tagged pre_remove_legacy_options
+
 2009-05-27  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_remove_many_short_options
