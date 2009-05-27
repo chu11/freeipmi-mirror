@@ -40,6 +40,7 @@ o Removed many legacy long options.  See details below for specific
   - --auth-type (--authentication-type since 0.5.1)
   - --privilege (--privilege-level since 0.5.1)
   - --priv-level (--privilege-level since 0.5.1)
+  - --config (--config-file since 0.7.1)
 o Rename pef-config to ipmi-pef-config for naming consistency.
 o Various minor feature enhancements and options.
 o Various bug fixes.
