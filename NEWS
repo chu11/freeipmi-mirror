@@ -13,7 +13,7 @@ o Make output of ipmi-chassis, bmc-info, bmc-device, and info output
 o When querying active/inactive, allowed/unallowed, true/false,
   etc. status fields in ipmi-chassis, bmc-info, and bmc-device, output
   all fields instead of only the active/allowed/true/etc. fields.
-o Support exclusion equivalent options such as (--exclude-groups) in
+o Support exclusion equivalent options (such as --exclude-groups) in
   various tools such as ipmi-sel, ipmi-sensors, and ipmimonitoring.
 o Support sensor unit percentages, rates, and modifiers (i.e. "%
   hit", "gigabyte per minute", "pounds / cu in") in most tools.
