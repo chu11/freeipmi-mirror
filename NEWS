@@ -30,7 +30,7 @@ o "Re-claimed" many short options by limiting short options to only
   the most popular options.  Short options have been removed from
   ipmipower, ipmiconsole, ipmi-chassis, ipmi-sel, and ipmi-raw.  See
   details below for specific short options removed.
-o Removed many legacy long option.  See details below in ipmipower,
+o Removed many legacy long option.  See details below in ipmipower
   and ipmimonitoring for specific tool long options removed.
   Following general long options removed throughout.
   - --no-probing (--disable-auto-probe since 0.7.1)
@@ -40,7 +40,15 @@ o Removed many legacy long option.  See details below in ipmipower,
   - --auth-type (--authentication-type since 0.5.1)
   - --privilege (--privilege-level since 0.5.1)
   - --priv-level (--privilege-level since 0.5.1)
-  - --config (--config-file since 0.7.1)
+  - --config (--config-file since 0.7.1) 
+
+o Removed many legacy config file options.  See details below in
+  ipmipower and ipmiconsole for specific options removed.  Following
+  general config file options removed.
+  - timeout (session-timeout since 0.5.1)
+  - retry-timeout (retransmission-timeout since 0.5.1)
+  - cipher_suite_id (cipher-suite-id since 0.5.1)
+  - privilege (privilege-level since 0.5.1)
 o Rename pef-config to ipmi-pef-config for naming consistency.
 o Various minor feature enhancements and options.
 o Various bug fixes.
@@ -206,11 +214,26 @@ o ipmipower
     - retry-timeout (retransmission-timeout since 0.5.1)
     - retry-wait-timeout (retransmission-wait-timeout since 0.5.1)
     - retry-backoff-timeout (retransmission-backoff-timeout since 0.5.1)
+  - Removed the following config file options.
+    - ipmi-version (converted to driver-type since 0.7.1)
+    - retry-wait-timeout (converted to retransmission-wait-timeout sinced 0.5.1)
+    - retransmission-wait-timeout (ipmipower-retransmission-wait-timeout sinced 0.7.1)
+    - retry-backoff-count (converted to retransmission-backoff-count sinced 0.5.1)
+    - retransmission-backoff-count (ipmipower-retransmission-backoff-count sinced 0.7.1)
+    - ping-interval (ipmipower-ping-interval since 0.7.1)
+    - ping-timeout (ipmipower-ping-timeout since 0.7.1)
+    - ping-packet-count (ipmipower-ping-packet-count since 0.7.1)
+    - ping-percent (ipmipower-ping-percent since 0.7.1)
+    - ping-consec-count (ipmipower-ping-consec-count since 0.7.1)
 o ipmiconsole
   - Removed the following short options (long options remain).
     - 'N' (--dont-steal)
     - 'T' (--deactivate)
     - 'L' (--lock-memory)
+  - Removed the following config file options.
+    - escape-char (ipmiconsole-escape-char since 0.7.1)
+    - dont-steal (ipmiconsole-dont-steal since 0.7.1)
+    - lock-memory (ipmiconsole-lock-memory since 0.7.1)
 o bmc-device
   - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
     of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to

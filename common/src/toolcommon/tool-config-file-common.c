@@ -1299,18 +1299,6 @@ config_file_parse (const char *filename,
         &cmd_args_config,
         0,
       },
-      /* timeout maintained for backwards compatability */
-      {
-        "timeout",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_positive_int,
-        1,
-        0,
-        &session_timeout_count,
-        &(cmd_args->session_timeout),
-        0
-      },
       {
         "session-timeout",
         CONFFILE_OPTION_INT,
@@ -1320,18 +1308,6 @@ config_file_parse (const char *filename,
         0,
         &session_timeout_count,
         &(cmd_args->session_timeout),
-        0
-      },
-      /* retry-timeout maintained for backwards compatability */
-      {
-        "retry-timeout",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_positive_int,
-        1,
-        0,
-        &retransmission_timeout_count,
-        &(cmd_args->retransmission_timeout),
         0
       },
       {
@@ -1356,18 +1332,6 @@ config_file_parse (const char *filename,
         &cmd_args_config,
         0,
       },
-      /* cipher_suite_id (underscored) maintained for backwards compatability */
-      {
-        "cipher_suite_id",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_cipher_suite_id,
-        1,
-        0,
-        &cipher_suite_id_count,
-        &cmd_args_config,
-        0,
-      },
       {
         "cipher-suite-id",
         CONFFILE_OPTION_INT,
@@ -1376,18 +1340,6 @@ config_file_parse (const char *filename,
         1,
         0,
         &cipher_suite_id_count,
-        &cmd_args_config,
-        0,
-      },
-      /* privilege maintained for backwards compatability */
-      {
-        "privilege",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_privilege_level,
-        1,
-        0,
-        &privilege_level_count,
         &cmd_args_config,
         0,
       },
@@ -3099,18 +3051,6 @@ config_file_parse (const char *filename,
         &cmd_args_config,
         0
       },
-      /* legacy - no ipmiconsole prefix */
-      {
-        "escape-char",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_ipmiconsole_escape_char,
-        1,
-        0,
-        &(ipmiconsole_data.escape_char_count),
-        &(ipmiconsole_data.escape_char),
-        0
-      },
       {
         "ipmiconsole-escape-char",
         CONFFILE_OPTION_STRING,
@@ -3122,18 +3062,6 @@ config_file_parse (const char *filename,
         &(ipmiconsole_data.escape_char),
         0
       },
-      /* legacy - no ipmiconsole prefix */
-      {
-        "dont-steal",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmiconsole_data.dont_steal_count),
-        &(ipmiconsole_data.dont_steal),
-        0,
-      },
       {
         "ipmiconsole-dont-steal",
         CONFFILE_OPTION_BOOL,
@@ -3143,18 +3071,6 @@ config_file_parse (const char *filename,
         0,
         &(ipmiconsole_data.dont_steal_count),
         &(ipmiconsole_data.dont_steal),
-        0,
-      },
-      /* legacy - no ipmiconsole prefix */
-      {
-        "lock-memory",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        config_file_bool,
-        1,
-        0,
-        &(ipmiconsole_data.lock_memory_count),
-        &(ipmiconsole_data.lock_memory),
         0,
       },
       {
@@ -3481,18 +3397,6 @@ config_file_parse (const char *filename,
         &cmd_args_config,
         0
       },
-      /* ipmi-version maintained for backwards compatability */
-      {
-        "ipmi-version",
-        CONFFILE_OPTION_STRING,
-        -1,
-        config_file_ipmipower_ipmi_version,
-        1,
-        0,
-        &driver_type_count,
-        cmd_args,
-        0
-      },
       /* legacy - no ipmipower prefix */
       {
         "on-if-off",
@@ -3562,30 +3466,6 @@ config_file_parse (const char *filename,
         &(ipmipower_data.wait_until_off),
         0
       },
-      /* retry-wait-timeout for backwards comptability */
-      {
-        "retry-wait-timeout",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_positive_int,
-        1,
-        0,
-        &(ipmipower_data.retransmission_wait_timeout_count),
-        &(ipmipower_data.retransmission_wait_timeout),
-        0
-      },
-      /* legacy - no ipmipower prefix */
-      {
-        "retransmission-wait-timeout",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_positive_int,
-        1,
-        0,
-        &(ipmipower_data.retransmission_wait_timeout_count),
-        &(ipmipower_data.retransmission_wait_timeout),
-        0
-      },
       {
         "ipmipower-retransmission-wait-timeout",
         CONFFILE_OPTION_INT,
@@ -3595,30 +3475,6 @@ config_file_parse (const char *filename,
         0,
         &(ipmipower_data.retransmission_wait_timeout_count),
         &(ipmipower_data.retransmission_wait_timeout),
-        0
-      },
-      /* retry-backoff-count for backwards compatability */
-      {
-        "retry-backoff-count",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_positive_int,
-        1,
-        0,
-        &(ipmipower_data.retransmission_backoff_count_count),
-        &(ipmipower_data.retransmission_backoff_count),
-        0
-      },
-      /* legacy - no ipmipower prefix */
-      {
-        "retransmission-backoff-count",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_positive_int,
-        1,
-        0,
-        &(ipmipower_data.retransmission_backoff_count_count),
-        &(ipmipower_data.retransmission_backoff_count),
         0
       },
       {
@@ -3632,18 +3488,6 @@ config_file_parse (const char *filename,
         &(ipmipower_data.retransmission_backoff_count),
         0
       },
-      /* legacy - no ipmipower prefix */
-      {
-        "ping-interval",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_non_negative_int,
-        1,
-        0,
-        &(ipmipower_data.ping_interval_count),
-        &(ipmipower_data.ping_interval),
-        0
-      },
       {
         "ipmipower-ping-interval",
         CONFFILE_OPTION_INT,
@@ -3653,18 +3497,6 @@ config_file_parse (const char *filename,
         0,
         &(ipmipower_data.ping_interval_count),
         &(ipmipower_data.ping_interval),
-        0
-      },
-      /* legacy - no ipmipower prefix */
-      {
-        "ping-timeout",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_non_negative_int,
-        1,
-        0,
-        &(ipmipower_data.ping_timeout_count),
-        &(ipmipower_data.ping_timeout),
         0
       },
       {
@@ -3678,18 +3510,6 @@ config_file_parse (const char *filename,
         &(ipmipower_data.ping_timeout),
         0
       },
-      /* legacy - no ipmipower prefix */
-      {
-        "ping-packet-count",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_non_negative_int,
-        1,
-        0,
-        &(ipmipower_data.ping_packet_count_count),
-        &(ipmipower_data.ping_packet_count),
-        0
-      },
       {
         "ipmipower-ping-packet-count",
         CONFFILE_OPTION_INT,
@@ -3701,18 +3521,6 @@ config_file_parse (const char *filename,
         &(ipmipower_data.ping_packet_count),
         0
       },
-      /* legacy - no ipmipower prefix */
-      {
-        "ping-percent",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_non_negative_int,
-        1,
-        0,
-        &(ipmipower_data.ping_percent_count),
-        &(ipmipower_data.ping_percent),
-        0
-      },
       {
         "ipmipower-ping-percent",
         CONFFILE_OPTION_INT,
@@ -3722,18 +3530,6 @@ config_file_parse (const char *filename,
         0,
         &(ipmipower_data.ping_percent_count),
         &(ipmipower_data.ping_percent),
-        0
-      },
-      /* legacy - no ipmipower prefix */
-      {
-        "ping-consec-count",
-        CONFFILE_OPTION_INT,
-        -1,
-        config_file_non_negative_int,
-        1,
-        0,
-        &(ipmipower_data.ping_consec_count_count),
-        &(ipmipower_data.ping_consec_count),
         0
       },
       {
