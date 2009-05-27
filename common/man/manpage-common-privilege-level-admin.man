@@ -1,5 +1,0 @@
-.TP
-\fB\-l\fR, \fB\-\-privilege-level\fR=\fIPRIVILEGE\-LEVEL\fR
-Specify the privilege level to be used.  The currently available
-privilege levels are USER, OPERATOR, and ADMIN.  Defaults to ADMIN if
-not specified.
