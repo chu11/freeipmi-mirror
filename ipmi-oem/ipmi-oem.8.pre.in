@@ -11,6 +11,12 @@ provide a better user interface for OEM specific IPMI commands rather
 than using
 .B ipmi-raw(8).
 
+There are no guarantees that the below OEM commands will work on any
+particular motherboard.  OEM extensions may exist for particular
+revisions and/or firmware revisions of particular motherboards.  The
+extensions may or may not exist for other lines of motherboards from
+the same manufacturer.
+
 #include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
