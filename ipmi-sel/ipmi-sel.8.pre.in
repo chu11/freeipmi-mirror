@@ -70,14 +70,14 @@ Display SEL records from record id START to END.
 \fB\-\-exclude\-display-range\fR=\fBSTART\-END\fR
 Exclude display of SEL records from record id START to END.
 .TP
-\fB\-c\fR, \fB\-\-delete-all\fR
+\fB\-\-delete-all\fR
 Delete all SEL records.
 .TP
-\fB\-d REC-LIST\fR, \fB\-\-delete\fR=\fBREC\-LIST\fR
+\fB\-\-delete\fR=\fBREC\-LIST\fR
 Delete records by record id in the SEL.  Accepts space or comma
 separated lists.
 .TP
-\fB\-R START-END\fR, \fB\-\-delete-range\fR=\fBSTART\-END\fR
+\fB\-\-delete-range\fR=\fBSTART\-END\fR
 Delete record ids from START to END in the SEL.
 .TP
 \fB\-\-system\-event\-only\fR
@@ -86,7 +86,7 @@ Output only system event records (i.e. don't output OEM records).
 \fB\-\-oem\-only\fR
 Output only OEM event records.
 .TP
-\fB\-x\fR, \fB\-\-hex\-dump\fR
+\fB\-\-hex\-dump\fR
 Hex-dump SEL entries.
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>

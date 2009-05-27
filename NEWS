@@ -28,8 +28,8 @@ o Re-work libipmimonitoring to return sensor events for all sensors,
   not just non-threshold sensors.  Resulted in an API change.
 o "Re-claimed" many short options by limiting short options to only
   the most popular options.  Short options have been removed from
-  ipmipower, ipmi-chassis, and ipmi-raw.  See details below for
-  specific short options removed.
+  ipmipower, ipmi-chassis, ipmi-sel, and ipmi-raw.  See details below
+  for specific short options removed.
 o Rename pef-config to ipmi-pef-config for naming consistency.
 o Various minor feature enhancements and options.
 o Various bug fixes.
@@ -65,6 +65,11 @@ o ipmi-sel
   - Output hex code more often if translation to string not available.
   - Re-work to use new libfreeipmi sel-parse sub library.
   - Remove legacy option to dump hex output to optional filename.
+  - Removed the following short options (long options remain).
+    - 'c' (--delete-all)
+    - 'd' (--delete)
+    - 'R' (--delete-range)
+    - 'x' (--hex-dump)
   - Support additional options in FreeIPMI config file.
 o ipmi-sensors
   - Alter output to make fields easier to read, consistent to other
