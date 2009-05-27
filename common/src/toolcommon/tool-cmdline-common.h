@@ -52,11 +52,13 @@ enum argp_common_option_keys
     ARGP_CONFIG_FILE_KEY = 136,
     ARGP_WORKAROUND_FLAGS_KEY = 'W',
     ARGP_DEBUG_KEY = 137,
+    /* sdr options */
     ARGP_FLUSH_CACHE_KEY = 'f',
     ARGP_QUIET_CACHE_KEY = 'Q',
     ARGP_SDR_CACHE_DIRECTORY_KEY = 138,
     ARGP_SDR_CACHE_RECREATE_KEY = 139,
     ARGP_IGNORE_SDR_CACHE_KEY = 140,
+    /* hostrange options */
     ARGP_BUFFER_OUTPUT_KEY = 'B',
     ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
