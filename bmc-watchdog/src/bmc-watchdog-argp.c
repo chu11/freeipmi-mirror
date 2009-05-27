@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog-argp.c,v 1.19 2009-05-05 17:46:56 chu11 Exp $
+ *  $Id: bmc-watchdog-argp.c,v 1.20 2009-05-27 20:28:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -126,12 +126,6 @@ static struct argp_option cmdline_options[] =
       "Specify time interval before resetting timer.", 57},
     { "help", HELP_KEY, NULL, 0,
       "Output help.", 58},
-    /* legacy short option */
-    { "bogus-long-option1", HELP2_KEY, NULL, 0,
-      "Output help.", 59},
-    /* legacy short option */
-    { "bogus-long-option1", HELP3_KEY, NULL, 0,
-      "Output help.", 60},
     { 0 }
   };
 
@@ -484,8 +478,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
       /* do not output default argp help, do internal help */
     case HELP_KEY:
-    case HELP2_KEY:              /* legacy */
-    case HELP3_KEY:             /* legacy */
       cmd_args->help++;
       break;
     case ARGP_KEY_ARG:

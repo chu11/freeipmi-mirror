@@ -28,8 +28,8 @@ o Re-work libipmimonitoring to return sensor events for all sensors,
   not just non-threshold sensors.  Resulted in an API change.
 o "Re-claimed" many short options by limiting short options to only
   the most popular options.  Short options have been removed from
-  ipmipower, ipmiconsole, ipmi-chassis, ipmi-sel, and ipmi-raw.  See
-  details below for specific short options removed.
+  ipmipower, ipmiconsole, bmc-watchdog, ipmi-chassis, ipmi-sel, and
+  ipmi-raw.  See details below for specific short options removed.
 o Removed many legacy long option.  See details below in ipmipower
   and ipmimonitoring for specific tool long options removed.
   Following general long options removed throughout.
@@ -310,6 +310,10 @@ o ipmi-pef-config/pef-config
   - Support ability to report read only field error.
   - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
+o bmc-watchdog
+  - Removed the following legacy short options.
+    - 'h' (-? since 0.5.1)
+    - 'H' (-? since 0.5.1)
 o Various documentation updates.
 
 Libraries

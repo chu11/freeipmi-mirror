@@ -27,6 +27,8 @@
 	* ipmipower/src/ipmipower/ipmipower_prompt.c: Remove more
 	backwards compatability interactive mode options.
 
+	* bmc-watchdog/src/: Remove legacy short options.
+
 2009-05-26  Albert Chu <chu11@llnl.gov>
 
         * libfreeipmi/include/freeipmi/dcmi/ipmi-dcmi.h,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.h,v 1.6 2009-05-06 17:44:37 chu11 Exp $
+ *  $Id: bmc-watchdog.h,v 1.7 2009-05-27 20:28:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -63,8 +63,6 @@ enum bmc_watchdog_argp_option_keys
     ARP_RESPONSE_KEY = 'A',
     RESET_PERIOD_KEY = 'e',
     HELP_KEY = '?',
-    HELP2_KEY = 'h',               /* legacy */
-    HELP3_KEY = 'H',               /* legacy */
   };
 
 struct bmc_watchdog_arguments
