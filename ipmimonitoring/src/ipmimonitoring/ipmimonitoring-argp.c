@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.50 2009-05-26 21:04:21 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.51 2009-05-27 18:45:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -81,9 +81,6 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     { "verbose", VERBOSE_KEY, 0, 0,
       "Increase verbosity in output.", 30},
-    /* maintain "cache-dir" for backwards compatability */
-    { "cache-dir", CACHE_DIR_KEY, "DIRECTORY", OPTION_HIDDEN,
-      "Specify an alternate directory to read and write SDR caches.", 31},
     { "quiet-readings", QUIET_READINGS_KEY,  0, 0,
       "Do not output sensor readings, only states.", 32},
     /* for backwards compatability */
@@ -141,13 +138,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     {
     case VERBOSE_KEY:
       cmd_args->verbose_count++;
-      break;
-      /* legacy option */
-    case CACHE_DIR_KEY:
-      return (sdr_parse_opt (ARGP_SDR_CACHE_DIRECTORY_KEY,
-                             arg,
-                             state,
-                             &(cmd_args->sdr)));
       break;
     case QUIET_READINGS_KEY:
       cmd_args->quiet_readings = 1;

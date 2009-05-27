@@ -37,7 +37,6 @@ enum ipmimonitoring_argp_option_keys
     GROUPS_KEY = 'g',
     EXCLUDE_GROUPS_KEY = 'G',
     LIST_GROUPS_KEY = 'L',
-    CACHE_DIR_KEY = 'c',              /* legacy */
     BRIDGE_SENSORS_KEY = 'b',
     INTERPRET_OEM_DATA = 160,
     IGNORE_NON_INTERPRETABLE_SENSORS = 'i',

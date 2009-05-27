@@ -30,9 +30,9 @@ o "Re-claimed" many short options by limiting short options to only
   the most popular options.  Short options have been removed from
   ipmipower, ipmiconsole, ipmi-chassis, ipmi-sel, and ipmi-raw.  See
   details below for specific short options removed.
-o Removed many legacy long option.  See details below in ipmipower
-  for specific tool long options removed.  Following general long
-  options removed throughout.
+o Removed many legacy long option.  See details below in ipmipower,
+  and ipmimonitoring for specific tool long options removed.
+  Following general long options removed throughout.
   - --no-probing (--disable-auto-probe since 0.7.1)
   - --reg-space (--register-spacing since 0.5.1)
   - --retry-timeout (--retransmission-timeout since 0.5.1)
@@ -162,6 +162,8 @@ o ipmimonitoring
   - Fix inconsistency in output, header output of "Record_ID" now
     "Record ID".
   - Support additional options in FreeIPMI config file.
+  - Removed the following short and long options.
+    - 'c' and --cache-dir (legacy, --sdr-cache-directory since 0.6.1)
 o ipmi-fru
   - Output hex with 'h' suffix instead of '0x' prefix for consistency to
     other FreeIPMI tools.
