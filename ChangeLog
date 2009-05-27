@@ -6,7 +6,7 @@
 
 	* Remove some legacy options from ipmipower and ipmimonitoring.
 	
-	* tagged pre_remove_legacy_options
+	* tagged post_remove_legacy_options
 
 2009-05-27  Albert Chu <chu11@llnl.gov>
 
