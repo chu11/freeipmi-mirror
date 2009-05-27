@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.108 2009-05-27 18:30:45 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.109 2009-05-27 20:25:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -910,13 +910,9 @@ ipmipower_prompt_process_cmdline (void)
                                               0,
                                               1,
                                               cmd_args.common.session_timeout);
-              /* support underscored version for backwards compatability and b/c its an easy typo */
-              else if (!strcmp (argv[0], "authentication_type")
-                       || !strcmp (argv[0], "authentication-type"))
+              else if (!strcmp (argv[0], "authentication-type"))
                 _cmd_authentication_type (argv);
-              /* support underscored version for backwards compatability and b/c its an easy typo */
-              else if (!strcmp (argv[0], "cipher_suite_id")
-                       || !strcmp (argv[0], "cipher-suite-id"))
+              else if (!strcmp (argv[0], "cipher-suite-id"))
                 _cmd_cipher_suite_id (argv);
               else if (!strcmp (argv[0], "privilege-level"))
                 _cmd_privilege_level (argv);

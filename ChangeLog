@@ -1,14 +1,12 @@
 2009-05-27  Albert Chu <chu11@llnl.gov>
 
-	* tagged pre_remove_legacy_config
+	* tagged pre_remove_many_short_options
 
-	* common/src/toolcommon/tool-config-file-common.c: Remove some
-	legacy options.
-
-	* tagged post_remove_legacy_config
+	* "Re-claim" short options in ipmipower, ipmi-chassis, ipmi-raw,
+	ipmi-sel, ipmiconsole.
 	
-2009-05-27  Albert Chu <chu11@llnl.gov>
-
+	* tagged post_remove_many_short_options
+	
 	* tagged pre_remove_legacy_options
 
 	* Remove general legacy options.
@@ -19,15 +17,16 @@
 
 	* ipmiconsole/src/ipmiconsole/ipmiconsole_.h: Fix comment.
 
-2009-05-27  Albert Chu <chu11@llnl.gov>
+	* tagged pre_remove_legacy_config
 
-	* tagged pre_remove_many_short_options
+	* common/src/toolcommon/tool-config-file-common.c: Remove some
+	legacy options.
 
-	* "Re-claim" short options in ipmipower, ipmi-chassis, ipmi-raw,
-	ipmi-sel, ipmiconsole.
-	
-	* tagged post_remove_many_short_options
-	
+	* tagged post_remove_legacy_config
+
+	* ipmipower/src/ipmipower/ipmipower_prompt.c: Remove more
+	backwards compatability interactive mode options.
+
 2009-05-26  Albert Chu <chu11@llnl.gov>
 
         * libfreeipmi/include/freeipmi/dcmi/ipmi-dcmi.h,
