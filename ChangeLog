@@ -1,6 +1,11 @@
 2009-05-27  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_remove_legacy_config
+
+	* common/src/toolcommon/tool-config-file-common.c: Remove some
+	legacy options.
+
+	* tagged post_remove_legacy_config
 	
 2009-05-27  Albert Chu <chu11@llnl.gov>
 
