@@ -30,6 +30,16 @@ o "Re-claimed" many short options by limiting short options to only
   the most popular options.  Short options have been removed from
   ipmipower, ipmiconsole, ipmi-chassis, ipmi-sel, and ipmi-raw.  See
   details below for specific short options removed.
+o Removed many legacy long options.  See details below for specific
+  tool long options removed.  Following general long options removed
+  throughout.
+  - --no-probing (--disable-auto-probe since 0.7.1)
+  - --reg-space (--register-spacing since 0.5.1)
+  - --retry-timeout (--retransmission-timeout since 0.5.1)
+  - --timeout (--retransmission-timeout since 0.5.1)
+  - --auth-type (--authentication-type since 0.5.1)
+  - --privilege (--privilege-level since 0.5.1)
+  - --priv-level (--privilege-level since 0.5.1)
 o Rename pef-config to ipmi-pef-config for naming consistency.
 o Various minor feature enhancements and options.
 o Various bug fixes.
