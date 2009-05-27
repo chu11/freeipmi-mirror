@@ -26,10 +26,10 @@ o "Library-ize" much of the functionality originally only inside the
   tools.  
 o Re-work libipmimonitoring to return sensor events for all sensors,
   not just non-threshold sensors.  Resulted in an API change.
-
 o "Re-claimed" many short options by limiting short options to only
   the most popular options.  Short options have been removed from
-  ipmipower.  See details below for specific short options removed.
+  ipmipower, ipmi-chassis, and ipmi-raw.  See details below for
+  specific short options removed.
 o Rename pef-config to ipmi-pef-config for naming consistency.
 o Various minor feature enhancements and options.
 o Various bug fixes.
@@ -219,6 +219,9 @@ o ipmi-chassis
     - 'H' (--get-power-on-hours-counter)
     - 'G' (legacy --get-boot-flags)
     - 'L' (legacy --set-boot-flags)
+o ipmi-raw
+  - Removed the following short options (long options remain).
+    - 'f' (--file)
 o bmc-config
   - Collapse "Password20" field into "Password" field so "Password"
     supports both IPMI 1.5 and IPMI 2.0 length passwords.

@@ -33,7 +33,7 @@ required user privilege will depend on the raw commands executed.
 The following options are specific to
 .B Ipmi-raw.
 .TP
-\fB\-f\fR, \fB\-\-file\fR=\fICMD\-FILE\fR
+\fB\-\-file\fR=\fICMD\-FILE\fR
 Specify a file to read command requests from.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
