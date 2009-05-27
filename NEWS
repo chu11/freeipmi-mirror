@@ -28,8 +28,8 @@ o Re-work libipmimonitoring to return sensor events for all sensors,
   not just non-threshold sensors.  Resulted in an API change.
 o "Re-claimed" many short options by limiting short options to only
   the most popular options.  Short options have been removed from
-  ipmipower, ipmi-chassis, ipmi-sel, and ipmi-raw.  See details below
-  for specific short options removed.
+  ipmipower, ipmiconsole, ipmi-chassis, ipmi-sel, and ipmi-raw.  See
+  details below for specific short options removed.
 o Rename pef-config to ipmi-pef-config for naming consistency.
 o Various minor feature enhancements and options.
 o Various bug fixes.
@@ -177,6 +177,11 @@ o ipmipower
     - 'v' (--ping-packet-count)
     - 'w' (--ping-percent)
     - 'x' (--ping-consec-count)
+o ipmiconsole
+  - Removed the following short options (long options remain).
+    - 'N' (--dont-steal)
+    - 'T' (--deactivate)
+    - 'L' (--lock-memory)
 o bmc-device
   - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
     of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to

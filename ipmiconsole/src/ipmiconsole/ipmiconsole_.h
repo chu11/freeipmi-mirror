@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_.h,v 1.3 2009-03-03 23:56:50 chu11 Exp $
+ *  $Id: ipmiconsole_.h,v 1.4 2009-05-27 17:45:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -41,13 +41,13 @@
 
 enum ipmiconsole_argp_option_keys
   {
-    DONT_STEAL_KEY = 'N',
-    DEACTIVATE_KEY = 'T',
-    LOCK_MEMORY_KEY = 'L',
+    DONT_STEAL_KEY = 160,
+    DEACTIVATE_KEY = 161,
+    LOCK_MEMORY_KEY = 162,
     ESCAPE_CHAR_KEY = 'e',
-    DEBUG_KEY = 160,
-    DEBUGFILE_KEY = 161,
-    NORAW_KEY = 162,
+    DEBUG_KEY = 163,
+    DEBUGFILE_KEY = 164,
+    NORAW_KEY = 165,
   };
 
 struct ipmiconsole_arguments

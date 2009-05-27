@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.42 2009-01-13 19:26:49 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.43 2009-05-27 17:45:28 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -99,7 +99,7 @@ The following options are specific to
 \fB\-e\fR, \fB\-\-escape-char\fR=\fICHAR\fR
 Specify an alternate escape character (default char '&').
 .TP
-\fB\-N\fR, \fB\-\-dont-steal\fR
+\fB\-\-dont-steal\fR
 Do not steal an SOL session if one is already detected as being in
 use.  Under most circumstances, if SOL is detected as being in use,
 .B ipmiconsole
@@ -107,10 +107,10 @@ will attempt to steal the SOL session away from the previous session.
 This default behavior exists for several reasons, most notably that
 earlier SOL sessions may have not been able to be deactivate properly.
 .TP
-\fB\-T\fR, \fB\-\-deactivate\fR
+\fB\-\-deactivate\fR
 Deactivate a SOL session if one is detected as being in use and exit.
 .TP
-\fB\-L\fR, \fB\-\-lock-memory\fR
+\fB\-\-lock-memory\fR
 Lock sensitive information (such as usernames and passwords) in
 memory.
 .LP
