@@ -30,9 +30,9 @@ o "Re-claimed" many short options by limiting short options to only
   the most popular options.  Short options have been removed from
   ipmipower, ipmiconsole, ipmi-chassis, ipmi-sel, and ipmi-raw.  See
   details below for specific short options removed.
-o Removed many legacy long options.  See details below for specific
-  tool long options removed.  Following general long options removed
-  throughout.
+o Removed many legacy long option.  See details below in ipmipower
+  for specific tool long options removed.  Following general long
+  options removed throughout.
   - --no-probing (--disable-auto-probe since 0.7.1)
   - --reg-space (--register-spacing since 0.5.1)
   - --retry-timeout (--retransmission-timeout since 0.5.1)
@@ -194,6 +194,16 @@ o ipmipower
     - 'v' (--ping-packet-count)
     - 'w' (--ping-percent)
     - 'x' (--ping-consec-count)
+  - Removed the following legacy long options.
+    - --ipmi-version (--driver-type since 0.7.1)
+    - --retry-wait-timeout (--retransmission-wait-timeout since 0.5.1)
+    - --retry-backoff-count (--retransmission-backoff-count since 0.5.1)
+  - Removed the following interactive mode legacy prompt options.
+    - timeout (session-timeout since 0.5.1)
+    - ipmi-version (driver-type since 0.7.1)
+    - retry-timeout (retransmission-timeout since 0.5.1)
+    - retry-wait-timeout (retransmission-wait-timeout since 0.5.1)
+    - retry-backoff-timeout (retransmission-backoff-timeout since 0.5.1)
 o ipmiconsole
   - Removed the following short options (long options remain).
     - 'N' (--dont-steal)
