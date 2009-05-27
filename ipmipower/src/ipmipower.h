@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.133 2009-05-27 16:58:24 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.134 2009-05-27 17:05:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -384,13 +384,13 @@ enum ipmi_sensors_argp_option_keys
 #if 0
     SESSION_TIMEOUT_KEY = 't', /* legacy removed */
     RETRANSMISSION_TIMEOUT_KEY = 'y', /* legacy removed */
-    RETRANSMISSION_WAIT_TIMEOUT_KEY = 'q', /* legacy removed */
-    RETRANSMISSION_BACKOFF_COUNT_KEY = 'b', /* legacy removed */
-    PING_INTERVAL_KEY = 'i', /* legacy removed */
-    PING_TIMEOUT_KEY = 'z', /* legacy removed */
-    PING_PACKET_COUNT_KEY = 'v', /* legacy removed */
-    PING_PERCENT_KEY = 'w', /* legacy removed */
-    PING_CONSEC_COUNT_KEY = 'x', /* legacy removed */
+    RETRANSMISSION_WAIT_TIMEOUT_KEY = 'q', /* removed */
+    RETRANSMISSION_BACKOFF_COUNT_KEY = 'b', /* removed */
+    PING_INTERVAL_KEY = 'i', /* removed */
+    PING_TIMEOUT_KEY = 'z', /* removed */
+    PING_PACKET_COUNT_KEY = 'v', /* removed */
+    PING_PERCENT_KEY = 'w', /* removed */
+    PING_CONSEC_COUNT_KEY = 'x', /* removed */
 #endif
 
     RETRY_WAIT_TIMEOUT_KEY = 161,
