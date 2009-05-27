@@ -1,7 +1,11 @@
 2009-05-27  Albert Chu <chu11@llnl.gov>
 
+	* tagged pre_remove_many_short_options
+
 	* "Re-claim" short options in ipmipower, ipmi-chassis, ipmi-raw,
 	ipmi-sel, ipmiconsole.
+	
+	* tagged post_remove_many_short_options
 	
 2009-05-26  Albert Chu <chu11@llnl.gov>
 
