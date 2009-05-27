@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.14 2009-05-27 17:07:19 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.15 2009-05-27 17:49:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -82,14 +82,6 @@ static struct argp_option cmdline_options[] =
       "Specify the IPMI protocol version to use.", 11},
     ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
     /* removed legacy short options */
-#if 0
-    /* maintain legacy short options to timeout/session-timeout */
-    { "bogus-long-option1", SESSION_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
-      "Specify the session timeout in milliseconds.", 12},
-    /* maintain legacy short options to retry-timeout/retransmission-timeout */
-    { "bogus-long-option2", RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
-      "Specify the packet retransmission timeout in milliseconds.", 11},
-#endif
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR,
@@ -268,17 +260,6 @@ cmdline_parse (int key,
       cmd_args->ping_consec_count = tmp;
       break;
       /* removed legacy short options */
-#if 0
-    case SESSION_TIMEOUT_KEY:
-      ret = common_parse_opt (ARGP_SESSION_TIMEOUT_KEY, arg, state, &(cmd_args->common));
-      return (ret);
-      break;
-      /* backwards compatability */
-    case RETRANSMISSION_TIMEOUT_KEY:
-      ret = common_parse_opt (ARGP_RETRANSMISSION_TIMEOUT_KEY, arg, state, &(cmd_args->common));
-      return (ret);
-      break;
-#endif
     default:
       ret = common_parse_opt (key, arg, state, &(cmd_args->common));
       if (ret == ARGP_ERR_UNKNOWN)

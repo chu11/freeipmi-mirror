@@ -26,10 +26,6 @@
 
 enum ipmi_raw_argp_option_keys
   {
-    /* following are legacy short options that have been removed */
-#if 0
-    CMD_FILE_KEY = 'f',         /* removed */
-#endif
     CMD_FILE_KEY = 160,
   };
 

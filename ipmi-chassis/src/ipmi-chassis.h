@@ -26,19 +26,6 @@
 
 enum ipmi_chassis_argp_option_keys
   {
-    /* following are legacy short options that have been removed */
-#if 0
-    GET_CHASSIS_CAPABILITIES_KEY = 'c', /* removed */
-    GET_CHASSIS_STATUS_KEY = 's', /* removed */
-    CHASSIS_CONTROL_KEY = 'O', /* removed */
-    CHASSIS_IDENTIFY_KEY = 'i', /* removed */
-    GET_SYSTEM_RESTART_CAUSE_KEY = 'R', /* removed */
-    GET_POWER_ON_HOURS_COUNTER_KEY = 'H', /* removed */
-    SET_POWER_CYCLE_INTERVAL_KEY = 'S', /* legacy removed */
-    GET_BOOT_FLAGS_KEY = 'G', /* legacy removed */
-    SET_BOOT_FLAGS_KEY = 'L', /* legacy removed */
-    SET_POWER_RESTORE_POLICY_KEY = 'X', /* legacy removed */
-#endif
     GET_CHASSIS_CAPABILITIES_KEY = 160,
     GET_CHASSIS_STATUS_KEY = 161,
     CHASSIS_CONTROL_KEY = 162,
