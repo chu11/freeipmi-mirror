@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.13 2009-05-27 16:58:24 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.14 2009-05-27 17:07:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -267,7 +267,8 @@ cmdline_parse (int key,
         ierr_exit ("Command Line Error: ping consec count invalid");
       cmd_args->ping_consec_count = tmp;
       break;
-      /* backwards compatability */
+      /* removed legacy short options */
+#if 0
     case SESSION_TIMEOUT_KEY:
       ret = common_parse_opt (ARGP_SESSION_TIMEOUT_KEY, arg, state, &(cmd_args->common));
       return (ret);
@@ -277,6 +278,7 @@ cmdline_parse (int key,
       ret = common_parse_opt (ARGP_RETRANSMISSION_TIMEOUT_KEY, arg, state, &(cmd_args->common));
       return (ret);
       break;
+#endif
     default:
       ret = common_parse_opt (key, arg, state, &(cmd_args->common));
       if (ret == ARGP_ERR_UNKNOWN)

@@ -208,6 +208,17 @@ o ipmi-chassis
   - Rename --get-capabilities option to --get-chassis-capabilities.
     Legacy option still supported.
   - Check interval input ranges.
+  - Removed the following short options (long options remain).
+    - 'c' (--get-chassis-capabilities)
+    - 's' (--get-chassis-status) 
+    - 'O' (--chassis-control)
+    - 'i' (--chassis-identify)
+    - 'X' (legacy --set-power-restore-policy)
+    - 'S' (legacy --set-power-cycle-interval)
+    - 'R' (--get-system-restart-cause)
+    - 'H' (--get-power-on-hours-counter)
+    - 'G' (legacy --get-boot-flags)
+    - 'L' (legacy --set-boot-flags)
 o bmc-config
   - Collapse "Password20" field into "Password" field so "Password"
     supports both IPMI 1.5 and IPMI 2.0 length passwords.
