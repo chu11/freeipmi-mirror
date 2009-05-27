@@ -168,6 +168,12 @@ o ipmi-fru
   - Support additional options in FreeIPMI config file.
 o ipmipower
   - Removed the following short options (long options remain).
+    - 'R' (legacy --ipmi-version)
+    - 'j' (--pulse)
+    - 'm' (--soft)
+    - 'g' (--on-if-off)
+    - 'A' (--wait-until-off)
+    - 'G' (--wait-until-on)
     - 't' (legacy --session-timeout)
     - 'y' (legacy --retransmission-timeout) 
     - 'q' (--retransmission--wait-timeout)
