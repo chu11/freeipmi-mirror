@@ -57,17 +57,17 @@ sensors without names.
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about the SEL.
 .TP
-\fB\-o REC-LIST\fR, \fB\-\-display\fR=\fBREC\-LIST\fR
+\fB\-\-display\fR=\fBREC\-LIST\fR
 Display SEL records by record id.  Accepts space or comma separated lists.
 .TP
-\fB\-G REC-LIST\fR, \fB\-\-exclude\-display\fR=\fBREC\-LIST\fR
+\fB\-\-exclude\-display\fR=\fBREC\-LIST\fR
 Exclude display of SEL records by record id.  Accepts space or comma
 separated lists.
 .TP
-\fB\-r START-END\fR, \fB\-\-display-range\fR=\fBSTART\-END\fR
+\fB\-\-display-range\fR=\fBSTART\-END\fR
 Display SEL records from record id START to END.
 .TP
-\fB\-X START-END\fR, \fB\-\-exclude\-display-range\fR=\fBSTART\-END\fR
+\fB\-\-exclude\-display-range\fR=\fBSTART\-END\fR
 Exclude display of SEL records from record id START to END.
 .TP
 \fB\-c\fR, \fB\-\-delete-all\fR
@@ -80,10 +80,10 @@ separated lists.
 \fB\-R START-END\fR, \fB\-\-delete-range\fR=\fBSTART\-END\fR
 Delete record ids from START to END in the SEL.
 .TP
-\fB\-N, \fB\-\-system\-event\-only\fR
+\fB\-\-system\-event\-only\fR
 Output only system event records (i.e. don't output OEM records).
 .TP
-\fB\-O, \fB\-\-oem\-only\fR
+\fB\-\-oem\-only\fR
 Output only OEM event records.
 .TP
 \fB\-x\fR, \fB\-\-hex\-dump\fR
