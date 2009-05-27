@@ -173,6 +173,8 @@ int ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                    fiid_obj_t obj_cmd_rq,
                    fiid_obj_t obj_cmd_rs);
 
+/* for request/response, byte #1 = cmd */
+/* for response, byte #2 (typically) = completion code */
 /* returns length written into buf_fs on success, -1 on error */
 int ipmi_cmd_raw (ipmi_ctx_t ctx,
                   uint8_t lun,
