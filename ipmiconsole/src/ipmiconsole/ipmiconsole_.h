@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_.h,v 1.4 2009-05-27 17:45:29 chu11 Exp $
+ *  $Id: ipmiconsole_.h,v 1.5 2009-05-27 20:01:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -28,7 +28,7 @@
  * library ipmiconsole.h.
  *
  * I am scared of the portability of the #include_next directive, so
- * that's why I'm it this way.
+ * that's why I'm doing it this way.
  */
 
 /* file is "ipmiconsole_.h", so double underscore */
