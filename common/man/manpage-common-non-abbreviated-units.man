@@ -1,4 +1,0 @@
-.TP
-\fB\-\-non-abbreviated-units\fR
-Output non-abbreviated units (i.e. 'Amps' instead of 'A').  May aid in
-disambiguation of units (i.e. 'C' for Celsius or Coulombs).

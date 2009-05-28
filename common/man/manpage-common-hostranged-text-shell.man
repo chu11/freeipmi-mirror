@@ -1,4 +1,0 @@
-.LP
-As a reminder to the reader, some shells will interpret brackets ([
-and ]) for pattern matching.  Depending on your shell, it may be
-necessary to enclose ranged lists within quotes.

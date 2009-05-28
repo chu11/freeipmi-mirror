@@ -1,5 +1,0 @@
-.TP
-\fB\-h\fR, \fB\-\-hostname\fR=\fIIPMIHOST1,IPMIHOST2,...\fR
-Specify the remote host(s) to communicate with.  Multiple hostnames
-may be separated by comma or may be specified in a range format; see
-HOSTRANGED SUPPORT below.
