@@ -1,7 +1,0 @@
-.TP
-\fB\-F\fR, \fB\-\-fanout\fR
-Specify multiple host fanout.  A "sliding window" (or fanout)
-algorithm is used for parallel IPMI communication so that slower nodes
-or timed out nodes will not impede parallel communication.  The
-maximum number of threads available at the same time is limited by the
-fanout.  The default is 64.

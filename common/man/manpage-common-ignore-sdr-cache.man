@@ -1,5 +1,0 @@
-.TP
-\fB\-\-ignore\-sdr\-cache\fR
-Ignore SDR cache related processing.  May lead to incomplete or less
-useful information being output, however it will allow functionality
-for those systems without SDRs.
