@@ -37,14 +37,14 @@ enum ipmimonitoring_argp_option_keys
     GROUPS_KEY = 'g',
     EXCLUDE_GROUPS_KEY = 'G',
     LIST_GROUPS_KEY = 'L',
-    CACHE_DIR_KEY = 'c',              /* legacy */
+    CACHE_DIR_KEY = 160,              /* legacy */
     BRIDGE_SENSORS_KEY = 'b',
-    INTERPRET_OEM_DATA = 160,
+    INTERPRET_OEM_DATA = 161,
     IGNORE_NON_INTERPRETABLE_SENSORS = 'i',
-    COMMA_SEPARATED_OUTPUT_KEY = 161,
-    NON_ABBREVIATED_UNITS_KEY = 162,
-    LEGACY_OUTPUT_KEY = 163,
-    SENSOR_CONFIG_FILE_KEY = 164,
+    COMMA_SEPARATED_OUTPUT_KEY = 162,
+    NON_ABBREVIATED_UNITS_KEY = 163,
+    LEGACY_OUTPUT_KEY = 164,
+    SENSOR_CONFIG_FILE_KEY = 165,
   };
 
 struct ipmimonitoring_arguments
