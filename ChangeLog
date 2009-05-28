@@ -16,6 +16,8 @@
 	
 	* tagged redo_remove_done
 
+	* ipmiconsole/src/ipmiconsole/: Remove legacy 'c' short option.
+
 2009-05-27  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_remove_many_short_options
