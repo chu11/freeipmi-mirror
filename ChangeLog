@@ -18,6 +18,8 @@
 
 	* ipmiconsole/src/ipmiconsole/: Remove legacy 'c' short option.
 
+	* ipmipower/ipmipower.8.pre.in.: Remove short options.
+
 2009-05-27  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_remove_many_short_options

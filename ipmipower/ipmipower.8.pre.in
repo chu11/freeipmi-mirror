@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmipower.8.pre.in,v 1.51 2009-05-28 17:11:37 chu11 Exp $
+.\"$Id: ipmipower.8.pre.in,v 1.52 2009-05-28 17:55:45 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -106,13 +106,13 @@ Reset the target hosts.
 \fB\-s\fR, \fB\-\-stat\fR
 Get power status of the target hosts.
 .TP
-\fB\-j\fR, \fB\-\-pulse\fR
+\fB\-\-pulse\fR
 Send power diagnostic interrupt to target hosts.
 .TP
-\fB\-m\fR, \fB\-\-soft\fR
+\fB\-\-soft\fR
 Initiate a soft-shutdown of the OS via ACPI.
 .TP
-\fB\-g\fR, \fB\-\-on\-if\-off\fR
+\fB\-\-on\-if\-off\fR
 The IPMI specification does not require the power cycle or hard reset
 commands to turn on a machine that is currently powered off.  This
 option will force
@@ -120,14 +120,14 @@ option will force
 to issue a power on command instead of a power cycle or hard reset
 command if the remote machine's power is currently off.
 .TP
-\fB\-A\fR, \fB\-\-wait\-until\-on\fR
+\fB\-\-wait\-until\-on\fR
 The IPMI specification allows power on commands to return prior to the
 power on actually taking place.  This option will force
 .B ipmipower 
 to regularly query the remote BMC and return only after the machine
 has powered on.
 .TP
-\fB\-G\fR, \fB\-\-wait\-until\-off\fR
+\fB\-\-wait\-until\-off\fR
 The IPMI specification allows power off commands to return prior the
 power off actually taking place.  This option will force
 .B ipmipower 
