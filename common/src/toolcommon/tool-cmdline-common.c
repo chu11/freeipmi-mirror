@@ -683,59 +683,59 @@ verify_common_cmd_args (struct common_cmd_args *cmd_args)
 }
 
 void
-init_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
+init_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
 {
-  cmd_args->flush_cache = 0;
-  cmd_args->quiet_cache = 0;
-  cmd_args->sdr_cache_directory = NULL;
-  cmd_args->sdr_cache_recreate = 0;
-  cmd_args->ignore_sdr_cache = 0;
+  sdr_cmd_args->flush_cache = 0;
+  sdr_cmd_args->quiet_cache = 0;
+  sdr_cmd_args->sdr_cache_directory = NULL;
+  sdr_cmd_args->sdr_cache_recreate = 0;
+  sdr_cmd_args->ignore_sdr_cache = 0;
 }
 
 void
-free_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
+free_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
 {
-  if (cmd_args->sdr_cache_directory)
+  if (sdr_cmd_args->sdr_cache_directory)
     {
-      free (cmd_args->sdr_cache_directory);
-      cmd_args->sdr_cache_directory = NULL;
+      free (sdr_cmd_args->sdr_cache_directory);
+      sdr_cmd_args->sdr_cache_directory = NULL;
     }
 }
 
 void
-verify_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
+verify_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
 {
-  if (cmd_args->sdr_cache_directory)
+  if (sdr_cmd_args->sdr_cache_directory)
     {
-      if (access (cmd_args->sdr_cache_directory, R_OK|W_OK|X_OK) < 0)
+      if (access (sdr_cmd_args->sdr_cache_directory, R_OK|W_OK|X_OK) < 0)
         {
           fprintf (stderr, "insufficient permission on sensor cache directory '%s'\n",
-                   cmd_args->sdr_cache_directory);
+                   sdr_cmd_args->sdr_cache_directory);
           exit (1);
         }
     }
 }
 
 void
-init_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
+init_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args)
 {
-  cmd_args->buffer_output = 0;
-  cmd_args->consolidate_output = 0;
-  cmd_args->fanout = 0;
-  cmd_args->eliminate = 0;
-  cmd_args->always_prefix = 0;
+  hostrange_cmd_args->buffer_output = 0;
+  hostrange_cmd_args->consolidate_output = 0;
+  hostrange_cmd_args->fanout = 0;
+  hostrange_cmd_args->eliminate = 0;
+  hostrange_cmd_args->always_prefix = 0;
 }
 
 void
-free_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
+free_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args)
 {
   /* nothing right now */
 }
 
 void
-verify_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
+verify_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args)
 {
-  if (cmd_args->buffer_output && cmd_args->consolidate_output)
+  if (hostrange_cmd_args->buffer_output && hostrange_cmd_args->consolidate_output)
     {
       fprintf (stderr, "cannot buffer and consolidate hostrange output, please select only one\n");
       exit (1);

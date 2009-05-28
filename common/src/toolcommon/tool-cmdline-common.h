@@ -293,13 +293,13 @@ void init_common_cmd_args_admin (struct common_cmd_args *cmd_args);
 void free_common_cmd_args (struct common_cmd_args *cmd_args);
 void verify_common_cmd_args (struct common_cmd_args *cmd_args);
 
-void init_sdr_cmd_args (struct sdr_cmd_args *cmd_args);
-void free_sdr_cmd_args (struct sdr_cmd_args *cmd_args);
-void verify_sdr_cmd_args (struct sdr_cmd_args *cmd_args);
+void init_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args);
+void free_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args);
+void verify_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args);
 
-void init_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
-void free_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
-void verify_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
+void init_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args);
+void free_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args);
+void verify_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args);
 
 /* to parse only the --config-file option */
 error_t cmdline_config_file_parse (int key, char *arg, struct argp_state *state);
