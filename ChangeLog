@@ -10,6 +10,9 @@
 	remove excess macros.
 
 	* tagged redo_remove
+
+	* "Re-claim" short options in ipmipower, ipmi-chassis, ipmi-raw,
+	ipmi-sel, ipmiconsole.
 	
 2009-05-27  Albert Chu <chu11@llnl.gov>
 
