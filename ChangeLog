@@ -8,6 +8,8 @@
 
 	* common/src/toolcommon/tool-cmdline-common.h: Code cleanup,
 	remove excess macros.
+
+	* tagged redo_remove
 	
 2009-05-27  Albert Chu <chu11@llnl.gov>
 
