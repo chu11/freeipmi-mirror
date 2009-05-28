@@ -1,3 +1,11 @@
+2009-05-28  Albert Chu <chu11@llnl.gov>
+
+	* tagged finished_remove_legacy
+
+	* Revert removal of options and legacy support.  Went too aggressive.
+
+	* tagged unfinished_remove_legacy
+	
 2009-05-27  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_remove_many_short_options

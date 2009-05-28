@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.137 2009-05-27 18:30:45 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.138 2009-05-28 17:00:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -366,6 +366,7 @@ typedef struct ipmipower_connection *ipmipower_connection_t;
 
 enum ipmi_sensors_argp_option_keys
   {
+    IPMI_VERSION_KEY = 'R',       /* legacy option */
     RMCPDUMP_KEY = 160,
 
     ON_KEY = 'n',
@@ -373,19 +374,24 @@ enum ipmi_sensors_argp_option_keys
     CYCLE_KEY = 'c',
     RESET_KEY = 'r',
     STAT_KEY = 's',
-    PULSE_KEY = 161,
-    SOFT_KEY = 162,
-    ON_IF_OFF_KEY = 163,
-    WAIT_UNTIL_OFF_KEY = 164,
-    WAIT_UNTIL_ON_KEY = 165,
+    PULSE_KEY = 'j',
+    SOFT_KEY = 'm',
+    ON_IF_OFF_KEY = 'g',
+    WAIT_UNTIL_OFF_KEY = 'A',
+    WAIT_UNTIL_ON_KEY = 'G',
 
-    RETRANSMISSION_WAIT_TIMEOUT_KEY = 167,
-    RETRANSMISSION_BACKOFF_COUNT_KEY = 169,
-    PING_INTERVAL_KEY = 170,
-    PING_TIMEOUT_KEY = 171,
-    PING_PACKET_COUNT_KEY = 172,
-    PING_PERCENT_KEY = 173,
-    PING_CONSEC_COUNT_KEY = 174,
+    SESSION_TIMEOUT_KEY = 't',    /* legacy short option */
+    RETRANSMISSION_TIMEOUT_KEY = 'y',   /* legacy short option */
+
+    RETRY_WAIT_TIMEOUT_KEY = 161,
+    RETRANSMISSION_WAIT_TIMEOUT_KEY = 'q',
+    RETRY_BACKOFF_COUNT_KEY = 162,
+    RETRANSMISSION_BACKOFF_COUNT_KEY = 'b',
+    PING_INTERVAL_KEY = 'i',
+    PING_TIMEOUT_KEY = 'z',
+    PING_PACKET_COUNT_KEY = 'v',
+    PING_PERCENT_KEY = 'w',
+    PING_CONSEC_COUNT_KEY = 'x',
   };
 
 struct ipmipower_arguments

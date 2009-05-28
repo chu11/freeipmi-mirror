@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.109 2009-05-27 20:25:04 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.110 2009-05-28 17:00:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -886,9 +886,12 @@ ipmipower_prompt_process_cmdline (void)
 
           if (argv[0])
             {
-              if (!strcmp (argv[0], "driver-type"))
+              /* support "ipmi_version" and "ipmi-version" for backwards compatability */
+              if (!strcmp (argv[0], "driver-type")
+                  || !strcmp (argv[0], "ipmi_version")
+                  || !strcmp (argv[0], "ipmi-version"))
                 _cmd_driver_type (argv);
-              /* support hostnames (plural) for backwards compatability and b/c its an easy typo */
+              /* support hostnames (plural) for backwards compatability */
               else if (!strcmp (argv[0], "hostnames")
                        || !strcmp (argv[0], "hostname"))
                 _cmd_hostname (argv);
@@ -898,23 +901,33 @@ ipmipower_prompt_process_cmdline (void)
                 _cmd_password (argv);
               else if (!strcmp (argv[0], "k_g"))
                 _cmd_k_g (argv);
-              else if (!strcmp (argv[0], "session-timeout"))
+              /* support "timeout" for backwards compatability */
+              else if (!strcmp (argv[0], "timeout")
+                       || !strcmp (argv[0], "session-timeout"))
                 _cmd_set_unsigned_int (argv,
                                        &cmd_args.common.session_timeout,
                                        "timeout",
                                        0);
-              else if (!strcmp (argv[0], "retransmission-timeout"))
+              /* support "retry-timeout" for backwards compatability */
+              else if (!strcmp (argv[0], "retry-timeout")
+                       || !strcmp (argv[0], "retransmission-timeout"))
                 _cmd_set_unsigned_int_ranged (argv,
                                               &cmd_args.common.retransmission_timeout,
                                               "retransmission-timeout",
                                               0,
                                               1,
                                               cmd_args.common.session_timeout);
-              else if (!strcmp (argv[0], "authentication-type"))
+              /* support underscored version for backwards compatability */
+              else if (!strcmp (argv[0], "authentication_type")
+                       || !strcmp (argv[0], "authentication-type"))
                 _cmd_authentication_type (argv);
-              else if (!strcmp (argv[0], "cipher-suite-id"))
+              /* support underscored version for backwards compatability */
+              else if (!strcmp (argv[0], "cipher_suite_id")
+                       || !strcmp (argv[0], "cipher-suite-id"))
                 _cmd_cipher_suite_id (argv);
-              else if (!strcmp (argv[0], "privilege-level"))
+              /* support "privilege" command for backwards compatability */
+              else if (!strcmp (argv[0], "privilege")
+                       || !strcmp (argv[0], "privilege-level"))
                 _cmd_privilege_level (argv);
               else if (!strcmp (argv[0], "workaround-flags"))
                 _cmd_workaround_flags (argv);
@@ -964,14 +977,18 @@ ipmipower_prompt_process_cmdline (void)
                 _cmd_set_flag (argv,
                                &cmd_args.wait_until_off,
                                "wait-until-off");
-              else if (!strcmp (argv[0], "retransmission-wait-timeout"))
+              /* support "retry-wait-timeout" for backwards compatability */
+              else if (!strcmp (argv[0], "retry-wait-timeout")
+                       || !strcmp (argv[0], "retransmission-wait-timeout"))
                 _cmd_set_unsigned_int_ranged (argv,
                                               &cmd_args.retransmission_wait_timeout,
                                               "retransmission-wait-timeout",
                                               0,
                                               1,
                                               cmd_args.common.session_timeout);
-              else if (!strcmp (argv[0], "retransmission-backoff-count"))
+              /* support "retry-backoff-count" for backwards compatability */
+              else if (!strcmp (argv[0], "retry-backoff-count")
+                       || !strcmp (argv[0], "retransmission-backoff-count"))
                 _cmd_set_unsigned_int (argv,
                                        &cmd_args.retransmission_backoff_count,
                                        "retransmission-backoff-count",
