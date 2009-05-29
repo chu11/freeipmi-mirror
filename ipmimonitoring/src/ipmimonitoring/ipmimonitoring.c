@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.124 2009-05-26 17:13:19 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.125 2009-05-29 00:29:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -958,6 +958,7 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
 static int
 run_cmd_args (ipmimonitoring_state_data_t *state_data)
 {
+  struct ipmi_monitoring_ipmi_config conf;
   struct ipmimonitoring_arguments *args;
   unsigned int sensor_reading_flags = 0;
   unsigned int output_record_ids[MAX_SENSOR_RECORD_IDS];
@@ -1036,12 +1037,53 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   if (args->interpret_oem_data)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA;
 
+  memset (&conf, '\0', sizeof (struct ipmi_monitoring_ipmi_config));
+  memcpy (&conf, &(args->conf), sizeof (struct ipmi_monitoring_ipmi_config));
+
+  /* 
+   * achu: configure per-situation workaround flags.  Can't be done
+   * below in _convert_to_ipmimonitoring_options() b/c user could have
+   * input localhost/127.0.0.1.
+   */
+  if (state_data->hostname
+      && strcasecmp (state_data->hostname, "localhost")
+      && strcmp (state_data->hostname, "127.0.0.1"))
+    {
+      if (conf.protocol_version == IPMI_MONITORING_PROTOCOL_VERSION_2_0)
+        {
+          if (args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
+          if (args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
+          if (args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
+          if (args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
+          if (args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
+        }
+      else
+        {
+          if (args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
+          if (args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
+          if (args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
+          if (args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION;
+          if (args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE;
+        }
+    }
+  /* else - no inband workaround flags yet */
+
   if ((!args->record_ids_length && !args->ipmimonitoring_groups_length)
       || output_record_ids_ptr)
     {
       if (ipmi_monitoring_sensor_readings_by_record_id (state_data->ctx,
                                                         state_data->hostname,
-                                                        &(args->conf),
+                                                        &conf,
                                                         sensor_reading_flags,
                                                         output_record_ids_ptr,
                                                         output_record_ids_length,
@@ -1059,7 +1101,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
     {
       if (ipmi_monitoring_sensor_readings_by_record_id (state_data->ctx,
                                                         state_data->hostname,
-                                                        &(args->conf),
+                                                        &conf,
                                                         sensor_reading_flags,
                                                         args->record_ids,
                                                         args->record_ids_length,
@@ -1086,7 +1128,7 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
     {
       if (ipmi_monitoring_sensor_readings_by_sensor_group (state_data->ctx,
                                                            state_data->hostname,
-                                                           &(args->conf),
+                                                           &conf,
                                                            sensor_reading_flags,
                                                            args->ipmimonitoring_groups,
                                                            args->ipmimonitoring_groups_length,
@@ -1344,6 +1386,8 @@ _convert_to_ipmimonitoring_options (struct ipmimonitoring_arguments *cmd_args)
         cmd_args->conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_SSIF;
       else if (cmd_args->common.driver_type == IPMI_DEVICE_OPENIPMI)
         cmd_args->conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_OPENIPMI;
+      else if (cmd_args->common.driver_type == IPMI_DEVICE_SUNBMC)
+        cmd_args->conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_SUNBMC;
     }
   else
     {
@@ -1387,24 +1431,7 @@ _convert_to_ipmimonitoring_options (struct ipmimonitoring_arguments *cmd_args)
   cmd_args->conf.retransmission_timeout_len = cmd_args->common.retransmission_timeout;
 
   cmd_args->conf.workaround_flags = 0;
-  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
-    cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
-    cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
-    cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
-    cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
-  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
-    cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
-  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-    cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
-  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
-    cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
-  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
-    cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION;
-  if (cmd_args->common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
-    cmd_args->conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE;
+  /* calculate workaround flags later dependent on settings/inputs */
 
   if (cmd_args->common.debug)
     {

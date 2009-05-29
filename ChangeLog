@@ -1,5 +1,17 @@
 2009-05-28  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(_convert_to_ipmimonitoring_options): Fix sunbmc corner case.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_ipmi_communication.c
+	(_inband_init): Check workaround flags appropriately.
+
+	* common/src/toolcommon/tool-common.c (ipmi_open),
+	ipmimonitoring/src/ipmimonitoring/: Fix in-band communication bug
+	when workaround flags for non-inband are specified.
+	
+2009-05-28  Albert Chu <chu11@llnl.gov>
+
 	* tagged finished_remove_legacy
 
 	* Revert removal of options and legacy support.  Went too aggressive.
