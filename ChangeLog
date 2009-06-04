@@ -1,3 +1,8 @@
+2009-06-04  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/templates/ipmi-dcmi-templates.h:
+	Add forgotten file.
+	
 2009-05-28  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
