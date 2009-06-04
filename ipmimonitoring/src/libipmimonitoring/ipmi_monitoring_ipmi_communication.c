@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.22.4.1 2009-04-08 21:12:39 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.22.4.2 2009-06-04 17:12:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -78,11 +78,12 @@ _inband_init(ipmi_monitoring_ctx_t c,
   assert(c->ipmi_ctx);
 
   if (config
-      && (config->driver_type >= 0
-          && (config->driver_type != IPMI_MONITORING_DRIVER_TYPE_KCS
-              && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_SSIF
-              && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_OPENIPMI
-              && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_SUNBMC)))
+      && ((config->driver_type >= 0
+           && (config->driver_type != IPMI_MONITORING_DRIVER_TYPE_KCS
+               && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_SSIF
+               && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_OPENIPMI
+               && config->driver_type != IPMI_MONITORING_DRIVER_TYPE_SUNBMC))
+          || (config->workaround_flags)))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return -1;
