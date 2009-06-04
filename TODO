@@ -5,6 +5,7 @@ and build option??
 inband flag - discover vs. not-discover on locate
 make ipmi_open() into lib function
 - copy usage into ipmimonitoring lib
+kcs/ssif debug output for raw/oem
 
 ipmi-locate
 -----------
@@ -82,6 +83,8 @@ IPv6
 - develop based on assumption someone's BMC can read IPv6 mapped IPv4 addresses?
 - assume OEM extensions to configure IPv6 addresses?
 have funcs that return buflen return ssize_t?, input should be size_t and void *? like read(), write()?
+config file support per host.
+i.e. workarounds FOO nodes[0-100]
 
 bmc-device
 --------
