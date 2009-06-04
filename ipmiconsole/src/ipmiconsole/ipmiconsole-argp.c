@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole-argp.c,v 1.29 2009-03-12 17:57:52 chu11 Exp $
+ *  $Id: ipmiconsole-argp.c,v 1.30 2009-06-04 16:51:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -79,10 +79,7 @@ static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
-    /* legacy */
-    { "cipher-suite-id", 'c', "CIPHER-SUITE-ID", OPTION_HIDDEN,
-      "Specify the IPMI 2.0 cipher suite ID to use.", 14},
-    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_OPTIONS_DEBUG,
@@ -148,11 +145,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       argp_usage (state);
       break;
     case ARGP_KEY_END:
-      break;
-      /* 'c' for backwards compatability */
-    case 'c':   /* --cipher-suite-id */
-      ret = common_parse_opt (ARGP_CIPHER_SUITE_ID_KEY, arg, state, &(cmd_args->common));
-      return (ret);
       break;
     default:
       ret = common_parse_opt (key, arg, state, &(cmd_args->common));

@@ -56,16 +56,16 @@ static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
-    ARGP_COMMON_OPTIONS_OUTOFBAND,
+    ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
-    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     /* legacy */
-    { "guid", GET_DEVICE_GUID_KEY, NULL, OPTION_HIDDEN,
+    { "guid", GUID_KEY, NULL, OPTION_HIDDEN,
       "Display only device guid.", 30},
     { "get-device-id", GET_DEVICE_ID_KEY, NULL, 0,
       "Display only device ID information.", 31},
@@ -101,6 +101,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case GET_DEVICE_ID_KEY:
       cmd_args->get_device_id++;
       break;
+      /* legacy */
+    case GUID_KEY:
     case GET_DEVICE_GUID_KEY:
       cmd_args->get_device_guid++;
       break;

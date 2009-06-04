@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.16 2009-05-27 18:30:45 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.17 2009-06-04 16:51:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -77,10 +77,14 @@ static char cmdline_args_doc[] = "";
 static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_DRIVER,
+    /* maintain "ipmi-version" for backwards compatability */
+    { "ipmi-version", IPMI_VERSION_KEY, "IPMIVERSION", OPTION_HIDDEN,
+      "Specify the IPMI protocol version to use.", 11},
     ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
+    /* removed legacy short options */
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
-    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_OPERATOR,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
@@ -110,8 +114,14 @@ static struct argp_option cmdline_options[] =
       "Regularly query the remote BMC and return only after the machine has powered off.", 39},
     { "wait-until-on", WAIT_UNTIL_ON_KEY, 0, 0,
       "Regularly query the remote BMC and return only after the machine has powered on.", 40},
+    /* retry-wait-timeout maintained for backwards comptability */
+    { "retry-wait-timeout", RETRY_WAIT_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
+      "Specify the retransmission timeout length in milliseconds.", 41},
     { "retransmission-wait-timeout", RETRANSMISSION_WAIT_TIMEOUT_KEY, "MILLISECONDS", 0,
       "Specify the retransmission timeout length in milliseconds.", 41},
+    /* retry-backoff-count maintained for backwards comptability */
+    { "retry-backoff-count", RETRY_BACKOFF_COUNT_KEY, "COUNT", OPTION_HIDDEN,
+      "Specify the retransmission backoff count for retransmissions.", 42},
     { "retransmission-backoff-count", RETRANSMISSION_BACKOFF_COUNT_KEY, "COUNT", 0,
       "Specify the retransmission backoff count for retransmissions.", 42},
     { "ping-interval", PING_INTERVAL_KEY, "MILLISECONDS", 0,
@@ -151,6 +161,16 @@ cmdline_parse (int key,
 
   switch (key)
     {
+      /* IPMI_VERSION_KEY for backwards compatability */
+    case IPMI_VERSION_KEY:      /* --ipmi-version */
+      if (!strcasecmp (arg, "1.5"))
+        tmp = IPMI_DEVICE_LAN;
+      else if (!strcasecmp (arg, "2.0"))
+        tmp = IPMI_DEVICE_LAN_2_0;
+      else
+        ierr_exit ("Command Line Error: invalid driver type specified");
+      cmd_args->common.driver_type = tmp;
+      break;
 #ifndef NDEBUG
     case RMCPDUMP_KEY:       /* --rmcpdump */
       cmd_args->rmcpdump++;
@@ -186,6 +206,8 @@ cmdline_parse (int key,
     case WAIT_UNTIL_ON_KEY:       /* --wait-until-off */
       cmd_args->wait_until_off++;
       break;
+      /* RETRY_WAIT_TIMEOUT for backwards compatability */
+    case RETRY_WAIT_TIMEOUT_KEY:
     case RETRANSMISSION_WAIT_TIMEOUT_KEY:       /* --retransmission-wait-timeout */
       tmp = strtol (arg, &ptr, 10);
       if (ptr != (arg + strlen (arg))
@@ -193,6 +215,8 @@ cmdline_parse (int key,
         ierr_exit ("Command Line Error: retransmission wait timeout length invalid");
       cmd_args->retransmission_wait_timeout = tmp;
       break;
+      /* RETRY_BACKOFF_COUNT for backwards compatability */
+    case RETRY_BACKOFF_COUNT_KEY:
     case RETRANSMISSION_BACKOFF_COUNT_KEY:       /* --retransmission-backoff-count */
       tmp = strtol (arg, &ptr, 10);
       if (ptr != (arg + strlen (arg))

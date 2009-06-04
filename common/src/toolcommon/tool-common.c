@@ -81,7 +81,7 @@ ipmi_open (const char *progname,
 {
   ipmi_ctx_t ipmi_ctx = NULL;
   ipmi_locate_ctx_t locate_ctx = NULL;
-  unsigned int workaround_flags;
+  unsigned int workaround_flags = 0;
 
   if (!(ipmi_ctx = ipmi_ctx_create ()))
     {
@@ -101,32 +101,23 @@ ipmi_open (const char *progname,
       goto cleanup;
     }
 
-  workaround_flags = 0;
-  if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
-    workaround_flags |= IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-  else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
-    workaround_flags |= IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-  else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
-    workaround_flags |= IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-  else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
-    workaround_flags |= IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
-  else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
-    workaround_flags |= IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
-  else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-    workaround_flags |= IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
-  else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
-    workaround_flags |= IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
-  else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
-    workaround_flags |= IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION;
-  else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
-    workaround_flags |= IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE;
-
   if (hostname
       && strcasecmp (hostname, "localhost") != 0
       && strcmp (hostname, "127.0.0.1") != 0)
     {
       if (cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
         {
+          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
+          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
+          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
+          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION;
+          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE;
+          
           if (ipmi_ctx_open_outofband_2_0 (ipmi_ctx,
                                            hostname,
                                            cmd_args->username,
@@ -166,6 +157,17 @@ ipmi_open (const char *progname,
         }
       else
         {
+          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
+          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
+          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
+          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
+          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+            workaround_flags |= IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
+
           if (ipmi_ctx_open_outofband (ipmi_ctx,
                                        hostname,
                                        cmd_args->username,
@@ -233,6 +235,8 @@ ipmi_open (const char *progname,
                                      (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
             goto out;
 
+          /* XXX: should handle "fatal" errors */
+
           if (!ipmi_ctx_open_inband (ipmi_ctx,
                                      IPMI_DEVICE_OPENIPMI,
                                      cmd_args->disable_auto_probe,
@@ -242,6 +246,8 @@ ipmi_open (const char *progname,
                                      workaround_flags,
                                      (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
             goto out;
+
+          /* XXX: should handle "fatal" errors */
 
           /* achu:
            *

@@ -27,9 +27,10 @@
 enum bmc_info_argp_option_keys
   {
     GET_DEVICE_ID_KEY = 160,
-    GET_DEVICE_GUID_KEY = 'g',
-    GET_CHANNEL_INFO_KEY = 161,
-    INTERPRET_OEM_DATA = 162,
+    GUID_KEY = 'g',             /* legacy */
+    GET_DEVICE_GUID_KEY = 161,
+    GET_CHANNEL_INFO_KEY = 162,
+    INTERPRET_OEM_DATA = 163,
   };
 
 struct bmc_info_arguments

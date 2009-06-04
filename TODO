@@ -2,6 +2,9 @@ inband
 ------
 --fail-if-ipmi-not-detected
 and build option??
+inband flag - discover vs. not-discover on locate
+make ipmi_open() into lib function
+- copy usage into ipmimonitoring lib
 
 ipmi-locate
 -----------
@@ -10,6 +13,9 @@ ipmi-locate
 hostrange
 ---------
 exclude hosts option
+- not really necessary in FreeIPMI?  in pdsh, the reason you really
+  need this is because you can do -a (all) or -g (genders
+  attribute/netgroups attribute).
 if user inputs hostname of localhost, do inband not outofband?
 
 freeipmi tools

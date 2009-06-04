@@ -100,7 +100,7 @@ int ipmi_locate_get_device_info (ipmi_locate_ctx_t ctx,
                                  ipmi_interface_type_t type,
                                  struct ipmi_locate_info *info);
 
-/* Identical to ipmi_locate_get_device_info() but will return
+/* Identical to ipmi_locate_get_device_info() but will NOT return
  * defaults if no device info is found.
  */
 int ipmi_locate_discover_device_info (ipmi_locate_ctx_t ctx,
