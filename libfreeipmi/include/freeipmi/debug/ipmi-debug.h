@@ -68,6 +68,14 @@ int ipmi_dump_kcs_packet_ipmb (int fd,
                                fiid_template_t tmpl_ipmb_msg_hdr,
                                fiid_template_t tmpl_ipmb_cmd);
 
+int ipmi_dump_ssif_packet (int fd,
+                           const char *prefix,
+                           const char *hdr,
+                           const char *trlr,
+                           const void *pkt,
+                           unsigned int pkt_len,
+                           fiid_template_t tmpl_cmd);
+
 int ipmi_dump_lan_packet (int fd,
                           const char *prefix,
                           const char *hdr,

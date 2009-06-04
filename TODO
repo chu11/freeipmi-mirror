@@ -5,7 +5,6 @@ and build option??
 inband flag - discover vs. not-discover on locate
 make ipmi_open() into lib function
 - copy usage into ipmimonitoring lib
-kcs/ssif debug output for raw/oem
 
 ipmi-locate
 -----------

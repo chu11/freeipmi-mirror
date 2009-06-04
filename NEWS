@@ -308,7 +308,7 @@ o libfreeipmi
     "gigabyte per minute", "pounds / cu in").
   - Properly handle int/unsigned int potential overflow conditions.
   - Fix several sensor units abbreviations.
-  - More detailed KCS debug output with header information.
+  - More detailed KCS and SSIF debug output with header information.
   - Always output debug key fields (i.e. 'raw_data' from ipmi-raw) in
     byte array format instead of an integer even if the field length
     is < 64 bits.

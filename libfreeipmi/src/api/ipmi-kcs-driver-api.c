@@ -87,9 +87,9 @@ _ipmi_kcs_dump (ipmi_ctx_t ctx,
           && (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
           && pkt
           && pkt_len
-          && tmpl_cmd
           && (debug_direction == DEBUG_UTIL_DIRECTION_REQUEST
-              || debug_direction == DEBUG_UTIL_DIRECTION_RESPONSE));
+              || debug_direction == DEBUG_UTIL_DIRECTION_RESPONSE)
+          && tmpl_cmd);
 
   /* Don't cleanup/return an error here.  It's just debug code. */
 

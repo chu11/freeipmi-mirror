@@ -47,22 +47,29 @@
 
 #include "freeipmi-portability.h"
 
+#define IPMI_USE_KCS_HEADER  0
+#define IPMI_USE_SSIF_HEADER 1
+
 static int
-_ipmi_dump_kcs_packet (int fd,
-                       const char *prefix,
-                       const char *hdr,
-                       const char *trlr,
-                       const void *pkt,
-                       unsigned int pkt_len,
-                       fiid_template_t tmpl_cmd,
-                       fiid_template_t tmpl_ipmb_msg_hdr,
-                       fiid_template_t tmpl_ipmb_cmd)
+_ipmi_dump_inband_packet (int fd,
+                          const char *prefix,
+                          const char *hdr,
+                          const char *trlr,
+                          const void *pkt,
+                          unsigned int pkt_len,
+                          fiid_template_t tmpl_cmd,
+                          fiid_template_t tmpl_ipmb_msg_hdr,
+                          fiid_template_t tmpl_ipmb_cmd,
+                          int which_header)
 {
   unsigned int indx = 0;
   unsigned int obj_cmd_len;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   char *kcs_hdr =
     "KCS Header:\n"
+    "------------";
+  char *ssif_hdr =
+    "SSIF Header:\n"
     "------------";
   char *cmd_hdr =
     "IPMI Command Data:\n"
@@ -92,6 +99,7 @@ _ipmi_dump_kcs_packet (int fd,
   assert (tmpl_cmd);
   assert ((!tmpl_ipmb_msg_hdr && !tmpl_ipmb_cmd)
           || (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd));
+  assert (which_header == IPMI_USE_KCS_HEADER || which_header == IPMI_USE_SSIF_HEADER);
 
   if (ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
     {
@@ -124,7 +132,7 @@ _ipmi_dump_kcs_packet (int fd,
 
   if (ipmi_obj_dump (fd,
                      prefix,
-                     kcs_hdr,
+                     (which_header == IPMI_USE_KCS_HEADER) ? kcs_hdr : ssif_hdr,
                      NULL,
                      obj_kcs_hdr) < 0)
     {
@@ -352,15 +360,16 @@ ipmi_dump_kcs_packet (int fd,
       return (-1);
     }
 
-  return (_ipmi_dump_kcs_packet (fd,
-                                 prefix,
-                                 hdr,
-                                 trlr,
-                                 pkt,
-                                 pkt_len,
-                                 tmpl_cmd,
-                                 NULL,
-                                 NULL));
+  return (_ipmi_dump_inband_packet (fd,
+                                    prefix,
+                                    hdr,
+                                    trlr,
+                                    pkt,
+                                    pkt_len,
+                                    tmpl_cmd,
+                                    NULL,
+                                    NULL,
+                                    IPMI_USE_KCS_HEADER));
 }
 
 int
@@ -397,13 +406,41 @@ ipmi_dump_kcs_packet_ipmb (int fd,
       return (-1);
     }
 
-  return (_ipmi_dump_kcs_packet (fd,
-                                 prefix,
-                                 hdr,
-                                 trlr,
-                                 pkt,
-                                 pkt_len,
-                                 tmpl_cmd,
-                                 tmpl_ipmb_msg_hdr,
-                                 tmpl_ipmb_cmd));
+  return (_ipmi_dump_inband_packet (fd,
+                                    prefix,
+                                    hdr,
+                                    trlr,
+                                    pkt,
+                                    pkt_len,
+                                    tmpl_cmd,
+                                    tmpl_ipmb_msg_hdr,
+                                    tmpl_ipmb_cmd,
+                                    IPMI_USE_KCS_HEADER));
+}
+
+int
+ipmi_dump_ssif_packet (int fd,
+                       const char *prefix,
+                       const char *hdr,
+                       const char *trlr,
+                       const void *pkt,
+                       unsigned int pkt_len,
+                       fiid_template_t tmpl_cmd)
+{
+  if (!pkt || !tmpl_cmd)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  return (_ipmi_dump_inband_packet (fd,
+                                    prefix,
+                                    hdr,
+                                    trlr,
+                                    pkt,
+                                    pkt_len,
+                                    tmpl_cmd,
+                                    NULL,
+                                    NULL,
+                                    IPMI_USE_SSIF_HEADER));
 }
