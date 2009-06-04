@@ -239,6 +239,7 @@ fi
 %{_sbindir}/ipmimonitoring
 %{_sbindir}/ipmi-chassis
 %{_sbindir}/ipmi-chassis-config
+%{_sbindir}/ipmi-dcmi
 %{_sbindir}/ipmidetect
 %{_mandir}/man8/bmc-config.8*
 %{_mandir}/man5/bmc-config.conf.5*
@@ -266,6 +267,7 @@ fi
 %{_mandir}/man5/libipmimonitoring.conf.5*
 %{_mandir}/man8/ipmi-chassis.8*
 %{_mandir}/man8/ipmi-chassis-config.8*
+%{_mandir}/man8/ipmi-dcmi.8*
 %{_mandir}/man8/ipmidetect.8*
 %{_mandir}/man5/freeipmi.conf.5*
 %{_mandir}/man5/ipmidetect.conf.5*
@@ -301,6 +303,7 @@ fi
 %{_includedir}/freeipmi/*.h
 %{_includedir}/freeipmi/api/*.h
 %{_includedir}/freeipmi/cmds/*.h
+%{_includedir}/freeipmi/dcmi/*.h
 %{_includedir}/freeipmi/debug/*.h
 %{_includedir}/freeipmi/driver/*.h
 %{_includedir}/freeipmi/fiid/*.h
@@ -337,6 +340,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Thu Jun 04 2009 Albert Chu <chu11@llnl.gov> 0.8.0
+- Update for dcmi.
+
 * Mon Apr 23 2009 Albert Chu <chu11@llnl.gov> 0.8.0
 - Update for renaming of pef-config.
 - Update for new .h files.
