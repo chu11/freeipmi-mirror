@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.93 2009-06-05 17:05:09 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.94 2009-06-05 17:09:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1155,7 +1155,8 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
        * b/c we are closing the session.  We will still call the check
        * functions so debugging will be logged appropriately and
        * outbound sequence number checks can move the window along
-       * appropriately.
+       * appropriately.  But if there is any issue along the way, goto
+       * cleanup and close the session anyways.
        */
 
       if ((ret = ipmiconsole_check_payload_type (c, *p)) < 0)
