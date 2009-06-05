@@ -17,6 +17,11 @@
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_fiid_wrappers.h,
 	ipmiconsole/src/libipmiconsole/ipmiconsole_fiid_wrappers.c: Remove files.
+
+	* tagged pre_wrapper_cleanup
+
+	* ipmipower/src/wrappers.h, ipmipower/src/wrappers.c: Removed
+	unused wrappers.
 	
 2009-06-04  Albert Chu <chu11@llnl.gov>
 

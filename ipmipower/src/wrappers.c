@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.23 2009-05-01 21:14:00 chu11 Exp $
+ *  $Id: wrappers.c,v 1.24 2009-06-05 21:58:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -126,28 +126,6 @@ static int memory_alloc = 0;
  * immediately obvious.  
  */
 
-int Socket(int family, int type, int protocol)
-{
-    int fd;
-
-    fd = socket(family, type, protocol);
-    if (fd < 0)
-        lsd_fatal_error(__FILE__, __LINE__, "socket");
-    return fd;
-}
-
-int
-Setsockopt(int fd, int level, int optname, const void *opt_val,
-           socklen_t optlen)
-{
-    int ret_code;
-
-    ret_code = setsockopt(fd, level, optname, opt_val, optlen);
-    if (ret_code < 0)
-        lsd_fatal_error(__FILE__, __LINE__, "setsockopt");
-    return ret_code;
-}
-
 int Bind(int fd, struct sockaddr_in *saddr, socklen_t len)
 {
     int ret_code;
@@ -156,46 +134,6 @@ int Bind(int fd, struct sockaddr_in *saddr, socklen_t len)
     if (ret_code < 0)
         lsd_fatal_error(__FILE__, __LINE__, "bind");
     return ret_code;
-}
-
-int
-Getsockopt(int fd, int level, int optname, void *opt_val,
-           socklen_t * optlen)
-{
-    int ret_code;
-
-    ret_code = getsockopt(fd, level, optname, opt_val, optlen);
-    if (ret_code < 0)
-        lsd_fatal_error(__FILE__, __LINE__, "getsockopt");
-    return ret_code;
-}
-
-int Listen(int fd, int backlog)
-{
-    int ret_code;
-
-    ret_code = listen(fd, backlog);
-    if (ret_code < 0)
-        lsd_fatal_error(__FILE__, __LINE__, "listen");
-    return ret_code;
-}
-
-int Fcntl(int fd, int cmd, int arg)
-{
-    int ret_code;
-
-    ret_code = fcntl(fd, cmd, arg);
-    if (ret_code < 0)
-        lsd_fatal_error(__FILE__, __LINE__, "fcntl");
-    return ret_code;
-}
-
-char *Strncpy(char *s1, const char *s2, int len)
-{
-    char *res = strncpy(s1, s2, len);
-
-    s1[len - 1] = '\0';
-    return res;
 }
 
 time_t Time(time_t * t)
@@ -212,70 +150,6 @@ void Gettimeofday(struct timeval *tv, struct timezone *tz)
 {
     if (gettimeofday(tv, tz) < 0)
         lsd_fatal_error(__FILE__, __LINE__, "gettimeofday");
-}
-
-static void _clear_sets(fd_set * rset, fd_set * wset, fd_set * eset)
-{
-    if (rset != NULL)
-        FD_ZERO(rset);
-    if (wset != NULL)
-        FD_ZERO(wset);
-    if (eset != NULL)
-        FD_ZERO(eset);
-}
-
-/*
- * Select wrapper that retries select on EINTR with appropriate timeout
- * adjustments, and Err on any other failures.
- * Can return 0 indicating timeout or a value > 0.
- * NOTE: fd_sets are cleared on timeout.
- */
-int
-Select(int maxfd, fd_set * rset, fd_set * wset, fd_set * eset,
-       struct timeval *tv)
-{
-    int n;
-    struct timeval tv_orig = { 0, };
-    struct timeval start, end, delta;
-
-    /* prep for EINTR handling */
-    if (tv) {
-        tv_orig = *tv;
-        Gettimeofday(&start, NULL);
-    }
-    /* repeat select if interrupted */
-    do {
-        n = select(maxfd, rset, wset, eset, tv);
-        if (n < 0 && errno != EINTR)    /* unrecov error */
-            lsd_fatal_error(__FILE__, __LINE__, "select");
-        if (n < 0 && tv != NULL) {      /* EINTR - adjust tv */
-            Gettimeofday(&end, NULL);
-            timersub(&end, &start, &delta);     /* delta = end-start */
-            timersub(&tv_orig, &delta, tv);     /* tv = tvsave-delta */
-        }
-        /*if (n < 0)
-            fprintf(stderr, "retrying interrupted select\n");*/
-    } while (n < 0);
-    /* Main select loop needs the fd_sets cleared on timeout */
-    if (n == 0)
-        _clear_sets(rset, wset, eset);
-    return n;
-}
-
-/* select-based usleep(3) */
-void 
-Usleep(unsigned long usec)
-{
-    fd_set rset, wset, eset;
-    struct timeval tv;
-
-    tv.tv_usec = usec % 1000000;
-    tv.tv_sec  = usec / 1000000;
-
-    FD_ZERO(&rset);
-    FD_ZERO(&wset);
-    FD_ZERO(&eset);
-    Select(0, &rset, &wset, &eset, &tv);
 }
 
 /* Review: look into dmalloc */
@@ -313,32 +187,6 @@ char *wrap_malloc(char *file, int line, int size)
     return new;
 }
 
-char *wrap_realloc(char *file, int line, char *item , int newsize)
-{
-    char *new;
-    int *p = (int *)item - 2;
-    int oldsize;
-
-    assert(item != NULL);
-    assert(newsize > 0 && newsize <= INT_MAX);
-    assert(p[0] == MALLOC_MAGIC);
-    oldsize = p[1];
-    assert(_checkfill((unsigned char *)(item + oldsize), MALLOC_PAD_FILL, MALLOC_PAD_SIZE));
-    p = (int *)realloc(p, 2*sizeof(int) + newsize + MALLOC_PAD_SIZE);
-    if (p == NULL)
-        return lsd_nomem_error(file, line, "realloc");
-    assert(p[0] == MALLOC_MAGIC);
-    p[1] = newsize;
-#ifndef NDEBUG
-    memory_alloc += (newsize - oldsize);
-#endif
-    new = (char *) &p[2];
-    if (newsize > oldsize)
-        memset(new + oldsize, 0, newsize - oldsize);
-    memset(new + newsize, MALLOC_PAD_FILL, MALLOC_PAD_SIZE);
-    return new;
-}
-
 void Free(void *ptr)
 {
     if (ptr != NULL) {
@@ -354,87 +202,6 @@ void Free(void *ptr)
 #endif
         free(p);
     }
-}
-
-char *Strdup(const char *str)
-{
-    char *cpy;
-
-    cpy = Malloc(strlen(str) + 1);
-
-    strcpy(cpy, str);
-    return cpy;
-}
-
-
-int Accept(int fd, struct sockaddr_in *addr, socklen_t * addrlen)
-{
-    int new;
-
-    new = accept(fd, (struct sockaddr *) addr, addrlen);
-    if (new < 0) {
-        /* 
-         *   A client could abort before a ready connection is accepted.  
-         *  "The fix for this problem is to:  ...  2.  "Ignore the following 
-         *  errors ..."  - Stevens, UNP p424
-         */
-        if (!((errno == EWOULDBLOCK) ||
-              (errno == ECONNABORTED) ||
-#ifdef EPROTO
-              (errno == EPROTO) ||
-#endif
-              (errno == EINTR)))
-            lsd_fatal_error(__FILE__, __LINE__, "accept");
-    }
-    return new;
-}
-
-int Connect(int fd, struct sockaddr *addr, socklen_t addrlen)
-{
-    int n;
-
-    n = connect(fd, addr, addrlen);
-    if (n < 0) {
-        if (errno != EINPROGRESS)
-            lsd_fatal_error(__FILE__, __LINE__, "connect");
-    }
-    return n;
-}
-
-int Read(int fd, unsigned char *p, int max)
-{
-    int n;
-
-    do {
-        n = read(fd, p, max);
-    } while (n < 0 && errno == EINTR);
-    if (n < 0 && errno != EWOULDBLOCK && errno != ECONNRESET)
-        lsd_fatal_error(__FILE__, __LINE__, "read");
-    return n;
-}
-
-int Write(int fd, unsigned char *p, int max)
-{
-    int n;
-
-    do {
-        n = write(fd, p, max);
-    } while (n < 0 && errno == EINTR);
-    if (n < 0 && errno != EAGAIN && errno != ECONNRESET && errno != EPIPE)
-        lsd_fatal_error(__FILE__, __LINE__, "write");
-    return n;
-}
-
-
-int Open(char *str, int flags, int mode)
-{
-    int fd;
-
-    assert(str != NULL);
-    fd = open(str, flags, mode);
-    if (fd < 0)
-        lsd_fatal_error(__FILE__, __LINE__, str);
-    return fd;
 }
 
 int Close(int fd)

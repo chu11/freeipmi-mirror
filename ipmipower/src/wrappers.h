@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.h,v 1.16 2009-05-01 21:14:00 chu11 Exp $
+ *  $Id: wrappers.h,v 1.17 2009-06-05 21:58:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -87,43 +87,16 @@
 
 /* Wrapper functions (in wrappers.c) */
 
-int Socket(int family, int type, int protocol);
-int Setsockopt(int fd, int level, int optname, const void *opt_val,
-               socklen_t optlen);
 int Bind(int fd, struct sockaddr_in *addr, socklen_t len);
-int Getsockopt(int fd, int level, int optname, void *opt_val,
-               socklen_t * optlen);
-int Listen(int fd, int backlog);
-int Fcntl(int fd, int cmd, int arg);
-int Select(int maxfd, fd_set * rset, fd_set * wset, fd_set * eset,
-           struct timeval *tv);
 
 #define Malloc(size)          wrap_malloc(__FILE__, __LINE__, size)
-#define Realloc(item,newsize) wrap_realloc(__FILE__, __LINE__, item, newsize)
 char *wrap_malloc(char *file, int line, int size);
-char *wrap_realloc(char *file, int line, char *item, int newsize);
 
 void Free(void *ptr);
-char *Strdup(const char *str);
-int Accept(int fd, struct sockaddr_in *addr, socklen_t * addrlen);
-int Connect(int fd, struct sockaddr *addr, socklen_t addrlen);
-int Read(int fd, unsigned char *p, int max);
-int Write(int fd, unsigned char *p, int max);
-int Open(char *str, int flags, int mode);
 int Close(int fd);
 
-pid_t Fork(void);
-typedef void Sigfunc(int);
-Sigfunc *Signal(int signo, Sigfunc * func);
-int Memory(void);
 void Gettimeofday(struct timeval *tv, struct timezone *tz);
 time_t Time(time_t * t);
-char *Strncpy(char *s1, const char *s2, int len);
-void Usleep(unsigned long usec);
-void Pipe(int filedes[2]);
-void Dup2(int oldfd, int newfd);
-void Execv(const char *path, char *const argv[]);
-pid_t Waitpid(pid_t pid, int *status, int options);
 
 /* Recvfrom, Sendto, Poll by achu */
 
