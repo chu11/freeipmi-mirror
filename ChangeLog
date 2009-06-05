@@ -1,3 +1,15 @@
+2009-06-05  Albert Chu <chu11@llnl.gov>
+
+	Variety of code cleanup.
+
+	* libfreeipmi/src/api/ipmi-lan-session-common.c, ipmipower/src/:
+	Re-architect code such that packets only check fields that are
+	necessary.  Re-architect code to handle packet "processing"
+	outside of "verification" functions.
+
+	* Update comments with key-word "Compliance" when related to IPMI
+	compliance issues.
+	
 2009-06-04  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Add dcmi additions.

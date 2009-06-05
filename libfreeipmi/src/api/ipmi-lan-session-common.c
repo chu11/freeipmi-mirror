@@ -690,6 +690,7 @@ static int
 _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
                                      unsigned int internal_workaround_flags,
                                      uint8_t authentication_type,
+                                     int check_authentication_code,
                                      uint32_t *session_sequence_number,
                                      uint32_t session_id,
                                      uint8_t *rq_seq,
@@ -768,38 +769,41 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
    * circumstances.
    */
 
-  if ((ret = ipmi_lan_check_session_authentication_code (ctx->io.outofband.rs.obj_lan_session_hdr,
-                                                         ctx->io.outofband.rs.obj_lan_msg_hdr,
-                                                         obj_cmd_rs,
-                                                         ctx->io.outofband.rs.obj_lan_msg_trlr,
-                                                         authentication_type,
-                                                         password,
-                                                         password_len)) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if ((internal_workaround_flags & IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
-      && !ret)
+  if (check_authentication_code)
     {
       if ((ret = ipmi_lan_check_session_authentication_code (ctx->io.outofband.rs.obj_lan_session_hdr,
                                                              ctx->io.outofband.rs.obj_lan_msg_hdr,
                                                              obj_cmd_rs,
                                                              ctx->io.outofband.rs.obj_lan_msg_trlr,
-                                                             ctx->io.outofband.authentication_type,
+                                                             authentication_type,
                                                              password,
                                                              password_len)) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
         }
-    }
+      
+      if ((internal_workaround_flags & IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+          && !ret)
+        {
+          if ((ret = ipmi_lan_check_session_authentication_code (ctx->io.outofband.rs.obj_lan_session_hdr,
+                                                                 ctx->io.outofband.rs.obj_lan_msg_hdr,
+                                                                 obj_cmd_rs,
+                                                                 ctx->io.outofband.rs.obj_lan_msg_trlr,
+                                                                 authentication_type,
+                                                                 password,
+                                                                 password_len)) < 0)
+            {
+              API_ERRNO_TO_API_ERRNUM (ctx, errno);
+              goto cleanup;
+            }
+        }
 
-  if (!ret)
-    {
-      rv = 0;
-      goto cleanup;
+      if (!ret)
+        {
+          rv = 0;
+          goto cleanup;
+        }
     }
 
   if (session_sequence_number)
@@ -851,6 +855,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                       uint8_t lun,
                       uint8_t net_fn,
                       uint8_t authentication_type,
+                      int check_authentication_code,
                       uint32_t *session_sequence_number,
                       uint32_t session_id,
                       uint8_t *rq_seq,
@@ -1022,6 +1027,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
       if ((ret = _ipmi_lan_cmd_wrapper_verify_packet (ctx,
                                                       internal_workaround_flags,
                                                       authentication_type,
+                                                      check_authentication_code,
                                                       session_sequence_number,
                                                       session_id,
                                                       rq_seq,
@@ -1262,6 +1268,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       if ((ret = _ipmi_lan_cmd_wrapper_verify_packet (ctx,
                                                       internal_workaround_flags,
                                                       authentication_type,
+                                                      1, /* always check auth code at this point */
                                                       &(ctx->io.outofband.session_sequence_number),
                                                       ctx->io.outofband.session_id,
                                                       &rq_seq_orig,
@@ -1350,6 +1357,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             IPMI_BMC_IPMB_LUN_BMC,
                             IPMI_NET_FN_APP_RQ,
                             IPMI_AUTHENTICATION_TYPE_NONE,
+                            0,
                             NULL,
                             0,
                             &(ctx->io.outofband.rq_seq),
@@ -1526,6 +1534,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             IPMI_BMC_IPMB_LUN_BMC,
                             IPMI_NET_FN_APP_RQ,
                             IPMI_AUTHENTICATION_TYPE_NONE,
+                            0,
                             NULL,
                             0,
                             &(ctx->io.outofband.rq_seq),
@@ -1601,6 +1610,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
                             IPMI_BMC_IPMB_LUN_BMC,
                             IPMI_NET_FN_APP_RQ,
                             ctx->io.outofband.authentication_type,
+                            1,
                             NULL,
                             temp_session_id,
                             &(ctx->io.outofband.rq_seq),
@@ -3057,6 +3067,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
                             IPMI_BMC_IPMB_LUN_BMC,
                             IPMI_NET_FN_APP_RQ,
                             IPMI_AUTHENTICATION_TYPE_NONE,
+                            0,
                             NULL,
                             0,
                             &(ctx->io.outofband.rq_seq),
@@ -3609,11 +3620,13 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 
   if (!ret)
     {
-      /* XXX: achu: some systems, password could be correct, but
-       * privilege is too high.  The error is b/c the privilege error
-       * is not handled properly in the open session stage (i.e. they
-       * tell me I can authenticate at a high privilege level, that in
-       * reality is not allowed).  Dunno how to deal with this.
+      /* IPMI Compliance Issue
+       *
+       * On some systems, password could be correct, but privilege is
+       * too high.  The error is b/c the privilege error is not
+       * handled properly in the open session stage (i.e. they tell me
+       * I can authenticate at a high privilege level, that in reality
+       * is not allowed).  Dunno how to deal with this.
        */
       API_SET_ERRNUM (ctx, IPMI_ERR_PASSWORD_INVALID);
       goto cleanup;

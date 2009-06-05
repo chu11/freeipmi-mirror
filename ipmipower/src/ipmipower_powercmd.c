@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.179 2009-05-03 18:09:05 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.180 2009-06-05 17:05:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -456,6 +456,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
   uint8_t recv_buf[IPMIPOWER_PACKET_BUFLEN];
   int recv_len = 0;
   int rv = -1;
+  uint64_t val;
 
   assert (PACKET_TYPE_VALID_RES (pkt));
 
@@ -466,26 +467,136 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   ipmipower_packet_dump (ip, pkt, recv_buf, recv_len);
 
-  /* IPMI 1.5 Packet Checks */
+  /* rv = 0 if the packet is unparseable */
+  if (ipmipower_packet_store (ip, pkt, recv_buf, recv_len) < 0)
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
       || pkt == AUTHENTICATION_CAPABILITIES_RES
-      || pkt == GET_SESSION_CHALLENGE_RES
-      || pkt == ACTIVATE_SESSION_RES
-      || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-              || pkt == GET_CHASSIS_STATUS_RES
-              || pkt == CHASSIS_CONTROL_RES
-              || pkt == CHASSIS_IDENTIFY_RES
-              || pkt == CLOSE_SESSION_RES)))
+      || pkt == GET_SESSION_CHALLENGE_RES)
     {
-      /* rv = 0 if the packet is unparseable */
-      if (ipmipower_packet_store (ip, pkt, recv_buf, recv_len) < 0)
+      if (!ipmipower_check_checksum (ip, pkt))
         {
           rv = 0;
           goto cleanup;
         }
 
+      if (!ipmipower_check_network_function (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
+      if (!ipmipower_check_command (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
+      if (!ipmipower_check_requester_sequence_number (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
+      /* If everything else is correct besides completion code, packet
+       * returned an error.
+       */
+      if (!ipmipower_check_completion_code (ip, pkt))
+        {
+          ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname);
+          ip->retransmission_count = 0;  /* important to reset */
+          Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
+          goto cleanup;
+        }
+    }
+  else if (pkt == ACTIVATE_SESSION_RES)
+    {
+      if (!ipmipower_check_checksum (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
+      if (!ipmipower_check_authentication_code (ip,
+                                                pkt,
+                                                recv_buf,
+                                                recv_len))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
+      if (!ipmipower_check_network_function (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
+      if (!ipmipower_check_command (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
+      if (!ipmipower_check_requester_sequence_number (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
+      /* If everything else is correct besides completion code, packet
+       * returned an error.
+       */
+      if (!ipmipower_check_completion_code (ip, pkt))
+        {
+          ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname);
+          ip->retransmission_count = 0;  /* important to reset */
+          Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
+          goto cleanup;
+        }
+
+      /* achu:
+       *
+       * this should really be done in _process_ipmi_packets(), but
+       * because we are going to clear out the lan session header (b/c
+       * it has sensitive information in it), we'll do this here.
+       */
+      
+      Fiid_obj_get (ip->obj_lan_session_hdr_res,
+                    "session_sequence_number",
+                    &val);
+      
+      ip->highest_received_sequence_number = val;
+      
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on Sun Fire 4100.
+       *
+       * The session sequence numbers for IPMI 1.5 are the wrong endian.
+       * So we have to flip the bits to workaround it.
+       */
+      if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+        {
+          uint32_t tmp_session_sequence_number = ip->highest_received_sequence_number;
+          
+          ip->highest_received_sequence_number =
+            ((tmp_session_sequence_number & 0xFF000000) >> 24)
+            | ((tmp_session_sequence_number & 0x00FF0000) >> 8)
+            | ((tmp_session_sequence_number & 0x0000FF00) << 8)
+            | ((tmp_session_sequence_number & 0x000000FF) << 24);
+        }
+    }
+  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+               || pkt == GET_CHASSIS_STATUS_RES
+               || pkt == CHASSIS_CONTROL_RES
+               || pkt == CHASSIS_IDENTIFY_RES
+               || pkt == CLOSE_SESSION_RES))
+    {
       if (!ipmipower_check_checksum (ip, pkt))
         {
           rv = 0;
@@ -548,178 +659,159 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
           goto cleanup;
         }
     }
-  else /* IPMI 2.0 Packet Checks
-
-       (pkt == OPEN_SESSION_RES
-       || pkt == RAKP_MESSAGE_2_RES
-       || pkt == RAKP_MESSAGE_4_RES
-       || (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-       || pkt == GET_CHASSIS_STATUS_RES
-       || pkt == CHASSIS_CONTROL_RES
-       || pkt == CHASSIS_IDENTIFY_RES
-       || pkt == CLOSE_SESSION_RES)))
-       */
+  else if (pkt == OPEN_SESSION_RES
+           || pkt == RAKP_MESSAGE_2_RES
+           || pkt == RAKP_MESSAGE_4_RES)
     {
-      if (ipmipower_packet_store (ip, pkt, recv_buf, recv_len) < 0)
+      if (!ipmipower_check_payload_type (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+      
+      if (!ipmipower_check_message_tag (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+      
+      /* I don't think there is a guarantee the data
+       * (i.e. authentication keys, session id's, etc.) in the
+       * RAKP response will be valid if there is a status code
+       * error.  So we check this status code first, then the
+       * other stuff afterwards.
+       */
+      if (!ipmipower_check_rmcpplus_status_code (ip, pkt))
+        {
+          ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname);
+          ip->retransmission_count = 0;  /* important to reset */
+          Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
+          goto cleanup;
+        }
+
+      if (!ipmipower_check_session_id (ip, pkt))
         {
           rv = 0;
           goto cleanup;
         }
 
-      if (pkt == OPEN_SESSION_RES
-          || pkt == RAKP_MESSAGE_2_RES
-          || pkt == RAKP_MESSAGE_4_RES)
+      if (pkt == OPEN_SESSION_RES)
         {
-          if (!ipmipower_check_payload_type (ip, pkt))
+          if (!ipmipower_check_open_session_response_privilege (ip, pkt))
             {
-              rv = 0;
+              ipmipower_output (MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED, ip->ic->hostname);
               goto cleanup;
-            }
-
-          if (!ipmipower_check_message_tag (ip, pkt))
-            {
-              rv = 0;
-              goto cleanup;
-            }
-
-          /* I don't think there is a guarantee the data
-           * (i.e. authentication keys, session id's, etc.) in the
-           * RAKP response will be valid if there is a status code
-           * error.  So we check this status code first, then the
-           * other stuff afterwards.
-           */
-          if (!ipmipower_check_rmcpplus_status_code (ip, pkt))
-            {
-              ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname);
-              ip->retransmission_count = 0;  /* important to reset */
-              Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
-              goto cleanup;
-            }
-
-          if (!ipmipower_check_session_id (ip, pkt))
-            {
-              rv = 0;
-              goto cleanup;
-            }
-
-          if (pkt == OPEN_SESSION_RES)
-            {
-              if (!ipmipower_check_open_session_response_privilege (ip, pkt))
-                {
-                  ipmipower_output (MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED, ip->ic->hostname);
-                  goto cleanup;
-                }
-            }
-          else if (pkt == RAKP_MESSAGE_2_RES)
-            {
-              if (!ipmipower_check_rakp_2_key_exchange_authentication_code (ip, pkt))
-                {
-                  /* XXX: achu: some systems, password could be
-                   * correct, but privilege is too high.  The error is
-                   * b/c the privilege error is not handled properly
-                   * in the open session stage (i.e. they tell me I
-                   * can authenticate at a high privilege level, that
-                   * in reality is not allowed).  Dunno how to deal
-                   * with this.
-                   */
-                  ipmipower_output (MSG_TYPE_PASSWORD_INVALID, ip->ic->hostname);
-                  goto cleanup;
-                }
-            }
-          else if (pkt == RAKP_MESSAGE_4_RES)
-            {
-              if (!ipmipower_check_rakp_4_integrity_check_value (ip, pkt))
-                {
-                  ipmipower_output (MSG_TYPE_K_G_INVALID, ip->ic->hostname);
-                  goto cleanup;
-                }
             }
         }
-      else /* (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-              && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-          || pkt == GET_CHASSIS_STATUS_RES
-          || pkt == CHASSIS_CONTROL_RES
-          || pkt == CHASSIS_IDENTIFY_RES
-          || pkt == CLOSE_SESSION_RES)) */
+      else if (pkt == RAKP_MESSAGE_2_RES)
         {
-          if (!ipmipower_check_payload_type (ip, pkt))
+          if (!ipmipower_check_rakp_2_key_exchange_authentication_code (ip, pkt))
             {
-              rv = 0;
+              /* IPMI Compliance Issue
+               *
+               * On some systems, password could be correct, but
+               * privilege is too high.  The error is b/c the
+               * privilege error is not handled properly in the open
+               * session stage (i.e. they tell me I can authenticate
+               * at a high privilege level, that in reality is not
+               * allowed).  Dunno how to deal with this.
+               */
+              ipmipower_output (MSG_TYPE_PASSWORD_INVALID, ip->ic->hostname);
               goto cleanup;
             }
-
-          if (!ipmipower_check_payload_pad (ip, pkt))
+        }
+      else if (pkt == RAKP_MESSAGE_4_RES)
+        {
+          if (!ipmipower_check_rakp_4_integrity_check_value (ip, pkt))
             {
-              rv = 0;
+              ipmipower_output (MSG_TYPE_K_G_INVALID, ip->ic->hostname);
               goto cleanup;
             }
+        }
+    }
+  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+               || pkt == GET_CHASSIS_STATUS_RES
+               || pkt == CHASSIS_CONTROL_RES
+               || pkt == CHASSIS_IDENTIFY_RES
+               || pkt == CLOSE_SESSION_RES))
+    {
+      if (!ipmipower_check_payload_type (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
 
-          if (!ipmipower_check_integrity_pad (ip, pkt))
-            {
-              rv = 0;
-              goto cleanup;
-            }
+      if (!ipmipower_check_payload_pad (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+      
+      if (!ipmipower_check_integrity_pad (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+      
+      if (!ipmipower_check_checksum (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+      
+      if (!ipmipower_check_authentication_code (ip,
+                                                pkt,
+                                                recv_buf,
+                                                recv_len))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+      
+      if (!ipmipower_check_outbound_sequence_number (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+      
+      if (!ipmipower_check_session_id (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
+      
+      if (!ipmipower_check_network_function (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
 
-          if (!ipmipower_check_checksum (ip, pkt))
-            {
-              rv = 0;
-              goto cleanup;
-            }
+      if (!ipmipower_check_command (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
 
-          if (!ipmipower_check_authentication_code (ip,
-                                                    pkt,
-                                                    recv_buf,
-                                                    recv_len))
-            {
-              rv = 0;
-              goto cleanup;
-            }
-
-          if (!ipmipower_check_outbound_sequence_number (ip, pkt))
-            {
-              rv = 0;
-              goto cleanup;
-            }
-
-          if (!ipmipower_check_session_id (ip, pkt))
-            {
-              rv = 0;
-              goto cleanup;
-            }
-
-          if (!ipmipower_check_network_function (ip, pkt))
-            {
-              rv = 0;
-              goto cleanup;
-            }
-
-          if (!ipmipower_check_command (ip, pkt))
-            {
-              rv = 0;
-              goto cleanup;
-            }
-
-          if (!ipmipower_check_requester_sequence_number (ip, pkt))
-            {
-              if (pkt == CLOSE_SESSION_RES)
-                goto close_session_workaround;
-              rv = 0;
-              goto cleanup;
-            }
-
-          /* If everything else is correct besides completion code, packet
-           * returned an error.
-           */
-          if (!ipmipower_check_completion_code (ip, pkt))
-            {
-              if (pkt == CLOSE_SESSION_RES)
-                goto close_session_workaround;
-
-              ip->retransmission_count = 0;  /* important to reset */
-              Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
-              goto cleanup;
-            }
+      if (!ipmipower_check_requester_sequence_number (ip, pkt))
+        {
+          if (pkt == CLOSE_SESSION_RES)
+            goto close_session_workaround;
+          rv = 0;
+          goto cleanup;
+        }
+      
+      /* If everything else is correct besides completion code, packet
+       * returned an error.
+       */
+      if (!ipmipower_check_completion_code (ip, pkt))
+        {
+          if (pkt == CLOSE_SESSION_RES)
+            goto close_session_workaround;
+          
+          ip->retransmission_count = 0;  /* important to reset */
+          Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
+          goto cleanup;
         }
     }
 
@@ -1481,7 +1573,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
         /* XXX Session is not up, is it ok to quit here?  Or
          * should we timeout?? */
         return (-1);
-
+     
       _send_packet (ip, SET_SESSION_PRIVILEGE_LEVEL_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT)

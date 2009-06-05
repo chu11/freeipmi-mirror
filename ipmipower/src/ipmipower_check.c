@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.105 2009-05-03 18:09:04 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.106 2009-06-05 17:05:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -91,10 +91,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
-  assert (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
-          || pkt == AUTHENTICATION_CAPABILITIES_RES
-          || pkt == GET_SESSION_CHALLENGE_RES
-          || pkt == ACTIVATE_SESSION_RES
+  assert (pkt == ACTIVATE_SESSION_RES
           || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES /* IPMI 1.5 or 2.0 */
           || pkt == GET_CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
           || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
@@ -102,10 +99,8 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
           || pkt == CLOSE_SESSION_RES); /* IPMI 1.5 or 2.0 */
   assert (buf && buflen);
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
-      || pkt == AUTHENTICATION_CAPABILITIES_RES
-      || pkt == GET_SESSION_CHALLENGE_RES
-      || pkt == ACTIVATE_SESSION_RES
+  /* IPMI 1.5 Checks */
+  if (pkt == ACTIVATE_SESSION_RES
       || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
               || pkt == GET_CHASSIS_STATUS_RES
@@ -116,12 +111,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
       uint8_t authentication_type;
       int check_authcode_retry_flag = 0;
 
-      /* IPMI 1.5 Checks */
-      if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
-          || pkt == AUTHENTICATION_CAPABILITIES_RES
-          || pkt == GET_SESSION_CHALLENGE_RES)
-        authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
-      else if (pkt == ACTIVATE_SESSION_RES)
+      if (pkt == ACTIVATE_SESSION_RES)
         authentication_type = cmd_args.common.authentication_type;
       else /* pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
           || pkt == GET_CHASSIS_STATUS_RES
@@ -193,13 +183,13 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
         }
     }
   else  /*
-      (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
-      && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-      || pkt == GET_CHASSIS_STATUS_RES
-      || pkt == CHASSIS_CONTROL_RES
-      || pkt == CHASSIS_IDENTIFY_RES
-      || pkt == CLOSE_SESSION_RES))
-    */
+          (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+          || pkt == GET_CHASSIS_STATUS_RES
+          || pkt == CHASSIS_CONTROL_RES
+          || pkt == CHASSIS_IDENTIFY_RES
+          || pkt == CLOSE_SESSION_RES))
+        */
     {
       /* IPMI 2.0 Checks */
       uint8_t integrity_algorithm;
@@ -239,6 +229,13 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
+  assert (pkt != AUTHENTICATION_CAPABILITIES_V20_RES
+          && pkt != AUTHENTICATION_CAPABILITIES_RES
+          && pkt != GET_SESSION_CHALLENGE_RES
+          && pkt != ACTIVATE_SESSION_RES
+          && pkt != OPEN_SESSION_RES
+          && pkt != RAKP_MESSAGE_2_RES
+          && pkt != RAKP_MESSAGE_4_RES);
 
   /* achu: This algorithm is more or less from Appendix A of the IPMI
    * spec.  It may not be entirely necessary for ipmipower, since the
@@ -251,15 +248,6 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
    * it makes more sense to the casual code reviewer.  Maybe I'll
    * change it later.
    */
-
-  /* Outbound sequence numbers have not started yet */
-  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
-      || pkt == AUTHENTICATION_CAPABILITIES_RES
-      || pkt == GET_SESSION_CHALLENGE_RES
-      || pkt == OPEN_SESSION_RES
-      || pkt == RAKP_MESSAGE_2_RES
-      || pkt == RAKP_MESSAGE_4_RES)
-    return (1);
 
   if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
       && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
@@ -274,13 +262,12 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
       seq_num = val;
     }
   else /*
-     pkt == ACTIVATE_SESSION_RES
-     || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-     && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-     || pkt == GET_CHASSIS_STATUS_RES
-     || pkt == CHASSIS_CONTROL_RES
-     || pkt == CHASSIS_IDENTIFY_RES
-     || pkt == CLOSE_SESSION_RES))
+        (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+        && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+        || pkt == GET_CHASSIS_STATUS_RES
+        || pkt == CHASSIS_CONTROL_RES
+        || pkt == CHASSIS_IDENTIFY_RES
+        || pkt == CLOSE_SESSION_RES))
        */
     {
       Fiid_obj_get (ip->obj_lan_session_hdr_res,
@@ -305,17 +292,6 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
         | ((tmp_seq_num & 0x00FF0000) >> 8)
         | ((tmp_seq_num & 0x0000FF00) << 8)
         | ((tmp_seq_num & 0x000000FF) << 24);
-    }
-
-  if (pkt == ACTIVATE_SESSION_RES)
-    {
-      /* achu: On some buggy BMCs the initial outbound sequence number on
-       * the activate session response is off by one.  So we just accept
-       * whatever sequence number they give us even if it isn't the
-       * initial outbound sequence number.
-       */
-      ip->highest_received_sequence_number = seq_num;
-      return (1);
     }
 
   /* Drop duplicate packet */
@@ -449,18 +425,17 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
+  assert (pkt != AUTHENTICATION_CAPABILITIES_V20_RES
+          && pkt != AUTHENTICATION_CAPABILITIES_RES
+          && pkt != GET_SESSION_CHALLENGE_RES
+          && pkt != ACTIVATE_SESSION_RES);
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
-      || pkt == AUTHENTICATION_CAPABILITIES_RES
-      || pkt == GET_SESSION_CHALLENGE_RES
-      || pkt == ACTIVATE_SESSION_RES)
-    return (1);
-  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-               || pkt == GET_CHASSIS_STATUS_RES
-               || pkt == CHASSIS_CONTROL_RES
-               || pkt == CHASSIS_IDENTIFY_RES
-               || pkt == CLOSE_SESSION_RES))
+  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+      && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+          || pkt == GET_CHASSIS_STATUS_RES
+          || pkt == CHASSIS_CONTROL_RES
+          || pkt == CHASSIS_IDENTIFY_RES
+          || pkt == CLOSE_SESSION_RES))
     {
       Fiid_obj_get (ip->obj_lan_session_hdr_res,
                     "session_id",
@@ -485,9 +460,11 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
       session_id = val;
       expected_session_id = ip->remote_console_session_id;
     }
-  else if (pkt == OPEN_SESSION_RES
-           || pkt == RAKP_MESSAGE_2_RES
-           || pkt == RAKP_MESSAGE_4_RES)
+  else /* 
+          (pkt == OPEN_SESSION_RES
+          || pkt == RAKP_MESSAGE_2_RES
+          || pkt == RAKP_MESSAGE_4_RES)
+       */
     {
       fiid_obj_t obj_cmd;
 
