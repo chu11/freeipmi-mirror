@@ -1300,14 +1300,35 @@ _ipmi_outofband_close (ipmi_ctx_t ctx)
   /* Function Note: No need to set errnum - just return */
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
-          && (ctx->type == IPMI_DEVICE_LAN
-              || ctx->type == IPMI_DEVICE_LAN_2_0));
+          && ctx->type == IPMI_DEVICE_LAN);
 
   /* No need to set errnum - if the anything in close session
    * fails, session will eventually timeout anyways
    */
 
   if (ipmi_lan_close_session (ctx) < 0)
+    goto cleanup;
+
+ cleanup:
+  /* ignore potential error, destroy path */
+  if (ctx->io.outofband.sockfd)
+    close (ctx->io.outofband.sockfd);
+  _ipmi_outofband_free (ctx);
+}
+
+static void
+_ipmi_outofband_2_0_close (ipmi_ctx_t ctx)
+{
+  /* Function Note: No need to set errnum - just return */
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_LAN);
+  
+  /* No need to set errnum - if the anything in close session
+   * fails, session will eventually timeout anyways
+   */
+
+  if (ipmi_lan_2_0_close_session (ctx) < 0)
     goto cleanup;
 
  cleanup:
@@ -1361,9 +1382,10 @@ ipmi_ctx_close (ipmi_ctx_t ctx)
       return (-1);
     }
 
-  if (ctx->type == IPMI_DEVICE_LAN
-      || ctx->type == IPMI_DEVICE_LAN_2_0)
+  if (ctx->type == IPMI_DEVICE_LAN)
     _ipmi_outofband_close (ctx);
+  else if (ctx->type == IPMI_DEVICE_LAN_2_0)
+    _ipmi_outofband_2_0_close (ctx);
   else
     _ipmi_inband_close (ctx);
 

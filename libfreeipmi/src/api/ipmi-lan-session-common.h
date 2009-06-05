@@ -23,8 +23,9 @@
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-#define IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_GET_SESSION_CHALLENGE     0x00000001
-#define IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE 0x00000002
+#define IPMI_INTERNAL_WORKAROUND_FLAGS_GET_SESSION_CHALLENGE         0x00000001
+#define IPMI_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE     0x00000002
+#define IPMI_INTERNAL_WORKAROUND_FLAGS_CLOSE_SESSION_SKIP_RETRANSMIT 0x00000004
 
 void ipmi_lan_cmd_get_session_parameters (ipmi_ctx_t ctx,
                                           uint8_t *authentication_type,
@@ -57,6 +58,7 @@ int ipmi_lan_open_session (ipmi_ctx_t ctx);
 int ipmi_lan_close_session (ipmi_ctx_t ctx);
 
 int ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
+                              unsigned int internal_workaround_flags,
                               uint8_t lun,
                               uint8_t net_fn,
                               uint8_t payload_type,

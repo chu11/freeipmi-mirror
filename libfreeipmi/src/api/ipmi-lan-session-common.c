@@ -103,7 +103,7 @@ ipmi_lan_cmd_get_session_parameters (ipmi_ctx_t ctx,
     {
       (*authentication_type) = IPMI_AUTHENTICATION_TYPE_NONE;
       if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
-        (*internal_workaround_flags) |= IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
+        (*internal_workaround_flags) |= IPMI_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
     }
   else
     (*authentication_type) = ctx->io.outofband.authentication_type;
@@ -783,7 +783,7 @@ _ipmi_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
           goto cleanup;
         }
       
-      if ((internal_workaround_flags & IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+      if ((internal_workaround_flags & IPMI_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
           && !ret)
         {
           if ((ret = ipmi_lan_check_session_authentication_code (ctx->io.outofband.rs.obj_lan_session_hdr,
@@ -942,6 +942,13 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
 
       if (!recv_len)
         {
+          /* ignore timeout, just cleanly close session */
+          if (internal_workaround_flags & IPMI_INTERNAL_WORKAROUND_FLAGS_CLOSE_SESSION_SKIP_RETRANSMIT)
+            {
+              rv = 0;
+              break;
+            }
+
           if (session_sequence_number)
             (*session_sequence_number)++;
           if (rq_seq)
@@ -970,7 +977,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
            * ports) on a list, and close all of them after we have gotten
            * past the Get Session Challenge phase of the protocol.
            */
-          if (internal_workaround_flags & IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_GET_SESSION_CHALLENGE)
+          if (internal_workaround_flags & IPMI_INTERNAL_WORKAROUND_FLAGS_GET_SESSION_CHALLENGE)
             {
               struct socket_to_close *s;
               struct sockaddr_in addr;
@@ -1530,7 +1537,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
     }
 
   if (ipmi_lan_cmd_wrapper (ctx,
-                            IPMI_LAN_INTERNAL_WORKAROUND_FLAGS_GET_SESSION_CHALLENGE,
+                            IPMI_INTERNAL_WORKAROUND_FLAGS_GET_SESSION_CHALLENGE,
                             IPMI_BMC_IPMB_LUN_BMC,
                             IPMI_NET_FN_APP_RQ,
                             IPMI_AUTHENTICATION_TYPE_NONE,
@@ -1758,14 +1765,24 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 int
 ipmi_lan_close_session (ipmi_ctx_t ctx)
 {
+  fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  int rv = -1;
+  uint8_t authentication_type;
+  unsigned int internal_workaround_flags = 0;
+  int ret, rv = -1;
+
+  /* Do not use ipmi_cmd_close_session(), we use a close session retransmit workaround */
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
-          && (ctx->type == IPMI_DEVICE_LAN
-              || ctx->type == IPMI_DEVICE_LAN_2_0)
+          && ctx->type == IPMI_DEVICE_LAN
           && ctx->io.outofband.sockfd);
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_close_session_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      return (-1);
+    }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_close_session_rs)))
     {
@@ -1773,23 +1790,50 @@ ipmi_lan_close_session (ipmi_ctx_t ctx)
       return (-1);
     }
 
-  if (ctx->type == IPMI_DEVICE_LAN)
+  if (fill_cmd_close_session (ctx->io.outofband.session_id, obj_cmd_rq) < 0)
     {
-      if (ipmi_cmd_close_session (ctx,
-                                  ctx->io.outofband.session_id,
-                                  obj_cmd_rs) < 0)
-        goto cleanup;
-    }
-  else
-    {
-      if (ipmi_cmd_close_session (ctx,
-                                  ctx->io.outofband.managed_system_session_id,
-                                  obj_cmd_rs) < 0)
-        goto cleanup;
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
     }
 
+  ipmi_lan_cmd_get_session_parameters (ctx,
+                                       &authentication_type,
+                                       &internal_workaround_flags);
+
+  internal_workaround_flags |= IPMI_INTERNAL_WORKAROUND_FLAGS_CLOSE_SESSION_SKIP_RETRANSMIT;
+  if (ipmi_lan_cmd_wrapper (ctx,
+                            internal_workaround_flags,
+                            IPMI_BMC_IPMB_LUN_BMC,
+                            IPMI_NET_FN_APP_RQ,
+                            authentication_type,
+                            1,
+                            &(ctx->io.outofband.session_sequence_number),
+                            ctx->io.outofband.session_id,
+                            &(ctx->io.outofband.rq_seq),
+                            ctx->io.outofband.password,
+                            IPMI_1_5_MAX_PASSWORD_LENGTH,
+                            obj_cmd_rq,
+                            obj_cmd_rs) < 0)
+      goto cleanup;
+
+  /* Check completion code just for tracing, but don't return error */
+
+  if ((ret = ipmi_check_completion_code_success (obj_cmd_rs)) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto out;
+    }
+
+  if (!ret)
+    {
+      API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      goto out;
+    }
+  
+ out:
   rv = 0;
  cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -2608,6 +2652,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 
 int
 ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
+                          unsigned int internal_workaround_flags,
                           uint8_t lun,
                           uint8_t net_fn,
                           uint8_t payload_type,
@@ -2729,6 +2774,13 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
 
       if (!recv_len)
         {
+          /* ignore timeout, just cleanly close session */
+          if (internal_workaround_flags & IPMI_INTERNAL_WORKAROUND_FLAGS_CLOSE_SESSION_SKIP_RETRANSMIT)
+            {
+              rv = 0;
+              break;
+            }
+
           if (message_tag)
             (*message_tag)++;
           /* In IPMI 2.0, session sequence numbers of 0 are special */
@@ -3241,6 +3293,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     }
 
   if (ipmi_lan_2_0_cmd_wrapper (ctx,
+                                0,
                                 IPMI_BMC_IPMB_LUN_BMC, /* doesn't actually matter here */
                                 IPMI_NET_FN_APP_RQ, /* doesn't actually matter here */
                                 IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST,
@@ -3400,6 +3453,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     }
 
   if (ipmi_lan_2_0_cmd_wrapper (ctx,
+                                0,
                                 IPMI_BMC_IPMB_LUN_BMC, /* doesn't actually matter here */
                                 IPMI_NET_FN_APP_RQ, /* doesn't actually matter here */
                                 IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1,
@@ -3729,6 +3783,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     }
 
   if (ipmi_lan_2_0_cmd_wrapper (ctx,
+                                0,
                                 IPMI_BMC_IPMB_LUN_BMC, /* doesn't actually matter here */
                                 IPMI_NET_FN_APP_RQ, /* doesn't actually matter here */
                                 IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3,
@@ -3874,13 +3929,25 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 int
 ipmi_lan_2_0_close_session (ipmi_ctx_t ctx)
 {
+  fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  int rv = -1;
+  uint8_t payload_authenticated;
+  uint8_t payload_encrypted;
+  unsigned int internal_workaround_flags = 0;
+  int ret, rv = -1;
+
+  /* Do not use ipmi_cmd_close_session(), we use a close session retransmit workaround */
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
           && ctx->type == IPMI_DEVICE_LAN_2_0
           && ctx->io.outofband.sockfd);
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_close_session_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      return (-1);
+    }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_close_session_rs)))
     {
@@ -3888,13 +3955,60 @@ ipmi_lan_2_0_close_session (ipmi_ctx_t ctx)
       return (-1);
     }
 
-  if (ipmi_cmd_close_session (ctx,
-                              ctx->io.outofband.managed_system_session_id,
-                              obj_cmd_rs) < 0)
+  if (fill_cmd_close_session (ctx->io.outofband.managed_system_session_id, obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  
+  ipmi_lan_2_0_cmd_get_session_parameters (ctx,
+                                           &payload_authenticated,
+                                           &payload_encrypted);
+  
+  internal_workaround_flags |= IPMI_INTERNAL_WORKAROUND_FLAGS_CLOSE_SESSION_SKIP_RETRANSMIT;
+  
+  if (ipmi_lan_2_0_cmd_wrapper (ctx,
+                                internal_workaround_flags,
+                                IPMI_BMC_IPMB_LUN_BMC,
+                                IPMI_NET_FN_APP_RQ,
+                                IPMI_PAYLOAD_TYPE_IPMI,
+                                payload_authenticated,
+                                payload_encrypted,
+                                NULL,
+                                &(ctx->io.outofband.session_sequence_number),
+                                ctx->io.outofband.managed_system_session_id,
+                                &(ctx->io.outofband.rq_seq),
+                                ctx->io.outofband.authentication_algorithm,
+                                ctx->io.outofband.integrity_algorithm,
+                                ctx->io.outofband.confidentiality_algorithm,
+                                ctx->io.outofband.integrity_key_ptr,
+                                ctx->io.outofband.integrity_key_len,
+                                ctx->io.outofband.confidentiality_key_ptr,
+                                ctx->io.outofband.confidentiality_key_len,
+                                strlen (ctx->io.outofband.password) ? ctx->io.outofband.password : NULL,
+                                strlen (ctx->io.outofband.password),
+                                obj_cmd_rq,
+                                obj_cmd_rs) < 0)
     goto cleanup;
+  
+  /* Check completion code just for tracing, but don't return error */
 
+  if ((ret = ipmi_check_completion_code_success (obj_cmd_rs)) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto out;
+    }
+
+  if (!ret)
+    {
+      API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      goto out;
+    }
+  
+ out:
   rv = 0;
  cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }

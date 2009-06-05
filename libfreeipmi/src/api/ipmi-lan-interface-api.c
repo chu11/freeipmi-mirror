@@ -269,6 +269,7 @@ ipmi_lan_2_0_cmd (ipmi_ctx_t ctx,
                                            &payload_encrypted);
 
   return (ipmi_lan_2_0_cmd_wrapper (ctx,
+                                    0,
                                     ctx->lun,
                                     ctx->net_fn,
                                     IPMI_PAYLOAD_TYPE_IPMI,
@@ -361,6 +362,7 @@ ipmi_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
                                            &payload_encrypted);
 
   if (ipmi_lan_2_0_cmd_wrapper (ctx,
+                                0,
                                 ctx->lun,
                                 ctx->net_fn,
                                 IPMI_PAYLOAD_TYPE_IPMI,
