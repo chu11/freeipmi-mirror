@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.33 2009-05-03 18:09:04 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.34 2009-06-05 21:50:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -46,7 +46,6 @@
 #include "ipmiconsole_checks.h"
 #include "ipmiconsole_ctx.h"
 #include "ipmiconsole_debug.h"
-#include "ipmiconsole_fiid_wrappers.h"
 #include "ipmiconsole_packet.h"
 
 #include "freeipmi-portability.h"
@@ -165,11 +164,15 @@ ipmiconsole_check_outbound_sequence_number (ipmiconsole_ctx_t c, ipmiconsole_pac
    * change it later.
    */
 
-  if (Fiid_obj_get (c,
-                    c->connection.obj_rmcpplus_session_hdr_rs,
+  if (FIID_OBJ_GET (c->connection.obj_rmcpplus_session_hdr_rs,
                     "session_sequence_number",
                     &val) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'session_sequence_number': %s",
+                                 fiid_obj_errormsg (c->connection.obj_rmcpplus_session_hdr_rs)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
   session_sequence_number = val;
 
   /* Sequence Number Zero is special and shouldn't be possible */
@@ -287,21 +290,27 @@ ipmiconsole_check_session_id (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 
       obj_cmd = ipmiconsole_packet_object (c, p);
 
-      if (Fiid_obj_get (c,
-                        obj_cmd,
+      if (FIID_OBJ_GET (obj_cmd,
                         "remote_console_session_id",
                         &val) < 0)
-        return (-1);
+        {
+          IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'remote_console_session_id': %s",
+                                     fiid_obj_errormsg (obj_cmd)));
+          return (-1);
+        }
       session_id = val;
       expected_session_id = c->session.remote_console_session_id;
     }
   else
     {
-      if (Fiid_obj_get (c,
-                        c->connection.obj_rmcpplus_session_hdr_rs,
+      if (FIID_OBJ_GET (c->connection.obj_rmcpplus_session_hdr_rs,
                         "session_id",
                         &val) < 0)
-        return (-1);
+        {
+          IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'session_id': %s",
+                                     fiid_obj_errormsg (c->connection.obj_rmcpplus_session_hdr_rs)));
+          return (-1);
+        }
       session_id = val;
       expected_session_id = c->session.remote_console_session_id;
     }
@@ -330,11 +339,14 @@ ipmiconsole_check_network_function (ipmiconsole_ctx_t c, ipmiconsole_packet_type
           || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
           || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
-  if (Fiid_obj_get (c,
-                    c->connection.obj_lan_msg_hdr_rs,
+  if (FIID_OBJ_GET (c->connection.obj_lan_msg_hdr_rs,
                     "net_fn",
                     &val) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'net_fn': %s",
+                                 fiid_obj_errormsg (c->connection.obj_lan_msg_hdr_rs)));
+      return (-1);
+    }
   netfn = val;
   expected_netfn = IPMI_NET_FN_APP_RS;
 
@@ -364,11 +376,14 @@ ipmiconsole_check_command (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
           || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
   obj_cmd = ipmiconsole_packet_object (c, p);
-  if (Fiid_obj_get (c,
-                    obj_cmd,
+  if (FIID_OBJ_GET (obj_cmd,
                     "cmd",
                     &val) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'cmd': %s",
+                                 fiid_obj_errormsg (obj_cmd)));
+      return (-1);
+    }
   cmd = val;
 
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
@@ -412,11 +427,14 @@ ipmiconsole_check_requester_sequence_number (ipmiconsole_ctx_t c, ipmiconsole_pa
           || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
           || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
-  if (Fiid_obj_get (c,
-                    c->connection.obj_lan_msg_hdr_rs,
+  if (FIID_OBJ_GET (c->connection.obj_lan_msg_hdr_rs,
                     "rq_seq",
                     &val) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'rq_seq': %s",
+                                 fiid_obj_errormsg (c->connection.obj_lan_msg_hdr_rs)));
+      return (-1);
+    }
   req_seq = val;
   expected_req_seq = c->session.requester_sequence_number;
 
@@ -446,11 +464,14 @@ ipmiconsole_check_completion_code (ipmiconsole_ctx_t c, ipmiconsole_packet_type_
           || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
   obj_cmd = ipmiconsole_packet_object (c, p);
-  if (Fiid_obj_get (c,
-                    obj_cmd,
+  if (FIID_OBJ_GET (obj_cmd,
                     "comp_code",
                     &val) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'comp_code': %s",
+                                 fiid_obj_errormsg (obj_cmd)));
+      return (-1);
+    }
   comp_code = val;
 
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
@@ -480,11 +501,14 @@ ipmiconsole_check_payload_type (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p
           || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
           || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
-  if (Fiid_obj_get (c,
-                    c->connection.obj_rmcpplus_session_hdr_rs,
+  if (FIID_OBJ_GET (c->connection.obj_rmcpplus_session_hdr_rs,
                     "payload_type",
                     &val) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'payload_type': %s",
+                                 fiid_obj_errormsg (c->connection.obj_rmcpplus_session_hdr_rs)));
+      return (-1);
+    }
   payload_type = val;
 
   if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE)
@@ -519,11 +543,14 @@ ipmiconsole_check_message_tag (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
           || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4);
 
   obj_cmd = ipmiconsole_packet_object (c, p);
-  if (Fiid_obj_get (c,
-                    obj_cmd,
+  if (FIID_OBJ_GET (obj_cmd,
                     "message_tag",
                     &val) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'message_tag': %s",
+                                 fiid_obj_errormsg (obj_cmd)));
+      return (-1);
+    }
   message_tag = val;
   expected_message_tag = c->session.message_tag;
 
@@ -548,11 +575,14 @@ ipmiconsole_check_rmcpplus_status_code (ipmiconsole_ctx_t c, ipmiconsole_packet_
           || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4);
 
   obj_cmd = ipmiconsole_packet_object (c, p);
-  if (Fiid_obj_get (c,
-                    obj_cmd,
+  if (FIID_OBJ_GET (obj_cmd,
                     "rmcpplus_status_code",
                     &val) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'rmcpplus_status_code': %s",
+                                 fiid_obj_errormsg (obj_cmd)));
+      return (-1);
+    }
   rmcpplus_status_code = val;
 
   if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
@@ -572,11 +602,14 @@ ipmiconsole_check_open_session_response_privilege (ipmiconsole_ctx_t c, ipmicons
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE);
 
-  if (Fiid_obj_get (c,
-                    c->connection.obj_open_session_response,
+  if (FIID_OBJ_GET (c->connection.obj_open_session_response,
                     "maximum_privilege_level",
                     &val) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'maximum_privilege_level': %s",
+                                 fiid_obj_errormsg (c->connection.obj_open_session_response)));
+      return (-1);
+    }
   privilege = val;
 
   /* IPMI Workaround
@@ -663,40 +696,56 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code (ipmiconsole_ctx_t c, 
       uint8_t keybuf[IPMICONSOLE_PACKET_BUFLEN];
       int keybuf_len;
 
-      if ((keybuf_len = Fiid_obj_get_data (c,
-                                           c->connection.obj_rakp_message_2,
+      if ((keybuf_len = fiid_obj_get_data (c->connection.obj_rakp_message_2,
                                            "key_exchange_authentication_code",
                                            keybuf,
                                            IPMICONSOLE_PACKET_BUFLEN)) < 0)
-        return (-1);
+        {
+          IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: 'key_exchange_authentication_code': %s",
+                                     fiid_obj_errormsg (c->connection.obj_rakp_message_2)));
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+          return (-1);
+        }
 
       if (c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
           && keybuf_len == 1)
         {
-          if (Fiid_obj_clear_field (c,
-                                    c->connection.obj_rakp_message_2,
+          if (fiid_obj_clear_field (c->connection.obj_rakp_message_2,
                                     "key_exchange_authentication_code") < 0)
-            return (-1);
+            {
+              IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_clear_field: 'key_exchange_authentication_code': %s",
+                                         fiid_obj_errormsg (c->connection.obj_rakp_message_2)));
+              ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+              return (-1);
+            }
         }
       else if (c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
                && keybuf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
         {
-          if (Fiid_obj_set_data (c,
-                                 c->connection.obj_rakp_message_2,
+          if (fiid_obj_set_data (c->connection.obj_rakp_message_2,
                                  "key_exchange_authentication_code",
                                  keybuf,
                                  IPMI_HMAC_SHA1_DIGEST_LENGTH) < 0)
-            return (-1);
+            {
+              IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_set_data: 'key_exchange_authentication_code': %s",
+                                         fiid_obj_errormsg (c->connection.obj_rakp_message_2)));
+              ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+              return (-1);
+            }
         }
       else if (c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
                && keybuf_len == (IPMI_HMAC_MD5_DIGEST_LENGTH + 1))
         {
-          if (Fiid_obj_set_data (c,
-                                 c->connection.obj_rakp_message_2,
+          if (fiid_obj_set_data (c->connection.obj_rakp_message_2,
                                  "key_exchange_authentication_code",
                                  keybuf,
                                  IPMI_HMAC_MD5_DIGEST_LENGTH) < 0)
-            return (-1);
+            {
+              IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_set_data: 'key_exchange_authentication_code': %s",
+                                         fiid_obj_errormsg (c->connection.obj_rakp_message_2)));
+              ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+              return (-1);
+            }
         }
     }
 
@@ -730,57 +779,78 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code (ipmiconsole_ctx_t c, 
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
       int buf_len;
 
-      buf_len = Fiid_obj_get_data (c,
-                                   c->connection.obj_rakp_message_2,
-                                   "key_exchange_authentication_code",
-                                   buf,
-                                   IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
+      /* trace, but do not return potential error */
+
+      if ((buf_len = fiid_obj_get_data (c->connection.obj_rakp_message_2,
+                                        "key_exchange_authentication_code",
+                                        buf,
+                                        IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
+        IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: 'key_exchange_authentication_code': %s",
+                                   fiid_obj_errormsg (c->connection.obj_rakp_message_2)));
 
       if (buf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
         {
-          Fiid_obj_clear_field (c,
-                                c->connection.obj_rakp_message_2,
-                                "key_exchange_authentication_code");
-          Fiid_obj_set_data (c,
-                             c->connection.obj_rakp_message_2,
-                             "key_exchange_authentication_code",
-                             buf,
-                             IPMI_HMAC_SHA1_DIGEST_LENGTH);
+          /* trace, but do not return potential error */
+
+          if (fiid_obj_clear_field (c->connection.obj_rakp_message_2,
+                                    "key_exchange_authentication_code") < 0)
+            IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_clear_field: 'key_exchange_authentication_code': %s",
+                                       fiid_obj_errormsg (c->connection.obj_rakp_message_2)));
+
+          if (fiid_obj_set_data (c->connection.obj_rakp_message_2,
+                                 "key_exchange_authentication_code",
+                                 buf,
+                                 IPMI_HMAC_SHA1_DIGEST_LENGTH) < 0)
+            IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_set_data: 'key_exchange_authentication_code': %s",
+                                       fiid_obj_errormsg (c->connection.obj_rakp_message_2)));
         }
     }
 
 
-  if (Fiid_obj_get (c,
-                    c->connection.obj_open_session_response,
+  if (FIID_OBJ_GET (c->connection.obj_open_session_response,
                     "managed_system_session_id",
                     &val) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'managed_system_session_id': %s",
+                                 fiid_obj_errormsg (c->connection.obj_open_session_response)));
+      return (-1);
+    }
   managed_system_session_id = val;
 
-  if ((managed_system_random_number_len = Fiid_obj_get_data (c,
-                                                             c->connection.obj_rakp_message_2,
+  if ((managed_system_random_number_len = fiid_obj_get_data (c->connection.obj_rakp_message_2,
                                                              "managed_system_random_number",
                                                              managed_system_random_number,
                                                              IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
-    return (-1);
-
-  if (managed_system_random_number_len != IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: invalid managed system random number length: %d", managed_system_random_number_len));
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: 'managed_system_random_number': %s",
+                                 fiid_obj_errormsg (c->connection.obj_rakp_message_2)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
-  if ((managed_system_guid_len = Fiid_obj_get_data (c,
-                                                    c->connection.obj_rakp_message_2,
+  if (managed_system_random_number_len != IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: invalid managed system random number length: %d",
+                                 managed_system_random_number_len));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  if ((managed_system_guid_len = fiid_obj_get_data (c->connection.obj_rakp_message_2,
                                                     "managed_system_guid",
                                                     managed_system_guid,
                                                     IPMI_MANAGED_SYSTEM_GUID_LENGTH)) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: 'managed_system_guid': %s",
+                                 fiid_obj_errormsg (c->connection.obj_rakp_message_2)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   if (managed_system_guid_len != IPMI_MANAGED_SYSTEM_GUID_LENGTH)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: invalid managed system guid length: %d", managed_system_guid_len));
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: invalid managed system guid length: %d",
+                                 managed_system_guid_len));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
     }
@@ -844,22 +914,31 @@ ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmiconsole
   else
     authentication_algorithm = c->config.authentication_algorithm;
 
-  if (Fiid_obj_get (c,
-                    c->connection.obj_open_session_response,
+  if (FIID_OBJ_GET (c->connection.obj_open_session_response,
                     "managed_system_session_id",
                     &val) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'managed_system_session_id': %s",
+                                 fiid_obj_errormsg (c->connection.obj_open_session_response)));
+      return (-1);
+    }
   managed_system_session_id = val;
 
-  if ((managed_system_guid_len = Fiid_obj_get_data (c,
-                                                    c->connection.obj_rakp_message_2,
+  if ((managed_system_guid_len = fiid_obj_get_data (c->connection.obj_rakp_message_2,
                                                     "managed_system_guid",
                                                     managed_system_guid,
                                                     IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
-    return (-1);
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: 'managed_system_guid': %s",
+                                 fiid_obj_errormsg (c->connection.obj_rakp_message_2)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
   if (managed_system_guid_len != IPMI_MANAGED_SYSTEM_GUID_LENGTH)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: invalid managed system guid length: %d", managed_system_guid_len));
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: invalid managed system guid length: %d",
+                                 managed_system_guid_len));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
     }

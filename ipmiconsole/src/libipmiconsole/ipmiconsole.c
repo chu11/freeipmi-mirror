@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.99 2009-05-16 05:36:18 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.100 2009-06-05 21:50:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -64,7 +64,6 @@
 #include "ipmiconsole_ctx.h"
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_engine.h"
-#include "ipmiconsole_fiid_wrappers.h"
 #include "ipmiconsole_util.h"
 
 #include "freeipmi-portability.h"

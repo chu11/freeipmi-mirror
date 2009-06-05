@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.52 2009-05-16 05:36:19 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.53 2009-06-05 21:50:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -65,11 +65,9 @@
 
 #include "ipmiconsole_ctx.h"
 #include "ipmiconsole_debug.h"
-#include "ipmiconsole_fiid_wrappers.h"
 #include "ipmiconsole_util.h"
 #include "scbuf.h"
 
-#include "freeipmi-portability.h"
 #include "list.h"
 #include "secure.h"
 #include "timeval.h"
@@ -554,78 +552,222 @@ ipmiconsole_ctx_connection_setup (ipmiconsole_ctx_t c)
 
   /* Fiid Objects */
 
-  if (!(c->connection.obj_rmcp_hdr_rq = Fiid_obj_create (c, tmpl_rmcp_hdr)))
-    goto cleanup;
-  if (!(c->connection.obj_rmcp_hdr_rs = Fiid_obj_create (c, tmpl_rmcp_hdr)))
-    goto cleanup;
-  if (!(c->connection.obj_lan_session_hdr_rq = Fiid_obj_create (c, tmpl_lan_session_hdr)))
-    goto cleanup;
-  if (!(c->connection.obj_lan_session_hdr_rs = Fiid_obj_create (c, tmpl_lan_session_hdr)))
-    goto cleanup;
-  if (!(c->connection.obj_lan_msg_hdr_rq = Fiid_obj_create (c, tmpl_lan_msg_hdr_rq)))
-    goto cleanup;
-  if (!(c->connection.obj_lan_msg_hdr_rs = Fiid_obj_create (c, tmpl_lan_msg_hdr_rs)))
-    goto cleanup;
-  if (!(c->connection.obj_lan_msg_trlr_rs = Fiid_obj_create (c, tmpl_lan_msg_trlr)))
-    goto cleanup;
-  if (!(c->connection.obj_rmcpplus_session_hdr_rq = Fiid_obj_create (c, tmpl_rmcpplus_session_hdr)))
-    goto cleanup;
-  if (!(c->connection.obj_rmcpplus_session_hdr_rs = Fiid_obj_create (c, tmpl_rmcpplus_session_hdr)))
-    goto cleanup;
-  if (!(c->connection.obj_rmcpplus_payload_rs = Fiid_obj_create (c, tmpl_rmcpplus_payload)))
-    goto cleanup;
-  if (!(c->connection.obj_rmcpplus_session_trlr_rq = Fiid_obj_create (c, tmpl_rmcpplus_session_trlr)))
-    goto cleanup;
-  if (!(c->connection.obj_rmcpplus_session_trlr_rs = Fiid_obj_create (c, tmpl_rmcpplus_session_trlr)))
-    goto cleanup;
-  if (!(c->connection.obj_authentication_capabilities_v20_rq = Fiid_obj_create (c, tmpl_cmd_get_channel_authentication_capabilities_v20_rq)))
-    goto cleanup;
-  if (!(c->connection.obj_authentication_capabilities_v20_rs = Fiid_obj_create (c, tmpl_cmd_get_channel_authentication_capabilities_v20_rs)))
-    goto cleanup;
-  if (!(c->connection.obj_open_session_request = Fiid_obj_create (c, tmpl_rmcpplus_open_session_request)))
-    goto cleanup;
-  if (!(c->connection.obj_open_session_response = Fiid_obj_create (c, tmpl_rmcpplus_open_session_response)))
-    goto cleanup;
-  if (!(c->connection.obj_rakp_message_1 = Fiid_obj_create (c, tmpl_rmcpplus_rakp_message_1)))
-    goto cleanup;
-  if (!(c->connection.obj_rakp_message_2 = Fiid_obj_create (c, tmpl_rmcpplus_rakp_message_2)))
-    goto cleanup;
-  if (!(c->connection.obj_rakp_message_3 = Fiid_obj_create (c, tmpl_rmcpplus_rakp_message_3)))
-    goto cleanup;
-  if (!(c->connection.obj_rakp_message_4 = Fiid_obj_create (c, tmpl_rmcpplus_rakp_message_4)))
-    goto cleanup;
-  if (!(c->connection.obj_set_session_privilege_level_rq = Fiid_obj_create (c, tmpl_cmd_set_session_privilege_level_rq)))
-    goto cleanup;
-  if (!(c->connection.obj_set_session_privilege_level_rs = Fiid_obj_create (c, tmpl_cmd_set_session_privilege_level_rs)))
-    goto cleanup;
-  if (!(c->connection.obj_get_channel_payload_support_rq = Fiid_obj_create (c, tmpl_cmd_get_channel_payload_support_rq)))
-    goto cleanup;
-  if (!(c->connection.obj_get_channel_payload_support_rs = Fiid_obj_create (c, tmpl_cmd_get_channel_payload_support_rs)))
-    goto cleanup;
-  if (!(c->connection.obj_get_payload_activation_status_rq = Fiid_obj_create (c, tmpl_cmd_get_payload_activation_status_rq)))
-    goto cleanup;
-  if (!(c->connection.obj_get_payload_activation_status_rs = Fiid_obj_create (c, tmpl_cmd_get_payload_activation_status_rs)))
-    goto cleanup;
-  if (!(c->connection.obj_activate_payload_rq = Fiid_obj_create (c, tmpl_cmd_activate_payload_sol_rq)))
-    goto cleanup;
-  if (!(c->connection.obj_activate_payload_rs = Fiid_obj_create (c, tmpl_cmd_activate_payload_sol_rs)))
-    goto cleanup;
-  if (!(c->connection.obj_sol_payload_data_rq = Fiid_obj_create (c, tmpl_sol_payload_data_remote_console_to_bmc)))
-    goto cleanup;
-  if (!(c->connection.obj_sol_payload_data_rs = Fiid_obj_create (c, tmpl_sol_payload_data_bmc_to_remote_console)))
-    goto cleanup;
-  if (!(c->connection.obj_get_channel_payload_version_rq = Fiid_obj_create (c, tmpl_cmd_get_channel_payload_version_rq)))
-    goto cleanup;
-  if (!(c->connection.obj_get_channel_payload_version_rs = Fiid_obj_create (c, tmpl_cmd_get_channel_payload_version_rs)))
-    goto cleanup;
-  if (!(c->connection.obj_deactivate_payload_rq = Fiid_obj_create (c, tmpl_cmd_deactivate_payload_rq)))
-    goto cleanup;
-  if (!(c->connection.obj_deactivate_payload_rs = Fiid_obj_create (c, tmpl_cmd_deactivate_payload_rs)))
-    goto cleanup;
-  if (!(c->connection.obj_close_session_rq = Fiid_obj_create (c, tmpl_cmd_close_session_rq)))
-    goto cleanup;
-  if (!(c->connection.obj_close_session_rs = Fiid_obj_create (c, tmpl_cmd_close_session_rs)))
-    goto cleanup;
+  if (!(c->connection.obj_rmcp_hdr_rq = fiid_obj_create (tmpl_rmcp_hdr)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_rmcp_hdr_rs = fiid_obj_create (tmpl_rmcp_hdr)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_lan_session_hdr_rq = fiid_obj_create (tmpl_lan_session_hdr)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_lan_session_hdr_rs = fiid_obj_create (tmpl_lan_session_hdr)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_lan_msg_hdr_rq = fiid_obj_create (tmpl_lan_msg_hdr_rq)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_lan_msg_hdr_rs = fiid_obj_create (tmpl_lan_msg_hdr_rs)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_lan_msg_trlr_rs = fiid_obj_create (tmpl_lan_msg_trlr)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_rmcpplus_session_hdr_rq = fiid_obj_create (tmpl_rmcpplus_session_hdr)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_rmcpplus_session_hdr_rs = fiid_obj_create (tmpl_rmcpplus_session_hdr)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_rmcpplus_payload_rs = fiid_obj_create (tmpl_rmcpplus_payload)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_rmcpplus_session_trlr_rq = fiid_obj_create (tmpl_rmcpplus_session_trlr)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_rmcpplus_session_trlr_rs = fiid_obj_create (tmpl_rmcpplus_session_trlr)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_authentication_capabilities_v20_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rq)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_authentication_capabilities_v20_rs = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rs)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_open_session_request = fiid_obj_create (tmpl_rmcpplus_open_session_request)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_open_session_response = fiid_obj_create (tmpl_rmcpplus_open_session_response)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_rakp_message_1 = fiid_obj_create (tmpl_rmcpplus_rakp_message_1)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_rakp_message_2 = fiid_obj_create (tmpl_rmcpplus_rakp_message_2)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_rakp_message_3 = fiid_obj_create (tmpl_rmcpplus_rakp_message_3)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_rakp_message_4 = fiid_obj_create (tmpl_rmcpplus_rakp_message_4)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_set_session_privilege_level_rq = fiid_obj_create (tmpl_cmd_set_session_privilege_level_rq)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_set_session_privilege_level_rs = fiid_obj_create (tmpl_cmd_set_session_privilege_level_rs)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_get_channel_payload_support_rq = fiid_obj_create (tmpl_cmd_get_channel_payload_support_rq)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_get_channel_payload_support_rs = fiid_obj_create (tmpl_cmd_get_channel_payload_support_rs)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_get_payload_activation_status_rq = fiid_obj_create (tmpl_cmd_get_payload_activation_status_rq)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_get_payload_activation_status_rs = fiid_obj_create (tmpl_cmd_get_payload_activation_status_rs)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_activate_payload_rq = fiid_obj_create (tmpl_cmd_activate_payload_sol_rq)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_activate_payload_rs = fiid_obj_create (tmpl_cmd_activate_payload_sol_rs)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_sol_payload_data_rq = fiid_obj_create (tmpl_sol_payload_data_remote_console_to_bmc)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_sol_payload_data_rs = fiid_obj_create (tmpl_sol_payload_data_bmc_to_remote_console)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_get_channel_payload_version_rq = fiid_obj_create (tmpl_cmd_get_channel_payload_version_rq)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_get_channel_payload_version_rs = fiid_obj_create (tmpl_cmd_get_channel_payload_version_rs)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_deactivate_payload_rq = fiid_obj_create (tmpl_cmd_deactivate_payload_rq)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_deactivate_payload_rs = fiid_obj_create (tmpl_cmd_deactivate_payload_rs)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_close_session_rq = fiid_obj_create (tmpl_cmd_close_session_rq)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if (!(c->connection.obj_close_session_rs = fiid_obj_create (tmpl_cmd_close_session_rs)))
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
 
   return (0);
 
@@ -731,77 +873,77 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
    * in the context.
    */
   if (c->connection.obj_rmcp_hdr_rq)
-    Fiid_obj_destroy (c, c->connection.obj_rmcp_hdr_rq);
+    fiid_obj_destroy (c->connection.obj_rmcp_hdr_rq);
   if (c->connection.obj_rmcp_hdr_rs)
-    Fiid_obj_destroy (c, c->connection.obj_rmcp_hdr_rs);
+    fiid_obj_destroy (c->connection.obj_rmcp_hdr_rs);
   if (c->connection.obj_lan_session_hdr_rq)
-    Fiid_obj_destroy (c, c->connection.obj_lan_session_hdr_rq);
+    fiid_obj_destroy (c->connection.obj_lan_session_hdr_rq);
   if (c->connection.obj_lan_session_hdr_rs)
-    Fiid_obj_destroy (c, c->connection.obj_lan_session_hdr_rs);
+    fiid_obj_destroy (c->connection.obj_lan_session_hdr_rs);
   if (c->connection.obj_lan_msg_hdr_rq)
-    Fiid_obj_destroy (c, c->connection.obj_lan_msg_hdr_rq);
+    fiid_obj_destroy (c->connection.obj_lan_msg_hdr_rq);
   if (c->connection.obj_lan_msg_hdr_rs)
-    Fiid_obj_destroy (c, c->connection.obj_lan_msg_hdr_rs);
+    fiid_obj_destroy (c->connection.obj_lan_msg_hdr_rs);
   if (c->connection.obj_lan_msg_trlr_rs)
-    Fiid_obj_destroy (c, c->connection.obj_lan_msg_trlr_rs);
+    fiid_obj_destroy (c->connection.obj_lan_msg_trlr_rs);
   if (c->connection.obj_rmcpplus_session_hdr_rq)
-    Fiid_obj_destroy (c, c->connection.obj_rmcpplus_session_hdr_rq);
+    fiid_obj_destroy (c->connection.obj_rmcpplus_session_hdr_rq);
   if (c->connection.obj_rmcpplus_session_hdr_rs)
-    Fiid_obj_destroy (c, c->connection.obj_rmcpplus_session_hdr_rs);
+    fiid_obj_destroy (c->connection.obj_rmcpplus_session_hdr_rs);
   if (c->connection.obj_rmcpplus_payload_rs)
-    Fiid_obj_destroy (c, c->connection.obj_rmcpplus_payload_rs);
+    fiid_obj_destroy (c->connection.obj_rmcpplus_payload_rs);
   if (c->connection.obj_rmcpplus_session_trlr_rq)
-    Fiid_obj_destroy (c, c->connection.obj_rmcpplus_session_trlr_rq);
+    fiid_obj_destroy (c->connection.obj_rmcpplus_session_trlr_rq);
   if (c->connection.obj_rmcpplus_session_trlr_rs)
-    Fiid_obj_destroy (c, c->connection.obj_rmcpplus_session_trlr_rs);
+    fiid_obj_destroy (c->connection.obj_rmcpplus_session_trlr_rs);
   if (c->connection.obj_authentication_capabilities_v20_rq)
-    Fiid_obj_destroy (c, c->connection.obj_authentication_capabilities_v20_rq);
+    fiid_obj_destroy (c->connection.obj_authentication_capabilities_v20_rq);
   if (c->connection.obj_authentication_capabilities_v20_rs)
-    Fiid_obj_destroy (c, c->connection.obj_authentication_capabilities_v20_rs);
+    fiid_obj_destroy (c->connection.obj_authentication_capabilities_v20_rs);
   if (c->connection.obj_open_session_request)
-    Fiid_obj_destroy (c, c->connection.obj_open_session_request);
+    fiid_obj_destroy (c->connection.obj_open_session_request);
   if (c->connection.obj_open_session_response)
-    Fiid_obj_destroy (c, c->connection.obj_open_session_response);
+    fiid_obj_destroy (c->connection.obj_open_session_response);
   if (c->connection.obj_rakp_message_1)
-    Fiid_obj_destroy (c, c->connection.obj_rakp_message_1);
+    fiid_obj_destroy (c->connection.obj_rakp_message_1);
   if (c->connection.obj_rakp_message_2)
-    Fiid_obj_destroy (c, c->connection.obj_rakp_message_2);
+    fiid_obj_destroy (c->connection.obj_rakp_message_2);
   if (c->connection.obj_rakp_message_3)
-    Fiid_obj_destroy (c, c->connection.obj_rakp_message_3);
+    fiid_obj_destroy (c->connection.obj_rakp_message_3);
   if (c->connection.obj_rakp_message_4)
-    Fiid_obj_destroy (c, c->connection.obj_rakp_message_4);
+    fiid_obj_destroy (c->connection.obj_rakp_message_4);
   if (c->connection.obj_set_session_privilege_level_rq)
-    Fiid_obj_destroy (c, c->connection.obj_set_session_privilege_level_rq);
+    fiid_obj_destroy (c->connection.obj_set_session_privilege_level_rq);
   if (c->connection.obj_set_session_privilege_level_rs)
-    Fiid_obj_destroy (c, c->connection.obj_set_session_privilege_level_rs);
+    fiid_obj_destroy (c->connection.obj_set_session_privilege_level_rs);
   if (c->connection.obj_get_channel_payload_support_rq)
-    Fiid_obj_destroy (c, c->connection.obj_get_channel_payload_support_rq);
+    fiid_obj_destroy (c->connection.obj_get_channel_payload_support_rq);
   if (c->connection.obj_get_channel_payload_support_rs)
-    Fiid_obj_destroy (c, c->connection.obj_get_channel_payload_support_rs);
+    fiid_obj_destroy (c->connection.obj_get_channel_payload_support_rs);
   if (c->connection.obj_get_payload_activation_status_rq)
-    Fiid_obj_destroy (c, c->connection.obj_get_payload_activation_status_rq);
+    fiid_obj_destroy (c->connection.obj_get_payload_activation_status_rq);
   if (c->connection.obj_get_payload_activation_status_rs)
-    Fiid_obj_destroy (c, c->connection.obj_get_payload_activation_status_rs);
+    fiid_obj_destroy (c->connection.obj_get_payload_activation_status_rs);
   if (c->connection.obj_activate_payload_rq)
-    Fiid_obj_destroy (c, c->connection.obj_activate_payload_rq);
+    fiid_obj_destroy (c->connection.obj_activate_payload_rq);
   if (c->connection.obj_activate_payload_rs)
-    Fiid_obj_destroy (c, c->connection.obj_activate_payload_rs);
+    fiid_obj_destroy (c->connection.obj_activate_payload_rs);
   if (c->connection.obj_sol_payload_data_rq)
-    Fiid_obj_destroy (c, c->connection.obj_sol_payload_data_rq);
+    fiid_obj_destroy (c->connection.obj_sol_payload_data_rq);
   if (c->connection.obj_sol_payload_data_rs)
-    Fiid_obj_destroy (c, c->connection.obj_sol_payload_data_rs);
+    fiid_obj_destroy (c->connection.obj_sol_payload_data_rs);
   if (c->connection.obj_get_channel_payload_version_rq)
-    Fiid_obj_destroy (c, c->connection.obj_get_channel_payload_version_rq);
+    fiid_obj_destroy (c->connection.obj_get_channel_payload_version_rq);
   if (c->connection.obj_get_channel_payload_version_rs)
-    Fiid_obj_destroy (c, c->connection.obj_get_channel_payload_version_rs);
+    fiid_obj_destroy (c->connection.obj_get_channel_payload_version_rs);
   if (c->connection.obj_deactivate_payload_rq)
-    Fiid_obj_destroy (c, c->connection.obj_deactivate_payload_rq);
+    fiid_obj_destroy (c->connection.obj_deactivate_payload_rq);
   if (c->connection.obj_deactivate_payload_rs)
-    Fiid_obj_destroy (c, c->connection.obj_deactivate_payload_rs);
+    fiid_obj_destroy (c->connection.obj_deactivate_payload_rs);
   if (c->connection.obj_close_session_rq)
-    Fiid_obj_destroy (c, c->connection.obj_close_session_rq);
+    fiid_obj_destroy (c->connection.obj_close_session_rq);
   if (c->connection.obj_close_session_rs)
-    Fiid_obj_destroy (c, c->connection.obj_close_session_rs);
+    fiid_obj_destroy (c->connection.obj_close_session_rs);
 
   _ipmiconsole_ctx_connection_init (c);
 
