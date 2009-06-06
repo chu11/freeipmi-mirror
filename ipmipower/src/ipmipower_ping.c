@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.47 2009-05-26 23:29:25 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.48 2009-06-06 00:09:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -34,6 +34,16 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else  /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif  /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #include <errno.h>
 
 #include "ipmipower_ping.h"
@@ -73,7 +83,9 @@ ipmipower_ping_process_pings (int *timeout)
   if (!cmd_args.ping_interval)
     return;
 
-  Gettimeofday (&cur_time, NULL);
+  if (gettimeofday (&cur_time, NULL) < 0)
+    ierr_exit ("gettimeofday: %s", strerror (errno));
+
   if (timeval_gt (&cur_time, &next_ping_sends_time) || force_discovery_sweep)
     {
       force_discovery_sweep = 0;

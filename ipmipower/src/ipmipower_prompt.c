@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.110 2009-05-28 17:00:26 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.111 2009-06-06 00:09:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -867,7 +867,9 @@ ipmipower_prompt_process_cmdline (void)
   char *buf;
   int quit = 0;
 
-  buf = (char *)Malloc (IPMIPOWER_MAX_TTY_BUF);
+  if (!(buf = (char *)malloc (IPMIPOWER_MAX_TTY_BUF)))
+    ierr_exit ("malloc: %s", strerror (errno));
+
   do
     {
       if (ipmipower_powercmd_pending ())
@@ -1072,7 +1074,7 @@ ipmipower_prompt_process_cmdline (void)
           argv_destroy (argv);
         }
     } while (!quit && strlen (buf) > 0);
-  Free (buf);
+  free (buf);
 
   return (!quit);
 }

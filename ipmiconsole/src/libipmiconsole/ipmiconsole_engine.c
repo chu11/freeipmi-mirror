@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.88 2009-06-05 21:50:41 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.89 2009-06-06 00:09:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -457,12 +457,17 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
 
   secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
-  if ((len = ipmi_lan_recvfrom (c->connection.ipmi_fd,
-                                buffer,
-                                IPMICONSOLE_PACKET_BUFLEN,
-                                0,
-                                (struct sockaddr *)&from,
-                                &fromlen)) < 0)
+  do
+    {
+      len = ipmi_lan_recvfrom (c->connection.ipmi_fd,
+                               buffer,
+                               IPMICONSOLE_PACKET_BUFLEN,
+                               0,
+                               (struct sockaddr *)&from,
+                               &fromlen);
+    } while (len < 0 && errno == EINTR);
+
+  if (len < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_lan_recvfrom: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
@@ -490,12 +495,12 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_from_bmc not empty, draining"));
       do {
-    char tempbuf[IPMICONSOLE_PACKET_BUFLEN];
-    if (scbuf_read (c->connection.ipmi_from_bmc, tempbuf, IPMICONSOLE_PACKET_BUFLEN) < 0)
-      {
-        IPMICONSOLE_CTX_DEBUG (c, ("scbuf_read: %s", strerror (errno)));
-        break;
-      }
+        char tempbuf[IPMICONSOLE_PACKET_BUFLEN];
+        if (scbuf_read (c->connection.ipmi_from_bmc, tempbuf, IPMICONSOLE_PACKET_BUFLEN) < 0)
+          {
+            IPMICONSOLE_CTX_DEBUG (c, ("scbuf_read: %s", strerror (errno)));
+            break;
+          }
       } while(!scbuf_is_empty (c->connection.ipmi_from_bmc));
     }
 
@@ -544,24 +549,32 @@ _ipmi_sendto (ipmiconsole_ctx_t c)
       return (-1);
     }
 
-  if ((len = ipmi_lan_sendto (c->connection.ipmi_fd,
-                              buffer,
-                              n,
-                              0,
-                              (struct sockaddr *)&(c->session.addr),
-                              sizeof (struct sockaddr_in))) < 0)
+  do
+    {
+      len = ipmi_lan_sendto (c->connection.ipmi_fd,
+                             buffer,
+                             n,
+                             0,
+                             (struct sockaddr *)&(c->session.addr),
+                             sizeof (struct sockaddr_in));
+    } while (len < 0 && errno == EINTR);
+
+  if (len < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_lan_sendto: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
+#if 0
+  /* don't check, let bad packet timeout */
   if (len != n)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_lan_sendto: invalid bytes written; n=%d; len=%d", n, len));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);
     }
+#endif
 
   /* scbuf should be empty now */
   if (!scbuf_is_empty (c->connection.ipmi_to_bmc))
@@ -750,6 +763,62 @@ _console_write (ipmiconsole_ctx_t c)
   return (0);
 }
 
+static int
+_ipmiconsole_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
+{
+  int n;
+  struct timeval tv, tv_orig;
+  struct timeval start, end, delta;
+
+  assert (ufds);
+
+  /* prep for EINTR handling */
+  if (timeout >= 0)
+    {
+      /* poll uses timeout in milliseconds */
+      tv_orig.tv_sec = (long)timeout/1000;
+      tv_orig.tv_usec = (timeout % 1000) * 1000;
+
+      if (gettimeofday(&start, NULL) < 0)
+        {
+          IPMICONSOLE_DEBUG (("gettimeofday: %s", strerror (errno)));
+          return (-1);
+        }
+    }
+  else
+    {
+      tv_orig.tv_sec = 0;
+      tv_orig.tv_usec = 0;
+    }
+
+  /* repeat poll if interrupted */
+  do
+    {
+      n = poll(ufds, nfds, timeout);
+
+      if (n < 0 && errno != EINTR)    /* unrecov error */
+        {
+          IPMICONSOLE_DEBUG (("poll: %s", strerror (errno)));
+          return (-1);
+        }
+
+      if (n < 0 && timeout >= 0)      /* EINTR - adjust timeout */
+        {
+          if (gettimeofday(&end, NULL) < 0)
+            {
+              IPMICONSOLE_DEBUG (("gettimeofday: %s", strerror (errno)));
+              return (-1);
+            }
+
+          timersub(&end, &start, &delta);     /* delta = end-start */
+          timersub(&tv_orig, &delta, &tv);    /* tv = tvsave-delta */
+          timeout = (tv.tv_sec * 1000) + (tv.tv_usec/1000);
+        }
+    } while (n < 0);
+
+  return n;
+}
+
 static void *
 _ipmiconsole_engine (void *arg)
 {
@@ -908,7 +977,7 @@ _ipmiconsole_engine (void *arg)
           goto continue_loop;
         }
 
-      if (poll (poll_data.pfds, (poll_data.ctxs_len * 3) + 1, timeout_len) < 0)
+      if (_ipmiconsole_poll (poll_data.pfds, (poll_data.ctxs_len * 3) + 1, timeout_len) < 0)
         {
           IPMICONSOLE_DEBUG (("poll: %s", strerror (errno)));
           goto continue_loop;

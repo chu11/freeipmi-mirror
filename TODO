@@ -3,8 +3,6 @@ inband
 --fail-if-ipmi-not-detected
 and build option??
 inband flag - discover vs. not-discover on locate
-make ipmi_open() into lib function
-- copy usage into ipmimonitoring lib
 
 ipmi-locate
 -----------
@@ -65,6 +63,9 @@ general
 beginning doc for developers
 event handling
 try and consolidate checks/etc code in ipmipower/ipmiconsole/api
+- ipmi-open
+- authentication code?
+- sequence number checks
 -x option for excluding hosts??
 perl extensions
 - api support?
@@ -84,6 +85,16 @@ IPv6
 have funcs that return buflen return ssize_t?, input should be size_t and void *? like read(), write()?
 config file support per host.
 i.e. workarounds FOO nodes[0-100]
+should completion code error handling code (ipmipower, ipmiconsole,
+libfreeipmi) handle fatal vs. non-fatal completion codes?
+- for example, what if I send a packet that is completely bogus?
+- will BMCs respond?
+- what completion code will be returned?
+- will vendors do it consistently?
+
+ipmipower
+---------
+do debug output like in ipmimonitoring/ipmiconsole?  not like currently.
 
 bmc-device
 --------

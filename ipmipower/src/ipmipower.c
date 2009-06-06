@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.77 2009-05-01 21:13:58 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.78 2009-06-06 00:09:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -31,12 +31,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif /* HAVE_UNISTD_H */
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #if TIME_WITH_SYS_TIME
 #include <sys/time.h>
 #include <time.h>
@@ -53,6 +53,7 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
+#include <netinet/in.h>
 #include <errno.h>
 
 #include "ipmipower.h"
@@ -61,6 +62,7 @@
 #include "ipmipower_powercmd.h"
 #include "ipmipower_prompt.h"
 #include "ipmipower_ping.h"
+#include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
 
 #include "freeipmi-portability.h"
@@ -90,7 +92,7 @@ _setup (void)
   int i;
   struct rlimit rlim;
 
-  srand (Time (NULL));
+  srand (time (NULL));
 
   /* Make best effort to increase file descriptor limit, if it fails
    * for any reason, don't worry about it, its no big deal.
@@ -110,7 +112,7 @@ _setup (void)
   for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
     {
       if (!(output_hostrange[i] = hostlist_create (NULL)))
-        ierr_exit ("hostlist_create() error");
+        ierr_exit ("hostlist_create: %s", strerror (errno));
     }
 
   /* in interactive mode errors should always go to atleast the syslog */
@@ -156,24 +158,32 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr)
   uint8_t buf[IPMIPOWER_PACKET_BUFLEN];
 
   if ((n = cbuf_read (cbuf, buf, IPMIPOWER_PACKET_BUFLEN)) < 0)
-    ierr_exit ("_sendto(%d): cbuf_read: %s", fd, strerror (errno));
+    ierr_exit ("cbuf_read: %s", fd, strerror (errno));
   if (n == IPMIPOWER_PACKET_BUFLEN)
-    ierr_exit ("_sendto: Buffer full");
+    ierr_exit ("cbuf_read: Buffer full");
 
-  if ((rv = ipmi_lan_sendto (fd,
-                             buf,
-                             n,
-                             0,
-                             (struct sockaddr *)destaddr,
-                             sizeof (struct sockaddr_in))) < 0)
-    ierr_exit ("_sendto: ipmi_lan_sendto %s", strerror (errno));
+  do 
+    {
+      rv = ipmi_lan_sendto (fd,
+                            buf,
+                            n,
+                            0,
+                            (struct sockaddr *)destaddr,
+                            sizeof (struct sockaddr_in));
+    } while (rv < 0 && errno == EINTR);
 
+  if (rv < 0)
+    ierr_exit ("ipmi_lan_sendto %s", strerror (errno));
+
+#if 0
+  /* don't check, let bad packet timeout */
   if (rv != n)
-    ierr_exit ("_sendto: ipmi_lan_sendto rv=%d n=%d", rv, n);
+    ierr_exit ("ipmi_lan_sendto rv=%d n=%d", rv, n);
+#endif
 
   /* cbuf should be empty now */
   if (!cbuf_is_empty (cbuf))
-    ierr_exit ("_sendto: cbuf not empty");
+    ierr_exit ("cbuf not empty");
 }
 
 static void
@@ -184,15 +194,20 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
   struct sockaddr_in from;
   unsigned int fromlen = sizeof (struct sockaddr_in);
 
-  if ((rv = ipmi_lan_recvfrom (fd,
-                               buf,
-                               IPMIPOWER_PACKET_BUFLEN,
-                               0,
-                               (struct sockaddr *)&from, &fromlen)) < 0)
-    ierr_exit ("_recvfrom: ipmi_lan_recvfrom: %s", strerror (errno));
+  do
+    {
+      rv = ipmi_lan_recvfrom (fd,
+                              buf,
+                              IPMIPOWER_PACKET_BUFLEN,
+                              0,
+                              (struct sockaddr *)&from, &fromlen);
+    } while (rv < 0 && errno == EINTR);
+
+  if (rv < 0)
+    ierr_exit ("ipmi_lan_recvfrom: %s", strerror (errno));
 
   if (!rv)
-    ierr_exit ("_recvfrom: ipmi_lan_recvfrom: EOF");
+    ierr_exit ("ipmi_lan_recvfrom: EOF");
 
   /* Don't store if this is packet is strange for some reason */
   if (from.sin_family != AF_INET
@@ -202,22 +217,22 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
   /* cbuf should be empty, but if it isn't, empty it */
   if (!cbuf_is_empty (cbuf))
     {
-      ierr_dbg ("_recvfrom: cbuf not empty, draining");
+      ierr_dbg ("cbuf not empty, draining");
       do
         {
           uint8_t tempbuf[IPMIPOWER_PACKET_BUFLEN];
 
           if (cbuf_read (cbuf, tempbuf, IPMIPOWER_PACKET_BUFLEN) < 0)
-            ierr_exit ("_recvfrom: cbuf_read: %s", strerror (errno));
+            ierr_exit ("cbuf_read: %s", strerror (errno));
         } while(!cbuf_is_empty (cbuf));
     }
 
   if ((n = cbuf_write (cbuf, buf, rv, &dropped)) < 0)
-    ierr_exit ("_recvfrom(%d): cbuf_write: %s", fd, strerror (errno));
+    ierr_exit ("cbuf_write: %s", strerror (errno));
   if (n != rv)
-    ierr_exit ("_recvfrom: rv=%d n=%d", rv, n);
+    ierr_exit ("cbuf_write: rv=%d n=%d", rv, n);
   if (dropped)
-    ierr_dbg ("_recvfrom: read dropped %d bytes", dropped);
+    ierr_dbg ("cbuf_write: read dropped %d bytes", dropped);
 }
 
 /* _poll_loop
@@ -277,8 +292,9 @@ _poll_loop (int non_interactive)
            * stdin, stdout, stderr.
            */
           nfds = (ics_len*2) + 3;
-          Free (pfds);
-          pfds = (struct pollfd *)Malloc (nfds * sizeof (struct pollfd));
+          free (pfds);
+          if (!(pfds = (struct pollfd *)malloc (nfds * sizeof (struct pollfd))))
+            ierr_exit ("malloc: %s", strerror (errno));
         }
 
       for (i = 0; i < ics_len; i++)
@@ -316,7 +332,7 @@ _poll_loop (int non_interactive)
         pfds[nfds-1].events = 0;
       pfds[nfds-1].revents = 0;
 
-      Poll (pfds, nfds, timeout);
+      ipmipower_poll (pfds, nfds, timeout);
 
       for (i = 0; i < ics_len; i++)
         {
@@ -354,7 +370,7 @@ _poll_loop (int non_interactive)
         Cbuf_read_to_fd (ttyerr, STDERR_FILENO);
     }
 
-  Free (pfds);
+  free (pfds);
 }
 
 static void
@@ -366,7 +382,7 @@ _eliminate_nodes (void)
       int i;
 
       if (!(id = ipmidetect_handle_create ()))
-        ierr_exit ("ipmidetect_handle_create");
+        ierr_exit ("ipmidetect_handle_create: %s", strerror (errno));
 
       if (ipmidetect_load_data (id,
                                 NULL,
@@ -408,7 +424,7 @@ main (int argc, char *argv[])
   ipmi_disable_coredump ();
 
   if (ipmi_rmcpplus_init () < 0)
-    ierr_exit ("ipmi_rmcpplus_init");
+    ierr_exit ("ipmi_rmcpplus_init: %s", strerror (errno));
 
   ipmipower_argp_parse (argc, argv, &cmd_args);
 

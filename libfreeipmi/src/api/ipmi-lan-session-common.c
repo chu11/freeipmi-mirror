@@ -469,7 +469,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
   unsigned int pkt_len = 0;
   int cmd_len = 0;
   int send_len = 0;
-  int rv = -1;
+  int ret, rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -556,17 +556,22 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && send_len)
     _ipmi_lan_dump_rq (ctx, pkt, send_len, cmd, net_fn, obj_cmd_rq);
 
-  if (ipmi_lan_sendto (ctx->io.outofband.sockfd,
-                       pkt,
-                       send_len,
-                       0,
-                       (struct sockaddr *)&(ctx->io.outofband.remote_host),
-                       sizeof (struct sockaddr_in)) < 0)
+  do
+    {
+      ret = ipmi_lan_sendto (ctx->io.outofband.sockfd,
+                             pkt,
+                             send_len,
+                             0,
+                             (struct sockaddr *)&(ctx->io.outofband.remote_host),
+                             sizeof (struct sockaddr_in));
+    } while (ret < 0 && errno == EINTR);
+  
+  if (ret < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-
+  
   if (gettimeofday (&ctx->io.outofband.last_send, NULL) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -648,12 +653,17 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
         return (0); /* resend the request */
     }
 
-  if ((recv_len = ipmi_lan_recvfrom (ctx->io.outofband.sockfd,
-                                     pkt,
-                                     pkt_len,
-                                     0,
-                                     (struct sockaddr *) &from,
-                                     &fromlen)) < 0)
+  do
+    {
+      recv_len = ipmi_lan_recvfrom (ctx->io.outofband.sockfd,
+                                    pkt,
+                                    pkt_len,
+                                    0,
+                                    (struct sockaddr *) &from,
+                                    &fromlen);
+    } while (recv_len < 0 && errno == EINTR);
+
+  if (recv_len < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
@@ -2029,7 +2039,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
   unsigned int pkt_len = 0;
   int cmd_len = 0;
   int send_len = 0;
-  int rv = -1;
+  int ret, rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -2157,12 +2167,17 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                            net_fn,
                            obj_cmd_rq);
 
-  if (ipmi_lan_sendto (ctx->io.outofband.sockfd,
-                       pkt,
-                       send_len,
-                       0,
-                       (struct sockaddr *)&(ctx->io.outofband.remote_host),
-                       sizeof (struct sockaddr_in)) < 0)
+  do
+    {
+      ret = ipmi_lan_sendto (ctx->io.outofband.sockfd,
+                             pkt,
+                             send_len,
+                             0,
+                             (struct sockaddr *)&(ctx->io.outofband.remote_host),
+                             sizeof (struct sockaddr_in));
+    } while (ret < 0 && errno == EINTR);
+  
+  if (ret < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -2267,12 +2282,17 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
         return (0); /* resend the request */
     }
 
-  if ((recv_len = ipmi_lan_recvfrom (ctx->io.outofband.sockfd,
-                                     pkt,
-                                     pkt_len,
-                                     0,
-                                     (struct sockaddr *) &from,
-                                     &fromlen)) < 0)
+  do
+    {
+      recv_len = ipmi_lan_recvfrom (ctx->io.outofband.sockfd,
+                                    pkt,
+                                    pkt_len,
+                                    0,
+                                    (struct sockaddr *) &from,
+                                    &fromlen);
+    } while (recv_len < 0 && errno == EINTR);
+  
+  if (recv_len < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.17 2009-06-04 16:51:20 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.18 2009-06-06 00:09:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -168,7 +168,10 @@ cmdline_parse (int key,
       else if (!strcasecmp (arg, "2.0"))
         tmp = IPMI_DEVICE_LAN_2_0;
       else
-        ierr_exit ("Command Line Error: invalid driver type specified");
+        {
+          fprintf (stderr, "invalid driver type specified");
+          exit (1);
+        }
       cmd_args->common.driver_type = tmp;
       break;
 #ifndef NDEBUG
@@ -212,7 +215,10 @@ cmdline_parse (int key,
       tmp = strtol (arg, &ptr, 10);
       if (ptr != (arg + strlen (arg))
           || tmp <= 0)
-        ierr_exit ("Command Line Error: retransmission wait timeout length invalid");
+        {
+          fprintf (stderr, "retransmission wait timeout length invalid");
+          exit (1);
+        }
       cmd_args->retransmission_wait_timeout = tmp;
       break;
       /* RETRY_BACKOFF_COUNT for backwards compatability */
@@ -221,42 +227,60 @@ cmdline_parse (int key,
       tmp = strtol (arg, &ptr, 10);
       if (ptr != (arg + strlen (arg))
           || tmp <= 0)
-        ierr_exit ("Command Line Error: retransmission backoff count invalid");
+        {
+          fprintf (stderr, "retransmission backoff count invalid");
+          exit (1);
+        }
       cmd_args->retransmission_backoff_count = tmp;
       break;
     case PING_INTERVAL_KEY:       /* --ping-interval */
       tmp = strtol (arg, &ptr, 10);
       if (ptr != (arg + strlen (arg))
           || tmp < 0)
-        ierr_exit ("Command Line Error: ping interval length invalid");
+        {
+          fprintf (stderr, "ping interval length invalid");
+          exit (1);
+        }
       cmd_args->ping_interval = tmp;
       break;
     case PING_TIMEOUT_KEY:       /* --ping-timeout */
       tmp = strtol (arg, &ptr, 10);
       if (ptr != (arg + strlen (arg))
           || tmp < 0)
-        ierr_exit ("Command Line Error: ping timeout length invalid");
+        {
+          fprintf (stderr, "ping timeout length invalid");
+          exit (1);
+        }
       cmd_args->ping_timeout = tmp;
       break;
     case PING_PACKET_COUNT_KEY:       /* --ping-packet-count */
       tmp = strtol (arg, &ptr, 10);
       if (ptr != (arg + strlen (arg))
           || tmp < 0)
-        ierr_exit ("Command Line Error: ping packet count invalid");
+        {
+          fprintf (stderr, "ping packet count invalid");
+          exit (1);
+        }
       cmd_args->ping_packet_count = tmp;
       break;
     case PING_PERCENT_KEY:       /* --ping-percent */
       tmp = strtol (arg, &ptr, 10);
       if (ptr != (arg + strlen (arg))
           || tmp < 0)
-        ierr_exit ("Command Line Error: ping percent invalid");
+        {
+          fprintf (stderr, "ping percent invalid");
+          exit (1);
+        }
       cmd_args->ping_percent = tmp;
       break;
     case PING_CONSEC_COUNT_KEY:       /* --ping-consec-count */
       tmp = strtol (arg, &ptr, 10);
       if (ptr != (arg + strlen (arg))
           || tmp < 0)
-        ierr_exit ("Command Line Error: ping consec count invalid");
+        {
+          fprintf (stderr, "ping consec count invalid");
+          exit (1);
+        }
       cmd_args->ping_consec_count = tmp;
       break;
       /* removed legacy short options */

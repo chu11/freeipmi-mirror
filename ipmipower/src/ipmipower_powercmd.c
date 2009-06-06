@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.180 2009-06-05 17:05:09 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.181 2009-06-06 00:09:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -36,8 +36,9 @@
 #if HAVE_STRINGS_H
 #include <strings.h>
 #endif /* HAVE_STRINGS_H */
-#include <assert.h>
-#include <errno.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #if TIME_WITH_SYS_TIME
 #include <sys/time.h>
 #include <time.h>
@@ -48,6 +49,9 @@
 #include <time.h>
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
+#include <netinet/in.h>
+#include <assert.h>
+#include <errno.h>
 
 #include "ipmipower.h"
 #include "ipmipower_connection.h"
@@ -121,14 +125,15 @@ _destroy_ipmipower_powercmd (ipmipower_powercmd_t ip)
       int *fd;
       while ((fd = list_pop (ip->sockets_to_close)))
         {
-          Close (*fd);
-          Free (fd);
+          /* cleanup path, ignore potential error */
+          close (*fd);
+          free (fd);
         }
     }
   
   list_destroy (ip->sockets_to_close);
 
-  Free (ip);
+  free (ip);
 }
 
 void
@@ -138,7 +143,7 @@ ipmipower_powercmd_setup ()
 
   pending = list_create ((ListDelF)_destroy_ipmipower_powercmd);
   if (!pending)
-    ierr_exit ("list_create() error");
+    ierr_exit ("list_create: %s", strerror (errno));
 }
 
 void
@@ -160,7 +165,8 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
 
   ipmipower_connection_clear (ic);
 
-  ip = (ipmipower_powercmd_t)Malloc (sizeof (struct ipmipower_powercmd));
+  if (!(ip = (ipmipower_powercmd_t)malloc (sizeof (struct ipmipower_powercmd))))
+    ierr_exit ("malloc: %s", strerror (errno));
   memset (ip, '\0', sizeof (struct ipmipower_powercmd));
 
   ip->cmd = cmd;
@@ -169,8 +175,11 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
   /*
    * Protocol State Machine Variables
    */
-  /* Initial when protocol really begins.  Necessary b/c of fanout support */
-  /* Gettimeofday(&(ip->time_begin), NULL); */
+#if 0
+  /* Initialize when protocol really begins.  Necessary b/c of fanout support */
+  if (gettimeofday (&(ip->time_begin), NULL) < 0)
+    ierr_exit ("gettimeofday: %s", strerror (errno));
+#endif
   ip->retransmission_count = 0;
   ip->close_timeout = 0;
 
@@ -264,7 +273,7 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
       /* if ipmi_get_random fails, use junk sitting on stack */
       if (ipmi_get_random (&ip->initial_message_tag,
                            sizeof (ip->initial_message_tag)) < 0)
-        ierr_dbg ("ipmi_get_random: %s", strerror(errno));
+        ierr_dbg ("ipmi_get_random: %s", strerror (errno));
 
       ip->message_tag_count = 0;
       ip->session_sequence_number = 0;
@@ -276,7 +285,7 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
           /* if ipmi_get_random fails, use junk sitting on stack */
           if (ipmi_get_random (&ip->remote_console_session_id,
                                sizeof (ip->remote_console_session_id)) < 0)
-            ierr_dbg ("ipmi_get_random: %s", strerror(errno));
+            ierr_dbg ("ipmi_get_random: %s", strerror (errno));
         } while (!ip->remote_console_session_id);
 
       /* Even if this fails, we'll just live with it */
@@ -329,7 +338,7 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_close_session_res = Fiid_obj_create (tmpl_cmd_close_session_rs);
 
   if (!(ip->sockets_to_close = list_create (NULL)))
-    ierr_exit ("list_create() error");
+    ierr_exit ("list_create: %s", strerror (errno));
 
   list_append (pending, ip);
 }
@@ -407,8 +416,9 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
           int *fd;
           while ((fd = list_pop (ip->sockets_to_close)))
             {
-              Close (*fd);
-              Free (fd);
+              /* cleanup path, ignore potential error */
+              close (*fd);
+              free (fd);
             }
         }
     }
@@ -441,7 +451,8 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
           || pkt == CLOSE_SESSION_REQ))
     ip->session_inbound_count++;
 
-  Gettimeofday (&(ip->ic->last_ipmi_send), NULL);
+  if (gettimeofday (&(ip->ic->last_ipmi_send), NULL) < 0)
+    ierr_exit ("gettimeofday: %s", strerror (errno));
 }
 
 /* _recv_packet
@@ -509,7 +520,8 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
         {
           ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname);
           ip->retransmission_count = 0;  /* important to reset */
-          Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
+          if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
+            ierr_exit ("gettimeofday: %s", strerror (errno));
           goto cleanup;
         }
     }
@@ -555,7 +567,8 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
         {
           ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname);
           ip->retransmission_count = 0;  /* important to reset */
-          Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
+          if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
+            ierr_exit ("gettimeofday: %s", strerror (errno));
           goto cleanup;
         }
 
@@ -655,7 +668,8 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
           ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname);
 
           ip->retransmission_count = 0;  /* important to reset */
-          Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
+          if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
+            ierr_exit ("gettimeofday: %s", strerror (errno));
           goto cleanup;
         }
     }
@@ -685,7 +699,8 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
         {
           ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname);
           ip->retransmission_count = 0;  /* important to reset */
-          Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
+          if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
+            ierr_exit ("gettimeofday: %s", strerror (errno));
           goto cleanup;
         }
 
@@ -810,7 +825,8 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
             goto close_session_workaround;
           
           ip->retransmission_count = 0;  /* important to reset */
-          Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
+          if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
+            ierr_exit ("gettimeofday: %s", strerror (errno));
           goto cleanup;
         }
     }
@@ -823,7 +839,8 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
    */
  close_session_workaround:
   ip->retransmission_count = 0;  /* important to reset */
-  Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
+  if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
+    ierr_exit ("gettimeofday: %s", strerror (errno));
   rv = 1;
 
  cleanup:
@@ -848,7 +865,9 @@ _has_timed_out (ipmipower_powercmd_t ip)
   if (ip->protocol_state == PROTOCOL_STATE_START)
     return (0);
 
-  Gettimeofday (&cur_time, NULL);
+  if (gettimeofday (&cur_time, NULL) < 0)
+    ierr_exit ("gettimeofday: %s", strerror (errno));
+
   timeval_sub (&cur_time, &(ip->time_begin), &result);
   timeval_millisecond_calc (&result, &session_timeout);
 
@@ -899,7 +918,9 @@ _retry_packets (ipmipower_powercmd_t ip)
   else
     retransmission_timeout = cmd_args.common.retransmission_timeout * (1 + (ip->retransmission_count/cmd_args.retransmission_backoff_count));
 
-  Gettimeofday (&cur_time, NULL);
+  if (gettimeofday (&cur_time, NULL) < 0)
+    ierr_exit ("gettimeofday: %s", strerror (errno));
+
   timeval_sub (&cur_time, &(ip->ic->last_ipmi_send), &result);
   timeval_millisecond_calc (&result, &time_since_last_ipmi_send);
 
@@ -961,9 +982,11 @@ _retry_packets (ipmipower_powercmd_t ip)
       srcaddr.sin_port = htons (0);
       srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
 
-      Bind (new_fd, &srcaddr, sizeof (struct sockaddr_in));
+      if (bind (new_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
+        ierr_exit ("bind: %s", strerror (errno));
 
-      old_fd = (int *)Malloc (sizeof (int));
+      if (!(old_fd = (int *)malloc (sizeof (int))))
+        ierr_exit ("malloc: %s", strerror (errno));
       *old_fd = ip->ic->ipmi_fd;
       list_push (ip->sockets_to_close, old_fd);
 
@@ -1340,7 +1363,8 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
           ipmipower_output (MSG_TYPE_BMC_ERROR, ip->ic->hostname);
 
           ip->retransmission_count = 0;  /* important to reset */
-          Gettimeofday (&ip->ic->last_ipmi_recv, NULL);
+          if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
+            ierr_exit ("gettimeofday: %s", strerror (errno));
           return (-1);
         }
     }
@@ -1491,7 +1515,8 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       else
         _send_packet (ip, AUTHENTICATION_CAPABILITIES_REQ);
 
-      Gettimeofday (&(ip->time_begin), NULL);
+      if (gettimeofday (&(ip->time_begin), NULL) < 0)
+        ierr_exit ("gettimeofday: %s", strerror (errno));
       executing_count++;
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
@@ -1809,7 +1834,8 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
     ierr_exit ("_process_ipmi_packets: invalid state: %d", ip->protocol_state);
 
  done:
-  Gettimeofday (&cur_time, NULL);
+  if (gettimeofday (&cur_time, NULL) < 0)
+    ierr_exit ("gettimeofday: %s", strerror (errno));
   timeval_add_ms (&(ip->time_begin), cmd_args.common.session_timeout, &end_time);
   timeval_sub (&end_time, &cur_time, &result);
   timeval_millisecond_calc (&result, &timeout);

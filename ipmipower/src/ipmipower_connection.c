@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.46 2009-05-16 05:29:55 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.47 2009-06-06 00:09:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -40,6 +40,9 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <errno.h>
 
 #include <stdint.h>
@@ -50,6 +53,7 @@
 
 #include "ipmipower_connection.h"
 #include "ipmipower_output.h"
+#include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
 
 #include "freeipmi-portability.h"
@@ -78,16 +82,16 @@ _clean_fd (int fd)
       ufds.events = POLLIN;
       ufds.revents = 0;
 
-      /* Must use Poll, we may go outside of the fd numbers
-       * that Select is capable of using
+      /* Must use poll, we may go outside of the fd numbers
+       * that select is capable of using
        */
 
-      Poll (&ufds, 1, 0);
+      ipmipower_poll (&ufds, 1, 0);
 
       if (ufds.revents & POLLIN)
         {
-          rv = Recvfrom (fd, buf, IPMIPOWER_PACKET_BUFLEN, 0, NULL, NULL);
-          if (rv == 0)
+          rv = recvfrom (fd, buf, IPMIPOWER_PACKET_BUFLEN, 0, NULL, NULL);
+          if (rv <= 0)
             break;
         }
       else
@@ -124,14 +128,14 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
     {
       if (errno == EMFILE)
         return (-1);
-      ierr_exit ("socket() error: %s", strerror (errno));
+      ierr_exit ("socket: %s", strerror (errno));
     }
 
   if ((ic->ping_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
     {
       if (errno == EMFILE)
         return (-1);
-      ierr_exit ("socket() error: %s", strerror (errno));
+      ierr_exit ("socket: %s", strerror (errno));
     }
 
   /* Secure ephemeral ports */
@@ -140,8 +144,10 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   srcaddr.sin_port = htons (0);
   srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
 
-  Bind (ic->ipmi_fd, &srcaddr, sizeof (struct sockaddr_in));
-  Bind (ic->ping_fd, &srcaddr, sizeof (struct sockaddr_in));
+  if (bind (ic->ipmi_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
+    ierr_exit ("bind: %s", strerror (errno));
+  if (bind (ic->ping_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
+    ierr_exit ("bind: %s", strerror (errno));
 
   ic->ipmi_in  = Cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
                               IPMIPOWER_MAX_CONNECTION_BUF);
@@ -156,11 +162,11 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 
   if (ipmi_get_random (&ic->ipmi_requester_sequence_number_counter,
                        sizeof (ic->ipmi_requester_sequence_number_counter)) < 0)
-    ierr_dbg ("ipmi_get_random: %s", strerror(errno));
+    ierr_dbg ("ipmi_get_random: %s", strerror (errno));
   
   if (ipmi_get_random (&ic->ping_sequence_number_counter,
                        sizeof (ic->ping_sequence_number_counter)) < 0)
-    ierr_dbg ("ipmi_get_random: %s", strerror(errno));
+    ierr_dbg ("ipmi_get_random: %s", strerror (errno));
 
   memset (&ic->last_ipmi_send, '\0', sizeof (struct timeval));
   memset (&ic->last_ping_send, '\0', sizeof (struct timeval));
@@ -190,9 +196,9 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
       else
         {
 #if HAVE_HSTRERROR
-          cbuf_printf (ttyout, "gethostbyname() error %s: %s", ic->hostname, hstrerror (h_errno));
+          cbuf_printf (ttyout, "gethostbyname() %s: %s", ic->hostname, hstrerror (h_errno));
 #else /* !HAVE_HSTRERROR */
-          cbuf_printf (ttyout, "gethostbyname() error %s: h_errno = %d", ic->hostname, h_errno);
+          cbuf_printf (ttyout, "gethostbyname() %s: h_errno = %d", ic->hostname, h_errno);
 #endif /* !HAVE_HSTRERROR */
         }
       return (-1);
@@ -228,13 +234,14 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
     }
 
   if (!(itr = hostlist_iterator_create (hl)))
-    ierr_exit ("hostlist_iterator_create() error");
+    ierr_exit ("hostlist_iterator_create: %s", strerror (errno));
 
   hostlist_uniq (hl);
 
   hl_count = hostlist_count (hl);
 
-  ics = (struct ipmipower_connection *)Malloc (size * hl_count);
+  if (!(ics = (struct ipmipower_connection *)malloc (size * hl_count)))
+    ierr_exit ("malloc: %s", strerror (errno));
 
   memset (ics, '\0', (size * hl_count));
 
@@ -281,7 +288,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
           if (ics[i].ping_out)
             cbuf_destroy (ics[i].ping_out);
         }
-      Free (ics);
+      free (ics);
       return (NULL);
     }
 
@@ -309,7 +316,7 @@ ipmipower_connection_array_destroy (struct ipmipower_connection *ics,
       cbuf_destroy (ics[i].ping_in);
       cbuf_destroy (ics[i].ping_out);
     }
-  Free (ics);
+  free (ics);
 }
 
 int

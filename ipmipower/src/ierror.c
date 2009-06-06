@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ierror.c,v 1.8 2009-01-13 01:02:22 chu11 Exp $
+ *  $Id: ierror.c,v 1.9 2009-06-06 00:09:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -64,13 +64,10 @@
 #include <syslog.h>
 
 #include "ierror.h"
-#include "wrappers.h"
 
 #include "freeipmi-portability.h"
 #include "cbuf.h"
 #include "fd.h"
-
-
 
 /* achu
  * 
@@ -259,7 +256,7 @@ void ierr_dbg(const char *fmt, ...)
  */
 void lsd_fatal_error(char *file, int line, char *mesg)
 {
-    ierr_exit("ERROR: [%s::%d] %s: %s", file, line, mesg, strerror(errno));
+    ierr_exit("ERROR: [%s::%d] %s: %s", file, line, mesg, strerror (errno));
 }
 
 void *lsd_nomem_error(char *file, int line, char *mesg)
