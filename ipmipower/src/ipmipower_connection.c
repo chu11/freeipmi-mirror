@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.47 2009-06-06 00:09:02 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.48 2009-06-08 20:24:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -54,9 +54,12 @@
 #include "ipmipower_connection.h"
 #include "ipmipower_output.h"
 #include "ipmipower_util.h"
-#include "ipmipower_wrappers.h"
+
+#include "ierror.h"
 
 #include "freeipmi-portability.h"
+#include "cbuf.h"
+#include "hostlist.h"
 
 extern int h_errno;
 
@@ -107,8 +110,10 @@ ipmipower_connection_clear (struct ipmipower_connection *ic)
   assert (ic);
 
   _clean_fd (ic->ipmi_fd);
-  Cbuf_drop_all (ic->ipmi_in);
-  Cbuf_drop_all (ic->ipmi_out);
+  if (cbuf_drop (ic->ipmi_in, -1) < 0)
+    ierr_exit ("cbuf_drop: %s", strerror (errno));
+  if (cbuf_drop (ic->ipmi_out, -1) < 0)
+    ierr_exit ("cbuf_drop: %s", strerror (errno));
   return;
 }
 
@@ -149,15 +154,26 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   if (bind (ic->ping_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
     ierr_exit ("bind: %s", strerror (errno));
 
-  ic->ipmi_in  = Cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
-                              IPMIPOWER_MAX_CONNECTION_BUF);
-  ic->ipmi_out = Cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
-                              IPMIPOWER_MAX_CONNECTION_BUF);
-  ic->ping_in  = Cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
-                              IPMIPOWER_MAX_CONNECTION_BUF);
-  ic->ping_out = Cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
-                              IPMIPOWER_MAX_CONNECTION_BUF);
+  if (!(ic->ipmi_in  = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
+                                    IPMIPOWER_MAX_CONNECTION_BUF)))
+    ierr_exit ("cbuf_create: %s", strerror (errno));
+  cbuf_opt_set (ic->ipmi_in, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
+  if (!(ic->ipmi_out = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
+                                    IPMIPOWER_MAX_CONNECTION_BUF)))
+    ierr_exit ("cbuf_create: %s", strerror (errno));
+  cbuf_opt_set (ic->ipmi_out, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
+
+  if (!(ic->ping_in  = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
+                                    IPMIPOWER_MAX_CONNECTION_BUF)))
+    ierr_exit ("cbuf_create: %s", strerror (errno));
+  cbuf_opt_set (ic->ping_in, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
+
+  if (!(ic->ping_out = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
+                                    IPMIPOWER_MAX_CONNECTION_BUF)))
+    ierr_exit ("cbuf_create: %s", strerror (errno));
+  cbuf_opt_set (ic->ping_out, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
+  
   /* if ipmi_get_random fails, use junk sitting on stack */
 
   if (ipmi_get_random (&ic->ipmi_requester_sequence_number_counter,

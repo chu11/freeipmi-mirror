@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.111 2009-06-06 00:09:02 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.112 2009-06-08 20:24:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -50,9 +50,13 @@
 #include "ipmipower_connection.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_output.h"
-#include "ipmipower_wrappers.h"
+
+#include "argv.h"
+#include "ierror.h"
 
 #include "freeipmi-portability.h"
+#include "cbuf.h"
+#include "hostlist.h"
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"

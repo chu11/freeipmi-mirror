@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.181 2009-06-06 00:09:02 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.182 2009-06-08 20:24:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -59,11 +59,16 @@
 #include "ipmipower_powercmd.h"
 #include "ipmipower_packet.h"
 #include "ipmipower_check.h"
-#include "ipmipower_wrappers.h"
+#include "ipmipower_util.h"
+
+#include "ierror.h"
 
 #include "freeipmi-portability.h"
+#include "cbuf.h"
+#include "list.h"
+#include "secure.h"
+#include "timeval.h"
 
-extern cbuf_t ttyout;
 extern struct ipmipower_arguments cmd_args;
 
 /* Queue of all pending power commands */
@@ -80,42 +85,42 @@ _destroy_ipmipower_powercmd (ipmipower_powercmd_t ip)
 {
   assert (ip);
 
-  Fiid_obj_destroy (ip->obj_rmcp_hdr_req);
-  Fiid_obj_destroy (ip->obj_rmcp_hdr_res);
-  Fiid_obj_destroy (ip->obj_lan_session_hdr_req);
-  Fiid_obj_destroy (ip->obj_lan_session_hdr_res);
-  Fiid_obj_destroy (ip->obj_lan_msg_hdr_req);
-  Fiid_obj_destroy (ip->obj_lan_msg_hdr_res);
-  Fiid_obj_destroy (ip->obj_lan_msg_trlr_res);
-  Fiid_obj_destroy (ip->obj_rmcpplus_session_hdr_req);
-  Fiid_obj_destroy (ip->obj_rmcpplus_session_hdr_res);
-  Fiid_obj_destroy (ip->obj_rmcpplus_payload_res);
-  Fiid_obj_destroy (ip->obj_rmcpplus_session_trlr_req);
-  Fiid_obj_destroy (ip->obj_rmcpplus_session_trlr_res);
-  Fiid_obj_destroy (ip->obj_authentication_capabilities_v20_req);
-  Fiid_obj_destroy (ip->obj_authentication_capabilities_v20_res);
-  Fiid_obj_destroy (ip->obj_authentication_capabilities_req);
-  Fiid_obj_destroy (ip->obj_authentication_capabilities_res);
-  Fiid_obj_destroy (ip->obj_get_session_challenge_req);
-  Fiid_obj_destroy (ip->obj_get_session_challenge_res);
-  Fiid_obj_destroy (ip->obj_activate_session_req);
-  Fiid_obj_destroy (ip->obj_activate_session_res);
-  Fiid_obj_destroy (ip->obj_open_session_req);
-  Fiid_obj_destroy (ip->obj_open_session_res);
-  Fiid_obj_destroy (ip->obj_rakp_message_1_req);
-  Fiid_obj_destroy (ip->obj_rakp_message_2_res);
-  Fiid_obj_destroy (ip->obj_rakp_message_3_req);
-  Fiid_obj_destroy (ip->obj_rakp_message_4_res);
-  Fiid_obj_destroy (ip->obj_set_session_privilege_level_req);
-  Fiid_obj_destroy (ip->obj_set_session_privilege_level_res);
-  Fiid_obj_destroy (ip->obj_get_chassis_status_req);
-  Fiid_obj_destroy (ip->obj_get_chassis_status_res);
-  Fiid_obj_destroy (ip->obj_chassis_control_req);
-  Fiid_obj_destroy (ip->obj_chassis_control_res);
-  Fiid_obj_destroy (ip->obj_chassis_identify_req);
-  Fiid_obj_destroy (ip->obj_chassis_identify_res);
-  Fiid_obj_destroy (ip->obj_close_session_req);
-  Fiid_obj_destroy (ip->obj_close_session_res);
+  fiid_obj_destroy (ip->obj_rmcp_hdr_req);
+  fiid_obj_destroy (ip->obj_rmcp_hdr_res);
+  fiid_obj_destroy (ip->obj_lan_session_hdr_req);
+  fiid_obj_destroy (ip->obj_lan_session_hdr_res);
+  fiid_obj_destroy (ip->obj_lan_msg_hdr_req);
+  fiid_obj_destroy (ip->obj_lan_msg_hdr_res);
+  fiid_obj_destroy (ip->obj_lan_msg_trlr_res);
+  fiid_obj_destroy (ip->obj_rmcpplus_session_hdr_req);
+  fiid_obj_destroy (ip->obj_rmcpplus_session_hdr_res);
+  fiid_obj_destroy (ip->obj_rmcpplus_payload_res);
+  fiid_obj_destroy (ip->obj_rmcpplus_session_trlr_req);
+  fiid_obj_destroy (ip->obj_rmcpplus_session_trlr_res);
+  fiid_obj_destroy (ip->obj_authentication_capabilities_v20_req);
+  fiid_obj_destroy (ip->obj_authentication_capabilities_v20_res);
+  fiid_obj_destroy (ip->obj_authentication_capabilities_req);
+  fiid_obj_destroy (ip->obj_authentication_capabilities_res);
+  fiid_obj_destroy (ip->obj_get_session_challenge_req);
+  fiid_obj_destroy (ip->obj_get_session_challenge_res);
+  fiid_obj_destroy (ip->obj_activate_session_req);
+  fiid_obj_destroy (ip->obj_activate_session_res);
+  fiid_obj_destroy (ip->obj_open_session_req);
+  fiid_obj_destroy (ip->obj_open_session_res);
+  fiid_obj_destroy (ip->obj_rakp_message_1_req);
+  fiid_obj_destroy (ip->obj_rakp_message_2_res);
+  fiid_obj_destroy (ip->obj_rakp_message_3_req);
+  fiid_obj_destroy (ip->obj_rakp_message_4_res);
+  fiid_obj_destroy (ip->obj_set_session_privilege_level_req);
+  fiid_obj_destroy (ip->obj_set_session_privilege_level_res);
+  fiid_obj_destroy (ip->obj_get_chassis_status_req);
+  fiid_obj_destroy (ip->obj_get_chassis_status_res);
+  fiid_obj_destroy (ip->obj_chassis_control_req);
+  fiid_obj_destroy (ip->obj_chassis_control_res);
+  fiid_obj_destroy (ip->obj_chassis_identify_req);
+  fiid_obj_destroy (ip->obj_chassis_identify_res);
+  fiid_obj_destroy (ip->obj_close_session_req);
+  fiid_obj_destroy (ip->obj_close_session_res);
 
   /* Close all sockets that were saved during the Get Session
    * Challenge phase of the IPMI protocol.
@@ -300,42 +305,78 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
 
   ip->ic = ic;
 
-  ip->obj_rmcp_hdr_req = Fiid_obj_create (tmpl_rmcp_hdr);
-  ip->obj_rmcp_hdr_res = Fiid_obj_create (tmpl_rmcp_hdr);
-  ip->obj_lan_session_hdr_req = Fiid_obj_create (tmpl_lan_session_hdr);
-  ip->obj_lan_session_hdr_res = Fiid_obj_create (tmpl_lan_session_hdr);
-  ip->obj_lan_msg_hdr_req = Fiid_obj_create (tmpl_lan_msg_hdr_rq);
-  ip->obj_lan_msg_hdr_res = Fiid_obj_create (tmpl_lan_msg_hdr_rs);
-  ip->obj_lan_msg_trlr_res = Fiid_obj_create (tmpl_lan_msg_trlr);
-  ip->obj_rmcpplus_session_hdr_req = Fiid_obj_create (tmpl_rmcpplus_session_hdr);
-  ip->obj_rmcpplus_session_hdr_res = Fiid_obj_create (tmpl_rmcpplus_session_hdr);
-  ip->obj_rmcpplus_payload_res = Fiid_obj_create (tmpl_rmcpplus_payload);
-  ip->obj_rmcpplus_session_trlr_req = Fiid_obj_create (tmpl_rmcpplus_session_trlr);
-  ip->obj_rmcpplus_session_trlr_res = Fiid_obj_create (tmpl_rmcpplus_session_trlr);
-  ip->obj_authentication_capabilities_v20_req = Fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rq);
-  ip->obj_authentication_capabilities_v20_res = Fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rs);
-  ip->obj_authentication_capabilities_req = Fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq);
-  ip->obj_authentication_capabilities_res = Fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rs);
-  ip->obj_get_session_challenge_req = Fiid_obj_create (tmpl_cmd_get_session_challenge_rq);
-  ip->obj_get_session_challenge_res = Fiid_obj_create (tmpl_cmd_get_session_challenge_rs);
-  ip->obj_activate_session_req = Fiid_obj_create (tmpl_cmd_activate_session_rq);
-  ip->obj_activate_session_res = Fiid_obj_create (tmpl_cmd_activate_session_rs);
-  ip->obj_open_session_req = Fiid_obj_create (tmpl_rmcpplus_open_session_request);
-  ip->obj_open_session_res = Fiid_obj_create (tmpl_rmcpplus_open_session_response);
-  ip->obj_rakp_message_1_req = Fiid_obj_create (tmpl_rmcpplus_rakp_message_1);
-  ip->obj_rakp_message_2_res = Fiid_obj_create (tmpl_rmcpplus_rakp_message_2);
-  ip->obj_rakp_message_3_req = Fiid_obj_create (tmpl_rmcpplus_rakp_message_3);
-  ip->obj_rakp_message_4_res = Fiid_obj_create (tmpl_rmcpplus_rakp_message_4);
-  ip->obj_set_session_privilege_level_req = Fiid_obj_create (tmpl_cmd_set_session_privilege_level_rq);
-  ip->obj_set_session_privilege_level_res = Fiid_obj_create (tmpl_cmd_set_session_privilege_level_rs);
-  ip->obj_get_chassis_status_req = Fiid_obj_create (tmpl_cmd_get_chassis_status_rq);
-  ip->obj_get_chassis_status_res = Fiid_obj_create (tmpl_cmd_get_chassis_status_rs);
-  ip->obj_chassis_control_req = Fiid_obj_create (tmpl_cmd_chassis_control_rq);
-  ip->obj_chassis_control_res = Fiid_obj_create (tmpl_cmd_chassis_control_rs);
-  ip->obj_chassis_identify_req = Fiid_obj_create (tmpl_cmd_chassis_identify_rq);
-  ip->obj_chassis_identify_res = Fiid_obj_create (tmpl_cmd_chassis_identify_rs);
-  ip->obj_close_session_req = Fiid_obj_create (tmpl_cmd_close_session_rq);
-  ip->obj_close_session_res = Fiid_obj_create (tmpl_cmd_close_session_rs);
+  if (!(ip->obj_rmcp_hdr_req = fiid_obj_create (tmpl_rmcp_hdr)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_rmcp_hdr_res = fiid_obj_create (tmpl_rmcp_hdr)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_lan_session_hdr_req = fiid_obj_create (tmpl_lan_session_hdr)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_lan_session_hdr_res = fiid_obj_create (tmpl_lan_session_hdr)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_lan_msg_hdr_req = fiid_obj_create (tmpl_lan_msg_hdr_rq)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_lan_msg_hdr_res = fiid_obj_create (tmpl_lan_msg_hdr_rs)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_lan_msg_trlr_res = fiid_obj_create (tmpl_lan_msg_trlr)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_rmcpplus_session_hdr_req = fiid_obj_create (tmpl_rmcpplus_session_hdr)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_rmcpplus_session_hdr_res = fiid_obj_create (tmpl_rmcpplus_session_hdr)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_rmcpplus_payload_res = fiid_obj_create (tmpl_rmcpplus_payload)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_rmcpplus_session_trlr_req = fiid_obj_create (tmpl_rmcpplus_session_trlr)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_rmcpplus_session_trlr_res = fiid_obj_create (tmpl_rmcpplus_session_trlr)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_authentication_capabilities_v20_req = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rq)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_authentication_capabilities_v20_res = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rs)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_authentication_capabilities_req = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_authentication_capabilities_res = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rs)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_get_session_challenge_req = fiid_obj_create (tmpl_cmd_get_session_challenge_rq)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_get_session_challenge_res = fiid_obj_create (tmpl_cmd_get_session_challenge_rs)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_activate_session_req = fiid_obj_create (tmpl_cmd_activate_session_rq)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_activate_session_res = fiid_obj_create (tmpl_cmd_activate_session_rs)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_open_session_req = fiid_obj_create (tmpl_rmcpplus_open_session_request)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_open_session_res = fiid_obj_create (tmpl_rmcpplus_open_session_response)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_rakp_message_1_req = fiid_obj_create (tmpl_rmcpplus_rakp_message_1)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_rakp_message_2_res = fiid_obj_create (tmpl_rmcpplus_rakp_message_2)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_rakp_message_3_req = fiid_obj_create (tmpl_rmcpplus_rakp_message_3)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_rakp_message_4_res = fiid_obj_create (tmpl_rmcpplus_rakp_message_4)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_set_session_privilege_level_req = fiid_obj_create (tmpl_cmd_set_session_privilege_level_rq)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_set_session_privilege_level_res = fiid_obj_create (tmpl_cmd_set_session_privilege_level_rs)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_get_chassis_status_req = fiid_obj_create (tmpl_cmd_get_chassis_status_rq)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_get_chassis_status_res = fiid_obj_create (tmpl_cmd_get_chassis_status_rs)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_chassis_control_req = fiid_obj_create (tmpl_cmd_chassis_control_rq)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_chassis_control_res = fiid_obj_create (tmpl_cmd_chassis_control_rs)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_chassis_identify_req = fiid_obj_create (tmpl_cmd_chassis_identify_rq)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_chassis_identify_res = fiid_obj_create (tmpl_cmd_chassis_identify_rs)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_close_session_req = fiid_obj_create (tmpl_cmd_close_session_rq)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
+  if (!(ip->obj_close_session_res = fiid_obj_create (tmpl_cmd_close_session_rs)))
+    ierr_exit ("fiid_obj_create: %s", strerror (errno));
 
   if (!(ip->sockets_to_close = list_create (NULL)))
     ierr_exit ("list_create: %s", strerror (errno));
@@ -362,8 +403,8 @@ ipmipower_powercmd_pending ()
 static void
 _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  int len = 0;
   uint8_t buf[IPMIPOWER_PACKET_BUFLEN];
+  int ret, len = 0, dropped = 0;
 
   assert (PACKET_TYPE_VALID_REQ (pkt));
 
@@ -392,7 +433,16 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   len = ipmipower_packet_create (ip, pkt, buf, IPMIPOWER_PACKET_BUFLEN);
   ipmipower_packet_dump (ip, pkt, buf, len);
-  Cbuf_write (ip->ic->ipmi_out, buf, len);
+
+  if ((ret = cbuf_write (ip->ic->ipmi_out, buf, len, &dropped)) < 0)
+    ierr_exit ("cbuf_write: %s", strerror (errno));
+
+  if (ret != len)
+    ierr_exit ("cbuf_write: incorrect bytes written %d", ret);
+  
+  if (dropped)
+    ierr_dbg ("cbuf_write: dropped %d bytes", dropped);
+
   secure_memset (buf, '\0', IPMIPOWER_PACKET_BUFLEN);
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
@@ -471,7 +521,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert (PACKET_TYPE_VALID_RES (pkt));
 
-  if (!(recv_len = Cbuf_peek_and_drop (ip->ic->ipmi_in,
+  if (!(recv_len = cbuf_peek_and_drop (ip->ic->ipmi_in,
                                        recv_buf,
                                        IPMIPOWER_PACKET_BUFLEN)))
     return (0);
@@ -579,9 +629,11 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
        * it has sensitive information in it), we'll do this here.
        */
       
-      Fiid_obj_get (ip->obj_lan_session_hdr_res,
-                    "session_sequence_number",
-                    &val);
+      if (FIID_OBJ_GET (ip->obj_lan_session_hdr_res,
+                        "session_sequence_number",
+                        &val) < 0)
+        ierr_exit ("FIID_OBJ_GET: 'session_sequence_number': %s",
+                   fiid_obj_errormsg (ip->obj_lan_session_hdr_res));
       
       ip->highest_received_sequence_number = val;
       
@@ -846,8 +898,10 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
  cleanup:
   /* Clear out data */
   secure_memset (recv_buf, '\0', IPMIPOWER_PACKET_BUFLEN);
-  Fiid_obj_clear (ip->obj_lan_session_hdr_res);
-  Fiid_obj_clear (ip->obj_rmcpplus_session_trlr_res);
+  if (fiid_obj_clear (ip->obj_lan_session_hdr_res) < 0)
+    ierr_exit ("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_lan_session_hdr_res));
+  if (fiid_obj_clear (ip->obj_rmcpplus_session_trlr_res) < 0)
+    ierr_exit ("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_rmcpplus_session_trlr_res));
   return (rv);
 }
 
@@ -1070,44 +1124,60 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
    * 2) How to authenticate with the remote host.
    */
 
-  Fiid_obj_get (obj_authentication_capabilities_res,
-                "authentication_type.none",
-                &val);
+  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
+                    "authentication_type.none",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_type.none': %s",
+               fiid_obj_errormsg (obj_authentication_capabilities_res));
   authentication_type_none = val;
 
-  Fiid_obj_get (obj_authentication_capabilities_res,
-                "authentication_type.md2",
-                &val);
+  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
+                    "authentication_type.md2",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_type.md2': %s",
+               fiid_obj_errormsg (obj_authentication_capabilities_res));
   authentication_type_md2 = val;
 
-  Fiid_obj_get (obj_authentication_capabilities_res,
-                "authentication_type.md5",
-                &val);
+  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
+                    "authentication_type.md5",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_type.md5': %s",
+               fiid_obj_errormsg (obj_authentication_capabilities_res));
   authentication_type_md5 = val;
 
-  Fiid_obj_get (obj_authentication_capabilities_res,
-                "authentication_type.straight_password_key",
-                &val);
+  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
+                    "authentication_type.straight_password_key",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_type.straight_password_key': %s",
+               fiid_obj_errormsg (obj_authentication_capabilities_res));
   authentication_type_straight_password_key = val;
 
-  Fiid_obj_get (obj_authentication_capabilities_res,
-                "authentication_status.anonymous_login",
-                &val);
+  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
+                    "authentication_status.anonymous_login",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_status.anonymous_login': %s",
+               fiid_obj_errormsg (obj_authentication_capabilities_res));
   authentication_status_anonymous_login = val;
 
-  Fiid_obj_get (obj_authentication_capabilities_res,
-                "authentication_status.null_username",
-                &val);
+  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
+                    "authentication_status.null_username",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_status.null_username': %s",
+               fiid_obj_errormsg (obj_authentication_capabilities_res));
   authentication_status_null_username = val;
 
-  Fiid_obj_get (obj_authentication_capabilities_res,
-                "authentication_status.non_null_username",
-                &val);
+  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
+                    "authentication_status.non_null_username",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_status.non_null_username': %s",
+               fiid_obj_errormsg (obj_authentication_capabilities_res));
   authentication_status_non_null_username = val;
 
-  Fiid_obj_get (obj_authentication_capabilities_res,
-                "authentication_status.per_message_authentication",
-                &val);
+  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
+                    "authentication_status.per_message_authentication",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_status.per_message_authentication': %s",
+               fiid_obj_errormsg (obj_authentication_capabilities_res));
   authentication_status_per_message_authentication = val;
 
   /* IPMI Workaround (achu)
@@ -1193,24 +1263,32 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
    * 2) How to authenticate with the remote host.
    */
 
-  Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
-                "authentication_status.anonymous_login",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
+                    "authentication_status.anonymous_login",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_status.anonymous_login': %s",
+               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
   authentication_status_anonymous_login = val;
 
-  Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
-                "authentication_status.null_username",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
+                    "authentication_status.null_username",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_status.null_username': %s",
+               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
   authentication_status_null_username = val;
 
-  Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
-                "authentication_status.non_null_username",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
+                    "authentication_status.non_null_username",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_status.non_null_username': %s",
+               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
   authentication_status_non_null_username = val;
 
-  Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
-                "authentication_status.k_g",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
+                    "authentication_status.k_g",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_status.k_g': %s",
+               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
   authentication_status_k_g = val;
 
   /* IPMI Workaround (achu)
@@ -1273,19 +1351,25 @@ _check_ipmi_version_support (ipmipower_powercmd_t ip, int *ipmi_1_5, int *ipmi_2
   assert (ipmi_1_5);
   assert (ipmi_2_0);
 
-  Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
-                "authentication_type.ipmi_v2.0_extended_capabilities_available",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
+                    "authentication_type.ipmi_v2.0_extended_capabilities_available",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_type.ipmi_v2.0_extended_capabilities_available': %s",
+               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
   ipmi_v20_extended_capabilities_available = val;
 
-  Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
-                "channel_supports_ipmi_v1.5_connections",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
+                    "channel_supports_ipmi_v1.5_connections",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'channel_supports_ipmi_v1.5_connections': %s",
+               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
   channel_supports_ipmi_v15_connections = val;
 
-  Fiid_obj_get (ip->obj_authentication_capabilities_v20_res,
-                "channel_supports_ipmi_v2.0_connections",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
+                    "channel_supports_ipmi_v2.0_connections",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'channel_supports_ipmi_v2.0_connections': %s",
+               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
   channel_supports_ipmi_v20_connections = val;
 
   if (!ipmi_v20_extended_capabilities_available)
@@ -1326,9 +1410,11 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
   assert (ip);
   assert (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT);
 
-  Fiid_obj_get (ip->obj_activate_session_res,
-                "authentication_type",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_activate_session_res,
+                    "authentication_type",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'authentication_type': %s",
+               fiid_obj_errormsg (ip->obj_activate_session_res));
   authentication_type = val;
 
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
@@ -1440,10 +1526,12 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
   else
     k_g = NULL;
 
-  managed_system_random_number_len = Fiid_obj_get_data (ip->obj_rakp_message_2_res,
-                                                        "managed_system_random_number",
-                                                        managed_system_random_number,
-                                                        IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+  if ((managed_system_random_number_len = fiid_obj_get_data (ip->obj_rakp_message_2_res,
+                                                             "managed_system_random_number",
+                                                             managed_system_random_number,
+                                                             IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
+    ierr_exit ("fiid_obj_get_data: 'managed_system_random_number': %s",
+               fiid_obj_errormsg (ip->obj_rakp_message_2_res));
 
   if (ipmi_calculate_rmcpplus_session_keys (ip->authentication_algorithm,
                                             ip->integrity_algorithm,
@@ -1677,9 +1765,11 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           goto done;
         }
 
-      Fiid_obj_get (ip->obj_get_chassis_status_res,
-                    "current_power_state.power_is_on",
-                    &val);
+      if (FIID_OBJ_GET (ip->obj_get_chassis_status_res,
+                        "current_power_state.power_is_on",
+                        &val) < 0)
+        ierr_exit ("FIID_OBJ_GET: 'current_power_state.power_is_on': %s",
+                   fiid_obj_errormsg (ip->obj_get_chassis_status_res));
       power_state = val;
 
       if (cmd_args.wait_until_on
@@ -1724,18 +1814,22 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
         {
           uint8_t identify_status_supported;
 
-          Fiid_obj_get (ip->obj_get_chassis_status_res,
-                        "misc_chassis_state.chassis_identify_command_and_state_info_supported",
-                        &val);
+          if (FIID_OBJ_GET (ip->obj_get_chassis_status_res,
+                            "misc_chassis_state.chassis_identify_command_and_state_info_supported",
+                            &val) < 0)
+            ierr_exit ("FIID_OBJ_GET: 'misc_chassis_state.chassis_identify_command_and_state_info_supported': %s",
+                       fiid_obj_errormsg (ip->obj_get_chassis_status_res));
           identify_status_supported = val;
 
           if (identify_status_supported)
             {
               uint8_t identify_status;
 
-              Fiid_obj_get (ip->obj_get_chassis_status_res,
-                            "misc_chassis_state.chassis_identify_state",
-                            &val);
+              if (FIID_OBJ_GET (ip->obj_get_chassis_status_res,
+                                "misc_chassis_state.chassis_identify_state",
+                                &val) < 0)
+                ierr_exit ("FIID_OBJ_GET: 'misc_chassis_state.chassis_identify_state': %s",
+                           fiid_obj_errormsg (ip->obj_get_chassis_status_res));
               identify_status = val;
 
               if (identify_status == IPMI_CHASSIS_IDENTIFY_STATE_OFF)

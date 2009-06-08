@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.106 2009-06-05 17:05:09 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.107 2009-06-08 20:24:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -36,11 +36,12 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "freeipmi-portability.h"
-
 #include "ipmipower_check.h"
 #include "ipmipower_packet.h"
-#include "ipmipower_wrappers.h"
+
+#include "ierror.h"
+
+#include "freeipmi-portability.h"
 
 extern struct ipmipower_arguments cmd_args;
 
@@ -114,10 +115,10 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
       if (pkt == ACTIVATE_SESSION_RES)
         authentication_type = cmd_args.common.authentication_type;
       else /* pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-          || pkt == GET_CHASSIS_STATUS_RES
-          || pkt == CHASSIS_CONTROL_RES
-          || pkt == CHASSIS_IDENTIFY_RES
-          || pkt == CLOSE_SESSION_RES
+              || pkt == GET_CHASSIS_STATUS_RES
+              || pkt == CHASSIS_CONTROL_RES
+              || pkt == CHASSIS_IDENTIFY_RES
+              || pkt == CLOSE_SESSION_RES
            */
         {
           if (!ip->permsgauth_enabled)
@@ -256,23 +257,27 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
           || pkt == CHASSIS_IDENTIFY_RES
           || pkt == CLOSE_SESSION_RES))
     {
-      Fiid_obj_get (ip->obj_rmcpplus_session_hdr_res,
-                    "session_sequence_number",
-                    &val);
+      if (FIID_OBJ_GET (ip->obj_rmcpplus_session_hdr_res,
+                        "session_sequence_number",
+                        &val) < 0)
+        ierr_exit ("FIID_OBJ_GET: 'session_sequence_number': %s",
+                   fiid_obj_errormsg (ip->obj_rmcpplus_session_hdr_res));
       seq_num = val;
     }
   else /*
-        (cmd_args.common.driver_type == IPMI_DEVICE_LAN
-        && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-        || pkt == GET_CHASSIS_STATUS_RES
-        || pkt == CHASSIS_CONTROL_RES
-        || pkt == CHASSIS_IDENTIFY_RES
-        || pkt == CLOSE_SESSION_RES))
+         (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+         && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+         || pkt == GET_CHASSIS_STATUS_RES
+         || pkt == CHASSIS_CONTROL_RES
+         || pkt == CHASSIS_IDENTIFY_RES
+         || pkt == CLOSE_SESSION_RES))
        */
     {
-      Fiid_obj_get (ip->obj_lan_session_hdr_res,
-                    "session_sequence_number",
-                    &val);
+      if (FIID_OBJ_GET (ip->obj_lan_session_hdr_res,
+                        "session_sequence_number",
+                        &val) < 0)
+        ierr_exit ("FIID_OBJ_GET: 'session_sequence_number': %s",
+                   fiid_obj_errormsg (ip->obj_lan_session_hdr_res));
       seq_num = val;
     }
 
@@ -437,14 +442,18 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
           || pkt == CHASSIS_IDENTIFY_RES
           || pkt == CLOSE_SESSION_RES))
     {
-      Fiid_obj_get (ip->obj_lan_session_hdr_res,
-                    "session_id",
-                    &val);
+      if (FIID_OBJ_GET (ip->obj_lan_session_hdr_res,
+                        "session_id",
+                        &val) < 0)
+        ierr_exit ("FIID_OBJ_GET: 'session_id': %s",
+                   fiid_obj_errormsg (ip->obj_lan_session_hdr_res));
       session_id = val;
 
-      Fiid_obj_get (ip->obj_activate_session_res,
-                    "session_id",
-                    &val);
+      if (FIID_OBJ_GET (ip->obj_activate_session_res,
+                        "session_id",
+                        &val) < 0)
+        ierr_exit ("FIID_OBJ_GET: 'session_id': %s",
+                   fiid_obj_errormsg (ip->obj_activate_session_res));
       expected_session_id = val;
     }
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
@@ -454,9 +463,11 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
                || pkt == CHASSIS_IDENTIFY_RES
                || pkt == CLOSE_SESSION_RES))
     {
-      Fiid_obj_get (ip->obj_rmcpplus_session_hdr_res,
-                    "session_id",
-                    &val);
+      if (FIID_OBJ_GET (ip->obj_rmcpplus_session_hdr_res,
+                        "session_id",
+                        &val) < 0)
+        ierr_exit ("FIID_OBJ_GET: 'session_id': %s",
+                   fiid_obj_errormsg (ip->obj_rmcpplus_session_hdr_res));
       session_id = val;
       expected_session_id = ip->remote_console_session_id;
     }
@@ -470,9 +481,11 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
 
       obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
-      Fiid_obj_get (obj_cmd,
-                    "remote_console_session_id",
-                    &val);
+      if (FIID_OBJ_GET (obj_cmd,
+                        "remote_console_session_id",
+                        &val) < 0)
+        ierr_exit ("FIID_OBJ_GET: 'remote_console_session_id': %s",
+                   fiid_obj_errormsg (obj_cmd));
       session_id = val;
       expected_session_id = ip->remote_console_session_id;
     }
@@ -512,9 +525,11 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip, packet_type_t pkt)
           && pkt != RAKP_MESSAGE_2_RES
           && pkt != RAKP_MESSAGE_4_RES);
 
-  Fiid_obj_get (ip->obj_lan_msg_hdr_res,
-                "net_fn",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_lan_msg_hdr_res,
+                    "net_fn",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'net_fn': %s",
+               fiid_obj_errormsg (ip->obj_lan_msg_hdr_res));
   netfn = val;
 
   if (pkt == GET_CHASSIS_STATUS_RES
@@ -548,9 +563,11 @@ ipmipower_check_command (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
-  Fiid_obj_get (obj_cmd,
-                "cmd",
-                &val);
+  if (FIID_OBJ_GET (obj_cmd,
+                    "cmd",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'cmd': %s",
+               fiid_obj_errormsg (obj_cmd));
   cmd = val;
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
@@ -595,9 +612,11 @@ ipmipower_check_requester_sequence_number (ipmipower_powercmd_t ip, packet_type_
 
   expected_req_seq = ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
 
-  Fiid_obj_get (ip->obj_lan_msg_hdr_res,
-                "rq_seq",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_lan_msg_hdr_res,
+                    "rq_seq",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'rq_seq': %s",
+               fiid_obj_errormsg (ip->obj_lan_msg_hdr_res));
   req_seq = val;
 
   if (req_seq != expected_req_seq)
@@ -624,9 +643,11 @@ ipmipower_check_completion_code (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
-  Fiid_obj_get (obj_cmd,
-                "comp_code",
-                &val);
+  if (FIID_OBJ_GET (obj_cmd,
+                    "comp_code",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'comp_code': %s",
+               fiid_obj_errormsg (obj_cmd));
   comp_code = val;
 
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
@@ -655,9 +676,11 @@ ipmipower_check_payload_type (ipmipower_powercmd_t ip, packet_type_t pkt)
                   || pkt == CHASSIS_IDENTIFY_RES
                   || pkt == CLOSE_SESSION_RES)));
 
-  Fiid_obj_get (ip->obj_rmcpplus_session_hdr_res,
-                "payload_type",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_rmcpplus_session_hdr_res,
+                    "payload_type",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'payload_type': %s",
+               fiid_obj_errormsg (ip->obj_rmcpplus_session_hdr_res));
   payload_type = val;
 
   if (pkt == OPEN_SESSION_RES)
@@ -694,9 +717,11 @@ ipmipower_check_message_tag (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
-  Fiid_obj_get (obj_cmd,
-                "message_tag",
-                &val);
+  if (FIID_OBJ_GET (obj_cmd,
+                    "message_tag",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'message_tag': %s",
+               fiid_obj_errormsg (obj_cmd));
   message_tag = val;
 
   expected_message_tag = ip->initial_message_tag + ip->message_tag_count;
@@ -726,9 +751,11 @@ ipmipower_check_rmcpplus_status_code (ipmipower_powercmd_t ip, packet_type_t pkt
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
-  Fiid_obj_get (obj_cmd,
-                "rmcpplus_status_code",
-                &val);
+  if (FIID_OBJ_GET (obj_cmd,
+                    "rmcpplus_status_code",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'rmcpplus_status_code': %s",
+               fiid_obj_errormsg (obj_cmd));
   rmcpplus_status_code = val;
 
   if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
@@ -756,9 +783,11 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip, packet
    * See comments in ipmipower_powercmd.c (_check_open_session_error).
    */
 
-  Fiid_obj_get (ip->obj_open_session_res,
-                "maximum_privilege_level",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_open_session_res,
+                    "maximum_privilege_level",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'maximum_privilege_level': %s",
+               fiid_obj_errormsg (ip->obj_open_session_res));
   maximum_privilege_level = val;
 
   /* IPMI Workaround (achu)
@@ -860,25 +889,41 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
        * We fix/adjust for the situation here.
        */
 
-      keybuf_len = Fiid_obj_get_data (ip->obj_rakp_message_2_res,
-                                      "key_exchange_authentication_code",
-                                      keybuf,
-                                      IPMIPOWER_PACKET_BUFLEN);
+      if ((keybuf_len = fiid_obj_get_data (ip->obj_rakp_message_2_res,
+                                           "key_exchange_authentication_code",
+                                           keybuf,
+                                           IPMIPOWER_PACKET_BUFLEN)) < 0)
+        ierr_exit ("fiid_obj_get_data: 'key_exchange_authentication_code': %s",
+                   fiid_obj_errormsg (ip->obj_rakp_message_2_res));
+      
       if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
           && keybuf_len == 1)
-        Fiid_obj_clear_field (ip->obj_rakp_message_2_res, "key_exchange_authentication_code");
+        {
+          if (fiid_obj_clear_field (ip->obj_rakp_message_2_res,
+                                    "key_exchange_authentication_code") < 0)
+            ierr_exit ("fiid_obj_clear_field: 'key_exchange_authentication_code': %s",
+                       fiid_obj_errormsg (ip->obj_rakp_message_2_res));
+        }
       else if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
                && keybuf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
-        Fiid_obj_set_data (ip->obj_rakp_message_2_res,
-                           "key_exchange_authentication_code",
-                           keybuf,
-                           IPMI_HMAC_SHA1_DIGEST_LENGTH);
+        {
+          if (fiid_obj_set_data (ip->obj_rakp_message_2_res,
+                                 "key_exchange_authentication_code",
+                                 keybuf,
+                                 IPMI_HMAC_SHA1_DIGEST_LENGTH) < 0)
+            ierr_exit ("fiid_obj_set_data: 'key_exchange_authentication_code': %s",
+                       fiid_obj_errormsg (ip->obj_rakp_message_2_res));
+        }
       else if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
                && keybuf_len == (IPMI_HMAC_MD5_DIGEST_LENGTH + 1))
-        Fiid_obj_set_data (ip->obj_rakp_message_2_res,
-                           "key_exchange_authentication_code",
-                           keybuf,
-                           IPMI_HMAC_MD5_DIGEST_LENGTH);
+        {
+          if (fiid_obj_set_data (ip->obj_rakp_message_2_res,
+                                 "key_exchange_authentication_code",
+                                 keybuf,
+                                 IPMI_HMAC_MD5_DIGEST_LENGTH) < 0)
+            ierr_exit ("fiid_obj_set_data: 'key_exchange_authentication_code': %s",
+                       fiid_obj_errormsg (ip->obj_rakp_message_2_res));
+        }
     }
 
   password = cmd_args.common.password;
@@ -899,20 +944,26 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
 
-  Fiid_obj_get (ip->obj_open_session_res,
-                "managed_system_session_id",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_open_session_res,
+                    "managed_system_session_id",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'managed_system_session_id': %s",
+               fiid_obj_errormsg (ip->obj_open_session_res));
   managed_system_session_id = val;
 
-  managed_system_random_number_len = Fiid_obj_get_data (ip->obj_rakp_message_2_res,
-                                                        "managed_system_random_number",
-                                                        managed_system_random_number,
-                                                        IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
-
-  managed_system_guid_len = Fiid_obj_get_data (ip->obj_rakp_message_2_res,
-                                               "managed_system_guid",
-                                               managed_system_guid,
-                                               IPMI_MANAGED_SYSTEM_GUID_LENGTH);
+  if ((managed_system_random_number_len = fiid_obj_get_data (ip->obj_rakp_message_2_res,
+                                                             "managed_system_random_number",
+                                                             managed_system_random_number,
+                                                             IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
+    ierr_exit ("fiid_obj_get_data: 'managed_system_random_number': %s",
+               fiid_obj_errormsg (ip->obj_rakp_message_2_res));
+  
+  if ((managed_system_guid_len = fiid_obj_get_data (ip->obj_rakp_message_2_res,
+                                                    "managed_system_guid",
+                                                    managed_system_guid,
+                                                    IPMI_MANAGED_SYSTEM_GUID_LENGTH)) < 0)
+    ierr_exit ("fiid_obj_get_data: 'managed_system_guid': %s",
+               fiid_obj_errormsg (ip->obj_rakp_message_2_res));
 
   /* IPMI Workaround (achu)
    *
@@ -930,19 +981,26 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
       int buf_len;
 
-      buf_len = Fiid_obj_get_data (ip->obj_rakp_message_2_res,
-                                   "key_exchange_authentication_code",
-                                   buf,
-                                   IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
+      if ((buf_len = fiid_obj_get_data (ip->obj_rakp_message_2_res,
+                                        "key_exchange_authentication_code",
+                                        buf,
+                                        IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
+        ierr_exit ("fiid_obj_get_data: 'key_exchange_authentication_code': %s",
+                   fiid_obj_errormsg (ip->obj_rakp_message_2_res));
 
       if (buf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
         {
-          Fiid_obj_clear_field (ip->obj_rakp_message_2_res,
-                                "key_exchange_authentication_code");
-          Fiid_obj_set_data (ip->obj_rakp_message_2_res,
-                             "key_exchange_authentication_code",
-                             buf,
-                             IPMI_HMAC_SHA1_DIGEST_LENGTH);
+          if (fiid_obj_clear_field (ip->obj_rakp_message_2_res,
+                                    "key_exchange_authentication_code") < 0)
+            ierr_exit ("fiid_obj_clear_field: 'key_exchange_authentication_code': %s",
+                       fiid_obj_errormsg (ip->obj_rakp_message_2_res));
+
+          if (fiid_obj_set_data (ip->obj_rakp_message_2_res,
+                                 "key_exchange_authentication_code",
+                                 buf,
+                                 IPMI_HMAC_SHA1_DIGEST_LENGTH) < 0)
+            ierr_exit ("fiid_obj_set_data: 'key_exchange_authentication_code': %s",
+                       fiid_obj_errormsg (ip->obj_rakp_message_2_res));
         }
     }
 
@@ -1019,15 +1077,19 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_ty
   else
     authentication_algorithm = ip->authentication_algorithm;
 
-  Fiid_obj_get (ip->obj_open_session_res,
-                "managed_system_session_id",
-                &val);
+  if (FIID_OBJ_GET (ip->obj_open_session_res,
+                    "managed_system_session_id",
+                    &val) < 0)
+    ierr_exit ("FIID_OBJ_GET: 'managed_system_session_id': %s",
+               fiid_obj_errormsg (ip->obj_open_session_res));
   managed_system_session_id = val;
 
-  managed_system_guid_len = Fiid_obj_get_data (ip->obj_rakp_message_2_res,
-                                               "managed_system_guid",
-                                               managed_system_guid,
-                                               IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+  if ((managed_system_guid_len = fiid_obj_get_data (ip->obj_rakp_message_2_res,
+                                                    "managed_system_guid",
+                                                    managed_system_guid,
+                                                    IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
+    ierr_exit ("fiid_obj_get_data: 'managed_system_guid': %s",
+               fiid_obj_errormsg (ip->obj_rakp_message_2_res));
 
   if ((rv = ipmi_rmcpplus_check_rakp_4_integrity_check_value (authentication_algorithm,
                                                               ip->sik_key_ptr,

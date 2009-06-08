@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.50 2009-06-06 00:09:02 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.51 2009-06-08 20:24:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -37,9 +37,12 @@
 
 #include "ipmipower.h"
 #include "ipmipower_output.h"
-#include "ipmipower_wrappers.h"
+
+#include "ierror.h"
 
 #include "freeipmi-portability.h"
+#include "cbuf.h"
+#include "hostlist.h"
 
 extern cbuf_t ttyout;
 extern struct ipmipower_arguments cmd_args;

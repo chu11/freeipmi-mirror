@@ -1,5 +1,13 @@
 2009-06-05  Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/src/ipmipower_wrappers.h,
+	ipmipower/src/ipmipower_wrappers.c: Removed files.
+
+	* ipmipower/src/: Cleanup, do not use wrappers.  Output errors
+	correctly.
+	
+2009-06-05  Albert Chu <chu11@llnl.gov>
+
 	Variety of code cleanup.
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c, ipmipower/src/:

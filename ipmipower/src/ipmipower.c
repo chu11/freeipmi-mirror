@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.78 2009-06-06 00:09:02 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.79 2009-06-08 20:24:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -63,9 +63,12 @@
 #include "ipmipower_prompt.h"
 #include "ipmipower_ping.h"
 #include "ipmipower_util.h"
-#include "ipmipower_wrappers.h"
+
+#include "ierror.h"
 
 #include "freeipmi-portability.h"
+#include "cbuf.h"
+#include "hostlist.h"
 #include "tool-common.h"
 
 cbuf_t ttyin;
@@ -105,9 +108,17 @@ _setup (void)
     }
 
   /* Create TTY bufs */
-  ttyin  = Cbuf_create (IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF);
-  ttyout = Cbuf_create (IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF);
-  ttyerr = Cbuf_create (IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF);
+  if (!(ttyin  = cbuf_create (IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF)))
+    ierr_exit ("cbuf_create: %s", strerror (errno));
+  cbuf_opt_set (ttyin, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
+
+  if (!(ttyout = cbuf_create (IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF)))
+    ierr_exit ("cbuf_create: %s", strerror (errno));
+  cbuf_opt_set (ttyout, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
+
+  if (!(ttyerr = cbuf_create (IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF)))
+    ierr_exit ("cbuf_create: %s", strerror (errno));
+  cbuf_opt_set (ttyerr, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
   for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
     {
@@ -363,11 +374,36 @@ _poll_loop (int non_interactive)
         }
 
       if (pfds[nfds-3].revents & POLLIN)
-        Cbuf_write_from_fd (ttyin, STDIN_FILENO);
+        {
+          int n, dropped = 0;
+
+          if ((n = cbuf_write_from_fd (ttyin, STDIN_FILENO, -1, &dropped)) < 0)
+            ierr_exit ("cbuf_write_from_fd: %s", strerror (errno));
+
+          /* achu: If you are running ipmipower in co-process mode with
+           * powerman, this error condition will probably be hit with the file
+           * descriptor STDIN_FILENO.  The powerman daemon is usually closed
+           * by /etc/init.d/powerman stop, which kills a process through a
+           * signal.  Thus, powerman closes stdin and stdout pipes to
+           * ipmipower and the call to cbuf_write_from_fd will give us an EOF
+           * reading.  We'll consider this EOF an "ok" error.
+           */
+          if (!n)
+            exit (1);
+          
+          if (dropped)
+            ierr_dbg ("cbuf_write_from_fd: read dropped %d bytes", dropped);
+        }
       if (!cbuf_is_empty (ttyout) && (pfds[nfds-2].revents & POLLOUT))
-        Cbuf_read_to_fd (ttyout, STDOUT_FILENO);
+        {
+          if (cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1) < 0)
+            ierr_exit ("cbuf_read_to_fd: %s", strerror (errno));
+        }
       if (!cbuf_is_empty (ttyerr) && (pfds[nfds-1].revents & POLLOUT))
-        Cbuf_read_to_fd (ttyerr, STDERR_FILENO);
+        {
+          if (cbuf_read_to_fd (ttyerr, STDERR_FILENO, -1) < 0)
+            ierr_exit ("cbuf_read_to_fd: %s", strerror (errno));
+        }
     }
 
   free (pfds);

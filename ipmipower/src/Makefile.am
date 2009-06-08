@@ -10,8 +10,7 @@ noinst_HEADERS = \
 	ipmipower_ping.h \
 	ipmipower_powercmd.h \
 	ipmipower_prompt.h \
-	ipmipower_util.h \
-	ipmipower_wrappers.h
+	ipmipower_util.h
  
 sbin_PROGRAMS = ipmipower
 
@@ -49,8 +48,7 @@ ipmipower_SOURCES = \
 	ipmipower_ping.c \
 	ipmipower_powercmd.c \
 	ipmipower_prompt.c \
-	ipmipower_util.c \
-	ipmipower_wrappers.c
+	ipmipower_util.c
  
 $(top_builddir)/common/src/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
