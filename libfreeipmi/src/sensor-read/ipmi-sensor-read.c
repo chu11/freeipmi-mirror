@@ -219,7 +219,9 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
            || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
            || (ipmi_check_completion_code (obj_cmd_rs,
-                                           IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+                                           IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1)
+           || (ipmi_check_completion_code (obj_cmd_rs, 
+                                           IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND) == 1))
     {
       /* A sensor listed by the SDR is not present or cannot be obtained for some reason */
       SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED);

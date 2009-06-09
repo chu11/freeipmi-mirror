@@ -1,3 +1,9 @@
+2009-06-09  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sensor-read/ipmi-sensor-read.c
+	(_sensor_reading_corner_case_checks): Ignore
+	IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND get sensor reading errors.
+
 2009-06-09  Dave Love <d.love@liverpool.ac.uk>
 
 	* common/man/manpage-common-workaround-sol-only-text.man,
