@@ -95,6 +95,8 @@ libfreeipmi) handle fatal vs. non-fatal completion codes?
 - will BMCs respond?
 - what completion code will be returned?
 - will vendors do it consistently?
+unassemble
+- what if packet not fully parsed?  should return 1 vs 0
 
 ipmipower
 ---------
