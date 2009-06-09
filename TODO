@@ -29,6 +29,10 @@ libfreeipmi
   - don't have a SSIF ipmi system, so shouldn't develop until I have a
     system I can test on?
 
+config
+------
+config file - support workarounds/etc. for heterogenous cluster?
+
 ipmi-fru
 --------
 (TEST) multirecord stuff against a FRU
