@@ -93,6 +93,13 @@ Sun Fire 4100 with ILOM: During a RAKP2 response, the key exchange
 authentication code is the wrong length.  Resolved with a workaround
 to adjust this length.
 
+Sun Fire X4150: The remote BMC (seems to) incorrectly calculates keys
+using the privilege specified in the open session stage rather than
+the privilege used during the RAKP1 stage.  This can be problematic if
+you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
+instead of a real privilege level.  Resolved with a workaround to
+handle this specific situation.
+
 Sun Fire X4150/X4450: Username capabilities are not reported properly
 by the Get Authentication Capabilities response.  Resolved with a
 workaround ignoring those flags.
