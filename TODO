@@ -97,6 +97,8 @@ libfreeipmi) handle fatal vs. non-fatal completion codes?
 - will vendors do it consistently?
 unassemble
 - what if packet not fully parsed?  should return 1 vs 0
+- either tools check for DATA_NOT_AVAILABLE errors
+- or unassemble do fiid_obj_packet_valid() on obj_cmd before returning?
 
 ipmipower
 ---------
