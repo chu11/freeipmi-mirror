@@ -1,10 +1,16 @@
-2009-06-05  Albert Chu <chu11@llnl.gov>
+2009-06-09  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/api/ipmi-api.c: Fix assert corner case.
+
+2009-06-08  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_wrappers.h,
 	ipmipower/src/ipmipower_wrappers.c: Removed files.
 
 	* ipmipower/src/: Cleanup, do not use wrappers.  Output errors
 	correctly.
+
+	* tagged post_wrapper_cleanup
 	
 2009-06-05  Albert Chu <chu11@llnl.gov>
 

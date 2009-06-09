@@ -1322,7 +1322,7 @@ _ipmi_outofband_2_0_close (ipmi_ctx_t ctx)
   /* Function Note: No need to set errnum - just return */
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
-          && ctx->type == IPMI_DEVICE_LAN);
+          && ctx->type == IPMI_DEVICE_LAN_2_0);
   
   /* No need to set errnum - if the anything in close session
    * fails, session will eventually timeout anyways
