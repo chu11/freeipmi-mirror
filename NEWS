@@ -5,6 +5,8 @@ o In all tools, properly deal with workaround flags when specifying
 o In bmc-config, fix bug setting volatile vs. non-volatile settings.
 o Fix in-band probing priority ordering to fix issues with machines
   that support multiple drivers.
+o In ipmi-sensors and ipmimonitoring, continue reading sensors after a
+  "command response cannot be provided" error.
 o Add additional workaround into Sun 2.0 workaround.
 o In ipmimonitoring, fix sunbmc driver interface bug.
 o Update workaround documentation without additional motherboards.
