@@ -1,5 +1,10 @@
 2009-06-09  Albert Chu <chu11@llnl.gov>
 
+	* common/src/toolcommon/tool-common.c (ipmi_open): Fix workaround
+	flags setting.
+	
+2009-06-09  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/api/ipmi-api.c: Fix assert corner case.
 
 2009-06-08  Albert Chu <chu11@llnl.gov>

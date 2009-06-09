@@ -109,13 +109,13 @@ ipmi_open (const char *progname,
         {
           if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
-          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
-          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
-          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION;
-          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
+          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE;
           
           if (ipmi_ctx_open_outofband_2_0 (ipmi_ctx,
@@ -159,13 +159,13 @@ ipmi_open (const char *progname,
         {
           if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
-          else if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+          if (cmd_args->workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
             workaround_flags |= IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
 
           if (ipmi_ctx_open_outofband (ipmi_ctx,
