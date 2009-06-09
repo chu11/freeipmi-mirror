@@ -71,8 +71,8 @@ confirmed to be fixed on newer firmware.
 Sun Fire 4100 with ILOM: There are several Sun IPMI 2.0 bugs.  These
 problems may cause "password invalid" or "bmc error" errors to occur.
 They can be worked around by specifying the "sun20" workaround.  The
-workarounds include handling invalid lengthed hash keys and invalid
-cipher suite records.
+workarounds include handling invalid lengthed hash keys, improperly
+hashed keys, and invalid cipher suite records.
 .LP
 Inventec 5441: The privilege level sent during the Open Session stage
 of an IPMI 2.0 connection is used for hashing keys instead of the

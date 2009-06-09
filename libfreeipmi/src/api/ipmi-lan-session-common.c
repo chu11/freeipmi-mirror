@@ -2603,6 +2603,7 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    * we want to use.
    */
   if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION
+      || ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION
       || ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
     requested_maximum_privilege = ctx->io.outofband.privilege_level;
   else

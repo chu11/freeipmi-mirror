@@ -1,5 +1,10 @@
 2009-06-09  Albert Chu <chu11@llnl.gov>
 
+	* Perform "open session privilege" workaround when specifying "Sun
+	2.0" workaround.
+	
+2009-06-09  Albert Chu <chu11@llnl.gov>
+
 	* common/src/toolcommon/tool-common.c (ipmi_open): Fix workaround
 	flags setting.
 
