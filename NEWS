@@ -7,6 +7,7 @@ o Fix in-band probing priority ordering to fix issues with machines
   that support multiple drivers.
 o Add additional workaround into Sun 2.0 workaround.
 o In ipmimonitoring, fix sunbmc driver interface bug.
+o Update workaround documentation without additional motherboards.
 
 0.7.9 - 05/15/09
 ----------------
