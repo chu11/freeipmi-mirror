@@ -183,6 +183,12 @@ unassemble_rmcp_pkt (const void *pkt,
       return (-1);
     }
 
+  if (fiid_obj_clear (obj_cmd) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
+      return (-1);
+    }
+
   if ((len = fiid_obj_set_all (obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcp_hdr);
@@ -191,12 +197,10 @@ unassemble_rmcp_pkt (const void *pkt,
   indx += len;
 
   if (pkt_len <= indx)
-    return (0);
-
-  if (fiid_obj_clear (obj_cmd) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-      return (-1);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
     }
 
   if ((len = fiid_obj_set_all (obj_cmd, pkt + indx, pkt_len - indx)) < 0)
@@ -206,6 +210,5 @@ unassemble_rmcp_pkt (const void *pkt,
     }
   indx += len;
 
-  return (0);
+  return (1);
 }
-

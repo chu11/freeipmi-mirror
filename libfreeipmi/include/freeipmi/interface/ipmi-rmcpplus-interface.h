@@ -263,6 +263,7 @@ int assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                                 void *pkt,
                                 unsigned int pkt_len);
 
+/* returns 1 if fully unparsed, 0 if not, -1 on error */
 int unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                                   uint8_t integrity_algorithm,
                                   uint8_t confidentiality_algorithm,

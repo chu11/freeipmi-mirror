@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.c,v 1.32 2009-06-08 20:24:27 chu11 Exp $
+ *  $Id: ipmipower_util.c,v 1.33 2009-06-10 22:57:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -104,7 +104,7 @@ ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
 }
 
 int
-cbuf_peek_and_drop (cbuf_t buf, void *buffer, int len)
+ipmipower_cbuf_peek_and_drop (cbuf_t buf, void *buffer, int len)
 {
   int rv, r_len, dropped = 0;
 

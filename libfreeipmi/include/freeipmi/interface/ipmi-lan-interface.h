@@ -69,6 +69,7 @@ int assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
                            void *pkt,
                            unsigned int pkt_len);
 
+/* returns 1 if fully unparsed, 0 if not, -1 on error */
 int unassemble_ipmi_lan_pkt (const void *pkt,
                              unsigned int pkt_len,
                              fiid_obj_t obj_rmcp_hdr,

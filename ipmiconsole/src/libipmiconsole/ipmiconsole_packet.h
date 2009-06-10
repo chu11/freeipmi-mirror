@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.h,v 1.10 2009-05-03 18:09:04 chu11 Exp $
+ *  $Id: ipmiconsole_packet.h,v 1.11 2009-06-10 22:56:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -62,6 +62,7 @@ int ipmiconsole_sol_packet_assemble (ipmiconsole_ctx_t c,
                                      void *buf,
                                      unsigned int buflen);
 
+/* returns 1 on successful parse, 0 if not, -1 on error */
 int ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
                                    ipmiconsole_packet_type_t *p,
                                    const void *buf,

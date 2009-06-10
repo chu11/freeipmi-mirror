@@ -650,6 +650,31 @@ unassemble_ipmi_lan_pkt (const void *pkt,
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcp_hdr);
       return (-1);
     }
+
+  if (fiid_obj_clear (obj_lan_session_hdr) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_session_hdr);
+      return (-1);
+    }
+
+  if (fiid_obj_clear (obj_lan_msg_hdr) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
+      return (-1);
+    }
+  
+  if (fiid_obj_clear (obj_cmd) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
+      return (-1);
+    }
+
+  if (fiid_obj_clear (obj_lan_msg_trlr) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_trlr);
+      return (-1);
+    }
+
   if ((len = fiid_obj_set_all (obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcp_hdr);
@@ -658,12 +683,10 @@ unassemble_ipmi_lan_pkt (const void *pkt,
   indx += len;
 
   if (pkt_len <= indx)
-    return (0);
-
-  if (fiid_obj_clear (obj_lan_session_hdr) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_session_hdr);
-      return (-1);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
     }
 
   if ((len = fiid_obj_set_block (obj_lan_session_hdr,
@@ -688,8 +711,9 @@ unassemble_ipmi_lan_pkt (const void *pkt,
 
   if (!IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type))
     {
-      SET_ERRNO (EINVAL);
-      return (-1);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
     }
 
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
@@ -705,7 +729,11 @@ unassemble_ipmi_lan_pkt (const void *pkt,
       indx += len;
 
       if (pkt_len <= indx)
-        return (0);
+        {
+          /* trace, but don't error out, cannot parse packet */
+          ERR_TRACE ("malformed packet", EINVAL);
+          return (0);
+        }
     }
 
   if ((len = fiid_obj_set_data (obj_lan_session_hdr,
@@ -719,13 +747,12 @@ unassemble_ipmi_lan_pkt (const void *pkt,
   indx += len;
 
   if (pkt_len <= indx)
-    return (0);
-
-  if (fiid_obj_clear (obj_lan_msg_hdr) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
-      return (-1);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
     }
+
   if ((len = fiid_obj_set_all (obj_lan_msg_hdr, pkt + indx, pkt_len - indx)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
@@ -734,7 +761,11 @@ unassemble_ipmi_lan_pkt (const void *pkt,
   indx += len;
 
   if (pkt_len <= indx)
-    return (0);
+    {
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
+    }
 
   if ((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0)
     {
@@ -742,42 +773,37 @@ unassemble_ipmi_lan_pkt (const void *pkt,
       return (-1);
     }
 
-  if ((pkt_len - indx) >= obj_lan_msg_trlr_len)
-    obj_cmd_len = (pkt_len - indx) - obj_lan_msg_trlr_len;
-  else if ((pkt_len - indx) < obj_lan_msg_trlr_len)
-    obj_cmd_len = 0;
-
-  if (obj_cmd_len)
+  if ((pkt_len - indx) <= obj_lan_msg_trlr_len)
     {
-      if (fiid_obj_clear (obj_cmd) < 0)
-        {
-          FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-          return (-1);
-        }
-      if ((len = fiid_obj_set_all (obj_cmd, pkt + indx, obj_cmd_len)) < 0)
-        {
-          FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-          return (-1);
-        }
-      indx += len;
-
-      if (pkt_len <= indx)
-        return (0);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
     }
 
-  if (fiid_obj_clear (obj_lan_msg_trlr) < 0)
+  obj_cmd_len = (pkt_len - indx) - obj_lan_msg_trlr_len;
+
+  if ((len = fiid_obj_set_all (obj_cmd, pkt + indx, obj_cmd_len)) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_trlr);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
+  indx += len;
+
+  if (pkt_len <= indx)
+    {
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
+    }
+
   if ((len = fiid_obj_set_all (obj_lan_msg_trlr, pkt + indx, pkt_len - indx)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_trlr);
       return (-1);
     }
   indx += len;
-
-  return (0);
+  
+  return (1);
 }
 
 ssize_t

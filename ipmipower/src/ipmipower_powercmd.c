@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.182 2009-06-08 20:24:27 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.183 2009-06-10 22:57:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -516,20 +516,20 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   uint8_t recv_buf[IPMIPOWER_PACKET_BUFLEN];
   int recv_len = 0;
-  int rv = -1;
+  int ret, rv = -1;
   uint64_t val;
 
   assert (PACKET_TYPE_VALID_RES (pkt));
 
-  if (!(recv_len = cbuf_peek_and_drop (ip->ic->ipmi_in,
-                                       recv_buf,
-                                       IPMIPOWER_PACKET_BUFLEN)))
+  if (!(recv_len = ipmipower_cbuf_peek_and_drop (ip->ic->ipmi_in,
+                                                 recv_buf,
+                                                 IPMIPOWER_PACKET_BUFLEN)))
     return (0);
 
   ipmipower_packet_dump (ip, pkt, recv_buf, recv_len);
 
   /* rv = 0 if the packet is unparseable */
-  if (ipmipower_packet_store (ip, pkt, recv_buf, recv_len) < 0)
+  if (!ipmipower_packet_store (ip, pkt, recv_buf, recv_len))
     {
       rv = 0;
       goto cleanup;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.49 2009-06-08 20:24:27 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.50 2009-06-10 22:56:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -103,13 +103,13 @@ ipmipower_ping_process_pings (int *timeout)
   for (i = 0; i < ics_len; i++)
     {
       uint8_t buf[IPMIPOWER_PACKET_BUFLEN];
-      int len;
+      int ret, len;
 
       if (send_pings_flag)
         {
           fiid_obj_t rmcp_hdr = NULL;
           fiid_obj_t rmcp_ping = NULL;
-          int ret, dropped = 0;
+          int dropped = 0;
           
           memset (buf, '\0', IPMIPOWER_PACKET_BUFLEN);
 
@@ -203,7 +203,7 @@ ipmipower_ping_process_pings (int *timeout)
 
       /* Did we receive something? */
       memset (buf, '\0', IPMIPOWER_PACKET_BUFLEN);
-      len = cbuf_peek_and_drop (ics[i].ping_in, buf, IPMIPOWER_PACKET_BUFLEN);
+      len = ipmipower_cbuf_peek_and_drop (ics[i].ping_in, buf, IPMIPOWER_PACKET_BUFLEN);
       if (len > 0)
         {
           fiid_obj_t rmcp_hdr = NULL;
@@ -239,74 +239,77 @@ ipmipower_ping_process_pings (int *timeout)
             }
 #endif /* NDEBUG */
 
-          if (unassemble_rmcp_pkt (buf,
-                                   len,
-                                   rmcp_hdr,
-                                   rmcp_pong) < 0)
+          if ((ret = unassemble_rmcp_pkt (buf,
+                                          len,
+                                          rmcp_hdr,
+                                          rmcp_pong)) < 0)
             ierr_exit ("unassemble_rmcp_pkt: %s", strerror (errno));
 
-          /* achu: check for ipmi_support and pong type, but don't
-           * check for message tag.  On occassion, I have witnessed
-           * BMCs send message tags "out of sync".  For example, you
-           * send 8, BMC returns 7.  You send 9, BMC returns 8.  We
-           * really don't care if the BMC is out of sync.  We just
-           * need to make sure we get something back from the BMC to
-           * ensure the machine is still there.
-           */
-
-          if (FIID_OBJ_GET (rmcp_pong,
-                            "message_type",
-                            &val) < 0)
-            ierr_exit ("FIID_OBJ_GET: 'message_type': %s",
-                       fiid_obj_errormsg (rmcp_pong));
-          message_type = val;
-          
-          if (FIID_OBJ_GET (rmcp_pong,
-                            "supported_entities.ipmi_supported",
-                            &val) < 0)
-            ierr_exit ("FIID_OBJ_GET: 'supported_entities.ipmi_supported': %s",
-                       fiid_obj_errormsg (rmcp_pong));
-          ipmi_supported = val;
-
-          if (message_type == RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG && ipmi_supported)
+          if (ret)
             {
-              if (cmd_args.ping_packet_count && cmd_args.ping_percent)
-                ics[i].ping_packet_count_recv++;
-
-              if (cmd_args.ping_consec_count)
+              /* achu: check for ipmi_support and pong type, but don't
+               * check for message tag.  On occassion, I have witnessed
+               * BMCs send message tags "out of sync".  For example, you
+               * send 8, BMC returns 7.  You send 9, BMC returns 8.  We
+               * really don't care if the BMC is out of sync.  We just
+               * need to make sure we get something back from the BMC to
+               * ensure the machine is still there.
+               */
+              
+              if (FIID_OBJ_GET (rmcp_pong,
+                                "message_type",
+                                &val) < 0)
+                ierr_exit ("FIID_OBJ_GET: 'message_type': %s",
+                           fiid_obj_errormsg (rmcp_pong));
+              message_type = val;
+              
+              if (FIID_OBJ_GET (rmcp_pong,
+                                "supported_entities.ipmi_supported",
+                                &val) < 0)
+                ierr_exit ("FIID_OBJ_GET: 'supported_entities.ipmi_supported': %s",
+                           fiid_obj_errormsg (rmcp_pong));
+              ipmi_supported = val;
+              
+              if (message_type == RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG && ipmi_supported)
                 {
-                  /* Don't increment twice, its possible a previous pong
-                   * response was late, and we quickly receive two
-                   * pong responses
-                   */
-                  if (!ics[i].ping_last_packet_recv_flag)
-                    ics[i].ping_consec_count++;
-
-                  ics[i].ping_last_packet_recv_flag++;
-                }
-
-              if (cmd_args.ping_packet_count && cmd_args.ping_percent)
-                {
-                  if (ics[i].link_state == LINK_GOOD)
-                    ics[i].discover_state = STATE_DISCOVERED;
-                  else
+                  if (cmd_args.ping_packet_count && cmd_args.ping_percent)
+                    ics[i].ping_packet_count_recv++;
+                  
+                  if (cmd_args.ping_consec_count)
                     {
-                      if (cmd_args.ping_consec_count
-                          && ics[i].ping_consec_count >= cmd_args.ping_consec_count)
+                      /* Don't increment twice, its possible a previous pong
+                       * response was late, and we quickly receive two
+                       * pong responses
+                       */
+                      if (!ics[i].ping_last_packet_recv_flag)
+                        ics[i].ping_consec_count++;
+                      
+                      ics[i].ping_last_packet_recv_flag++;
+                    }
+                  
+                  if (cmd_args.ping_packet_count && cmd_args.ping_percent)
+                    {
+                      if (ics[i].link_state == LINK_GOOD)
                         ics[i].discover_state = STATE_DISCOVERED;
                       else
-                        ics[i].discover_state = STATE_BADCONNECTION;
+                        {
+                          if (cmd_args.ping_consec_count
+                              && ics[i].ping_consec_count >= cmd_args.ping_consec_count)
+                            ics[i].discover_state = STATE_DISCOVERED;
+                          else
+                            ics[i].discover_state = STATE_BADCONNECTION;
+                        }
                     }
+                  else
+                    {
+                      ics[i].discover_state = STATE_DISCOVERED;
+                    }
+                  ics[i].last_ping_recv.tv_sec = cur_time.tv_sec;
+                  ics[i].last_ping_recv.tv_usec = cur_time.tv_usec;
+                  
+                  fiid_obj_destroy (rmcp_hdr);
+                  fiid_obj_destroy (rmcp_pong);
                 }
-              else
-                {
-                  ics[i].discover_state = STATE_DISCOVERED;
-                }
-              ics[i].last_ping_recv.tv_sec = cur_time.tv_sec;
-              ics[i].last_ping_recv.tv_usec = cur_time.tv_usec;
-
-              fiid_obj_destroy (rmcp_hdr);
-              fiid_obj_destroy (rmcp_pong);
             }
         }
 

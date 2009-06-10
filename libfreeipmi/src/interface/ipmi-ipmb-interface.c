@@ -320,56 +320,68 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
       FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_hdr);
       return (-1);
     }
+
+  if (fiid_obj_clear (obj_cmd) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
+      return (-1);
+    }
+  
+  if (fiid_obj_clear (obj_ipmb_msg_trlr) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_trlr);
+      return (-1);
+    }
+
   if ((len = fiid_obj_set_all (obj_ipmb_msg_hdr, buf + indx, buf_len - indx)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_hdr);
       return (-1);
     }
   indx += len;
-
+  
   if (buf_len <= indx)
-    return (0);
-
+    {
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
+    }
+  
   if ((obj_ipmb_msg_trlr_len = fiid_template_len_bytes (tmpl_ipmb_msg_trlr)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-
-  if ((buf_len - indx) >= obj_ipmb_msg_trlr_len)
-    ipmb_msg_len = (buf_len - indx) - obj_ipmb_msg_trlr_len;
-  else if ((buf_len - indx) < obj_ipmb_msg_trlr_len)
-    ipmb_msg_len = 0;
-
-  if (ipmb_msg_len)
+  
+  if ((buf_len - indx) <= obj_ipmb_msg_trlr_len)
     {
-      if (fiid_obj_clear (obj_cmd) < 0)
-        {
-          FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-          return (-1);
-        }
-      if ((len = fiid_obj_set_all (obj_cmd, buf + indx, ipmb_msg_len)) < 0)
-        {
-          FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-          return (-1);
-        }
-      indx += len;
-
-      if (buf_len <= indx)
-        return (0);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
     }
 
-  if (fiid_obj_clear (obj_ipmb_msg_trlr) < 0)
+  ipmb_msg_len = (buf_len - indx) - obj_ipmb_msg_trlr_len;
+
+  if ((len = fiid_obj_set_all (obj_cmd, buf + indx, ipmb_msg_len)) < 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_trlr);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
+  indx += len;
+      
+  if (buf_len <= indx)
+    {
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
+    }
+
   if ((len = fiid_obj_set_all (obj_ipmb_msg_trlr, buf + indx, buf_len - indx)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_trlr);
       return (-1);
     }
   indx += len;
-
-  return (0);
+  
+  return (1);
 }

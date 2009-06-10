@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.95 2009-06-05 21:50:41 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.96 2009-06-10 22:56:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -538,10 +538,13 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       goto cleanup;
     }
 
-  if (ipmiconsole_packet_unassemble (c, p, pkt, pkt_len) < 0)
+  if ((ret = ipmiconsole_packet_unassemble (c, p, pkt, pkt_len)) < 0)
+    goto cleanup;
+
+  if (!ret)
     {
-      /* Assume it's an error if the packet is unparseable, but don't
-       * exit
+      /* Assume it's an error if the packet is unparseable, not
+       * expected, etc., but don't exit
        */
       if (c->config.debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
         ipmiconsole_packet_dump_unknown (c, pkt, pkt_len);

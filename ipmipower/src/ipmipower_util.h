@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.h,v 1.19 2009-06-08 20:24:27 chu11 Exp $
+ *  $Id: ipmipower_util.h,v 1.20 2009-06-10 22:57:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -39,11 +39,11 @@
  */
 int ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout);
 
-/* cbuf_peek_and_drop
+/* ipmipower_cbuf_peek_and_drop
  * - wrapper for cbuf_peek and cbuf_drop
  * - will drop remaining data in cbuf if buffer not large enough
  * Returns length of packet received, 0 if no packet seen
  */
-int cbuf_peek_and_drop (cbuf_t buf, void *buffer, int len);
+int ipmipower_cbuf_peek_and_drop (cbuf_t buf, void *buffer, int len);
 
 #endif /* _IPMIPOWER_UTIL_H */

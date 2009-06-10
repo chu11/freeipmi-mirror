@@ -703,12 +703,6 @@ _construct_payload_confidentiality_none (uint8_t payload_type,
           && fiid_obj_valid (obj_rmcpplus_payload)
           && fiid_obj_template_compare (obj_rmcpplus_payload, tmpl_rmcpplus_payload) == 1);
 
-  if (fiid_obj_clear (obj_rmcpplus_payload) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_payload);
-      return (-1);
-    }
-
   if ((payload_len = _construct_payload_buf (payload_type,
                                              obj_lan_msg_hdr,
                                              obj_cmd,
@@ -848,12 +842,6 @@ _construct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
       return (-1);
     }
 
-  if (fiid_obj_clear (obj_rmcpplus_payload) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_payload);
-      return (-1);
-    }
-
   if (fiid_obj_set_data (obj_rmcpplus_payload,
                          "confidentiality_header",
                          iv,
@@ -905,12 +893,6 @@ _construct_payload_rakp (uint8_t payload_type,
           && fiid_obj_valid (obj_rmcpplus_payload)
           && fiid_obj_template_compare (obj_rmcpplus_payload, tmpl_rmcpplus_payload) == 1
           && fiid_obj_packet_valid (obj_cmd) == 1);
-
-  if (fiid_obj_clear (obj_rmcpplus_payload) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_payload);
-      return (-1);
-    }
 
   if ((obj_cmd_len = fiid_obj_get_all (obj_cmd,
                                        obj_cmd_buf,
@@ -1016,12 +998,6 @@ _construct_session_trlr_pad (uint8_t integrity_algorithm,
 
   if (ipmi_msg_len % IPMI_INTEGRITY_PAD_MULTIPLE)
     pad_length = IPMI_INTEGRITY_PAD_MULTIPLE - (ipmi_msg_len % IPMI_INTEGRITY_PAD_MULTIPLE);
-
-  if (fiid_obj_clear_field (obj_rmcpplus_session_trlr, "integrity_pad") < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_trlr);
-      return (-1);
-    }
 
   if (pad_length)
     {
@@ -1723,6 +1699,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   return (rv);
 }
 
+/* return 1 on full parse, 0 if not, -1 on error */
 static int
 _deconstruct_payload_buf (uint8_t payload_type,
                           fiid_obj_t obj_lan_msg_hdr,
@@ -1760,12 +1737,6 @@ _deconstruct_payload_buf (uint8_t payload_type,
           return (-1);
         }
 
-      if (fiid_obj_clear (obj_lan_msg_hdr) < 0)
-        {
-          FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
-          return (-1);
-        }
-
       if ((len = fiid_obj_set_all (obj_lan_msg_hdr,
                                    pkt + indx,
                                    lan_msg_len - indx)) < 0)
@@ -1776,47 +1747,44 @@ _deconstruct_payload_buf (uint8_t payload_type,
       indx += len;
 
       if (indx >= lan_msg_len)
-        return (0);
+        {
+          /* trace, but don't error out, cannot parse packet */
+          ERR_TRACE ("malformed packet", EINVAL);
+          return (0);
+        }
 
       /* achu: For payload_type == IPMI Whatever is in between the
        * header and the trailer is the command data
        */
 
-      if ((lan_msg_len - indx) >= obj_lan_msg_trlr_len)
-        obj_cmd_len = (lan_msg_len - indx) - obj_lan_msg_trlr_len;
-      else
-        obj_cmd_len = 0;
+      if ((lan_msg_len - indx) <= obj_lan_msg_trlr_len)
+        {
+          /* trace, but don't error out, cannot parse packet */
+          ERR_TRACE ("malformed packet", EINVAL);
+          return (0);
+        }
+
+      obj_cmd_len = (lan_msg_len - indx) - obj_lan_msg_trlr_len;
     }
   else /* payload_type == IPMI_PAYLOAD_TYPE_SOL */
     obj_cmd_len = lan_msg_len;
 
-  if (obj_cmd_len)
+  if ((len = fiid_obj_set_all (obj_cmd,
+                               pkt + indx,
+                               obj_cmd_len)) < 0)
     {
-      if (fiid_obj_clear (obj_cmd) < 0)
-        {
-          FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-          return (-1);
-        }
-
-      if ((len = fiid_obj_set_all (obj_cmd,
-                                   pkt + indx,
-                                   obj_cmd_len)) < 0)
-        {
-          FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-          return (-1);
-        }
-      indx += len;
-
-      if (indx >= lan_msg_len)
-        return (0);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
+      return (-1);
     }
+  indx += len;
 
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
     {
-      if (fiid_obj_clear (obj_lan_msg_trlr) < 0)
+      if (indx >= lan_msg_len)
         {
-          FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_trlr);
-          return (-1);
+          /* trace, but don't error out, cannot parse packet */
+          ERR_TRACE ("malformed packet", EINVAL);
+          return (0);
         }
 
       if ((len = fiid_obj_set_all (obj_lan_msg_trlr,
@@ -1828,9 +1796,10 @@ _deconstruct_payload_buf (uint8_t payload_type,
         }
     }
 
-  return (0);
+  return (1);
 }
 
+/* return 1 on full parse, 0 if not, -1 on error */
 static int
 _deconstruct_payload_confidentiality_none (uint8_t payload_type,
                                            fiid_obj_t obj_rmcpplus_payload,
@@ -1840,6 +1809,8 @@ _deconstruct_payload_confidentiality_none (uint8_t payload_type,
                                            const void *pkt,
                                            uint16_t ipmi_payload_len)
 {
+  int ret;
+
   assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
            || payload_type == IPMI_PAYLOAD_TYPE_SOL)
           && fiid_obj_valid (obj_rmcpplus_payload)
@@ -1859,22 +1830,19 @@ _deconstruct_payload_confidentiality_none (uint8_t payload_type,
   /* achu: No encryption, so ipmi_payload_len is the length of
    * the msg_hdr, cmd, and msg_trlr.
    */
-  if (_deconstruct_payload_buf (payload_type,
-                                obj_lan_msg_hdr,
-                                obj_cmd,
-                                obj_lan_msg_trlr,
-                                pkt,
-                                ipmi_payload_len) < 0)
+  if ((ret = _deconstruct_payload_buf (payload_type,
+                                       obj_lan_msg_hdr,
+                                       obj_cmd,
+                                       obj_lan_msg_trlr,
+                                       pkt,
+                                       ipmi_payload_len)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
 
-  if (fiid_obj_clear (obj_rmcpplus_payload) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_payload);
-      return (-1);
-    }
+  if (!ret)
+    return (0);
 
   if (fiid_obj_set_data (obj_rmcpplus_payload,
                          "payload_data",
@@ -1886,9 +1854,10 @@ _deconstruct_payload_confidentiality_none (uint8_t payload_type,
       return (-1);
     }
 
-  return (0);
+  return (1);
 }
 
+/* return 1 on full parse, 0 if not, -1 on error */
 static int
 _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
                                                   uint8_t payload_encrypted,
@@ -1953,27 +1922,24 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
 
   if (ipmi_payload_len < IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH)
     {
-      SET_ERRNO (EINVAL);
-      return (-1);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
     }
 
   payload_data_len = ipmi_payload_len - IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH;
 
-  if (payload_data_len <= 0)
+  if (!payload_data_len)
     {
-      SET_ERRNO (EINVAL);
-      return (-1);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
     }
 
   memcpy (iv, pkt, IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
   indx += IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH;
   memcpy (payload_buf, pkt + indx, payload_data_len);
 
-  if (fiid_obj_clear (obj_rmcpplus_payload) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_payload);
-      return (-1);
-    }
   if (fiid_obj_set_data (obj_rmcpplus_payload,
                          "confidentiality_header",
                          iv,
@@ -2005,16 +1971,25 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
   pad_length = payload_buf[payload_data_len - 1];
   if (pad_length > IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH)
     {
-      SET_ERRNO (EINVAL);
-      return (-1);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
+    }
+
+  if ((pad_length + 1) > payload_data_len)
+    {
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
     }
 
   cmd_data_len = payload_data_len - pad_length - 1;
 
-  if (cmd_data_len <= 0)
+  if (!cmd_data_len)
     {
-      SET_ERRNO (EINVAL);
-      return (-1);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
     }
 
   if (fiid_obj_set_data (obj_rmcpplus_payload,
@@ -2037,20 +2012,15 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
 
   /* achu: User is responsible for checking if padding is not corrupt  */
 
-  if (_deconstruct_payload_buf (payload_type,
-                                obj_lan_msg_hdr,
-                                obj_cmd,
-                                obj_lan_msg_trlr,
-                                payload_buf,
-                                cmd_data_len) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  return (0);
+  return _deconstruct_payload_buf (payload_type,
+                                   obj_lan_msg_hdr,
+                                   obj_cmd,
+                                   obj_lan_msg_trlr,
+                                   payload_buf,
+                                   cmd_data_len);
 }
 
+/* return 1 on full parse, 0 if not, -1 on error */
 static int
 _deconstruct_payload_rakp (uint8_t payload_type,
                            fiid_obj_t obj_rmcpplus_payload,
@@ -2073,11 +2043,6 @@ _deconstruct_payload_rakp (uint8_t payload_type,
           && pkt
           && ipmi_payload_len);
 
-  if (fiid_obj_clear (obj_rmcpplus_payload) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_payload);
-      return (-1);
-    }
   if (fiid_obj_set_data (obj_rmcpplus_payload,
                          "payload_data",
                          pkt,
@@ -2087,11 +2052,6 @@ _deconstruct_payload_rakp (uint8_t payload_type,
       return (-1);
     }
 
-  if (fiid_obj_clear (obj_cmd) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-      return (-1);
-    }
   if (fiid_obj_set_all (obj_cmd,
                         pkt,
                         ipmi_payload_len) < 0)
@@ -2100,9 +2060,10 @@ _deconstruct_payload_rakp (uint8_t payload_type,
       return (-1);
     }
 
-  return (0);
+  return (1);
 }
 
+/* return 1 on full parse, 0 if not, -1 on error */
 static int
 _deconstruct_payload (uint8_t payload_type,
                       uint8_t payload_encrypted,
@@ -2189,6 +2150,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   uint8_t payload_type, payload_authenticated, payload_encrypted;
   uint32_t session_id, session_sequence_number;
   uint16_t ipmi_payload_len;
+  int ret, check_session_trlr_valid = 0;
   uint64_t val;
 
   /* achu: obj_lan_msg_hdr & trlr only needed for payload type IPMI
@@ -2206,8 +2168,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       || !fiid_obj_valid (obj_rmcp_hdr)
       || !fiid_obj_valid (obj_rmcpplus_session_hdr)
       || !fiid_obj_valid (obj_rmcpplus_payload)
-      || !fiid_obj_valid (obj_cmd)
-      || !fiid_obj_valid (obj_rmcpplus_session_trlr))
+      || !fiid_obj_valid (obj_cmd))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -2228,20 +2189,34 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       ERRNO_TRACE (errno);
       return (-1);
     }
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr) < 0)
+
+  if (fiid_obj_clear (obj_rmcp_hdr) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcp_hdr);
+      return (-1);
+    }
+
+  if (fiid_obj_clear (obj_rmcpplus_session_hdr) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
+      return (-1);
+    }
+
+  if (fiid_obj_clear (obj_rmcpplus_payload) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_payload);
+      return (-1);
+    }
+
+  if (fiid_obj_clear (obj_cmd) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
 
   /*
    * Extract RMCP header
    */
-  if (fiid_obj_clear (obj_rmcp_hdr) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcp_hdr);
-      return (-1);
-    }
   if ((obj_rmcp_hdr_len = fiid_obj_set_all (obj_rmcp_hdr,
                                             pkt + indx,
                                             pkt_len - indx)) < 0)
@@ -2252,16 +2227,15 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   indx += obj_rmcp_hdr_len;
 
   if (pkt_len <= indx)
-    return (0);
+    {
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
+    }
 
   /*
    * Extract auth_type and payload information
    */
-  if (fiid_obj_clear (obj_rmcpplus_session_hdr) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_hdr);
-      return (-1);
-    }
   if ((obj_len = fiid_obj_set_block (obj_rmcpplus_session_hdr,
                                      "authentication_type",
                                      "payload_type.encrypted",
@@ -2274,7 +2248,11 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   indx += obj_len;
 
   if (pkt_len <= indx)
-    return (0);
+    {
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
+    }
 
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "payload_type",
@@ -2291,10 +2269,11 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
     {
-      SET_ERRNO (EINVAL);
-      return (-1);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
     }
-
+  
 #if 0
   /*
    * Extract OEM IANA and OEM Payload ID
@@ -2317,7 +2296,11 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       indx += obj_len;
 
       if (pkt_len <= indx)
-        return (0);
+        {
+          /* trace, but don't error out, cannot parse packet */
+          ERR_TRACE ("malformed packet", EINVAL);
+          return (0);
+        }
     }
 #endif
 
@@ -2336,7 +2319,11 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   indx += obj_len;
 
   if (pkt_len <= indx)
-    return (0);
+    {
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
+    }
 
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "payload_type.authenticated",
@@ -2400,8 +2387,9 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           && payload_encrypted != IPMI_PAYLOAD_FLAG_UNENCRYPTED)
       || !ipmi_payload_len)
     {
-      SET_ERRNO (EINVAL);
-      return (-1);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      return (0);
     }
 
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
@@ -2420,6 +2408,16 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_msg_trlr, tmpl_lan_msg_trlr) < 0)
         {
           ERRNO_TRACE (errno);
+          return (-1);
+        }
+      if (fiid_obj_clear (obj_lan_msg_hdr) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
+          return (-1);
+        }
+      if (fiid_obj_clear (obj_lan_msg_trlr) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_trlr);
           return (-1);
         }
     }
@@ -2469,40 +2467,45 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           ERRNO_TRACE (errno);
           return (-1);
         }
+      if (fiid_obj_clear (obj_rmcpplus_session_trlr) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_trlr);
+          return (-1);
+        }
+
+      check_session_trlr_valid++;
     }
 
   if (pkt_len - indx < ipmi_payload_len)
-    ipmi_payload_len = pkt_len - indx;
+    {
+      ERR_TRACE ("shorten ipmi_payload_len", EINVAL);
+      ipmi_payload_len = pkt_len - indx;
+    }
 
   /*
    * Deconstruct/Decrypt Payload
    */
-  if (_deconstruct_payload (payload_type,
-                            payload_encrypted,
-                            authentication_algorithm,
-                            confidentiality_algorithm,
-                            obj_rmcpplus_payload,
-                            obj_lan_msg_hdr,
-                            obj_cmd,
-                            obj_lan_msg_trlr,
-                            confidentiality_key,
-                            confidentiality_key_len,
-                            pkt + indx,
-                            ipmi_payload_len) < 0)
+  if ((ret = _deconstruct_payload (payload_type,
+                                   payload_encrypted,
+                                   authentication_algorithm,
+                                   confidentiality_algorithm,
+                                   obj_rmcpplus_payload,
+                                   obj_lan_msg_hdr,
+                                   obj_cmd,
+                                   obj_lan_msg_trlr,
+                                   confidentiality_key,
+                                   confidentiality_key_len,
+                                   pkt + indx,
+                                   ipmi_payload_len)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-  indx += ipmi_payload_len;
 
-  if (pkt_len <= indx)
+  if (!ret)
     return (0);
 
-  if (fiid_obj_clear (obj_rmcpplus_session_trlr) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_trlr);
-      return (-1);
-    }
+  indx += ipmi_payload_len;
 
   if (session_id && payload_authenticated == IPMI_PAYLOAD_FLAG_AUTHENTICATED)
     {
@@ -2532,7 +2535,11 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
       /* achu: There needs to be atleast the next_header and pad_length fields */
       if ((pkt_len - indx) < (authentication_code_len + pad_length_field_len + next_header_field_len))
-        return (0);
+        {
+          /* trace, but don't error out, cannot parse packet */
+          ERR_TRACE ("malformed packet", EINVAL);
+          return (0);
+        }
 
       if (authentication_code_len)
         {
@@ -2575,12 +2582,16 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
       if (pad_length > IPMI_INTEGRITY_PAD_MULTIPLE)
         {
-          SET_ERRNO (EINVAL);
-          return (-1);
+          /* trace, but don't error out, cannot parse packet */
+          ERR_TRACE ("malformed packet", EINVAL);
+          return (0);
         }
 
       if (pad_length >= (pkt_len - indx - authentication_code_len - pad_length_field_len - next_header_field_len))
-        pad_length = (pkt_len - indx - authentication_code_len - pad_length_field_len - next_header_field_len);
+        {
+          ERR_TRACE ("shorten pad_length", EINVAL);
+          pad_length = (pkt_len - indx - authentication_code_len - pad_length_field_len - next_header_field_len);
+        }
 
       if (fiid_obj_set_data (obj_rmcpplus_session_trlr,
                              "integrity_pad",
@@ -2592,5 +2603,5 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
         }
     }
 
-  return (0);
+  return (1);
 }

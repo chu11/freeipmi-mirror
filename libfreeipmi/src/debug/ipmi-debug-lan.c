@@ -199,6 +199,14 @@ _ipmi_dump_lan_packet (int fd,
     }
   authentication_type = val;
 
+  /* don't know how to parse, just output in raw form */
+  if (!IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type))
+    {
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      goto dump_extra;
+    }
+
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {
       if ((len = fiid_obj_set_data (obj_session_hdr,
@@ -493,29 +501,34 @@ _ipmi_dump_lan_packet (int fd,
 
   /* Dump unexpected stuff */
 
-  if (!(obj_unexpected_data = fiid_obj_create (tmpl_unexpected_data)))
-    {
-      ERRNO_TRACE (errno);
-      goto cleanup;
-    }
+ dump_extra:
 
-  if ((len = fiid_obj_set_all (obj_unexpected_data,
-                               pkt + indx,
-                               pkt_len - indx)) < 0)
+  if ((pkt_len - indx) > 0)
     {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_unexpected_data);
-      goto cleanup;
-    }
-  indx += len;
-
-  if (ipmi_obj_dump (fd,
-                     prefix,
-                     unexpected_hdr,
-                     NULL,
-                     obj_unexpected_data) < 0)
-    {
-      ERRNO_TRACE (errno);
-      goto cleanup;
+      if (!(obj_unexpected_data = fiid_obj_create (tmpl_unexpected_data)))
+        {
+          ERRNO_TRACE (errno);
+          goto cleanup;
+        }
+      
+      if ((len = fiid_obj_set_all (obj_unexpected_data,
+                                   pkt + indx,
+                                   pkt_len - indx)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO (obj_unexpected_data);
+          goto cleanup;
+        }
+      indx += len;
+      
+      if (ipmi_obj_dump (fd,
+                         prefix,
+                         unexpected_hdr,
+                         NULL,
+                         obj_unexpected_data) < 0)
+        {
+          ERRNO_TRACE (errno);
+          goto cleanup;
+        }
     }
 
   if (ipmi_debug_output_str (fd, prefix_buf, trlr) < 0)

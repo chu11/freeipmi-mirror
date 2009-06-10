@@ -47,6 +47,7 @@
 
 #include "freeipmi-portability.h"
 
+/* return data parsed on success, 0 if can't parse anymore, -1 on error */
 static int
 _dump_rmcpplus_session_hdr (int fd,
                             const char *prefix,
@@ -194,6 +195,7 @@ _dump_rmcpplus_session_hdr (int fd,
   return (rv);
 }
 
+/* return 1 on parse success, 0 if can't parse anymore, -1 on error */
 static int
 _dump_rmcpplus_payload_data (int fd,
                              const char *prefix,
@@ -293,12 +295,6 @@ _dump_rmcpplus_payload_data (int fd,
           if (!(obj_cmd = fiid_obj_create (tmpl_cmd)))
             {
               ERRNO_TRACE (errno);
-              goto cleanup;
-            }
-
-          if (fiid_obj_clear (obj_cmd) < 0)
-            {
-              FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
               goto cleanup;
             }
 
@@ -497,7 +493,7 @@ _dump_rmcpplus_payload_data (int fd,
         }
     }
 
-  rv = 0;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_lan_msg_hdr);
   fiid_obj_destroy (obj_cmd);
@@ -508,6 +504,7 @@ _dump_rmcpplus_payload_data (int fd,
   return (rv);
 }
 
+/* return 1 on parse success, 0 if can't parse anymore, -1 on error */
 static int
 _dump_rmcpplus_payload_confidentiality_none (int fd,
                                              const char *prefix,
@@ -527,7 +524,7 @@ _dump_rmcpplus_payload_confidentiality_none (int fd,
                                              uint16_t ipmi_payload_len)
 {
   fiid_obj_t obj_rmcpplus_payload = NULL;
-  int rv = -1;
+  int ret, rv = -1;
 
   assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
            || payload_type == IPMI_PAYLOAD_TYPE_SOL)
@@ -574,32 +571,33 @@ _dump_rmcpplus_payload_confidentiality_none (int fd,
       goto cleanup;
     }
 
-  if (_dump_rmcpplus_payload_data (fd,
-                                   prefix,
-                                   msg_hdr,
-                                   cmd_hdr,
-                                   ipmb_msg_hdr,
-                                   ipmb_cmd_hdr,
-                                   ipmb_msg_trlr_hdr,
-                                   trailer_hdr,
-                                   payload_type,
-                                   tmpl_lan_msg_hdr,
-                                   tmpl_cmd,
-                                   tmpl_ipmb_msg_hdr,
-                                   tmpl_ipmb_cmd,
-                                   pkt,
-                                   ipmi_payload_len) < 0)
+  if ((ret = _dump_rmcpplus_payload_data (fd,
+                                          prefix,
+                                          msg_hdr,
+                                          cmd_hdr,
+                                          ipmb_msg_hdr,
+                                          ipmb_cmd_hdr,
+                                          ipmb_msg_trlr_hdr,
+                                          trailer_hdr,
+                                          payload_type,
+                                          tmpl_lan_msg_hdr,
+                                          tmpl_cmd,
+                                          tmpl_ipmb_msg_hdr,
+                                          tmpl_ipmb_cmd,
+                                          pkt,
+                                          ipmi_payload_len)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
     }
 
-  rv = 0;
+  rv = ret;
  cleanup:
   fiid_obj_destroy (obj_rmcpplus_payload);
   return (rv);
 }
 
+/* return 1 on parse success, 0 if can't parse anymore, -1 on error */
 static int
 _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
                                                     const char *prefix,
@@ -623,7 +621,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
   uint8_t iv[IPMI_CRYPT_AES_CBC_128_IV_LENGTH];
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t pad_len;
-  int cipher_keylen, cipher_blocklen, decrypt_len, rv = -1;
+  int cipher_keylen, cipher_blocklen, decrypt_len, ret, rv = -1;
   unsigned int payload_data_len, cmd_data_len;
   fiid_obj_t obj_rmcpplus_payload = NULL;
   unsigned int indx = 0;
@@ -674,14 +672,19 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
 
   if (ipmi_payload_len < IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH)
     {
-      SET_ERRNO (EINVAL);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      rv = 0;
       goto cleanup;
     }
-
+  
   payload_data_len = ipmi_payload_len - IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH;
-  if (payload_data_len <= 0)
+
+  if (!payload_data_len)
     {
-      SET_ERRNO (EINVAL);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      rv = 0;
       goto cleanup;
     }
 
@@ -726,14 +729,27 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
   pad_len = payload_buf[payload_data_len - 1];
   if (pad_len > IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH)
     {
-      SET_ERRNO (EINVAL);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      rv = 0;
+      goto cleanup;
+    }
+
+  if ((pad_len + 1) > payload_data_len)
+    {
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      rv = 0;
       goto cleanup;
     }
 
   cmd_data_len = payload_data_len - pad_len - 1;
+
   if (cmd_data_len <= 0)
     {
-      SET_ERRNO (EINVAL);
+      /* trace, but don't error out, cannot parse packet */
+      ERR_TRACE ("malformed packet", EINVAL);
+      rv = 0;
       goto cleanup;
     }
 
@@ -765,32 +781,33 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
       goto cleanup;
     }
 
-  if (_dump_rmcpplus_payload_data (fd,
-                                   prefix,
-                                   msg_hdr,
-                                   cmd_hdr,
-                                   ipmb_msg_hdr,
-                                   ipmb_cmd_hdr,
-                                   ipmb_msg_trlr_hdr,
-                                   trailer_hdr,
-                                   payload_type,
-                                   tmpl_lan_msg_hdr,
-                                   tmpl_cmd,
-                                   tmpl_ipmb_msg_hdr,
-                                   tmpl_ipmb_cmd,
-                                   payload_buf,
-                                   cmd_data_len) < 0)
+  if ((ret = _dump_rmcpplus_payload_data (fd,
+                                          prefix,
+                                          msg_hdr,
+                                          cmd_hdr,
+                                          ipmb_msg_hdr,
+                                          ipmb_cmd_hdr,
+                                          ipmb_msg_trlr_hdr,
+                                          trailer_hdr,
+                                          payload_type,
+                                          tmpl_lan_msg_hdr,
+                                          tmpl_cmd,
+                                          tmpl_ipmb_msg_hdr,
+                                          tmpl_ipmb_cmd,
+                                          payload_buf,
+                                          cmd_data_len)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
     }
 
-  rv = 0;
+  rv = ret;
  cleanup:
   fiid_obj_destroy (obj_rmcpplus_payload);
   return (rv);
 }
 
+/* return 1 on parse success, 0 if can't parse anymore, -1 on error */
 static int
 _dump_rmcpplus_payload_rakp (int fd,
                              const char *prefix,
@@ -925,13 +942,14 @@ _dump_rmcpplus_payload_rakp (int fd,
       goto cleanup;
     }
 
-  rv = 0;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_rmcpplus_payload);
   fiid_obj_destroy (obj_cmd);
   return (rv);
 }
 
+/* return 1 on parse success, 0 if can't parse anymore, -1 on error */
 static int
 _dump_rmcpplus_payload (int fd,
                         const char *prefix,
@@ -1037,6 +1055,7 @@ _dump_rmcpplus_payload (int fd,
                                          ipmi_payload_len));
 }
 
+/* return data parsed on success, 0 if can't parse anymore, -1 on error */
 static int
 _dump_rmcpplus_session_trlr (int fd,
                              const char *prefix,
@@ -1055,7 +1074,7 @@ _dump_rmcpplus_session_trlr (int fd,
   assert (IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm));
 
   if (!session_id || payload_authenticated == IPMI_PAYLOAD_FLAG_UNAUTHENTICATED)
-    return (0);
+    return (1);
 
   /* payload should be authenticated */
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
@@ -1197,7 +1216,7 @@ _ipmi_dump_rmcpplus_packet (int fd,
                             fiid_template_t tmpl_ipmb_msg_hdr,
                             fiid_template_t tmpl_ipmb_cmd)
 {
-  int obj_rmcp_hdr_len, obj_len, rv = -1;
+  int obj_rmcp_hdr_len, obj_len, ret, rv = -1;
   uint8_t payload_type = 0, payload_authenticated = 0, payload_encrypted = 0;
   uint32_t session_id = 0;
   uint16_t ipmi_payload_len = 0;
@@ -1311,6 +1330,10 @@ _ipmi_dump_rmcpplus_packet (int fd,
       goto cleanup;
     }
 
+  /* don't know how to parse, dump as just big blob of hex */
+  if (!obj_len)
+    goto dump_extra;
+
   indx += obj_len;
 
   if (pkt_len <= indx)
@@ -1411,30 +1434,34 @@ _ipmi_dump_rmcpplus_packet (int fd,
 
   /* Dump Payload */
 
-  if (_dump_rmcpplus_payload (fd,
-                              prefix,
-                              payload_hdr,
-                              msg_hdr,
-                              cmd_hdr,
-                              ipmb_msg_hdr,
-                              ipmb_cmd_hdr,
-                              ipmb_msg_trlr_hdr,
-                              trailer_hdr,
-                              payload_type,
-                              authentication_algorithm,
-                              confidentiality_algorithm,
-                              tmpl_lan_msg_hdr,
-                              tmpl_cmd,
-                              tmpl_ipmb_msg_hdr,
-                              tmpl_ipmb_cmd,
-                              confidentiality_key,
-                              confidentiality_key_len,
-                              pkt + indx,
-                              ipmi_payload_len) < 0)
+  if ((ret = _dump_rmcpplus_payload (fd,
+                                     prefix,
+                                     payload_hdr,
+                                     msg_hdr,
+                                     cmd_hdr,
+                                     ipmb_msg_hdr,
+                                     ipmb_cmd_hdr,
+                                     ipmb_msg_trlr_hdr,
+                                     trailer_hdr,
+                                     payload_type,
+                                     authentication_algorithm,
+                                     confidentiality_algorithm,
+                                     tmpl_lan_msg_hdr,
+                                     tmpl_cmd,
+                                     tmpl_ipmb_msg_hdr,
+                                     tmpl_ipmb_cmd,
+                                     confidentiality_key,
+                                     confidentiality_key_len,
+                                     pkt + indx,
+                                     ipmi_payload_len)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
     }
+
+  /* don't know how to parse, dump as just big blob of hex */
+  if (!ret)
+    goto dump_extra;
 
   indx += ipmi_payload_len;
 
@@ -1458,6 +1485,10 @@ _ipmi_dump_rmcpplus_packet (int fd,
       ERRNO_TRACE (errno);
       goto cleanup;
     }
+
+  /* don't know how to parse, dump as just big blob of hex */
+  if (!obj_len)
+    goto dump_extra;
 
   indx += obj_len;
 

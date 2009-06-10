@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.70 2009-05-03 18:21:07 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.71 2009-06-10 22:56:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -239,14 +239,22 @@ parsepacket (const char *destination,
       goto cleanup;
     }
 
-  if (unassemble_ipmi_lan_pkt (buf,
-                               buflen,
-                               obj_rmcp_hdr,
-                               obj_lan_session_hdr,
-                               obj_lan_msg_hdr,
-                               obj_cmd,
-                               obj_lan_msg_trlr) < 0)
+  if ((ret = unassemble_ipmi_lan_pkt (buf,
+                                      buflen,
+                                      obj_rmcp_hdr,
+                                      obj_lan_session_hdr,
+                                      obj_lan_msg_hdr,
+                                      obj_cmd,
+                                      obj_lan_msg_trlr)) < 0)
     ipmi_ping_err_exit ("unassemble_ipmi_lan_pkt: %s", strerror (errno));
+
+  if (!ret)
+    {
+      if (debug)
+        fprintf (stderr, "%s(%d): Could not unassemble packet\n", __FUNCTION__, __LINE__);
+      rv = 0;
+      goto cleanup;
+    }
 
   if ((ret = ipmi_lan_check_net_fn (obj_lan_msg_hdr, IPMI_NET_FN_APP_RS)) < 0)
     ipmi_ping_err_exit ("ipmi_lan_check_net_fn: %s", strerror (errno));

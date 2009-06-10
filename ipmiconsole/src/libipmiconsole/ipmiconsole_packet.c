@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.47 2009-06-09 22:11:57 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.48 2009-06-10 22:55:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1383,7 +1383,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
 {
   ipmiconsole_packet_type_t pkt;
   fiid_obj_t obj_cmd = NULL;
-  int ret;
+  int ret, pkt_ret = 0;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -1451,7 +1451,8 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
         {
           /* Unexpected packet, throw it away */
           IPMICONSOLE_CTX_DEBUG (c, ("Unexpected IPMI 1.5 Packet: protocol_state = %d", c->session.protocol_state));
-          return (-1);
+          pkt_ret = 0;
+          goto out;
         }
 
       obj_cmd =  ipmiconsole_packet_object (c, pkt);
@@ -1462,13 +1463,13 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
           return (-1);
         }
 
-      if (unassemble_ipmi_lan_pkt (buf,
-                                   buflen,
-                                   c->connection.obj_rmcp_hdr_rs,
-                                   c->connection.obj_lan_session_hdr_rs,
-                                   c->connection.obj_lan_msg_hdr_rs,
-                                   obj_cmd,
-                                   c->connection.obj_lan_msg_trlr_rs) < 0)
+      if ((pkt_ret = unassemble_ipmi_lan_pkt (buf,
+                                              buflen,
+                                              c->connection.obj_rmcp_hdr_rs,
+                                              c->connection.obj_lan_session_hdr_rs,
+                                              c->connection.obj_lan_msg_hdr_rs,
+                                              obj_cmd,
+                                              c->connection.obj_lan_msg_trlr_rs)) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("unassemble_ipmi_lan_pkt: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1500,7 +1501,8 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
           else
             {
               IPMICONSOLE_CTX_DEBUG (c, ("Unexpected IPMI 2.0 Session Setup Packet: protocol_state = %d", c->session.protocol_state));
-              return (-1);
+              pkt_ret = 0;
+              goto out;
             }
 
           obj_cmd =  ipmiconsole_packet_object (c, pkt);
@@ -1512,22 +1514,22 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
             }
 
           /* IPMI 2.0 Pre-Session Establishment Packets */
-          if (unassemble_ipmi_rmcpplus_pkt (IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
-                                            IPMI_INTEGRITY_ALGORITHM_NONE,
-                                            IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
-                                            NULL,
-                                            0,
-                                            NULL,
-                                            0,
-                                            buf,
-                                            buflen,
-                                            c->connection.obj_rmcp_hdr_rs,
-                                            c->connection.obj_rmcpplus_session_hdr_rs,
-                                            c->connection.obj_rmcpplus_payload_rs,
-                                            c->connection.obj_lan_msg_hdr_rs,
-                                            obj_cmd,
-                                            c->connection.obj_lan_msg_trlr_rs,
-                                            c->connection.obj_rmcpplus_session_trlr_rs) < 0)
+          if ((pkt_ret = unassemble_ipmi_rmcpplus_pkt (IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
+                                                       IPMI_INTEGRITY_ALGORITHM_NONE,
+                                                       IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
+                                                       NULL,
+                                                       0,
+                                                       NULL,
+                                                       0,
+                                                       buf,
+                                                       buflen,
+                                                       c->connection.obj_rmcp_hdr_rs,
+                                                       c->connection.obj_rmcpplus_session_hdr_rs,
+                                                       c->connection.obj_rmcpplus_payload_rs,
+                                                       c->connection.obj_lan_msg_hdr_rs,
+                                                       obj_cmd,
+                                                       c->connection.obj_lan_msg_trlr_rs,
+                                                       c->connection.obj_rmcpplus_session_trlr_rs)) < 0)
             {
               IPMICONSOLE_CTX_DEBUG (c, ("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1557,7 +1559,8 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
               else
                 {
                   IPMICONSOLE_CTX_DEBUG (c, ("Unexpected IPMI 2.0 IPMI Packet: protocol_state = %d", c->session.protocol_state));
-                  return (-1);
+                  pkt_ret = 0;
+                  goto out;
                 }
             }
           else
@@ -1565,7 +1568,8 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
               if (c->session.protocol_state != IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
                 {
                   IPMICONSOLE_CTX_DEBUG (c, ("Unexpected IPMI 2.0 SOL Packet: protocol_state = %d", c->session.protocol_state));
-                  return (-1);
+                  pkt_ret = 0;
+                  goto out;
                 }
               pkt = IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS;
             }
@@ -1579,38 +1583,39 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
             }
 
           /* IPMI 2.0 Session Packets */
-          if (unassemble_ipmi_rmcpplus_pkt (c->config.authentication_algorithm,
-                                            c->config.integrity_algorithm,
-                                            c->config.confidentiality_algorithm,
-                                            c->session.integrity_key_ptr,
-                                            c->session.integrity_key_len,
-                                            c->session.confidentiality_key_ptr,
-                                            c->session.confidentiality_key_len,
-                                            buf,
-                                            buflen,
-                                            c->connection.obj_rmcp_hdr_rs,
-                                            c->connection.obj_rmcpplus_session_hdr_rs,
-                                            c->connection.obj_rmcpplus_payload_rs,
-                                            c->connection.obj_lan_msg_hdr_rs,
-                                            obj_cmd,
-                                            c->connection.obj_lan_msg_trlr_rs,
-                                            c->connection.obj_rmcpplus_session_trlr_rs) < 0)
+          if ((pkt_ret = unassemble_ipmi_rmcpplus_pkt (c->config.authentication_algorithm,
+                                                       c->config.integrity_algorithm,
+                                                       c->config.confidentiality_algorithm,
+                                                       c->session.integrity_key_ptr,
+                                                       c->session.integrity_key_len,
+                                                       c->session.confidentiality_key_ptr,
+                                                       c->session.confidentiality_key_len,
+                                                       buf,
+                                                       buflen,
+                                                       c->connection.obj_rmcp_hdr_rs,
+                                                       c->connection.obj_rmcpplus_session_hdr_rs,
+                                                       c->connection.obj_rmcpplus_payload_rs,
+                                                       c->connection.obj_lan_msg_hdr_rs,
+                                                       obj_cmd,
+                                                       c->connection.obj_lan_msg_trlr_rs,
+                                                       c->connection.obj_rmcpplus_session_trlr_rs)) < 0)
             {
               IPMICONSOLE_CTX_DEBUG (c, ("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
               return (-1);
             }
-
           *p = pkt;
         }
       else
         {
           IPMICONSOLE_CTX_DEBUG (c, ("Unexpected payload_type: payload_type = %u", payload_type));
-          return (-1);
+          pkt_ret = 0;
+          goto out;
         }
     }
 
-  return (0);
+ out:
+  return (pkt_ret);
 }
 
 int

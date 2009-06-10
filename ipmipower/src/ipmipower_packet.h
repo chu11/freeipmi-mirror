@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.h,v 1.21 2009-05-03 18:09:05 chu11 Exp $
+ *  $Id: ipmipower_packet.h,v 1.22 2009-06-10 22:56:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -44,7 +44,7 @@ fiid_obj_t ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
  * - Store pkt into ipmipower_powercmd_t structure
  * - if buf too long, packet truncated
  * - Only works with response packet types
- * - Returns -1 if the packet is un-storeable, returns 0 on success
+ * - Returns 1 if packet unparsed properly, 0 if not
  */
 int ipmipower_packet_store (ipmipower_powercmd_t ip,
                             packet_type_t pkt,

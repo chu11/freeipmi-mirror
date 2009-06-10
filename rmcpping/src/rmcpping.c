@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.52 2009-05-26 23:29:26 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.53 2009-06-10 22:58:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -128,7 +128,7 @@ parsepacket (const char *destination,
   fiid_obj_t obj_rmcp_cmd = NULL;
   uint8_t message_type, message_tag;
   uint64_t val;
-  int rv = -1;
+  int ret, rv = -1;
 
   assert (destination);
   assert (buf);
@@ -163,11 +163,17 @@ parsepacket (const char *destination,
         ipmi_ping_err_exit ("ipmi_dump_rmcp_packet: %s", strerror (errno));
     }
 
-  if (unassemble_rmcp_pkt (buf,
-                           buflen,
-                           obj_rmcp_hdr,
-                           obj_rmcp_cmd) < 0)
+  if ((ret = unassemble_rmcp_pkt (buf,
+                                  buflen,
+                                  obj_rmcp_hdr,
+                                  obj_rmcp_cmd)) < 0)
     ipmi_ping_err_exit ("unassemble_rmcp_pkt: %s", strerror (errno));
+
+  if (!ret)
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   if (FIID_OBJ_GET (obj_rmcp_cmd,
                     "message_type",

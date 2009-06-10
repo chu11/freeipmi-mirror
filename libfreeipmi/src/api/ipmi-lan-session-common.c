@@ -585,6 +585,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
   return (rv);
 }
 
+/* return receive length on success, 0 on no/bad packet, -1 on error */
 static int
 _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                     void *pkt,
@@ -599,7 +600,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
   struct timeval timeout;
   fd_set read_set;
   int status = 0;
-  int recv_len;
+  int ret, recv_len;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -649,7 +650,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
           return (-1);
         }
 
-      if (status == 0)
+      if (!status)
         return (0); /* resend the request */
     }
 
@@ -677,17 +678,20 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                        net_fn,
                        obj_cmd_rs);
 
-  if (unassemble_ipmi_lan_pkt (pkt,
-                               recv_len,
-                               ctx->io.outofband.rs.obj_rmcp_hdr,
-                               ctx->io.outofband.rs.obj_lan_session_hdr,
-                               ctx->io.outofband.rs.obj_lan_msg_hdr,
-                               obj_cmd_rs,
-                               ctx->io.outofband.rs.obj_lan_msg_trlr) < 0)
+  if ((ret = unassemble_ipmi_lan_pkt (pkt,
+                                      recv_len,
+                                      ctx->io.outofband.rs.obj_rmcp_hdr,
+                                      ctx->io.outofband.rs.obj_lan_session_hdr,
+                                      ctx->io.outofband.rs.obj_lan_msg_hdr,
+                                      obj_cmd_rs,
+                                      ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
     }
+
+  if (!ret)
+    return (0); /* resend the request */
 
   return (recv_len);
 }
@@ -2196,6 +2200,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
   return (0);
 }
 
+/* return receive length on success, 0 on no/bad packet, -1 on error */
 static int
 _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                         uint8_t authentication_algorithm,
@@ -2218,6 +2223,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
   fd_set read_set;
   int recv_len = 0;
   int status = 0;
+  int ret;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -2278,7 +2284,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
           return (-1);
         }
 
-      if (status == 0)
+      if (!status)
         return (0); /* resend the request */
     }
 
@@ -2313,26 +2319,29 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                            net_fn,
                            obj_cmd_rs);
 
-  if (unassemble_ipmi_rmcpplus_pkt (authentication_algorithm,
-                                    integrity_algorithm,
-                                    confidentiality_algorithm,
-                                    integrity_key,
-                                    integrity_key_len,
-                                    confidentiality_key,
-                                    confidentiality_key_len,
-                                    pkt,
-                                    recv_len,
-                                    ctx->io.outofband.rs.obj_rmcp_hdr,
-                                    ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
-                                    ctx->io.outofband.rs.obj_rmcpplus_payload,
-                                    ctx->io.outofband.rs.obj_lan_msg_hdr,
-                                    obj_cmd_rs,
-                                    ctx->io.outofband.rs.obj_lan_msg_trlr,
-                                    ctx->io.outofband.rs.obj_rmcpplus_session_trlr) < 0)
+  if ((ret = unassemble_ipmi_rmcpplus_pkt (authentication_algorithm,
+                                           integrity_algorithm,
+                                           confidentiality_algorithm,
+                                           integrity_key,
+                                           integrity_key_len,
+                                           confidentiality_key,
+                                           confidentiality_key_len,
+                                           pkt,
+                                           recv_len,
+                                           ctx->io.outofband.rs.obj_rmcp_hdr,
+                                           ctx->io.outofband.rs.obj_rmcpplus_session_hdr,
+                                           ctx->io.outofband.rs.obj_rmcpplus_payload,
+                                           ctx->io.outofband.rs.obj_lan_msg_hdr,
+                                           obj_cmd_rs,
+                                           ctx->io.outofband.rs.obj_lan_msg_trlr,
+                                           ctx->io.outofband.rs.obj_rmcpplus_session_trlr)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
     }
+
+  if (!ret)
+    return (0); /* resend the request */
 
   return (recv_len);
 }

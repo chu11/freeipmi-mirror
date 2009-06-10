@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.119 2009-06-08 20:24:27 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.120 2009-06-10 22:56:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -271,7 +271,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
                                          buflen,
                                          tmpl_lan_msg_hdr,
                                          ipmipower_packet_cmd_template (ip, pkt)) < 0)
-            ierr_dbg ("ipmi_dump_rmcpplus_packet: %s", strerror (errno));
+            ierr_exit ("ipmi_dump_rmcpplus_packet: %s", strerror (errno));
         }
       else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
                && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
@@ -300,7 +300,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
                                          buflen,
                                          tmpl_lan_msg_hdr,
                                          ipmipower_packet_cmd_template (ip, pkt)) < 0)
-            ierr_dbg ("ipmi_dump_rmcpplus_packet: %s", strerror (errno));
+            ierr_exit ("ipmi_dump_rmcpplus_packet: %s", strerror (errno));
         }
       else /* IPMI 1.5 pkt */
         {
@@ -312,7 +312,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
                                     buflen,
                                     tmpl_lan_msg_hdr,
                                     ipmipower_packet_cmd_template (ip, pkt)) < 0)
-            ierr_dbg ("ipmi_dump_lan_packet: %s", strerror (errno));
+            ierr_exit ("ipmi_dump_lan_packet: %s", strerror (errno));
         }
     }
 }
@@ -368,7 +368,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
                                          ip->obj_lan_msg_hdr_res,
                                          obj,
                                          ip->obj_lan_msg_trlr_res)) < 0)
-        ierr_dbg ("ipmipower_packet_store: unassemble_ipmi_lan_pkt: %s", strerror (errno));
+        ierr_exit ("unassemble_ipmi_lan_pkt: %s", strerror (errno));
     }
   else
     {
@@ -392,7 +392,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
                                                   obj,
                                                   ip->obj_lan_msg_trlr_res,
                                                   ip->obj_rmcpplus_session_trlr_res)) < 0)
-            ierr_dbg ("ipmipower_packet_store: unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno));
+            ierr_exit ("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno));
         }
       else
         {
@@ -412,7 +412,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
                                                   obj,
                                                   ip->obj_lan_msg_trlr_res,
                                                   ip->obj_rmcpplus_session_trlr_res)) < 0)
-            ierr_dbg ("ipmipower_packet_store: unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno));
+            ierr_exit ("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno));
         }
     }
 

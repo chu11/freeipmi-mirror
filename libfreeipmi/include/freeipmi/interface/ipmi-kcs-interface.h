@@ -51,6 +51,7 @@ int assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
                            void *pkt,
                            unsigned int pkt_len);
 
+/* returns 1 if fully unparsed, 0 if not, -1 on error */
 int unassemble_ipmi_kcs_pkt (const void *pkt,
                              unsigned int pkt_len,
                              fiid_obj_t obj_kcs_hdr,

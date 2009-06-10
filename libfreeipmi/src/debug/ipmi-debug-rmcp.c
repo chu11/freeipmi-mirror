@@ -141,23 +141,26 @@ ipmi_dump_rmcp_packet (int fd,
 
   /* Dump unexpected stuff */
 
-  if (!(obj_unexpected_data = fiid_obj_create (tmpl_unexpected_data)))
+  if ((pkt_len - indx) > 0)
     {
-      ERRNO_TRACE (errno);
-      goto cleanup;
-    }
-
-  if ((len = fiid_obj_set_all (obj_unexpected_data, pkt + indx, pkt_len - indx)) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_unexpected_data);
-      goto cleanup;
-    }
-  indx += len;
-
-  if (ipmi_obj_dump (fd, prefix, unexpected_hdr, NULL, obj_unexpected_data) < 0)
-    {
-      ERRNO_TRACE (errno);
-      goto cleanup;
+      if (!(obj_unexpected_data = fiid_obj_create (tmpl_unexpected_data)))
+        {
+          ERRNO_TRACE (errno);
+          goto cleanup;
+        }
+      
+      if ((len = fiid_obj_set_all (obj_unexpected_data, pkt + indx, pkt_len - indx)) < 0)
+        {
+          FIID_OBJECT_ERROR_TO_ERRNO (obj_unexpected_data);
+          goto cleanup;
+        }
+      indx += len;
+      
+      if (ipmi_obj_dump (fd, prefix, unexpected_hdr, NULL, obj_unexpected_data) < 0)
+        {
+          ERRNO_TRACE (errno);
+          goto cleanup;
+        }
     }
 
   if (ipmi_debug_output_str (fd, prefix_buf, trlr) < 0)
