@@ -1,3 +1,8 @@
+2009-06-10  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/ipmiconsole/ipmiconsole.c: Consider
+	IPMICONSOLE_ERR_BMC_IMPLEMENTATION as a non-fatal error too.
+	
 2009-06-09  Albert Chu <chu11@llnl.gov>
 
 	*

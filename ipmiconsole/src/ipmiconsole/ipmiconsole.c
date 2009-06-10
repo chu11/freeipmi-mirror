@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.53.4.4 2009-04-08 21:12:37 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.53.4.5 2009-06-10 16:53:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -375,6 +375,7 @@ main(int argc, char **argv)
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_BMC_BUSY
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_BMC_ERROR
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_BMC_IMPLEMENTATION
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CONNECTION_TIMEOUT
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SESSION_TIMEOUT
           || ipmiconsole_ctx_errnum(c) ==  IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT
