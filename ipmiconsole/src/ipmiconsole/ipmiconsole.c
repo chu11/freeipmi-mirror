@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.64 2009-05-16 05:36:18 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.65 2009-06-10 16:51:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -375,10 +375,11 @@ main (int argc, char **argv)
           || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION
           || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_BMC_BUSY
           || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_BMC_ERROR
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_BMC_IMPLEMENTATION
           || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_CONNECTION_TIMEOUT
           || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SESSION_TIMEOUT
-          || ipmiconsole_ctx_errnum (c) ==  IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT
-          || ipmiconsole_ctx_errnum (c) ==  IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED)
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED)
         printf ("[error received]: %s\n", ipmiconsole_ctx_errormsg (c));
       else
         fprintf (stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
