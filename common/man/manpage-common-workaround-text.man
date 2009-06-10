@@ -9,7 +9,6 @@ packet responses return empty session IDs to the client.  This will
 likely cause "session timeout" errors to occur.  In order to work
 around this issue, the "idzero" workaround must be specified.  The
 option will allow empty session IDs to be accepted by the client.
-This problem is reported to be fixed in later firmware releases.
 .LP
 Dell PowerEdge 2850,SC1425: When Per-Message Authentication is
 disabled, packet responses contain non-null authentication data (when
@@ -46,12 +45,11 @@ sessions are the wrong endian on some systems running ILOM 1.0/2.0.
 The incorrect endian depends on the service processor endianness.
 This will likely cause "session timeout" errors to occur.  In order to
 work around this issue, the "endianseq" workaround must be specified.
-This problem is reported to be fixed in a later release.
 .LP
-Sun Fire X2200/X4150/X4450: The motherboard does not properly report
-username capabilities.  This will likely cause "username invalid"
-errors to occur.  In order to work around this issue, the "authcap"
-workaround must be specified.
+Sun Fire 2200/4150/4450 with ELOM: The motherboard does not properly
+report username capabilities.  This will likely cause "username
+invalid" errors to occur.  In order to work around this issue, the
+"authcap" workaround must be specified.
 .LP
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): There are a number of Intel IPMI 2.0 authentication bugs.
