@@ -74,24 +74,14 @@ _ipmi_dump_inband_packet (int fd,
   char *cmd_hdr =
     "IPMI Command Data:\n"
     "------------------";
-  char *ipmb_msg_hdr =
-    "IPMB Message Header:\n"
-    "--------------------";
-  char *ipmb_cmd_hdr =
-    "IPMB Message Data:\n"
-    "------------------";
-  char *ipmb_msg_trlr_hdr =
-    "IPMB Message Trailer:\n"
-    "---------------------";
   char *unexpected_hdr =
     "Unexpected Data:\n"
     "----------------";
   fiid_obj_t obj_kcs_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
-  fiid_obj_t obj_ipmb_msg_hdr = NULL;
-  fiid_obj_t obj_ipmb_cmd = NULL;
-  fiid_obj_t obj_ipmb_msg_trlr = NULL;
   fiid_obj_t obj_unexpected_data = NULL;
+  uint8_t ipmb_buf[IPMI_DEBUG_MAX_PKT_LEN];
+  int ipmb_buf_len = 0;
   int len;
   int rv = -1;
 
@@ -153,152 +143,63 @@ _ipmi_dump_inband_packet (int fd,
       ERRNO_TRACE (errno);
       goto cleanup;
     }
-  if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd)
-    {
-      if (!(obj_ipmb_msg_hdr = fiid_obj_create (tmpl_ipmb_msg_hdr)))
-        {
-          ERRNO_TRACE (errno);
-          goto cleanup;
-        }
-      if (!(obj_ipmb_cmd = fiid_obj_create (tmpl_ipmb_cmd)))
-        {
-          ERRNO_TRACE (errno);
-          goto cleanup;
-        }
-      if (!(obj_ipmb_msg_trlr = fiid_obj_create (tmpl_ipmb_msg_trlr)))
-        {
-          ERRNO_TRACE (errno);
-          goto cleanup;
-        }
-    }
 
   obj_cmd_len = (pkt_len - indx);
 
-  if (obj_cmd_len)
+  if ((len = fiid_obj_set_all (obj_cmd,
+                               pkt + indx,
+                               obj_cmd_len)) < 0)
     {
-      uint8_t ipmb_buf[IPMI_DEBUG_MAX_PKT_LEN];
-      int ipmb_buf_len = 0;
-
-      if ((len = fiid_obj_set_all (obj_cmd,
-                                   pkt + indx,
-                                   obj_cmd_len)) < 0)
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
+      goto cleanup;
+    }
+  indx += len;
+  
+  if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd)
+    {
+      memset (ipmb_buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
+      
+      if ((ipmb_buf_len = fiid_obj_get_data (obj_cmd,
+                                             "message_data",
+                                             ipmb_buf,
+                                             IPMI_DEBUG_MAX_PKT_LEN)) < 0)
         {
           FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
           goto cleanup;
         }
-      indx += len;
-
-      if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd)
+      
+      if (fiid_obj_clear_field (obj_cmd, "message_data") < 0)
         {
-          memset (ipmb_buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-
-          if ((ipmb_buf_len = fiid_obj_get_data (obj_cmd,
-                                                 "message_data",
-                                                 ipmb_buf,
-                                                 IPMI_DEBUG_MAX_PKT_LEN)) < 0)
-            {
-              FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-              goto cleanup;
-            }
-
-          if (fiid_obj_clear_field (obj_cmd, "message_data") < 0)
-            {
-              FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-              goto cleanup;
-            }
-        }
-
-      if (ipmi_obj_dump (fd,
-                         prefix,
-                         cmd_hdr,
-                         NULL,
-                         obj_cmd) < 0)
-        {
-          ERRNO_TRACE (errno);
+          FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
           goto cleanup;
         }
+    }
+  
+  if (ipmi_obj_dump (fd,
+                     prefix,
+                     cmd_hdr,
+                     NULL,
+                     obj_cmd) < 0)
+    {
+      ERRNO_TRACE (errno);
+      goto cleanup;
+    }
 
-      if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
-        {
-          int obj_ipmb_msg_trlr_len = 0;
-          unsigned int obj_ipmb_cmd_len = 0;
-          int ipmb_hdr_len = 0;
-          int ipmb_cmd_len = 0;
-
-          if ((obj_ipmb_msg_trlr_len = fiid_template_len_bytes (tmpl_ipmb_msg_trlr)) < 0)
-            {
-              ERRNO_TRACE (errno);
-              goto cleanup;
-            }
-
-          if ((ipmb_hdr_len = fiid_obj_set_all (obj_ipmb_msg_hdr,
-                                                ipmb_buf,
-                                                ipmb_buf_len)) < 0)
-            {
-              FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_hdr);
-              goto cleanup;
-            }
-
-          if (ipmi_obj_dump (fd,
-                             prefix,
-                             ipmb_msg_hdr,
-                             NULL,
-                             obj_ipmb_msg_hdr) < 0)
-            {
-              ERRNO_TRACE (errno);
-              goto cleanup;
-            }
-
-          if ((ipmb_buf_len - ipmb_hdr_len) >= obj_ipmb_msg_trlr_len)
-            obj_ipmb_cmd_len = (ipmb_buf_len - ipmb_hdr_len) - obj_ipmb_msg_trlr_len;
-          else
-            obj_ipmb_cmd_len = 0;
-
-          if (obj_ipmb_cmd_len)
-            {
-              if ((ipmb_cmd_len = fiid_obj_set_all (obj_ipmb_cmd,
-                                                    ipmb_buf + ipmb_hdr_len,
-                                                    obj_ipmb_cmd_len)) < 0)
-                {
-                  FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_cmd);
-                  goto cleanup;
-                }
-
-              if (ipmi_obj_dump (fd,
-                                 prefix,
-                                 ipmb_cmd_hdr,
-                                 NULL,
-                                 obj_ipmb_cmd) < 0)
-                {
-                  ERRNO_TRACE (errno);
-                  goto cleanup;
-                }
-            }
-
-          if ((len = fiid_obj_set_all (obj_ipmb_msg_trlr,
-                                       ipmb_buf + ipmb_hdr_len + ipmb_cmd_len,
-                                       (ipmb_buf_len - ipmb_hdr_len - ipmb_cmd_len))) < 0)
-            {
-              FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_trlr);
-              goto cleanup;
-            }
-
-          if (ipmi_obj_dump (fd,
-                             prefix,
-                             ipmb_msg_trlr_hdr,
-                             NULL,
-                             obj_ipmb_msg_trlr) < 0)
-            {
-              ERRNO_TRACE (errno);
-              goto cleanup;
-            }
-        }
-
-      if (pkt_len <= indx)
-        {
-          rv = 0;
-          goto cleanup;
-        }
+  if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
+    {
+      if (ipmi_debug_dump_ipmb (fd,
+                                prefix,
+                                ipmb_buf,
+                                ipmb_buf_len,
+                                tmpl_ipmb_msg_hdr,
+                                tmpl_ipmb_cmd) < 0)
+        goto cleanup;
+    }
+  
+  if (pkt_len <= indx)
+    {
+      rv = 0;
+      goto cleanup;
     }
 
   /* Dump unexpected stuff */
@@ -341,9 +242,6 @@ _ipmi_dump_inband_packet (int fd,
  cleanup:
   fiid_obj_destroy (obj_kcs_hdr);
   fiid_obj_destroy (obj_cmd);
-  fiid_obj_destroy (obj_ipmb_msg_hdr);
-  fiid_obj_destroy (obj_ipmb_cmd);
-  fiid_obj_destroy (obj_ipmb_msg_trlr);
   fiid_obj_destroy (obj_unexpected_data);
   return (rv);
 }

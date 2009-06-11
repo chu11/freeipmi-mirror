@@ -36,6 +36,13 @@ int ipmi_debug_output_str (int fd, const char *prefix, const char *str);
 
 int ipmi_debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, unsigned int buf_len);
 
+int ipmi_debug_dump_ipmb (int fd,
+                          const char *prefix,
+                          const uint8_t *ipmb_buf,
+                          unsigned int ipmb_buf_len,
+                          fiid_template_t tmpl_ipmb_msg_hdr,
+                          fiid_template_t tmpl_ipmb_cmd);
+
 #endif /* ipmi-debug-common.h */
 
 

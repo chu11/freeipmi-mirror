@@ -282,6 +282,8 @@ o libfreeipmi
   - Add new dcmi sub library.
   - The locate sub library now uses a context style API for
     consistency to the rest of libfreeipmi.
+  - Re-architect all 'unassemble' functions to return 1 if packet
+    fully parsed, 0 if not, and -1 on error.
   - New freeipmi/template/ files to document fiid fields for fiid
     templates.
   - New error code IPMI_ERR_NOT_FOUND in libfreeipmi API sub library

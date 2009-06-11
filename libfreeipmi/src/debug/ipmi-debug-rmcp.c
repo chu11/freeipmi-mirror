@@ -133,12 +133,6 @@ ipmi_dump_rmcp_packet (int fd,
       goto cleanup;
     }
 
-  if (pkt_len <= indx)
-    {
-      rv = 0;
-      goto cleanup;
-    }
-
   /* Dump unexpected stuff */
 
   if ((pkt_len - indx) > 0)
