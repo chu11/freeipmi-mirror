@@ -1,3 +1,8 @@
+2009-06-11  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue):
+	Fix Sun 2.0/Open Session Privilege workaround.
+	
 2009-06-10  Albert Chu <chu11@llnl.gov>
 
 	* common/man/manpage-common-workaround-text.man: Add additional
