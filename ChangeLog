@@ -10,6 +10,9 @@
 	
 	* tagged post_fiid_required_rearch
 
+	* Slighlty rework FIID_FIELD_MAKES_PACKET_VALID to mean
+	"sufficient" if set, not "if only" set.
+
 2009-06-10  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_unassemble_rearch

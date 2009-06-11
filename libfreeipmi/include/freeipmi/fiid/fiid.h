@@ -107,10 +107,10 @@ typedef enum fiid_err fiid_err_t;
  *
  * MAKES_PACKET_VALID
  *
- * Typically used in response templates to indicate an IPMI command
- * and completion code are required.  All "required" fields in the
- * template are allowed to be missing as long as the "makes packet
- * valid" fields are available.
+ * Used to indicate a sufficient set of fields, that if set, may allow
+ * a packet to be "valid", despite other "required" fields not being
+ * set.  Typically used in response packets to indicate the few fields
+ * necessary to be set for a payload to be accepted.
  */
 
 #define FIID_FIELD_REQUIRED         0x00000001

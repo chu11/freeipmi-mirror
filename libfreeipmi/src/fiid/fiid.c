@@ -1067,10 +1067,7 @@ _fiid_obj_packet_valid (fiid_obj_t obj, int makes_packet_valid_checks)
 
       if (makes_packet_valid_checks)
         {
-          /* Each field w/ MAKES_PACKET_VALID must have the field set.
-           *
-           * Each field w/o MAKES_PACKET_VALID must have nothing set.
-           */
+          /* Each field w/ MAKES_PACKET_VALID must have the field set. */
           
           if (makes_packet_valid_flag && !set_field_len)
             return (0);
@@ -1081,11 +1078,6 @@ _fiid_obj_packet_valid (fiid_obj_t obj, int makes_packet_valid_checks)
                 return (0);
               
               if (length_flag == FIID_FIELD_LENGTH_FIXED && max_field_len != set_field_len)
-                return (0);
-            }
-          else
-            {
-              if (set_field_len)
                 return (0);
             }
         }
