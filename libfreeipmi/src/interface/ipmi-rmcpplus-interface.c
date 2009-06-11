@@ -2610,6 +2610,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_payload) == 1
           && FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr) == 1
+          && FIID_OBJ_PACKET_VALID (obj_cmd) == 1
           && FIID_OBJ_PACKET_VALID (obj_lan_msg_trlr) == 1
           && (!check_session_trlr_valid
               || FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_trlr) == 1))
@@ -2620,6 +2621,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_payload) == 1
+          && FIID_OBJ_PACKET_VALID (obj_cmd) == 1
           && (!check_session_trlr_valid
               || FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_trlr) == 1))
         return (1);

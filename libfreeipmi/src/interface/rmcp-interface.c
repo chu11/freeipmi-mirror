@@ -211,7 +211,8 @@ unassemble_rmcp_pkt (const void *pkt,
   indx += len;
 
   /* don't check obj_cmd, responsibility of caller */
-  if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1)
+  if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
+      && FIID_OBJ_PACKET_VALID (obj_cmd) == 1)
     return (1);
 
   return (0);
