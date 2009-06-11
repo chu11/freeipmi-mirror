@@ -1,3 +1,16 @@
+unassemble
+----------
+inband unassemble's
+- can't even get back cmd/comp_code - system_error
+
+after check completion code, check if hdr, trlr, etc. packet_valid.
+- necessary?  probably not, it's enough that unassemble completed.
+
+after check completion code, check if obj_cmd packet_valid.
+- inband - consider a system error (lib and bmc-watchdog)
+- outofband - can retry (ipmipower, ipmiconsole)
+- api - consider a system error (will catch out of band errors)
+
 inband
 ------
 --fail-if-ipmi-not-detected
