@@ -147,6 +147,7 @@ static char * ipmi_openipmi_ctx_errmsg[] =
     "io not initialized",
     "out of memory",
     "driver timeout",
+    "internal IPMI error",
     "internal system error"
     "internal error",
     "errnum out of range",

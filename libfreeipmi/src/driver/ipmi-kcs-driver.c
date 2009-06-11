@@ -176,6 +176,7 @@ static char * ipmi_kcs_ctx_errmsg[] =
     "out of memory",
     "device not found",
     "driver timeout",
+    "internal IPMI error",
     "internal system error",
     "internal error",
     "errnum out of range",
@@ -995,7 +996,7 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
 {
   uint8_t *pkt = NULL;
   unsigned int pkt_len;
-  int hdr_len, cmd_len, read_len, rv = -1;
+  int hdr_len, cmd_len, read_len, ret, rv = -1;
   fiid_obj_t obj_hdr = NULL;
   fiid_field_t *tmpl = NULL;
 
@@ -1048,12 +1049,19 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
       goto cleanup;
     }
 
-  if (unassemble_ipmi_kcs_pkt (pkt,
-                               read_len,
-                               obj_hdr,
-                               obj_cmd_rs) < 0)
+  if ((ret = unassemble_ipmi_kcs_pkt (pkt,
+                                      read_len,
+                                      obj_hdr,
+                                      obj_cmd_rs)) < 0)
     {
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
+  /* IPMI didn't return enough data back to you */
+  if (!ret)
+    {
+      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_IPMI_ERROR);
       goto cleanup;
     }
 

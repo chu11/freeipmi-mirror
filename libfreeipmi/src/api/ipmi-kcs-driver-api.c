@@ -283,7 +283,7 @@ _kcs_cmd_read (ipmi_ctx_t ctx, uint8_t cmd, fiid_obj_t obj_cmd_rs)
   unsigned int pkt_len;
   int hdr_len, cmd_len, read_len;
   fiid_field_t *tmpl = NULL;
-  int rv = -1;
+  int ret, rv = -1;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -334,12 +334,19 @@ _kcs_cmd_read (ipmi_ctx_t ctx, uint8_t cmd, fiid_obj_t obj_cmd_rs)
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && read_len)
     _ipmi_kcs_dump_rs (ctx, pkt, read_len, cmd, ctx->net_fn, obj_cmd_rs);
   
-  if (unassemble_ipmi_kcs_pkt (pkt,
-                               read_len,
-                               ctx->io.inband.rs.obj_hdr,
-                               obj_cmd_rs) < 0)
+  if ((ret = unassemble_ipmi_kcs_pkt (pkt,
+                                      read_len,
+                                      ctx->io.inband.rs.obj_hdr,
+                                      obj_cmd_rs)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  /* IPMI didn't return enough data back to you */
+  if (!ret)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_IPMI_ERROR);
       goto cleanup;
     }
   
