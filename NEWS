@@ -305,7 +305,8 @@ o libfreeipmi
   - IPMI_*CTX_ERR* renamed to IPMI_*ERR* for consistency throughout.
   - The fiid sub library now includes wrapper functions for a number of
     fiid library functions.
-  - Suppot FIID_FIELD_MAKES_PACKET_VALID fiid field flags.
+  - Suppot FIID_FIELD_MAKES_PACKET_SUFFICIENT fiid field flags and new
+    functions.
   - Support ipmi_sensor_units_string utility function to support
     units, percentages, rates, and units modifiers (i.e. "% hit",
     "gigabyte per minute", "pounds / cu in").

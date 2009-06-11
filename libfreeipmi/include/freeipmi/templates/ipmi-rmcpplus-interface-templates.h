@@ -120,8 +120,8 @@ RMCP+ Open Session Response
 
 fiid_template_t tmpl_rmcpplus_open_session_response =
   {
-    { 8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
-    { 8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 4,   "maximum_privilege_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,   "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -172,8 +172,8 @@ RMCP+ RAKP Message 2
 
 fiid_template_t tmpl_rmcpplus_rakp_message_2 =
   {
-    { 8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
-    { 8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 16,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32,  "remote_console_session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 128, "managed_system_random_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -205,8 +205,8 @@ RMCP+ RAKP Message 4
  */
 fiid_template_t tmpl_rmcpplus_rakp_message_4 =
   {
-    { 8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
-    { 8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 16,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32,  "remote_console_session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 512, "integrity_check_value", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},

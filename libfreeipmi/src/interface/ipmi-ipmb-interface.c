@@ -384,7 +384,7 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
   indx += len;
   
   if (FIID_OBJ_PACKET_VALID (obj_ipmb_msg_hdr) == 1
-      && FIID_OBJ_PACKET_VALID (obj_cmd) == 1
+      && FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1
       && FIID_OBJ_PACKET_VALID (obj_ipmb_msg_trlr) == 1)
     return (1);
 

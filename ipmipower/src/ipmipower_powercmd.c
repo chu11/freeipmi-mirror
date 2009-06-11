@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.183 2009-06-10 22:57:05 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.184 2009-06-11 23:34:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -574,6 +574,16 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
             ierr_exit ("gettimeofday: %s", strerror (errno));
           goto cleanup;
         }
+
+      /* If packet is no good though, ignore it, treat it like a
+       * checksum error.  Note, you must check after checking
+       * completion code.
+       */
+      if (!ipmipower_check_packet (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
     }
   else if (pkt == ACTIVATE_SESSION_RES)
     {
@@ -619,6 +629,16 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
           ip->retransmission_count = 0;  /* important to reset */
           if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
             ierr_exit ("gettimeofday: %s", strerror (errno));
+          goto cleanup;
+        }
+
+      /* If packet is no good though, ignore it, treat it like a
+       * checksum error.  Note, you must check after checking
+       * completion code.
+       */
+      if (!ipmipower_check_packet (ip, pkt))
+        {
+          rv = 0;
           goto cleanup;
         }
 
@@ -724,6 +744,16 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
             ierr_exit ("gettimeofday: %s", strerror (errno));
           goto cleanup;
         }
+
+      /* If packet is no good though, ignore it, treat it like a
+       * checksum error.  Note, you must check after checking
+       * completion code.
+       */
+      if (!ipmipower_check_packet (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
+        }
     }
   else if (pkt == OPEN_SESSION_RES
            || pkt == RAKP_MESSAGE_2_RES
@@ -794,6 +824,16 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
               ipmipower_output (MSG_TYPE_K_G_INVALID, ip->ic->hostname);
               goto cleanup;
             }
+        }
+
+      /* If packet is no good though, ignore it, treat it like a
+       * checksum error.  Note, you must check after checking
+       * completion code.
+       */
+      if (!ipmipower_check_packet (ip, pkt))
+        {
+          rv = 0;
+          goto cleanup;
         }
     }
   else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
@@ -879,6 +919,16 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
           ip->retransmission_count = 0;  /* important to reset */
           if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
             ierr_exit ("gettimeofday: %s", strerror (errno));
+          goto cleanup;
+        }
+
+      /* If packet is no good though, ignore it, treat it like a
+       * checksum error.  Note, you must check after checking
+       * completion code.
+       */
+      if (!ipmipower_check_packet (ip, pkt))
+        {
+          rv = 0;
           goto cleanup;
         }
     }

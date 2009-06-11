@@ -15,6 +15,12 @@
 
 	* tagged pre_fiid_required_rearch2
 
+	* Rework fiid to make FIID_FIELD_MAKES_PACKET_VALID to
+	FIID_FIELD_MAKES_PACKET_SUFFICIENT. Add new API functions
+	appropriately.
+
+	* Adjust interfaces to check for packet sufficiency, not validity.
+
 2009-06-10  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_unassemble_rearch

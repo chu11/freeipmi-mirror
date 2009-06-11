@@ -128,8 +128,8 @@ fiid_template_t tmpl_rmcpplus_open_session_request =
 
 fiid_template_t tmpl_rmcpplus_open_session_response =
   {
-    { 8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
-    { 8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 4,   "maximum_privilege_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,   "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -174,8 +174,8 @@ fiid_template_t tmpl_rmcpplus_rakp_message_1 =
 
 fiid_template_t tmpl_rmcpplus_rakp_message_2 =
   {
-    { 8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
-    { 8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 16,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32,  "remote_console_session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 128, "managed_system_random_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -201,8 +201,8 @@ fiid_template_t tmpl_rmcpplus_rakp_message_3 =
  */
 fiid_template_t tmpl_rmcpplus_rakp_message_4 =
   {
-    { 8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
-    { 8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 16,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32,  "remote_console_session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 512, "integrity_check_value", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
@@ -2603,14 +2603,13 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
         }
     }
 
-  /* don't check obj_cmd, responsibility of caller */
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
     {  
       if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_payload) == 1
           && FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr) == 1
-          && FIID_OBJ_PACKET_VALID (obj_cmd) == 1
+          && FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1
           && FIID_OBJ_PACKET_VALID (obj_lan_msg_trlr) == 1
           && (!check_session_trlr_valid
               || FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_trlr) == 1))
@@ -2621,7 +2620,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_payload) == 1
-          && FIID_OBJ_PACKET_VALID (obj_cmd) == 1
+          && FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1
           && (!check_session_trlr_valid
               || FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_trlr) == 1))
         return (1);

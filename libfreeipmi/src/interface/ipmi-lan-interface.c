@@ -803,11 +803,10 @@ unassemble_ipmi_lan_pkt (const void *pkt,
     }
   indx += len;
   
-  /* don't check obj_cmd, responsibility of caller */
   if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
       && FIID_OBJ_PACKET_VALID (obj_lan_session_hdr) == 1
       && FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr) == 1
-      && FIID_OBJ_PACKET_VALID (obj_cmd) == 1
+      && FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1
       && FIID_OBJ_PACKET_VALID (obj_lan_msg_trlr) == 1)
     return (1);
 

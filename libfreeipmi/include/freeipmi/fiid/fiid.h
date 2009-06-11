@@ -105,12 +105,13 @@ typedef enum fiid_err fiid_err_t;
  *
  * FIID Field Misc Flags
  *
- * MAKES_PACKET_VALID
+ * MAKES_PACKET_SUFFICIENT
  *
  * Used to indicate a sufficient set of fields, that if set, may allow
- * a packet to be "valid", despite other "required" fields not being
- * set.  Typically used in response packets to indicate the few fields
- * necessary to be set for a payload to be accepted.
+ * a packet to be "sufficiently valid", despite other "required"
+ * fields not being set.  Typically used in response packets to
+ * indicate the few fields necessary to be set for a payload to be
+ * accepted.
  */
 
 #define FIID_FIELD_REQUIRED         0x00000001
@@ -135,7 +136,7 @@ typedef enum fiid_err fiid_err_t;
   ((FIID_FIELD_LENGTH_FLAG (__flags) ==  FIID_FIELD_LENGTH_FIXED \
     || FIID_FIELD_LENGTH_FLAG (__flags) ==  FIID_FIELD_LENGTH_VARIABLE) ? 1 : 0)
 
-#define FIID_FIELD_MAKES_PACKET_VALID 0x00010000
+#define FIID_FIELD_MAKES_PACKET_SUFFICIENT 0x00010000
 
 /*
  * fiid_field_t
@@ -372,24 +373,46 @@ int fiid_obj_valid (fiid_obj_t obj);
 /*
  * fiid_obj_packet_valid
  *
- * Returns 1 if the object contains a all the data for a valid packet,
+ * Returns 1 if the object contains all the data for a valid packet,
  * 0 if not, -1 on error.  A valid packet is based on the field flags
  * specified in the original fiid template.  For example, this
  * function will check if all required fields have been set with the
  * correct number of bytes.  It will also check that data set within
- * the object is byte aligned.
+ * the object is byte aligned.  The FIID_FIELD_MAKES_PACKET_SUFFICIENT
+ * is not considered in this function.
  */
 int fiid_obj_packet_valid (fiid_obj_t obj);
 
 /*
  * FIID_OBJ_PACKET_VALID
  *
- * Returns 1 if the object contains a all the data for a valid packet,
+ * Returns 1 if the object contains all the data for a valid packet,
  * -1 on error.  Identical to fiid_obj_packet_valid() except a return
- * of 0 is not possible.  If object template and input template are
- * not identical, -1 is returned and the appropriate error code set.
+ * of 0 is not possible.  The FIID_FIELD_MAKES_PACKET_SUFFICIENT is
+ * not considered in this function.
  */
 int FIID_OBJ_PACKET_VALID (fiid_obj_t obj);
+
+/*
+ * fiid_obj_packet_sufficient
+ *
+ * Returns 1 if the object contains all the data for a sufficient
+ * packet, 0 if not, -1 on error.  Identical to
+ * fiid_obj_packet_valid() except FIID_FIELD_MAKES_PACKET_SUFFICIENT
+ * is considered.  If a packet does not meet the conditions to pass
+ * fiid_obj_packet_valid(), sufficient fields are subsequently
+ * checked.
+ */
+int fiid_obj_packet_sufficient (fiid_obj_t obj);
+
+/*
+ * FIID_OBJ_PACKET_SUFFICIENT
+ *
+ * Returns 1 if the object contains a all the data for a valid packet,
+ * -1 on error.  Identical to fiid_obj_packet_sufficient() except a return
+ * of 0 is not possible.
+ */
+int FIID_OBJ_PACKET_SUFFICIENT (fiid_obj_t obj);
 
 /*
  * fiid_obj_template

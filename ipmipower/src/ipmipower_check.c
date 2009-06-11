@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.107 2009-06-08 20:24:26 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.108 2009-06-11 23:34:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -765,6 +765,23 @@ ipmipower_check_rmcpplus_status_code (ipmipower_powercmd_t ip, packet_type_t pkt
               rmcpplus_status_code);
 
   return ((rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS) ? 1 : 0);
+}
+
+int
+ipmipower_check_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
+{
+  fiid_obj_t obj_cmd;
+  int ret;
+
+  assert (ip);
+  assert (PACKET_TYPE_VALID_RES (pkt));
+
+  obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
+
+  if ((ret = fiid_obj_packet_valid (obj_cmd)) < 0)
+    ierr_exit ("fiid_obj_packet_valid: %s",
+               fiid_obj_errormsg (obj_cmd));
+
 }
 
 int

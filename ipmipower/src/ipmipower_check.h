@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.h,v 1.17 2009-05-03 18:09:04 chu11 Exp $
+ *  $Id: ipmipower_check.h,v 1.18 2009-06-11 23:34:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -88,7 +88,6 @@ int ipmipower_check_requester_sequence_number (ipmipower_powercmd_t ip, packet_t
  */
 int ipmipower_check_completion_code (ipmipower_powercmd_t ip, packet_type_t pkt);
 
-
 /* ipmipower_check_payload_type
  * - Check for valid payload type
  * - Function can be passed IPMI 2.0 packets
@@ -109,6 +108,13 @@ int ipmipower_check_message_tag (ipmipower_powercmd_t ip, packet_type_t pkt);
  * Returns 1 if rmcpplus status code is valid, 0 if not
  */
 int ipmipower_check_rmcpplus_status_code (ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_packet
+ * - Check if packet contains everything it should.
+ * - Function can be passed IPMI 1.5 packets and IPMI 2.0 session packets
+ * Returns 1 if packet is valid, 0 if not
+ */
+int ipmipower_check_packet (ipmipower_powercmd_t ip, packet_type_t pkt);
 
 /* ipmipower_check_open_session_response_privilege
  * - Check for valid open session response data
