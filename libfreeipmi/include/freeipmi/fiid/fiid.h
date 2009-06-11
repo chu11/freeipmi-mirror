@@ -71,15 +71,24 @@ typedef enum fiid_err fiid_err_t;
 /*
  * FIID Field Flags
  *
+ * FIID Field Requirement Flags
+ *
  * REQUIRED
  *
- * The field in the template is required.  If not set, a packet cannot
- * be created.
+ * The field in the template is required.  For requests, if not set, a
+ * packet cannot be created.  For responses, if not set, a packet is
+ * invalid.
  *
  * OPTIONAL
  *
- * The field in the template is not required.  If not set, a packet
- * can still be created.
+ * The field in the template is not required.  For requests, if not
+ * set, a packet can still be created.  For responses, if not set, a
+ * packet is still valid.
+ *
+ * In a template field, either the REQUIRED or OPTIONAL flag must be
+ * specified.
+ *
+ * FIID Field Length Flags
  *
  * LENGTH_FIXED
  *
@@ -91,12 +100,17 @@ typedef enum fiid_err fiid_err_t;
  * The number of bits that must be set in the field is variable in
  * length.
  *
- * In a template field, either the REQUIRED or OPTIONAL flag must be
- * specified.
- *
  * In a template field, either the LENGTH_FIXED or LENGTH_VARIABLE
  * flag must be specified.
  *
+ * FIID Field Misc Flags
+ *
+ * MAKES_PACKET_VALID
+ *
+ * Typically used in response templates to indicate an IPMI command
+ * and completion code are required.  All "required" fields in the
+ * template are allowed to be missing as long as the "makes packet
+ * valid" fields are available.
  */
 
 #define FIID_FIELD_REQUIRED         0x00000001
@@ -120,6 +134,8 @@ typedef enum fiid_err fiid_err_t;
 #define FIID_FIELD_LENGTH_FLAG_VALID(__flags)                    \
   ((FIID_FIELD_LENGTH_FLAG (__flags) ==  FIID_FIELD_LENGTH_FIXED \
     || FIID_FIELD_LENGTH_FLAG (__flags) ==  FIID_FIELD_LENGTH_VARIABLE) ? 1 : 0)
+
+#define FIID_FIELD_MAKES_PACKET_VALID 0x00010000
 
 /*
  * fiid_field_t

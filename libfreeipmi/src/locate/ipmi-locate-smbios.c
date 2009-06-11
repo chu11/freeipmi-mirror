@@ -91,8 +91,8 @@
 
 fiid_template_t tmpl_smbios_ipmi_device_info_record =
   {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
     /* IPMI Device Information structure indicator. value = 38
        (Note this number is given in decimal) */
     { 8, "type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

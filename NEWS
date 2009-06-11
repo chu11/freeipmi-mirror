@@ -283,7 +283,7 @@ o libfreeipmi
   - The locate sub library now uses a context style API for
     consistency to the rest of libfreeipmi.
   - Re-architect all 'unassemble' functions to return 1 if packet
-    fully parsed, 0 if not, and -1 on error.
+    fully and correctly parsed, 0 if not, and -1 on error.
   - New freeipmi/template/ files to document fiid fields for fiid
     templates.
   - New error code IPMI_ERR_NOT_FOUND in libfreeipmi API sub library
@@ -305,6 +305,7 @@ o libfreeipmi
   - IPMI_*CTX_ERR* renamed to IPMI_*ERR* for consistency throughout.
   - The fiid sub library now includes wrapper functions for a number of
     fiid library functions.
+  - Suppot FIID_FIELD_MAKES_PACKET_VALID fiid field flags.
   - Support ipmi_sensor_units_string utility function to support
     units, percentages, rates, and units modifiers (i.e. "% hit",
     "gigabyte per minute", "pounds / cu in").

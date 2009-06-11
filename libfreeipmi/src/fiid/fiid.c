@@ -59,6 +59,7 @@ struct fiid_obj
   unsigned int data_len;
   struct fiid_field_data *field_data;
   unsigned int field_data_len;
+  int makes_packet_valid;
 };
 
 struct fiid_iterator
@@ -896,6 +897,9 @@ fiid_obj_create (fiid_template_t tmpl)
       obj->field_data[i].set_field_len = 0;
       obj->field_data[i].flags = tmpl[i].flags;
       max_pkt_len += tmpl[i].max_field_len;
+
+      if (obj->field_data[i].flags & FIID_FIELD_MAKES_PACKET_VALID)
+        obj->makes_packet_valid = 1;
     }
 
   if (max_pkt_len % 8)
@@ -1042,15 +1046,16 @@ fiid_obj_valid (fiid_obj_t obj)
   return (1);
 }
 
-int
-fiid_obj_packet_valid (fiid_obj_t obj)
+static int
+_fiid_obj_packet_valid (fiid_obj_t obj, int makes_packet_valid_checks)
 {
   unsigned int total_set_bits_counter = 0, max_bits_counter = 0,
     set_bits_counter = 0, optional_bits_counter = 0;
   unsigned int i;
 
-  if (!obj || obj->magic != FIID_OBJ_MAGIC)
-    return (-1);
+  assert (obj);
+  assert (obj->magic == FIID_OBJ_MAGIC);
+  assert (!makes_packet_valid_checks || obj->makes_packet_valid);
 
   for (i = 0; i < obj->field_data_len; i++)
     {
@@ -1058,20 +1063,48 @@ fiid_obj_packet_valid (fiid_obj_t obj)
       unsigned int length_flag = FIID_FIELD_LENGTH_FLAG (obj->field_data[i].flags);
       unsigned int max_field_len = obj->field_data[i].max_field_len;
       unsigned int set_field_len = obj->field_data[i].set_field_len;
+      unsigned int makes_packet_valid_flag = obj->field_data[i].flags & FIID_FIELD_MAKES_PACKET_VALID;
 
-      if (required_flag == FIID_FIELD_REQUIRED && !set_field_len)
+      if (makes_packet_valid_checks)
         {
-          obj->errnum = FIID_ERR_REQUIRED_FIELD_MISSING;
-          return (0);
+          /* Each field w/ MAKES_PACKET_VALID must have the field set.
+           *
+           * Each field w/o MAKES_PACKET_VALID must have nothing set.
+           */
+          
+          if (makes_packet_valid_flag && !set_field_len)
+            return (0);
+          
+          if (makes_packet_valid_flag)
+            {
+              if (!set_field_len)
+                return (0);
+              
+              if (length_flag == FIID_FIELD_LENGTH_FIXED && max_field_len != set_field_len)
+                return (0);
+            }
+          else
+            {
+              if (set_field_len)
+                return (0);
+            }
         }
-
-      if ((length_flag == FIID_FIELD_LENGTH_FIXED && max_field_len != set_field_len)
-          && (required_flag == FIID_FIELD_REQUIRED
-              || (required_flag == FIID_FIELD_OPTIONAL && set_field_len)))
-
+      else
         {
-          obj->errnum = FIID_ERR_FIXED_LENGTH_FIELD_INVALID;
-          return (0);
+          if (required_flag == FIID_FIELD_REQUIRED && !set_field_len)
+            {
+              obj->errnum = FIID_ERR_REQUIRED_FIELD_MISSING;
+              return (0);
+            }
+          
+          if ((length_flag == FIID_FIELD_LENGTH_FIXED && max_field_len != set_field_len)
+              && (required_flag == FIID_FIELD_REQUIRED
+                  || (required_flag == FIID_FIELD_OPTIONAL && set_field_len)))
+            
+            {
+              obj->errnum = FIID_ERR_FIXED_LENGTH_FIELD_INVALID;
+              return (0);
+            }
         }
 
       max_bits_counter += max_field_len;
@@ -1150,6 +1183,29 @@ fiid_obj_packet_valid (fiid_obj_t obj)
 
   obj->errnum = FIID_ERR_SUCCESS;
   return (1);
+}
+
+int
+fiid_obj_packet_valid (fiid_obj_t obj)
+{
+  int ret;
+
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
+    return (-1);
+
+  if (!obj->makes_packet_valid)
+    return _fiid_obj_packet_valid (obj, 0);
+
+  if (!(ret = _fiid_obj_packet_valid (obj, 0)))
+    {
+      fiid_err_t save_errnum = obj->errnum;
+
+      if (_fiid_obj_packet_valid (obj, 1) == 1)
+        return (1);
+      
+      obj->errnum = save_errnum;
+    }
+  return (ret);
 }
 
 int

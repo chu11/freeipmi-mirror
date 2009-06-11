@@ -3,7 +3,13 @@
 	* Continue unassemble rework.
 
 	* tagged pre_fiid_required_rearch
+
+	* Support FIID_FIELD_MAKES_PACKET_VALID flag in fiid.  Add
+	FIID_FIELD_MAKES_PACKET_VALID to all respective fields in reponse
+	packets.
 	
+	* tagged post_fiid_required_rearch
+
 2009-06-10  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_unassemble_rearch

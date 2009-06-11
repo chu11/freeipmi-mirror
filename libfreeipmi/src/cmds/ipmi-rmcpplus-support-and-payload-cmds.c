@@ -71,8 +71,8 @@ fiid_template_t tmpl_cmd_activate_payload_sol_rq =
 
 fiid_template_t tmpl_cmd_activate_payload_rs =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
     { 32, "auxiliary_response_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "inbound_payload_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "outbound_payload_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -83,8 +83,8 @@ fiid_template_t tmpl_cmd_activate_payload_rs =
 
 fiid_template_t tmpl_cmd_activate_payload_sol_rs =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
     { 1,  "test_mode", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 31, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "inbound_payload_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -107,8 +107,8 @@ fiid_template_t tmpl_cmd_deactivate_payload_rq =
 
 fiid_template_t tmpl_cmd_deactivate_payload_rs =
   {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
     { 0, "", 0}
   };
 
@@ -131,8 +131,8 @@ fiid_template_t tmpl_cmd_suspend_resume_payload_encryption_rq =
 
 fiid_template_t tmpl_cmd_suspend_resume_payload_encryption_rs =
   {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
     { 0, "", 0}
   };
 
@@ -145,8 +145,8 @@ fiid_template_t tmpl_cmd_get_payload_activation_status_rq =
 
 fiid_template_t tmpl_cmd_get_payload_activation_status_rs =
   {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
     { 4, "instance_capacity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "instance_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -178,8 +178,8 @@ fiid_template_t tmpl_cmd_get_payload_instance_info_rq =
 
 fiid_template_t tmpl_cmd_get_payload_instance_info_rs =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
     { 32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "port_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 56, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -216,8 +216,8 @@ fiid_template_t tmpl_cmd_set_user_payload_access_rq =
 
 fiid_template_t tmpl_cmd_set_user_payload_access_rs =
   {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
     { 0, "", 0}
   };
 
@@ -233,8 +233,8 @@ fiid_template_t tmpl_cmd_get_user_payload_access_rq =
 
 fiid_template_t tmpl_cmd_get_user_payload_access_rs =
   {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
     { 1, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "standard_payload_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "standard_payload_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -266,8 +266,8 @@ fiid_template_t tmpl_cmd_get_channel_payload_support_rq =
 
 fiid_template_t tmpl_cmd_get_channel_payload_support_rs =
   {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
     { 1, "standard_payload_type_0_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "standard_payload_type_1_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "standard_payload_type_2_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -331,8 +331,8 @@ fiid_template_t tmpl_cmd_get_channel_payload_version_rq =
 
 fiid_template_t tmpl_cmd_get_channel_payload_version_rs =
   {
-    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
     { 4, "minor_format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "major_format_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
@@ -351,8 +351,8 @@ fiid_template_t tmpl_cmd_get_channel_oem_payload_info_rq =
 
 fiid_template_t tmpl_cmd_get_channel_oem_payload_info_rs =
   {
-    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
+    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_VALID},
     { 8,  "payload_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "oem_iana", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "oem_payload_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
