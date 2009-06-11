@@ -1748,7 +1748,7 @@ _deconstruct_payload_buf (uint8_t payload_type,
 
       if (indx >= lan_msg_len)
         {
-          /* trace, but don't error out, cannot parse packet */
+          /* cannot parse packet */
           ERR_TRACE ("malformed packet", EINVAL);
           return (0);
         }
@@ -1759,7 +1759,7 @@ _deconstruct_payload_buf (uint8_t payload_type,
 
       if ((lan_msg_len - indx) <= obj_lan_msg_trlr_len)
         {
-          /* trace, but don't error out, cannot parse packet */
+          /* cannot parse packet */
           ERR_TRACE ("malformed packet", EINVAL);
           return (0);
         }
@@ -1782,7 +1782,7 @@ _deconstruct_payload_buf (uint8_t payload_type,
     {
       if (indx >= lan_msg_len)
         {
-          /* trace, but don't error out, cannot parse packet */
+          /* cannot parse packet */
           ERR_TRACE ("malformed packet", EINVAL);
           return (0);
         }
@@ -1922,7 +1922,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
 
   if (ipmi_payload_len < IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -1931,7 +1931,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
 
   if (!payload_data_len)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -1971,14 +1971,14 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
   pad_length = payload_buf[payload_data_len - 1];
   if (pad_length > IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
 
   if ((pad_length + 1) > payload_data_len)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -1987,7 +1987,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
 
   if (!cmd_data_len)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -2228,7 +2228,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
   if (pkt_len <= indx)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -2249,7 +2249,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
   if (pkt_len <= indx)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -2269,7 +2269,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -2297,7 +2297,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
       if (pkt_len <= indx)
         {
-          /* trace, but don't error out, cannot parse packet */
+          /* cannot parse packet */
           ERR_TRACE ("malformed packet", EINVAL);
           return (0);
         }
@@ -2320,7 +2320,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
   if (pkt_len <= indx)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -2387,7 +2387,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           && payload_encrypted != IPMI_PAYLOAD_FLAG_UNENCRYPTED)
       || !ipmi_payload_len)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -2536,7 +2536,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       /* achu: There needs to be atleast the next_header and pad_length fields */
       if ((pkt_len - indx) < (authentication_code_len + pad_length_field_len + next_header_field_len))
         {
-          /* trace, but don't error out, cannot parse packet */
+          /* cannot parse packet */
           ERR_TRACE ("malformed packet", EINVAL);
           return (0);
         }
@@ -2582,7 +2582,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
       if (pad_length > IPMI_INTEGRITY_PAD_MULTIPLE)
         {
-          /* trace, but don't error out, cannot parse packet */
+          /* cannot parse packet */
           ERR_TRACE ("malformed packet", EINVAL);
           return (0);
         }
@@ -2603,5 +2603,27 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
         }
     }
 
-  return (1);
+  /* don't check obj_cmd, responsibility of caller */
+  if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
+    {  
+      if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
+          && FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_hdr) == 1
+          && FIID_OBJ_PACKET_VALID (obj_rmcpplus_payload) == 1
+          && FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr) == 1
+          && FIID_OBJ_PACKET_VALID (obj_lan_msg_trlr) == 1
+          && (!check_session_trlr_valid
+              || FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_trlr) == 1))
+        return (1);
+    }
+  else 
+    {
+      if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
+          && FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_hdr) == 1
+          && FIID_OBJ_PACKET_VALID (obj_rmcpplus_payload) == 1
+          && (!check_session_trlr_valid
+              || FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_trlr) == 1))
+        return (1);
+    }
+
+  return (0);
 }

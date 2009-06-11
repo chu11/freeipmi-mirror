@@ -684,7 +684,7 @@ unassemble_ipmi_lan_pkt (const void *pkt,
 
   if (pkt_len <= indx)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -711,7 +711,7 @@ unassemble_ipmi_lan_pkt (const void *pkt,
 
   if (!IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type))
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -730,7 +730,7 @@ unassemble_ipmi_lan_pkt (const void *pkt,
 
       if (pkt_len <= indx)
         {
-          /* trace, but don't error out, cannot parse packet */
+          /* cannot parse packet */
           ERR_TRACE ("malformed packet", EINVAL);
           return (0);
         }
@@ -748,7 +748,7 @@ unassemble_ipmi_lan_pkt (const void *pkt,
 
   if (pkt_len <= indx)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -762,7 +762,7 @@ unassemble_ipmi_lan_pkt (const void *pkt,
 
   if (pkt_len <= indx)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -775,7 +775,7 @@ unassemble_ipmi_lan_pkt (const void *pkt,
 
   if ((pkt_len - indx) <= obj_lan_msg_trlr_len)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -791,7 +791,7 @@ unassemble_ipmi_lan_pkt (const void *pkt,
 
   if (pkt_len <= indx)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -803,7 +803,14 @@ unassemble_ipmi_lan_pkt (const void *pkt,
     }
   indx += len;
   
-  return (1);
+  /* don't check obj_cmd, responsibility of caller */
+  if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
+      && FIID_OBJ_PACKET_VALID (obj_lan_session_hdr) == 1
+      && FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr) == 1
+      && FIID_OBJ_PACKET_VALID (obj_lan_msg_trlr) == 1)
+    return (1);
+
+  return (0);
 }
 
 ssize_t

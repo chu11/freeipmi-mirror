@@ -342,7 +342,7 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
   
   if (buf_len <= indx)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -355,7 +355,7 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
   
   if ((buf_len - indx) <= obj_ipmb_msg_trlr_len)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -371,7 +371,7 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
       
   if (buf_len <= indx)
     {
-      /* trace, but don't error out, cannot parse packet */
+      /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
@@ -383,5 +383,10 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
     }
   indx += len;
   
-  return (1);
+  /* don't check obj_cmd, responsibility of caller */
+  if (FIID_OBJ_PACKET_VALID (obj_ipmb_msg_hdr) == 1
+      && FIID_OBJ_PACKET_VALID (obj_ipmb_msg_trlr) == 1)
+    return (1);
+
+  return (0);
 }

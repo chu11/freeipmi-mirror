@@ -11,6 +11,8 @@ after check completion code, check if obj_cmd packet_valid.
 - outofband - can retry (ipmipower, ipmiconsole)
 - api - consider a system error (will catch out of band errors)
 
+some palces hsould be ipmi error?
+
 inband
 ------
 --fail-if-ipmi-not-detected

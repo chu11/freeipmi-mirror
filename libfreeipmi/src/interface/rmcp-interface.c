@@ -210,5 +210,9 @@ unassemble_rmcp_pkt (const void *pkt,
     }
   indx += len;
 
-  return (1);
+  /* don't check obj_cmd, responsibility of caller */
+  if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1)
+    return (1);
+
+  return (0);
 }
