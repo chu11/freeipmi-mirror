@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.184 2009-06-11 23:34:59 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.185 2009-06-11 23:50:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -255,13 +255,19 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
       /* IPMI Workaround (achu)
        *
        * Discovered on SE7520AF2 with Intel Server Management Module
-       * (Professional Edition)
+       * (Professional Edition), Sun Fire 4100, Inventec 5441
        *
        * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
        * of an actual privilege, so have to pass the actual privilege
        * we want to use.
+       *
+       * The Sun and Dell hash w/ the Privilege specified in the open
+       * session stage, not the one in the RAKP 1 stage, so you have
+       * to pass the used privilege level here.
        */
-      if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+      if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION
+          || cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION
+          || cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
         ip->requested_maximum_privilege_level = cmd_args.common.privilege_level;
       else
         ip->requested_maximum_privilege_level = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;

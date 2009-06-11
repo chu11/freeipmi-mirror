@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.48 2009-06-10 22:55:45 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.49 2009-06-11 23:50:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -976,7 +976,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
 
       /* IPMI Workaround
        *
-       * Intel IPMI 2.0 implementations don't support the highest level privilege.
+       * IPMI 2.0 implementations don't support the highest level privilege.
        */
       if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION
           || c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION

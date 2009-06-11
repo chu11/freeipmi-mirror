@@ -23,6 +23,12 @@
 
 	* tagged post_fiid_required_rearch2
 
+	* Add packet payload validity checks to ipmipower, ipmiconsole,
+	libfreeipmi API.
+
+	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue):
+	Fix Sun 2.0/Open Session Privilege workaround.
+
 2009-06-10  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_unassemble_rearch
