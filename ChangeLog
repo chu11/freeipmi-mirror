@@ -21,6 +21,8 @@
 
 	* Adjust interfaces to check for packet sufficiency, not validity.
 
+	* tagged post_fiid_required_rearch2
+
 2009-06-10  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_unassemble_rearch
