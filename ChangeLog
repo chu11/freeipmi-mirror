@@ -1,6 +1,13 @@
 2009-06-10  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_unassemble_rearch
+
+	* Re-work all 'unassemble' code to return 1 if packet was fully
+	parsed vs. not fully parsed.
+
+	* libfreeipmi/src/debug/: Handle more corner cases.  Handle
+	ability to dump data under more bad situations.  Consolidate and
+	cleanup code.
 	
 2009-06-10  Albert Chu <chu11@llnl.gov>
 
