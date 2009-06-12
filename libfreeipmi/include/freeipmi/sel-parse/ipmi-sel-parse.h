@@ -108,10 +108,16 @@ int ipmi_sel_parse_ctx_set_separator (ipmi_sel_parse_ctx_t ctx, const char *sepa
  * Returns the number of entries parsed
  */
 int ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
-                    Ipmi_Sel_Parse_Callback callback,
                     uint16_t record_id_start,
                     uint16_t record_id_last,
+                    Ipmi_Sel_Parse_Callback callback,
                     void *callback_data);
+
+int ipmi_sel_parse_record_ids (ipmi_sel_parse_ctx_t ctx,
+                               uint16_t *record_ids,
+                               unsigned int record_ids_len,
+                               Ipmi_Sel_Parse_Callback callback,
+                               void *callback_data);
 
 /* SEL data retrieval functions after SEL is parsed
  *

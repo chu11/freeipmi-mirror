@@ -1,7 +1,7 @@
 2009-06-11  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/: Re-architect code to allow
-	--display-range command to work much more quickly.
+	--display and --display-range command to work much more quickly.
 
 	* ipmi-sel/src/: Update appropriately for API changes.
 	

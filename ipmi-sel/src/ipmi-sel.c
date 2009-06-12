@@ -1487,43 +1487,16 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
   ipmi_sel_state_data_t *state_data;
   uint8_t record_type;
   int record_type_class;
+  int display_flag = 1;
   int rv = -1;
-  int display_flag = 0;
 
   assert (ctx);
   assert (callback_data);
 
   state_data = (ipmi_sel_state_data_t *)callback_data;
 
-  if (state_data->prog_data->args->display)
-    {
-      uint16_t record_id;
-      unsigned int i;
-      
-      if (ipmi_sel_parse_read_record_id (state_data->sel_parse_ctx,
-                                         &record_id) < 0)
-        {
-          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_id") < 0)
-            goto cleanup;
-          goto out;
-        }
-      
-      /* achu: I know it's slow, shouldn't be that big of a deal in the grand scheme */
-      for (i = 0; i < state_data->prog_data->args->display_record_list_length; i++)
-        {
-          if (state_data->prog_data->args->display_record_list[i] == record_id)
-            {
-              display_flag++;
-              break;
-            }
-        }
-    }
-  else
-    display_flag++;
-
-  if (display_flag
-      && (state_data->prog_data->args->exclude_display
-          || state_data->prog_data->args->exclude_display_range))
+  if (state_data->prog_data->args->exclude_display
+      || state_data->prog_data->args->exclude_display_range)
     {
       uint16_t record_id;
 
@@ -1716,14 +1689,13 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         }
     }
 
-  if (!state_data->prog_data->args->display
-      && !state_data->prog_data->args->display_range)
+  if (state_data->prog_data->args->display)
     {
-      if (ipmi_sel_parse (state_data->sel_parse_ctx,
-                          _sel_parse_callback,
-                          IPMI_SEL_RECORD_ID_FIRST,
-                          IPMI_SEL_RECORD_ID_LAST,
-                          state_data) < 0)
+      if (ipmi_sel_parse_record_ids (state_data->sel_parse_ctx,
+                                     state_data->prog_data->args->display_record_list,
+                                     state_data->prog_data->args->display_record_list_length,
+                                     _sel_parse_callback,
+                                     state_data) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -1732,13 +1704,12 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           goto cleanup;
         }
     }
-  else if (!state_data->prog_data->args->display
-           && state_data->prog_data->args->display_range)
+  else if (state_data->prog_data->args->display_range)
     {
       if (ipmi_sel_parse (state_data->sel_parse_ctx,
-                          _sel_parse_callback,
                           state_data->prog_data->args->display_range1,
                           state_data->prog_data->args->display_range2,
+                          _sel_parse_callback,
                           state_data) < 0)
         {
           pstdout_fprintf (state_data->pstate,
@@ -1751,9 +1722,9 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
   else
     {
       if (ipmi_sel_parse (state_data->sel_parse_ctx,
-                          _sel_parse_callback,
                           IPMI_SEL_RECORD_ID_FIRST,
                           IPMI_SEL_RECORD_ID_LAST,
+                          _sel_parse_callback,
                           state_data) < 0)
         {
           pstdout_fprintf (state_data->pstate,

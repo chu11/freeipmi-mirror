@@ -120,7 +120,7 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 
 static void
 _read_record_list (int *flag,
-                   unsigned int *record_list,
+                   uint16_t *record_list,
                    unsigned int *record_list_length,
                    char *arg)
 {
@@ -161,8 +161,8 @@ _read_record_list (int *flag,
 
 static void
 _read_range (int *flag,
-             unsigned int *range1,
-             unsigned int *range2,
+             uint16_t *range1,
+             uint16_t *range2,
              char *arg)
 {
   char *ptr;
@@ -381,12 +381,12 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->display = 0;
   memset (cmd_args->display_record_list,
           '\0',
-          sizeof (int) * IPMI_SEL_MAX_RECORD);
+          sizeof (uint16_t) * IPMI_SEL_MAX_RECORD);
   cmd_args->display_record_list_length = 0;
   cmd_args->exclude_display = 0;
   memset (cmd_args->exclude_display_record_list,
           '\0',
-          sizeof (int) * IPMI_SEL_MAX_RECORD);
+          sizeof (uint16_t) * IPMI_SEL_MAX_RECORD);
   cmd_args->exclude_display_record_list_length = 0;
   cmd_args->display_range = 0;
   cmd_args->display_range1 = 0;
@@ -398,7 +398,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->delete = 0;
   memset (cmd_args->delete_record_list,
           '\0',
-          sizeof (int) * IPMI_SEL_MAX_RECORD);
+          sizeof (uint16_t) * IPMI_SEL_MAX_RECORD);
   cmd_args->delete_record_list_length = 0;
   cmd_args->delete_range = 0;
   cmd_args->delete_range1 = 0;
