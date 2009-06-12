@@ -26,6 +26,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
+#include <freeipmi/cmds/ipmi-sel-cmds.h>
 #include <freeipmi/sdr-cache/ipmi-sdr-cache.h>
 
 #define IPMI_SEL_PARSE_ERR_SUCCESS                                 0
@@ -62,6 +63,9 @@ extern "C" {
 #define IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD            0x1
 #define IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD        0x2
 #define IPMI_SEL_RECORD_TYPE_CLASS_UNKNOWN                           0x3
+
+#define IPMI_SEL_RECORD_ID_FIRST      IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+#define IPMI_SEL_RECORD_ID_LAST        IPMI_SEL_GET_RECORD_ID_LAST_ENTRY
 
 typedef struct ipmi_sel_parse_ctx *ipmi_sel_parse_ctx_t;
 
@@ -105,6 +109,8 @@ int ipmi_sel_parse_ctx_set_separator (ipmi_sel_parse_ctx_t ctx, const char *sepa
  */
 int ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
                     Ipmi_Sel_Parse_Callback callback,
+                    uint16_t record_id_start,
+                    uint16_t record_id_last,
                     void *callback_data);
 
 /* SEL data retrieval functions after SEL is parsed

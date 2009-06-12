@@ -1495,11 +1495,11 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
 
   state_data = (ipmi_sel_state_data_t *)callback_data;
 
-  if (state_data->prog_data->args->display
-      || state_data->prog_data->args->display_range)
+  if (state_data->prog_data->args->display)
     {
       uint16_t record_id;
-
+      unsigned int i;
+      
       if (ipmi_sel_parse_read_record_id (state_data->sel_parse_ctx,
                                          &record_id) < 0)
         {
@@ -1507,26 +1507,15 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
             goto cleanup;
           goto out;
         }
-
-      if (state_data->prog_data->args->display)
+      
+      /* achu: I know it's slow, shouldn't be that big of a deal in the grand scheme */
+      for (i = 0; i < state_data->prog_data->args->display_record_list_length; i++)
         {
-          unsigned int i;
-
-          /* achu: I know it's slow, shouldn't be that big of a deal in the grand scheme */
-          for (i = 0; i < state_data->prog_data->args->display_record_list_length; i++)
+          if (state_data->prog_data->args->display_record_list[i] == record_id)
             {
-              if (state_data->prog_data->args->display_record_list[i] == record_id)
-                {
-                  display_flag++;
-                  break;
-                }
+              display_flag++;
+              break;
             }
-        }
-      else
-        {
-          if (record_id >= state_data->prog_data->args->display_range1
-              && record_id <= state_data->prog_data->args->display_range2)
-            display_flag++;
         }
     }
   else
@@ -1727,15 +1716,52 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         }
     }
 
-  if (ipmi_sel_parse (state_data->sel_parse_ctx,
-                      _sel_parse_callback,
-                      state_data) < 0)
+  if (!state_data->prog_data->args->display
+      && !state_data->prog_data->args->display_range)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_sel_parse: %s\n",
-                       ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
-      goto cleanup;
+      if (ipmi_sel_parse (state_data->sel_parse_ctx,
+                          _sel_parse_callback,
+                          IPMI_SEL_RECORD_ID_FIRST,
+                          IPMI_SEL_RECORD_ID_LAST,
+                          state_data) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse: %s\n",
+                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+          goto cleanup;
+        }
+    }
+  else if (!state_data->prog_data->args->display
+           && state_data->prog_data->args->display_range)
+    {
+      if (ipmi_sel_parse (state_data->sel_parse_ctx,
+                          _sel_parse_callback,
+                          state_data->prog_data->args->display_range1,
+                          state_data->prog_data->args->display_range2,
+                          state_data) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse: %s\n",
+                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+          goto cleanup;
+        }
+    }
+  else
+    {
+      if (ipmi_sel_parse (state_data->sel_parse_ctx,
+                          _sel_parse_callback,
+                          IPMI_SEL_RECORD_ID_FIRST,
+                          IPMI_SEL_RECORD_ID_LAST,
+                          state_data) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse: %s\n",
+                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+          goto cleanup;
+        }
     }
 
   rv = 0;
