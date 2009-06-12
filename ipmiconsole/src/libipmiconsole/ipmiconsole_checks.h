@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.h,v 1.10 2009-05-03 18:09:04 chu11 Exp $
+ *  $Id: ipmiconsole_checks.h,v 1.11 2009-06-12 00:20:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -45,6 +45,7 @@ int ipmiconsole_check_completion_code (ipmiconsole_ctx_t c, ipmiconsole_packet_t
 int ipmiconsole_check_payload_type (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
 int ipmiconsole_check_message_tag (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
 int ipmiconsole_check_rmcpplus_status_code (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
 int ipmiconsole_check_open_session_response_privilege (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
 int ipmiconsole_check_rakp_2_key_exchange_authentication_code (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
 int ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);

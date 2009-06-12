@@ -29,7 +29,8 @@
 	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue):
 	Fix Sun 2.0/Open Session Privilege workaround.
 
-	* ipmipower/, ipmiconsole/: Add packet validity checks.
+	* libfreeipmi/src/api/ipmi-api-util.c (api_ipmi_cmd_ipmb),
+	ipmipower/, ipmiconsole/: Add packet validity checks.
 
 	* Various code cleanup and minor bug fixes.
 

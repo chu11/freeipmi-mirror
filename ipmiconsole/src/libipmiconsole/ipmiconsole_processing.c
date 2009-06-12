@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.96 2009-06-10 22:56:38 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.97 2009-06-12 00:20:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -618,6 +618,17 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
           ipmiconsole_calculate_errnum (c, *p);
           goto cleanup;
         }
+
+      /* Check for valid packet after completion code */
+      if ((ret = ipmiconsole_check_packet (c, *p)) < 0)
+        goto cleanup;
+
+      if (!ret)
+        {
+          c->session.errors_count++;
+          rv = 0;
+          goto cleanup;
+        }
     }
   else if (*p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
            || *p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2
@@ -664,6 +675,17 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
         {
           _receive_packet_data_reset (c);
           ipmiconsole_calculate_errnum (c, *p);
+          goto cleanup;
+        }
+
+      /* Check for valid packet after status code */
+      if ((ret = ipmiconsole_check_packet (c, *p)) < 0)
+        goto cleanup;
+
+      if (!ret)
+        {
+          c->session.errors_count++;
+          rv = 0;
           goto cleanup;
         }
 
@@ -874,6 +896,17 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
           ipmiconsole_calculate_errnum (c, *p);
           goto cleanup;
         }
+
+      /* Check for valid packet after completion code */
+      if ((ret = ipmiconsole_check_packet (c, *p)) < 0)
+        goto cleanup;
+
+      if (!ret)
+        {
+          c->session.errors_count++;
+          rv = 0;
+          goto cleanup;
+        }
     }
   else if (*p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS)
     {
@@ -940,6 +973,17 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
           rv = 0;
           goto cleanup;
         }
+
+      /* Check for valid packet after completion code */
+      if ((ret = ipmiconsole_check_packet (c, *p)) < 0)
+        goto cleanup;
+
+      if (!ret)
+        {
+          c->session.errors_count++;
+          rv = 0;
+          goto cleanup;
+        }
     }
   else if (*p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS)
     {
@@ -997,6 +1041,9 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
         goto cleanup;
 
       if ((ret = ipmiconsole_check_completion_code (c, *p)) < 0)
+        goto cleanup;
+
+      if ((ret = ipmiconsole_check_packet (c, *p)) < 0)
         goto cleanup;
     }
   else if (*p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS)
@@ -1158,6 +1205,17 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
           ipmiconsole_calculate_errnum (c, *p);
           goto cleanup;
         }
+
+      /* Check for valid packet after completion code */
+      if ((ret = ipmiconsole_check_packet (c, *p)) < 0)
+        goto cleanup;
+
+      if (!c->session.close_session_flag && !ret)
+        {
+          c->session.errors_count++;
+          rv = 0;
+          goto cleanup;
+        }
     }
   else if (*p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS)
     {
@@ -1216,6 +1274,9 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
         goto cleanup;
 
       if ((ret = ipmiconsole_check_completion_code (c, *p)) < 0)
+        goto cleanup;
+
+      if ((ret = ipmiconsole_check_packet (c, *p)) < 0)
         goto cleanup;
     }
   else

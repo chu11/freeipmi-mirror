@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.108 2009-06-11 23:34:59 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.109 2009-06-12 00:20:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -782,6 +782,11 @@ ipmipower_check_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
     ierr_exit ("fiid_obj_packet_valid: %s",
                fiid_obj_errormsg (obj_cmd));
 
+  if (!ret)
+    ierr_dbg ("ipmipower_check_packet(%s:%d): packet invalid",
+              ip->ic->hostname, ip->protocol_state);
+
+  return (ret);
 }
 
 int

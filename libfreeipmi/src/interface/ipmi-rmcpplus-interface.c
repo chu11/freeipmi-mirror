@@ -2476,7 +2476,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       check_session_trlr_valid++;
     }
 
-  if (pkt_len - indx < ipmi_payload_len)
+  if ((pkt_len - indx) < ipmi_payload_len)
     {
       ERR_TRACE ("shorten ipmi_payload_len", EINVAL);
       ipmi_payload_len = pkt_len - indx;
@@ -2587,7 +2587,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           return (0);
         }
 
-      if (pad_length >= (pkt_len - indx - authentication_code_len - pad_length_field_len - next_header_field_len))
+      if (pad_length > (pkt_len - indx - authentication_code_len - pad_length_field_len - next_header_field_len))
         {
           ERR_TRACE ("shorten pad_length", EINVAL);
           pad_length = (pkt_len - indx - authentication_code_len - pad_length_field_len - next_header_field_len);

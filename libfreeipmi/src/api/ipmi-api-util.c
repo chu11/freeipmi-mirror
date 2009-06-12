@@ -292,5 +292,17 @@ api_ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       return (-1);
     }
 
+  if ((ret = fiid_obj_packet_valid (obj_cmd_rs)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!ret)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_IPMI_ERROR);
+      return (-1);
+    }
+
   return (0);
 }
