@@ -20,6 +20,7 @@ ipmi-sel
 --------
 - head/tail on record counts
 - display-range, ability to skip to record?
+- clear records, not delete-all
 
 freeipmi tools
 --------------
