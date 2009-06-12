@@ -18,7 +18,8 @@ if user inputs hostname of localhost, do inband not outofband?
 
 ipmi-sel
 --------
-head/tail on record counts
+- head/tail on record counts
+- display-range, ability to skip to record?
 
 freeipmi tools
 --------------
