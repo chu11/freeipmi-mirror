@@ -29,6 +29,8 @@
 	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue):
 	Fix Sun 2.0/Open Session Privilege workaround.
 
+	* Various code cleanup and minor bug fixes.
+
 2009-06-10  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_unassemble_rearch
