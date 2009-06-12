@@ -16,6 +16,10 @@ exclude hosts option
   attribute/netgroups attribute).
 if user inputs hostname of localhost, do inband not outofband?
 
+ipmi-sel
+--------
+head/tail on record counts
+
 freeipmi tools
 --------------
 config via environment variables too - like config file
