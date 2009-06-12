@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.34 2009-06-05 21:50:41 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.35 2009-06-12 00:20:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -589,6 +589,30 @@ ipmiconsole_check_rmcpplus_status_code (ipmiconsole_ctx_t c, ipmiconsole_packet_
     IPMICONSOLE_CTX_DEBUG (c, ("rmcpplus status code check failed; p = %d", p));
 
   return ((rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS) ? 1 : 0);
+}
+
+int
+ipmiconsole_check_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
+{
+  fiid_obj_t obj_cmd;
+  int rv;
+  
+  assert (c);
+  assert (c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert (IPMICONSOLE_PACKET_TYPE_RESPONSE (p));
+
+  obj_cmd = ipmiconsole_packet_object (c, p);
+  if ((rv = fiid_obj_packet_valid (obj_cmd)) < 0)
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_packet_valid: %s",
+                                 fiid_obj_errormsg (obj_cmd)));
+      return (-1);
+    }
+
+  if (!rv)
+    IPMICONSOLE_CTX_DEBUG (c, ("invalid packet received; p = %d", p));
+
+  return (rv);
 }
 
 int
