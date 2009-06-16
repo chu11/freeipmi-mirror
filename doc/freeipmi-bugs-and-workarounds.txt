@@ -115,6 +115,12 @@ you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
 instead of a real privilege level.  Resolved with a workaround to
 handle this specific situation.
 
+Inventec 5441: Given specific configuration of IPMI 1.5 authentication
+types, certain user privileges are not specified correctly during Get
+Authentication Capabilities and an CCh CCh = "Invalid data field in
+request" is returned during Activiate Session.  No resolution
+currently available.
+
 Session Issues
 --------------
 
