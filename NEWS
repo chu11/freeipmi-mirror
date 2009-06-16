@@ -1,4 +1,4 @@
-0.7.10 - XX/XX/XX
+0.7.10 - 06/16/09
 -----------------
 o In all tools, properly deal with workaround flags when specifying
   different devices than what workaround flags are intended for.
@@ -7,7 +7,7 @@ o Fix in-band probing priority ordering to fix issues with machines
   that support multiple drivers.
 o In ipmi-sensors and ipmimonitoring, continue reading sensors after a
   "command response cannot be provided" error.
-o Add additional workaround into Sun 2.0 workaround.
+o Add additional workaround hanling into Sun 2.0 workaround.
 o In ipmimonitoring, fix sunbmc driver interface bug.
 o In ipmiconsole, consider IPMICONSOLE_ERR_BMC_IMPLEMENTATION a
   non-fatal error.

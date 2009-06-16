@@ -1,3 +1,9 @@
+2009-06-16  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Update for release.
+
+	* Tagged Release-0_7_10.	
+
 2009-06-11  Albert Chu <chu11@llnl.gov>
 
 	* common/man/manpage-common-workaround-sol-only-text.man: Add new
