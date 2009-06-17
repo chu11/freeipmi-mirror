@@ -5,8 +5,8 @@
 
 	* libfreeipmi/include/freeipmi/util/, libfreeipmi/src/util/,
 	ipmipower/, ipmiconsole/, libfreeipmi/src/api/: Support common
-	session sequence number checking functions and authentication
-	capabilities checks.
+	session sequence number checking functions, authentication
+	capabilities checks, and open session response checks.
 
 	* Various code cleanup.
 	

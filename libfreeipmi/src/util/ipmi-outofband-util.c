@@ -48,8 +48,10 @@
 #include "freeipmi/util/ipmi-outofband-util.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
+#include "freeipmi/interface/ipmi-rmcpplus-interface.h"
 #include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
+#include "freeipmi/spec/ipmi-privilege-level-spec.h"
 
 #include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-trace.h"
@@ -518,4 +520,55 @@ ipmi_check_authentication_capabilities_k_g (const void *k_g,
     return (0);
 
   return (1);
+}
+
+int
+ipmi_check_open_session_maximum_privilege (uint8_t privilege_level,
+                                           fiid_obj_t obj_cmd)
+{
+  uint8_t maximum_privilege_level;
+  uint64_t val;
+
+  if (!IPMI_PRIVILEGE_LEVEL_VALID (privilege_level)
+      || !fiid_obj_valid (obj_cmd))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_rmcpplus_open_session_response) < 0)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_GET (obj_cmd,
+                    "maximum_privilege_level",
+                    &val) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
+      return (-1);
+    }
+  maximum_privilege_level = val;
+
+  if (privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+      && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+          || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
+          || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
+          || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM))
+    return (1);
+  else if (privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
+           && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
+                   || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
+               || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM))
+    return (1);
+  else if (privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
+           && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
+               || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM))
+    return (1);
+  else if (privilege_level == IPMI_PRIVILEGE_LEVEL_OEM
+           && maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM)
+    return (1);
+
+  return (0);
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.111 2009-06-17 22:30:33 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.112 2009-06-17 23:47:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -712,13 +712,6 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip, packet
   assert (ip);
   assert (pkt == OPEN_SESSION_RES);
 
-  if (FIID_OBJ_GET (ip->obj_open_session_res,
-                    "maximum_privilege_level",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'maximum_privilege_level': %s",
-               fiid_obj_errormsg (ip->obj_open_session_res));
-  maximum_privilege_level = val;
-
   /* IPMI Workaround (achu)
    *
    * Discovered on SE7520AF2 with Intel Server Management Module
@@ -728,34 +721,28 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip, packet
    * So check that we get back what we sent.
    */
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-    rv = (maximum_privilege_level == ip->requested_maximum_privilege_level) ? 1 : 0;
+    {
+      if (FIID_OBJ_GET (ip->obj_open_session_res,
+                        "maximum_privilege_level",
+                        &val) < 0)
+        ierr_exit ("FIID_OBJ_GET: 'maximum_privilege_level': %s",
+                   fiid_obj_errormsg (ip->obj_open_session_res));
+      maximum_privilege_level = val;
+
+      rv = (maximum_privilege_level == ip->requested_maximum_privilege_level) ? 1 : 0;
+    }
   else
     {
-      if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-          && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-              || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
-              || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
-              || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM))
-        rv = 1;
-      else if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
-               && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
-                   || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
-                   || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM))
-        rv = 1;
-      else if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
-               && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
-                   || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM))
-        rv = 1;
-      else
-        rv = 0;
+      if ((rv = ipmi_check_open_session_maximum_privilege (cmd_args.common.privilege_level,
+                                                           ip->obj_open_session_res)) < 0)
+        ierr_exit ("ipmi_check_open_session_maximum_privilege: %s", strerror (errno));
     }
 
   if (!rv)
     ierr_dbg ("ipmipower_check_open_session_response_privilege(%s:%d): "
-              "invalid privilege: %Xh, expected: %Xh",
+              "invalid privilege: expected: %Xh",
               ip->ic->hostname, ip->protocol_state,
-              maximum_privilege_level,
-              ip->requested_maximum_privilege_level);
+              cmd_args.common.privilege_level);
 
   return (rv);
 }

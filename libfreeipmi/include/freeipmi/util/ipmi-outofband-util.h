@@ -80,6 +80,11 @@ int ipmi_check_authentication_capabilities_ipmi_2_0 (fiid_obj_t obj_cmd);
 int ipmi_check_authentication_capabilities_k_g (const void *k_g,
                                                 fiid_obj_t obj_cmd);
 
+/* returns 1 on privilege level supported, 0 on not-supported, -1 on error */
+/* obj_cmd must be open session response */
+int ipmi_check_open_session_maximum_privilege (uint8_t privilege_level,
+                                               fiid_obj_t obj_cmd);
+
 #ifdef __cplusplus
 }
 #endif

@@ -2924,7 +2924,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t maximum_privilege_level;
   uint8_t rmcpplus_status_code;
   uint8_t remote_console_random_number[IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH];
   uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
@@ -3189,16 +3188,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
 
-  /* Check if we can eventually authentication at the privilege we want */
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "maximum_privilege_level",
-                    &val) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      goto cleanup;
-    }
-  maximum_privilege_level = val;
-
   /* IPMI Workaround (achu)
    *
    * Discovered on SE7520AF2 with Intel Server Management Module
@@ -3208,21 +3197,32 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    * of an actual privilege, so have to pass the actual privilege
    * we want to use.
    */
+  if (ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+    {
+      uint8_t maximum_privilege_level;
 
-  if (!((ctx->io.outofband.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-         && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-             || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
-             || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
-             || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM))
-        || (ctx->io.outofband.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
-            && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
-                || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
-                || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM))
-        || (ctx->io.outofband.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
-            && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
-                || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OEM))
-        || ((ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-            && (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL))))
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "maximum_privilege_level",
+                        &val) < 0)
+        {
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+          goto cleanup;
+        }
+      maximum_privilege_level = val;
+      
+      ret = (maximum_privilege_level == requested_maximum_privilege) ? 1 : 0;
+    }
+  else
+    {
+      if ((ret = ipmi_check_open_session_maximum_privilege (ctx->io.outofband.privilege_level,
+                                                            obj_cmd_rs)) < 0)
+        {
+          API_ERRNO_TO_API_ERRNUM (ctx, errno);
+          goto cleanup;
+        }
+    }
+
+  if (!ret)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       goto cleanup;

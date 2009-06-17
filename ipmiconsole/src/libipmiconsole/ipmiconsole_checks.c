@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.37 2009-06-17 22:22:26 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.38 2009-06-17 23:47:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -545,50 +545,44 @@ ipmiconsole_check_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 int
 ipmiconsole_check_open_session_response_privilege (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  uint8_t privilege;
-  uint64_t val;
   int rv;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE);
 
-  if (FIID_OBJ_GET (c->connection.obj_open_session_response,
-                    "maximum_privilege_level",
-                    &val) < 0)
-    {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'maximum_privilege_level': %s",
-                                 fiid_obj_errormsg (c->connection.obj_open_session_response)));
-      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-  privilege = val;
-
   /* IPMI Workaround
    *
    * Intel IPMI 2.0 implementations don't support the highest level privilege.
    */
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION)
-    rv = (privilege == c->config.privilege_level) ? 1 : 0;
+    {
+      uint8_t maximum_privilege_level;
+      uint64_t val;
+
+      if (FIID_OBJ_GET (c->connection.obj_open_session_response,
+                        "maximum_privilege_level",
+                        &val) < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'maximum_privilege_level': %s",
+                                     fiid_obj_errormsg (c->connection.obj_open_session_response)));
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+          return (-1);
+        }
+      maximum_privilege_level = val;
+      
+      rv = (maximum_privilege_level == c->config.privilege_level) ? 1 : 0;
+    }
   else
     {
-      if (c->config.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-          && (privilege == IPMI_PRIVILEGE_LEVEL_USER
-              || privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR
-              || privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
-              || privilege == IPMI_PRIVILEGE_LEVEL_OEM))
-        rv = 1;
-      else if (c->config.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
-               && (privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR
-                   || privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
-                   || privilege == IPMI_PRIVILEGE_LEVEL_OEM))
-        rv = 1;
-      else if (c->config.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
-               && (privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
-                   || privilege == IPMI_PRIVILEGE_LEVEL_OEM))
-        rv = 1;
-      else
-        rv = 0;
+      if ((rv = ipmi_check_open_session_maximum_privilege (c->config.privilege_level,
+                                                           c->connection.obj_open_session_response)) < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG (c, ("ipmi_check_open_session_maximum_privilege: %s",
+                                     strerror (errno)));
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+          return (-1);
+        }
     }
 
   if (!rv)
