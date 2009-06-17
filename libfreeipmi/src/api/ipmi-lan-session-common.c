@@ -63,8 +63,8 @@
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 #include "freeipmi/util/ipmi-lan-util.h"
+#include "freeipmi/util/ipmi-outofband-util.h"
 #include "freeipmi/util/ipmi-rmcpplus-util.h"
-#include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-api-defs.h"
 #include "ipmi-api-trace.h"
@@ -1252,15 +1252,13 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t authentication_status_anonymous_login;
-  uint8_t authentication_status_null_username;
-  uint8_t authentication_status_non_null_username;
-  uint8_t supported_authentication_type = 0;
   uint8_t authentication_type;
   uint32_t temp_session_id = 0;
   uint8_t challenge_string[IPMI_CHALLENGE_STRING_LENGTH];
   uint32_t initial_outbound_sequence_number = 0;
   unsigned int seedp;
+  char *tmp_username_ptr = NULL;
+  char *tmp_password_ptr = NULL;
   int ret, rv = -1;
   uint64_t val;
 
@@ -1331,40 +1329,21 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 
   if (!(ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "authentication_status.anonymous_login",
-                        &val) < 0)
+      if (strlen (ctx->io.outofband.username))
+        tmp_username_ptr = ctx->io.outofband.username;
+
+      if (strlen (ctx->io.outofband.password))
+        tmp_password_ptr = ctx->io.outofband.password;
+
+      if ((ret = ipmi_check_authentication_capabilities_username (tmp_username_ptr,
+                                                                  tmp_password_ptr,
+                                                                  obj_cmd_rs)) < 0)
         {
-          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+          API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
         }
-      authentication_status_anonymous_login = val;
 
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "authentication_status.null_username",
-                        &val) < 0)
-        {
-          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-          goto cleanup;
-        }
-      authentication_status_null_username = val;
-
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "authentication_status.non_null_username",
-                        &val) < 0)
-        {
-          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-          goto cleanup;
-        }
-      authentication_status_non_null_username = val;
-
-      if ((!strlen (ctx->io.outofband.username) && !strlen (ctx->io.outofband.password)
-           && !authentication_status_anonymous_login)
-          || (!strlen (ctx->io.outofband.username)
-              && !authentication_status_anonymous_login
-              && !authentication_status_null_username)
-          || (strlen (ctx->io.outofband.username)
-              && !authentication_status_non_null_username))
+      if (!ret)
         {
           ctx->errnum = IPMI_ERR_USERNAME_INVALID;
           goto cleanup;
@@ -1392,61 +1371,14 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   else
     ctx->io.outofband.per_msg_auth_disabled = 0;
 
-  switch (ctx->io.outofband.authentication_type)
+  if ((ret = ipmi_check_authentication_capabilities_authentication_type (ctx->io.outofband.authentication_type,
+                                                                         obj_cmd_rs)) < 0)
     {
-    case IPMI_AUTHENTICATION_TYPE_NONE:
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "authentication_type.none",
-                        &val) < 0)
-        {
-          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-          goto cleanup;
-        }
-      supported_authentication_type = val;
-      break;
-    case IPMI_AUTHENTICATION_TYPE_MD2:
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "authentication_type.md2",
-                        &val) < 0)
-        {
-          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-          goto cleanup;
-        }
-      supported_authentication_type = val;
-      break;
-    case IPMI_AUTHENTICATION_TYPE_MD5:
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "authentication_type.md5",
-                        &val) < 0)
-        {
-          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-          goto cleanup;
-        }
-      supported_authentication_type = val;
-      break;
-    case IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY:
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "authentication_type.straight_password_key",
-                        &val) < 0)
-        {
-          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-          goto cleanup;
-        }
-      supported_authentication_type = val;
-      break;
-    case IPMI_AUTHENTICATION_TYPE_OEM_PROP:
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "authentication_type.oem_prop",
-                        &val) < 0)
-        {
-          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-          goto cleanup;
-        }
-      supported_authentication_type = val;
-      break;
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
     }
 
-  if (!supported_authentication_type)
+  if (!ret)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE);
       goto cleanup;
@@ -2992,12 +2924,6 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t authentication_status_anonymous_login;
-  uint8_t authentication_status_null_username;
-  uint8_t authentication_status_non_null_username;
-  uint8_t authentication_status_k_g;
-  uint8_t ipmi_v20_extended_capabilities_available;
-  uint8_t channel_supports_ipmi_v20_connections;
   uint8_t maximum_privilege_level;
   uint8_t rmcpplus_status_code;
   uint8_t remote_console_random_number[IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH];
@@ -3017,6 +2943,9 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   uint8_t requested_maximum_privilege;
   uint8_t assume_rakp_4_success = 0;
   uint8_t name_only_lookup;
+  char *tmp_username_ptr = NULL;
+  char *tmp_password_ptr = NULL;
+  void *tmp_k_g_ptr = NULL;
   int ret, rv = -1;
   unsigned int seedp;
   uint64_t val;
@@ -3088,62 +3017,13 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "authentication_status.anonymous_login",
-                    &val) < 0)
+  if ((ret = ipmi_check_authentication_capabilities_ipmi_2_0 (obj_cmd_rs)) < 0)
     {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  authentication_status_anonymous_login = val;
 
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "authentication_status.null_username",
-                    &val) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      goto cleanup;
-    }
-  authentication_status_null_username = val;
-
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "authentication_status.non_null_username",
-                    &val) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      goto cleanup;
-    }
-  authentication_status_non_null_username = val;
-
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "authentication_status.k_g",
-                    &val) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      goto cleanup;
-    }
-  authentication_status_k_g = val;
-
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "authentication_type.ipmi_v2.0_extended_capabilities_available",
-                    &val) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      goto cleanup;
-    }
-  ipmi_v20_extended_capabilities_available = val;
-  
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "channel_supports_ipmi_v2.0_connections",
-                    &val) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      goto cleanup;
-    }
-  channel_supports_ipmi_v20_connections = val;
-
-  if (!ipmi_v20_extended_capabilities_available
-      || !channel_supports_ipmi_v20_connections)
+  if (!ret)
     {
       ctx->errnum = IPMI_ERR_IPMI_2_0_UNAVAILABLE;
       goto cleanup;
@@ -3163,20 +3043,37 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
    */
   if (!(ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
-      if ((!strlen (ctx->io.outofband.username) && !strlen (ctx->io.outofband.password)
-           && !authentication_status_anonymous_login)
-          || (!strlen (ctx->io.outofband.username)
-              && !authentication_status_anonymous_login
-              && !authentication_status_null_username)
-          || (strlen (ctx->io.outofband.username)
-              && !authentication_status_non_null_username))
+      if (strlen (ctx->io.outofband.username))
+        tmp_username_ptr = ctx->io.outofband.username;
+      
+      if (strlen (ctx->io.outofband.password))
+        tmp_password_ptr = ctx->io.outofband.password;
+      
+      if ((ret = ipmi_check_authentication_capabilities_username (tmp_username_ptr,
+                                                                  tmp_password_ptr,
+                                                                  obj_cmd_rs)) < 0)
+        {
+          API_ERRNO_TO_API_ERRNUM (ctx, errno);
+          goto cleanup;
+        }
+      
+      if (!ret)
         {
           ctx->errnum = IPMI_ERR_USERNAME_INVALID;
           goto cleanup;
         }
 
-      if ((!ctx->io.outofband.k_g_configured && authentication_status_k_g)
-          || (ctx->io.outofband.k_g_configured && !authentication_status_k_g))
+      if (ctx->io.outofband.k_g_configured)
+        tmp_k_g_ptr = ctx->io.outofband.k_g;
+
+      if ((ret = ipmi_check_authentication_capabilities_k_g (tmp_k_g_ptr,
+                                                             obj_cmd_rs)) < 0)
+        {
+          API_ERRNO_TO_API_ERRNUM (ctx, errno);
+          goto cleanup;
+        }
+
+      if (!ret)
         {
           API_SET_ERRNUM (ctx, IPMI_ERR_K_G_INVALID);
           goto cleanup;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.186 2009-06-17 20:17:58 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.187 2009-06-17 22:22:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1162,13 +1162,10 @@ static int
 _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
                                              packet_type_t pkt)
 {
-  uint8_t authentication_type_none, authentication_type_md2,
-    authentication_type_md5, authentication_type_straight_password_key,
-    authentication_status_anonymous_login, authentication_status_null_username,
-    authentication_status_non_null_username,
-    authentication_status_per_message_authentication;
+  uint8_t authentication_status_per_message_authentication;
   uint64_t val;
   fiid_obj_t obj_authentication_capabilities_res;
+  int ret;
 
   assert (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
           || pkt == AUTHENTICATION_CAPABILITIES_RES);
@@ -1177,63 +1174,6 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
     obj_authentication_capabilities_res = ip->obj_authentication_capabilities_v20_res;
   else
     obj_authentication_capabilities_res = ip->obj_authentication_capabilities_res;
-
-  /* Using results from Get Authentication Capabilities Response,
-   * determine:
-   *
-   * 1) If we are capable of authenticating with the remote host.
-   *
-   * 2) How to authenticate with the remote host.
-   */
-
-  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
-                    "authentication_type.none",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'authentication_type.none': %s",
-               fiid_obj_errormsg (obj_authentication_capabilities_res));
-  authentication_type_none = val;
-
-  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
-                    "authentication_type.md2",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'authentication_type.md2': %s",
-               fiid_obj_errormsg (obj_authentication_capabilities_res));
-  authentication_type_md2 = val;
-
-  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
-                    "authentication_type.md5",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'authentication_type.md5': %s",
-               fiid_obj_errormsg (obj_authentication_capabilities_res));
-  authentication_type_md5 = val;
-
-  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
-                    "authentication_type.straight_password_key",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'authentication_type.straight_password_key': %s",
-               fiid_obj_errormsg (obj_authentication_capabilities_res));
-  authentication_type_straight_password_key = val;
-
-  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
-                    "authentication_status.anonymous_login",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'authentication_status.anonymous_login': %s",
-               fiid_obj_errormsg (obj_authentication_capabilities_res));
-  authentication_status_anonymous_login = val;
-
-  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
-                    "authentication_status.null_username",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'authentication_status.null_username': %s",
-               fiid_obj_errormsg (obj_authentication_capabilities_res));
-  authentication_status_null_username = val;
-
-  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
-                    "authentication_status.non_null_username",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'authentication_status.non_null_username': %s",
-               fiid_obj_errormsg (obj_authentication_capabilities_res));
-  authentication_status_non_null_username = val;
 
   if (FIID_OBJ_GET (obj_authentication_capabilities_res,
                     "authentication_status.per_message_authentication",
@@ -1252,32 +1192,25 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
    */
   if (!(cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
-      /* Does the remote BMC's authentication configuration support
-       * our username/password combination
-       */
-      if ((!cmd_args.common.username && !cmd_args.common.password
-           && !authentication_status_anonymous_login
-           && !authentication_type_none)
-          || (!cmd_args.common.username
-              && !authentication_status_anonymous_login
-              && !authentication_status_null_username)
-          || (cmd_args.common.username
-              && !authentication_status_non_null_username))
+      if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common.username,
+                                                                  cmd_args.common.password,
+                                                                  obj_authentication_capabilities_res)) < 0)
+        ierr_exit ("ipmi_check_authentication_capabilities_username: %s",
+                   strerror (errno));
+
+      if (!ret)
         {
           ipmipower_output (MSG_TYPE_USERNAME_INVALID, ip->ic->hostname);
           return (-1);
         }
     }
 
-  /* Can we authenticate with the specified authentication type? */
-  if (!((cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
-         && authentication_type_none)
-        || (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
-            && authentication_type_md2)
-        || (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
-            && authentication_type_md5)
-        || (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
-            && authentication_type_straight_password_key)))
+  if ((ret = ipmi_check_authentication_capabilities_authentication_type (cmd_args.common.authentication_type,
+                                                                         obj_authentication_capabilities_res)) < 0)
+    ierr_exit ("ipmi_check_authentication_capabilities_authentication_type: %s",
+               strerror (errno));
+
+  if (!ret)
     {
       ipmipower_output (MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);
       return (-1);
@@ -1313,45 +1246,17 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
 static int
 _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
 {
-  uint8_t authentication_status_anonymous_login, authentication_status_null_username,
-    authentication_status_non_null_username, authentication_status_k_g;
-  uint64_t val;
+  void *tmp_k_g_ptr = NULL;
+  int ret;
 
-  /* Using results from Get Authentication Capabilities Response,
-   * determine:
-   *
-   * 1) If we are capable of authenticating with the remote host.
-   *
-   * 2) How to authenticate with the remote host.
-   */
+  if ((ret = ipmi_check_authentication_capabilities_ipmi_2_0 (ip->obj_authentication_capabilities_v20_res)) < 0)
+    ierr_exit ("ipmi_check_authentication_capabilities_ipmi_2_0: %s", strerror (errno));
 
-  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
-                    "authentication_status.anonymous_login",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'authentication_status.anonymous_login': %s",
-               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
-  authentication_status_anonymous_login = val;
-
-  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
-                    "authentication_status.null_username",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'authentication_status.null_username': %s",
-               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
-  authentication_status_null_username = val;
-
-  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
-                    "authentication_status.non_null_username",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'authentication_status.non_null_username': %s",
-               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
-  authentication_status_non_null_username = val;
-
-  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
-                    "authentication_status.k_g",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'authentication_status.k_g': %s",
-               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
-  authentication_status_k_g = val;
+  if (!ret)
+    {
+      ipmipower_output (MSG_TYPE_IPMI_2_0_UNAVAILABLE, ip->ic->hostname);
+      return (-1);
+    }
 
   /* IPMI Workaround (achu)
    *
@@ -1367,89 +1272,31 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
    */
   if (!(cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
-      /* Does the remote BMC's authentication configuration support
-       * our username/password combination
-       */
-      if ((!cmd_args.common.username && !cmd_args.common.password
-           && !authentication_status_anonymous_login)
-          || (!cmd_args.common.username
-              && !authentication_status_anonymous_login
-              && !authentication_status_null_username)
-          || (cmd_args.common.username
-              && !authentication_status_non_null_username))
+      if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common.username,
+                                                                  cmd_args.common.password,
+                                                                  ip->obj_authentication_capabilities_v20_res)) < 0)
+        ierr_exit ("ipmi_check_authentication_capabilities_username: %s",
+                   strerror (errno));
+
+      if (!ret)
         {
           ipmipower_output (MSG_TYPE_USERNAME_INVALID, ip->ic->hostname);
           return (-1);
         }
 
-      if ((!cmd_args.common.k_g_len && authentication_status_k_g)
-          || (cmd_args.common.k_g_len && !authentication_status_k_g))
+      if (cmd_args.common.k_g_len)
+        tmp_k_g_ptr = cmd_args.common.k_g;
+
+      if ((ret = ipmi_check_authentication_capabilities_k_g (tmp_k_g_ptr,
+                                                             ip->obj_authentication_capabilities_v20_res)) < 0)
+        ierr_exit ("ipmi_check_authentication_capabilities_k_g: %s",
+                   strerror (errno));
+
+      if (!ret)
         {
           ipmipower_output (MSG_TYPE_K_G_INVALID, ip->ic->hostname);
           return (-1);
         }
-    }
-
-  return (0);
-}
-
-/* _check_ipmi_version_support
- *
- * Check for IPMI 2.0 support
- *
- * Returns 0 on success and flags set in ipmi_1_5 and ipmi_2_0
- * Returns -1 on error
- */
-static int
-_check_ipmi_version_support (ipmipower_powercmd_t ip, int *ipmi_1_5, int *ipmi_2_0)
-{
-  uint8_t ipmi_v20_extended_capabilities_available,
-    channel_supports_ipmi_v15_connections,
-    channel_supports_ipmi_v20_connections;
-  uint64_t val;
-
-  assert (ip);
-  assert (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT);
-  assert (ipmi_1_5);
-  assert (ipmi_2_0);
-
-  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
-                    "authentication_type.ipmi_v2.0_extended_capabilities_available",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'authentication_type.ipmi_v2.0_extended_capabilities_available': %s",
-               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
-  ipmi_v20_extended_capabilities_available = val;
-
-  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
-                    "channel_supports_ipmi_v1.5_connections",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'channel_supports_ipmi_v1.5_connections': %s",
-               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
-  channel_supports_ipmi_v15_connections = val;
-
-  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_v20_res,
-                    "channel_supports_ipmi_v2.0_connections",
-                    &val) < 0)
-    ierr_exit ("FIID_OBJ_GET: 'channel_supports_ipmi_v2.0_connections': %s",
-               fiid_obj_errormsg (ip->obj_authentication_capabilities_v20_res));
-  channel_supports_ipmi_v20_connections = val;
-
-  if (!ipmi_v20_extended_capabilities_available)
-    {
-      *ipmi_1_5 = 1;
-      *ipmi_2_0 = 0;
-    }
-  else
-    {
-      if (channel_supports_ipmi_v15_connections)
-        *ipmi_1_5 = 1;
-      else
-        *ipmi_1_5 = 0;
-
-      if (channel_supports_ipmi_v20_connections)
-        *ipmi_2_0 = 1;
-      else
-        *ipmi_2_0 = 0;
     }
 
   return (0);
@@ -1671,27 +1518,12 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
     {
-      int ipmi_1_5, ipmi_2_0;
-
-      /* If the remote machine does not support IPMI 2.0, we move onto
-       * IPMI 1.5 protocol appropriately.
-       */
       if ((rv = _recv_packet (ip, AUTHENTICATION_CAPABILITIES_V20_RES)) != 1)
         {
           if (rv < 0)
             return (-1);
           goto done;
         }
-
-      if (_check_ipmi_version_support (ip, &ipmi_1_5, &ipmi_2_0) < 0)
-        return (-1);
-
-      if (!ipmi_2_0)
-        {
-          ipmipower_output (MSG_TYPE_IPMI_2_0_UNAVAILABLE, ip->ic->hostname);
-          return (-1);
-        }
-      /* else we continue with the IPMI 2.0 protocol */
 
       if (_check_ipmi_2_0_authentication_capabilities (ip) < 0)
         return (-1);

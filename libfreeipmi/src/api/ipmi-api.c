@@ -69,6 +69,7 @@
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
+#include "freeipmi/util/ipmi-outofband-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-api-defs.h"

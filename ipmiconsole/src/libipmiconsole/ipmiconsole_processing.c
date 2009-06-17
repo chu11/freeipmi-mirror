@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.98 2009-06-17 20:17:58 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.99 2009-06-17 22:22:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1697,51 +1697,32 @@ _keepalive_timeout (ipmiconsole_ctx_t c)
 }
 
 /*
- * Return 1 if IPMI 2.0 is supported
- * Return 0 if IPMI 2.0 is not supported
- * Return -1 on error
+ * Return 0 if IPMI 2.0 is supported
+ * Return -1 IPMI 2.0 is not supported or error
  */
 static int
 _check_for_ipmi_2_0_support (ipmiconsole_ctx_t c)
 {
-  uint8_t ipmi_v20_extended_capabilities_available;
-  uint8_t channel_supports_ipmi_v20_connections;
-  uint64_t val;
+  int ret;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT);
 
-  if (FIID_OBJ_GET (c->connection.obj_authentication_capabilities_v20_rs,
-                    "authentication_type.ipmi_v2.0_extended_capabilities_available",
-                    &val) < 0)
+  if ((ret = ipmi_check_authentication_capabilities_ipmi_2_0 (c->connection.obj_authentication_capabilities_v20_rs)) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'authentication_type.ipmi_v2.0_extended_capabilities_available': %s", 
-                                 fiid_obj_errormsg (c->connection.obj_authentication_capabilities_v20_rs)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmi_check_authentication_capabilities_ipmi_2_0: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
     }
-  ipmi_v20_extended_capabilities_available = val;
 
-  if (FIID_OBJ_GET (c->connection.obj_authentication_capabilities_v20_rs,
-                    "channel_supports_ipmi_v2.0_connections",
-                    &val) < 0)
-    {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'channel_supports_ipmi_v2.0_connections': %s", 
-                                 fiid_obj_errormsg (c->connection.obj_authentication_capabilities_v20_rs)));
-      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-  channel_supports_ipmi_v20_connections = val;
-
-  if (!ipmi_v20_extended_capabilities_available
-      || !channel_supports_ipmi_v20_connections)
+  if (!ret)
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE);
-      return (0);
+      return (-1);
     }
 
-  return (1);
+  return (0);
 }
 
 /*
@@ -1751,59 +1732,14 @@ _check_for_ipmi_2_0_support (ipmiconsole_ctx_t c)
 static int
 _check_for_authentication_support (ipmiconsole_ctx_t c)
 {
-  uint8_t authentication_status_anonymous_login;
-  uint8_t authentication_status_null_username;
-  uint8_t authentication_status_non_null_username;
-  uint8_t authentication_status_k_g;
-  uint64_t val;
+  char *tmp_username_ptr = NULL;
+  char *tmp_password_ptr = NULL;
+  void *tmp_k_g_ptr = NULL;
+  int ret;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT);
-
-  if (FIID_OBJ_GET (c->connection.obj_authentication_capabilities_v20_rs,
-                    "authentication_status.anonymous_login",
-                    &val) < 0)
-    {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'authentication_status.anonymous_login': %s", 
-                                 fiid_obj_errormsg (c->connection.obj_authentication_capabilities_v20_rs)));
-      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-  authentication_status_anonymous_login = val;
-
-  if (FIID_OBJ_GET (c->connection.obj_authentication_capabilities_v20_rs,
-                    "authentication_status.null_username",
-                    &val) < 0)
-    {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'authentication_status.null_username': %s", 
-                                 fiid_obj_errormsg (c->connection.obj_authentication_capabilities_v20_rs)));
-      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-  authentication_status_null_username = val;
-
-  if (FIID_OBJ_GET (c->connection.obj_authentication_capabilities_v20_rs,
-                    "authentication_status.non_null_username",
-                    &val) < 0)
-    {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'authentication_status.non_null_username': %s", 
-                                 fiid_obj_errormsg (c->connection.obj_authentication_capabilities_v20_rs)));
-      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-  authentication_status_non_null_username = val;
-
-  if (FIID_OBJ_GET (c->connection.obj_authentication_capabilities_v20_rs,
-                    "authentication_status.k_g",
-                    &val) < 0)
-    {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'authentication_status.k_g': %s", 
-                                 fiid_obj_errormsg (c->connection.obj_authentication_capabilities_v20_rs)));
-      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-  authentication_status_k_g = val;
 
   /* IPMI Workaround
    *
@@ -1821,20 +1757,39 @@ _check_for_authentication_support (ipmiconsole_ctx_t c)
    */
   if (!(c->config.workaround_flags & IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES))
     {
-      if ((!strlen (c->config.username) && !strlen (c->config.password)
-           && !authentication_status_anonymous_login)
-          || (!strlen (c->config.username)
-              && !authentication_status_anonymous_login
-              && !authentication_status_null_username)
-          || (strlen (c->config.username)
-              && !authentication_status_non_null_username))
+      if (strlen (c->config.username))
+        tmp_username_ptr = c->config.username;
+
+      if (strlen (c->config.password))
+        tmp_password_ptr = c->config.password;
+      
+      if ((ret = ipmi_check_authentication_capabilities_username (tmp_username_ptr,
+                                                                  tmp_password_ptr,
+                                                                  c->connection.obj_authentication_capabilities_v20_rs)) < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG (c, ("ipmi_check_authentication_capabilities_username: %s", strerror (errno)));
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+          return (-1);
+        }
+
+      if (!ret)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_USERNAME_INVALID);
           return (-1);
         }
-
-      if ((!c->config.k_g_len && authentication_status_k_g)
-          || (c->config.k_g_len && !authentication_status_k_g))
+      
+      if (c->config.k_g_len)
+        tmp_k_g_ptr = c->config.k_g;
+      
+      if ((ret = ipmi_check_authentication_capabilities_k_g (tmp_k_g_ptr,
+                                                             c->connection.obj_authentication_capabilities_v20_rs)) < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG (c, ("ipmi_check_authentication_capabilities_k_g: %s", strerror (errno)));
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+          return (-1);
+        }
+      
+      if (!ret)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_K_G_INVALID);
           return (-1);
@@ -2804,10 +2759,6 @@ _process_protocol_state_get_authentication_capabilities_v20_sent (ipmiconsole_ct
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
 
   if ((ret = _check_for_ipmi_2_0_support (c)) < 0)
-    /* The session isn't setup, no need to attempt to close it cleanly */
-    return (-1);
-
-  if (!ret)
     /* The session isn't setup, no need to attempt to close it cleanly */
     return (-1);
 

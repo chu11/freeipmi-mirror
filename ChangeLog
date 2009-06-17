@@ -1,8 +1,14 @@
 2009-06-17  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/util/ipmi-outofband-util.h,
+	libfreeipmi/src/util/ipmi-outofband-util.c: New files.
+
 	* libfreeipmi/include/freeipmi/util/, libfreeipmi/src/util/,
 	ipmipower/, ipmiconsole/, libfreeipmi/src/api/: Support common
-	session sequence number checking functions.
+	session sequence number checking functions and authentication
+	capabilities checks.
+
+	* Various code cleanup.
 	
 2009-06-11  Albert Chu <chu11@llnl.gov>
 

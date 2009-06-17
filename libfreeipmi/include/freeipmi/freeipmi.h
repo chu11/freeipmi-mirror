@@ -101,6 +101,7 @@ extern "C" {
 #include <freeipmi/util/ipmi-error-util.h>
 #include <freeipmi/util/ipmi-ipmb-util.h>
 #include <freeipmi/util/ipmi-lan-util.h>
+#include <freeipmi/util/ipmi-outofband-util.h>
 #include <freeipmi/util/ipmi-rmcpplus-util.h>
 #include <freeipmi/util/ipmi-sensor-and-event-code-tables-util.h>
 #include <freeipmi/util/ipmi-sensor-util.h>

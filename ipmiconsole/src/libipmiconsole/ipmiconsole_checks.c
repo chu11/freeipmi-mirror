@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.36 2009-06-17 20:17:58 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.37 2009-06-17 22:22:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -173,7 +173,6 @@ ipmiconsole_check_outbound_sequence_number (ipmiconsole_ctx_t c, ipmiconsole_pac
       return (-1);
     }
 
- out:
   if (!rv)
     IPMICONSOLE_CTX_DEBUG (c, ("session sequence number check failed; p = %d; session_sequence_number = %u; highest_received_sequence_number = %u", p, session_sequence_number, c->session.highest_received_sequence_number));
 
