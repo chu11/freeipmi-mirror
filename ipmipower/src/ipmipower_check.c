@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.110 2009-06-17 20:17:58 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.111 2009-06-17 22:30:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -711,12 +711,6 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip, packet
 
   assert (ip);
   assert (pkt == OPEN_SESSION_RES);
-
-  /*
-   * IPMI Workaround (achu)
-   *
-   * See comments in ipmipower_powercmd.c (_check_open_session_error).
-   */
 
   if (FIID_OBJ_GET (ip->obj_open_session_res,
                     "maximum_privilege_level",
