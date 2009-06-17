@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.53 2009-06-05 21:50:41 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.54 2009-06-17 20:17:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1123,8 +1123,14 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   c->session.session_sequence_number_errors_count = 0;
   c->session.activate_payloads_count = 0;
   c->session.deactivate_active_payloads_count = 0;
-  c->session.highest_received_sequence_number = 0; /* so first packet received will be > 0 */
-  c->session.previously_received_list = IPMI_SESSION_SEQUENCE_NUMBER_PREVIOUSLY_RECEIVED_LIST_INIT;
+
+  if (ipmi_check_session_sequence_number_2_0_init (&(c->session.highest_received_sequence_number),
+                                                   &(c->session.previously_received_list)) < 0)
+    {
+      IPMICONSOLE_DEBUG (("ipmi_check_session_sequence_number_2_0_init: %s", strerror (errno)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   if (ipmi_get_random (&(c->session.message_tag),
                        sizeof (c->session.message_tag)) < 0)

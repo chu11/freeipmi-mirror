@@ -64,6 +64,7 @@
 #include "freeipmi/util/ipmi-cipher-suite-util.h"
 #include "freeipmi/util/ipmi-lan-util.h"
 #include "freeipmi/util/ipmi-rmcpplus-util.h"
+#include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-api-defs.h"
 #include "ipmi-api-trace.h"
@@ -76,9 +77,6 @@
 #include "debug-util.h"
 
 #define IPMI_LAN_BACKOFF_COUNT         2
-
-#define IPMI_SEQUENCE_NUMBER_WINDOW    8
-#define IPMI_MAX_SEQUENCE_NUMBER       0xFFFFFFFF
 
 struct socket_to_close {
   int fd;
@@ -312,7 +310,6 @@ static int
 _ipmi_check_session_sequence_number (ipmi_ctx_t ctx,
                                      uint32_t session_sequence_number)
 {
-  uint32_t shift_num, wrap_val;
   int rv = 0;
 
   /* achu: This algorithm is more or less from Appendix A of the IPMI
@@ -349,106 +346,34 @@ _ipmi_check_session_sequence_number (ipmi_ctx_t ctx,
         | ((tmp_session_sequence_number & 0x000000FF) << 24);
     }
 
-  /* Drop duplicate packet */
-  if (session_sequence_number == ctx->io.outofband.highest_received_sequence_number)
-    goto out;
-
-  /* In IPMI 2.0, sequence number 0 is special, and shouldn't happen */
-  if (ctx->type == IPMI_DEVICE_LAN_2_0 && session_sequence_number == 0)
-    goto out;
-
-  /* Check if sequence number is greater than highest received and is
-   * within range
-   */
-  if (ctx->io.outofband.highest_received_sequence_number > (IPMI_MAX_SEQUENCE_NUMBER - IPMI_SEQUENCE_NUMBER_WINDOW))
+  if (ctx->type == IPMI_DEVICE_LAN)
     {
-      wrap_val = IPMI_SEQUENCE_NUMBER_WINDOW - (IPMI_MAX_SEQUENCE_NUMBER - ctx->io.outofband.highest_received_sequence_number) - 1;
-
-      /* In IPMI 2.0, sequence number 0 isn't possible, so adjust wrap_val */
-      if (ctx->type == IPMI_DEVICE_LAN_2_0)
-        wrap_val++;
-
-      if (session_sequence_number > ctx->io.outofband.highest_received_sequence_number || session_sequence_number <= wrap_val)
+      if ((rv = ipmi_check_session_sequence_number_1_5 (session_sequence_number,
+                                                        &(ctx->io.outofband.highest_received_sequence_number),
+                                                        &(ctx->io.outofband.previously_received_list),
+                                                        0)) < 0)
         {
-          if (session_sequence_number > ctx->io.outofband.highest_received_sequence_number && session_sequence_number <= IPMI_MAX_SEQUENCE_NUMBER)
-            shift_num = session_sequence_number - ctx->io.outofband.highest_received_sequence_number;
-          else
-            {
-              if (ctx->type == IPMI_DEVICE_LAN)
-                shift_num = session_sequence_number + (IPMI_MAX_SEQUENCE_NUMBER - ctx->io.outofband.highest_received_sequence_number) + 1;
-              else
-                /* IPMI 2.0 Special Case b/c 0 isn't a legit sequence number */
-                shift_num = session_sequence_number + (IPMI_MAX_SEQUENCE_NUMBER - ctx->io.outofband.highest_received_sequence_number);
-            }
-
-          ctx->io.outofband.highest_received_sequence_number = session_sequence_number;
-          ctx->io.outofband.previously_received_list <<= shift_num;
-          ctx->io.outofband.previously_received_list |= (0x1 << (shift_num - 1));
-          rv++;
+          {
+            API_ERRNO_TO_API_ERRNUM (ctx, errno);
+            goto cleanup;
+          }
         }
     }
   else
     {
-      if (session_sequence_number > ctx->io.outofband.highest_received_sequence_number
-          && (session_sequence_number - ctx->io.outofband.highest_received_sequence_number) <= IPMI_SEQUENCE_NUMBER_WINDOW)
+      if ((rv = ipmi_check_session_sequence_number_2_0 (session_sequence_number,
+                                                        &(ctx->io.outofband.highest_received_sequence_number),
+                                                        &(ctx->io.outofband.previously_received_list),
+                                                        0)) < 0)
         {
-          shift_num = (session_sequence_number - ctx->io.outofband.highest_received_sequence_number);
-          ctx->io.outofband.highest_received_sequence_number = session_sequence_number;
-          ctx->io.outofband.previously_received_list <<= shift_num;
-          ctx->io.outofband.previously_received_list |= (0x1 << (shift_num - 1));
-          rv++;
+          {
+            API_ERRNO_TO_API_ERRNUM (ctx, errno);
+            goto cleanup;
+          }
         }
     }
 
-  /* Check if sequence number is lower than highest received, is
-   * within range, and hasn't been seen yet
-   */
-  if (ctx->io.outofband.highest_received_sequence_number < IPMI_SEQUENCE_NUMBER_WINDOW)
-    {
-      uint32_t wrap_val = IPMI_MAX_SEQUENCE_NUMBER - (IPMI_SEQUENCE_NUMBER_WINDOW - ctx->io.outofband.highest_received_sequence_number) + 1;
-
-      /* In IPMI 2.0, sequence number 0 isn't possible, so adjust wrap_val */
-      if (ctx->type == IPMI_DEVICE_LAN_2_0)
-        wrap_val--;
-
-      if (session_sequence_number < ctx->io.outofband.highest_received_sequence_number || session_sequence_number >= wrap_val)
-        {
-          if (session_sequence_number > ctx->io.outofband.highest_received_sequence_number && session_sequence_number <= IPMI_MAX_SEQUENCE_NUMBER)
-            {
-              if (ctx->type == IPMI_DEVICE_LAN)
-                shift_num = ctx->io.outofband.highest_received_sequence_number + (IPMI_MAX_SEQUENCE_NUMBER - session_sequence_number) + 1;
-              else
-                /* IPMI 2.0 Special Case b/c 0 isn't a legit sequence number */
-                shift_num = ctx->io.outofband.highest_received_sequence_number + (IPMI_MAX_SEQUENCE_NUMBER - session_sequence_number);
-            }
-          else
-            shift_num = ctx->io.outofband.highest_received_sequence_number - session_sequence_number;
-
-          /* Duplicate packet check*/
-          if (ctx->io.outofband.previously_received_list & (0x1 << (shift_num - 1)))
-            goto out;
-
-          ctx->io.outofband.previously_received_list |= (0x1 << (shift_num - 1));
-          rv++;
-        }
-    }
-  else
-    {
-      if (session_sequence_number < ctx->io.outofband.highest_received_sequence_number
-          && session_sequence_number >= (ctx->io.outofband.highest_received_sequence_number - IPMI_SEQUENCE_NUMBER_WINDOW))
-        {
-          shift_num = ctx->io.outofband.highest_received_sequence_number - session_sequence_number;
-
-          /* Duplicate packet check*/
-          if (ctx->io.outofband.previously_received_list & (0x1 << (shift_num - 1)))
-            goto out;
-
-          ctx->io.outofband.previously_received_list |= (0x1 << (shift_num - 1));
-          rv++;
-        }
-    }
-
- out:
+ cleanup:
   return (rv);
 }
 

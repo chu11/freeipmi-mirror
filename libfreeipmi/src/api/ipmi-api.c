@@ -427,8 +427,12 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   memset (&ctx->io.outofband.last_send, '\0', sizeof (struct timeval));
   memset (&ctx->io.outofband.last_received, '\0', sizeof (struct timeval));
 
-  ctx->io.outofband.highest_received_sequence_number = 0;
-  ctx->io.outofband.previously_received_list = 0xFF;
+  if (ipmi_check_session_sequence_number_1_5_init (&(ctx->io.outofband.highest_received_sequence_number),
+                                                   &(ctx->io.outofband.previously_received_list)) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
 
   ctx->io.outofband.authentication_type = authentication_type;
 
@@ -591,8 +595,12 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   memset (&ctx->io.outofband.last_send, '\0', sizeof (struct timeval));
   memset (&ctx->io.outofband.last_received, '\0', sizeof (struct timeval));
 
-  ctx->io.outofband.highest_received_sequence_number = 0;
-  ctx->io.outofband.previously_received_list = 0xFF;
+  if (ipmi_check_session_sequence_number_2_0_init (&(ctx->io.outofband.highest_received_sequence_number),
+                                                   &(ctx->io.outofband.previously_received_list)) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
 
   if (!(ctx->io.outofband.rq.obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
     {

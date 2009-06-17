@@ -775,3 +775,4 @@ ipmi_lan_check_packet_checksum (const void *pkt, unsigned int pkt_len)
 
   return (1);
 }
+

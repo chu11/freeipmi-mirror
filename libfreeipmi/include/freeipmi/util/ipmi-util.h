@@ -46,6 +46,28 @@ int ipmi_is_ipmi_1_5_packet (const void *pkt, unsigned int pkt_len);
 /* returns 1 on pass, 0 on fail, -1 on error */
 int ipmi_is_ipmi_2_0_packet (const void *pkt, unsigned int pkt_len);
 
+int ipmi_check_session_sequence_number_1_5_init (uint32_t *highest_received_sequence_number,
+                                                 uint32_t *previously_received_list);
+
+int ipmi_check_session_sequence_number_2_0_init (uint32_t *highest_received_sequence_number,
+                                                 uint32_t *previously_received_list);
+
+/* returns 1 if sequence number in range, 0 if not, -1 on error */
+/* highest_received_sequence_number and previously_received_list updated on success */
+/* set sequence_number_window to 0 for default */
+int ipmi_check_session_sequence_number_1_5 (uint32_t session_sequence_number,
+                                            uint32_t *highest_received_sequence_number,
+                                            uint32_t *previously_received_list,
+                                            unsigned int sequence_number_window);
+
+/* returns 1 if sequence number in range, 0 if not, -1 on error */
+/* highest_received_sequence_number and previously_received_list updated on success */
+/* set sequence_number_window to 0 for default */
+int ipmi_check_session_sequence_number_2_0 (uint32_t session_sequence_number,
+                                            uint32_t *highest_received_sequence_number,
+                                            uint32_t *previously_received_list,
+                                            unsigned int sequence_number_window);
+
 const char *ipmi_cmd_str (uint8_t net_fn, uint8_t cmd);
 
 #ifdef __cplusplus

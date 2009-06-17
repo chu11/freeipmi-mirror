@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.185 2009-06-11 23:50:27 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.186 2009-06-17 20:17:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -195,11 +195,17 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->session_inbound_count = 0;
 
   if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
-    ip->highest_received_sequence_number = IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
+    {
+      if (ipmi_check_session_sequence_number_1_5_init (&(ip->highest_received_sequence_number), 
+                                                       &(ip->previously_received_list)) < 0)
+        ierr_exit ("ipmi_check_session_sequence_number_1_5_init: %s", strerror (errno));
+    }
   else
-    ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-
-  ip->previously_received_list = 0xFF;
+    {
+      if (ipmi_check_session_sequence_number_2_0_init (&(ip->highest_received_sequence_number), 
+                                                       &(ip->previously_received_list)) < 0)
+        ierr_exit ("ipmi_check_session_sequence_number_2_0_init: %s", strerror (errno));
+    }
 
   /* IPMI 1.5 */
 #if 0
@@ -522,7 +528,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   uint8_t recv_buf[IPMIPOWER_PACKET_BUFLEN];
   int recv_len = 0;
-  int ret, rv = -1;
+  int rv = -1;
   uint64_t val;
 
   assert (PACKET_TYPE_VALID_RES (pkt));

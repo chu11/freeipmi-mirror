@@ -1,3 +1,9 @@
+2009-06-17  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/util/, libfreeipmi/src/util/,
+	ipmipower/, ipmiconsole/, libfreeipmi/src/api/: Support common
+	session sequence number checking functions.
+	
 2009-06-11  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/: Re-architect code to allow

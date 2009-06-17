@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.139 2009-05-28 17:11:37 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.140 2009-06-17 20:17:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -255,7 +255,7 @@ struct ipmipower_powercmd {
    */
   unsigned int session_inbound_count;
   uint32_t highest_received_sequence_number;
-  unsigned int previously_received_list;
+  uint32_t previously_received_list;
 
   /* IPMI 1.5 specific */
   int permsgauth_enabled;

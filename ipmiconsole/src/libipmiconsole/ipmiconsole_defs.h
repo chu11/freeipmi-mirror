@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.72 2009-05-03 17:40:28 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.73 2009-06-17 20:17:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -176,11 +176,6 @@ typedef enum
 #define IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH                   64
 #define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH      64
 
-#define IPMI_SESSION_SEQUENCE_NUMBER_WINDOW                   16
-#define IPMI_SESSION_MAX_SEQUENCE_NUMBER                      0xFFFFFFFF
-
-#define IPMI_SESSION_SEQUENCE_NUMBER_PREVIOUSLY_RECEIVED_LIST_INIT 0xFFFF;
-
 #define IPMI_SESSION_INITIAL_OUTBOUND_SEQUENCE_NUMBER              1
 #define IPMI_SOL_SESSION_INITIAL_PACKET_SEQUENCE_NUMBER            1
 
@@ -352,7 +347,7 @@ struct ipmiconsole_ctx_session {
   unsigned int deactivate_active_payloads_count;
   uint32_t highest_received_sequence_number;
   /* need to also store bytes read from a previous seq num */
-  unsigned int previously_received_list;
+  uint32_t previously_received_list;
 
   uint8_t message_tag;
   uint8_t requester_sequence_number;

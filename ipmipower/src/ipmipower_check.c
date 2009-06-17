@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.109 2009-06-12 00:20:33 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.110 2009-06-17 20:17:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -44,9 +44,6 @@
 #include "freeipmi-portability.h"
 
 extern struct ipmipower_arguments cmd_args;
-
-#define IPMIPOWER_SEQUENCE_NUMBER_WINDOW 8
-#define IPMIPOWER_MAX_SEQUENCE_NUMBER    0xFFFFFFFF
 
 int
 ipmipower_check_checksum (ipmipower_powercmd_t ip, packet_type_t pkt)
@@ -223,8 +220,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
 int
 ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  uint32_t shift_num, wrap_val;
-  uint32_t seq_num = 0;
+  uint32_t session_sequence_number = 0;
   uint64_t val;
   int rv = 0;
 
@@ -262,7 +258,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
                         &val) < 0)
         ierr_exit ("FIID_OBJ_GET: 'session_sequence_number': %s",
                    fiid_obj_errormsg (ip->obj_rmcpplus_session_hdr_res));
-      seq_num = val;
+      session_sequence_number = val;
     }
   else /*
          (cmd_args.common.driver_type == IPMI_DEVICE_LAN
@@ -278,7 +274,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
                         &val) < 0)
         ierr_exit ("FIID_OBJ_GET: 'session_sequence_number': %s",
                    fiid_obj_errormsg (ip->obj_lan_session_hdr_res));
-      seq_num = val;
+      session_sequence_number = val;
     }
 
   /* IPMI Workaround (achu)
@@ -290,112 +286,13 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
    */
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
     {
-      uint32_t tmp_seq_num = seq_num;
+      uint32_t tmp_session_sequence_number = session_sequence_number;
 
-      seq_num =
-        ((tmp_seq_num & 0xFF000000) >> 24)
-        | ((tmp_seq_num & 0x00FF0000) >> 8)
-        | ((tmp_seq_num & 0x0000FF00) << 8)
-        | ((tmp_seq_num & 0x000000FF) << 24);
-    }
-
-  /* Drop duplicate packet */
-  if (seq_num == ip->highest_received_sequence_number)
-    goto out;
-
-  /* In IPMI 2.0, sequence number 0 is special, and shouldn't happen */
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0 && !seq_num)
-    goto out;
-
-  /* Check if sequence number is greater than highest received and is
-   * within range
-   */
-  if (ip->highest_received_sequence_number > (IPMIPOWER_MAX_SEQUENCE_NUMBER - IPMIPOWER_SEQUENCE_NUMBER_WINDOW))
-    {
-      wrap_val = IPMIPOWER_SEQUENCE_NUMBER_WINDOW - (IPMIPOWER_MAX_SEQUENCE_NUMBER - ip->highest_received_sequence_number) - 1;
-
-      /* In IPMI 2.0, sequence number 0 isn't possible, so adjust wrap_val */
-      if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
-        wrap_val++;
-
-      if (seq_num > ip->highest_received_sequence_number || seq_num <= wrap_val)
-        {
-          if (seq_num > ip->highest_received_sequence_number && seq_num <= IPMIPOWER_MAX_SEQUENCE_NUMBER)
-            shift_num = seq_num - ip->highest_received_sequence_number;
-          else
-            {
-              if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
-                shift_num = seq_num + (IPMIPOWER_MAX_SEQUENCE_NUMBER - ip->highest_received_sequence_number) + 1;
-              else
-                /* IPMI 2.0 Special Case b/c 0 isn't a legit sequence number */
-                shift_num = seq_num + (IPMIPOWER_MAX_SEQUENCE_NUMBER - ip->highest_received_sequence_number);
-            }
-
-          ip->highest_received_sequence_number = seq_num;
-          ip->previously_received_list <<= shift_num;
-          ip->previously_received_list |= (0x1 << (shift_num - 1));
-          rv++;
-        }
-    }
-  else
-    {
-      if (seq_num > ip->highest_received_sequence_number
-          && (seq_num - ip->highest_received_sequence_number) <= IPMIPOWER_SEQUENCE_NUMBER_WINDOW)
-        {
-          shift_num = (seq_num - ip->highest_received_sequence_number);
-          ip->highest_received_sequence_number = seq_num;
-          ip->previously_received_list <<= shift_num;
-          ip->previously_received_list |= (0x1 << (shift_num - 1));
-          rv++;
-        }
-    }
-
-  /* Check if sequence number is lower than highest received, is
-   * within range, and hasn't been seen yet
-   */
-  if (ip->highest_received_sequence_number < IPMIPOWER_SEQUENCE_NUMBER_WINDOW)
-    {
-      uint32_t wrap_val = IPMIPOWER_MAX_SEQUENCE_NUMBER - (IPMIPOWER_SEQUENCE_NUMBER_WINDOW - ip->highest_received_sequence_number) + 1;
-
-      /* In IPMI 2.0, sequence number 0 isn't possible, so adjust wrap_val */
-      if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
-        wrap_val--;
-
-      if (seq_num < ip->highest_received_sequence_number || seq_num >= wrap_val)
-        {
-          if (seq_num > ip->highest_received_sequence_number && seq_num <= IPMIPOWER_MAX_SEQUENCE_NUMBER)
-            {
-              if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
-                shift_num = ip->highest_received_sequence_number + (IPMIPOWER_MAX_SEQUENCE_NUMBER - seq_num) + 1;
-              else
-                /* IPMI 2.0 Special Case b/c 0 isn't a legit sequence number */
-                shift_num = ip->highest_received_sequence_number + (IPMIPOWER_MAX_SEQUENCE_NUMBER - seq_num);
-            }
-          else
-            shift_num = ip->highest_received_sequence_number - seq_num;
-
-          /* Duplicate packet check*/
-          if (ip->previously_received_list & (0x1 << (shift_num - 1)))
-            goto out;
-
-          ip->previously_received_list |= (0x1 << (shift_num - 1));
-          rv++;
-        }
-    }
-  else
-    {
-      if (seq_num < ip->highest_received_sequence_number
-          && seq_num >= (ip->highest_received_sequence_number - IPMIPOWER_SEQUENCE_NUMBER_WINDOW))
-        {
-          shift_num = ip->highest_received_sequence_number - seq_num;
-
-          /* Duplicate packet check*/
-          if (ip->previously_received_list & (0x1 << (shift_num - 1)))
-            goto out;
-
-          ip->previously_received_list |= (0x1 << (shift_num - 1));
-          rv++;
-        }
+      session_sequence_number =
+        ((tmp_session_sequence_number & 0xFF000000) >> 24)
+        | ((tmp_session_sequence_number & 0x00FF0000) >> 8)
+        | ((tmp_session_sequence_number & 0x0000FF00) << 8)
+        | ((tmp_session_sequence_number & 0x000000FF) << 24);
     }
 
   /* IPMI Workaround (achu)
@@ -412,10 +309,26 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
    * may also be incorrect.
    */
 
- out:
+  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
+    {
+      if ((rv = ipmi_check_session_sequence_number_1_5 (session_sequence_number,
+                                                        &(ip->highest_received_sequence_number),
+                                                        &(ip->previously_received_list),
+                                                        0)) < 0)
+        ierr_exit ("ipmi_check_session_sequence_number_1_5: %s", strerror (errno));
+    }
+  else
+    {
+      if ((rv = ipmi_check_session_sequence_number_2_0 (session_sequence_number,
+                                                        &(ip->highest_received_sequence_number),
+                                                        &(ip->previously_received_list),
+                                                        0)) < 0)
+        ierr_exit ("ipmi_check_session_sequence_number_2_0: %s", strerror (errno));
+    }
+
   if (!rv)
-    ierr_dbg ("ipmipower_check_outbound_sequence_number(%s:%d): seq_num: %u, high: %u",
-              ip->ic->hostname, ip->protocol_state, seq_num,
+    ierr_dbg ("ipmipower_check_outbound_sequence_number(%s:%d): session_sequence_number: %u, high: %u",
+              ip->ic->hostname, ip->protocol_state, session_sequence_number,
               ip->highest_received_sequence_number);
 
   return (rv);
