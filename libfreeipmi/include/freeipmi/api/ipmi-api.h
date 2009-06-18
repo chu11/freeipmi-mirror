@@ -158,6 +158,18 @@ int ipmi_ctx_open_inband (ipmi_ctx_t ctx,
                           unsigned int workaround_flags,
                           unsigned int flags);
 
+/* like ipmi_ctx_open_inband, but finds probes/discovers an inband device */
+/* returns 1 on driver found, 0 on not found, -1 on error */
+/* if specified, driver type returned in 'driver_type' */
+int ipmi_ctx_find_inband (ipmi_ctx_t ctx,
+                          ipmi_driver_type_t *driver_type,
+                          int disable_auto_probe,
+                          uint16_t driver_address,
+                          uint8_t register_spacing,
+                          const char *driver_device,
+                          unsigned int workaround_flags,
+                          unsigned int flags);
+
 int ipmi_cmd (ipmi_ctx_t ctx,
               uint8_t lun,
               uint8_t net_fn,

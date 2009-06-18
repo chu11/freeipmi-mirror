@@ -1008,6 +1008,260 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
   return (-1);
 }
 
+static int
+_is_ctx_fatal_error (ipmi_ctx_t ctx)
+{
+  /* some are fatal b/c they are outfoband and shouldn't happen */
+  /* note parameters is not fatal, for some drivers, inputs from users may not be ok */
+  /* note internal error is not fatal, could be a bad errno from a syscall */
+  
+  assert (ctx);
+  assert (ctx->magic == IPMI_CTX_MAGIC);
+
+  if (ipmi_ctx_errnum (ctx) == IPMI_ERR_CTX_NULL
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_CTX_INVALID
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_USERNAME_INVALID
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_PASSWORD_INVALID
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_IPMI_2_0_UNAVAILABLE
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_CONNECTION_TIMEOUT
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_SESSION_TIMEOUT
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_DEVICE_ALREADY_OPEN
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_DEVICE_NOT_OPEN
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_NOT_FOUND
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_OUT_OF_MEMORY
+      || ipmi_ctx_errnum (ctx) == IPMI_ERR_HOSTNAME_INVALID)
+    return (1);
+
+  return (0);
+}
+
+static int
+_is_locate_ctx_fatal_error (ipmi_locate_ctx_t locate_ctx)
+{
+  /* some are fatal b/c they are outfoband and shouldn't happen */
+  /* note parameters is not fatal, for some drivers, inputs from users may not be ok */
+  /* note internal error is not fatal, could be a bad errno from a syscall */
+  
+  assert (locate_ctx);
+
+  if (ipmi_locate_ctx_errnum (locate_ctx) == IPMI_LOCATE_ERR_NULL
+      || ipmi_locate_ctx_errnum (locate_ctx) == IPMI_LOCATE_ERR_INVALID
+      || ipmi_locate_ctx_errnum (locate_ctx) == IPMI_LOCATE_ERR_OUT_OF_MEMORY)
+    return (1);
+
+  return (0);
+}
+
+int
+ipmi_ctx_find_inband (ipmi_ctx_t ctx,
+                      ipmi_driver_type_t *driver_type,
+                      int disable_auto_probe,
+                      uint16_t driver_address,
+                      uint8_t register_spacing,
+                      const char *driver_device,
+                      unsigned int workaround_flags,
+                      unsigned int flags)
+{
+  ipmi_locate_ctx_t locate_ctx = NULL;
+  struct ipmi_locate_info locate_info;
+  int ret, rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (ctx->type != IPMI_DEVICE_UNKNOWN)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_ALREADY_OPEN);
+      return (-1);
+    }
+
+  if (!(locate_ctx = ipmi_locate_ctx_create ()))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  /* achu
+   *
+   * Try OpenIPMI and SunBMC drivers first, since they cannot
+   * be found via probing.  Do it before probing for KCS/SSIF,
+   * because it is possible, even though the OpenIPMI/SunBMC
+   * driver is installed, probing may find KCS/SSIF anyways,
+   * and try to use those first/instead.
+   */
+  if ((ret = ipmi_ctx_open_inband (ctx,
+                                   IPMI_DEVICE_OPENIPMI,
+                                   disable_auto_probe,
+                                   driver_address,
+                                   register_spacing,
+                                   driver_device,
+                                   workaround_flags,
+                                   flags)) < 0)
+    {
+      if (_is_ctx_fatal_error (ctx))
+        goto cleanup;
+    }
+  
+  if (!ret)
+    {
+      rv = 1;
+      goto out;
+    }
+  
+  if ((ret = ipmi_ctx_open_inband (ctx,
+                                   IPMI_DEVICE_SUNBMC,
+                                   disable_auto_probe,
+                                   driver_address,
+                                   register_spacing,
+                                   driver_device,
+                                   workaround_flags,
+                                   flags)) < 0)
+    {
+      if (_is_ctx_fatal_error (ctx))
+        goto cleanup;
+    }
+  
+  if (!ret)
+    {
+      rv = 1;
+      goto out;
+    }
+  
+  /* achu
+   *
+   * If one of KCS or SSIF is found, we try that one first.
+   * We don't want to hang on one or another if one is bad.
+   *
+   * If neither is found (perhaps b/c the vendor just assumes
+   * default values), then there's not much we can do, we can
+   * only guess.
+   *
+   * This does mean in-band communication is slower (doing
+   * excessive early probing).  It's a justified cost to me.
+   */
+      
+  if ((ret = ipmi_locate_discover_device_info (locate_ctx,
+                                               IPMI_INTERFACE_KCS,
+                                               &locate_info)) < 0)
+    {
+      if (_is_locate_ctx_fatal_error (locate_ctx))
+        goto cleanup;
+    }
+  
+  if (!ret)
+    {
+      if ((ret = ipmi_ctx_open_inband (ctx,
+                                       IPMI_DEVICE_KCS,
+                                       disable_auto_probe,
+                                       driver_address,
+                                       register_spacing,
+                                       driver_device,
+                                       workaround_flags,
+                                       flags)) < 0)
+        {
+          if (_is_ctx_fatal_error (ctx))
+            goto cleanup;
+        }
+      
+      if (!ret)
+        {
+          rv = 1;
+          goto out;
+        }
+    }
+
+  if (!ipmi_locate_discover_device_info (locate_ctx,
+                                         IPMI_INTERFACE_SSIF,
+                                         &locate_info))
+    {
+      if (_is_locate_ctx_fatal_error (locate_ctx))
+        goto cleanup;
+    }
+
+  if (!ret)
+    {
+      if ((ret = ipmi_ctx_open_inband (ctx,
+                                       IPMI_DEVICE_SSIF,
+                                       disable_auto_probe,
+                                       driver_address,
+                                       register_spacing,
+                                       driver_device,
+                                       workaround_flags,
+                                       flags)) < 0)
+        {
+          if (_is_ctx_fatal_error (ctx))
+            goto cleanup;
+        }
+      
+      if (!ret)
+        {
+          rv = 1;
+          goto out;
+        }
+    }
+
+  /* achu
+   *
+   * If KCS/SSIF was not discovered, try plain old default values
+   */
+
+  if ((ret = ipmi_ctx_open_inband (ctx,
+                                   IPMI_DEVICE_KCS,
+                                   disable_auto_probe,
+                                   driver_address,
+                                   register_spacing,
+                                   driver_device,
+                                   workaround_flags,
+                                   flags)) < 0)
+    {
+      if (_is_ctx_fatal_error (ctx))
+        goto cleanup;
+    }
+  
+  if (!ret)
+    {
+      rv = 1;
+      goto out;
+    }
+  
+  if ((ret = ipmi_ctx_open_inband (ctx,
+                                   IPMI_DEVICE_SSIF,
+                                   disable_auto_probe,
+                                   driver_address,
+                                   register_spacing,
+                                   driver_device,
+                                   workaround_flags,
+                                   flags)) < 0)
+    {
+      if (_is_ctx_fatal_error (ctx))
+        goto cleanup;
+    }
+
+  if (!ret)
+    {
+      rv = 1;
+      goto out;
+    }
+
+  rv = 0;
+ out:
+  if (driver_type)
+    (*driver_type) = ctx->type;
+  ctx->errnum = IPMI_ERR_SUCCESS;
+ cleanup:
+  if (locate_ctx)
+    ipmi_locate_ctx_destroy (locate_ctx);
+  return (rv);
+}
+
 int
 ipmi_cmd (ipmi_ctx_t ctx,
           uint8_t lun,

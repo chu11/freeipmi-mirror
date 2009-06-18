@@ -80,7 +80,6 @@ ipmi_open (const char *progname,
            unsigned int errmsglen)
 {
   ipmi_ctx_t ipmi_ctx = NULL;
-  ipmi_locate_ctx_t locate_ctx = NULL;
   unsigned int workaround_flags = 0;
 
   if (!(ipmi_ctx = ipmi_ctx_create ()))
@@ -88,15 +87,6 @@ ipmi_open (const char *progname,
       snprintf (errmsg,
                 errmsglen,
                 "ipmi_ctx_create: %s",
-                strerror (errno));
-      goto cleanup;
-    }
-
-  if (!(locate_ctx = ipmi_locate_ctx_create ()))
-    {
-      snprintf (errmsg,
-                errmsglen,
-                "ipmi_locate_ctx_create: %s",
                 strerror (errno));
       goto cleanup;
     }
@@ -215,108 +205,31 @@ ipmi_open (const char *progname,
 
       if (cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
         {
-          struct ipmi_locate_info locate_info;
+          int ret;
 
-          /* achu
-           *
-           * Try SunBMC and OpenIPMI drivers first, since they cannot
-           * be found via probing.  Do it before probing for KCS/SSIF,
-           * because it is possible, even though the SunBMC/OpenIPMI
-           * driver is installed, probing may find KCS/SSIF anyways,
-           * and try to use those first/instead.
-           */
-          if (!ipmi_ctx_open_inband (ipmi_ctx,
-                                     IPMI_DEVICE_SUNBMC,
-                                     cmd_args->disable_auto_probe,
-                                     cmd_args->driver_address,
-                                     cmd_args->register_spacing,
-                                     cmd_args->driver_device,
-                                     workaround_flags,
-                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
-            goto out;
-
-          /* XXX: should handle "fatal" errors */
-
-          if (!ipmi_ctx_open_inband (ipmi_ctx,
-                                     IPMI_DEVICE_OPENIPMI,
-                                     cmd_args->disable_auto_probe,
-                                     cmd_args->driver_address,
-                                     cmd_args->register_spacing,
-                                     cmd_args->driver_device,
-                                     workaround_flags,
-                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
-            goto out;
-
-          /* XXX: should handle "fatal" errors */
-
-          /* achu:
-           *
-           * If one of KCS or SSIF is found, we try that one first.
-           * We don't want to hang on one or another if one is bad.
-           *
-           * If neither is found (perhaps b/c the vendor just assumes
-           * default values), then there's not much we can do, we can
-           * only guess.
-           *
-           * This does mean in-band communication is slower (doing
-           * excessive early probing).  It's a justified cost to me.
-           */
-
-          if (!ipmi_locate_discover_device_info (locate_ctx,
-                                                 IPMI_INTERFACE_KCS,
-                                                 &locate_info))
+          if ((ret = ipmi_ctx_find_inband (ipmi_ctx,
+                                           NULL,
+                                           cmd_args->disable_auto_probe,
+                                           cmd_args->driver_address,
+                                           cmd_args->register_spacing,
+                                           cmd_args->driver_device,
+                                           workaround_flags,
+                                           (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
             {
-              if (!(ipmi_ctx_open_inband (ipmi_ctx,
-                                          IPMI_DEVICE_KCS,
-                                          cmd_args->disable_auto_probe,
-                                          cmd_args->driver_address,
-                                          cmd_args->register_spacing,
-                                          cmd_args->driver_device,
-                                          workaround_flags,
-                                          (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0))
-                goto out;
+              snprintf (errmsg,
+                        errmsglen,
+                        "ipmi_ctx_find_inband: %s",
+                        ipmi_ctx_errormsg (ipmi_ctx));
+              goto cleanup;
             }
 
-          if (!ipmi_locate_discover_device_info (locate_ctx,
-                                                 IPMI_INTERFACE_SSIF,
-                                                 &locate_info))
+          if (!ret)
             {
-              if (!(ipmi_ctx_open_inband (ipmi_ctx,
-                                          IPMI_DEVICE_SSIF,
-                                          cmd_args->disable_auto_probe,
-                                          cmd_args->driver_address,
-                                          cmd_args->register_spacing,
-                                          cmd_args->driver_device,
-                                          workaround_flags,
-                                          (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0))
-                goto out;
+              snprintf (errmsg,
+                        errmsglen,
+                        "could not find inband device");
+              goto cleanup;
             }
-
-          if (!ipmi_ctx_open_inband (ipmi_ctx,
-                                     IPMI_DEVICE_KCS,
-                                     cmd_args->disable_auto_probe,
-                                     cmd_args->driver_address,
-                                     cmd_args->register_spacing,
-                                     cmd_args->driver_device,
-                                     workaround_flags,
-                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
-            goto out;
-
-          if (!ipmi_ctx_open_inband (ipmi_ctx,
-                                     IPMI_DEVICE_SSIF,
-                                     cmd_args->disable_auto_probe,
-                                     cmd_args->driver_address,
-                                     cmd_args->register_spacing,
-                                     cmd_args->driver_device,
-                                     workaround_flags,
-                                     (cmd_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))
-            goto out;
-
-          /* else error ... */
-          snprintf (errmsg,
-                    errmsglen,
-                    "could not find inband device");
-          goto cleanup;
         }
       else
         {
@@ -346,8 +259,6 @@ ipmi_open (const char *progname,
     }
 
  out:
-  if (locate_ctx)
-    ipmi_locate_ctx_destroy (locate_ctx);
   return (ipmi_ctx);
 
  cleanup:
@@ -356,8 +267,6 @@ ipmi_open (const char *progname,
       ipmi_ctx_close (ipmi_ctx);
       ipmi_ctx_destroy (ipmi_ctx);
     }
-  if (locate_ctx)
-    ipmi_locate_ctx_destroy (locate_ctx);
   return (NULL);
 }
 

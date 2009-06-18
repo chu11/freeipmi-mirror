@@ -1,3 +1,13 @@
+2009-06-18  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h,
+	libfreeipmi/src/api/ipmi-api.c (ipmi_ctx_find_inband): New
+	function.
+
+	* common/src/toolcommon/tool-common.c,
+	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_ipmi_communication.c:
+	Use new ipmi_ctx_find_inband call.
+	
 2009-06-17  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/util/ipmi-outofband-util.h,

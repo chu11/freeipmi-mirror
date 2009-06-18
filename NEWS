@@ -284,6 +284,7 @@ o libfreeipmi
     consistency to the rest of libfreeipmi.
   - Re-architect all 'unassemble' functions to return 1 if packet
     fully and correctly parsed, 0 if not, and -1 on error.
+  - New 'ipmi_ctx_find_inband' call to find an inband device.
   - New freeipmi/template/ files to document fiid fields for fiid
     templates.
   - New error code IPMI_ERR_NOT_FOUND in libfreeipmi API sub library
