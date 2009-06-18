@@ -7,6 +7,8 @@
 	* common/src/toolcommon/tool-common.c,
 	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_ipmi_communication.c:
 	Use new ipmi_ctx_find_inband call.
+
+	* Update some documentation.
 	
 2009-06-17  Albert Chu <chu11@llnl.gov>
 

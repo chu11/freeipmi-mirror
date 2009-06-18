@@ -40,6 +40,7 @@ EXTRA = \
 	README \
 	README.argp \
 	README.build \
+	README.openipmi \
 	README.sunbmc \
 	TODO \
 	COPYING.bmc-watchdog \

@@ -11,3 +11,9 @@ C) Commit the configuration back using the --commit option and
 specifying the configuration file with the --filename option.  The
 configuration can be committed to multiple hosts in parallel via the
 hostrange support.
+.LP
+Although not typically necessarily, some motherboards do not store
+configuration values in non-volatile memory.  Therefore, after system
+reboots, some configuration values may have changed.  The user may
+wish to run configuration tools on each boot to ensure configuration
+values remain.
