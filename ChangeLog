@@ -1,3 +1,8 @@
+2009-06-19  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sensors.c: Software sensors output "N/A"
+	instead of "Unknown" now.
+	
 2009-06-18  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h,

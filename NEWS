@@ -82,6 +82,7 @@ o ipmi-sensors
     brackets ([]).
   - Sensors that can't be read or don't exist (i.e. "N/A", "Unknown") are
     now *not* surrounded by single quotes (') or square brackets ([]).
+  - Software sensors output "N/A" instead of "Unknown" now.
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
   - Support --exclude-groups option.

@@ -470,7 +470,8 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
           goto get_events;
         }
 
-      if (errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE
+      if (errnum == IPMI_SENSOR_READ_ERR_SENSOR_IS_SYSTEM_SOFTWARE
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_ANALOG
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR
@@ -491,8 +492,8 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
 
           goto output;
         }
-      if (errnum == IPMI_SENSOR_READ_ERR_SENSOR_IS_SYSTEM_SOFTWARE
-          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED
+
+      if (errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED
           || errnum == IPMI_SENSOR_READ_ERR_NODE_BUSY
           || errnum == IPMI_SENSOR_READ_ERR_INVALID_SDR_RECORD_TYPE)
         {
