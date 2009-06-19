@@ -2,6 +2,10 @@
 
 	* ipmi-sensors/src/ipmi-sensors.c: Software sensors output "N/A"
 	instead of "Unknown" now.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h,
+	libfreeipmi/src/util/ipmi-error-util.c: Add "Send Message"
+	specific completion codes.
 	
 2009-06-18  Albert Chu <chu11@llnl.gov>
 
