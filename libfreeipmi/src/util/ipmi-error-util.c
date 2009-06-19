@@ -254,6 +254,19 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_DATA_NOT_AVAILABLE_STR);
                 }
               break;
+            case IPMI_CMD_SEND_MESSAGE:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_INVALID_SESSION_HANDLE:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_INVALID_SESSION_HANDLE_STR);
+                case IPMI_COMP_CODE_LOST_ARBITRATION:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_LOST_ARBITRATION_STR);
+                case IPMI_COMP_CODE_BUS_ERROR:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_BUS_ERROR_STR);
+                case IPMI_COMP_CODE_NAK_ON_WRITE:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_NAK_ON_WRITE_STR);
+                }
+              break;
             case IPMI_CMD_GET_SESSION_CHALLENGE:
               switch (comp_code)
                 {
