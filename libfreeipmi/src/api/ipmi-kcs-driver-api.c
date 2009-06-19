@@ -479,7 +479,13 @@ _ipmi_kcs_ipmb_send (ipmi_ctx_t ctx,
                              len,
                              obj_send_cmd_rs) < 0)
     {
-      API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_send_cmd_rs);
+      /* assume these mean can't send message, back slave address, etc. */
+      if (ipmi_check_completion_code (obj_send_cmd_rs, IPMI_COMP_CODE_LOST_ARBITRATION) == 1
+          || ipmi_check_completion_code (obj_send_cmd_rs, IPMI_COMP_CODE_BUS_ERROR) == 1
+          || ipmi_check_completion_code (obj_send_cmd_rs, IPMI_COMP_CODE_NAK_ON_WRITE) == 1)
+        API_SET_ERRNUM (ctx, IPMI_ERR_MESSAGE_TIMEOUT);
+      else
+        API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_send_cmd_rs);
       goto cleanup;
     }
 

@@ -6,6 +6,13 @@
 	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h,
 	libfreeipmi/src/util/ipmi-error-util.c: Add "Send Message"
 	specific completion codes.
+
+	* libfreeipmi/src/sensor-read/: Consider "message timeout" errors
+	a "sensor reading unavailable" error so tools can continue on.
+
+	* libfreeipmi/src/api/: Consider multiple additional error
+	codes/completion codes for "message timeout" error code instead of
+	"ipmi" error.
 	
 2009-06-18  Albert Chu <chu11@llnl.gov>
 

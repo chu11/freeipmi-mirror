@@ -87,7 +87,14 @@ api_set_api_errnum_by_bad_response (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     return;
 
-  if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_NODE_BUSY) == 1
+  /* IPMI_COMP_CODE_COMMAND_TIMEOUT, assumes it's a IPMB or command
+   * specific timeout, so set to "MESSAGE_TIMEOUT" so user can
+   * continue on if they wish.  At minimum, returned by openipmi
+   * driver for (what seems to be) collection of potential errors.
+   */
+  if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1)
+    ctx->errnum = IPMI_ERR_MESSAGE_TIMEOUT;
+  else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_NODE_BUSY) == 1
       || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OUT_OF_SPACE) == 1
       || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_SDR_UPDATE_MODE) == 1
       || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_FIRMWARE_UPDATE_MODE) == 1
