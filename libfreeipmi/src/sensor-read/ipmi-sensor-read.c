@@ -287,7 +287,7 @@ _get_sensor_reading_ipmb (ipmi_sensor_read_ctx_t ctx,
             }
           else if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
             {
-              SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_NODE_BUSY);
+              SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED);
               goto cleanup;
             }
           else if (_sensor_reading_corner_case_checks (ctx, obj_cmd_rs) < 0)
