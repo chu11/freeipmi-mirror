@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.15.4.4 2009-04-16 22:34:30 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.15.4.5 2009-06-20 06:35:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -127,6 +127,9 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
   
   chassis_offset++;
 
+  if (frubuf[chassis_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
                                                chassis_info_area_length_bytes,
@@ -143,6 +146,9 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
     }
     
   chassis_offset += len_parsed;
+
+  if (frubuf[chassis_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
@@ -192,6 +198,7 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
+ out:
   rv = FRU_ERR_SUCCESS;
  cleanup:
   return (rv);
@@ -302,6 +309,9 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
                  "  FRU Board Info Area Manufacturing Date/Time: %s\n",
                  mfg_date_time_buf);
 
+  if (frubuf[board_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
                                                board_info_area_length_bytes,
@@ -318,6 +328,9 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
     }
     
   board_offset += len_parsed;
+
+  if (frubuf[board_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
@@ -336,6 +349,9 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
     
   board_offset += len_parsed;
 
+  if (frubuf[board_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
                                                board_info_area_length_bytes,
@@ -353,6 +369,9 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
     
   board_offset += len_parsed;
 
+  if (frubuf[board_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
                                                board_info_area_length_bytes,
@@ -369,6 +388,9 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
     }
     
   board_offset += len_parsed;
+
+  if (frubuf[board_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
@@ -418,6 +440,7 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
+ out:
   rv = FRU_ERR_SUCCESS;
  cleanup:
   return (rv);
@@ -520,6 +543,9 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
 
   product_offset++;
 
+  if (frubuf[product_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
                                                product_info_area_length_bytes,
@@ -536,6 +562,9 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
     }
     
   product_offset += len_parsed;
+
+  if (frubuf[product_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
@@ -554,6 +583,9 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
     
   product_offset += len_parsed;
 
+  if (frubuf[product_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
                                                product_info_area_length_bytes,
@@ -570,6 +602,9 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
     }
     
   product_offset += len_parsed;
+
+  if (frubuf[product_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
@@ -588,6 +623,9 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
     
   product_offset += len_parsed;
 
+  if (frubuf[product_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
                                                product_info_area_length_bytes,
@@ -605,6 +643,9 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
     
   product_offset += len_parsed;
 
+  if (frubuf[product_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
                                                product_info_area_length_bytes,
@@ -621,6 +662,9 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
     }
     
   product_offset += len_parsed;
+
+  if (frubuf[product_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
 
   if ((ret = ipmi_fru_output_type_length_field(state_data,
                                                frubuf,
@@ -670,6 +714,7 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
+ out:
   rv = FRU_ERR_SUCCESS;
  cleanup:
   return (rv);

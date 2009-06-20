@@ -1,3 +1,7 @@
+2009-06-19  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-fru/src/: Fix FRU info-area output corner case.
+	
 2009-06-16  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Update for release.
