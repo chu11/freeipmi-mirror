@@ -71,6 +71,7 @@ sensors/monitoring
 (TEST) make sure bridging still works w/ sensor-read lib
 (TEST) make sure oem still outputs fine
 option output via entity_id organization (i.e. groups of owners)
+entity-id name options (and in ipmi-sel)
 
 ipmi-chassis-config
 -------------------
