@@ -84,8 +84,8 @@ enable_sol_checkout (const char *section_name,
   if (ipmi_cmd_get_sol_configuration_parameters_sol_enable (state_data->ipmi_ctx,
                                                             channel_number,
                                                             IPMI_GET_SOL_PARAMETER,
-                                                            SET_SELECTOR,
-                                                            BLOCK_SELECTOR,
+                                                            CONFIG_SET_SELECTOR,
+                                                            CONFIG_BLOCK_SELECTOR,
                                                             obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -203,8 +203,8 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
   if (ipmi_cmd_get_sol_configuration_parameters_sol_authentication (state_data->ipmi_ctx,
                                                                     channel_number,
                                                                     IPMI_GET_SOL_PARAMETER,
-                                                                    SET_SELECTOR,
-                                                                    BLOCK_SELECTOR,
+                                                                    CONFIG_SET_SELECTOR,
+                                                                    CONFIG_BLOCK_SELECTOR,
                                                                     obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -452,8 +452,8 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
   if (ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (state_data->ipmi_ctx,
                                                                                                   channel_number,
                                                                                                   IPMI_GET_SOL_PARAMETER,
-                                                                                                  SET_SELECTOR,
-                                                                                                  BLOCK_SELECTOR,
+                                                                                                  CONFIG_SET_SELECTOR,
+                                                                                                  CONFIG_BLOCK_SELECTOR,
                                                                                                   obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -653,8 +653,8 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
   if (ipmi_cmd_get_sol_configuration_parameters_sol_retry (state_data->ipmi_ctx,
                                                            channel_number,
                                                            IPMI_GET_SOL_PARAMETER,
-                                                           SET_SELECTOR,
-                                                           BLOCK_SELECTOR,
+                                                           CONFIG_SET_SELECTOR,
+                                                           CONFIG_BLOCK_SELECTOR,
                                                            obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -852,8 +852,8 @@ non_volatile_bit_rate_checkout (const char *section_name,
   if (ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (state_data->ipmi_ctx,
                                                                            channel_number,
                                                                            IPMI_GET_SOL_PARAMETER,
-                                                                           SET_SELECTOR,
-                                                                           BLOCK_SELECTOR,
+                                                                           CONFIG_SET_SELECTOR,
+                                                                           CONFIG_BLOCK_SELECTOR,
                                                                            obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -972,8 +972,8 @@ volatile_bit_rate_checkout (const char *section_name,
   if (ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (state_data->ipmi_ctx,
                                                                        channel_number,
                                                                        IPMI_GET_SOL_PARAMETER,
-                                                                       SET_SELECTOR,
-                                                                       BLOCK_SELECTOR,
+                                                                       CONFIG_SET_SELECTOR,
+                                                                       CONFIG_BLOCK_SELECTOR,
                                                                        obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -1092,8 +1092,8 @@ sol_payload_port_checkout (const char *section_name,
   if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (state_data->ipmi_ctx,
                                                                          channel_number,
                                                                          IPMI_GET_SOL_PARAMETER,
-                                                                         SET_SELECTOR,
-                                                                         BLOCK_SELECTOR,
+                                                                         CONFIG_SET_SELECTOR,
+                                                                         CONFIG_BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)

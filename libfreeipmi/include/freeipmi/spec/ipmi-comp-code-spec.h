@@ -205,6 +205,31 @@ extern "C" {
 #define IPMI_COMP_CODE_NAK_ON_WRITE_STR \
   "NAK on Write"
 
+/* IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS */
+
+#define IPMI_COMP_CODE_SET_SYSTEM_INFO_PARAMETER_NOT_SUPPORTED            0x80
+#define IPMI_COMP_CODE_SET_SYSTEM_INFO_PARAMETER_NOT_SUPPORTED_STR \
+  "parameter not supported."
+
+#define IPMI_COMP_CODE_SET_SYSTEM_INFO_INVALID_SET_IN_PROGRESS            0x81
+#define IPMI_COMP_CODE_SET_SYSTEM_INFO_INVALID_SET_IN_PROGRESS_STR \
+  "attempt to set the 'set in progress' value (in parameter #0) " \
+  "when not int the 'set complete' state."
+
+#define IPMI_COMP_CODE_SET_SYSTEM_INFO_WRITE_READ_ONLY_PARAMETER          0x82
+#define IPMI_COMP_CODE_SET_SYSTEM_INFO_WRITE_READ_ONLY_PARAMETER_STR \
+  "attempt to write read-only parameter"
+
+#define IPMI_COMP_CODE_SET_SYSTEM_INFO_READ_WRITE_ONLY_PARAMETER          0x83
+#define IPMI_COMP_CODE_SET_SYSTEM_INFO_READ_WRITE_ONLY_PARAMETER_STR \
+  "attempt to read write-only parameter"
+
+/* IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS */
+
+#define IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETER_NOT_SUPPORTED            0x80
+#define IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETER_NOT_SUPPORTED_STR \
+  "parameter not supported."
+
 /* IPMI_CMD_GET_SESSION_CHALLENGE */
 
 #define IPMI_COMP_CODE_INVALID_USERNAME                                   0x81

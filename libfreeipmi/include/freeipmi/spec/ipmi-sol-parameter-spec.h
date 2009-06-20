@@ -34,6 +34,11 @@ extern "C" {
 #define IPMI_SOL_PARAMETER_SOL_PAYLOAD_CHANNEL                              7
 #define IPMI_SOL_PARAMETER_SOL_PAYLOAD_PORT_NUMBER                          8
 
+/* To avoid gcc warnings, add +1 in comparison */
+#define IPMI_SOL_PARAMETER_VALID(__sol_parameter)                         \
+  (((__sol_parameter+1) > (IPMI_SOL_PARAMETER_SET_IN_PROGRESS+1) \
+    && (__sol_parameter) <= IPMI_SOL_PARAMETER_SOL_PAYLOAD_PORT_NUMBER) ? 1 : 0)
+
 #ifdef __cplusplus
 }
 #endif

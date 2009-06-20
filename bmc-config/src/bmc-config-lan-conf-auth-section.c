@@ -92,8 +92,8 @@ _get_authentication_type_support (bmc_config_state_data_t *state_data)
   if (ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (state_data->ipmi_ctx,
                                                                              channel_number,
                                                                              IPMI_GET_LAN_PARAMETER,
-                                                                             SET_SELECTOR,
-                                                                             BLOCK_SELECTOR,
+                                                                             CONFIG_SET_SELECTOR,
+                                                                             CONFIG_BLOCK_SELECTOR,
                                                                              obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -194,8 +194,8 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
   if (ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (state_data->ipmi_ctx,
                                                                              channel_number,
                                                                              IPMI_GET_LAN_PARAMETER,
-                                                                             SET_SELECTOR,
-                                                                             BLOCK_SELECTOR,
+                                                                             CONFIG_SET_SELECTOR,
+                                                                             CONFIG_BLOCK_SELECTOR,
                                                                              obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)

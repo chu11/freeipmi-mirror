@@ -89,7 +89,7 @@ _get_destination_type (ipmi_pef_config_state_data_t *state_data,
                                                                   channel_number,
                                                                   IPMI_GET_LAN_PARAMETER,
                                                                   destination_selector,
-                                                                  BLOCK_SELECTOR,
+                                                                  CONFIG_BLOCK_SELECTOR,
                                                                   obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -432,7 +432,7 @@ _get_destination_addresses (ipmi_pef_config_state_data_t *state_data,
                                                                       channel_number,
                                                                       IPMI_GET_LAN_PARAMETER,
                                                                       destination_selector,
-                                                                      BLOCK_SELECTOR,
+                                                                      CONFIG_BLOCK_SELECTOR,
                                                                       obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)

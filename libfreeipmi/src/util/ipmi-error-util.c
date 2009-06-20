@@ -267,6 +267,26 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_NAK_ON_WRITE_STR);
                 }
               break;
+            case IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_SET_SYSTEM_INFO_PARAMETER_NOT_SUPPORTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SYSTEM_INFO_PARAMETER_NOT_SUPPORTED_STR);
+                case IPMI_COMP_CODE_SET_SYSTEM_INFO_INVALID_SET_IN_PROGRESS:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SYSTEM_INFO_INVALID_SET_IN_PROGRESS_STR);
+                case IPMI_COMP_CODE_SET_SYSTEM_INFO_WRITE_READ_ONLY_PARAMETER:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SYSTEM_INFO_WRITE_READ_ONLY_PARAMETER_STR);
+                case IPMI_COMP_CODE_SET_SYSTEM_INFO_READ_WRITE_ONLY_PARAMETER:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SYSTEM_INFO_READ_WRITE_ONLY_PARAMETER_STR);
+                }
+              break;
+            case IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETER_NOT_SUPPORTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETER_NOT_SUPPORTED_STR);
+                }
+              break;
             case IPMI_CMD_GET_SESSION_CHALLENGE:
               switch (comp_code)
                 {

@@ -74,8 +74,8 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (state_data->ipmi_ctx,
                                                                                                    channel_number,
                                                                                                    IPMI_GET_LAN_PARAMETER,
-                                                                                                   SET_SELECTOR,
-                                                                                                   BLOCK_SELECTOR,
+                                                                                                   CONFIG_SET_SELECTOR,
+                                                                                                   CONFIG_BLOCK_SELECTOR,
                                                                                                    obj_cmd_count_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
@@ -117,8 +117,8 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (state_data->ipmi_ctx,
                                                                                              channel_number,
                                                                                              IPMI_GET_LAN_PARAMETER,
-                                                                                             SET_SELECTOR,
-                                                                                             BLOCK_SELECTOR,
+                                                                                             CONFIG_SET_SELECTOR,
+                                                                                             CONFIG_BLOCK_SELECTOR,
                                                                                              obj_cmd_id_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)
@@ -198,8 +198,8 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (state_data->ipmi_ctx,
                                                                                                       channel_number,
                                                                                                       IPMI_GET_LAN_PARAMETER,
-                                                                                                      SET_SELECTOR,
-                                                                                                      BLOCK_SELECTOR,
+                                                                                                      CONFIG_SET_SELECTOR,
+                                                                                                      CONFIG_BLOCK_SELECTOR,
                                                                                                       obj_cmd_priv_rs) < 0)
         {
           if (state_data->prog_data->args->config_args.common.debug)

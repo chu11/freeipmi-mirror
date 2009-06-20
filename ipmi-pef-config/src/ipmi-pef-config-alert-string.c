@@ -74,7 +74,7 @@ _get_alert_string_keys (ipmi_pef_config_state_data_t *state_data,
   if (ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (state_data->ipmi_ctx,
                                                                    IPMI_GET_PEF_PARAMETER,
                                                                    string_selector,
-                                                                   BLOCK_SELECTOR,
+                                                                   CONFIG_BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)

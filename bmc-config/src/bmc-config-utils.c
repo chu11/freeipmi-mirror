@@ -124,8 +124,8 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
   if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (state_data->ipmi_ctx,
                                                                      channel_number,
                                                                      IPMI_GET_SOL_PARAMETER,
-                                                                     SET_SELECTOR,
-                                                                     BLOCK_SELECTOR,
+                                                                     CONFIG_SET_SELECTOR,
+                                                                     CONFIG_BLOCK_SELECTOR,
                                                                      obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)

@@ -109,7 +109,7 @@ _get_event_filter_table (struct ipmi_pef_config_state_data *state_data,
   if (ipmi_cmd_get_pef_configuration_parameters_event_filter_table (state_data->ipmi_ctx,
                                                                     IPMI_GET_PEF_PARAMETER,
                                                                     filter_number,
-                                                                    BLOCK_SELECTOR,
+                                                                    CONFIG_BLOCK_SELECTOR,
                                                                     obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)

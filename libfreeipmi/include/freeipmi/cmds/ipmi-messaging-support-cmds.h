@@ -103,6 +103,13 @@ extern "C" {
   (((__val) == IPMI_GET_IPMI_V20_EXTENDED_DATA \
     || (__val) == IPMI_GET_IPMI_V15_DATA) ? 1 : 0)
 
+#define IPMI_GET_SYSTEM_INFO_PARAMETER                 0x0
+#define IPMI_GET_SYSTEM_INFO_PARAMETER_REVISION_ONLY   0x1
+
+#define IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1         0x0
+#define IPMI_SYSTEM_INFO_ENCODING_UTF_8                0x1
+#define IPMI_SYSTEM_INFO_ENCODING_UNICODE              0x2
+
 #define IPMI_LIST_ALGORITHMS_BY_CIPHER_SUITE 0x1
 #define IPMI_LIST_SUPPORTED_ALGORITHMS       0x0
 
@@ -282,6 +289,22 @@ extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rs;
 extern fiid_template_t tmpl_cmd_get_system_guid_rq;
 extern fiid_template_t tmpl_cmd_get_system_guid_rs;
 extern fiid_template_t tmpl_cmd_get_device_guid_format_rs;
+
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_rs;
+
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_firmware_version_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_name_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_operating_system_name_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_primary_operating_system_name_rq;
+
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_rq;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_rs;
+
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_firmware_version_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_name_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_operating_system_name_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_primary_operating_system_name_rs;
 
 extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_rq;
 extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_rs;

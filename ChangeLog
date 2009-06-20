@@ -3,7 +3,11 @@
 	* libfreeipmi/src/fru-parse/: Handle
 	FRU parsing corner case.
 
-	* libfreeipmi/: Add get system guid command.
+	* libfreeipmi/: Add get system guid command.  Add system info commands.
+
+	* libfreeipmi/: Make configuration parameter data fields optional.
+
+	* bmc-config/, ipmi-pef-config/, common/src/configtool/: Code cleanup.
 	
 2009-06-19  Albert Chu <chu11@llnl.gov>
 

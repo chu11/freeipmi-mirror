@@ -102,8 +102,8 @@ get_number_of_lan_alert_destinations (struct ipmi_pef_config_state_data *state_d
   if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (state_data->ipmi_ctx,
                                                                         channel_number,
                                                                         IPMI_GET_LAN_PARAMETER,
-                                                                        SET_SELECTOR,
-                                                                        BLOCK_SELECTOR,
+                                                                        CONFIG_SET_SELECTOR,
+                                                                        CONFIG_BLOCK_SELECTOR,
                                                                         obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -162,8 +162,8 @@ get_number_of_alert_strings (struct ipmi_pef_config_state_data *state_data, uint
 
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->ipmi_ctx,
                                                                          IPMI_GET_PEF_PARAMETER,
-                                                                         SET_SELECTOR,
-                                                                         BLOCK_SELECTOR,
+                                                                         CONFIG_SET_SELECTOR,
+                                                                         CONFIG_BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -222,8 +222,8 @@ get_number_of_alert_policy_entries (struct ipmi_pef_config_state_data *state_dat
 
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->ipmi_ctx,
                                                                                 IPMI_GET_PEF_PARAMETER,
-                                                                                SET_SELECTOR,
-                                                                                BLOCK_SELECTOR,
+                                                                                CONFIG_SET_SELECTOR,
+                                                                                CONFIG_BLOCK_SELECTOR,
                                                                                 obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -282,8 +282,8 @@ get_number_of_event_filters (struct ipmi_pef_config_state_data *state_data, uint
 
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->ipmi_ctx,
                                                                          IPMI_GET_PEF_PARAMETER,
-                                                                         SET_SELECTOR,
-                                                                         BLOCK_SELECTOR,
+                                                                         CONFIG_SET_SELECTOR,
+                                                                         CONFIG_BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)

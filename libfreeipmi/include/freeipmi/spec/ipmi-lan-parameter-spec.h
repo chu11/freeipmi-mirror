@@ -30,7 +30,7 @@ extern "C" {
 #define IPMI_LAN_PARAMETER_IP_ADDRESS_SOURCE                                4
 #define IPMI_LAN_PARAMETER_MAC_ADDRESS                                      5
 #define IPMI_LAN_PARAMETER_SUBNET_MASK                                      6
-#define IPMI_LAN_PARAMETER_IPV4_HEADER_PARAMETERETERS                           7
+#define IPMI_LAN_PARAMETER_IPV4_HEADER_PARAMETERS                           7
 #define IPMI_LAN_PARAMETER_PRIMARY_RMCP_PORT_NO                             8
 #define IPMI_LAN_PARAMETER_SECONDARY_RMCP_PORT_NO                           9
 #define IPMI_LAN_PARAMETER_BMC_GENERATED_ARP_CONTROL                        10
@@ -51,7 +51,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_LAN_PARAMETER_VALID(__lan_parameter)                         \
-  (((__lan_parameter+1) >= IPMI_LAN_PARAMETER_AUTHENTICATION_TYPE_SUPPORT \
+  (((__lan_parameter+1) > (IPMI_LAN_PARAMETER_SET_IN_PROGRESS+1)        \
     && (__lan_parameter) <= IPMI_LAN_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS) ? 1 : 0)
 
 #ifdef __cplusplus

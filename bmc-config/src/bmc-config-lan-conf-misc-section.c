@@ -73,8 +73,8 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
   if (ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (state_data->ipmi_ctx,
                                                                            channel_number,
                                                                            IPMI_GET_LAN_PARAMETER,
-                                                                           SET_SELECTOR,
-                                                                           BLOCK_SELECTOR,
+                                                                           CONFIG_SET_SELECTOR,
+                                                                           CONFIG_BLOCK_SELECTOR,
                                                                            obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
@@ -266,8 +266,8 @@ gratuitous_arp_interval_checkout (const char *section_name,
   if (ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (state_data->ipmi_ctx,
                                                                          channel_number,
                                                                          IPMI_GET_LAN_PARAMETER,
-                                                                         SET_SELECTOR,
-                                                                         BLOCK_SELECTOR,
+                                                                         CONFIG_SET_SELECTOR,
+                                                                         CONFIG_BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)

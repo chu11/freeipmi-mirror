@@ -383,6 +383,277 @@ fiid_template_t tmpl_cmd_get_system_guid_format_rs =
     { 0, "", 0}
   };
 
+Set System Info Parameters Request
+----------------------------------
+
+fiid_template_t tmpl_cmd_set_system_info_parameters_rq =
+  {
+    { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,    "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1024, "configuration_parameter_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+Set System Info Parameters Response
+-----------------------------------
+
+fiid_template_t tmpl_cmd_set_system_info_parameters_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 0, "", 0}
+  };
+
+Set System Info Parameters (System Firmware Version First Set) Request
+----------------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_set_system_info_parameters_system_firmware_version_first_set_rq =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "encoding", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "string_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 112, "string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+Set System Info Parameters (System Firmware Version) Request
+------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_set_system_info_parameters_system_firmware_version_rq =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Set System Info Parameters (System Name First Set) Request
+----------------------------------------------------------
+
+fiid_template_t tmpl_cmd_set_system_info_parameters_system_name_first_set_rq =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "encoding", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "string_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 112, "string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+Set System Info Parameters (System Name) Request
+------------------------------------------------
+
+fiid_template_t tmpl_cmd_set_system_info_parameters_system_name_rq =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Set System Info Parameters (Primary Operating System Name First Set) Request
+----------------------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_set_system_info_parameters_primary_operating_system_name_first_set_rq =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "encoding", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "string_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 112, "string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+Set System Info Parameters (Primary Operating System Name) Request
+------------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_set_system_info_parameters_primary_operating_system_name_rq =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Set System Info Parameters (Operating System Name First Set) Request
+--------------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_set_system_info_parameters_operating_system_name_first_set_rq =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "encoding", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "string_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 112, "string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+Set System Info Parameters (Operating System Name) Request
+----------------------------------------------------------
+
+fiid_template_t tmpl_cmd_set_system_info_parameters_operating_system_name_rq =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Get System Info Parameters Request
+----------------------------------
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "get_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "block_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Get System Info Parameters Response
+-----------------------------------
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_rs =
+  {
+    { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,    "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1024, "configuration_parameter_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+Get System Info Parameters (System Firmware Version First Set) Response
+-----------------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_system_firmware_version_first_set_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "encoding", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "string_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 112, "string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+Get System Info Parameters (System Firmware Version) Response
+-------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_system_firmware_version_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Get System Info Parameters (System Name First Set) Response
+-----------------------------------------------------------
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_system_name_first_set_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "encoding", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "string_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 112, "string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+Get System Info Parameters (System Name) Response
+-------------------------------------------------
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_system_name_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Get System Info Parameters (Primary Operating System Name First Set) Response
+-----------------------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_primary_operating_system_name_first_set_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "encoding", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "string_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 112, "string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+Get System Info Parameters (Primary Operating System Name) Response
+-------------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_primary_operating_system_name_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Get System Info Parameters (Operating System Name First Set) Response
+---------------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_operating_system_name_first_set_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "encoding", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "string_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 112, "string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+Get System Info Parameters (Operating System Name) Response
+-----------------------------------------------------------
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_operating_system_name_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 Get Channel Cipher Suites Request
 ---------------------------------
 

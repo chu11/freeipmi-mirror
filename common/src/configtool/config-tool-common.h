@@ -68,8 +68,8 @@
 #define CONFIG_MAX_SECTION_NAME_LEN                        128
 #define CONFIG_MAX_DESCRIPTION_LEN                         1024
 
-#define SET_SELECTOR      0x0
-#define BLOCK_SELECTOR    0x0
+#define CONFIG_SET_SELECTOR      0x0
+#define CONFIG_BLOCK_SELECTOR    0x0
 
 #define same(a,b) (strcasecmp (a,b) == 0)
 
