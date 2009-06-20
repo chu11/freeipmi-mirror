@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.10 2009-05-22 02:33:39 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.11 2009-06-20 05:17:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -422,6 +422,18 @@ _read_fru_data (ipmi_fru_parse_ctx_t ctx,
                                   count_to_read,
                                   fru_read_data_rs) < 0)
         {
+          /* if first time we've read from this device id, assume the
+           * below completion codes mean that there is no data on this
+           * device.
+           */
+          if (!num_bytes_read
+              && (ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1
+                  || ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+            {
+              FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
+              goto cleanup;
+            }
+
           FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_IPMI_ERROR);
           goto cleanup;
         }
