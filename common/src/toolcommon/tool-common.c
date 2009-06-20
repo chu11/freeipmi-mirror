@@ -258,7 +258,6 @@ ipmi_open (const char *progname,
         }
     }
 
- out:
   return (ipmi_ctx);
 
  cleanup:
