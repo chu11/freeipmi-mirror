@@ -4,6 +4,14 @@ inband
 and build option??
 inband flag - discover vs. not-discover on locate
 
+general
+-------
+master read-write
+
+bmc-info
+--------
+get system info support
+
 ipmi-locate
 -----------
 (TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi
