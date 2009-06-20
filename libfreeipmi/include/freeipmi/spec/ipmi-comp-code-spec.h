@@ -188,22 +188,40 @@ extern "C" {
 
 /* IPMI_CMD_SEND_MESSAGE */
 
-#define IPMI_COMP_CODE_INVALID_SESSION_HANDLE                             0x80
-#define IPMI_COMP_CODE_INVALID_SESSION_HANDLE_STR \
+#define IPMI_COMP_CODE_SEND_MESSAGE_INVALID_SESSION_HANDLE                0x80
+#define IPMI_COMP_CODE_SEND_MESSAGE_INVALID_SESSION_HANDLE_STR \
   "Invalid Session Handle.  The session handle does not match up with any " \
   "curently active sessions for this channel."
 
-#define IPMI_COMP_CODE_LOST_ARBITRATION                                   0x81
-#define IPMI_COMP_CODE_LOST_ARBITRATION_STR \
+#define IPMI_COMP_CODE_SEND_MESSAGE_LOST_ARBITRATION                      0x81
+#define IPMI_COMP_CODE_SEND_MESSAGE_LOST_ARBITRATION_STR \
   "Lost Arbitration"
 
-#define IPMI_COMP_CODE_BUS_ERROR                                          0x82
-#define IPMI_COMP_CODE_BUS_ERROR_STR \
+#define IPMI_COMP_CODE_SEND_MESSAGE_BUS_ERROR                             0x82
+#define IPMI_COMP_CODE_SEND_MESSAGE_BUS_ERROR_STR \
   "Bus Error"
 
-#define IPMI_COMP_CODE_NAK_ON_WRITE                                       0x83
-#define IPMI_COMP_CODE_NAK_ON_WRITE_STR \
+#define IPMI_COMP_CODE_SEND_MESSAGE_NAK_ON_WRITE                          0x83
+#define IPMI_COMP_CODE_SEND_MESSAGE_NAK_ON_WRITE_STR \
   "NAK on Write"
+
+/* IPMI_CMD_MASTER_WRITE_READ */
+
+#define IPMI_COMP_CODE_MASTER_WRITE_READ_LOST_ARBITRATION                 0x81
+#define IPMI_COMP_CODE_MASTER_WRITE_READ_LOST_ARBITRATION_STR \
+  "Lost Arbitration"
+
+#define IPMI_COMP_CODE_MASTER_WRITE_READ_BUS_ERROR                        0x82
+#define IPMI_COMP_CODE_MASTER_WRITE_READ_BUS_ERROR_STR \
+  "Bus Error"
+
+#define IPMI_COMP_CODE_MASTER_WRITE_READ_NAK_ON_WRITE                     0x83
+#define IPMI_COMP_CODE_MASTER_WRITE_READ_NAK_ON_WRITE_STR \
+  "NAK on Write"
+
+#define IPMI_COMP_CODE_MASTER_WRITE_READ_TRUNCATED_READ                   0x84
+#define IPMI_COMP_CODE_MASTER_WRITE_READ_TRUNCATED_READ_STR \
+  "Truncated Read"
 
 /* IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS */
 

@@ -9,6 +9,8 @@
 
 	* bmc-config/, ipmi-pef-config/, common/src/configtool/: Code cleanup.
 
+	* libfreeipmi/: Add master write read support.
+
 	* Various code cleanup.
 	
 2009-06-19  Albert Chu <chu11@llnl.gov>

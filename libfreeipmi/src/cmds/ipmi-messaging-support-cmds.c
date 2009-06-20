@@ -216,6 +216,27 @@ fiid_template_t tmpl_cmd_get_bt_interface_capabilities_rs =
     { 0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_master_write_read_rq = 
+  {
+    { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,    "bus_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3,    "bus_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,    "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,    "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7,    "slave_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,    "read_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2040, "data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_master_write_read_rs =
+  {
+    { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 2040, "data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1055,6 +1076,45 @@ fill_cmd_get_bt_interface_capabilities (fiid_obj_t obj_cmd_rq)
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_BT_INTERFACE_CAPABILITIES);
   return (0);
 }
+
+int
+fill_cmd_master_write_read (uint8_t bus_type,
+                            uint8_t bus_id,
+                            uint8_t channel_number,
+                            uint8_t slave_address,
+                            uint8_t read_count,
+                            const void *data,
+                            unsigned int data_len,
+                            fiid_obj_t obj_cmd_rq)
+{
+  /* note, don't check channel number, since this is a master write-read command */
+  if (!IPMI_BUS_TYPE_VALID (bus_type)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_master_write_read_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_MASTER_WRITE_READ);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "bus_type", bus_type);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "bus_id", bus_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "slave_address", slave_address);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "read_count", read_count);
+  if (data && data_len)
+    FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "data", data, data_len);
+
+  return (0);
+}
+
 
 int
 fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
