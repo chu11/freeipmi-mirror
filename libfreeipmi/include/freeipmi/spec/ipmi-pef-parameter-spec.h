@@ -16,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-/* $Id: ipmi-pef-parameter-spec.h,v 1.9 2009-06-20 16:07:04 chu11 Exp $ */
+/* $Id: ipmi-pef-parameter-spec.h,v 1.10 2009-06-20 18:07:46 chu11 Exp $ */
 
 #ifndef IPMI_PEF_PARAMETER_SPEC_H
 #define IPMI_PEF_PARAMETER_SPEC_H
@@ -43,9 +43,9 @@ extern "C" {
 #define IPMI_PEF_PARAMETER_GROUP_CONTROL_TABLE                   15
 
 /* To avoid gcc warnings, add +1 in comparison */
-#define IPMI_PEF_PARAMETER_VALID(__pef_parameter)         \
-  (((__pef_parameter+1) > (IPMI_PEF_PARAMETER_SET_IN_PROGRESS+1)        \
-    && (__pef_parameter) <= IPMI_PEF_PARAMETER_GROUP_CONTROL_TABLE) ? 1 : 0)
+#define IPMI_PEF_PARAMETER_SELECTOR_VALID(__parameter_selector)         \
+  (((__parameter_selector+1) > (IPMI_PEF_PARAMETER_SET_IN_PROGRESS+1)        \
+    && (__parameter_selector) <= IPMI_PEF_PARAMETER_GROUP_CONTROL_TABLE) ? 1 : 0)
 
 #ifdef __cplusplus
 }

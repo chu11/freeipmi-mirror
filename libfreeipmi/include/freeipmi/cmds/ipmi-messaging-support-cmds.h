@@ -106,9 +106,21 @@ extern "C" {
 #define IPMI_GET_SYSTEM_INFO_PARAMETER                 0x0
 #define IPMI_GET_SYSTEM_INFO_PARAMETER_REVISION_ONLY   0x1
 
+#define IPMI_GET_SYSTEM_INFO_PARAMETER_VALID(__val) \
+  (((__val) == IPMI_GET_SYSTEM_INFO_PARAMETER       \
+    || (__val) == IPMI_GET_SYSTEM_INFO_PARAMETER_REVISION_ONLY) ? 1 : 0)
+
 #define IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1         0x0
 #define IPMI_SYSTEM_INFO_ENCODING_UTF_8                0x1
 #define IPMI_SYSTEM_INFO_ENCODING_UNICODE              0x2
+
+#define IPMI_SYSTEM_INFO_ENCODING_VALID(__val) \
+  (((__val) == IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1 \
+    || (__val) == IPMI_SYSTEM_INFO_ENCODING_UTF_8 \
+    || (__val) == IPMI_SYSTEM_INFO_ENCODING_UNICODE) ? 1 : 0)
+
+#define IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX      14
+#define IPMI_SYSTEM_INFO_STRING_LEN_MAX                16
 
 #define IPMI_LIST_ALGORITHMS_BY_CIPHER_SUITE 0x1
 #define IPMI_LIST_SUPPORTED_ALGORITHMS       0x0
@@ -293,17 +305,25 @@ extern fiid_template_t tmpl_cmd_get_device_guid_format_rs;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_rs;
 
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_firmware_version_first_set_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_firmware_version_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_name_first_set_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_name_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_operating_system_name_first_set_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_operating_system_name_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_primary_operating_system_name_first_set_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_primary_operating_system_name_rq;
 
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_rq;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_rs;
 
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_firmware_version_first_set_rs;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_firmware_version_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_name_first_set_rs;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_name_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_operating_system_name_first_set_rs;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_operating_system_name_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_primary_operating_system_name_first_set_rs;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_primary_operating_system_name_rs;
 
 extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_rq;
@@ -383,6 +403,65 @@ int fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number
                                                           fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_get_system_guid (fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_info_parameters (uint8_t parameter_selector,
+                                         const void *configuration_parameter_data,
+                                         unsigned int configuration_parameter_data_len,
+                                         fiid_obj_t obj_cmd_rq);
+  
+int fill_cmd_set_system_info_parameters_system_firmware_version_first_set (uint8_t set_selector,
+                                                                           uint8_t encoding,
+                                                                           uint8_t string_length,
+                                                                           const void *string_block,
+                                                                           unsigned int string_block_length,
+                                                                           fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_info_parameters_system_firmware_version (uint8_t set_selector,
+                                                                 const void *string_block,
+                                                                 unsigned int string_block_length,
+                                                                 fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_info_parameters_system_name_first_set (uint8_t set_selector,
+                                                               uint8_t encoding,
+                                                               uint8_t string_length,
+                                                               const void *string_block,
+                                                               unsigned int string_block_length,
+                                                               fiid_obj_t obj_cmd_rq);
+  
+int fill_cmd_set_system_info_parameters_system_name (uint8_t set_selector,
+                                                     const void *string_block,
+                                                     unsigned int string_block_length,
+                                                     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_info_parameters_primary_operating_system_name_first_set (uint8_t set_selector,
+                                                                                 uint8_t encoding,
+                                                                                 uint8_t string_length,
+                                                                                 const void *string_block,
+                                                                                 unsigned int string_block_length,
+                                                                                 fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_info_parameters_primary_operating_system_name (uint8_t set_selector,
+                                                                       const void *string_block,
+                                                                       unsigned int string_block_length,
+                                                                       fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_info_parameters_operating_system_name_first_set (uint8_t set_selector,
+                                                                         uint8_t encoding,
+                                                                         uint8_t string_length,
+                                                                         const void *string_block,
+                                                                         unsigned int string_block_length,
+                                                                         fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_info_parameters_operating_system_name (uint8_t set_selector,
+                                                               const void *string_block,
+                                                               unsigned int string_block_length,
+                                                               fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_get_system_info_parameters (uint8_t get_parameter,
+                                         uint8_t parameter_selector,
+                                         uint8_t set_selector,
+                                         uint8_t block_selector,
+                                         fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_get_channel_cipher_suites (uint8_t channel_number,
                                         uint8_t payload_type,

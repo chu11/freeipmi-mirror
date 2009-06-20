@@ -34,6 +34,7 @@
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
+#include "freeipmi/spec/ipmi-system-info-parameters-spec.h"
 
 #include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-fill-util.h"
@@ -355,7 +356,7 @@ fiid_template_t tmpl_cmd_set_system_info_parameters_system_firmware_version_rq =
     { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 
@@ -376,7 +377,7 @@ fiid_template_t tmpl_cmd_set_system_info_parameters_system_name_rq =
     { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 
@@ -397,7 +398,7 @@ fiid_template_t tmpl_cmd_set_system_info_parameters_primary_operating_system_nam
     { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 
@@ -418,7 +419,7 @@ fiid_template_t tmpl_cmd_set_system_info_parameters_operating_system_name_rq =
     { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 
@@ -461,7 +462,7 @@ fiid_template_t tmpl_cmd_get_system_info_parameters_system_firmware_version_rs =
     { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 
@@ -484,7 +485,7 @@ fiid_template_t tmpl_cmd_get_system_info_parameters_system_name_rs =
     { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 
@@ -507,7 +508,7 @@ fiid_template_t tmpl_cmd_get_system_info_parameters_primary_operating_system_nam
     { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 
@@ -530,7 +531,7 @@ fiid_template_t tmpl_cmd_get_system_info_parameters_operating_system_name_rs =
     { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,   "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,   "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 
@@ -1130,6 +1131,425 @@ fill_cmd_get_system_guid (fiid_obj_t obj_cmd_rq)
     }
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_GUID);
+
+  return (0);
+}
+
+int
+fill_cmd_set_system_info_parameters (uint8_t parameter_selector,
+                                     const void *configuration_parameter_data,
+                                     unsigned int configuration_parameter_data_len,
+                                     fiid_obj_t obj_cmd_rq)
+{
+  if (!configuration_parameter_data
+      || !configuration_parameter_data_len
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_info_parameters_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq,
+                     "cmd",
+                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+                          "configuration_parameter_data",
+                          configuration_parameter_data,
+                          configuration_parameter_data_len);
+
+  return (0);
+}
+  
+int
+fill_cmd_set_system_info_parameters_system_firmware_version_first_set (uint8_t set_selector,
+                                                                       uint8_t encoding,
+                                                                       uint8_t string_length,
+                                                                       const void *string_block,
+                                                                       unsigned int string_block_length,
+                                                                       fiid_obj_t obj_cmd_rq)
+{
+  uint8_t stringbuf[IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX];
+
+  if (!IPMI_SYSTEM_INFO_ENCODING_VALID (encoding)
+      || string_block_length > IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_info_parameters_system_firmware_version_first_set_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq,
+                     "cmd",
+                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "encoding", encoding);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "string_length", string_length);
+
+  /* achu: spec is not clear if this data should be 0 extended, we
+   * will do it to be on the safe side
+   */
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX);
+  if (string_block && string_block_length)
+    memcpy (stringbuf, string_block, string_block_length);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX);
+
+  return (0);
+}
+
+int
+fill_cmd_set_system_info_parameters_system_firmware_version (uint8_t set_selector,
+                                                             const void *string_block,
+                                                             unsigned int string_block_length,
+                                                             fiid_obj_t obj_cmd_rq)
+{
+  uint8_t stringbuf[IPMI_SYSTEM_INFO_STRING_LEN_MAX];
+
+  if (string_block_length > IPMI_SYSTEM_INFO_STRING_LEN_MAX
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_info_parameters_system_firmware_version_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq,
+                     "cmd",
+                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+
+  /* achu: spec is not clear if this data should be 0 extended, we
+   * will do it to be on the safe side
+   */
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  if (string_block && string_block_length)
+    memcpy (stringbuf, string_block, string_block_length);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+
+  return (0);
+}
+
+int
+fill_cmd_set_system_info_parameters_system_name_first_set (uint8_t set_selector,
+                                                           uint8_t encoding,
+                                                           uint8_t string_length,
+                                                           const void *string_block,
+                                                           unsigned int string_block_length,
+                                                           fiid_obj_t obj_cmd_rq)
+{
+  uint8_t stringbuf[IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX];
+
+  if (!IPMI_SYSTEM_INFO_ENCODING_VALID (encoding)
+      || string_block_length > IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_info_parameters_system_name_first_set_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq,
+                     "cmd",
+                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "encoding", encoding);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "string_length", string_length);
+
+  /* achu: spec is not clear if this data should be 0 extended, we
+   * will do it to be on the safe side
+   */
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX);
+  if (string_block && string_block_length)
+    memcpy (stringbuf, string_block, string_block_length);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX);
+
+  return (0);
+}
+  
+int
+fill_cmd_set_system_info_parameters_system_name (uint8_t set_selector,
+                                                 const void *string_block,
+                                                 unsigned int string_block_length,
+                                                 fiid_obj_t obj_cmd_rq)
+{
+  uint8_t stringbuf[IPMI_SYSTEM_INFO_STRING_LEN_MAX];
+
+  if (string_block_length > IPMI_SYSTEM_INFO_STRING_LEN_MAX
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_info_parameters_system_name_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq,
+                     "cmd",
+                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+
+  /* achu: spec is not clear if this data should be 0 extended, we
+   * will do it to be on the safe side
+   */
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  if (string_block && string_block_length)
+    memcpy (stringbuf, string_block, string_block_length);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+
+  return (0);
+}
+
+int
+fill_cmd_set_system_info_parameters_primary_operating_system_name_first_set (uint8_t set_selector,
+                                                                             uint8_t encoding,
+                                                                             uint8_t string_length,
+                                                                             const void *string_block,
+                                                                             unsigned int string_block_length,
+                                                                             fiid_obj_t obj_cmd_rq)
+{
+  uint8_t stringbuf[IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX];
+
+  if (!IPMI_SYSTEM_INFO_ENCODING_VALID (encoding)
+      || string_block_length > IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_info_parameters_primary_operating_system_name_first_set_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq,
+                     "cmd",
+                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "encoding", encoding);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "string_length", string_length);
+
+  /* achu: spec is not clear if this data should be 0 extended, we
+   * will do it to be on the safe side
+   */
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX);
+  if (string_block && string_block_length)
+    memcpy (stringbuf, string_block, string_block_length);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX);
+
+  /* achu: spec is not clear if this data should be 0 extended, we
+   * will do it to be on the safe side
+   */
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  if (string_block && string_block_length)
+    memcpy (stringbuf, string_block, string_block_length);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+
+  return (0);
+}
+
+int
+fill_cmd_set_system_info_parameters_primary_operating_system_name (uint8_t set_selector,
+                                                                   const void *string_block,
+                                                                   unsigned int string_block_length,
+                                                                   fiid_obj_t obj_cmd_rq)
+{
+  uint8_t stringbuf[IPMI_SYSTEM_INFO_STRING_LEN_MAX];
+
+  if (string_block_length > IPMI_SYSTEM_INFO_STRING_LEN_MAX
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_info_parameters_primary_operating_system_name_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq,
+                     "cmd",
+                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+
+  /* achu: spec is not clear if this data should be 0 extended, we
+   * will do it to be on the safe side
+   */
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  if (string_block && string_block_length)
+    memcpy (stringbuf, string_block, string_block_length);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+
+  return (0);
+}
+
+int
+fill_cmd_set_system_info_parameters_operating_system_name_first_set (uint8_t set_selector,
+                                                                     uint8_t encoding,
+                                                                     uint8_t string_length,
+                                                                     const void *string_block,
+                                                                     unsigned int string_block_length,
+                                                                     fiid_obj_t obj_cmd_rq)
+{
+  uint8_t stringbuf[IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX];
+
+  if (!IPMI_SYSTEM_INFO_ENCODING_VALID (encoding)
+      || string_block_length > IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_info_parameters_operating_system_name_first_set_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq,
+                     "cmd",
+                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "encoding", encoding);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "string_length", string_length);
+
+  /* achu: spec is not clear if this data should be 0 extended, we
+   * will do it to be on the safe side
+   */
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX);
+  if (string_block && string_block_length)
+    memcpy (stringbuf, string_block, string_block_length);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX);
+
+  return (0);
+}
+
+int
+fill_cmd_set_system_info_parameters_operating_system_name (uint8_t set_selector,
+                                                           const void *string_block,
+                                                           unsigned int string_block_length,
+                                                           fiid_obj_t obj_cmd_rq)
+{
+  uint8_t stringbuf[IPMI_SYSTEM_INFO_STRING_LEN_MAX];
+
+  if (string_block_length > IPMI_SYSTEM_INFO_STRING_LEN_MAX
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_info_parameters_operating_system_name_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq,
+                     "cmd",
+                     IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+
+  /* achu: spec is not clear if this data should be 0 extended, we
+   * will do it to be on the safe side
+   */
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  if (string_block && string_block_length)
+    memcpy (stringbuf, string_block, string_block_length);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+
+  return (0);
+}
+
+int
+fill_cmd_get_system_info_parameters (uint8_t get_parameter,
+                                     uint8_t parameter_selector,
+                                     uint8_t set_selector,
+                                     uint8_t block_selector,
+                                     fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_GET_SYSTEM_INFO_PARAMETER_VALID (get_parameter)
+      || !IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_VALID (parameter_selector)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_system_info_parameters_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "get_parameter", get_parameter);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
 
   return (0);
 }

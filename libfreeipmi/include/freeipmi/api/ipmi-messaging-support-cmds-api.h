@@ -93,6 +93,110 @@ int ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
 
 int ipmi_cmd_get_system_guid (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_set_system_info_parameters_system_firmware_version_first_set (ipmi_ctx_t ctx,
+                                                                           uint8_t set_selector,
+                                                                           uint8_t encoding,
+                                                                           uint8_t string_length,
+                                                                           const void *string_block,
+                                                                           unsigned int string_block_length,
+                                                                           fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_set_system_info_parameters_system_firmware_version (ipmi_ctx_t ctx,
+                                                                 uint8_t set_selector,
+                                                                 const void *string_block,
+                                                                 unsigned int string_block_length,
+                                                                 fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_set_system_info_parameters_system_name_first_set (ipmi_ctx_t ctx,
+                                                               uint8_t set_selector,
+                                                               uint8_t encoding,
+                                                               uint8_t string_length,
+                                                               const void *string_block,
+                                                               unsigned int string_block_length,
+                                                               fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_set_system_info_parameters_system_name (ipmi_ctx_t ctx,
+                                                     uint8_t set_selector,
+                                                     const void *string_block,
+                                                     unsigned int string_block_length,
+                                                     fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_set_system_info_parameters_primary_operating_system_name_first_set (ipmi_ctx_t ctx,
+                                                                                 uint8_t set_selector,
+                                                                                 uint8_t encoding,
+                                                                                 uint8_t string_length,
+                                                                                 const void *string_block,
+                                                                                 unsigned int string_block_length,
+                                                                                 fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_set_system_info_parameters_primary_operating_system_name (ipmi_ctx_t ctx,
+                                                                       uint8_t set_selector,
+                                                                       const void *string_block,
+                                                                       unsigned int string_block_length,
+                                                                       fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_set_system_info_parameters_operating_system_name_first_set (ipmi_ctx_t ctx,
+                                                                         uint8_t set_selector,
+                                                                         uint8_t encoding,
+                                                                         uint8_t string_length,
+                                                                         const void *string_block,
+                                                                         unsigned int string_block_length,
+                                                                         fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_set_system_info_parameters_operating_system_name (ipmi_ctx_t ctx,
+                                                               uint8_t set_selector,
+                                                               const void *string_block,
+                                                               unsigned int string_block_length,
+                                                               fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_system_info_parameters_system_firmware_version_first_set (ipmi_ctx_t ctx,
+                                                                           uint8_t get_parameter,
+                                                                           uint8_t set_selector,
+                                                                           uint8_t block_selector,
+                                                                           fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_system_info_parameters_system_firmware_version (ipmi_ctx_t ctx,
+                                                                 uint8_t get_parameter,
+                                                                 uint8_t set_selector,
+                                                                 uint8_t block_selector,
+                                                                 fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_system_info_parameters_system_name_first_set (ipmi_ctx_t ctx,
+                                                               uint8_t get_parameter,
+                                                               uint8_t set_selector,
+                                                               uint8_t block_selector,
+                                                               fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_system_info_parameters_system_name (ipmi_ctx_t ctx,
+                                                     uint8_t get_parameter,
+                                                     uint8_t set_selector,
+                                                     uint8_t block_selector,
+                                                     fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_system_info_parameters_primary_operating_system_name_first_set (ipmi_ctx_t ctx,
+                                                                                 uint8_t get_parameter,
+                                                                                 uint8_t set_selector,
+                                                                                 uint8_t block_selector,
+                                                                                 fiid_obj_t obj_cmd_rs);
+  
+int ipmi_cmd_get_system_info_parameters_primary_operating_system_name (ipmi_ctx_t ctx,
+                                                                       uint8_t get_parameter,
+                                                                       uint8_t set_selector,
+                                                                       uint8_t block_selector,
+                                                                       fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_system_info_parameters_operating_system_name_first_set (ipmi_ctx_t ctx,
+                                                                         uint8_t get_parameter,
+                                                                         uint8_t set_selector,
+                                                                         uint8_t block_selector,
+                                                                         fiid_obj_t obj_cmd_rs);
+  
+int ipmi_cmd_get_system_info_parameters_operating_system_name (ipmi_ctx_t ctx,
+                                                               uint8_t get_parameter,
+                                                               uint8_t set_selector,
+                                                               uint8_t block_selector,
+                                                               fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_get_session_challenge (ipmi_ctx_t ctx,
                                     uint8_t authentication_type,
                                     const char *user_name,

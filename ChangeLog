@@ -8,6 +8,8 @@
 	* libfreeipmi/: Make configuration parameter data fields optional.
 
 	* bmc-config/, ipmi-pef-config/, common/src/configtool/: Code cleanup.
+
+	* Various code cleanup.
 	
 2009-06-19  Albert Chu <chu11@llnl.gov>
 

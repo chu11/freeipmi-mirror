@@ -16,23 +16,23 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
  */
 
-#ifndef _IPMI_SYSTEM_INFORMATION_PARAMETER_SPEC_H
-#define _IPMI_SYSTEM_INFORMATION_PARAMETER_SPEC_H
+#ifndef _IPMI_SYSTEM_INFO_PARAMETER_SPEC_H
+#define _IPMI_SYSTEM_INFO_PARAMETER_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define IPMI_SYSTEM_INFORMATION_PARAMETER_SET_IN_PROGRESS                  0x0
-#define IPMI_SYSTEM_INFORMATION_PARAMETER_SYSTEM_FIRMWARE_VERSION          0x1
-#define IPMI_SYSTEM_INFORMATION_PARAMETER_SYSTEM_NAME                      0x2
-#define IPMI_SYSTEM_INFORMATION_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME    0x3
-#define IPMI_SYSTEM_INFORMATION_PARAMETER_OPERATING_SYSTEM_NAME            0x4
+#define IPMI_SYSTEM_INFO_PARAMETER_SET_IN_PROGRESS                  0x0
+#define IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION          0x1
+#define IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME                      0x2
+#define IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME    0x3
+#define IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME            0x4
 
 /* Add +1 to avoid compiler warnings */
-#define IPMI_SYSTEM_INFORMATION_PARAMETER_SELECTOR_VALID(__parameter_selector)              \
-  ((((__parameter_selector+1)) > (IPMI_SYSTEM_INFORMATION_PARAMETER_SET_IN_PROGRESS+1) && \
-    (__parameter_selector) <= IPMI_SYSTEM_INFORMATION_PARAMETER_OPERATING_SYSTEM_NAME) ? 1 : 0)
+#define IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_VALID(__parameter_selector)              \
+  ((((__parameter_selector+1)) > (IPMI_SYSTEM_INFO_PARAMETER_SET_IN_PROGRESS+1) && \
+    (__parameter_selector) <= IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) ? 1 : 0)
 
 #define IPMI_SYSTEM_INFO_NO_SET_SELECTOR                                    0x0
 #define IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR                                  0x0
@@ -40,4 +40,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif /* _IPMI_SYSTEM_INFORMATION_PARAMETER_SPEC_H */
+#endif /* _IPMI_SYSTEM_INFO_PARAMETER_SPEC_H */

@@ -516,7 +516,8 @@ ipmi_cmd_set_system_boot_options (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!fiid_obj_valid (obj_cmd_rs))
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
+      || !fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -876,7 +877,8 @@ ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!fiid_obj_valid (obj_cmd_rs))
+  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
+      || !fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
