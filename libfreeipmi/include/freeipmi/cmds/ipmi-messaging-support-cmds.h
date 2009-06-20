@@ -279,6 +279,10 @@ extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rq;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rs;
 
+extern fiid_template_t tmpl_cmd_get_system_guid_rq;
+extern fiid_template_t tmpl_cmd_get_system_guid_rs;
+extern fiid_template_t tmpl_cmd_get_device_guid_format_rs;
+
 extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_rq;
 extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_rs;
 
@@ -354,6 +358,8 @@ int fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number
                                                           uint8_t maximum_privilege_level,
                                                           uint8_t get_ipmi_v20_extended_data,
                                                           fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_get_system_guid (fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_get_channel_cipher_suites (uint8_t channel_number,
                                         uint8_t payload_type,

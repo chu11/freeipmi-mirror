@@ -31,6 +31,7 @@ Edition)
 Sun Fire 4100 with ILOM
 Tyan S4811 with SMDC daughter card
 Supermicro X6-DHR-1G with BMC2.0 daughter card
+Dell Poweredge R610
 
 The remaining motherboards (and subsequent bugs/workarounds) listed
 below are from interaction with users in the community and I have
@@ -273,9 +274,9 @@ work.  User must configure password using IPMI 1.5 formatted payloads.
 ipmi-fru
 --------
 
-Forgotten/Undocumented Motherboard(s) and Inventec 5441: Some FRU data
-has invalid checksums.  Resolved with workaround to ignore the
-checksum (and pray for the best).
+Forgotten/Undocumented Motherboard(s), Inventec 5441, Dell Poweredge
+R610: Some FRU data has invalid checksums.  Resolved with workaround
+to ignore the checksum (and pray for the best).
 
 ipmi-sensors/ipmimonitoring
 ---------------------------

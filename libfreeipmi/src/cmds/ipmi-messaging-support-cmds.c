@@ -288,6 +288,41 @@ fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rs =
     { 0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_get_system_guid_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_system_guid_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 128, "guid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+/* achu: format in IPMI spec differs from the format in the "Wired for
+   Management Baseline" 2.0 document.  In the IPMI spec there is a 2 byte
+   field called "clock_seq_and_reserved", and in "Wired for Management
+   Baseline" there is a 1 byte field called
+   "clock_seq_hi_and_reserved" and a 1 byte field called
+   "clock_seq_low".  I am going with the "Wired for Management
+   Baseline" format under the assumption the IPMI spec has a typo.
+*/
+fiid_template_t tmpl_cmd_get_system_guid_format_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 48,  "node", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
+    { 8,   "clock_seq_low", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "clock_seq_hi_and_reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16,  "time_high_and_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
+    { 16,  "time_mid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
+    { 32,  "time_low", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_channel_cipher_suites_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -864,6 +899,26 @@ fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "get_ipmi_v2.0_extended_data", get_ipmi_v20_extended_data);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_level", maximum_privilege_level);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+
+  return (0);
+}
+
+int
+fill_cmd_get_system_guid (fiid_obj_t obj_cmd_rq)
+{
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_system_guid_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_GUID);
 
   return (0);
 }

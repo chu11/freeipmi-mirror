@@ -91,6 +91,8 @@ int ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
                                                           uint8_t get_ipmi_v20_extended_data,
                                                           fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_get_system_guid (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_get_session_challenge (ipmi_ctx_t ctx,
                                     uint8_t authentication_type,
                                     const char *user_name,

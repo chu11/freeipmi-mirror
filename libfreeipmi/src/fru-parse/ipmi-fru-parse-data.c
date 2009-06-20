@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse-data.c,v 1.10 2009-05-03 17:40:36 chu11 Exp $
+ *  $Id: ipmi-fru-parse-data.c,v 1.11 2009-06-20 14:26:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -96,6 +96,21 @@ _parse_type_length (ipmi_fru_parse_ctx_t ctx,
   assert (number_of_data_bytes);
   
   type_length = areabufptr[current_area_offset];
+
+  /* IPMI Workaround 
+   *
+   * Dell Poweredge R610
+   *
+   * My reading of the FRU Spec is that all non-custom fields are
+   * required to be listed by the vendor.  However, on this
+   * motherboard, some areas list this, indicating that there is
+   * no more data to be parsed.  So now, for "required" fields, I
+   * check to see if the type-length field is a sentinel before
+   * calling this function.
+   */
+
+  assert (type_length != IPMI_FRU_SENTINEL_VALUE);
+
   type_code = (type_length & IPMI_FRU_TYPE_LENGTH_TYPE_CODE_MASK) >> IPMI_FRU_TYPE_LENGTH_TYPE_CODE_SHIFT;
   (*number_of_data_bytes) = type_length & IPMI_FRU_TYPE_LENGTH_NUMBER_OF_DATA_BYTES_MASK;
 
@@ -174,6 +189,9 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
     (*chassis_type) = areabufptr[area_offset];
   area_offset++;
 
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if (_parse_type_length (ctx,
                           areabufptr,
                           areabuflen,
@@ -183,6 +201,9 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
+
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
 
   if (_parse_type_length (ctx,
                           areabufptr,
@@ -231,6 +252,7 @@ ipmi_fru_parse_chassis_info_area (ipmi_fru_parse_ctx_t ctx,
     }
 #endif
 
+ out:
   rv = 0;
  cleanup:
   return (rv);
@@ -326,6 +348,9 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
   else
     area_offset += 3;
 
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if (_parse_type_length (ctx,
                           areabufptr,
                           areabuflen,
@@ -335,6 +360,9 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
+
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
 
   if (_parse_type_length (ctx,
                           areabufptr,
@@ -346,6 +374,9 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
 
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if (_parse_type_length (ctx,
                           areabufptr,
                           areabuflen,
@@ -356,6 +387,9 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
 
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if (_parse_type_length (ctx,
                           areabufptr,
                           areabuflen,
@@ -365,6 +399,9 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
+
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
 
   if (_parse_type_length (ctx,
                           areabufptr,
@@ -413,6 +450,7 @@ ipmi_fru_parse_board_info_area (ipmi_fru_parse_ctx_t ctx,
     }
 #endif
 
+ out:
   rv = 0;
  cleanup:
   return (rv);
@@ -488,6 +526,9 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
     (*language_code) = areabufptr[area_offset];
   area_offset++;
 
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if (_parse_type_length (ctx,
                           areabufptr,
                           areabuflen,
@@ -497,6 +538,9 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
+
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
 
   if (_parse_type_length (ctx,
                           areabufptr,
@@ -508,6 +552,9 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
 
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if (_parse_type_length (ctx,
                           areabufptr,
                           areabuflen,
@@ -517,6 +564,9 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
+
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
 
   if (_parse_type_length (ctx,
                           areabufptr,
@@ -528,6 +578,9 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
 
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if (_parse_type_length (ctx,
                           areabufptr,
                           areabuflen,
@@ -538,6 +591,9 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
 
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
+
   if (_parse_type_length (ctx,
                           areabufptr,
                           areabuflen,
@@ -547,6 +603,9 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
+
+  if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
+    goto out;
 
   if (_parse_type_length (ctx,
                           areabufptr,
@@ -595,6 +654,7 @@ ipmi_fru_parse_product_info_area (ipmi_fru_parse_ctx_t ctx,
     }
 #endif
 
+ out:
   rv = 0;
  cleanup:
   return (rv);

@@ -347,6 +347,42 @@ fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rs =
     { 0, "", 0}
   };
 
+Get System GUID Request
+-----------------------
+
+fiid_template_t tmpl_cmd_get_system_guid_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Get System GUID Response
+------------------------
+
+fiid_template_t tmpl_cmd_get_system_guid_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 128, "guid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Get System GUID (with Format) Response
+--------------------------------------
+
+fiid_template_t tmpl_cmd_get_system_guid_format_rs =
+  {
+    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 48,  "node", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
+    { 8,   "clock_seq_low", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,   "clock_seq_hi_and_reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16,  "time_high_and_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
+    { 16,  "time_mid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
+    { 32,  "time_low", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
+    { 0, "", 0}
+  };
+
 Get Channel Cipher Suites Request
 ---------------------------------
 

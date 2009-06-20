@@ -1,3 +1,10 @@
+2009-06-20  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/fru-parse/: Handle
+	FRU parsing corner case.
+
+	* libfreeipmi/: Add get system guid command.
+	
 2009-06-19  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fru-parse/: Handle FRU read corner case.
