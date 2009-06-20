@@ -85,7 +85,7 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel
     }
 
   state_data->serial_channel_number_initialized = 1;
-  state_data->lan_channel_number = channel_number;
+  state_data->serial_channel_number = channel_number;
   *channel_num = state_data->serial_channel_number;
 
   return (CONFIG_ERR_SUCCESS);
