@@ -62,16 +62,19 @@ copy ipmi-oem stuff in??
 
 ipmi-oem
 --------
-inventec disable ports
+dell poweredge service tag, asset tag
+dell poweredge power monitoring/control stuff
 inventec user disable
-inventec firmware revision
 
 sensors/monitoring
 ------------------
 (TEST) make sure bridging still works w/ sensor-read lib
 (TEST) make sure oem still outputs fine
 option output via entity_id organization (i.e. groups of owners)
-entity-id name options (and in ipmi-sel)
+
+sensors/monitoring/sel
+----------------------
+entity-id prefix naming
 
 ipmi-chassis-config
 -------------------
