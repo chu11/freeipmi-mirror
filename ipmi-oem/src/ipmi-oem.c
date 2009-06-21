@@ -46,7 +46,7 @@ typedef int (*oem_callback)(ipmi_oem_state_data_t *);
 struct ipmi_oem_command
 {
   char *oem_command;
-  char *description;
+  char *command_options;
   int required_oem_options;
   oem_callback func;
 };
@@ -60,19 +60,19 @@ struct ipmi_oem_id
 struct ipmi_oem_command oem_inventec[] =
   {
     { "get-nic-status",
-      "get NIC status",
+      NULL,
       0,
       ipmi_oem_inventec_get_nic_status},
     { "set-nic-status",
-      "set NIC status",
+      "<dedicated|shared>",
       1,
       ipmi_oem_inventec_set_nic_status},
     { "get-mac-address",
-      "get MAC address",
+      NULL,
       0,
       ipmi_oem_inventec_get_mac_address},
     { "set-mac-address",
-      "set MAC address",
+      "<dedicated|shared> <MACADDRESS>",
       2,
       ipmi_oem_inventec_set_mac_address},
     { NULL, NULL, 0, NULL},
@@ -81,7 +81,7 @@ struct ipmi_oem_command oem_inventec[] =
 struct ipmi_oem_command oem_supermicro[] =
   {
     { "reset-intrusion",
-      "reset motherboard intrusion flag",
+      NULL,
       0,
       ipmi_oem_supermicro_reset_intrusion},
     { NULL, NULL, 0, NULL},
@@ -107,9 +107,13 @@ _list (void)
 
       while (oem_cmd && oem_cmd->oem_command)
         {
-          printf ("    Command: %s - %s\n",
-                  oem_cmd->oem_command,
-                  oem_cmd->description);
+          if (oem_cmd->command_options)
+            printf ("    Command: %s %s\n",
+                    oem_cmd->oem_command,
+                    oem_cmd->command_options);
+          else
+            printf ("    Command: %s\n",
+                    oem_cmd->oem_command);
           oem_cmd++;
         }
 
