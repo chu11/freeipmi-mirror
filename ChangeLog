@@ -2,6 +2,8 @@
 
 	* ipmi-oem/src/: Add options output into --list output, remove
 	description output.
+
+	* libfreeipmi/: Make ipmi_entity_ids_pretty array.
 	
 2009-06-20  Albert Chu <chu11@llnl.gov>
 

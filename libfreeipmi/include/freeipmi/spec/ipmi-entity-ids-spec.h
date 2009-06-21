@@ -97,6 +97,9 @@ extern "C" {
 
 extern const char *const ipmi_entity_ids[];
 
+/* properly capitalize, for some entries if entity has an "or" or "/" remove it and pick one element, etc. */
+extern const char *const ipmi_entity_ids_pretty[];
+
 #ifdef __cplusplus
 }
 #endif
