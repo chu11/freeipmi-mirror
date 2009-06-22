@@ -111,6 +111,9 @@ o ipmi-sensors
     Event Enabled" or "Deassertion Event Enabled" for assertion and
     deassertion event listings (changed from a single "Assertion
     Events Enabled" or "Deassertion Events Enabled").
+  - Under verbose output, do not output Nominal reading, Normal Min.,
+    or Normal Max. if SDR flags do not indicate the values are
+    specified.
   - Output record-type names in addition to record type hex code in
     very-verbose output.
   - Under very verbose output, default to abbreviated units.

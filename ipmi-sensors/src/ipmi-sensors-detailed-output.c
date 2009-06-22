@@ -409,6 +409,9 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
                                         unsigned int sdr_record_len,
                                         char *sensor_units_str)
 {
+  uint8_t nominal_reading_specified = 0;
+  uint8_t normal_maximum_specified = 0;
+  uint8_t normal_minimum_specified = 0;
   double *nominal_reading = NULL;
   double *normal_maximum = NULL;
   double *normal_minimum = NULL;
@@ -422,12 +425,26 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   assert (sensor_units_str);
   assert (state_data->prog_data->args->verbose_count >= 1);
 
+  if (ipmi_sdr_parse_sensor_reading_ranges_specified (state_data->sdr_parse_ctx,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      &nominal_reading_specified,
+                                                      &normal_maximum_specified,
+                                                      &normal_minimum_specified) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_reading_ranges_specified: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+
   if (ipmi_sdr_parse_sensor_reading_ranges (state_data->sdr_parse_ctx,
                                             sdr_record,
                                             sdr_record_len,
-                                            &nominal_reading,
-                                            &normal_maximum,
-                                            &normal_minimum,
+                                            (nominal_reading_specified) ? &nominal_reading : NULL,
+                                            (normal_maximum_specified) ? &normal_maximum : NULL,
+                                            (normal_minimum_specified) ? &normal_minimum : NULL,
                                             &sensor_maximum_reading,
                                             &sensor_minimum_reading) < 0)
     {

@@ -244,7 +244,14 @@ int ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
                                          uint8_t *analog_data_format);
 
 /* For Full SDR records */
-/* Returns NULL for pointers if not available */
+int ipmi_sdr_parse_sensor_reading_ranges_specified (ipmi_sdr_parse_ctx_t ctx,
+                                                    const void *sdr_record,
+                                                    unsigned int sdr_record_len,
+                                                    uint8_t *nominal_reading_specified,
+                                                    uint8_t *normal_maximum_specified,
+                                                    uint8_t *normal_minimum_specified);
+
+/* For Full SDR records */
 /* Results must be freed by user */
 int ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
                                           const void *sdr_record,
@@ -256,6 +263,7 @@ int ipmi_sdr_parse_sensor_reading_ranges (ipmi_sdr_parse_ctx_t ctx,
                                           double **sensor_minimum_reading);
 
 /* For Full SDR records */
+/* Results must be freed by user */
 int ipmi_sdr_parse_thresholds (ipmi_sdr_parse_ctx_t ctx,
                                const void *sdr_record,
                                unsigned int sdr_record_len,
