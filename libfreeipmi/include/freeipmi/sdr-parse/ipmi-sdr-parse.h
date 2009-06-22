@@ -231,6 +231,8 @@ int ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
                                        uint8_t *upper_non_recoverable_threshold);
 
 /* For Full SDR records */
+/* b_exponent - sometimes documented as k1 */
+/* r_exponent - sometimes documented as k2 */
 int ipmi_sdr_parse_sensor_decoding_data (ipmi_sdr_parse_ctx_t ctx,
                                          const void *sdr_record,
                                          unsigned int sdr_record_len,

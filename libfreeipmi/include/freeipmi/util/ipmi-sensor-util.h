@@ -31,6 +31,8 @@ int ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen);
 
 const char *ipmi_get_sensor_type_string (uint8_t sensor_type);
 
+/* b_exponent - sometimes documented as k1 */
+/* r_exponent - sometimes documented as k2 */
 int ipmi_sensor_decode_value (int8_t r_exponent,
                               int8_t b_exponent,
                               int16_t m,
@@ -40,6 +42,8 @@ int ipmi_sensor_decode_value (int8_t r_exponent,
                               uint8_t raw_data,
                               double *value);
 
+/* b_exponent - sometimes documented as k1 */
+/* r_exponent - sometimes documented as k2 */
 int ipmi_sensor_decode_raw_value (int8_t r_exponent,
                                   int8_t b_exponent,
                                   int16_t m,
