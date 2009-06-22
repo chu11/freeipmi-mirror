@@ -6,7 +6,6 @@ inband flag - discover vs. not-discover on locate
 
 general
 -------
-master read-write
 b_exponent, r_expoentnt -> k1/k2
 
 bmc-info
@@ -65,6 +64,13 @@ ipmi-oem
 dell poweredge service tag, asset tag
 dell poweredge power monitoring/control stuff
 inventec user disable
+
+ipmi-sensors
+------------
+check normal min/max output flags
+accuracy output
+tolerance output
+sensor direction output
 
 sensors/monitoring
 ------------------
