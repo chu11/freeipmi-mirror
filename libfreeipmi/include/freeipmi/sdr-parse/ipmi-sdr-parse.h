@@ -129,6 +129,12 @@ int ipmi_sdr_parse_sensor_capabilities (ipmi_sdr_parse_ctx_t ctx,
                                         uint8_t *entity_ignore_support);
 
 /* For Full, Compact SDR records */
+int ipmi_sdr_parse_sensor_direction (ipmi_sdr_parse_ctx_t ctx,
+                                     const void *sdr_record,
+                                     unsigned int sdr_record_len,
+                                     uint8_t *sensor_direction);
+
+/* For Full, Compact SDR records */
 /* event reading type must indicate a discrete sensor */
 int ipmi_sdr_parse_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
                                         const void *sdr_record,

@@ -19,6 +19,12 @@
 	* ipmi-sensors/: Do not output Nominal, Normal Min., Normal
 	Max. reading unless SDR flags indicate unavailable.
 		
+	* libfreeipmi/include/freeipmi/sdr-parse/,
+	libfreeipmi/src/sdr-parse/
+	(ipmi_sdr_parse_sensor_direction): New function.
+
+	* ipmi-sensors/: Output sensor direction under very verbose output.
+
 2009-06-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/src/: Add options output into --list output, remove

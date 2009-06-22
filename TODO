@@ -6,7 +6,7 @@ inband flag - discover vs. not-discover on locate
 
 general
 -------
-b_exponent, r_expoentnt -> k1/k2
+forwarded command support (errata 35b)
 
 bmc-info
 --------

@@ -120,7 +120,7 @@ fiid_template_t tmpl_sdr_full_sensor_record =
     { 6, "accuracy_ls", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "b_ms", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Accuracy, Accuracy exp */
-    { 2, "accuracy_exp.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "sensor_direction", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "accuracy_exp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "accuracy_ms", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* R exp, B exp (2s complement, signed) */
@@ -275,7 +275,7 @@ fiid_template_t tmpl_sdr_full_sensor_record_non_threshold_based_sensors =
     { 6, "accuracy_ls", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "b_ms", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Accuracy, Accuracy exp */
-    { 2, "accuracy_exp.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "sensor_direction", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "accuracy_exp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "accuracy_ms", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* R exp, B exp (2s complement, signed) */
@@ -431,7 +431,7 @@ fiid_template_t tmpl_sdr_full_sensor_record_threshold_based_sensors =
     { 6, "accuracy_ls", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "b_ms", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Accuracy, Accuracy exp */
-    { 2, "accuracy_exp.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "sensor_direction", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "accuracy_exp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "accuracy_ms", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* R exp, B exp (2s complement, signed) */

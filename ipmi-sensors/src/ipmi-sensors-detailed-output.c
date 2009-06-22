@@ -1101,6 +1101,46 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
 }
 
 static int
+_detailed_output_sensor_direction (ipmi_sensors_state_data_t *state_data,
+                                   const void *sdr_record,
+                                   unsigned int sdr_record_len)
+{
+  uint8_t sensor_direction = 0;
+  int rv = -1;
+
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
+
+  if (ipmi_sdr_parse_sensor_direction (state_data->sdr_parse_ctx,
+                                       sdr_record,
+                                       sdr_record_len,
+                                       &sensor_direction) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_direction: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+
+  if (sensor_direction == IPMI_SDR_SENSOR_DIRECTION_UNSPECIFIED)
+    pstdout_printf (state_data->pstate,
+                    "Sensor Direction: Unspecified\n");
+  else if (sensor_direction == IPMI_SDR_SENSOR_DIRECTION_INPUT)
+    pstdout_printf (state_data->pstate,
+                    "Sensor Direction: Input\n");
+  else if (sensor_direction == IPMI_SDR_SENSOR_DIRECTION_OUTPUT)
+    pstdout_printf (state_data->pstate,
+                    "Sensor Direction: Output\n");
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
 _detailed_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                                      char **event_message_list,
                                      unsigned int event_message_list_len)
@@ -1295,6 +1335,11 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                                          sdr_record_len,
                                          record_type) < 0)
         return (-1);
+
+      if (_detailed_output_sensor_direction (state_data,
+                                             sdr_record,
+                                             sdr_record_len) < 0)
+        return (-1);
     }
 
   if (state_data->prog_data->args->legacy_output)
@@ -1367,6 +1412,11 @@ _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
                                          sdr_record,
                                          sdr_record_len,
                                          record_type) < 0)
+        return (-1);
+
+      if (_detailed_output_sensor_direction (state_data,
+                                             sdr_record,
+                                             sdr_record_len) < 0)
         return (-1);
     }
 
