@@ -689,18 +689,18 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
        * get_sensor_reading.  Fall through to below.
        */
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE:
-      ret = ipmi_get_generic_event_message (system_event_record_data.event_type_code,
-                                            system_event_record_data.offset_from_event_reading_type_code,
-                                            tmpbuf,
-                                            EVENT_BUFFER_LENGTH);
+      ret = ipmi_get_generic_event_message_short (system_event_record_data.event_type_code,
+                                                  system_event_record_data.offset_from_event_reading_type_code,
+                                                  tmpbuf,
+                                                  EVENT_BUFFER_LENGTH);
       if (ret > 0)
         output_flag++;
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE:
-      ret = ipmi_get_sensor_type_code_message (system_event_record_data.sensor_type,
-                                               system_event_record_data.offset_from_event_reading_type_code,
-                                               tmpbuf,
-                                               EVENT_BUFFER_LENGTH);
+      ret = ipmi_get_sensor_type_code_message_short (system_event_record_data.sensor_type,
+                                                     system_event_record_data.offset_from_event_reading_type_code,
+                                                     tmpbuf,
+                                                     EVENT_BUFFER_LENGTH);
       if (ret > 0)
         output_flag++;
       break;
@@ -963,10 +963,10 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
               }
             if (offset_from_severity_event_reading_type_code != IPMI_SEL_RECORD_UNSPECIFIED_OFFSET)
               {
-                ret = ipmi_get_generic_event_message (0x07,  /* 0x07 == severity event reading type code */
-                                                      offset_from_severity_event_reading_type_code,
-                                                      tmpseveritybuf,
-                                                      EVENT_BUFFER_LENGTH);
+                ret = ipmi_get_generic_event_message_short (0x07,  /* 0x07 == severity event reading type code */
+                                                            offset_from_severity_event_reading_type_code,
+                                                            tmpseveritybuf,
+                                                            EVENT_BUFFER_LENGTH);
                 if (ret > 0)
                   {
                     snprintf (tmpbuf,
@@ -1625,10 +1625,10 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
         }
       else
         {
-          ret = ipmi_get_generic_event_message (0x07, /* 0x07 == severity event reading type code */
-                                                offset_from_severity_event_reading_type_code,
-                                                tmpstatebuf,
-                                                EVENT_BUFFER_LENGTH);
+          ret = ipmi_get_generic_event_message_short (0x07, /* 0x07 == severity event reading type code */
+                                                      offset_from_severity_event_reading_type_code,
+                                                      tmpstatebuf,
+                                                      EVENT_BUFFER_LENGTH);
           if (ret > 0)
             {
               snprintf (tmpbuf,

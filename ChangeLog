@@ -1,3 +1,7 @@
+2009-06-22  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sel-parse/: Use short messages not long ones.
+	
 2009-06-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/src/: Add options output into --list output, remove
