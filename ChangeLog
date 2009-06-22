@@ -1,7 +1,17 @@
 2009-06-22  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/: Use short messages not long ones.
-	
+
+	* ipmimonitoring/: Remove short option 'i' for
+	--ignore-not-interpretable-sensors.
+
+	* ipmi-sensors/, common/src/toolcommon/: Add
+	--ignore-not-available-sensors option.
+
+	* ipmimonitoring/ipmimonitoring.8.pre.in: Note different between
+	--ignore-not-interpretable-sensors and --ignore-na-sensors in
+	ipmi-sensors.
+		
 2009-06-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/src/: Add options output into --list output, remove

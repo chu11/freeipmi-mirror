@@ -95,7 +95,7 @@ static struct argp_option cmdline_options[] =
       "Output only OEM event records.", 39},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
       "Hex-dump SEL records.", 40},
-    { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
+    { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
       "Attempt to interpret OEM data.", 41},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
       "Output fields in comma separated format.", 42},
@@ -301,7 +301,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case HEX_DUMP_KEY:
       cmd_args->hex_dump = 1;
       break;
-    case INTERPRET_OEM_DATA:
+    case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
       break;
     case COMMA_SEPARATED_OUTPUT_KEY:

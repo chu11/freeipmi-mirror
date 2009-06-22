@@ -96,14 +96,16 @@ static struct argp_option cmdline_options[] =
       "List sensor groups.", 39},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
       "Bridge addresses to read non-BMC owned sensors.", 40},
-    { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
+    { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
       "Attempt to interpret OEM data.", 41},
+    { "ignore-not-available-sensors", IGNORE_NOT_AVAILABLE_SENSORS_KEY, NULL, 0,
+      "Ignore not-available (i.e. N/A) sensors.", 42},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 42},
+      "Output fields in comma separated format.", 43},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' insetead of 'A').", 43},
+      "Output non-abbreviated units (i.e. 'Amps' insetead of 'A').", 44},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 44},
+      "Output in legacy format.", 45},
     { 0 }
   };
 
@@ -249,8 +251,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
       break;
-    case INTERPRET_OEM_DATA:
+    case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
+      break;
+    case IGNORE_NOT_AVAILABLE_SENSORS_KEY:
+      cmd_args->ignore_not_available_sensors = 1;
       break;
     case COMMA_SEPARATED_OUTPUT_KEY:
       cmd_args->comma_separated_output = 1;
@@ -355,6 +360,8 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
   if (config_file_data.interpret_oem_data_count)
     cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
+  if (config_file_data.ignore_not_available_sensors_count)
+    cmd_args->ignore_not_available_sensors = config_file_data.ignore_not_available_sensors;
   if (config_file_data.comma_separated_output_count)
     cmd_args->comma_separated_output = config_file_data.comma_separated_output;
   if (config_file_data.non_abbreviated_units_count)
@@ -462,6 +469,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
 
   cmd_args->bridge_sensors = 0;
   cmd_args->interpret_oem_data = 0;
+  cmd_args->ignore_not_available_sensors = 0;
   cmd_args->comma_separated_output = 0;
   cmd_args->non_abbreviated_units = 0;
   cmd_args->legacy_output = 0;

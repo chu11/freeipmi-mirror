@@ -971,6 +971,11 @@ Specify if
 .B ipmi-sensors
 should attempt to interpret OEM data by default or not.
 .TP
+\fBipmi-sensors-ignore-not-available-sensors\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-sensors
+should ignore not-available (i.e. N/A) sensors by default.
+.TP
 \fBipmi-sensors-comma-separated-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be comma separated or not.
 .TP

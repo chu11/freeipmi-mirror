@@ -484,6 +484,12 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                              "Sensor reading/event bitmask not available: %s\n",
                              ipmi_sensor_read_ctx_errormsg (state_data->sensor_read_ctx));
 
+          if (state_data->prog_data->args->ignore_not_available_sensors)
+            {
+              rv = 0;
+              goto cleanup;
+            }
+
           if (get_msg_message_list (state_data,
                                     &event_message_list,
                                     &event_message_list_len,

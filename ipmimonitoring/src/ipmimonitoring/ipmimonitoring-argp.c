@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.52 2009-06-04 16:51:20 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.53 2009-06-22 17:50:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -101,9 +101,9 @@ static struct argp_option cmdline_options[] =
       "List sensor groups.", 38},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
       "Bridge addresses to read non-BMC owned sensors.", 39},
-    { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
+    { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
       "Attempt to interpret OEM data.", 40},
-    { "ignore-non-interpretable-sensors", IGNORE_NON_INTERPRETABLE_SENSORS, NULL, 0,
+    { "ignore-non-interpretable-sensors", IGNORE_NON_INTERPRETABLE_SENSORS_KEY, NULL, 0,
       "Ignore non-interpretable sensors in output.", 41},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
       "Output fields in comma separated format.", 42},
@@ -254,10 +254,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
       break;
-    case INTERPRET_OEM_DATA:
+    case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
       break;
-    case IGNORE_NON_INTERPRETABLE_SENSORS:
+    case IGNORE_NON_INTERPRETABLE_SENSORS_KEY:
       cmd_args->ignore_non_interpretable_sensors = 1;
       break;
     case COMMA_SEPARATED_OUTPUT_KEY:
