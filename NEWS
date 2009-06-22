@@ -45,6 +45,7 @@ o ipmi-dcmi
 o ipmi-sel
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
+  - Use short-message event strings instead of long ones for readability.
   - Support --legacy-output option.
   - Support --verbose option to offer verbose, very verbose, and very
     very verbose additional SEL event information.
