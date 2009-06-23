@@ -760,7 +760,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
   
   /* XXX: assume ascii, or if not, user has set locale properly?? */
   pstdout_printf (state_data->pstate,
-                  "%s%s\n",
+                  "%s %s\n",
                   string_prefix,
                   string);
 
