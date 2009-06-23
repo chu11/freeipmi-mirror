@@ -53,6 +53,18 @@ typedef struct channel_info
 
 #define BMC_INFO_SYSTEM_INFO_STRING_MAX 512
 
+typedef int (*Bmc_info_system_info_first_set)(ipmi_ctx_t ctx,
+                                              uint8_t get_parameter,
+                                              uint8_t set_selector,
+                                              uint8_t block_selector,
+                                              fiid_obj_t obj_cmd_rs);
+
+typedef int (*Bmc_info_system_info)(ipmi_ctx_t ctx,
+                                    uint8_t get_parameter,
+                                    uint8_t set_selector,
+                                    uint8_t block_selector,
+                                    fiid_obj_t obj_cmd_rs);
+
 fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -580,12 +592,19 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
 
 /* return 1 if supported, 0 if not */
 static int
-display_system_info_system_firmware_version (bmc_info_state_data_t *state_data)
+display_system_info_common (bmc_info_state_data_t *state_data,
+                            fiid_field_t *tmpl_cmd_first_set,
+                            fiid_field_t *tmpl_cmd,
+                            Bmc_info_system_info_first_set func_cmd_first_set,
+                            const char *func_cmd_first_set_str,
+                            Bmc_info_system_info func_cmd,
+                            const char *func_cmd_str,
+                            const char *string_prefix)
 {
   fiid_obj_t obj_cmd_first_set_rs = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t encoding, string_length;
-  uint8_t string[BMC_INFO_SYSTEM_INFO_STRING_MAX];
+  char string[BMC_INFO_SYSTEM_INFO_STRING_MAX];
   uint64_t val;
   uint8_t set_selector = 0;
   unsigned int string_count = 0;
@@ -593,10 +612,17 @@ display_system_info_system_firmware_version (bmc_info_state_data_t *state_data)
   int rv = -1;
 
   assert (state_data);
+  assert (tmpl_cmd_first_set);
+  assert (tmpl_cmd);
+  assert (func_cmd_first_set);
+  assert (func_cmd);
+  assert (string_prefix);
+
+  assert (state_data);
 
   memset (string, '\0', BMC_INFO_SYSTEM_INFO_STRING_MAX);
 
-  if (!(obj_cmd_first_set_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_system_firmware_version_first_set_rs)))
+  if (!(obj_cmd_first_set_rs = fiid_obj_create (tmpl_cmd_first_set)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -605,7 +631,7 @@ display_system_info_system_firmware_version (bmc_info_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_system_firmware_version_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -614,11 +640,11 @@ display_system_info_system_firmware_version (bmc_info_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_system_info_parameters_system_firmware_version_first_set (state_data->ipmi_ctx,
-                                                                             IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                                                             set_selector,
-                                                                             IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
-                                                                             obj_cmd_first_set_rs) < 0)
+  if (func_cmd_first_set (state_data->ipmi_ctx,
+                          IPMI_GET_SYSTEM_INFO_PARAMETER,
+                          set_selector,
+                          IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                          obj_cmd_first_set_rs) < 0)
     {
       if (!state_data->prog_data->args->get_system_info
           && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND)
@@ -628,7 +654,8 @@ display_system_info_system_firmware_version (bmc_info_state_data_t *state_data)
         }
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_cmd_get_system_info_parameters_system_firmware_version_first_set: %s\n",
+                       "%s: %s\n",
+                       func_cmd_first_set_str,
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
@@ -692,11 +719,11 @@ display_system_info_system_firmware_version (bmc_info_state_data_t *state_data)
           goto cleanup;
         }
       
-      if (ipmi_cmd_get_system_info_parameters_system_firmware_version (state_data->ipmi_ctx,
-                                                                       IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                                                       set_selector,
-                                                                       IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
-                                                                       obj_cmd_rs) < 0)
+      if (func_cmd (state_data->ipmi_ctx,
+                    IPMI_GET_SYSTEM_INFO_PARAMETER,
+                    set_selector,
+                    IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                    obj_cmd_rs) < 0)
         {
           if (!state_data->prog_data->args->get_system_info
               && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND)
@@ -707,7 +734,8 @@ display_system_info_system_firmware_version (bmc_info_state_data_t *state_data)
 
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_cmd_get_system_info_parameters_system_firmware_version_first_set: %s\n",
+                           "%s: %s\n",
+                           func_cmd_str,
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
@@ -730,8 +758,10 @@ display_system_info_system_firmware_version (bmc_info_state_data_t *state_data)
 
  output:
   
+  /* XXX: assume ascii, or if not, user has set locale properly?? */
   pstdout_printf (state_data->pstate,
-                  "System Firmware Version : %s\n",
+                  "%s%s\n",
+                  string_prefix,
                   string);
 
   rv = 1;
@@ -739,7 +769,73 @@ display_system_info_system_firmware_version (bmc_info_state_data_t *state_data)
   fiid_obj_destroy (obj_cmd_first_set_rs);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
+
 }
+
+/* return 1 if supported, 0 if not */
+static int
+display_system_info_system_firmware_version (bmc_info_state_data_t *state_data)
+{
+  assert (state_data);
+
+  return display_system_info_common (state_data,
+                                     tmpl_cmd_get_system_info_parameters_system_firmware_version_first_set_rs,
+                                     tmpl_cmd_get_system_info_parameters_system_firmware_version_rs,
+                                     ipmi_cmd_get_system_info_parameters_system_firmware_version_first_set,
+                                     "ipmi_cmd_get_system_info_parameters_system_firmware_version_first_set",
+                                     ipmi_cmd_get_system_info_parameters_system_firmware_version,
+                                     "ipmi_cmd_get_system_info_parameters_system_firmware_version",
+                                     "System Firmware Version       :");
+}
+
+/* return 1 if supported, 0 if not */
+static int
+display_system_info_system_name (bmc_info_state_data_t *state_data)
+{
+  assert (state_data);
+
+  return display_system_info_common (state_data,
+                                     tmpl_cmd_get_system_info_parameters_system_name_first_set_rs,
+                                     tmpl_cmd_get_system_info_parameters_system_name_rs,
+                                     ipmi_cmd_get_system_info_parameters_system_name_first_set,
+                                     "ipmi_cmd_get_system_info_parameters_system_name_first_set",
+                                     ipmi_cmd_get_system_info_parameters_system_name,
+                                     "ipmi_cmd_get_system_info_parameters_system_name",
+                                     "System Name                   :");
+}
+
+/* return 1 if supported, 0 if not */
+static int
+display_system_info_primary_operating_system_name (bmc_info_state_data_t *state_data)
+{
+  assert (state_data);
+
+  return display_system_info_common (state_data,
+                                     tmpl_cmd_get_system_info_parameters_primary_operating_system_name_first_set_rs,
+                                     tmpl_cmd_get_system_info_parameters_primary_operating_system_name_rs,
+                                     ipmi_cmd_get_system_info_parameters_primary_operating_system_name_first_set,
+                                     "ipmi_cmd_get_system_info_parameters_primary_operating_system_name_first_set",
+                                     ipmi_cmd_get_system_info_parameters_primary_operating_system_name,
+                                     "ipmi_cmd_get_system_info_parameters_primary_operating_system_name",
+                                     "Primary Operating System Name :");
+}
+
+/* return 1 if supported, 0 if not */
+static int
+display_system_info_operating_system_name (bmc_info_state_data_t *state_data)
+{
+  assert (state_data);
+
+  return display_system_info_common (state_data,
+                                     tmpl_cmd_get_system_info_parameters_operating_system_name_first_set_rs,
+                                     tmpl_cmd_get_system_info_parameters_operating_system_name_rs,
+                                     ipmi_cmd_get_system_info_parameters_operating_system_name_first_set,
+                                     "ipmi_cmd_get_system_info_parameters_operating_system_name_first_set",
+                                     ipmi_cmd_get_system_info_parameters_operating_system_name,
+                                     "ipmi_cmd_get_system_info_parameters_operating_system_name",
+                                     "Operating System Name         :");
+}
+
 
 static int
 display_system_info (bmc_info_state_data_t *state_data)
@@ -749,6 +845,24 @@ display_system_info (bmc_info_state_data_t *state_data)
   assert (state_data);
 
   if ((ret = display_system_info_system_firmware_version (state_data)) < 0)
+    return (-1);
+
+  if (!ret)
+    return (0);
+
+  if ((ret = display_system_info_system_name (state_data)) < 0)
+    return (-1);
+
+  if (!ret)
+    return (0);
+
+  if ((ret = display_system_info_primary_operating_system_name (state_data)) < 0)
+    return (-1);
+
+  if (!ret)
+    return (0);
+
+  if ((ret = display_system_info_operating_system_name (state_data)) < 0)
     return (-1);
 
   if (!ret)
