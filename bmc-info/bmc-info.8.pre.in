@@ -30,11 +30,13 @@ support, and globally unique IDs (guids).
 The following options are specific to
 .B Bmc-info.
 .TP
-\fB\-\-get-device-id\fR
+\fB\-\-get\-device\-id\fR
 Display only device ID information.
-\fB\-\-get-device-guid\fR
+\fB\-\-get\-device\-guid\fR
 Display only device guid.
-\fB\-\-get-channel-info\fR
+\fB\-\-get\-system\-info\fR
+Display only system info.
+\fB\-\-get\-channel\-info\fR
 Display only channel information.
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>

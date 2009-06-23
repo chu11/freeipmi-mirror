@@ -29,8 +29,9 @@ enum bmc_info_argp_option_keys
     GET_DEVICE_ID_KEY = 160,
     GUID_KEY = 'g',             /* legacy */
     GET_DEVICE_GUID_KEY = 161,
-    GET_CHANNEL_INFO_KEY = 162,
-    INTERPRET_OEM_DATA = 163,
+    GET_SYSTEM_INFO_KEY = 162,
+    GET_CHANNEL_INFO_KEY = 163,
+    INTERPRET_OEM_DATA = 164,
   };
 
 struct bmc_info_arguments
@@ -39,6 +40,7 @@ struct bmc_info_arguments
   struct hostrange_cmd_args hostrange;
   int get_device_id;
   int get_device_guid;
+  int get_system_info;
   int get_channel_info;
   int interpret_oem_data;
 };

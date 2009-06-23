@@ -70,11 +70,13 @@ static struct argp_option cmdline_options[] =
     { "get-device-id", GET_DEVICE_ID_KEY, NULL, 0,
       "Display only device ID information.", 31},
     { "get-device-guid", GET_DEVICE_GUID_KEY, NULL, 0,
-      "Display only device guid.", 31},
+      "Display only device guid.", 32},
+    { "get-system-info", GET_SYSTEM_INFO_KEY, NULL, 0,
+      "Display only system information.", 33},
     { "get-channel-info", GET_CHANNEL_INFO_KEY, NULL, 0,
-      "Display only channel information.", 31},
+      "Display only channel information.", 34},
     { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
-      "Attempt to interpret OEM data.", 32},
+      "Attempt to interpret OEM data.", 35},
     { 0 }
   };
 
@@ -105,6 +107,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case GUID_KEY:
     case GET_DEVICE_GUID_KEY:
       cmd_args->get_device_guid++;
+      break;
+    case GET_SYSTEM_INFO_KEY:
+      cmd_args->get_system_info++;
       break;
     case GET_CHANNEL_INFO_KEY:
       cmd_args->get_channel_info++;
@@ -162,6 +167,7 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
 
   cmd_args->get_device_id = 0;
   cmd_args->get_device_guid = 0;
+  cmd_args->get_system_info = 0;
   cmd_args->get_channel_info = 0;
   cmd_args->interpret_oem_data = 0;
 

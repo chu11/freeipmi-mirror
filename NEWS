@@ -213,9 +213,11 @@ o bmc-info
     of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
     each other.
   - Output GUID by default.
+  - Output system info by default.
   - Rename --guid to --get-device-guid.  Legacy option still supported.
   - When outputting only the GUID, don't prefix "GUID : " in the
     output.
+  - Support --get-system-info.
   - Support --get-channel-info.
   - Support --get-device-id.
   - Support --interpret-oem-data option.  Do not automatically assume

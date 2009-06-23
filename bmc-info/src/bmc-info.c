@@ -49,7 +49,9 @@ typedef struct channel_info
   uint32_t vendor_id;
 } channel_info_t;
 
-#define NUM_CHANNELS 8
+#define BMC_INFO_NUM_CHANNELS 8
+
+#define BMC_INFO_SYSTEM_INFO_STRING_MAX 512
 
 fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs =
   {
@@ -81,80 +83,6 @@ fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs =
     { 8,  "auxiliary_firmware_revision_information.pia.minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
-
-static int
-display_get_device_guid (bmc_info_state_data_t *state_data)
-{
-  uint8_t guidbuf[1024];
-  fiid_obj_t obj_cmd_rs = NULL;
-  int rv = -1;
-
-  assert (state_data);
-
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_guid_rs)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (ipmi_cmd_get_device_guid (state_data->ipmi_ctx, obj_cmd_rs) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_get_device_guid: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
-    }
-
-  if (fiid_obj_get_data (obj_cmd_rs,
-                         "guid",
-                         guidbuf,
-                         1024) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get_data: 'guid': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
-      goto cleanup;
-    }
-
-  /* IPMI transfers the guid in least significant bit order and the
-   * fields are reverse from the "Wired for Management
-   * Specification".
-   *
-   * For output format details see Appendix 1 "String Representation
-   * of UUIDs" in the above document.  Note that the output is
-   * supposed to be output in most significant byte order.
-   */
-  if (!state_data->prog_data->args->get_device_guid)
-    pstdout_printf (state_data->pstate, "GUID : ");
-
-  pstdout_printf (state_data->pstate,
-                  "%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X\n",
-                  guidbuf[15],  /* time low */
-                  guidbuf[14],
-                  guidbuf[13],
-                  guidbuf[12],
-                  guidbuf[11],  /* time mid */
-                  guidbuf[10],
-                  guidbuf[9],   /* time high and version */
-                  guidbuf[8],
-                  guidbuf[6],   /* clock seq high and reserved - comes before clock seq low */
-                  guidbuf[7],   /* clock seq low */
-                  guidbuf[5],   /* node */
-                  guidbuf[4],
-                  guidbuf[3],
-                  guidbuf[2],
-                  guidbuf[1],
-                  guidbuf[0]);
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
-  return (rv);
-}
 
 static int
 display_intel_sr870bn4 (bmc_info_state_data_t *state_data, fiid_obj_t device_id_rs)
@@ -551,10 +479,286 @@ display_get_device_id (bmc_info_state_data_t *state_data)
                         auxiliary_firmware_revision_information);
     }
 
+  /* output newline if we're outputting all sections */
+  if (!state_data->prog_data->args->get_device_id)
+    pstdout_printf (state_data->pstate, "\n");
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
+}
+
+static int
+display_get_device_guid (bmc_info_state_data_t *state_data)
+{
+  uint8_t guidbuf[1024];
+  fiid_obj_t obj_cmd_rs = NULL;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_guid_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_device_guid (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_device_guid: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "guid",
+                                guidbuf,
+                                1024)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'guid': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (len < 16)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "guid length invalid: %d\n",
+                       len);
+      goto cleanup;
+    }
+
+  /* IPMI transfers the guid in least significant bit order and the
+   * fields are reverse from the "Wired for Management
+   * Specification".
+   *
+   * For output format details see Appendix 1 "String Representation
+   * of UUIDs" in the above document.  Note that the output is
+   * supposed to be output in most significant byte order.
+   */
+  if (!state_data->prog_data->args->get_device_guid)
+    pstdout_printf (state_data->pstate, "GUID : ");
+
+  pstdout_printf (state_data->pstate,
+                  "%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X\n",
+                  guidbuf[15],  /* time low */
+                  guidbuf[14],
+                  guidbuf[13],
+                  guidbuf[12],
+                  guidbuf[11],  /* time mid */
+                  guidbuf[10],
+                  guidbuf[9],   /* time high and version */
+                  guidbuf[8],
+                  guidbuf[6],   /* clock seq high and reserved - comes before clock seq low */
+                  guidbuf[7],   /* clock seq low */
+                  guidbuf[5],   /* node */
+                  guidbuf[4],
+                  guidbuf[3],
+                  guidbuf[2],
+                  guidbuf[1],
+                  guidbuf[0]);
+
+  /* output newline if we're outputting all sections */
+  if (!state_data->prog_data->args->get_device_guid)
+    pstdout_printf (state_data->pstate, "\n");
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+/* return 1 if supported, 0 if not */
+static int
+display_system_info_system_firmware_version (bmc_info_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_first_set_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t encoding, string_length;
+  uint8_t string[BMC_INFO_SYSTEM_INFO_STRING_MAX];
+  uint64_t val;
+  uint8_t set_selector = 0;
+  unsigned int string_count = 0;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+
+  memset (string, '\0', BMC_INFO_SYSTEM_INFO_STRING_MAX);
+
+  if (!(obj_cmd_first_set_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_system_firmware_version_first_set_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_system_firmware_version_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_system_info_parameters_system_firmware_version_first_set (state_data->ipmi_ctx,
+                                                                             IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                                                             set_selector,
+                                                                             IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                                                             obj_cmd_first_set_rs) < 0)
+    {
+      if (!state_data->prog_data->args->get_system_info
+          && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND)
+        {
+          rv = 0;
+          goto cleanup;
+        }
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters_system_firmware_version_first_set: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (FIID_OBJ_GET (obj_cmd_first_set_rs,
+                    "encoding",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'encoding': %s\n",
+                       fiid_obj_errormsg (obj_cmd_first_set_rs));
+      goto cleanup;
+    }
+  encoding = val;
+  
+  if (FIID_OBJ_GET (obj_cmd_first_set_rs,
+                    "string_length",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'string_length': %s\n",
+                       fiid_obj_errormsg (obj_cmd_first_set_rs));
+      goto cleanup;
+    }
+  string_length = val;
+
+  /* no string */
+  if (!string_length)
+    goto output;
+
+  if ((len = fiid_obj_get_data (obj_cmd_first_set_rs,
+                                "string",
+                                string + string_count,
+                                BMC_INFO_SYSTEM_INFO_STRING_MAX - string_count)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'string': %s\n",
+                       fiid_obj_errormsg (obj_cmd_first_set_rs));
+      goto cleanup;
+    }
+  string_count += len;
+
+  /* string_length is 8 bits, so we should call >= 17 times,
+   *
+   * ceiling ( (255 - 14) / 16 ) + 1 = 17
+   *
+   */
+
+  set_selector++;
+  while (string_count < string_length && set_selector < 17)
+    {
+      if (fiid_obj_clear (obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_clear: %s\n", 
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      
+      if (ipmi_cmd_get_system_info_parameters_system_firmware_version (state_data->ipmi_ctx,
+                                                                       IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                                                       set_selector,
+                                                                       IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                                                       obj_cmd_rs) < 0)
+        {
+          if (!state_data->prog_data->args->get_system_info
+              && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND)
+            {
+              rv = 0;
+              goto cleanup;
+            }
+
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_get_system_info_parameters_system_firmware_version_first_set: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+
+      if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                    "string",
+                                    string + string_count,
+                                    BMC_INFO_SYSTEM_INFO_STRING_MAX - string_count)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: 'string': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      string_count += len;
+      set_selector++;
+    }
+
+
+ output:
+  
+  pstdout_printf (state_data->pstate,
+                  "System Firmware Version : %s\n",
+                  string);
+
+  rv = 1;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_first_set_rs);
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+display_system_info (bmc_info_state_data_t *state_data)
+{
+  int ret;
+
+  assert (state_data);
+
+  if ((ret = display_system_info_system_firmware_version (state_data)) < 0)
+    return (-1);
+
+  if (!ret)
+    return (0);
+
+  /* output newline if we're outputting all sections */
+  if (!state_data->prog_data->args->get_system_info)
+    pstdout_printf (state_data->pstate, "\n");
+
+  return (0);
 }
 
 static int
@@ -578,7 +782,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
       goto cleanup;
     }
 
-  for (i = 0, ci = 0; i < NUM_CHANNELS; i++)
+  for (i = 0, ci = 0; i < BMC_INFO_NUM_CHANNELS; i++)
     {
       if (ipmi_cmd_get_channel_info (state_data->ipmi_ctx,
                                      i,
@@ -675,20 +879,20 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
 static int
 display_channel_info (bmc_info_state_data_t *state_data)
 {
-  channel_info_t channel_info_list[NUM_CHANNELS];
+  channel_info_t channel_info_list[BMC_INFO_NUM_CHANNELS];
   int first_newline_output = 0;
   unsigned int i;
 
   assert (state_data);
 
-  memset (channel_info_list, '\0', sizeof (channel_info_t) * NUM_CHANNELS);
+  memset (channel_info_list, '\0', sizeof (channel_info_t) * BMC_INFO_NUM_CHANNELS);
   if (get_channel_info_list (state_data, channel_info_list) < 0)
     return (-1);
 
   if (!state_data->prog_data->args->get_channel_info)
     pstdout_printf (state_data->pstate, "Channel Information\n");
 
-  for (i = 0; i < NUM_CHANNELS; i++)
+  for (i = 0; i < BMC_INFO_NUM_CHANNELS; i++)
     {
       char *medium_type_str = NULL;
       char *protocol_type_str = NULL;
@@ -797,6 +1001,12 @@ display_channel_info (bmc_info_state_data_t *state_data)
       first_newline_output++;
     }
 
+  /* don't output, we're the last output when we output "all" */
+#if 0
+  if (!state_data->prog_data->args->get_channel_info)
+    pstdout_printf (state_data->pstate, "\n");
+#endif
+
   return (0);
 }
 
@@ -816,18 +1026,22 @@ run_cmd_args (bmc_info_state_data_t *state_data)
   if (args->get_device_guid)
     return (display_get_device_guid (state_data));
  
+  if (args->get_system_info)
+    return (display_system_info (state_data));
+
   if (args->get_channel_info)
     return (display_channel_info (state_data));
+
+  /* else display all */
 
   if (display_get_device_id (state_data) < 0)
     goto cleanup;
 
-  pstdout_printf (state_data->pstate, "\n");
-
   if (display_get_device_guid (state_data) < 0)
     goto cleanup;
 
-  pstdout_printf (state_data->pstate, "\n");
+  if (display_system_info (state_data) < 0)
+    goto cleanup;
 
   if (display_channel_info (state_data) < 0)
     goto cleanup;
