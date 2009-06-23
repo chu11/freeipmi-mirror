@@ -630,6 +630,65 @@ _detailed_output_tolerance (ipmi_sensors_state_data_t *state_data,
 }
 
 static int
+_detailed_output_resolution (ipmi_sensors_state_data_t *state_data,
+                             const void *sdr_record,
+                             unsigned int sdr_record_len,
+                             const char *sensor_units_str)
+{
+  int8_t r_exponent;
+  int16_t m;
+  double resolution = 0.0;
+  int rv = -1;
+
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (sensor_units_str);
+  assert (state_data->prog_data->args->verbose_count >= 2);
+
+  /* achu: resolution is calculated using the decoding data, nothing
+   * else in the SDR is read/required.  See section 36.4.2 in the
+   * spec.
+   */
+  
+  if (ipmi_sdr_parse_sensor_decoding_data (state_data->sdr_parse_ctx,
+                                           sdr_record,
+                                           sdr_record_len,
+                                           &r_exponent,
+                                           NULL,
+                                           &m,
+                                           NULL,
+                                           NULL,
+                                           NULL) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_decoding_data: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+  
+  
+  if (ipmi_sensor_decode_resolution (r_exponent, m, &resolution) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sensor_decode_resolution: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+  
+  pstdout_printf (state_data->pstate,
+                  "Resolution: %f %s\n",
+                  resolution,
+                  sensor_units_str);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
 _detailed_output_accuracy (ipmi_sensors_state_data_t *state_data,
                             const void *sdr_record,
                             unsigned int sdr_record_len)
@@ -1405,6 +1464,12 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                                           sdr_record,
                                           sdr_record_len,
                                           sensor_units_buf) < 0)
+            return (-1);
+
+          if (_detailed_output_resolution (state_data,
+                                           sdr_record,
+                                           sdr_record_len,
+                                           sensor_units_buf) < 0)
             return (-1);
         }
 

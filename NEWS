@@ -116,6 +116,7 @@ o ipmi-sensors
     specified.
   - Under very verbose output, output Sensor Direction.
   - Under very verbose output, output Tolerance.
+  - Under very verbose output, output Resolution.
   - Under very verbose output, output Accuracy.
   - Output record-type names in addition to record type hex code in
     very-verbose output.
