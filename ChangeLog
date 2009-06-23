@@ -2,6 +2,9 @@
 
 	* bmc-info/: Support --get-system-info option.  When options
 	dictate it, output system info.
+
+	* common/src/toolsensor/, ipmi-sensors/: Begin support of
+	--entity-sensor-names option.
 	
 2009-06-23  Albert Chu <chu11@llnl.gov>
 

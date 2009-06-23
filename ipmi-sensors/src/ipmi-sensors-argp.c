@@ -100,12 +100,14 @@ static struct argp_option cmdline_options[] =
       "Attempt to interpret OEM data.", 41},
     { "ignore-not-available-sensors", IGNORE_NOT_AVAILABLE_SENSORS_KEY, NULL, 0,
       "Ignore not-available (i.e. N/A) sensors.", 42},
+    { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
+      "Output sensor names with entity ids and instances.", 43},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 43},
+      "Output fields in comma separated format.", 44},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' insetead of 'A').", 44},
+      "Output non-abbreviated units (i.e. 'Amps' insetead of 'A').", 45},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 45},
+      "Output in legacy format.", 46},
     { 0 }
   };
 
@@ -256,6 +258,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case IGNORE_NOT_AVAILABLE_SENSORS_KEY:
       cmd_args->ignore_not_available_sensors = 1;
+      break;
+    case ENTITY_SENSOR_NAMES_KEY:
+      cmd_args->entity_sensor_names = 1;
       break;
     case COMMA_SEPARATED_OUTPUT_KEY:
       cmd_args->comma_separated_output = 1;
@@ -470,6 +475,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->bridge_sensors = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->ignore_not_available_sensors = 0;
+  cmd_args->entity_sensor_names = 0;
   cmd_args->comma_separated_output = 0;
   cmd_args->non_abbreviated_units = 0;
   cmd_args->legacy_output = 0;

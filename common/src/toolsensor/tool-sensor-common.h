@@ -44,6 +44,11 @@
 #define SENSOR_PARSE_ALL_STRING             "all"
 #define SENSOR_PARSE_NONE_STRING            "none"
 
+/* entity_id is a 8 bit field */
+#define MAX_ENTITY_IDS                      256
+
+#define MAX_ENTITY_ID_SENSOR_NAME_STRING    256
+
 struct sensor_column_width
 {
   int record_id;
@@ -52,9 +57,22 @@ struct sensor_column_width
   int sensor_units;
 };
 
+struct sensor_entity_id_counts
+{
+  unsigned int count[MAX_ENTITY_IDS];
+};
+
 const char * get_sensor_group_output_string (unsigned int sensor_type);
 
 void get_sensor_group_cmdline_string (char *sensor_group);
+
+int get_entity_id_sensor_name_string (pstdout_state_t pstate,
+                                      ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                                      const void *sdr_record,
+                                      unsigned int sdr_record_len,
+                                      struct sensor_entity_id_counts *entity_id_counts,
+                                      char *sensor_name_buf,
+                                      unsigned int sensor_name_buf_len);
 
 int display_sensor_group_cmdline (pstdout_state_t pstate, 
                                   unsigned int sensor_type);
@@ -80,6 +98,16 @@ void output_sensor_headers (pstdout_state_t pstate,
                             int comma_separated_output,
                             struct sensor_column_width *column_width);
 
+int calculate_entity_id_counts (pstdout_state_t pstate,
+                                ipmi_sdr_cache_ctx_t sdr_cache_ctx,
+                                ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                                char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
+                                unsigned int groups_length,
+                                unsigned int record_ids[],
+                                unsigned int record_ids_length,
+                                struct sensor_entity_id_counts *entity_id_counts);
+
+/* use normal names, set entity_id_counts to NULL */
 int calculate_column_widths (pstdout_state_t pstate,
                              ipmi_sdr_cache_ctx_t sdr_cache_ctx,
                              ipmi_sdr_parse_ctx_t sdr_parse_ctx,
@@ -88,6 +116,7 @@ int calculate_column_widths (pstdout_state_t pstate,
                              unsigned int record_ids[],
                              unsigned int record_ids_length,
                              unsigned int abbreviated_units,
+                             struct sensor_entity_id_counts *entity_id_counts,
                              struct sensor_column_width *column_width);
 
 int calculate_record_ids (pstdout_state_t pstate,

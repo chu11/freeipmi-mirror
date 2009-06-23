@@ -91,9 +91,10 @@ extern "C" {
   (((__entity_id) >= 0xB0                    \
     && ((__entity_id) <= 0xCF)) ? 1 : 0)
 
+/* To avoid gcc warnings, subtract -1 in comparison */
 #define IPMI_ENTITY_ID_IS_OEM_SYSTEM_INTEGRATOR_DEFINED(__entity_id) \
   (((__entity_id) >= 0xD0                    \
-    && ((__entity_id) <= 0xFF)) ? 1 : 0)
+    && ((__entity_id - 1) <= (0xFF - 1))) ? 1 : 0)
 
 extern const char *const ipmi_entity_ids[];
 

@@ -41,9 +41,10 @@ enum ipmi_sensors_argp_option_keys
     BRIDGE_SENSORS_KEY = 'b',
     INTERPRET_OEM_DATA_KEY = 161,
     IGNORE_NOT_AVAILABLE_SENSORS_KEY = 162,
-    COMMA_SEPARATED_OUTPUT_KEY = 163,
-    NON_ABBREVIATED_UNITS_KEY = 164,
-    LEGACY_OUTPUT_KEY = 165,
+    ENTITY_SENSOR_NAMES_KEY = 163,
+    COMMA_SEPARATED_OUTPUT_KEY = 164,
+    NON_ABBREVIATED_UNITS_KEY = 165,
+    LEGACY_OUTPUT_KEY = 166,
   };
 
 struct ipmi_sensors_arguments
@@ -66,6 +67,7 @@ struct ipmi_sensors_arguments
   int bridge_sensors;
   int interpret_oem_data;
   int ignore_not_available_sensors;
+  int entity_sensor_names;
   int comma_separated_output;
   int non_abbreviated_units;
   int legacy_output;
@@ -87,6 +89,7 @@ typedef struct ipmi_sensors_state_data
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
   ipmi_sensor_read_ctx_t sensor_read_ctx;
   int output_headers;
+  struct sensor_entity_id_counts entity_id_counts;
   struct sensor_column_width column_width;
   uint32_t manufacturer_id;
   uint16_t product_id;

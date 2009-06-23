@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.125 2009-05-29 00:29:05 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.126 2009-06-23 23:11:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -391,6 +391,7 @@ _output_setup (ipmimonitoring_state_data_t *state_data)
                                    state_data->prog_data->args->record_ids,
                                    state_data->prog_data->args->record_ids_length,
                                    !state_data->prog_data->args->non_abbreviated_units,
+                                   NULL,
                                    &(state_data->column_width)) < 0)
         return (-1);
       
