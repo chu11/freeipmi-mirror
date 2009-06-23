@@ -287,7 +287,7 @@ static int
 _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
                              const void *sdr_record,
                              unsigned int sdr_record_len,
-                             char *sensor_units_str)
+                             const char *sensor_units_str)
 {
   double *lower_non_critical_threshold = NULL;
   double *lower_critical_threshold = NULL;
@@ -407,7 +407,7 @@ static int
 _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
                                         const void *sdr_record,
                                         unsigned int sdr_record_len,
-                                        char *sensor_units_str)
+                                        const char *sensor_units_str)
 {
   uint8_t nominal_reading_specified = 0;
   uint8_t normal_maximum_specified = 0;
@@ -581,7 +581,7 @@ static int
 _detailed_output_tolerance (ipmi_sensors_state_data_t *state_data,
                             const void *sdr_record,
                             unsigned int sdr_record_len,
-                            char *sensor_units_str)
+                            const char *sensor_units_str)
 {
   double *tolerance = NULL;
   int rv = -1;
@@ -611,10 +611,12 @@ _detailed_output_tolerance (ipmi_sensors_state_data_t *state_data,
     }
 
   if (tolerance)
-    pstdout_printf (state_data->pstate,
-                    "Tolerance: %f %s\n",
-                    tolerance,
-                    sensor_units_str);
+    {
+      pstdout_printf (state_data->pstate,
+                      "Tolerance: %f %s\n",
+                      *tolerance,
+                      sensor_units_str);
+    }
   else
     pstdout_printf (state_data->pstate,
                     "Tolerance: %s\n",
@@ -655,7 +657,7 @@ _detailed_output_accuracy (ipmi_sensors_state_data_t *state_data,
   if (accuracy)
     pstdout_printf (state_data->pstate,
                     "Accuracy: %f%\n",
-                    accuracy);
+                    *accuracy);
   else
     pstdout_printf (state_data->pstate,
                     "Accuracy: %s\n",
