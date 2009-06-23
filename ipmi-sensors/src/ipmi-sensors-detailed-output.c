@@ -578,6 +578,97 @@ _detailed_output_sensor_direction (ipmi_sensors_state_data_t *state_data,
 }
 
 static int
+_detailed_output_tolerance (ipmi_sensors_state_data_t *state_data,
+                            const void *sdr_record,
+                            unsigned int sdr_record_len,
+                            char *sensor_units_str)
+{
+  double *tolerance = NULL;
+  int rv = -1;
+
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (sensor_units_str);
+  assert (state_data->prog_data->args->verbose_count >= 2);
+
+  if (ipmi_sdr_parse_tolerance (state_data->sdr_parse_ctx,
+                                sdr_record,
+                                sdr_record_len,
+                                &tolerance) < 0)
+    {
+      if (ipmi_sdr_parse_ctx_errnum (state_data->sdr_parse_ctx) == IPMI_SDR_PARSE_ERR_CANNOT_PARSE_OR_CALCULATE)
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_tolerance: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+
+  if (tolerance)
+    pstdout_printf (state_data->pstate,
+                    "Tolerance: %f %s\n",
+                    tolerance,
+                    sensor_units_str);
+  else
+    pstdout_printf (state_data->pstate,
+                    "Tolerance: %s\n",
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
+
+  rv = 0;
+ cleanup:
+  if (tolerance)
+    free (tolerance);
+  return (rv);
+}
+
+static int
+_detailed_output_accuracy (ipmi_sensors_state_data_t *state_data,
+                            const void *sdr_record,
+                            unsigned int sdr_record_len)
+{
+  double *accuracy = NULL;
+  int rv = -1;
+
+  assert (state_data);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (state_data->prog_data->args->verbose_count >= 2);
+
+  if (ipmi_sdr_parse_accuracy (state_data->sdr_parse_ctx,
+                                sdr_record,
+                                sdr_record_len,
+                                &accuracy) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_accuracy: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+  
+  if (accuracy)
+    pstdout_printf (state_data->pstate,
+                    "Accuracy: %f%\n",
+                    accuracy);
+  else
+    pstdout_printf (state_data->pstate,
+                    "Accuracy: %s\n",
+                    IPMI_SENSORS_NA_STRING_OUTPUT);
+  
+  rv = 0;
+ cleanup:
+  if (accuracy)
+    free (accuracy);
+  return (rv);
+}
+
+static int
 _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
                              const void *sdr_record,
                              unsigned int sdr_record_len,
@@ -1307,6 +1398,12 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                           "Analog Data Format: %s (%Xh)\n",
                           _analog_data_format_string (state_data, analog_data_format),
                           analog_data_format);
+
+          if (_detailed_output_tolerance (state_data,
+                                          sdr_record,
+                                          sdr_record_len,
+                                          sensor_units_buf) < 0)
+            return (-1);
         }
 
       if (_detailed_output_thresholds (state_data,
@@ -1324,6 +1421,11 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
 
   if (state_data->prog_data->args->verbose_count >= 2)
     {
+      if (_detailed_output_accuracy (state_data,
+                                     sdr_record,
+                                     sdr_record_len) < 0)
+        return (-1);
+
       if (_detailed_output_sensor_direction (state_data,
                                              sdr_record,
                                              sdr_record_len) < 0)

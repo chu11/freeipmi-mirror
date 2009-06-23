@@ -293,6 +293,21 @@ int ipmi_sdr_parse_thresholds_raw (ipmi_sdr_parse_ctx_t ctx,
                                    uint8_t *upper_non_recoverable_threshold);
 
 /* For Full SDR records */
+/* Results must be freed by user */
+int ipmi_sdr_parse_tolerance (ipmi_sdr_parse_ctx_t ctx,
+                              const void *sdr_record,
+                              unsigned int sdr_record_len,
+                              double **tolerance);
+
+/* For Full SDR records */
+/* Result returned is in percentage */
+/* Results must be freed by user */
+int ipmi_sdr_parse_accuracy (ipmi_sdr_parse_ctx_t ctx,
+                             const void *sdr_record,
+                             unsigned int sdr_record_len,
+                             double **tolerance);
+
+/* For Full SDR records */
 int ipmi_sdr_parse_hysteresis (ipmi_sdr_parse_ctx_t ctx,
                                const void *sdr_record,
                                unsigned int sdr_record_len,

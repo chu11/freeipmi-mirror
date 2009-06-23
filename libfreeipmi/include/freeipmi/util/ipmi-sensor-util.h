@@ -53,6 +53,18 @@ int ipmi_sensor_decode_raw_value (int8_t r_exponent,
                                   double value,
                                   uint8_t *raw_data);
 
+/* r_exponent - sometimes documented as k2 */
+int ipmi_sensor_decode_tolerance (int8_t r_exponent,
+                                  int16_t m,
+                                  uint8_t raw_data,
+                                  uint8_t linearization,
+                                  double *value);
+
+/* accuracy returned as percentage */
+int ipmi_sensor_decode_accuracy (uint16_t accuracy_raw,
+                                 uint8_t accuracy_exp,
+                                 double *value);
+
 #ifdef __cplusplus
 }
 #endif

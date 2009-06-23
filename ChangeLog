@@ -1,3 +1,17 @@
+2009-06-23  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/util/ipmi-sensors-util.h,
+	libfreeipmi/src/util/ipmi-sensors-util.c
+	(ipmi_sensor_decode_tolerance, ipmi_sensor_decode_accuracy): New
+	functions.
+
+	* libfreeipmi/include/freeipmi/sdr-parse/ipmi-sdr-parse.h,
+	libfreeipmi/src/sdr-parse/ipmi-sdr-parse.c
+	(ipmi_sdr_parse_tolerance, ipmi_sdr_parse_accuracy): New
+	functions.
+
+	* ipmi-sensors/: Support accuracy and tolerance output.
+	
 2009-06-22  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/: Use short messages not long ones.

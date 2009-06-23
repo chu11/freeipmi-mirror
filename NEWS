@@ -114,7 +114,9 @@ o ipmi-sensors
   - Under verbose output, do not output Nominal reading, Normal Min.,
     or Normal Max. if SDR flags do not indicate the values are
     specified.
-  - Under very verbose output, output sensor direction.
+  - Under very verbose output, output Sensor Direction.
+  - Under very verbose output, output Tolerance.
+  - Under very verbose output, output Accuracy.
   - Output record-type names in addition to record type hex code in
     very-verbose output.
   - Under very verbose output, default to abbreviated units.
