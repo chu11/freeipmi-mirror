@@ -1,0 +1,61 @@
+FreeIPMI Testing
+
+by 
+
+Albert Chu
+chu11@llnl.gov
+
+The following is a (semi) detailed list of tests to measure the
+compliance of a motherboard to IPMI as well as FreeIPMI's compliance
+to the motherboard's implementation.  It is not 100% thorough, but
+covers a fair amount of the IPMI specification.
+
+This document is updated for FreeIPMI release 0.8.1.
+
+All documentation below assume reasonably advanced knowledge of IPMI
+and knowledge of FreeIPMI tools.  Please see the IPMI specification or
+FreeIPMI documentation/manpages for additional information.
+
+I am writing this document based primarily upon recollection of tests
+I've done in the past.  All vendors are free to challenge me on all
+points listed below, such as mandatory vs. optional requirements, etc.
+
+Bmc-config Testing
+------------------
+
+Bmc-info Testing
+----------------
+
+Execute bmc-info with default output
+
+Verify:
+
+- Executes to completion
+- All fields output are correct.  Key fields:
+  * Firmware Revision
+  * IPMI Version
+  * Manufacturer ID
+    - The name of the manufacter outputs along with the "Manufacturer ID"
+    - i.e. "Manufacturer ID       : SOME-COMPANY (1234)"
+           vs.
+           "Manufacturer ID       : 1234"
+  * Product ID
+  * GUID
+  * Channel Information - Medium Type
+    o If IPMI over LAN is supported, atleast one should be == "802.3 LAN"
+  * Channel Information - Vendor ID
+    o Most if not all should be == "Intelligent Platform Management Interface forum (7154)"
+
+Ipmi-sensors Testing
+--------------------
+
+Ipmi-sel Testing
+----------------
+
+
+
+In-Band KCS Testing
+-------------------
+
+Out-of-Band Testing
+-------------------
