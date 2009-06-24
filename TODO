@@ -8,9 +8,9 @@ general
 -------
 forwarded command support (errata 35b)
 
-bmc-info
+bmc-device
 --------
-get system info support
+set system info support
 
 ipmi-locate
 -----------
@@ -27,8 +27,7 @@ if user inputs hostname of localhost, do inband not outofband?
 ipmi-sel
 --------
 - head/tail on record counts
-- display-range, ability to skip to record?
-- clear records, not delete-all
+- clear records, not delete-all?
 
 freeipmi tools
 --------------
@@ -65,22 +64,10 @@ dell poweredge service tag, asset tag
 dell poweredge power monitoring/control stuff
 inventec user disable
 
-ipmi-sensors
-------------
-check normal min/max output flags
-accuracy output
-tolerance output
-sensor direction output
-
 sensors/monitoring
 ------------------
 (TEST) make sure bridging still works w/ sensor-read lib
 (TEST) make sure oem still outputs fine
-option output via entity_id organization (i.e. groups of owners)
-
-sensors/monitoring/sel
-----------------------
-entity-id prefix naming
 
 ipmi-chassis-config
 -------------------
