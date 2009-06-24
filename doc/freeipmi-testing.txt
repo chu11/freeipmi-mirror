@@ -464,7 +464,7 @@ Ipmiconsole Testing
 -------------------
 
 (Note: A fair amount of SOL/Ipmiconsole authentication/connection
-issues are tested below in "Out-of-Band Testing")
+issues are tested in other sections.)
 
 Configure all BIOS settings and SOL settings to enable SOL.  Enable
 the remote machine to except sysrqs (in Linux, this requires
