@@ -367,6 +367,8 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
   if (config_file_data.ignore_not_available_sensors_count)
     cmd_args->ignore_not_available_sensors = config_file_data.ignore_not_available_sensors;
+  if (config_file_data.entity_sensor_names_count)
+    cmd_args->entity_sensor_names = config_file_data.entity_sensor_names;
   if (config_file_data.comma_separated_output_count)
     cmd_args->comma_separated_output = config_file_data.comma_separated_output;
   if (config_file_data.non_abbreviated_units_count)

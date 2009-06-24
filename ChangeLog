@@ -5,7 +5,10 @@
 
 	* ipmi-sensors/: Clarify Entity-ID output.
 
-	* comman/man/manpage-common-entity-sensor-names.man: New file.
+	* common/man/manpage-common-entity-sensor-names.man: New file.
+
+	* common/src/toolcommon/: Support entity-sensor-names in config
+	file.
 	
 	* Various code cleanup.
 	

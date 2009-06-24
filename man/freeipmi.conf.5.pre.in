@@ -871,6 +871,10 @@ Specify if
 .B ipmi-sel
 should attempt to interpret OEM data by default or not.
 .TP
+\fBipmi-sel-entity-sensor-names\fR \fIENABLE|DISABLE\fR
+Specify if output of sensor names should include entity ids and
+instances.
+.TP
 \fBipmi-sel-comma-separated-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be comma separated or not.
 .TP
@@ -975,6 +979,10 @@ should attempt to interpret OEM data by default or not.
 Specify if
 .B ipmi-sensors
 should ignore not-available (i.e. N/A) sensors by default.
+.TP
+\fBipmi-sensors-entity-sensor-names\fR \fIENABLE|DISABLE\fR
+Specify if output of sensor names should include entity ids and
+instances.
 .TP
 \fBipmi-sensors-comma-separated-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be comma separated or not.
@@ -1211,6 +1219,10 @@ should attempt to interpret OEM data by default or not.
 .TP
 \fBipmimonitoring-ignore-non-interpretable-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-interpretable sensors should be ignored by default or not.
+.TP
+\fBipmimonitoring-entity-sensor-names\fR \fIENABLE|DISABLE\fR
+Specify if output of sensor names should include entity ids and
+instances.
 .TP
 \fBipmimonitoring-comma-separated-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be comma separated or not.

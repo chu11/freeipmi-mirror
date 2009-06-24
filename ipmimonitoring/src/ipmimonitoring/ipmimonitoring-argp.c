@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.54 2009-06-24 16:33:56 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.55 2009-06-24 17:31:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -379,6 +379,8 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
   if (config_file_data.ignore_non_interpretable_sensors_count)
     cmd_args->ignore_non_interpretable_sensors = config_file_data.ignore_non_interpretable_sensors;
+  if (config_file_data.entity_sensor_names_count)
+    cmd_args->entity_sensor_names = config_file_data.entity_sensor_names;
   if (config_file_data.comma_separated_output_count)
     cmd_args->comma_separated_output = config_file_data.comma_separated_output;
   if (config_file_data.non_abbreviated_units_count)

@@ -108,6 +108,8 @@ struct config_file_data_ipmi_sel
   int oem_event_only_count;
   int interpret_oem_data;
   int interpret_oem_data_count;
+  int entity_sensor_names;
+  int entity_sensor_names_count;
   int comma_separated_output;
   int comma_separated_output_count;
   int non_abbreviated_units;
@@ -140,6 +142,8 @@ struct config_file_data_ipmi_sensors
   int interpret_oem_data_count;
   int ignore_not_available_sensors;
   int ignore_not_available_sensors_count;
+  int entity_sensor_names;
+  int entity_sensor_names_count;
   int comma_separated_output_count;
   int comma_separated_output;
   int non_abbreviated_units;
@@ -188,6 +192,8 @@ struct config_file_data_ipmimonitoring
   int interpret_oem_data_count;
   int ignore_non_interpretable_sensors;
   int ignore_non_interpretable_sensors_count;
+  int entity_sensor_names;
+  int entity_sensor_names_count;
   int comma_separated_output_count;
   int comma_separated_output;
   int non_abbreviated_units;

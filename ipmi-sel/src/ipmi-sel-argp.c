@@ -366,6 +366,8 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
     cmd_args->oem_event_only = config_file_data.oem_event_only;
   if (config_file_data.interpret_oem_data_count)
     cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
+  if (config_file_data.entity_sensor_names_count)
+    cmd_args->entity_sensor_names = config_file_data.entity_sensor_names;
   if (config_file_data.comma_separated_output_count)
     cmd_args->comma_separated_output = config_file_data.comma_separated_output;
   if (config_file_data.non_abbreviated_units_count)
