@@ -1818,10 +1818,16 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
       return (-1);
     }
 
-  pstdout_printf (state_data->pstate,
-                  "Entity ID: %u\n",
-                  entity_id);
-
+  if (IPMI_ENTITY_ID_VALID (entity_id))
+    pstdout_printf (state_data->pstate,
+                    "Entity ID: %s (%u)\n",
+                    ipmi_entity_ids[entity_id],
+                    entity_id);
+  else
+    pstdout_printf (state_data->pstate,
+                    "Entity ID: %u\n",
+                    entity_id);
+  
   pstdout_printf (state_data->pstate,
                   "Entity Instance: %u\n",
                   entity_instance);

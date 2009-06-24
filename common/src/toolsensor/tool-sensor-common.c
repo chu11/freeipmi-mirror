@@ -509,14 +509,11 @@ int
 calculate_entity_id_counts (pstdout_state_t pstate,
                             ipmi_sdr_cache_ctx_t sdr_cache_ctx,
                             ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                            char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                            unsigned int groups_length,
-                            unsigned int record_ids[],
-                            unsigned int record_ids_length,
                             struct sensor_entity_id_counts *entity_id_counts)
 {
   uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
   int sdr_record_len = 0;
+  uint16_t record_count;
   int rv = -1;
   int i;
 
@@ -526,102 +523,40 @@ calculate_entity_id_counts (pstdout_state_t pstate,
 
   _sensor_entity_id_counts_init (entity_id_counts);
 
-  if (record_ids && record_ids_length)
+  if (ipmi_sdr_cache_record_count (sdr_cache_ctx, &record_count) < 0)
     {
-      for (i = 0; i < record_ids_length; i++)
-        {
-          if (ipmi_sdr_cache_search_record_id (sdr_cache_ctx, record_ids[i]) < 0)
-            {
-              if (ipmi_sdr_cache_ctx_errnum (sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND)
-                continue;
-              else
-                {
-                  PSTDOUT_FPRINTF (pstate,
-                                   stderr,
-                                   "ipmi_sdr_cache_search_record_id: %s\n",
-                                   ipmi_sdr_cache_ctx_errormsg (sdr_cache_ctx));
-                  goto cleanup;
-                }
-            }
-
-          if ((sdr_record_len = ipmi_sdr_cache_record_read (sdr_cache_ctx,
-                                                            sdr_record,
-                                                            IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
-            {
-              PSTDOUT_FPRINTF (pstate,
-                               stderr,
-                               "ipmi_sdr_cache_record_read: %s\n",
-                               ipmi_sdr_cache_ctx_errormsg (sdr_cache_ctx));
-              goto cleanup;
-            }
-
-          /* Shouldn't be possible */
-          if (!sdr_record_len)
-            continue;
-
-          if (_store_entity_id_count (pstate,
-                                      sdr_parse_ctx,
-                                      sdr_record,
-                                      sdr_record_len,
-                                      entity_id_counts) < 0)
-            goto cleanup;
-        }
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "ipmi_sdr_cache_record_count: %s\n",
+                       ipmi_sdr_cache_ctx_errormsg (sdr_cache_ctx));
+      goto cleanup;
     }
-  else
+  
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (sdr_cache_ctx))
     {
-      uint16_t record_count;
-
-      if (ipmi_sdr_cache_record_count (sdr_cache_ctx, &record_count) < 0)
+      int ret;
+      
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (sdr_cache_ctx,
+                                                        sdr_record,
+                                                        IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
         {
           PSTDOUT_FPRINTF (pstate,
                            stderr,
-                           "ipmi_sdr_cache_record_count: %s\n",
+                           "ipmi_sdr_cache_record_read: %s\n",
                            ipmi_sdr_cache_ctx_errormsg (sdr_cache_ctx));
           goto cleanup;
         }
-
-      for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (sdr_cache_ctx))
-        {
-          int ret;
-
-          if ((sdr_record_len = ipmi_sdr_cache_record_read (sdr_cache_ctx,
-                                                            sdr_record,
-                                                            IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
-            {
-              PSTDOUT_FPRINTF (pstate,
-                               stderr,
-                               "ipmi_sdr_cache_record_read: %s\n",
-                               ipmi_sdr_cache_ctx_errormsg (sdr_cache_ctx));
-              goto cleanup;
-            }
-
-          /* Shouldn't be possible */
-          if (!sdr_record_len)
-            continue;
-
-          if (groups && groups_length)
-            {
-              if ((ret = _is_sdr_sensor_group_listed (pstate,
-                                                      sdr_parse_ctx,
-                                                      sdr_record,
-                                                      sdr_record_len,
-                                                      groups,
-                                                      groups_length)) < 0)
-                goto cleanup;
-            }
-          else
-            ret = 1;            /* accept all */
-
-          if (ret)
-            {
-              if (_store_entity_id_count (pstate,
-                                          sdr_parse_ctx,
-                                          sdr_record,
-                                          sdr_record_len,
-                                          entity_id_counts) < 0)
-                goto cleanup;
-            }
-        }
+      
+      /* Shouldn't be possible */
+      if (!sdr_record_len)
+        continue;
+      
+      if (_store_entity_id_count (pstate,
+                                  sdr_parse_ctx,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  entity_id_counts) < 0)
+        goto cleanup;
     }
 
   rv = 0;

@@ -50,10 +50,6 @@ ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data)
       if (calculate_entity_id_counts (state_data->pstate,
                                       state_data->sdr_cache_ctx,
                                       state_data->sdr_parse_ctx,
-                                      state_data->prog_data->args->groups,
-                                      state_data->prog_data->args->groups_length,
-                                      state_data->prog_data->args->record_ids,
-                                      state_data->prog_data->args->record_ids_length,
                                       &(state_data->entity_id_counts)) < 0)
         return (-1);
     }

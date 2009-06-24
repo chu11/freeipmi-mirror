@@ -101,10 +101,6 @@ void output_sensor_headers (pstdout_state_t pstate,
 int calculate_entity_id_counts (pstdout_state_t pstate,
                                 ipmi_sdr_cache_ctx_t sdr_cache_ctx,
                                 ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                                char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                                unsigned int groups_length,
-                                unsigned int record_ids[],
-                                unsigned int record_ids_length,
                                 struct sensor_entity_id_counts *entity_id_counts);
 
 /* use normal names, set entity_id_counts to NULL */
