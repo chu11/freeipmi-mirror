@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.49 2009-06-11 23:50:28 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.50 2009-06-24 20:37:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1719,7 +1719,9 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION);
           return (0);
         }
-      /* Inventec 5441 returns IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE, so we'll assume
+      /* Workaround
+       *
+       * Inventec 5441 returns IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE, so we'll assume
        * that return code always means we need encryption.
        */
       else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
