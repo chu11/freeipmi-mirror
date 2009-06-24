@@ -353,6 +353,41 @@ Contributions
 o Update Ganglia and Nagios plugins for changes in ipmi-sensors and
 ipmimonitoring.
 
+0.7.10 - 06/16/09
+-----------------
+o In all tools, properly deal with workaround flags when specifying
+  different devices than what workaround flags are intended for.
+o In bmc-config, fix bug setting volatile vs. non-volatile settings.
+o Fix in-band probing priority ordering to fix issues with machines
+  that support multiple drivers.
+o In ipmi-sensors and ipmimonitoring, continue reading sensors after a
+  "command response cannot be provided" error.
+o Add additional workaround handling into Sun 2.0 workaround.
+o In ipmimonitoring, fix sunbmc driver interface bug.
+o In ipmiconsole, consider IPMICONSOLE_ERR_BMC_IMPLEMENTATION a
+  non-fatal error.
+o Update workaround documentation with additional motherboards.
+
+0.7.9 - 05/15/09
+----------------
+o In bmc-config, fix diff check for "Password20" field.
+o In ipmi-fru, fix various output typoes and output errors.
+  - Output "Product Name" instead of "Product Product Name".
+  - Output "FRU Chassis Type" instead of "Chassis Type".
+  - Output "Version" instead of "Version Type".
+  - Fix invalid DC Output and DC Load voltage outputs. mV multiplier
+    of 10 was previously not factored in.
+o In ipmi-chassis, fix chassis-identify parameter parsing bug.
+o In ipmi-chassis, fix output corner cases.
+o In ipmipower, support identify-on, identify-off, identify-status in
+  interactive mode.
+o In ipmipower, fix closing session corner case bug.
+o Update ipmi-oem manpage with extra information.
+o Fix bmc-device --get-mca-auxiliary-log-status bug.
+o Fix debug output corner case in ipmi-oem.
+o Fix glibc 2.8 portability bug with ipmi-raw.
+o Fix freeipmi.conf comment typos.
+
 0.7.8 - 04/10/09
 ----------------
 o Support and document Inventec 5441 workarounds.  Most notably, added

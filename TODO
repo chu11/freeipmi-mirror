@@ -11,6 +11,7 @@ forwarded command support (errata 35b)
 bmc-device
 --------
 set system info support
+- really should be done by firmware?  or OS distro?  Hold off for now.
 
 ipmi-locate
 -----------
