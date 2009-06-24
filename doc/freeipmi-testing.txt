@@ -5,10 +5,12 @@ by
 Albert Chu
 chu11@llnl.gov
 
-The following is a (semi) detailed list of tests to measure the
-compliance of a motherboard to IPMI as well as FreeIPMI's compliance
-to the motherboard's implementation.  It is not 100% thorough, but
-covers a fair amount of the IPMI specification.
+The following is a list of tests I've (semi) regularly done to measure
+the compliance of a motherboard to IPMI as well as FreeIPMI's
+compliance to the motherboard's implementation.  It is not 100%
+thorough and will not guaranteee compliance with the IPMI
+specification, but it covers a fair amount of the IPMI specification
+and a number of the common corner-cases.
 
 This document is updated for FreeIPMI release 0.8.1.
 
