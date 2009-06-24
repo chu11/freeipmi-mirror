@@ -10,10 +10,10 @@ Updated: 06/24/09 for FreeIPMI 0.8.1
 The following is a list of tests I've (semi) regularly done to measure
 the compliance of a motherboard to IPMI as well as FreeIPMI's
 compliance to the motherboard's implementation.  It is not 100%
-thorough and will not guaranteee compliance with the IPMI
+thorough and will not guaranteee full compliance with the IPMI
 specification, but it covers a fair amount of the IPMI specification
-and tests a significant number of cases.  It should also help uncover
-the most common IPMI compliance issues.
+and tests a significant number of cases.  It should help uncover
+many of the most common IPMI compliance issues.
 
 All users/vendors/manufacturers are free to challenge me on all points
 listed below, such as mandatory vs. optional requirements, whether
@@ -25,37 +25,35 @@ FreeIPMI documentation/manpages for additional information.
 
 All tool testing listed below is general agnostic to execution in-band
 vs. out-of-band with obvious exceptions (i.e. testing ipmipower
-in-band, configuring the MAC address out-of-band).
+in-band, configuring the MAC address out-of-band, etc).  Naturally,
+the testing below assumes the tester is not configuring/using FreeIPMI
+workarounds.  That defeats the point of testing for IPMI compliance
+:-)
 
 Out of Band Configuration Definitions
 -------------------------------------
 
 A number of test situations below require a particular out-of-band
 configuration on the remote machine.  The following define a set of
-situations that will be referenced in the tests below.
+usernames/password combinations that will be referenced in the tests
+below.
 
-USERANONYMOUS - A configuration in which user #1 (i.e. NULL)
-username is enabled and does not require a password for
-authentication.
+USERANONYMOUS - User #1 (i.e. NULL) username *without* a password.
 
-USERNULL - A configuration which user #1 (i.e. NULL) username is
-enabled, but requires a password for authentication.
+USERNULL - User #1 (i.e. NULL) username *with* a password.
 
-USER1 - A configuration in which a non-null username is configured,
-enabled, with a password, and the highest privilege this user can
-authenticate at is the "user" privilege.
+USER1 - A non-null username, with a password, and the highest
+privilege this user can authenticate at is the "user" privilege.
 
-OPERATOR1 - A configuration in which a non-null username is
-configured, enabled, with a password, and the highest privilege this
-user can authenticate at is the "operator" privilege.
+OPERATOR1 - A non-null username, with a password, and the highest
+privilege this user can authenticate at is the "operator" privilege.
 
-ADMIN1 - A configuration in which a non-null username is
-configured, enabled, with a password, and the highest privilege this
-user can authenticate at is the "admin" privilege.
+ADMIN1 - A non-null username, with a password, and the highest
+privilege this user can authenticate at is the "admin" privilege.
 
-SOL1 - A configuration in which a non-null username is configured,
-enabled, with a password, and the user is configured to be able to
-establish a SOL session.
+SOL1 - A non-null username, with a password, the highest privilege
+this user can authenticate with is identical to the SOL privilege
+level, and SOL payload access is enabled.
 
 Bmc-config Testing
 ------------------
@@ -463,14 +461,72 @@ Execute ipmi-fru with no ipmi-fru specific options, verify tool:
 Ipmiconsole Testing
 -------------------
 
-(Note: A fair amount of SOL/Ipmiconsole authentication/connection
-issues are tested in other sections.)
-
 Configure all BIOS settings and SOL settings to enable SOL.  Enable
 the remote machine to except sysrqs (in Linux, this requires
 configuration of console=ttySX on the kernel boot line).
 
+For purpose of this set of tests, consider this set of configuration
+options from bmc-config the "pristine" SOL configuration and the SOL1
+user configuration.
+
+Section User5
+        ## Give Username
+        Username                                     SOL1
+        ## Possible values: Yes/No or blank to not set
+        Enable_User                                  Yes
+        ## Give password or blank to clear. MAX 16 chars.
+        Password                                     soltest
+        ## Possible values: Yes/No
+        Lan_Enable_IPMI_Msgs                         Yes
+        ## Possible values: Yes/No
+        Lan_Enable_Link_Auth                         No
+        ## Possible values: Yes/No
+        Lan_Enable_Restricted_to_Callback            No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Lan_Privilege_Limit                          Administrator
+        ## Possible values: Yes/No
+        SOL_Payload_Access                           Yes
+EndSection
+
+Section Rmcpplus_Conf_Privilege
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_0           Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_1           Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_2           Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_3           Administrator
+EndSection
+
+Section SOL_Conf
+        ## Possible values: Yes/No
+        Enable_SOL                                   Yes
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary
+        SOL_Privilege_Level                          Administrator
+        ## Possible values: Yes/No
+        Force_SOL_Payload_Authentication             Yes
+        ## Possible values: Yes/No
+        Force_SOL_Payload_Encryption                 Yes
+        ## Give a valid integer. Each unit is 5ms
+        Character_Accumulate_Interval                5
+        ## Give a valid number
+        Character_Send_Threshold                     50
+        ## Give a valid integer
+        SOL_Retry_Count                              5
+        ## Give a valid integer. Interval unit is 10ms
+        SOL_Retry_Interval                           10
+        ## Possible values: Serial/9600/19200/38400/57600/115200
+        Non_Volatile_Bit_Rate                        115200
+        ## Possible values: Serial/9600/19200/38400/57600/115200
+        Volatile_Bit_Rate                            115200
+        ## Give a valid port number
+        ## SOL_Payload_Port_Number                   623
+EndSection
+
 Test)
+
+Configure "pristine" configuration.
 
 Execute ipmiconsole, authentication with SOL1, verify tool:
 - Establishes a SOL session by outputting "[SOL established]"
@@ -478,17 +534,77 @@ Execute ipmiconsole, authentication with SOL1, verify tool:
 
 Test)
 
+Begin with "pristine" configuration.
+
+Disable SOL Payload access for user sol1.
+
+Execute ipmiconsole, authentication with SOL1, verify tool:
+- Does not establish an SOL session, outputting "SOL unavailable"
+* If it outputs a different error, are the proper completion codes
+  being returned?  It is possible an alternate completion code could
+  be acceptable.  It is most important that the connection not
+  succeed.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure lan_privilege_limit "user" for sol1.
+
+Execute ipmiconsole, authentication with SOL1 and privilege level user
+(-l user), verify tool:
+- Does not establish an SOL session, outputting "privilege level
+  insufficient".
+* If it outputs a different error, are the proper completion codes
+  being returned?  It is possible an alternate completion code could
+  be acceptable.  It is most important that the connection not
+  succeed.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure lan_privilege_limit "user" for sol1.
+
+Configure sol_privilege_level to "user".
+
+Execute ipmiconsole, authentication with SOL1 and privilege level user
+(-l user), verify tool:
+- Establishes a SOL session by outputting "[SOL established]"
+- Verify session can be exitted cleanly (by default type &.).
+
+Test)
+
+Begin with "pristine" configuration.
+
+Disable SOL (Enable_SOL field).
+
+Execute ipmiconsole, authentication with SOL1, verify tool:
+- Does not establish an SOL session, outputting "SOL unavailable"
+* If it outputs a different error, are the proper completion codes
+  being returned?  It is possible an alternate completion code could
+  be acceptable.  It is most important that the connection not
+  succeed.
+
+Test)
+
+Establish a SOL session.
+
 While in a session, generate a break (by default generated via &B)
 and ensure the remote console has received it.  In Linux, if sysrqs
 are enabled properly, an &B? should output the linux sysrq menu.
 
 Test)
 
+Establish a SOL session.
+
 While in a session, reboot the remote machine, and ensure the BIOS
 (or EFI, etc.) can be entered and BIOS settings can be
 modified.
 
 Test)
+
+Establish a SOL session.
 
 While a session is currently active, in a different window, execute
 ipmiconsole w/ the --dont-steal option, authenticating with SOL1,
@@ -500,6 +616,8 @@ verify tool:
 
 Test)
 
+Establish a SOL session.
+
 While a session is currently active, in a different window, execute
 ipmiconsole w/ the --deactivate option, authenticating with SOL1, verify tool:
 - Does not establish an SOL session.
@@ -507,6 +625,8 @@ ipmiconsole w/ the --deactivate option, authenticating with SOL1, verify tool:
 * If this does not work, does proper SOL payload deactivation work?
 
 Test)
+
+Establish a SOL session.
 
 While a session is currently active, in a different window, execute
 ipmiconsole, authenticating with SOL1, verify tool:
@@ -518,9 +638,7 @@ ipmiconsole, authenticating with SOL1, verify tool:
 
 Test)
 
-Configure remote system to require SOL Payload Authentication and
-require SOL Payload Encryption.  Enable all cipher suite ids on the
-remote system.
+Configure "pristine" configuration.
 
 Execute ipmiconsole w/ -I 0, -I 1, and -I 2, authentication with SOL1,
 verify tool:
@@ -528,12 +646,15 @@ verify tool:
   outputting "SOL requires encryption".
 * If it outputs a different error, are the proper completion codes
   being returned?  It is possible an alternate completion code could
-  be acceptable.
+  be acceptable.  It is most important that the connection not
+  succeed.
 
 Execute ipmiconsole w/ -I 3, authentication with SOL1, verify tool:
 - Establishes a SOL session by outputting "[SOL established]"
 
 Test)
+
+Begin with "pristine" configuration.
 
 Configure remote system to *not* require SOL Payload Authentication
 and *not* require SOL Payload Encryption.
@@ -543,12 +664,13 @@ verify tool:
 - Establishes a SOL session by outputting "[SOL established]" under
   each input to the -I option.
 
+
 Ipmipower Testing
 -----------------
 
 Test)
 
-Begin with an machine currently powered off.
+Begin with the remote machine currently powered off.
 
 Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
 - Executes without errors.
@@ -570,8 +692,22 @@ Execute ipmipower w/ --off, authenticating with USER1, verify tool:
 Execute ipmipower w/ --off, authenticating with OPERATOR1, verify tool:
 - Returns "ok" and turns off the node.
 
+Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
+- Executes without errors.
+- Properly reports the state of the machine as "off".
+
 In-Band KCS Testing
 -------------------
 
+Test)
+
+Execute bmc-info in-band, verify tool:
+- Executes without errors.
+- If tool fails to execute, determine:
+  * A) Are memory-mapped address properly stored in the SMBIOS or
+    other locations?
+  * B) Is KCS accessed through the default memory-mapped addresses?
+
 Out-of-Band Testing
 -------------------
+
