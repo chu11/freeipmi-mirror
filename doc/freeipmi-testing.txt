@@ -35,10 +35,15 @@ Verify:
   * Firmware Revision
   * IPMI Version
   * Manufacturer ID
-    - The name of the manufacter outputs along with the "Manufacturer ID"
-    - i.e. "Manufacturer ID       : SOME-COMPANY (1234)"
+    o The name of the manufacter outputs
+ 
+      i.e. "Manufacturer ID       : SOME-COMPANY (1234)"
            vs.
            "Manufacturer ID       : 1234"
+      
+      If the above is not the case, and the vendor is registered with
+      IANA, is there a firmware bug?
+
   * Product ID
   * GUID
   * Channel Information - Medium Type
@@ -48,6 +53,22 @@ Verify:
 
 Ipmi-sensors Testing
 --------------------
+
+Execute ipmi-sensors with very verbose output (-vv)
+
+Verify:
+
+- Executes to completion
+- All fields output are correct.  Key fields to verify:
+  * Entity ID
+    o The name of the Entity ID outputs 
+
+      i.e. "Entity ID: system board (7)"
+           vs.
+           "Entity ID: 7"
+
+      If the above is not the case, are all the Entity IDs valid?  Do they
+      belong in the proper ranges defined by the IPMI specification?
 
 Ipmi-sel Testing
 ----------------
