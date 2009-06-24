@@ -31,7 +31,7 @@ Execute bmc-info with default output
 Verify:
 
 - Executes to completion
-- All fields output are correct.  Key fields:
+- All fields output are correct.  Key fields to verify:
   * Firmware Revision
   * IPMI Version
   * Manufacturer ID
