@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.53 2009-06-22 17:50:21 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.54 2009-06-24 16:33:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -105,14 +105,16 @@ static struct argp_option cmdline_options[] =
       "Attempt to interpret OEM data.", 40},
     { "ignore-non-interpretable-sensors", IGNORE_NON_INTERPRETABLE_SENSORS_KEY, NULL, 0,
       "Ignore non-interpretable sensors in output.", 41},
+    { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
+      "Output sensor names with entity ids and instances.", 42},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 42},
+      "Output fields in comma separated format.", 43},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 43},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 44},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 44},
+      "Output in legacy format.", 45},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate sensor configuration file.", 45},
+      "Specify an alternate sensor configuration file.", 46},
     { 0 }
   };
 
@@ -259,6 +261,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case IGNORE_NON_INTERPRETABLE_SENSORS_KEY:
       cmd_args->ignore_non_interpretable_sensors = 1;
+      break;
+    case ENTITY_SENSOR_NAMES_KEY:
+      cmd_args->entity_sensor_names = 1;
       break;
     case COMMA_SEPARATED_OUTPUT_KEY:
       cmd_args->comma_separated_output = 1;
@@ -422,6 +427,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   cmd_args->bridge_sensors = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->ignore_non_interpretable_sensors = 0;
+  cmd_args->entity_sensor_names = 0;
   cmd_args->comma_separated_output = 0;
   cmd_args->non_abbreviated_units = 0;
   cmd_args->legacy_output = 0;

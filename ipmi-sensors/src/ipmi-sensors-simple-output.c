@@ -341,16 +341,15 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
 
   if (state_data->prog_data->args->entity_sensor_names)
     {
-
       memset (sensor_name_buf, '\0', MAX_ENTITY_ID_SENSOR_NAME_STRING + 1);
 
-      if (get_entity_id_sensor_name_string (state_data->pstate,
-                                            state_data->sdr_parse_ctx,
-                                            sdr_record,
-                                            sdr_record_len,
-                                            &(state_data->entity_id_counts),
-                                            sensor_name_buf,
-                                            MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
+      if (get_entity_sensor_name_string (state_data->pstate,
+                                         state_data->sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &(state_data->entity_id_counts),
+                                         sensor_name_buf,
+                                         MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
         return (-1);
       
       sensor_name = sensor_name_buf;

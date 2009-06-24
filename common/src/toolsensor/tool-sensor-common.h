@@ -66,13 +66,21 @@ const char * get_sensor_group_output_string (unsigned int sensor_type);
 
 void get_sensor_group_cmdline_string (char *sensor_group);
 
-int get_entity_id_sensor_name_string (pstdout_state_t pstate,
-                                      ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                                      const void *sdr_record,
-                                      unsigned int sdr_record_len,
-                                      struct sensor_entity_id_counts *entity_id_counts,
-                                      char *sensor_name_buf,
-                                      unsigned int sensor_name_buf_len);
+int get_entity_sensor_name_string (pstdout_state_t pstate,
+                                   ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                                   const void *sdr_record,
+                                   unsigned int sdr_record_len,
+                                   struct sensor_entity_id_counts *entity_id_counts,
+                                   char *sensor_name_buf,
+                                   unsigned int sensor_name_buf_len);
+
+int get_entity_sensor_name_string_by_record_id (pstdout_state_t pstate,
+                                                ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                                                ipmi_sdr_cache_ctx_t sdr_cache_ctx,
+                                                uint16_t record_id,
+                                                struct sensor_entity_id_counts *entity_id_counts,
+                                                char *sensor_name_buf,
+                                                unsigned int sensor_name_buf_len);
 
 int display_sensor_group_cmdline (pstdout_state_t pstate, 
                                   unsigned int sensor_type);

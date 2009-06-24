@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.126 2009-06-23 23:11:15 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.127 2009-06-24 16:33:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -380,9 +380,23 @@ _output_setup (ipmimonitoring_state_data_t *state_data)
 {
   assert (state_data);
 
+  if (state_data->prog_data->args->entity_sensor_names)
+    {
+      if (calculate_entity_id_counts (state_data->pstate,
+                                      state_data->sdr_cache_ctx,
+                                      state_data->sdr_parse_ctx,
+                                      &(state_data->entity_id_counts)) < 0)
+        return (-1);
+    }
+
   if (!state_data->prog_data->args->legacy_output
       && !state_data->prog_data->args->comma_separated_output)
     {
+      struct sensor_entity_id_counts *entity_ptr = NULL;
+
+      if (state_data->prog_data->args->entity_sensor_names)
+        entity_ptr = &(state_data->entity_id_counts);
+
       if (calculate_column_widths (state_data->pstate,
                                    state_data->sdr_cache_ctx,
                                    state_data->sdr_parse_ctx,
@@ -391,11 +405,13 @@ _output_setup (ipmimonitoring_state_data_t *state_data)
                                    state_data->prog_data->args->record_ids,
                                    state_data->prog_data->args->record_ids_length,
                                    !state_data->prog_data->args->non_abbreviated_units,
-                                   NULL,
+                                   entity_ptr,
                                    &(state_data->column_width)) < 0)
         return (-1);
       
-      /* Calculate units column width special since it's a limited bunch */
+      /* Calculate units column width special since it's a limited
+       * bunch for ipmimonitoring 
+       */
       if (_store_sensor_units_column_width (state_data) < 0)
         return (-1);
     }
@@ -671,8 +687,9 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
     sensor_reading_type, sensor_bitmask_type, sensor_bitmask;
   const char *sensor_group_str;
   const char *sensor_state_str;
-  char *sensor_name;
+  char *sensor_name = NULL;
   void *sensor_reading;
+  char sensor_name_buf[MAX_ENTITY_ID_SENSOR_NAME_STRING + 1];
   char fmt[IPMIMONITORING_FMT_BUFLEN + 1];
   int rv = -1;
 
@@ -722,13 +739,32 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                        ipmi_monitoring_ctx_errormsg (state_data->ctx));
       goto cleanup;
     }
-  if (!(sensor_name = ipmi_monitoring_read_sensor_name (state_data->ctx)))
+  /* get adjusted sensor name if necessary */
+  if (state_data->prog_data->args->entity_sensor_names)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_monitoring_read_sensor_name: %s\n",
-                       ipmi_monitoring_ctx_errormsg (state_data->ctx));
-      goto cleanup;
+      memset (sensor_name_buf, '\0', MAX_ENTITY_ID_SENSOR_NAME_STRING + 1);
+      
+      if (get_entity_sensor_name_string_by_record_id (state_data->pstate,
+                                                      state_data->sdr_parse_ctx,
+                                                      state_data->sdr_cache_ctx,
+                                                      (uint16_t)record_id,
+                                                      &(state_data->entity_id_counts),
+                                                      sensor_name_buf,
+                                                      MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
+        return (-1);
+
+      sensor_name = sensor_name_buf;
+    }
+  else
+    {
+      if (!(sensor_name = ipmi_monitoring_read_sensor_name (state_data->ctx)))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_monitoring_read_sensor_name: %s\n",
+                           ipmi_monitoring_ctx_errormsg (state_data->ctx));
+          goto cleanup;
+        }
     }
   if ((sensor_state = ipmi_monitoring_read_sensor_state (state_data->ctx)) < 0)
     {
@@ -1011,13 +1047,6 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
       if (!args->verbose_count)
         sensor_reading_flags = IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS;
     }
-
-  /* At this point in time we no longer need sdr_cache b/c
-   * libipmimonitoring will open its own copy.
-   */
-  ipmi_sdr_cache_close (state_data->sdr_cache_ctx);
-  ipmi_sdr_cache_ctx_destroy (state_data->sdr_cache_ctx);
-  state_data->sdr_cache_ctx = NULL;
 
   /* At this point in time we no longer need ipmi_ctx b/c
    * libipmimonitoring will open its own copy.  Although no BMC should

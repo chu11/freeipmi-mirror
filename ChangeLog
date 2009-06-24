@@ -1,3 +1,10 @@
+2009-06-24  Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolsensor/, ipmimonitoring/: Support of
+	--entity-sensor-names option.
+
+	* Various code cleanup.
+	
 2009-06-23  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-testing.txt: New file.

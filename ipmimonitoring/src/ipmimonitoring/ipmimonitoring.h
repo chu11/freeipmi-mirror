@@ -41,10 +41,11 @@ enum ipmimonitoring_argp_option_keys
     BRIDGE_SENSORS_KEY = 'b',
     INTERPRET_OEM_DATA_KEY = 161,
     IGNORE_NON_INTERPRETABLE_SENSORS_KEY = 162,
-    COMMA_SEPARATED_OUTPUT_KEY = 163,
-    NON_ABBREVIATED_UNITS_KEY = 164,
-    LEGACY_OUTPUT_KEY = 165,
-    SENSOR_CONFIG_FILE_KEY = 166,
+    ENTITY_SENSOR_NAMES_KEY = 163,
+    COMMA_SEPARATED_OUTPUT_KEY = 164,
+    NON_ABBREVIATED_UNITS_KEY = 165,
+    LEGACY_OUTPUT_KEY = 166,
+    SENSOR_CONFIG_FILE_KEY = 167,
   };
 
 struct ipmimonitoring_arguments
@@ -67,6 +68,7 @@ struct ipmimonitoring_arguments
   int bridge_sensors;
   int interpret_oem_data;
   int ignore_non_interpretable_sensors;
+  int entity_sensor_names;
   int comma_separated_output;
   int non_abbreviated_units;
   int legacy_output;
@@ -94,6 +96,7 @@ typedef struct ipmimonitoring_state_data
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
   ipmi_monitoring_ctx_t ctx;
   int output_headers;
+  struct sensor_entity_id_counts entity_id_counts;
   struct sensor_column_width column_width;
 } ipmimonitoring_state_data_t;
 
