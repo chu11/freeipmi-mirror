@@ -849,16 +849,100 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
 
-  memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
-  if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
-                                                       "%s",
-                                                       outbuf,
-                                                       IPMI_SEL_OUTPUT_BUFLEN,
-                                                       flags)) < 0)
+  if (state_data->prog_data->args->entity_sensor_names
+      && !state_data->prog_data->args->sdr.ignore_sdr_cache)
     {
-      if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
+      uint8_t sensor_number, generator_id;
+      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      int sdr_record_len = 0;
+      
+      if (ipmi_sel_parse_read_generator_id (state_data->sel_parse_ctx,
+                                            &generator_id) < 0)
+        {
+          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_generator_id") < 0)
+            return (-1);
+          return (0);
+        }
+
+      if (ipmi_sel_parse_read_sensor_number (state_data->sel_parse_ctx,
+                                             &sensor_number) < 0)
+        {
+          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_sensor_number") < 0)
+            return (-1);
+          return (0);
+        }
+      
+      /* achu: really shouldn't do this, b/c sel-parse library uses
+       * this, but sel-parse lib doesn't iterate over the cache, so
+       * it's ok.  If we need to later, we'll open a new sdr_cache
+       */
+      if (ipmi_sdr_cache_search_sensor (state_data->sdr_cache_ctx,
+                                        sensor_number,
+                                        generator_id) < 0)
+        {
+          /* IPMI Workaround (achu)
+           *
+           * Discovered on Supermicro H8QME with SIMSO daughter card.
+           *
+           * The slave address is reportedly incorrectly by having the
+           * generator_id be shifted over by one.  This is a special
+           * "try again" corner case.
+           */
+          if (ipmi_sdr_cache_ctx_errnum (state_data->sdr_cache_ctx) == IPMI_SDR_CACHE_ERR_NOT_FOUND
+              && (generator_id == (IPMI_SLAVE_ADDRESS_BMC << 1)))
+            {
+              if (!ipmi_sdr_cache_search_sensor (state_data->sdr_cache_ctx,
+                                                 sensor_number,
+                                                 (generator_id >> 1)))
+                goto fall_through;
+              /* else fall through to normal error path */
+            }
+          
+          goto normal_sensor_output;
+        }
+
+    fall_through:
+      
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+                                                        sdr_record,
+                                                        IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_cache_record_read: %s\n",
+                           ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+          return (-1);
+        }
+
+      memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
+      if (get_entity_sensor_name_string (state_data->pstate,
+                                         state_data->sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &(state_data->entity_id_counts),
+                                         outbuf,
+                                         IPMI_SEL_OUTPUT_BUFLEN) < 0)
         return (-1);
-      return (0);
+
+      outbuf_len = strlen (outbuf);
+      if (!outbuf_len)
+        goto normal_sensor_output;
+    }
+  else
+    {
+    normal_sensor_output:
+
+      memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
+      if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
+                                                           "%s",
+                                                           outbuf,
+                                                           IPMI_SEL_OUTPUT_BUFLEN,
+                                                           flags)) < 0)
+        {
+          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
+            return (-1);
+          return (0);
+        }
     }
 
   if (outbuf_len > state_data->column_width.sensor_name)
@@ -1614,6 +1698,19 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
   if (!args->sdr.ignore_sdr_cache && !args->legacy_output)
     {
+      struct sensor_entity_id_counts *entity_ptr = NULL;
+
+      if (args->entity_sensor_names)
+        {
+          if (calculate_entity_id_counts (state_data->pstate,
+                                          state_data->sdr_cache_ctx,
+                                          state_data->sdr_parse_ctx,
+                                          &(state_data->entity_id_counts)) < 0)
+            goto cleanup;
+
+          entity_ptr = &(state_data->entity_id_counts);
+        }
+
       if (calculate_column_widths (state_data->pstate,
                                    state_data->sdr_cache_ctx,
                                    state_data->sdr_parse_ctx,

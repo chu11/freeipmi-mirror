@@ -38,11 +38,11 @@ below are from interaction with users in the community and I have
 never personally accessed.
 
 For the record, I have nothing against the companies and these issues.
-I am just as prone to programming bugs as they are.  I'm sure many of
-the motherboard manufacturers don't even write the firmware in house,
-they are from third parties.  This is more documentation for
-historical purposes, people searching for information, and to document
-the difficulty of developing against IPMI.
+I am just as prone to programming bugs as they are.  The IPMI
+specification is gigantic, mistakes will happen.  This is more
+documentation for historical purposes, people searching for
+information, and to document the difficulty of developing against
+IPMI.
 
 Authentication Issues
 ---------------------
@@ -317,6 +317,10 @@ Supermicro H8QME with SIMSO daughter card: Some sensors do not return
 sensor event bitmasks in accordance to the IPMI specification.  This
 bug is confirmed to be fixed on newer firmware.
 
+Inventec 5441: Several sensors have bogus Entity IDs.  In other words,
+not in the valid Entity ID range, or OEM defined range.  No resolution
+required, output alternate text appropriately.
+
 ipmi-sel
 --------
 
@@ -339,5 +343,4 @@ from a Get SDR Record command would be different from the record ID
 passed in. No resolution in FreeIPMI required.  Resolved in IPMItool
 with workaround to detect issue and use input record ID instead of
 output record ID.
-
 

@@ -43,9 +43,10 @@ enum ipmi_sel_argp_option_keys
     OEM_EVENT_ONLY_KEY = 164,
     HEX_DUMP_KEY = 165,
     INTERPRET_OEM_DATA_KEY = 166,
-    COMMA_SEPARATED_OUTPUT_KEY = 167,
-    NON_ABBREVIATED_UNITS_KEY = 168,
-    LEGACY_OUTPUT_KEY = 169,
+    ENTITY_SENSOR_NAMES_KEY = 167,
+    COMMA_SEPARATED_OUTPUT_KEY = 168,
+    NON_ABBREVIATED_UNITS_KEY = 169,
+    LEGACY_OUTPUT_KEY = 170,
   };
 
 struct ipmi_sel_arguments
@@ -78,6 +79,7 @@ struct ipmi_sel_arguments
   int oem_event_only;
   int hex_dump;
   int interpret_oem_data;
+  int entity_sensor_names;
   int comma_separated_output;
   int non_abbreviated_units;
   int legacy_output;
@@ -99,6 +101,7 @@ typedef struct ipmi_sel_state_data
   ipmi_sdr_parse_ctx_t sdr_parse_ctx;
   ipmi_sel_parse_ctx_t sel_parse_ctx;
   int output_headers;
+  struct sensor_entity_id_counts entity_id_counts;
   struct sensor_column_width column_width;
   unsigned int event_column_width;
   uint32_t manufacturer_id;

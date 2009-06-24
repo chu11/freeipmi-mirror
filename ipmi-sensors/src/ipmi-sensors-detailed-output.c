@@ -268,6 +268,18 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                     "Entity ID: %s (%u)\n",
                     ipmi_entity_ids[entity_id],
                     entity_id);
+  else if (IPMI_ENTITY_ID_IS_CHASSIS_SPECIFIC (entity_id))
+    pstdout_printf (state_data->pstate,
+                    "Entity ID: Chassis Specific (%u)\n",
+                    entity_id);
+  else if (IPMI_ENTITY_ID_IS_BOARD_SET_SPECIFIC (entity_id))
+    pstdout_printf (state_data->pstate,
+                    "Entity ID: Board-Set Specific (%u)\n",
+                    entity_id);
+  else if (IPMI_ENTITY_ID_IS_OEM_SYSTEM_INTEGRATOR_DEFINED (entity_id))
+    pstdout_printf (state_data->pstate,
+                    "Entity ID: OEM System Integrator (%u)\n",
+                    entity_id);
   else
     pstdout_printf (state_data->pstate,
                     "Entity ID: %u\n",
@@ -1822,6 +1834,18 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
     pstdout_printf (state_data->pstate,
                     "Entity ID: %s (%u)\n",
                     ipmi_entity_ids[entity_id],
+                    entity_id);
+  else if (IPMI_ENTITY_ID_IS_CHASSIS_SPECIFIC (entity_id))
+    pstdout_printf (state_data->pstate,
+                    "Entity ID: Chassis Specific (%u)\n",
+                    entity_id);
+  else if (IPMI_ENTITY_ID_IS_BOARD_SET_SPECIFIC (entity_id))
+    pstdout_printf (state_data->pstate,
+                    "Entity ID: Board-Set Specific (%u)\n",
+                    entity_id);
+  else if (IPMI_ENTITY_ID_IS_OEM_SYSTEM_INTEGRATOR_DEFINED (entity_id))
+    pstdout_printf (state_data->pstate,
+                    "Entity ID: OEM System Integrator (%u)\n",
                     entity_id);
   else
     pstdout_printf (state_data->pstate,

@@ -138,21 +138,37 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
   else if (IPMI_ENTITY_ID_IS_OEM_SYSTEM_INTEGRATOR_DEFINED (entity_id))
     entity_id_str = "OEM System Integrator";
   else
-    entity_id_str = "Undefined";
+    entity_id_str = "OEM Entity"; /* vendor screwed up, assume it's an OEM entity id */
 
-  if (entity_id_counts->count[entity_id] > 1)
-    snprintf (sensor_name_buf,
-              sensor_name_buf_len,
-              "%s %u %s",
-              entity_id_str,
-              entity_instance,
-              id_string);
+  /* a few special cases, for entity_ids are special, the vendor has
+   * specifically stated there is no "entity" associated with this sdr
+   * record
+   */
+  if (entity_id == IPMI_ENTITY_ID_UNSPECIFIED
+      || entity_id == IPMI_ENTITY_ID_OTHER
+      || entity_id == IPMI_ENTITY_ID_UNKNOWN)
+    {
+      snprintf (sensor_name_buf,
+                sensor_name_buf_len,
+                "%s",
+                id_string);
+    }
   else
-    snprintf (sensor_name_buf,
-              sensor_name_buf_len,
-              "%s %s",
-              entity_id_str,
-              id_string);
+    {
+      if (entity_id_counts->count[entity_id] > 1)
+        snprintf (sensor_name_buf,
+                  sensor_name_buf_len,
+                  "%s %u %s",
+                  entity_id_str,
+                  entity_instance,
+                  id_string);
+      else
+        snprintf (sensor_name_buf,
+                  sensor_name_buf_len,
+                  "%s %s",
+                  entity_id_str,
+                  id_string);
+    }
 
   return (0);
 }

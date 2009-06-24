@@ -97,12 +97,14 @@ static struct argp_option cmdline_options[] =
       "Hex-dump SEL records.", 40},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
       "Attempt to interpret OEM data.", 41},
+    { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
+      "Output sensor names with entity ids and instances.", 42},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 42},
+      "Output fields in comma separated format.", 43},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 43},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 44},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 44},
+      "Output in legacy format.", 45},
     { 0 }
   };
 
@@ -304,6 +306,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
       break;
+    case ENTITY_SENSOR_NAMES_KEY:
+      cmd_args->entity_sensor_names = 1;
+      break;
     case COMMA_SEPARATED_OUTPUT_KEY:
       cmd_args->comma_separated_output = 1;
       break;
@@ -407,6 +412,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->oem_event_only = 0;
   cmd_args->hex_dump = 0;
   cmd_args->interpret_oem_data = 0;
+  cmd_args->entity_sensor_names = 0;
   cmd_args->comma_separated_output = 0;
   cmd_args->non_abbreviated_units = 0;
   cmd_args->legacy_output = 0;
