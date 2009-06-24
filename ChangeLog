@@ -1,5 +1,9 @@
 2009-06-24  Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/src/ipmipower.h: Fix assert bug.
+	
+2009-06-24  Albert Chu <chu11@llnl.gov>
+
 	* common/src/toolsensor/, ipmimonitoring/, ipmi-sel/: Support of
 	--entity-sensor-names option.
 
