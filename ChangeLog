@@ -4,6 +4,8 @@
 	--entity-sensor-names option.
 
 	* ipmi-sensors/: Clarify Entity-ID output.
+
+	* comman/man/manpage-common-entity-sensor-names.man: New file.
 	
 	* Various code cleanup.
 	
