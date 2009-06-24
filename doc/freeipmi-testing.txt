@@ -329,18 +329,21 @@ Execute bmc-info with no bmc-info specific options, verify tool:
 Ipmi-chassis Testing
 --------------------
 
-If the remote system supports an IPMI controllable LED:
-
 Test)
 
-Execute ipmi-chassis with --chassis-identify=force, verify remote system:
+If the remote system supports an IPMI controllable LED:
+
+Execute ipmi-chassis with --chassis-identify=force, verify remote
+system:
 - Has LED turned on indefinitely.
 
-Execute ipmi-chassis with --chassis-identify=turn-off, verify remote system:
+Execute ipmi-chassis with --chassis-identify=turn-off, verify remote
+system:
 - Has LED turned off.
 
 Execute ipmi-chassis with --chassis-identify=30, verify remote system:
-- Has LED turned on for about 30 seconds, then turns itself off.
+- Has LED turned on for approximately 30 seconds, then turns itself
+  off.
 
 Ipmi-sensors Testing
 --------------------
@@ -355,7 +358,8 @@ Execute ipmi-sensors with no ipmi-sensors specific options, verify tool:
     software sensor?  Is the sensor disabled?  Is sensor scanning
     disabled?  Is the event-reading-type-code of the sensor correct?
 - All threshold values (i.e. temperature, rpm, voltage, etc.) are
-  valid/correct values.
+  valid/correct values (no invalid numbers, no negative temperatures,
+  etc.).
   * If not, are stored SDR values for this sensor correct?
 - All units are valid/correct.
   * If not, are stored SDR values for this sensor correct?
@@ -377,7 +381,6 @@ Execute ipmi-sensors with very verbose output (-vv), verify tool:
       i.e. "Entity ID: system board (7)"
            vs.
            "Entity ID: 7"
-
       If the above is not the case, are all the Entity IDs valid?  Do they
       belong in the proper ranges defined by the IPMI specification?
   * Lower Critical Threshold
@@ -456,7 +459,8 @@ Execute ipmi-fru with no ipmi-fru specific options, verify tool:
 - Executes without errors
 - All FRU entries are output fully
 - No outputs of checksum errors
-  - If checksum errors output, are checksums valid?
+  * If checksum errors are output, are checksums valid?
+- No error message outputs (keyword "Error" is output).
 
 Ipmiconsole Testing
 -------------------
