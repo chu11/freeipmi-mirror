@@ -5,29 +5,57 @@ by
 Albert Chu
 chu11@llnl.gov
 
+Updated: 06/24/09 for FreeIPMI 0.8.1
+
 The following is a list of tests I've (semi) regularly done to measure
 the compliance of a motherboard to IPMI as well as FreeIPMI's
 compliance to the motherboard's implementation.  It is not 100%
 thorough and will not guaranteee compliance with the IPMI
 specification, but it covers a fair amount of the IPMI specification
-and a number of the common corner-cases.
-
-This document is updated for FreeIPMI release 0.8.1.
-
-All documentation below assume reasonably advanced knowledge of IPMI
-and knowledge of FreeIPMI tools.  Please see the IPMI specification or
-FreeIPMI documentation/manpages for additional information.
-
-I am writing this document based primarily upon recollection.  It
-should hopefully find a number of problems.
+and tests a significant number of cases.  It should also help uncover
+the most common IPMI compliance issues.
 
 All users/vendors/manufacturers are free to challenge me on all points
 listed below, such as mandatory vs. optional requirements, whether
 something meets strict compliance, etc.
 
+All documentation below assume reasonably advanced knowledge of IPMI
+and knowledge of FreeIPMI tools.  Please see the IPMI specification or
+FreeIPMI documentation/manpages for additional information.
+
 All tool testing listed below is general agnostic to execution in-band
 vs. out-of-band with obvious exceptions (i.e. testing ipmipower
 in-band, configuring the MAC address out-of-band).
+
+Out of Band Configuration Definitions
+-------------------------------------
+
+A number of test situations below require a particular out-of-band
+configuration on the remote machine.  The following define a set of
+situations that will be referenced in the tests below.
+
+USERANONYMOUS - A configuration in which user #1 (i.e. NULL)
+username is enabled and does not require a password for
+authentication.
+
+USERNULL - A configuration which user #1 (i.e. NULL) username is
+enabled, but requires a password for authentication.
+
+USER1 - A configuration in which a non-null username is configured,
+enabled, with a password, and the highest privilege this user can
+authenticate at is the "user" privilege.
+
+OPERATOR1 - A configuration in which a non-null username is
+configured, enabled, with a password, and the highest privilege this
+user can authenticate at is the "operator" privilege.
+
+ADMIN1 - A configuration in which a non-null username is
+configured, enabled, with a password, and the highest privilege this
+user can authenticate at is the "admin" privilege.
+
+SOL1 - A configuration in which a non-null username is configured,
+enabled, with a password, and the user is configured to be able to
+establish a SOL session.
 
 Bmc-config Testing
 ------------------
@@ -35,11 +63,8 @@ Bmc-config Testing
 Bmc-info Testing
 ----------------
 
-Execute bmc-info with no bmc-info specific output
-
-Verify:
-
-- Executes to completion
+Execute bmc-info with no bmc-info specific output, verify tool:
+- Executes without errors
 - All fields output are correct.  Key fields to verify:
   * Firmware Revision
   * IPMI Version
@@ -60,14 +85,25 @@ Verify:
   * Channel Information - Vendor ID
     o Most if not all should be == "Intelligent Platform Management Interface forum (7154)"
 
+Ipmi-chassis Testing
+--------------------
+
+If the remote system supports an IPMI controllable LED:
+
+Execute ipmi-chassis with --chassis-identify=force, verify remote system:
+- Has LED turned on indefinitely.
+
+Execute ipmi-chassis with --chassis-identify=turn-off, verify remote system:
+- Has LED turned off.
+
+Execute ipmi-chassis with --chassis-identify=30, verify remote system:
+- Has LED turned on for about 30 seconds, then turns itself off.
+
 Ipmi-sensors Testing
 --------------------
 
-Execute ipmi-sensors with no ipmi-sensors specific options
-
-Verify:
-
-- Executes to completion
+Execute ipmi-sensors with no ipmi-sensors specific options, verify tool:
+- Executes without errors
 - All threshold and discrete sensor readings that should be output are
   output with a reading and/or event.
   * If N/A is output instead, is the sensor improperly listed a
@@ -81,11 +117,8 @@ Verify:
 - All groups are valid/correct.
   * If not, are stored SDR values for this sensor correct?
 
-Execute ipmi-sensors with very verbose output (-vv)
-
-Verify:
-
-- Executes to completion
+Execute ipmi-sensors with very verbose output (-vv), verify tool:
+- Executes without errors
 - All fields output are correct.  Key fields to verify:
   * Sensor Number
   * Sensor Owner ID
@@ -110,6 +143,9 @@ Verify:
       readable/relevant are output w/ "N/A".  If not output with
       "N/A", does the BMC properly label them as readable
       vs. unreadable?
+  * Assertion Event Enabled
+  * Deassertion Event Enabled
+    o All supported assertion and deassertion events are listed.
 
 Testing Power Supply Sensors:
 
@@ -120,6 +156,9 @@ Testing Power Supply Sensors:
 - Verify ipmi-sensors now lists the power supply sensor with an
   appropriate event message, such as "Power Supply Failure detected"
   or "Power Supply input lost (AC/DC)".
+- Plug the power supply back in.
+- Verify ipmi-sensors not lists the power supply sensors as having an
+  event of "Presence Detected".
 
 Testing Intrusion Sensors:
 
@@ -131,43 +170,31 @@ Testing Intrusion Sensors:
 Ipmi-sel Testing
 ----------------
 
-Execute ipmi-sel with no ipmi-sel specific options
-
-Verify:
-
-- Executes to completion
+Execute ipmi-sel with no ipmi-sel specific options, verify tool:
+- Executes without errors
 - All dates on SEL records are correct
   * If not, is the BMC time set correctly?
 - Sensor names are output correctly.
   * If not, are the SEL records reporting the correct sensor number
     and/or sensor owner id?
 
-Execute ipmi-sel with --display and --display-range
-
-Verify:
-
-- Executes to completion
+Execute ipmi-sel with --display and --display-range, verify tool:
+- Executes without errors
 - Exact record ids listed in options are output.
 - Exact record ids output match record ids listed with default
   (i.e. list all records) output.
   * If not, are record ids stored incorrectly?
 
-Execute ipmi-sel with --delete-all
-
-Verify:
-
-- Executes to completion
+Execute ipmi-sel with --delete-all, verify tool:
+- Executes without errors
 - SEL is completely cleared.  Subsequent calls to ipmi-sel result in
   no output.
 
 Ipmi-fru Testing
 ----------------
 
-Execute ipmi-fru with no ipmi-fru specific options
-
-Verify:
-
-- Executes to completion
+Execute ipmi-fru with no ipmi-fru specific options, verify tool:
+- Executes without errors
 - All FRU entries are output fully
 - No outputs of checksum errors
   - If checksum errors output, are checksums valid?
@@ -175,8 +202,95 @@ Verify:
 Ipmiconsole Testing
 -------------------
 
+(Note: A fair amount of SOL/Ipmiconsole authentication/connection
+issues are tested below in "Out-of-Band Testing")
+
+Configure all BIOS settings and SOL settings to enable SOL.  Enable
+the remote machine to except sysrqs (in Linux, this requires
+configuration of console=ttySX on the kernel boot line).
+
+Execute ipmiconsole, authentication with SOL1, verify tool:
+- Establishes a SOL session by outputting "[SOL established]"
+- Verify session can be exitted cleanly (by default type &.).
+
+While in a session, generate a break (by default generated via &B)
+and ensure the remote console has received it.  In Linux, if sysrqs
+are enabled properly, an &B? should output the linux sysrq menu.
+
+While in a session, reboot the remote machine, and ensure the BIOS
+(or system equivalent) can be entered and BIOS settings can be
+modified.
+- If this does not work, are serial breaks supported in SOL?
+
+While a session is currently active, in a different window, execute
+ipmiconsole w/ the --dont-steal option, authenticating with SOL1,
+verify tool:
+- Does not establish an SOL session, outputting "SOL in use".
+- The original SOL session has stayed alive.
+* If this does not work, does proper SOL payload activation status
+  work?
+
+While a session is currently active, in a different window, execute
+ipmiconsole w/ the --deactivate option, authenticating with SOL1, verify tool:
+- Does not establish an SOL session.
+- The original SOL session has been terminated.
+* If this does not work, does proper SOL payload deactivation work?
+
+While a session is currently active, in a different window, execute
+ipmiconsole, authenticating with SOL1, verify tool:
+- Establishes a SOL session by outputting "[SOL established]"
+- The original SOL session has been terminated, and "[SOL session
+  stolen]" is reported.
+* If this does not work, does SOL properly inform "old" sessions that
+  it is being terminated?  does proper SOL payload deactivation work?
+
+Configure remote system to require SOL Payload Authentication and
+require SOL Payload Encryption.  Enable all cipher suite ids on the
+remote system.
+
+Execute ipmiconsole w/ -I 0, -I 1, and -I 2, authentication with SOL1,
+verify tool:
+- Does not establish an SOL session under each input to the -I option,
+  outputting "SOL requires encryption".
+* If it outputs a different error, are the proper completion codes
+  being returned?  It is possible an alternate completion code could
+  be acceptable.
+
+Execute ipmiconsole w/ -I 3, authentication with SOL1, verify tool:
+- Establishes a SOL session by outputting "[SOL established]"
+
+Configure remote system to *not* require SOL Payload Authentication
+and *not* require SOL Payload Encryption.
+
+Execute ipmiconsole w/ -I 0, -I 1, -I 2, -I 3, authentication with SOL1,
+verify tool:
+- Establishes a SOL session by outputting "[SOL established]" under
+  each input to the -I option.
+
 Ipmipower Testing
 -----------------
+
+Begin with an machine currently powered off.
+
+Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
+- Executes without errors.
+- Properly reports the state of the machine as "off".
+
+Execute ipmipower w/ --on, authenticating with USER1, verify tool:
+- Returns an error of "privilege level cannot be obtained for this user"
+
+Execute ipmipower w/ --on, authenticating with OPERATOR1, verify tool:
+- Returns "ok" and turns on the node.
+
+Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
+- Executes without errors.
+- Properly reports the state of the machine as "on".
+
+Execute ipmipower w/ --off, authenticating with USER1, verify tool:
+- Returns an error of "privilege level cannot be obtained for this user"
+
+Execute ipmipower w/ --off, authenticating with OPERATOR1, verify tool:
+- Returns "ok" and turns off the node.
 
 In-Band KCS Testing
 -------------------
