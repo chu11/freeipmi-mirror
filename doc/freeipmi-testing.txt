@@ -18,9 +18,16 @@ All documentation below assume reasonably advanced knowledge of IPMI
 and knowledge of FreeIPMI tools.  Please see the IPMI specification or
 FreeIPMI documentation/manpages for additional information.
 
-I am writing this document based primarily upon recollection of tests
-I've done in the past.  All vendors are free to challenge me on all
-points listed below, such as mandatory vs. optional requirements, etc.
+I am writing this document based primarily upon recollection.  It
+should hopefully find a number of problems.
+
+All users/vendors/manufacturers are free to challenge me on all points
+listed below, such as mandatory vs. optional requirements, whether
+something meets strict compliance, etc.
+
+All tool testing listed below is general agnostic to execution in-band
+vs. out-of-band with obvious exceptions (i.e. testing ipmipower
+in-band, configuring the MAC address out-of-band).
 
 Bmc-config Testing
 ------------------
@@ -28,7 +35,7 @@ Bmc-config Testing
 Bmc-info Testing
 ----------------
 
-Execute bmc-info with default output
+Execute bmc-info with no bmc-info specific output
 
 Verify:
 
@@ -56,26 +63,120 @@ Verify:
 Ipmi-sensors Testing
 --------------------
 
+Execute ipmi-sensors with no ipmi-sensors specific options
+
+Verify:
+
+- Executes to completion
+- All threshold and discrete sensor readings that should be output are
+  output with a reading and/or event.
+  * If N/A is output instead, is the sensor improperly listed a
+    software sensor?  Is the sensor disabled?  Is sensor scanning
+    disabled?  Is the event-reading-type-code of the sensor correct?
+- All threshold values (i.e. temperature, rpm, voltage, etc.) are
+  valid/correct values.
+  * If not, are stored SDR values for this sensor correct?
+- All units are valid/correct.
+  * If not, are stored SDR values for this sensor correct?
+- All groups are valid/correct.
+  * If not, are stored SDR values for this sensor correct?
+
 Execute ipmi-sensors with very verbose output (-vv)
 
 Verify:
 
 - Executes to completion
 - All fields output are correct.  Key fields to verify:
+  * Sensor Number
+  * Sensor Owner ID
+    o BMC owned sensors should be 0x20.
+    o The combination of Sensor Owner ID and Sensor Number should
+      point to a unique sensor.
   * Entity ID
     o The name of the Entity ID outputs 
-
       i.e. "Entity ID: system board (7)"
            vs.
            "Entity ID: 7"
 
       If the above is not the case, are all the Entity IDs valid?  Do they
       belong in the proper ranges defined by the IPMI specification?
+  * Lower Critical Threshold
+  * Upper Critical Threshold
+  * Lower Non-Critical Threshold
+  * Upper Non-Critical Threshold
+  * Lower Non-Recoverable Threshold
+  * Upper Non-Recoverable Threshold
+    o All thresholds listed are correct.  Those that are not
+      readable/relevant are output w/ "N/A".  If not output with
+      "N/A", does the BMC properly label them as readable
+      vs. unreadable?
+
+Testing Power Supply Sensors:
+
+- Use a dual power supply motherboard.
+- Verify ipmi-sensors lists the power supply sensors as having an
+  event of "Presence Detected".
+- Unplug one of the power supplies.
+- Verify ipmi-sensors now lists the power supply sensor with an
+  appropriate event message, such as "Power Supply Failure detected"
+  or "Power Supply input lost (AC/DC)".
+
+Testing Intrusion Sensors:
+
+- Verify ipmi-sensors lists the intrusion sensor as "OK".
+- Open the case/chassis/motherboard/etc.
+- Verify ipmi-sensors now lists the intrusion sensor with an
+  appropriate event message, such as "General Chassis Intrusion".
 
 Ipmi-sel Testing
 ----------------
 
+Execute ipmi-sel with no ipmi-sel specific options
 
+Verify:
+
+- Executes to completion
+- All dates on SEL records are correct
+  * If not, is the BMC time set correctly?
+- Sensor names are output correctly.
+  * If not, are the SEL records reporting the correct sensor number
+    and/or sensor owner id?
+
+Execute ipmi-sel with --display and --display-range
+
+Verify:
+
+- Executes to completion
+- Exact record ids listed in options are output.
+- Exact record ids output match record ids listed with default
+  (i.e. list all records) output.
+  * If not, are record ids stored incorrectly?
+
+Execute ipmi-sel with --delete-all
+
+Verify:
+
+- Executes to completion
+- SEL is completely cleared.  Subsequent calls to ipmi-sel result in
+  no output.
+
+Ipmi-fru Testing
+----------------
+
+Execute ipmi-fru with no ipmi-fru specific options
+
+Verify:
+
+- Executes to completion
+- All FRU entries are output fully
+- No outputs of checksum errors
+  - If checksum errors output, are checksums valid?
+
+Ipmiconsole Testing
+-------------------
+
+Ipmipower Testing
+-----------------
 
 In-Band KCS Testing
 -------------------
