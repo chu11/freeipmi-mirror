@@ -60,10 +60,254 @@ establish a SOL session.
 Bmc-config Testing
 ------------------
 
+Test)
+
+Execute bmc-config with --checkout, verify checked out configuration
+contains all appropriate configurable fields.  At minimum, the fields
+listed below should be output:
+- For each "User" section:
+  * Username
+  * Enable_User
+  * Password
+  * Lan_Enable_IPMI_Msgs
+  * Lan_Privilege_Limit
+  * SOL_Payload_Access (if IPMI 2.0 is supported)
+- For the Lan_Channel section:
+  * Volatile_Access_Mode
+  * Volatile_Enable_Per_Message_Auth
+  * Non_Volatile_Access_Mode
+  * Non_Volatile_Enable_Per_Message_Auth
+- For the Lan_Conf section:
+  * IP_Address_Source
+  * IP_Address
+  * MAC_Address
+  * Subnet_Mask
+  * Default_Gateway_IP_Address
+  * Default_Gateway_MAC_Address
+  * Backup_Gateway_IP_Address
+  * Backup_Gateway_MAC_Address
+- For the Lan_Conf_Auth section:
+  * Callback_Enable_Auth_Type_None
+  * Callback_Enable_Auth_Type_MD2
+  * Callback_Enable_Auth_Type_MD5
+  * Callback_Enable_Auth_Type_Straight_Password
+  * User_Enable_Auth_Type_None
+  * User_Enable_Auth_Type_MD2
+  * User_Enable_Auth_Type_MD5
+  * User_Enable_Auth_Type_Straight_Password
+  * Operator_Enable_Auth_Type_None
+  * Operator_Enable_Auth_Type_MD2
+  * Operator_Enable_Auth_Type_MD5
+  * Operator_Enable_Auth_Type_Straight_Password
+  * Admin_Enable_Auth_Type_None
+  * Admin_Enable_Auth_Type_MD2
+  * Admin_Enable_Auth_Type_MD5
+  * Admin_Enable_Auth_Type_Straight_Password
+    o If some of these fields are not output, are the appropriate
+    system "authentication type support" flags set properly?
+- For the Lan_Conf_Security_Keys section (if IPMI 2.0 is supported):
+  * K_G
+- For the Lan_Conf_Misc:
+  * Enable_Gratuitous_ARPs (if gratuitous ARPs supported)
+  * Enable_ARP_Response (if BMC generated ARPs supported)
+  * Gratuitous_ARP_Interval (if gratuitous ARPs supported)
+- For Rmcpplus_Conf_Privilege section:
+  * Maximum_Privilege_Cipher_Suite_Id_0
+  * Maximum_Privilege_Cipher_Suite_Id_1
+  * Maximum_Privilege_Cipher_Suite_Id_2
+  * Maximum_Privilege_Cipher_Suite_Id_3
+- For SOL_Conf section (if IPMI 2.0 is supported):
+  * Enable_SOL 
+  * SOL_Privilege_Level
+  * Force_SOL_Payload_Authentication
+  * Force_SOL_Payload_Encryption
+  * Character_Accumulate_Interval
+  * Character_Send_Threshold
+  * SOL_Retry_Count
+  * SOL_Retry_Interval
+  * Non_Volatile_Bit_Rate
+  * Volatile_Bit_Rate
+
+Test)
+
+Using a previously checked out configuration file, modify the
+configuration file as follows below to try many configuration
+possibilities.  Then for each configuration change:
+
+- Using the --diff and --filename options, verify that each field
+  modified in the configuration file is indeed different than what is
+  currently stored on the BMC.  Bmc-config should output each
+  difference to stdout.
+
+- Using the --commit and --filename options, commit the configuration
+  file to the BMC.
+
+- Using the --diff and --filename options, verify that each field has
+  been written to the BMC and there are no longer any differences
+  Bmc-config should not output anything to stdout.
+
+- Ensure that fields can be changed once and then changed back.  For
+  example for Yes/No fields, configure a "Yes" to a "No", then back
+  to a "Yes".
+
+- If configuration changed configuration cannot be done:
+  * Have some configuration fields been made read-only?
+  * Are some configuration fields not implemented?
+  * Are some configuration inputs not accepted?
+  * Possibly something else?
+
+Configuration changes to try:
+- For each "User" section:
+  * Username
+    o Change username to something different.
+    o Ensure username of length 16 can be configured.
+  * Enable_User
+    o Can configure both Yes and No
+  * Password
+    o Can change username to something different.
+    o Ensure empty password (no input) can be configured.
+    o Ensure password of length 16 (20 if IPMI 2.0 supported) can be
+      configured.
+  * Lan_Enable_IPMI_Msgs
+    o Can configure both Yes and No
+  * Lan_Privilege_Limit
+    o Can change privilege level to User, Operator, and Administrator
+  * SOL_Payload_Access
+    o Can configure both Yes and No
+- For the Lan_Channel section:
+  * Volatile_Access_Mode
+    o Can configure Disabled and Always_Available
+  * Volatile_Enable_Per_Message_Auth
+    o Can configure both Yes and No
+  * Non_Volatile_Access_Mode
+    o Can configure Disabled and Always_Available
+  * Non_Volatile_Enable_Per_Message_Auth
+    o Can configure both Yes and No
+- For the Lan_Conf section:
+  * IP_Address_Source
+    o Can configure Static and Use_DHCP
+  * IP_Address
+    o Can configure a different IP address
+  * MAC_Address
+    o Can configure a different MAC address
+  * Subnet_Mask
+    o Can configure a different Subnet address
+  * Default_Gateway_IP_Address
+    o Can configure a different IP address
+  * Default_Gateway_MAC_Address
+    o Can configure a different MAC address
+  * Backup_Gateway_IP_Address
+    o Can configure a different IP address
+  * Backup_Gateway_MAC_Address
+    o Can configure a different MAC address
+- For the Lan_Conf_Auth section:
+  * Callback_Enable_Auth_Type_None
+    o Can configure both Yes and No
+  * Callback_Enable_Auth_Type_MD2
+    o Can configure both Yes and No
+  * Callback_Enable_Auth_Type_MD5
+    o Can configure both Yes and No
+  * Callback_Enable_Auth_Type_Straight_Password
+    o Can configure both Yes and No
+  * User_Enable_Auth_Type_None
+    o Can configure both Yes and No
+  * User_Enable_Auth_Type_MD2
+    o Can configure both Yes and No
+  * User_Enable_Auth_Type_MD5
+    o Can configure both Yes and No
+  * User_Enable_Auth_Type_Straight_Password
+    o Can configure both Yes and No
+  * Operator_Enable_Auth_Type_None
+    o Can configure both Yes and No
+  * Operator_Enable_Auth_Type_MD2
+    o Can configure both Yes and No
+  * Operator_Enable_Auth_Type_MD5
+    o Can configure both Yes and No
+  * Operator_Enable_Auth_Type_Straight_Password
+    o Can configure both Yes and No
+  * Admin_Enable_Auth_Type_None
+    o Can configure both Yes and No
+  * Admin_Enable_Auth_Type_MD2
+    o Can configure both Yes and No
+  * Admin_Enable_Auth_Type_MD5
+    o Can configure both Yes and No
+  * Admin_Enable_Auth_Type_Straight_Password
+    o Can configure both Yes and No
+- For the Lan_Conf_Security_Keys section (if IPMI 2.0 is supported):
+  * K_G
+    o Can configure a different key
+    o Ensure empty key (no input) can be configured.
+- For the Lan_Conf_Misc:
+  * Enable_Gratuitous_ARPs
+    o Can configure both Yes and No
+  * Enable_ARP_Response
+    o Can configure both Yes and No
+  * Gratuitous_ARP_Interval
+    o Can configure a different value (i.e. 5 to 6)
+- For Rmcpplus_Conf_Privilege section:
+  * Maximum_Privilege_Cipher_Suite_Id_0
+    o Can configure Unused, User, Operator, and Administrator.
+  * Maximum_Privilege_Cipher_Suite_Id_1
+    o Can configure Unused, User, Operator, and Administrator.
+  * Maximum_Privilege_Cipher_Suite_Id_2
+    o Can configure Unused, User, Operator, and Administrator.
+  * Maximum_Privilege_Cipher_Suite_Id_3
+    o Can configure Unused, User, Operator, and Administrator.
+- For SOL_Conf section (if IPMI 2.0 is supported):
+  * Enable_SOL 
+    o Can configure both Yes and No
+  * SOL_Privilege_Level
+    o Can configure User, Operator, and Administrator.
+  * Force_SOL_Payload_Authentication
+    o Can configure both Yes and No
+  * Force_SOL_Payload_Encryption
+    o Can configure both Yes and No
+  * Character_Accumulate_Interval
+    o Can configure a different value (i.e. 5 to 6)
+  * Character_Send_Threshold
+    o Can configure a different value (i.e. 5 to 6)
+  * SOL_Retry_Count
+    o Can configure a different value (i.e. 5 to 6)
+  * SOL_Retry_Interval
+    o Can configure a different value (i.e. 5 to 6)
+  * Non_Volatile_Bit_Rate
+    o Can configure a different bit rate (i.e. 57600 to 115200)
+  * Volatile_Bit_Rate
+    o Can configure a different bit rate (i.e. 57600 to 115200)
+
+Test)
+
+Using a previously checked out configuration file, modify all the
+"Non_Volatile" fields but not "Volatile" fields to something
+different.  Power off the IPMI machine and power it back on.  Verify
+that all "Volatile" fields not hold the new values stored in the
+"Non_Volatile" fields.
+
+Test)
+
+Reboot the machine.  Using --checkout, checkout the current
+configuration.  Configure all fields to be the "opposite" or
+"different" of what they currently are (i.e. No to Yes, User to
+Administrator, etc.).
+
+Power off the machine and power it back on.
+
+Using the --diff option, verify that newly configured fields have been
+saved across a reboot.
+
+Again, configure all fields "opposite" again.
+
+Power off the machine and power it back on.
+
+Using the --diff option, verify that newly configured fields have been
+saved across a reboot.
+
 Bmc-info Testing
 ----------------
 
-Execute bmc-info with no bmc-info specific output, verify tool:
+Test)
+
+Execute bmc-info with no bmc-info specific options, verify tool:
 - Executes without errors
 - All fields output are correct.  Key fields to verify:
   * Firmware Revision
@@ -77,7 +321,6 @@ Execute bmc-info with no bmc-info specific output, verify tool:
       
       If the above is not the case, and the vendor is registered with
       IANA, is there a firmware bug?
-
   * Product ID
   * GUID
   * Channel Information - Medium Type
@@ -90,6 +333,8 @@ Ipmi-chassis Testing
 
 If the remote system supports an IPMI controllable LED:
 
+Test)
+
 Execute ipmi-chassis with --chassis-identify=force, verify remote system:
 - Has LED turned on indefinitely.
 
@@ -101,6 +346,8 @@ Execute ipmi-chassis with --chassis-identify=30, verify remote system:
 
 Ipmi-sensors Testing
 --------------------
+
+Test)
 
 Execute ipmi-sensors with no ipmi-sensors specific options, verify tool:
 - Executes without errors
@@ -116,6 +363,8 @@ Execute ipmi-sensors with no ipmi-sensors specific options, verify tool:
   * If not, are stored SDR values for this sensor correct?
 - All groups are valid/correct.
   * If not, are stored SDR values for this sensor correct?
+
+Test)
 
 Execute ipmi-sensors with very verbose output (-vv), verify tool:
 - Executes without errors
@@ -147,6 +396,8 @@ Execute ipmi-sensors with very verbose output (-vv), verify tool:
   * Deassertion Event Enabled
     o All supported assertion and deassertion events are listed.
 
+Test)
+
 Testing Power Supply Sensors:
 
 - Use a dual power supply motherboard.
@@ -160,6 +411,8 @@ Testing Power Supply Sensors:
 - Verify ipmi-sensors not lists the power supply sensors as having an
   event of "Presence Detected".
 
+Test)
+
 Testing Intrusion Sensors:
 
 - Verify ipmi-sensors lists the intrusion sensor as "OK".
@@ -170,6 +423,8 @@ Testing Intrusion Sensors:
 Ipmi-sel Testing
 ----------------
 
+Test)
+
 Execute ipmi-sel with no ipmi-sel specific options, verify tool:
 - Executes without errors
 - All dates on SEL records are correct
@@ -178,12 +433,16 @@ Execute ipmi-sel with no ipmi-sel specific options, verify tool:
   * If not, are the SEL records reporting the correct sensor number
     and/or sensor owner id?
 
+Test)
+
 Execute ipmi-sel with --display and --display-range, verify tool:
 - Executes without errors
 - Exact record ids listed in options are output.
 - Exact record ids output match record ids listed with default
   (i.e. list all records) output.
   * If not, are record ids stored incorrectly?
+
+Test)
 
 Execute ipmi-sel with --delete-all, verify tool:
 - Executes without errors
@@ -192,6 +451,8 @@ Execute ipmi-sel with --delete-all, verify tool:
 
 Ipmi-fru Testing
 ----------------
+
+Test)
 
 Execute ipmi-fru with no ipmi-fru specific options, verify tool:
 - Executes without errors
@@ -209,18 +470,25 @@ Configure all BIOS settings and SOL settings to enable SOL.  Enable
 the remote machine to except sysrqs (in Linux, this requires
 configuration of console=ttySX on the kernel boot line).
 
+Test)
+
 Execute ipmiconsole, authentication with SOL1, verify tool:
 - Establishes a SOL session by outputting "[SOL established]"
 - Verify session can be exitted cleanly (by default type &.).
+
+Test)
 
 While in a session, generate a break (by default generated via &B)
 and ensure the remote console has received it.  In Linux, if sysrqs
 are enabled properly, an &B? should output the linux sysrq menu.
 
+Test)
+
 While in a session, reboot the remote machine, and ensure the BIOS
-(or system equivalent) can be entered and BIOS settings can be
+(or EFI, etc.) can be entered and BIOS settings can be
 modified.
-- If this does not work, are serial breaks supported in SOL?
+
+Test)
 
 While a session is currently active, in a different window, execute
 ipmiconsole w/ the --dont-steal option, authenticating with SOL1,
@@ -230,11 +498,15 @@ verify tool:
 * If this does not work, does proper SOL payload activation status
   work?
 
+Test)
+
 While a session is currently active, in a different window, execute
 ipmiconsole w/ the --deactivate option, authenticating with SOL1, verify tool:
 - Does not establish an SOL session.
 - The original SOL session has been terminated.
 * If this does not work, does proper SOL payload deactivation work?
+
+Test)
 
 While a session is currently active, in a different window, execute
 ipmiconsole, authenticating with SOL1, verify tool:
@@ -243,6 +515,8 @@ ipmiconsole, authenticating with SOL1, verify tool:
   stolen]" is reported.
 * If this does not work, does SOL properly inform "old" sessions that
   it is being terminated?  does proper SOL payload deactivation work?
+
+Test)
 
 Configure remote system to require SOL Payload Authentication and
 require SOL Payload Encryption.  Enable all cipher suite ids on the
@@ -259,6 +533,8 @@ verify tool:
 Execute ipmiconsole w/ -I 3, authentication with SOL1, verify tool:
 - Establishes a SOL session by outputting "[SOL established]"
 
+Test)
+
 Configure remote system to *not* require SOL Payload Authentication
 and *not* require SOL Payload Encryption.
 
@@ -269,6 +545,8 @@ verify tool:
 
 Ipmipower Testing
 -----------------
+
+Test)
 
 Begin with an machine currently powered off.
 
