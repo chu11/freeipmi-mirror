@@ -436,7 +436,7 @@ ipmi_check_authentication_capabilities_username (const char *username,
   authentication_status_non_null_username = val;
 
   if ((!username && !password && !authentication_status_anonymous_login)
-      || (!username && !authentication_status_anonymous_login)
+      || (!username && password && !authentication_status_null_username)
       || (username  && !authentication_status_non_null_username))
     return (0);
 
