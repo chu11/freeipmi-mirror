@@ -15,15 +15,23 @@ specification, but it covers a fair amount of the IPMI specification
 and tests a significant number of cases.  It should help uncover
 many of the most common IPMI compliance issues.
 
-A few of the things listed below, while technically optional in the
-IPMI spec (for example, the ability to configure SOL on/off), I
-personally feel are practically a requirement.  So they are listed
-below.  All users/vendors/manufacturers/etc. are welcome to debate me
-on the below.
+All users/vendors/manufacturers/etc. are welcome to debate me on the
+below as mandatory vs. optional requirements.  While many of the below
+may technically be optional for IPMI compliance, I consider them to be
+practically mandatory for a functioning IPMI system supporting IPMI
+1.5, IPMI 2.0, Serial-over-LAN, etc.
 
-All documentation below assume reasonably advanced knowledge of IPMI
-and knowledge of FreeIPMI tools.  Please see the IPMI specification or
-FreeIPMI documentation/manpages for additional information.
+The error messages listed in tests below highlight what I believe to
+be the "best" or "most likely" error messages that should be returned
+by the tools.  It is possible that different IPMI completion codes
+returned by commands are acceptable, leading to other error message
+output in the tools.  If you believe an alternate completion code
+(leading to an alternate error message) is acceptable, please let me
+know about them.
+
+All documentation below assume reasonable knowledge of IPMI and
+knowledge of FreeIPMI tools.  Please see FreeIPMI
+documentation/manpages for additional information.
 
 All tool testing listed below is general agnostic to execution in-band
 vs. out-of-band with obvious exceptions (i.e. testing ipmipower
@@ -857,7 +865,7 @@ verify tool:
 * It is most important that the connection not succeed.
 
 Execute bmc-info, authenticating with USERANONYMOUS (i.e. no username
-and no password inputs), verify tool:
+and no password input), verify tool:
 - Exits with error.  Most likely/best error message "username invalid".
 * It is most important that the connection not succeed.
 
@@ -885,7 +893,18 @@ Begin with "pristine" configuration.
 Configure User1 to be enabled and have a privilege_limit of "user".
 
 Execute bmc-info, authenticating with USERANONYMOUS (i.e. no username
-and no password inputs), verify tool:
+and no password input), verify tool:
+- Executes without errors.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure User1 to be enabled, with a password, and have a
+privilege_limit of "user".
+
+Execute bmc-info, authenticating with USERNULL (i.e. no username
+and w/ the proper password input), verify tool:
 - Executes without errors.
 
 Test)
@@ -1048,7 +1067,7 @@ verify tool:
 * It is most important that the connection not succeed.
 
 Execute bmc-info, authenticating with USERANONYMOUS (i.e. no username
-and no password inputs), verify tool:
+and no password input), verify tool:
 - Exits with error.  Most likely/best error message "username invalid".
 * It is most important that the connection not succeed.
 
@@ -1070,7 +1089,20 @@ Configure User1 to be enabled and have a privilege_limit of "user".
 Execute all below tests with IPMI 2.0 (-D lan_2_0)
 
 Execute bmc-info, authenticating with USERANONYMOUS (i.e. no username
-and no password inputs), verify tool:
+and no password input), verify tool:
+- Executes without errors.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure User1 to be enabled, with a password, and have a
+privilege_limit of "user".
+
+Execute all below tests with IPMI 2.0 (-D lan_2_0)
+
+Execute bmc-info, authenticating with USERNULL (i.e. no username
+and w/ the proper password input), verify tool:
 - Executes without errors.
 
 Test)
