@@ -15,9 +15,11 @@ specification, but it covers a fair amount of the IPMI specification
 and tests a significant number of cases.  It should help uncover
 many of the most common IPMI compliance issues.
 
-All users/vendors/manufacturers are free to challenge me on all points
-listed below, such as mandatory vs. optional requirements, whether
-something meets strict compliance, etc.
+A few of the things listed below, while technically optional in the
+IPMI spec (for example, the ability to configure SOL on/off), I
+personally feel are practically a requirement.  So they are listed
+below.  All users/vendors/manufacturers/etc. are welcome to debate me
+on the below.
 
 All documentation below assume reasonably advanced knowledge of IPMI
 and knowledge of FreeIPMI tools.  Please see the IPMI specification or
@@ -147,12 +149,6 @@ possibilities.  Then for each configuration change:
 - Ensure that fields can be changed once and then changed back.  For
   example for Yes/No fields, configure a "Yes" to a "No", then back
   to a "Yes".
-
-- If configuration changed configuration cannot be done:
-  * Have some configuration fields been made read-only?
-  * Are some configuration fields not implemented?
-  * Are some configuration inputs not accepted?
-  * Possibly something else?
 
 Configuration changes to try:
 - For each "User" section:
@@ -395,7 +391,9 @@ Execute ipmi-sensors with very verbose output (-vv), verify tool:
       vs. unreadable?
   * Assertion Event Enabled
   * Deassertion Event Enabled
-    o All supported assertion and deassertion events are listed.
+    o All supported assertion and deassertion events are listed.  If
+      they are not listed, are they properly labeled as enabled/disabled
+      in the SDR?
 
 Test)
 
@@ -473,19 +471,15 @@ For purpose of this set of tests, consider this set of configuration
 options from bmc-config the "pristine" SOL configuration and the SOL1
 user configuration.
 
-Section User5
+Section UserX
         ## Give Username
         Username                                     SOL1
         ## Possible values: Yes/No or blank to not set
         Enable_User                                  Yes
         ## Give password or blank to clear. MAX 16 chars.
-        Password                                     soltest
+        Password                                     somepassword
         ## Possible values: Yes/No
         Lan_Enable_IPMI_Msgs                         Yes
-        ## Possible values: Yes/No
-        Lan_Enable_Link_Auth                         No
-        ## Possible values: Yes/No
-        Lan_Enable_Restricted_to_Callback            No
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
         Lan_Privilege_Limit                          Administrator
         ## Possible values: Yes/No
@@ -543,11 +537,9 @@ Begin with "pristine" configuration.
 Disable SOL Payload access for user sol1.
 
 Execute ipmiconsole, authentication with SOL1, verify tool:
-- Does not establish an SOL session, outputting "SOL unavailable"
-* If it outputs a different error, are the proper completion codes
-  being returned?  It is possible an alternate completion code could
-  be acceptable.  It is most important that the connection not
-  succeed.
+- Does not establish an SOL session.  Most likely/best error message
+  "SOL unavailable".
+* It is most important that the connection not succeed.
 
 Test)
 
@@ -557,12 +549,9 @@ Configure lan_privilege_limit "user" for sol1.
 
 Execute ipmiconsole, authentication with SOL1 and privilege level user
 (-l user), verify tool:
-- Does not establish an SOL session, outputting "privilege level
-  insufficient".
-* If it outputs a different error, are the proper completion codes
-  being returned?  It is possible an alternate completion code could
-  be acceptable.  It is most important that the connection not
-  succeed.
+- Does not establish an SOL session.  Most likely/best error message
+  "privilege level insufficient".
+* It is most important that the connection not succeed.
 
 Test)
 
@@ -584,11 +573,9 @@ Begin with "pristine" configuration.
 Disable SOL (Enable_SOL field).
 
 Execute ipmiconsole, authentication with SOL1, verify tool:
-- Does not establish an SOL session, outputting "SOL unavailable"
-* If it outputs a different error, are the proper completion codes
-  being returned?  It is possible an alternate completion code could
-  be acceptable.  It is most important that the connection not
-  succeed.
+- Does not establish an SOL session.  Most likely/best error message
+  "SOL unavailable"
+* It is most important that the connection not succeed.
 
 Test)
 
@@ -613,8 +600,8 @@ Establish a SOL session.
 While a session is currently active, in a different window, execute
 ipmiconsole w/ the --dont-steal option, authenticating with SOL1,
 verify tool:
-- Does not establish an SOL session, outputting "SOL in use".
-- The original SOL session has stayed alive.
+- Does not establish an SOL session.  Most likely/best error message
+  "SOL in use".  The original SOL session has stayed alive.
 * If this does not work, does proper SOL payload activation status
   work?
 
@@ -644,14 +631,13 @@ Test)
 
 Configure "pristine" configuration.
 
-Execute ipmiconsole w/ -I 0, -I 1, and -I 2, authentication with SOL1,
+Execute ipmiconsole, authentication with SOL1, with option -I 0
+Execute ipmiconsole, authentication with SOL1, with option -I 1
+Execute ipmiconsole, authentication with SOL1, with option -I 2
 verify tool:
-- Does not establish an SOL session under each input to the -I option,
-  outputting "SOL requires encryption".
-* If it outputs a different error, are the proper completion codes
-  being returned?  It is possible an alternate completion code could
-  be acceptable.  It is most important that the connection not
-  succeed.
+- Does not establish an SOL session under each test, outputting "SOL
+  requires encryption".
+* It is most important that the connection not succeed.
 
 Execute ipmiconsole w/ -I 3, authentication with SOL1, verify tool:
 - Establishes a SOL session by outputting "[SOL established]"
@@ -663,10 +649,13 @@ Begin with "pristine" configuration.
 Configure remote system to *not* require SOL Payload Authentication
 and *not* require SOL Payload Encryption.
 
-Execute ipmiconsole w/ -I 0, -I 1, -I 2, -I 3, authentication with SOL1,
+Execute ipmiconsole, authentication with SOL1, with option -I 0
+Execute ipmiconsole, authentication with SOL1, with option -I 1
+Execute ipmiconsole, authentication with SOL1, with option -I 2
+Execute ipmiconsole, authentication with SOL1, with option -I 3
 verify tool:
 - Establishes a SOL session by outputting "[SOL established]" under
-  each input to the -I option.
+  each test.
 
 
 Ipmipower Testing
@@ -700,6 +689,34 @@ Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
 - Executes without errors.
 - Properly reports the state of the machine as "off".
 
+Test)
+
+Begin with the remote machine currently powered off.
+
+Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
+- Executes without errors.
+- Properly reports the state of the machine as "off".
+
+Execute ipmipower w/ --on, authenticating with USER1, verify tool:
+- Returns an error of "privilege level cannot be obtained for this user"
+
+Execute ipmipower w/ --on, authenticating with ADMIN1, verify tool:
+- Returns "ok" and turns on the node.
+
+Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
+- Executes without errors.
+- Properly reports the state of the machine as "on".
+
+Execute ipmipower w/ --off, authenticating with USER1, verify tool:
+- Returns an error of "privilege level cannot be obtained for this user"
+
+Execute ipmipower w/ --off, authenticating with ADMIN1, verify tool:
+- Returns "ok" and turns off the node.
+
+Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
+- Executes without errors.
+- Properly reports the state of the machine as "off".
+
 In-Band KCS Testing
 -------------------
 
@@ -712,6 +729,460 @@ Execute bmc-info in-band, verify tool:
     other locations?
   * B) Is KCS accessed through the default memory-mapped addresses?
 
-Out-of-Band Testing
--------------------
+Out-of-Band IPMI 1.5 Testing
+----------------------------
+
+For purpose of this set of tests, consider this set of configuration
+options from bmc-config the "pristine" BMC configuration and user
+configuration.
+
+Section User1
+        ## Give Username
+        ## Username                                   NULL
+        ## Possible values: Yes/No or blank to not set
+        Enable_User                                   No
+        ## Give password or blank to clear. MAX 16 chars.
+        Password                                   
+        ## Possible values: Yes/No
+        Lan_Enable_IPMI_Msgs                          Yes
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Lan_Privilege_Limit                           No_Access
+EndSection
+
+Section UserA
+        ## Give Username
+        Username                                     USER1
+        ## Possible values: Yes/No or blank to not set
+        Enable_User                                  Yes
+        ## Give password or blank to clear. MAX 16 chars.
+        Password                                     somepassword
+        ## Possible values: Yes/No
+        Lan_Enable_IPMI_Msgs                         Yes
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Lan_Privilege_Limit                          User
+EndSection
+
+Section UserB
+        ## Give Username
+        Username                                     OPERATOR1
+        ## Possible values: Yes/No or blank to not set
+        Enable_User                                  Yes
+        ## Give password or blank to clear. MAX 16 chars.
+        Password                                     somepassword
+        ## Possible values: Yes/No
+        Lan_Enable_IPMI_Msgs                         Yes
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Lan_Privilege_Limit                          Operator
+EndSection
+
+Section UserC
+        ## Give Username
+        Username                                     ADMIN1
+        ## Possible values: Yes/No or blank to not set
+        Enable_User                                  Yes
+        ## Give password or blank to clear. MAX 16 chars.
+        Password                                     somepassword
+        ## Possible values: Yes/No
+        Lan_Enable_IPMI_Msgs                         Yes
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Lan_Privilege_Limit                          Administrator
+EndSection
+
+Section Lan_Channel
+        ## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
+        Volatile_Access_Mode                         Always_Available
+        ## Possible values: Yes/No
+        Volatile_Enable_Per_Message_Auth             Yes
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary
+        Volatile_Channel_Privilege_Limit             Administrator
+        ## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
+        Non_Volatile_Access_Mode                     Always_Available
+        ## Possible values: Yes/No
+        Non_Volatile_Enable_Per_Message_Auth         Yes
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary
+        Non_Volatile_Channel_Privilege_Limit         Administrator
+EndSection
+
+Section Lan_Conf_Auth
+        ## Possible values: Yes/No
+        Callback_Enable_Auth_Type_None               No
+        ## Possible values: Yes/No
+        Callback_Enable_Auth_Type_MD2                No
+        ## Possible values: Yes/No
+        Callback_Enable_Auth_Type_MD5                No
+        ## Possible values: Yes/No
+        Callback_Enable_Auth_Type_Straight_Password  No
+        ## Possible values: Yes/No
+        User_Enable_Auth_Type_None                   No
+        ## Possible values: Yes/No
+        User_Enable_Auth_Type_MD2                    No
+        ## Possible values: Yes/No
+        User_Enable_Auth_Type_MD5                    Yes
+        ## Possible values: Yes/No
+        User_Enable_Auth_Type_Straight_Password      No
+        ## Possible values: Yes/No
+        Operator_Enable_Auth_Type_None               No
+        ## Possible values: Yes/No
+        Operator_Enable_Auth_Type_MD2                No
+        ## Possible values: Yes/No
+        Operator_Enable_Auth_Type_MD5                Yes
+        ## Possible values: Yes/No
+        Operator_Enable_Auth_Type_Straight_Password  No
+        ## Possible values: Yes/No
+        Admin_Enable_Auth_Type_None                  No
+        ## Possible values: Yes/No
+        Admin_Enable_Auth_Type_MD2                   No
+        ## Possible values: Yes/No
+        Admin_Enable_Auth_Type_MD5                   Yes
+        ## Possible values: Yes/No
+        Admin_Enable_Auth_Type_Straight_Password     No
+EndSection
+
+Test)
+
+Configure "pristine" configuration.
+
+Execute bmc-info, authenticating with USER1, with privilege level user (-l user)
+Execute bmc-info, authenticating with OPERATOR1, with privilege level operator (-l operator)
+Execute bmc-info, authenticating with ADMIN1, with privilege level admin (-l admin)
+verify tool:
+- Executes without errors for each test.
+
+Execute bmc-info, authenticating with USER1, with privilege level operator (-l operator).
+Execute bmc-info, authenticating with USER1, with privilege level admin (-l admin).
+Execute bmc-info, authenticating with OPERATOR1, with privilege level admin (-l admin).
+verify tool:
+- Exits with error.  Most likely/best error message "privilege level
+  cannot be obtained for this user".
+* It is most important that the connection not succeed.
+
+Execute bmc-info, authenticating with USERANONYMOUS (i.e. no username
+and no password inputs), verify tool:
+- Exits with error.  Most likely/best error message "username invalid".
+* It is most important that the connection not succeed.
+
+Execute bmc-info, authenticating with a bogus username (i.e. FOO)
+- Exits with error.  Most likely/best error message "username invalid".
+* It is most important that the connection not succeed.
+
+Execute bmc-info, authenticating with USER1, with a bad password
+- Exits with error.  Most likely/best error message "password
+  verification timeout".
+* It is most important that the connection not succeed.
+
+Execute bmc-info, authenticating with USER1, with option -a md2
+Execute bmc-info, authenticating with USER1, with option -a straight_password_key
+Execute bmc-info, authenticating with USER1, with option -a none
+verify tool:
+- Exits with error.  Most likely/best error message "authentication
+  type unavailable for attempted privilege level" for each test.
+* It is most important that the connection not succeed.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure User1 to be enabled and have a privilege_limit of "user".
+
+Execute bmc-info, authenticating with USERANONYMOUS (i.e. no username
+and no password inputs), verify tool:
+- Executes without errors.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure USER1, OPERATOR1, and ADMIN1 users to be off
+(i.e. Enable_User = No).
+
+Execute bmc-info, authenticating with USER1
+Execute bmc-info, authenticating with OPERATOR1
+Execute bmc-info, authenticating with ADMIN1
+verify tool:
+- Exits with error.  Most likely/best error message "username invalid".
+* It is most important that the connection not succeed.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure all "Lan_Conf_Auth" fields to "Yes".
+
+Execute bmc-info, authenticating with USER1, with option -a md5
+Execute bmc-info, authenticating with USER1, with option -a md2
+Execute bmc-info, authenticating with USER1, with option -a straight_password_key
+Execute bmc-info, authenticating with USER1, with option -a none
+verify tool:
+- Executes without errors for each test.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Disable the LAN Channel (Volatile_Access_Mode = Disabled)
+
+Execute bmc-info, authenticating with USER1, verify tool:
+- Exits with error.  Most likely/best error message "connection
+  timeout".
+* It is most important that the connection not succeed.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure LAN Channel Privilege Limit to User.
+
+Execute bmc-info, authenticating with USER1, verify tool:
+- Executes without errors.
+
+Execute bmc-info, authenticating with OPERATOR1, with privilege level operator (-l operator)
+Execute bmc-info, authenticating with ADMIN1, with privilege level admin (-l admin)
+- Exits with error.  Most likely/best error message "privilege level
+  cannot be obtained for this user".
+* It is most important that the connection not succeed.
+
+(achu note: I do not currently possess a motherboard that passes this
+last test, however, I am 99% sure I've had a motherboard in the past that
+did indeed pass this test.)
+
+Out-of-Band IPMI 2.0 Testing
+----------------------------
+
+For purpose of this set of tests, consider this set of configuration
+options from bmc-config the "pristine" BMC configuration and user
+configuration.
+
+Section User1
+        ## Give Username
+        ## Username                                   NULL
+        ## Possible values: Yes/No or blank to not set
+        Enable_User                                   No
+        ## Give password or blank to clear. MAX 16 chars.
+        Password                                   
+        ## Possible values: Yes/No
+        Lan_Enable_IPMI_Msgs                          Yes
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Lan_Privilege_Limit                           No_Access
+EndSection
+
+Section UserA
+        ## Give Username
+        Username                                     USER1
+        ## Possible values: Yes/No or blank to not set
+        Enable_User                                  Yes
+        ## Give password or blank to clear. MAX 16 chars.
+        Password                                     somepassword
+        ## Possible values: Yes/No
+        Lan_Enable_IPMI_Msgs                         Yes
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Lan_Privilege_Limit                          User
+EndSection
+
+Section UserB
+        ## Give Username
+        Username                                     OPERATOR1
+        ## Possible values: Yes/No or blank to not set
+        Enable_User                                  Yes
+        ## Give password or blank to clear. MAX 16 chars.
+        Password                                     somepassword
+        ## Possible values: Yes/No
+        Lan_Enable_IPMI_Msgs                         Yes
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Lan_Privilege_Limit                          Operator
+EndSection
+
+Section UserC
+        ## Give Username
+        Username                                     ADMIN1
+        ## Possible values: Yes/No or blank to not set
+        Enable_User                                  Yes
+        ## Give password or blank to clear. MAX 16 chars.
+        Password                                     somepassword
+        ## Possible values: Yes/No
+        Lan_Enable_IPMI_Msgs                         Yes
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Lan_Privilege_Limit                          Administrator
+EndSection
+
+Section Lan_Conf_Security_Keys
+        ## Give string or blank to clear. Max 20 chars
+        K_G                                          
+EndSection
+
+Section Rmcpplus_Conf_Privilege
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_0           Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_1           Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_2           Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_3           Administrator
+EndSection
+
+Test)
+
+Configure "pristine" configuration.
+
+Execute all below tests with IPMI 2.0 (-D lan_2_0)
+
+Execute bmc-info, authenticating with USER1, with privilege level user (-l user)
+Execute bmc-info, authenticating with OPERATOR1, with privilege level operator (-l operator)
+Execute bmc-info, authenticating with ADMIN1, with privilege level admin (-l admin)
+verify tool:
+- Executes without errors for each test.
+
+Execute bmc-info, authenticating with USER1, with -I 0
+Execute bmc-info, authenticating with USER1, with -I 1
+Execute bmc-info, authenticating with USER1, with -I 2
+Execute bmc-info, authenticating with USER1, with -I 3
+verify tool:
+- Executes without errors for each test.
+
+Execute bmc-info, authenticating with USER1, with privilege level operator (-l operator).
+Execute bmc-info, authenticating with USER1, with privilege level admin (-l admin).
+Execute bmc-info, authenticating with OPERATOR1, with privilege level admin (-l admin).
+verify tool:
+- Exits with error.  Most likely/best error messages are "password invalid"
+  or "privilege level cannot be obtained for this user".
+* It is most important that the connection not succeed.
+
+Execute bmc-info, authenticating with USERANONYMOUS (i.e. no username
+and no password inputs), verify tool:
+- Exits with error.  Most likely/best error message "username invalid".
+* It is most important that the connection not succeed.
+
+Execute bmc-info, authenticating with a bogus username (i.e. FOO)
+- Exits with error.  Most likely/best error message "username invalid".
+* It is most important that the connection not succeed.
+
+Execute bmc-info, authenticating with USER1, with a bad password
+- Exits with error.  Most likely/best error message "password
+  invalid".
+* It is most important that the connection not succeed.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure User1 to be enabled and have a privilege_limit of "user".
+
+Execute all below tests with IPMI 2.0 (-D lan_2_0)
+
+Execute bmc-info, authenticating with USERANONYMOUS (i.e. no username
+and no password inputs), verify tool:
+- Executes without errors.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure USER1, OPERATOR1, and ADMIN1 users to be off
+(i.e. Enable_User = No).
+
+Execute all below tests with IPMI 2.0 (-D lan_2_0)
+
+Execute bmc-info, authenticating with USER1
+Execute bmc-info, authenticating with OPERATOR1
+Execute bmc-info, authenticating with ADMIN1
+verify tool:
+- Exits with error.  Most likely/best error message "username invalid".
+* It is most important that the connection not succeed.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure a non-null K_G key.
+
+Execute all below tests with IPMI 2.0 (-D lan_2_0)
+
+Execute bmc-info, authenticating with USER1, without specify -k
+verify tool:
+- Exits with error.  Most likely/best error message "k_g invalid".
+* It is most important that the connection not succeed.
+
+Execute bmc-info, authenticating with USER1, specify -k key.
+verify tool:
+- Executes without errors.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure each field in Rmcpplus_Conf_Privilege to "User".
+
+Execute all below tests with IPMI 2.0 (-D lan_2_0)
+
+Execute bmc-info, authenticating with USER1, with privilege level user (-l user), with -I 0
+Execute bmc-info, authenticating with USER1, with privilege level user (-l user), with -I 1
+Execute bmc-info, authenticating with USER1, with privilege level user (-l user), with -I 2
+Execute bmc-info, authenticating with USER1, with privilege level user (-l user), with -I 3
+verify tool:
+- Executes without errors for each test.
+
+Execute bmc-info, authenticating with OPERATOR1, with privilege level operator (-l operator), with -I 0
+Execute bmc-info, authenticating with OPERATOR1, with privilege level operator (-l operator), with -I 1
+Execute bmc-info, authenticating with OPERATOR1, with privilege level operator (-l operator), with -I 2
+Execute bmc-info, authenticating with OPERATOR1, with privilege level operator (-l operator), with -I 3
+Execute bmc-info, authenticating with ADMIN1, with privilege level admin (-l admin), with -I 0
+Execute bmc-info, authenticating with ADMIN1, with privilege level admin (-l admin), with -I 1
+Execute bmc-info, authenticating with ADMIN1, with privilege level admin (-l admin), with -I 2
+Execute bmc-info, authenticating with ADMIN1, with privilege level admin (-l admin), with -I 3
+verify tool:
+- Exits with error.  Most likely/best error message "privilege level
+  cannot be obtained for this user".
+* It is most important that the connection not succeed.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure each field in Rmcpplus_Conf_Privilege to "Unused".
+
+Execute all below tests with IPMI 2.0 (-D lan_2_0)
+
+Execute bmc-info, authenticating with USER1, with privilege level user (-l user), with -I 0
+Execute bmc-info, authenticating with USER1, with privilege level user (-l user), with -I 1
+Execute bmc-info, authenticating with USER1, with privilege level user (-l user), with -I 2
+Execute bmc-info, authenticating with USER1, with privilege level user (-l user), with -I 3
+Execute bmc-info, authenticating with OPERATOR1, with privilege level operator (-l operator), with -I 0
+Execute bmc-info, authenticating with OPERATOR1, with privilege level operator (-l operator), with -I 1
+Execute bmc-info, authenticating with OPERATOR1, with privilege level operator (-l operator), with -I 2
+Execute bmc-info, authenticating with OPERATOR1, with privilege level operator (-l operator), with -I 3
+Execute bmc-info, authenticating with ADMIN1, with privilege level admin (-l admin), with -I 0
+Execute bmc-info, authenticating with ADMIN1, with privilege level admin (-l admin), with -I 1
+Execute bmc-info, authenticating with ADMIN1, with privilege level admin (-l admin), with -I 2
+Execute bmc-info, authenticating with ADMIN1, with privilege level admin (-l admin), with -I 3
+verify tool:
+- Exits with error.  Most likely/best error message "cipher suite id unavailable".
+* It is most important that the connection not succeed.
+
+Misc Testing
+------------
+
+Test)
+
+Configure Gratuitous ARPs On.
+
+Verify (probably with tcpdump or an equivalent network sniffer) that
+Gratuitous ARPs are enabled and sending gratuitouts arps on the
+network.
+
+Configure Gratuitous ARPs Off.
+
+Verify (probably with tcpdump or an equivalent network sniffer) that
+Gratuitous ARPs are no longer being sent on the network.
+
+Test)
+
+Configure ARP Responses On.
+
+Verify (probably with tcpdump or an equivalent network sniffer) that
+ARP Responses are enabled and sending ARP responses back from requests.
+
+Configure ARP Responses Off.
+
+Verify (probably with tcpdump or an equivalent network sniffer) that
+ARP Responses are disabled and not responding to ARP requests.
 
