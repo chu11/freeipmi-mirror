@@ -12,30 +12,26 @@ the compliance of a motherboard to IPMI as well as FreeIPMI's
 compliance to the motherboard's implementation.  It is not 100%
 thorough and will not guaranteee full compliance with the IPMI
 specification, but it covers a fair amount of the IPMI specification
-and tests a significant number of cases.  It should help uncover
-many of the most common IPMI compliance issues.
+and tests a significant number of important cases.  It should help
+uncover many of the most common IPMI compliance issues I've found.
 
 All users/vendors/manufacturers/etc. are welcome to debate me on the
 below as mandatory vs. optional requirements.  While some of the below
 may technically be optional for IPMI compliance, I consider them to be
 practically mandatory for a functioning IPMI system supporting IPMI
-1.5, IPMI 2.0, Serial-over-LAN, etc.  For example, it may not be a
-requirement to store some of the configuration values below in
-Non-Volatile memory.  However, if it is stored in Volatile memory,
-that means that BMC configuration values must always be configured on
-every reboot.
+1.5, IPMI 2.0, Serial-over-LAN, etc.
 
 The error messages listed in tests below highlight what I believe to
 be the "best" or "most likely" error messages that should be returned
 by the tools.  It is possible that different IPMI completion codes
-returned by commands are acceptable, leading to other error message
-output in the tools.  If you believe an alternate completion code
-(leading to an alternate error message) is acceptable, please let me
-know about them.
+returned by commands are acceptable, leading to different error
+message output in the tools.  If you believe an alternate completion
+code (leading to an alternate error message) is acceptable, please let
+me know about them.
 
-All documentation below assume reasonable knowledge of IPMI and
-knowledge of FreeIPMI tools.  Please see FreeIPMI
-documentation/manpages for additional information.
+Everything below assumes reasonable knowledge of IPMI and knowledge of
+FreeIPMI tools.  Please see FreeIPMI documentation/manpages for
+additional information.
 
 All tool testing listed below is general agnostic to execution in-band
 vs. out-of-band with obvious exceptions (i.e. testing ipmipower
@@ -474,7 +470,7 @@ Test)
 Execute ipmi-sel with --delete-all, verify tool:
 - Executes without errors
 - SEL is completely cleared.  Subsequent calls to ipmi-sel result in
-  no output.
+  no output and no errors.
 
 Ipmi-fru Testing
 ----------------
@@ -996,9 +992,15 @@ Execute bmc-info, authenticating with ADMIN1, with privilege level admin (-l adm
   cannot be obtained for this user".
 * It is most important that the connection not succeed.
 
+Execute ipmipower, authenticating with OPERATOR1, with --on
+Execute ipmipower, authenticating with ADMIN1, with --on
+- Exits with error.  Most likely/best error message "privilege level
+  cannot be obtained for this user".
+* It is most important that the connection not succeed.
+
 (achu note: I do not currently possess a motherboard that passes this
-last test, however, I am 99% sure I've had a motherboard in the past that
-did indeed pass this test.)
+last test, however, I am 99% sure I've had atleast one motherboard in
+the past that did indeed pass this test.)
 
 Out-of-Band IPMI 2.0 Testing
 ----------------------------
