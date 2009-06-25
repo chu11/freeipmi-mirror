@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.112 2009-06-08 20:24:27 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.113 2009-06-25 22:40:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -576,19 +576,20 @@ _cmd_config (void)
         goto cleanup;
       if (!(badconnection = hostlist_create (NULL)))
         goto cleanup;
-
-      for (i = 0; i < ics_len; i++) {
-    if (ics[i].discover_state == STATE_DISCOVERED)
-      rv = hostlist_push_host (discovered, ics[i].hostname);
-    else if (ics[i].discover_state == STATE_UNDISCOVERED)
-      rv = hostlist_push_host (undiscovered, ics[i].hostname);
-    else
-      rv = hostlist_push_host (badconnection, ics[i].hostname);
-
-    if (!rv)
-      goto cleanup;
-      }
-
+      
+      for (i = 0; i < ics_len; i++)
+        {
+          if (ics[i].discover_state == STATE_DISCOVERED)
+            rv = hostlist_push_host (discovered, ics[i].hostname);
+          else if (ics[i].discover_state == STATE_UNDISCOVERED)
+            rv = hostlist_push_host (undiscovered, ics[i].hostname);
+          else
+            rv = hostlist_push_host (badconnection, ics[i].hostname);
+          
+          if (!rv)
+            goto cleanup;
+        }
+      
       if ((rv = hostlist_ranged_string (discovered, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
         ierr_exit ("hostlist_ranged_string: %s", strerror (errno));
       if (rv > 0)
@@ -938,11 +939,7 @@ ipmipower_prompt_process_cmdline (void)
               else if (!strcmp (argv[0], "workaround-flags"))
                 _cmd_workaround_flags (argv);
               else if (!strcmp (argv[0], "debug"))
-                {
-                  _cmd_debug (argv);
-                  ierr_cbuf (cmd_args.common.debug, ttyerr);
-                  ierr_cbuf_dump_file_stream (cmd_args.common.debug, stderr);
-                }
+                _cmd_debug (argv);
 #ifndef NDEBUG
               else if (!strcmp (argv[0], "rmcpdump"))
                 _cmd_set_flag (argv,

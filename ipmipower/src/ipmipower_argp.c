@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.19 2009-06-08 20:24:26 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.20 2009-06-25 22:40:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -45,8 +45,6 @@
 #include <errno.h>
 
 #include "ipmipower_argp.h"
-
-#include "ierror.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -358,23 +356,40 @@ _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
   if (cmd_args->common.driver_type == IPMI_DEVICE_LAN
       && cmd_args->common.password
       && strlen (cmd_args->common.password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
-    ierr_exit ("Error: password too long");
+    {
+      fprintf (stderr, "password too long\n");
+      exit (1);
+    }
 
   if (cmd_args->common.retransmission_timeout > cmd_args->common.session_timeout)
-    ierr_exit ("Error: Session timeout length must be longer than retransmission timeout length");
+    {
+      fprintf (stderr, "retransmission timeout larger than session timeout\n");
+      exit (1);
+    }
 
   if (cmd_args->retransmission_wait_timeout > cmd_args->common.session_timeout)
-    ierr_exit ("Error: Session timeout length must be longer than retransmission wait timeout length");
+    {
+      fprintf (stderr, "retransmission wait timeout larger than session timeout\n");
+      exit (1);
+    }
 
   if (cmd_args->powercmd != POWER_CMD_NONE && !cmd_args->common.hostname)
-    ierr_exit ("Error: Must specify target hostname(s) in non-interactive mode");
+    {
+      fprintf (stderr, "must specify target hostname(s) in non-interactive mode");
+      exit (1);
+    }
 
   if (cmd_args->ping_interval > cmd_args->ping_timeout)
-    ierr_exit ("Error: Ping timeout interval length must be "
-               "longer than ping interval length");
+    {
+      fprintf (stderr, "ping interval larger than ping timeout\n");
+      exit (1);
+    }
 
   if (cmd_args->ping_consec_count > cmd_args->ping_packet_count)
-    ierr_exit ("Error: Ping consec count must be larger than ping packet count");
+    {
+      fprintf (stderr, "ping consec count larger than ping packet count");
+      exit (1);
+    }
 }
 
 void

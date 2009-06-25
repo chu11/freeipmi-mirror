@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.51 2009-06-08 20:24:27 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.52 2009-06-25 22:40:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -102,35 +102,29 @@ ipmipower_output_finish (void)
 
       for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
         {
-          if (hostlist_count (output_hostrange[i]) > 0) {
-        memset (buf, '\0', IPMIPOWER_OUTPUT_BUFLEN);
-
-        hostlist_sort (output_hostrange[i]);
-
-        rv = hostlist_ranged_string (output_hostrange[i],
-                                     IPMIPOWER_OUTPUT_BUFLEN,
-                                     buf);
-        if (rv < 0)
-          {
-        cbuf_printf (ttyout, "OVERFLOWED BUFFER: %s\n",
-                 ipmipower_outputs[i]);
-
-        while (hostlist_count (output_hostrange[i]) > 0)
-          hostlist_delete_nth (output_hostrange[i], 0);
-          }
-
-        if (rv > 0)
-          {
-        cbuf_printf (ttyout, "----------------\n");
-        cbuf_printf (ttyout, "%s\n", buf);
-        cbuf_printf (ttyout, "----------------\n");
-        cbuf_printf (ttyout, " %s\n",
-                 ipmipower_outputs[i]);
-        hostlist_delete (output_hostrange[i], buf);
-          }
-
-        assert (!hostlist_count (output_hostrange[i]));
-      }
+          if (hostlist_count (output_hostrange[i]) > 0)
+            {
+              memset (buf, '\0', IPMIPOWER_OUTPUT_BUFLEN);
+              
+              hostlist_sort (output_hostrange[i]);
+              
+              if ((rv = hostlist_ranged_string (output_hostrange[i],
+                                                IPMIPOWER_OUTPUT_BUFLEN,
+                                                buf)) < 0)
+                ierr_exit ("hostlist_ranged_string: %s", strerror (errno));
+              
+              if (rv > 0)
+                {
+                  cbuf_printf (ttyout, "----------------\n");
+                  cbuf_printf (ttyout, "%s\n", buf);
+                  cbuf_printf (ttyout, "----------------\n");
+                  cbuf_printf (ttyout, " %s\n",
+                               ipmipower_outputs[i]);
+                  hostlist_delete (output_hostrange[i], buf);
+                }
+              
+              assert (!hostlist_count (output_hostrange[i]));
+            }
         }
     }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.79 2009-06-08 20:24:26 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.80 2009-06-25 22:40:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -89,14 +89,17 @@ hostlist_t output_hostrange[MSG_TYPE_NUM_ENTRIES];
 /* _setup
  * - Setup structures and values for the program
  */
-static void
+static int
 _setup (void)
 {
   int i;
   struct rlimit rlim;
 
-  srand (time (NULL));
-
+  if (ipmi_rmcpplus_init () < 0)
+    {
+      fprintf (stderr, "ipmi_rmcpplus_init: %s\n", strerror (errno));
+      return (-1);
+    }
   /* Make best effort to increase file descriptor limit, if it fails
    * for any reason, don't worry about it, its no big deal.
    */
@@ -109,35 +112,86 @@ _setup (void)
 
   /* Create TTY bufs */
   if (!(ttyin  = cbuf_create (IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF)))
-    ierr_exit ("cbuf_create: %s", strerror (errno));
+    {
+      fprintf (stderr, "cbuf_create: %s\n", strerror (errno));
+      return (-1);
+    }
   cbuf_opt_set (ttyin, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
   if (!(ttyout = cbuf_create (IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF)))
-    ierr_exit ("cbuf_create: %s", strerror (errno));
+    {
+      fprintf (stderr, "cbuf_create: %s\n", strerror (errno));
+      return (-1);
+    }
   cbuf_opt_set (ttyout, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
   if (!(ttyerr = cbuf_create (IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF)))
-    ierr_exit ("cbuf_create: %s", strerror (errno));
+    {
+      fprintf (stderr, "cbuf_create: %s\n", strerror (errno));
+      return (-1);
+    }
   cbuf_opt_set (ttyerr, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
   for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
     {
       if (!(output_hostrange[i] = hostlist_create (NULL)))
-        ierr_exit ("hostlist_create: %s", strerror (errno));
+        {
+          fprintf (stderr, "hostlist_create: %s\n", strerror (errno));
+          return (-1);
+        }
+    }
+  
+  return (0);
+}
+
+static int
+_eliminate_nodes (void)
+{
+  if (cmd_args.hostrange.eliminate)
+    {
+      ipmidetect_t id = NULL;
+      int i;
+
+      if (!(id = ipmidetect_handle_create ()))
+        {
+          fprintf (stderr, "ipmidetect_handle_create: %s", strerror (errno));
+          return (-1);
+        }
+
+      if (ipmidetect_load_data (id,
+                                NULL,
+                                0,
+                                0) < 0)
+        {
+          if (ipmidetect_errnum (id) == IPMIDETECT_ERR_CONNECT
+              || ipmidetect_errnum (id) == IPMIDETECT_ERR_CONNECT_TIMEOUT)
+            fprintf (stderr, "Error connecting to ipmidetect daemon\n");
+          else
+            fprintf (stderr, "ipmidetect_load_data: %s\n", ipmidetect_errormsg (id));
+          return (-1);
+        }
+
+      for (i = 0; i < ics_len; i++)
+        {
+          int ret;
+
+          if ((ret = ipmidetect_is_node_detected (id, ics[i].hostname)) < 0)
+            {
+              if (ipmidetect_errnum (id) == IPMIDETECT_ERR_NOTFOUND)
+                fprintf (stderr, "Node '%s' unrecognized by ipmidetect\n", ics[i].hostname);
+              else
+                fprintf (stderr, "ipmidetect_is_node_detected: %s", ipmidetect_errormsg (id));
+              return (-1);
+            }
+
+          if (!ret)
+            ics[i].skip++;
+        }
+
+      ipmidetect_handle_destroy (id);
     }
 
-  /* in interactive mode errors should always go to atleast the syslog */
-  ierr_syslog (1);
-
-#ifndef NDEBUG
-  /* if debug set, send debug info to stderr too */
-  ierr_cbuf (cmd_args.common.debug, ttyerr);
-
-  /* on ierr_exit() dump cbuf data to appropriate places too */
-  ierr_cbuf_dump_file_stream (cmd_args.common.debug, stderr);
-#else  /* !NDEBUG */
-  ierr_cbuf (0, 0);
-#endif /* !NDEBUG */
+  return (0);
 }
 
 /* _cleanup
@@ -409,62 +463,24 @@ _poll_loop (int non_interactive)
   free (pfds);
 }
 
-static void
-_eliminate_nodes (void)
-{
-  if (cmd_args.hostrange.eliminate)
-    {
-      ipmidetect_t id = NULL;
-      int i;
-
-      if (!(id = ipmidetect_handle_create ()))
-        ierr_exit ("ipmidetect_handle_create: %s", strerror (errno));
-
-      if (ipmidetect_load_data (id,
-                                NULL,
-                                0,
-                                0) < 0)
-        {
-          if (ipmidetect_errnum (id) == IPMIDETECT_ERR_CONNECT
-              || ipmidetect_errnum (id) == IPMIDETECT_ERR_CONNECT_TIMEOUT)
-            ierr_exit ("Error connecting to ipmidetect daemon");
-          ierr_exit ("ipmidetect_load_data: %s", ipmidetect_errormsg (id));
-        }
-
-      for (i = 0; i < ics_len; i++)
-        {
-          int ret;
-
-          if ((ret = ipmidetect_is_node_detected (id, ics[i].hostname)) < 0)
-            {
-              if (ipmidetect_errnum (id) == IPMIDETECT_ERR_NOTFOUND)
-                ierr_exit ("Node '%s' unrecognized by ipmidetect", ics[i].hostname);
-              ierr_exit ("ipmidetect_is_node_detected: %s", ipmidetect_errormsg (id));
-            }
-
-          if (!ret)
-            ics[i].skip++;
-        }
-
-      ipmidetect_handle_destroy (id);
-    }
-}
-
 int
 main (int argc, char *argv[])
 {
+  int exit_code = EXIT_FAILURE;
+
   /* Call before anything else */
   ierr_init (argv[0]);
   ierr_file_descriptor (1, STDERR_FILENO); /* initially errors goto stderr */
 
   ipmi_disable_coredump ();
 
-  if (ipmi_rmcpplus_init () < 0)
-    ierr_exit ("ipmi_rmcpplus_init: %s", strerror (errno));
-
   ipmipower_argp_parse (argc, argv, &cmd_args);
 
-  _setup ();
+  if (_setup () < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
 
   ipmipower_powercmd_setup ();
 
@@ -474,9 +490,9 @@ main (int argc, char *argv[])
       if (!(ics = ipmipower_connection_array_create (cmd_args.common.hostname, &len)))
         {
           /* dump error outputs here, most notably invalid hostname output */
-          if (cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1) > 0)
-            exit (1);
-          ierr_exit ("ipmipower_connection_array_create: %s", strerror (errno));
+          cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1);
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
         }
       ics_len = len;
     }
@@ -494,17 +510,29 @@ main (int argc, char *argv[])
       /* Check for appropriate privilege first */
       if (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
           && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd_args.powercmd))
-        ierr_exit ("power operation requires atleast operator privilege");
-
-      _eliminate_nodes ();
+        {
+          fprintf (stderr, "power operation requires atleast operator privilege\n");
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+      
+      if (_eliminate_nodes () < 0)
+        {
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
 
       for (i = 0; i < ics_len; i++)
         {
           if (ics[i].skip)
             continue;
+
           ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i]);
         }
     }
+  else
+    /* in interactive mode errors should always go to atleast the syslog */
+    ierr_syslog (1);
 
   ierr_file_descriptor (0, 0); /* now errors are done through the ttyerr */
 
@@ -513,7 +541,9 @@ main (int argc, char *argv[])
 
   _poll_loop ((cmd_args.powercmd != POWER_CMD_NONE) ? 1 : 0);
 
+  exit_code = 0;
+ cleanup:
   ipmipower_powercmd_cleanup ();
   _cleanup ();
-  exit (0);
+  exit (exit_code);
 }
