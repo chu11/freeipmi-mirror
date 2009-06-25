@@ -16,10 +16,14 @@ and tests a significant number of cases.  It should help uncover
 many of the most common IPMI compliance issues.
 
 All users/vendors/manufacturers/etc. are welcome to debate me on the
-below as mandatory vs. optional requirements.  While many of the below
+below as mandatory vs. optional requirements.  While some of the below
 may technically be optional for IPMI compliance, I consider them to be
 practically mandatory for a functioning IPMI system supporting IPMI
-1.5, IPMI 2.0, Serial-over-LAN, etc.
+1.5, IPMI 2.0, Serial-over-LAN, etc.  For example, it may not be a
+requirement to store some of the configuration values below in
+Non-Volatile memory.  However, if it is stored in Volatile memory,
+that means that BMC configuration values must always be configured on
+every reboot.
 
 The error messages listed in tests below highlight what I believe to
 be the "best" or "most likely" error messages that should be returned
@@ -279,11 +283,21 @@ Configuration changes to try:
 
 Test)
 
-Using a previously checked out configuration file, modify all the
-"Non_Volatile" fields but not "Volatile" fields to something
-different.  Power off the IPMI machine and power it back on.  Verify
-that all "Volatile" fields not hold the new values stored in the
-"Non_Volatile" fields.
+Start from machine where all "Non_Volatile" fields are identical to
+the "Volatile" fields.
+
+Checkout, modify, then commit all "Non_Volatile" fields to something
+different but not the "Volatile" fields.
+
+Using --diff, verify that only the "Non_Volatile" fields have changed
+and the "Volatile" fields have not changed.  The field pairs should be
+different from each other.
+
+Power off the IPMI machine and power it back on.
+
+Verify that all "Volatile" fields now hold the new values stored in
+the "Non_Volatile" fields.  The field pairs should be the same as each
+other.
 
 Test)
 
