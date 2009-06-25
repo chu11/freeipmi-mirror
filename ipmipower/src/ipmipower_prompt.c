@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.113 2009-06-25 22:40:52 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.114 2009-06-25 23:14:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -576,7 +576,7 @@ _cmd_config (void)
         goto cleanup;
       if (!(badconnection = hostlist_create (NULL)))
         goto cleanup;
-      
+
       for (i = 0; i < ics_len; i++)
         {
           if (ics[i].discover_state == STATE_DISCOVERED)
@@ -939,7 +939,11 @@ ipmipower_prompt_process_cmdline (void)
               else if (!strcmp (argv[0], "workaround-flags"))
                 _cmd_workaround_flags (argv);
               else if (!strcmp (argv[0], "debug"))
-                _cmd_debug (argv);
+                {
+                  _cmd_debug (argv);
+                  ierr_cbuf (cmd_args.common.debug, ttyerr);
+                  ierr_cbuf_dump_file_stream (cmd_args.common.debug, stderr);
+                }
 #ifndef NDEBUG
               else if (!strcmp (argv[0], "rmcpdump"))
                 _cmd_set_flag (argv,

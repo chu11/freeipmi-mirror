@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.52 2009-06-25 22:40:52 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.53 2009-06-25 23:14:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -127,7 +127,7 @@ ipmipower_output_finish (void)
             }
         }
     }
-
+  
   return;
 }
 
