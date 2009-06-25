@@ -87,8 +87,10 @@ listed below should be output:
 - For the Lan_Channel section:
   * Volatile_Access_Mode
   * Volatile_Enable_Per_Message_Auth
+  * Volatile_Channel_Privilege_Limit
   * Non_Volatile_Access_Mode
   * Non_Volatile_Enable_Per_Message_Auth
+  * Non_Volatile_Channel_Privilege_Limit
 - For the Lan_Conf section:
   * IP_Address_Source
   * IP_Address
@@ -185,10 +187,14 @@ Configuration changes to try:
     o Can configure Disabled and Always_Available
   * Volatile_Enable_Per_Message_Auth
     o Can configure both Yes and No
+  * Volatile_Channel_Privilege_Limit
+    o Can configure User, Operator, and Administrator
   * Non_Volatile_Access_Mode
     o Can configure Disabled and Always_Available
   * Non_Volatile_Enable_Per_Message_Auth
     o Can configure both Yes and No
+  * Non_Volatile_Channel_Privilege_Limit
+    o Can configure User, Operator, and Administrator
 - For the Lan_Conf section:
   * IP_Address_Source
     o Can configure Static and Use_DHCP
@@ -947,14 +953,9 @@ Execute bmc-info, authenticating with OPERATOR1
 Execute bmc-info, authenticating with ADMIN1
 verify tool:
 - Exits with error.  Most likely/best error message "password
-  verification timeout" or "session timeout."  (Although I don't like
-  it, I've seen "privilege level insufficient" on a number of
-  motherboards, I suppose that one is ok too.)
+  verification timeout", "session timeout", or "privilege level
+  insufficient".
 * It is most important that the connection not succeed.
-
-(Note: Disabling IPMI messaging means disabling the IPMI "payload".
-So the error will not occur as "early" in the session setup as one
-might guess.)
 
 Test)
 
@@ -1167,15 +1168,9 @@ Execute bmc-info, authenticating with USER1
 Execute bmc-info, authenticating with OPERATOR1
 Execute bmc-info, authenticating with ADMIN1
 verify tool:
-- Exits with error.  Most likely/best error message "password invalid"
-  or "session timeout."  (Although I don't like it, I've seen
-  "privilege level insufficient" on a number of motherboards, I
-  suppose that one is ok too.)
+- Exits with error.  Most likely/best error message "password
+  invalid", "session timeout", or "privilege level insufficient".
 * It is most important that the connection not succeed.
-
-(Note: Disabling IPMI messaging means disabling the IPMI "payload".
-So the error will not occur as "early" in the session setup as one
-might guess.)
 
 Test)
 
