@@ -939,6 +939,27 @@ Test)
 
 Begin with "pristine" configuration.
 
+Configure USER1, OPERATOR1, and ADMIN1 users IPMI messaging to be off
+(i.e. Lan_Enable_Ipmi_Msgs = No).
+
+Execute bmc-info, authenticating with USER1
+Execute bmc-info, authenticating with OPERATOR1
+Execute bmc-info, authenticating with ADMIN1
+verify tool:
+- Exits with error.  Most likely/best error message "password
+  verification timeout" or "session timeout."  (Although I don't like
+  it, I've seen "privilege level insufficient" on a number of
+  motherboards, I suppose that one is ok too.)
+* It is most important that the connection not succeed.
+
+(Note: Disabling IPMI messaging means disabling the IPMI "payload".
+So the error will not occur as "early" in the session setup as one
+might guess.)
+
+Test)
+
+Begin with "pristine" configuration.
+
 Configure all "Lan_Conf_Auth" fields to "Yes".
 
 Execute bmc-info, authenticating with USER1, with option -a md5
@@ -1134,6 +1155,27 @@ Execute bmc-info, authenticating with ADMIN1
 verify tool:
 - Exits with error.  Most likely/best error message "username invalid".
 * It is most important that the connection not succeed.
+
+Test)
+
+Begin with "pristine" configuration.
+
+Configure USER1, OPERATOR1, and ADMIN1 users IPMI messaging to be off
+(i.e. Lan_Enable_Ipmi_Msgs = No).
+
+Execute bmc-info, authenticating with USER1
+Execute bmc-info, authenticating with OPERATOR1
+Execute bmc-info, authenticating with ADMIN1
+verify tool:
+- Exits with error.  Most likely/best error message "password invalid"
+  or "session timeout."  (Although I don't like it, I've seen
+  "privilege level insufficient" on a number of motherboards, I
+  suppose that one is ok too.)
+* It is most important that the connection not succeed.
+
+(Note: Disabling IPMI messaging means disabling the IPMI "payload".
+So the error will not occur as "early" in the session setup as one
+might guess.)
 
 Test)
 
