@@ -1,6 +1,5 @@
 noinst_HEADERS = \
 	argv.h \
-	ierror.h \
 	ipmipower_check.h \
 	ipmipower_argp.h \
 	ipmipower_connection.h \
@@ -39,7 +38,6 @@ ipmipower_LDADD = \
 
 ipmipower_SOURCES = \
 	argv.c \
-	ierror.c \
 	ipmipower_check.c \
 	ipmipower_argp.c \
 	ipmipower_connection.c \

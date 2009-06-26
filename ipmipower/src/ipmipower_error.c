@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_error.c,v 1.1 2009-06-26 00:43:48 chu11 Exp $
+ *  $Id: ipmipower_error.c,v 1.2 2009-06-26 03:43:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -24,7 +24,7 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 /*****************************************************************************\
- *  $Id: ipmipower_error.c,v 1.1 2009-06-26 00:43:48 chu11 Exp $
+ *  $Id: ipmipower_error.c,v 1.2 2009-06-26 03:43:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -78,8 +78,6 @@
 
 #include "freeipmi-portability.h"
 #include "fd.h"
-
-extern struct ipmipower_arguments cmd_args;
 
 static unsigned int power_error_flags = 0;
 
@@ -148,12 +146,9 @@ ipmipower_debug (const char *fmt, ...)
 
   assert (fmt);
 
-  if (cmd_args.common.debug)
-    {
-      va_start (ap, fmt);
-      _debug (fmt, ap);
-      va_end (ap);
-    }
+  va_start (ap, fmt);
+  _debug (fmt, ap);
+  va_end (ap);
 }
 
 char *

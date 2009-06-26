@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.51 2009-06-26 02:32:06 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.52 2009-06-26 03:43:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -56,8 +56,6 @@
 #include "ipmipower_output.h"
 #include "ipmipower_util.h"
 
-#include "ierror.h"
-
 #include "freeipmi-portability.h"
 #include "cbuf.h"
 #include "hostlist.h"
@@ -65,6 +63,8 @@
 extern int h_errno;
 
 extern cbuf_t ttyout;
+
+extern struct ipmipower_arguments cmd_args;
 
 #define IPMIPOWER_MIN_CONNECTION_BUF 1024*2
 #define IPMIPOWER_MAX_CONNECTION_BUF 1024*4
@@ -112,9 +112,15 @@ ipmipower_connection_clear (struct ipmipower_connection *ic)
 
   _clean_fd (ic->ipmi_fd);
   if (cbuf_drop (ic->ipmi_in, -1) < 0)
-    ierr_exit ("cbuf_drop: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("cbuf_drop: %s", strerror (errno)));
+      exit (1);
+    }
   if (cbuf_drop (ic->ipmi_out, -1) < 0)
-    ierr_exit ("cbuf_drop: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("cbuf_drop: %s", strerror (errno)));
+      exit (1);
+    }
   return;
 }
 
@@ -137,7 +143,9 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
           IPMIPOWER_DEBUG (("file descriptor limit reached"));
           return (-1);
         }
-      ierr_exit ("socket: %s", strerror (errno));
+      
+      IPMIPOWER_ERROR (("socket: %s", strerror (errno)));
+      exit (1);
     }
 
   if ((ic->ping_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
@@ -147,7 +155,9 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
           IPMIPOWER_DEBUG (("file descriptor limit reached"));
           return (-1);
         }
-      ierr_exit ("socket: %s", strerror (errno));
+
+      IPMIPOWER_ERROR (("socket: %s", strerror (errno)));
+      exit (1);
     }
 
   /* Secure ephemeral ports */
@@ -157,37 +167,61 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
 
   if (bind (ic->ipmi_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
-    ierr_exit ("bind: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("bind: %s", strerror (errno)));
+      exit (1);
+    }
   if (bind (ic->ping_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
-    ierr_exit ("bind: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("bind: %s", strerror (errno)));
+      exit (1);
+    }
 
   if (!(ic->ipmi_in  = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
                                     IPMIPOWER_MAX_CONNECTION_BUF)))
-    ierr_exit ("cbuf_create: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
+      exit (1);
+    }
   cbuf_opt_set (ic->ipmi_in, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
   if (!(ic->ipmi_out = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
                                     IPMIPOWER_MAX_CONNECTION_BUF)))
-    ierr_exit ("cbuf_create: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
+      exit (1);
+    }
   cbuf_opt_set (ic->ipmi_out, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
   if (!(ic->ping_in  = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
                                     IPMIPOWER_MAX_CONNECTION_BUF)))
-    ierr_exit ("cbuf_create: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
+      exit (1);
+    }
   cbuf_opt_set (ic->ping_in, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
   if (!(ic->ping_out = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
                                     IPMIPOWER_MAX_CONNECTION_BUF)))
-    ierr_exit ("cbuf_create: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
+      exit (1);
+    }
   cbuf_opt_set (ic->ping_out, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
   
   if (ipmi_get_random (&ic->ipmi_requester_sequence_number_counter,
                        sizeof (ic->ipmi_requester_sequence_number_counter)) < 0)
-    ierr_exit ("ipmi_get_random: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("ipmi_get_random: %s", strerror (errno)));
+      exit (1);
+    }
   
   if (ipmi_get_random (&ic->ping_sequence_number_counter,
                        sizeof (ic->ping_sequence_number_counter)) < 0)
-    ierr_exit ("ipmi_get_random: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("ipmi_get_random: %s", strerror (errno)));
+      exit (1);
+    }
 
   memset (&ic->last_ipmi_send, '\0', sizeof (struct timeval));
   memset (&ic->last_ping_send, '\0', sizeof (struct timeval));
@@ -217,10 +251,11 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
       else
         {
 #if HAVE_HSTRERROR
-          ierr_exit ("gethostbyname() %s: %s", ic->hostname, hstrerror (h_errno));
+          IPMIPOWER_ERROR (("gethostbyname() %s: %s", ic->hostname, hstrerror (h_errno)));
 #else /* !HAVE_HSTRERROR */
-          ierr_exit ("gethostbyname() %s: h_errno = %d", ic->hostname, h_errno);
+          IPMIPOWER_ERROR (("gethostbyname() %s: h_errno = %d", ic->hostname, h_errno));
 #endif /* !HAVE_HSTRERROR */
+          exit (1);
         }
       return (-1);
     }
@@ -255,14 +290,20 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
     }
 
   if (!(itr = hostlist_iterator_create (hl)))
-    ierr_exit ("hostlist_iterator_create: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+      exit (1);
+    }
 
   hostlist_uniq (hl);
 
   hl_count = hostlist_count (hl);
 
   if (!(ics = (struct ipmipower_connection *)malloc (size * hl_count)))
-    ierr_exit ("malloc: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
+      exit (1);
+    }
 
   memset (ics, '\0', (size * hl_count));
 

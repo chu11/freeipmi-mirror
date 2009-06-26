@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_error.h,v 1.1 2009-06-26 00:43:48 chu11 Exp $
+ *  $Id: ipmipower_error.h,v 1.2 2009-06-26 03:43:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -24,7 +24,7 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 /*****************************************************************************\
- *  $Id: ipmipower_error.h,v 1.1 2009-06-26 00:43:48 chu11 Exp $
+ *  $Id: ipmipower_error.h,v 1.2 2009-06-26 03:43:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -66,14 +66,15 @@
 #define IPMIPOWER_ERROR(__msg)                                                  \
   do {                                                                          \
     char __err[IPMIPOWER_ERROR_BUFLEN];                                         \
-    int __len;                                                                  \
+    int __len = 0;                                                              \
     memset (__err, '\0', IPMIPOWER_ERROR_BUFLEN);                               \
-    __len = snprintf (__err,                                                    \
-                      IPMIPOWER_ERROR_BUFLEN,                                   \
-                      "(%s, %s, %d): ",                                         \
-                      __FILE__,                                                 \
-                      __FUNCTION__,                                             \
-                      __LINE__);                                                \
+    if (cmd_args.common.debug)                                                  \
+      __len = snprintf (__err,                                                  \
+                        IPMIPOWER_ERROR_BUFLEN,                                 \
+                        "(%s, %s, %d): ",                                       \
+                        __FILE__,                                               \
+                        __FUNCTION__,                                           \
+                        __LINE__);                                              \
     if (__len < IPMIPOWER_ERROR_BUFLEN)                                         \
       {                                                                         \
         char *__str;                                                            \
@@ -89,24 +90,27 @@
 #define IPMIPOWER_DEBUG(__msg)                                                  \
   do {                                                                          \
     char __err[IPMIPOWER_ERROR_BUFLEN];                                         \
-    int __len;                                                                  \
-    memset (__err, '\0', IPMIPOWER_ERROR_BUFLEN);                               \
-    __len = snprintf (__err,                                                    \
-                      IPMIPOWER_ERROR_BUFLEN,                                   \
-                      "(%s, %s, %d): ",                                         \
-                      __FILE__,                                                 \
-                      __FUNCTION__,                                             \
-                      __LINE__);                                                \
-    if (__len < IPMIPOWER_ERROR_BUFLEN)                                         \
+    int __len = 0;                                                              \
+    if (cmd_args.common.debug)                                                  \
       {                                                                         \
-        char *__str;                                                            \
-        if ((__str = __error_msg_create __msg))                                 \
+        memset (__err, '\0', IPMIPOWER_ERROR_BUFLEN);                           \
+        __len = snprintf (__err,                                                \
+                          IPMIPOWER_ERROR_BUFLEN,                               \
+                          "(%s, %s, %d): ",                                     \
+                          __FILE__,                                             \
+                          __FUNCTION__,                                         \
+                          __LINE__);                                            \
+        if (__len < IPMIPOWER_ERROR_BUFLEN)                                     \
           {                                                                     \
-            strncat (__err, __str, IPMIPOWER_ERROR_BUFLEN - __len - 1);         \
-            free (__str);                                                       \
+            char *__str;                                                        \
+            if ((__str = __error_msg_create __msg))                             \
+              {                                                                 \
+                strncat (__err, __str, IPMIPOWER_ERROR_BUFLEN - __len - 1);     \
+                free (__str);                                                   \
+              }                                                                 \
           }                                                                     \
+        ipmipower_debug (__err);                                                \
       }                                                                         \
-    ipmipower_debug (__err);                                                    \
   } while(0)
 
 int ipmipower_error_setup (unsigned int error_flags);

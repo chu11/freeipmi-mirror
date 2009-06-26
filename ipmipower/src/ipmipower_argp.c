@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_argp.c,v 1.21 2009-06-26 00:43:48 chu11 Exp $
+ *  $Id: ipmipower_argp.c,v 1.22 2009-06-26 03:43:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -45,8 +45,6 @@
 #include <errno.h>
 
 #include "ipmipower_argp.h"
-
-#include "ierror.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.51 2009-06-26 02:32:06 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.52 2009-06-26 03:43:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -53,8 +53,6 @@
 #include "ipmipower_error.h"
 #include "ipmipower_util.h"
 
-#include "ierror.h"
-
 #include "freeipmi-portability.h"
 #include "cbuf.h"
 #include "debug-util.h"
@@ -92,7 +90,10 @@ ipmipower_ping_process_pings (int *timeout)
     return;
 
   if (gettimeofday (&cur_time, NULL) < 0)
-    ierr_exit ("gettimeofday: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
+      exit (1);
+    }
 
   if (timeval_gt (&cur_time, &next_ping_sends_time) || force_discovery_sweep)
     {
@@ -142,23 +143,39 @@ ipmipower_ping_process_pings (int *timeout)
           ics[i].ping_sequence_number_counter++;
 
           if (!(rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
-            ierr_exit ("fiid_obj_create: %s", strerror (errno));
+            {
+              IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+              exit (1);
+            }
+
           if (!(rmcp_ping = fiid_obj_create (tmpl_cmd_asf_presence_ping)))
-            ierr_exit ("fiid_obj_create: %s", strerror (errno));
+            {
+              IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+              exit (1);
+            }
 
           if (fill_rmcp_hdr_asf (rmcp_hdr) < 0)
-            ierr_exit ("fill_rmcp_hdr_asf: %s", strerror (errno));
+            {
+              IPMIPOWER_ERROR (("fill_rmcp_hdr_asf: %s", strerror (errno)));
+              exit (1);
+            }
 
           if (fill_cmd_asf_presence_ping ((ics[i].ping_sequence_number_counter %
                                            (RMCP_ASF_MESSAGE_TAG_MAX + 1)),
                                           rmcp_ping) < 0)
-            ierr_exit ("fill_cmd_asf_presence_ping: %s", strerror (errno));
+            {
+              IPMIPOWER_ERROR (("fill_cmd_asf_presence_ping: %s", strerror (errno)));
+              exit (1);
+            }
 
           if ((len = assemble_rmcp_pkt (rmcp_hdr,
                                         rmcp_ping,
                                         buf,
                                         IPMIPOWER_PACKET_BUFLEN)) < 0)
-            ierr_exit ("assemble_rmcp_pkt: %s", strerror (errno));
+            {
+              IPMIPOWER_ERROR (("assemble_rmcp_pkt: %s", strerror (errno)));
+              exit (1);
+            }
 
 #ifndef NDEBUG
           if (cmd_args.rmcpdump)
@@ -184,10 +201,16 @@ ipmipower_ping_process_pings (int *timeout)
 #endif /* NDEBUG */
 
           if ((ret = cbuf_write (ics[i].ping_out, buf, len, &dropped)) < 0)
-            ierr_exit ("cbuf_write: %s", strerror (errno));
+            {
+              IPMIPOWER_ERROR (("cbuf_write: %s", strerror (errno)));
+              exit (1);
+            }
 
           if (ret != len)
-            ierr_exit ("cbuf_write: incorrect bytes written %d", ret);
+            {
+              IPMIPOWER_ERROR (("cbuf_write: incorrect bytes written %d", ret));
+              exit (1);
+            }
 
           if (dropped)
             IPMIPOWER_DEBUG (("cbuf_write: dropped %d bytes", dropped));
@@ -213,9 +236,16 @@ ipmipower_ping_process_pings (int *timeout)
           uint64_t val;
 
           if (!(rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
-            ierr_exit ("fiid_obj_create: %s", strerror (errno));
+            {
+              IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+              exit (1);
+            }
+
           if (!(rmcp_pong = fiid_obj_create (tmpl_cmd_asf_presence_pong)))
-            ierr_exit ("fiid_obj_create: %s", strerror (errno));
+            {
+              IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+              exit (1);
+            }
 
 #ifndef NDEBUG
           if (cmd_args.rmcpdump)
@@ -244,7 +274,10 @@ ipmipower_ping_process_pings (int *timeout)
                                           len,
                                           rmcp_hdr,
                                           rmcp_pong)) < 0)
-            ierr_exit ("unassemble_rmcp_pkt: %s", strerror (errno));
+            {
+              IPMIPOWER_ERROR (("unassemble_rmcp_pkt: %s", strerror (errno)));
+              exit (1);
+            }
 
           if (ret)
             {
@@ -260,15 +293,21 @@ ipmipower_ping_process_pings (int *timeout)
               if (FIID_OBJ_GET (rmcp_pong,
                                 "message_type",
                                 &val) < 0)
-                ierr_exit ("FIID_OBJ_GET: 'message_type': %s",
-                           fiid_obj_errormsg (rmcp_pong));
+                {
+                  IPMIPOWER_ERROR (("FIID_OBJ_GET: 'message_type': %s",
+                                    fiid_obj_errormsg (rmcp_pong)));
+                  exit (1);
+                }
               message_type = val;
               
               if (FIID_OBJ_GET (rmcp_pong,
                                 "supported_entities.ipmi_supported",
                                 &val) < 0)
-                ierr_exit ("FIID_OBJ_GET: 'supported_entities.ipmi_supported': %s",
-                           fiid_obj_errormsg (rmcp_pong));
+                {
+                  IPMIPOWER_ERROR (("FIID_OBJ_GET: 'supported_entities.ipmi_supported': %s",
+                                    fiid_obj_errormsg (rmcp_pong)));
+                  exit (1);
+                }
               ipmi_supported = val;
               
               if (message_type == RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG && ipmi_supported)

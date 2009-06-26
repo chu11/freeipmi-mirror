@@ -5,8 +5,10 @@
 	* ipmipower/src/ipmipower_error.h,
 	ipmipower/src/ipmipower_error.c: New files.
 
+	* ipmipower/src/ierror.h, ipmipower/src/ierror.c: Remove files.
+
 	* ipmipower/: Various re-arch to make tool more like other
-	FreeIPMI tools.
+	FreeIPMI tools.  Use new debug libs.
 
 2009-06-24  Albert Chu <chu11@llnl.gov>
 

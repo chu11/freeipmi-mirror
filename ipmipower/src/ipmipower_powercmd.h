@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.h,v 1.14 2009-06-26 00:43:48 chu11 Exp $
+ *  $Id: ipmipower_powercmd.h,v 1.15 2009-06-26 03:43:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -31,9 +31,8 @@
 
 /* ipmipower_powercmd_setup
  * - Setup ipmipower to process commands
- * Returns 0 on success, -1 on error
  */
-int ipmipower_powercmd_setup ();
+void ipmipower_powercmd_setup ();
 
 /* ipmipower_powercmd_cleanup
  * - Cleanup ipmipower when we are done

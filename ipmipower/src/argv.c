@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: argv.c,v 1.11 2009-06-06 00:09:02 chu11 Exp $
+ *  $Id: argv.c,v 1.12 2009-06-26 03:43:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -61,7 +61,6 @@
 #include <assert.h>
 
 #include "argv.h"
-#include "ierror.h"
 
 #include "freeipmi-portability.h"
 
@@ -81,8 +80,10 @@ static char *_nextargv(char **strp, char *ignore)
     len = str - word;
 
     if (len > 0) {
-        if (!(cpy = (char *)malloc(len + 1)))
-            ierr_exit ("malloc: %s", strerror (errno));
+        if (!(cpy = (char *)malloc(len + 1))) {
+            fprintf (stderr, "malloc: %s", strerror (errno));
+            exit (1);
+        }
         memcpy(cpy, word, len);
         cpy[len] = '\0';
     }
@@ -117,8 +118,10 @@ char **argv_create(char *cmdline, char *ignore)
     char **argv;
     int i;
 
-    if (!(argv = (char **)malloc(sizeof(char *) * (argc + 1))))
-        ierr_exit ("malloc: %s", strerror (errno));
+    if (!(argv = (char **)malloc(sizeof(char *) * (argc + 1)))) {
+        fprintf (stderr, "malloc: %s", strerror (errno));
+        exit (1);
+    }
 
     for (i = 0; i < argc; i++) {
         argv[i] = _nextargv(&cmdline, ignore);

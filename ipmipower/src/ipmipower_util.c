@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.c,v 1.34 2009-06-26 02:03:16 chu11 Exp $
+ *  $Id: ipmipower_util.c,v 1.35 2009-06-26 03:43:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -53,11 +53,12 @@
 #include <errno.h>
 
 #include "ipmipower_util.h"
-
-#include "ierror.h"
+#include "ipmipower_error.h"
 
 #include "freeipmi-portability.h"
 #include "cbuf.h"
+
+extern struct ipmipower_arguments cmd_args;
 
 int
 ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
@@ -74,7 +75,10 @@ ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
       tv_orig.tv_usec = (timeout % 1000) * 1000;
 
       if (gettimeofday(&start, NULL) < 0)
-        ierr_exit ("gettimeofday: %s", strerror (errno));
+        {
+          IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
+          exit (1);
+        }
     }
   else
     {
@@ -87,13 +91,20 @@ ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
     {
       n = poll(ufds, nfds, timeout);
 
-      if (n < 0 && errno != EINTR)    /* unrecov error */
-        ierr_exit ("poll: %s", strerror (errno));
+      /* unrecov error */
+      if (n < 0 && errno != EINTR)
+        {
+          IPMIPOWER_ERROR (("poll: %s", strerror (errno)));
+          exit (1);
+        }
 
       if (n < 0 && timeout >= 0)      /* EINTR - adjust timeout */
         {
           if (gettimeofday(&end, NULL) < 0)
-            ierr_exit ("gettimeofday: %s", strerror (errno));
+            {
+              IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
+              exit (1);
+            }
 
           timersub(&end, &start, &delta);     /* delta = end-start */
           timersub(&tv_orig, &delta, &tv);    /* tv = tvsave-delta */
@@ -119,7 +130,10 @@ ipmipower_cbuf_printf(cbuf_t cbuf, const char *fmt, ...)
   
   written = cbuf_write (cbuf, buf, len, &dropped);
   if (written < 0)
-    ierr_exit ("cbuf write: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("cbuf_write: %s", strerror (errno)));
+      exit (1);
+    }
   
   va_end(ap);
 }
@@ -134,23 +148,35 @@ ipmipower_cbuf_peek_and_drop (cbuf_t buf, void *buffer, int len)
   assert (len > 0);
 
   if ((r_len = cbuf_peek (buf, buffer, len)) < 0)
-    ierr_exit ("cbuf_peek: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("cbuf_peek: %s", strerror (errno)));
+      exit (1);
+    }
 
   /* Nothing there */
   if (!r_len)
     return (0);
 
   if ((dropped = cbuf_drop (buf, len)) < 0)
-    ierr_exit ("cbuf_drop: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("cbuf_drop: %s", strerror (errno)));
+      exit (1);
+    }
 
   if (dropped != r_len)
-    ierr_exit ("cbuf_drop: dropped incorrect bytes: %d", dropped);
+    {
+      IPMIPOWER_ERROR (("cbuf_drop: dropped incorrect bytes: %d", dropped));
+      exit (1);
+    }
 
   if ((rv = cbuf_drop (buf, -1)) < 0)
-    ierr_exit ("cbuf_drop: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("cbuf_drop: %s", strerror (errno)));
+      exit (1);
+    }
 
   if (rv > 0)
-    ierr_dbg ("cbuf_drop dropped data: %d", rv);
-
+    IPMIPOWER_DEBUG (("cbuf_drop dropped data: %d", rv));
+  
   return (r_len);
 }

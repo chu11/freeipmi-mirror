@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.55 2009-06-26 02:03:16 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.56 2009-06-26 03:43:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -36,10 +36,9 @@
 #include <assert.h>
 
 #include "ipmipower.h"
+#include "ipmipower_error.h"
 #include "ipmipower_output.h"
 #include "ipmipower_util.h"
-
-#include "ierror.h"
 
 #include "freeipmi-portability.h"
 #include "cbuf.h"
@@ -85,13 +84,16 @@ ipmipower_output (msg_type_t num, const char *hostname)
   if (cmd_args.hostrange.consolidate_output)
     {
       if (!hostlist_push_host (output_hostrange[num], hostname))
-        ierr_exit ("hostlist_push_host: %s", strerror(errno));
+        {
+          IPMIPOWER_ERROR (("hostlist_push_host: %s", strerror(errno)));
+          exit (1);
+        }
     }
   else
-      ipmipower_cbuf_printf (ttyout,
-                             "%s: %s\n",
-                             hostname,
-                             ipmipower_outputs[num]);
+    ipmipower_cbuf_printf (ttyout,
+                           "%s: %s\n",
+                           hostname,
+                           ipmipower_outputs[num]);
 
   return;
 }
@@ -115,7 +117,10 @@ ipmipower_output_finish (void)
               if ((rv = hostlist_ranged_string (output_hostrange[i],
                                                 IPMIPOWER_OUTPUT_BUFLEN,
                                                 buf)) < 0)
-                ierr_exit ("hostlist_ranged_string: %s", strerror (errno));
+                {
+                  IPMIPOWER_ERROR (("hostlist_ranged_string: %s", strerror(errno)));
+                  exit (1);
+                }
               
               if (rv > 0)
                 {

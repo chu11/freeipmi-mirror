@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.115 2009-06-26 02:03:16 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.116 2009-06-26 03:43:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -44,16 +44,15 @@
 #endif /* HAVE_UNISTD_H */
 #include <errno.h>
 
-#include "ipmipower_argp.h"
 #include "ipmipower_prompt.h"
-#include "ipmipower_ping.h"
+#include "ipmipower_error.h"
 #include "ipmipower_connection.h"
+#include "ipmipower_ping.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_output.h"
 #include "ipmipower_util.h"
 
 #include "argv.h"
-#include "ierror.h"
 
 #include "freeipmi-portability.h"
 #include "cbuf.h"
@@ -150,7 +149,10 @@ _cmd_hostname (char **argv)
       ics_len = len;
 
       if (!(cmd_args.common.hostname = strdup (argv[1])))
-        ierr_exit ("strdup: %s", strerror (errno));
+        {
+          IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+          exit (1);
+        }
 
       ipmipower_ping_force_discovery_sweep ();
 
@@ -177,7 +179,10 @@ _cmd_username (char **argv)
       if (argv[1])
         {
           if (!(cmd_args.common.username = strdup (argv[1])))
-            ierr_exit ("strdup: %s", strerror (errno));
+            {
+              IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+              exit (1);
+            }
         }
 
       ipmipower_cbuf_printf (ttyout,
@@ -213,7 +218,10 @@ _cmd_password (char **argv)
       if (argv[1])
         {
           if (!(cmd_args.common.password = strdup (argv[1])))
-            ierr_exit ("strdup: %s", strerror (errno));
+            {
+              IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+              exit (1);
+            }
         }
 
 #ifdef NDEBUG
@@ -451,7 +459,10 @@ _cmd_power (char **argv, power_cmd_t cmd)
         }
 
       if (!(itr = hostlist_iterator_create (h)))
-        ierr_exit ("hostlist_iterator_create() error");
+        {
+          IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+          exit (1);
+        }
 
       while ((node = hostlist_next (itr)))
         {
@@ -634,21 +645,33 @@ _cmd_config (void)
         }
       
       if ((rv = hostlist_ranged_string (discovered, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
-        ierr_exit ("hostlist_ranged_string: %s", strerror (errno));
+        {
+          IPMIPOWER_ERROR (("hostlist_ranged_string: %s", strerror (errno)));
+          exit (1);
+        }
+
       if (rv > 0)
         ipmipower_cbuf_printf (ttyout,
                                "Discovered:                   %s\n",
                                buf);
 
       if ((rv = hostlist_ranged_string (undiscovered, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
-        ierr_exit ("hostlist_ranged_string: %s", strerror (errno));
+        {
+          IPMIPOWER_ERROR (("hostlist_ranged_string: %s", strerror (errno)));
+          exit (1);
+        }
+
       if (rv > 0)
         ipmipower_cbuf_printf (ttyout,
                                "Undiscovered:                 %s\n",
                                buf);
 
       if ((rv = hostlist_ranged_string (badconnection, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
-        ierr_exit ("hostlist_ranged_string: %s", strerror (errno));
+        {
+          IPMIPOWER_ERROR (("hostlist_ranged_string: %s", strerror (errno)));
+          exit (1);
+        }
+
       if (rv > 0)
         ipmipower_cbuf_printf (ttyout,
                                "BadConnection:                %s\n",
@@ -945,14 +968,15 @@ _readcmd (char *buf, int buflen)
 {
   int dropped, bytes_peeked, len = 0;
 
-  /* Don't use Cbuf_peek(), we may not want to cbuf_drop data */
   buf[0] = '\0';
-  if ((bytes_peeked = cbuf_peek (ttyin, buf, buflen)) <= 0)
+  if ((bytes_peeked = cbuf_peek (ttyin, buf, buflen)) < 0)
     {
-      if (bytes_peeked < 0)
-        ierr_exit ("_readcmd: cbuf_peek returned %d", bytes_peeked);
-      return;
+      IPMIPOWER_ERROR (("cbuf_peek: %s", strerror (errno)));
+      exit (1);
     }
+
+  if (!bytes_peeked)
+    return;
 
   for (len = 0; len < bytes_peeked; len++)
     {
@@ -969,7 +993,7 @@ _readcmd (char *buf, int buflen)
   len++;
 
   if ((dropped = cbuf_drop (ttyin, len)) != len)
-    ierr_dbg ("warning: _readcmd: cbuf_drop returned %d (!= %d)", dropped, len);
+    IPMIPOWER_DEBUG (("cbuf_drop returned %d != %d)", dropped, len));
 }
 
 int
@@ -980,7 +1004,10 @@ ipmipower_prompt_process_cmdline (void)
   int quit = 0;
 
   if (!(buf = (char *)malloc (IPMIPOWER_MAX_TTY_BUF)))
-    ierr_exit ("malloc: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("malloc: %s", strerror(errno)));
+      exit (1);
+    }
 
   do
     {
@@ -1046,11 +1073,7 @@ ipmipower_prompt_process_cmdline (void)
               else if (!strcmp (argv[0], "workaround-flags"))
                 _cmd_workaround_flags (argv);
               else if (!strcmp (argv[0], "debug"))
-                {
-                  _cmd_debug (argv);
-                  ierr_cbuf (cmd_args.common.debug, ttyerr);
-                  ierr_cbuf_dump_file_stream (cmd_args.common.debug, stderr);
-                }
+                _cmd_debug (argv);
 #ifndef NDEBUG
               else if (!strcmp (argv[0], "rmcpdump"))
                 _cmd_set_flag (argv,
