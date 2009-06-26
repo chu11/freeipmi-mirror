@@ -39,9 +39,6 @@ new ipmi-oem-config - to deal with config OEM stuff config tool style?
 libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
-* more detailed debug output for ssif interface like KCS interface
-  - don't have a SSIF ipmi system, so shouldn't develop until I have a
-    system I can test on?
 
 config
 ------
@@ -108,7 +105,6 @@ libfreeipmi) handle fatal vs. non-fatal completion codes?
 - will BMCs respond?
 - what completion code will be returned?
 - will vendors do it consistently?
-testing guide - doc on how to test
 
 ipmipower
 ---------

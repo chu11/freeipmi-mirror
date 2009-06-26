@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.48 2009-06-08 20:24:27 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.49 2009-06-26 00:43:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -174,15 +174,13 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
     ierr_exit ("cbuf_create: %s", strerror (errno));
   cbuf_opt_set (ic->ping_out, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
   
-  /* if ipmi_get_random fails, use junk sitting on stack */
-
   if (ipmi_get_random (&ic->ipmi_requester_sequence_number_counter,
                        sizeof (ic->ipmi_requester_sequence_number_counter)) < 0)
-    ierr_dbg ("ipmi_get_random: %s", strerror (errno));
+    ierr_exit ("ipmi_get_random: %s", strerror (errno));
   
   if (ipmi_get_random (&ic->ping_sequence_number_counter,
                        sizeof (ic->ping_sequence_number_counter)) < 0)
-    ierr_dbg ("ipmi_get_random: %s", strerror (errno));
+    ierr_exit ("ipmi_get_random: %s", strerror (errno));
 
   memset (&ic->last_ipmi_send, '\0', sizeof (struct timeval));
   memset (&ic->last_ping_send, '\0', sizeof (struct timeval));

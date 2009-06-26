@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.53 2009-06-25 23:14:36 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.54 2009-06-26 00:43:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -87,7 +87,7 @@ ipmipower_output (msg_type_t num, const char *hostname)
         ierr_exit ("hostlist_push_host: %s", strerror(errno));
     }
   else
-    cbuf_printf (ttyout, "%s: %s\n", hostname, ipmipower_outputs[num]);
+      cbuf_printf (ttyout, "%s: %s\n", hostname, ipmipower_outputs[num]);
 
   return;
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.187 2009-06-17 22:22:27 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.188 2009-06-26 00:43:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -55,6 +55,7 @@
 
 #include "ipmipower.h"
 #include "ipmipower_connection.h"
+#include "ipmipower_error.h"
 #include "ipmipower_output.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_packet.h"
@@ -141,14 +142,19 @@ _destroy_ipmipower_powercmd (ipmipower_powercmd_t ip)
   free (ip);
 }
 
-void
+int
 ipmipower_powercmd_setup ()
 {
   assert (!pending);  /* need to cleanup first! */
 
   pending = list_create ((ListDelF)_destroy_ipmipower_powercmd);
   if (!pending)
-    ierr_exit ("list_create: %s", strerror (errno));
+    {
+      IPMIPOWER_ERROR (("list_create: %s", strerror (errno)));
+      return (-1);
+    }
+
+  return (0);
 }
 
 void
@@ -287,10 +293,9 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
       ip->confidentiality_key_ptr = ip->confidentiality_key;
       ip->confidentiality_key_len = IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH;
 
-      /* if ipmi_get_random fails, use junk sitting on stack */
       if (ipmi_get_random (&ip->initial_message_tag,
                            sizeof (ip->initial_message_tag)) < 0)
-        ierr_dbg ("ipmi_get_random: %s", strerror (errno));
+        ierr_exit ("ipmi_get_random: %s", strerror (errno));
 
       ip->message_tag_count = 0;
       ip->session_sequence_number = 0;
@@ -299,17 +304,14 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
       /* In IPMI 2.0, session_ids of 0 are special */
       do
         {
-          /* if ipmi_get_random fails, use junk sitting on stack */
           if (ipmi_get_random (&ip->remote_console_session_id,
                                sizeof (ip->remote_console_session_id)) < 0)
-            ierr_dbg ("ipmi_get_random: %s", strerror (errno));
+            ierr_exit ("ipmi_get_random: %s", strerror (errno));
         } while (!ip->remote_console_session_id);
 
-      /* Even if this fails, we'll just live with it */
       if (ipmi_get_random (ip->remote_console_random_number,
                            IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
-        ierr_dbg ("ipmipower_powercmd_queue: ipmi_get_random: %s ",
-                  strerror (errno));
+        ierr_exit ("ipmi_get_random: %s", strerror (errno));
 
       ip->wait_until_on_state = 0;
       ip->wait_until_off_state = 0;

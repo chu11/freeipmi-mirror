@@ -1,5 +1,15 @@
 2009-06-24  Albert Chu <chu11@llnl.gov>
 
+	* tagged pre_ipmipower_err_handling
+
+	* ipmipower/src/ipmipower_error.h,
+	ipmipower/src/ipmipower_error.c: New files.
+
+	* ipmipower/: Various re-arch to make tool more like other
+	FreeIPMI tools.
+
+2009-06-24  Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/src/ipmipower.h: Fix assert bug.
 	
 2009-06-24  Albert Chu <chu11@llnl.gov>

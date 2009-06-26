@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ierror.c,v 1.9 2009-06-06 00:09:02 chu11 Exp $
+ *  $Id: ierror.c,v 1.10 2009-06-26 00:43:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -272,9 +272,6 @@ void cbuf_printf(cbuf_t cbuf, const char *fmt, ...)
     va_list ap;
     int written, dropped;
     int len;
-
-    if (ierr_dest == IERR_NONE)
-        return;
 
     va_start(ap, fmt);
     len = vsnprintf(buf, IERROR_BUFLEN, fmt, ap);  /* overflow ignored */

@@ -4,6 +4,7 @@ noinst_HEADERS = \
 	ipmipower_check.h \
 	ipmipower_argp.h \
 	ipmipower_connection.h \
+	ipmipower_error.h \
 	ipmipower.h \
 	ipmipower_output.h \
 	ipmipower_packet.h \
@@ -42,6 +43,7 @@ ipmipower_SOURCES = \
 	ipmipower_check.c \
 	ipmipower_argp.c \
 	ipmipower_connection.c \
+	ipmipower_error.c \
 	ipmipower.c \
 	ipmipower_output.c \
 	ipmipower_packet.c \
