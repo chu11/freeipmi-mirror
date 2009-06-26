@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.84 2009-06-26 03:43:18 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.85 2009-06-26 03:55:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -72,7 +72,6 @@
 
 cbuf_t ttyin;
 cbuf_t ttyout;
-cbuf_t ttyerr;
 
 /* configuration for ipmipower */
 struct ipmipower_arguments cmd_args;
@@ -122,13 +121,6 @@ _ipmipower_setup (void)
     }
   cbuf_opt_set (ttyout, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
-  if (!(ttyerr = cbuf_create (IPMIPOWER_MIN_TTY_BUF, IPMIPOWER_MAX_TTY_BUF)))
-    {
-      IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
-      exit (1);
-    }
-  cbuf_opt_set (ttyerr, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
-
   for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
     {
       if (!(output_hostrange[i] = hostlist_create (NULL)))
@@ -149,8 +141,6 @@ _ipmipower_cleanup (void)
   /* Flush before destroying. */
   cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1);
   cbuf_destroy (ttyout);
-  cbuf_read_to_fd (ttyerr, STDERR_FILENO, -1);
-  cbuf_destroy (ttyerr);
 
   ipmipower_connection_array_destroy (ics, ics_len);
 
@@ -367,10 +357,10 @@ _poll_loop (int non_interactive)
       if (nfds != (ics_len*2) + 3)
         {
           /* The "*2" is for each host's two fds, one for ipmi
-           * (ipmi_fd) and one for rmcp (ping_fd).  The "+3" is for
-           * stdin, stdout, stderr.
+           * (ipmi_fd) and one for rmcp (ping_fd).  The "+2" is for
+           * stdin and stdout.
            */
-          nfds = (ics_len*2) + 3;
+          nfds = (ics_len*2) + 2;
           free (pfds);
 
           if (!(pfds = (struct pollfd *)malloc (nfds * sizeof (struct pollfd))))
@@ -399,17 +389,11 @@ _poll_loop (int non_interactive)
             pfds[i*2+1].events |= POLLOUT;
         }
 
-      pfds[nfds-3].fd = STDIN_FILENO;
-      pfds[nfds-3].events = POLLIN;
-      pfds[nfds-3].revents = 0;
-      pfds[nfds-2].fd = STDOUT_FILENO;
-      if (!cbuf_is_empty (ttyout))
-        pfds[nfds-2].events = POLLOUT;
-      else
-        pfds[nfds-2].events = 0;
+      pfds[nfds-2].fd = STDIN_FILENO;
+      pfds[nfds-2].events = POLLIN;
       pfds[nfds-2].revents = 0;
-      pfds[nfds-1].fd = STDERR_FILENO;
-      if (!cbuf_is_empty (ttyerr))
+      pfds[nfds-1].fd = STDOUT_FILENO;
+      if (!cbuf_is_empty (ttyout))
         pfds[nfds-1].events = POLLOUT;
       else
         pfds[nfds-1].events = 0;
@@ -447,7 +431,7 @@ _poll_loop (int non_interactive)
             _sendto (ics[i].ping_out, ics[i].ping_fd, &(ics[i].destaddr));
         }
 
-      if (pfds[nfds-3].revents & POLLIN)
+      if (pfds[nfds-2].revents & POLLIN)
         {
           int n, dropped = 0;
 
@@ -471,17 +455,9 @@ _poll_loop (int non_interactive)
           if (dropped)
             IPMIPOWER_DEBUG (("cbuf_write_from_fd: read dropped %d bytes", dropped));
         }
-      if (!cbuf_is_empty (ttyout) && (pfds[nfds-2].revents & POLLOUT))
+      if (!cbuf_is_empty (ttyout) && (pfds[nfds-1].revents & POLLOUT))
         {
           if (cbuf_read_to_fd (ttyout, STDOUT_FILENO, -1) < 0)
-            {
-              IPMIPOWER_ERROR (("cbuf_read_to_fd: %s", strerror (errno)));
-              exit (1);
-            }
-        }
-      if (!cbuf_is_empty (ttyerr) && (pfds[nfds-1].revents & POLLOUT))
-        {
-          if (cbuf_read_to_fd (ttyerr, STDERR_FILENO, -1) < 0)
             {
               IPMIPOWER_ERROR (("cbuf_read_to_fd: %s", strerror (errno)));
               exit (1);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.116 2009-06-26 03:43:18 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.117 2009-06-26 03:55:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -63,9 +63,10 @@
 
 extern cbuf_t ttyout;
 extern cbuf_t ttyin;
-extern cbuf_t ttyerr;
+
 extern struct ipmipower_arguments cmd_args;
 extern struct ipmipower_connection *ics;
+
 extern unsigned int ics_len;
 
 /* eliminate
