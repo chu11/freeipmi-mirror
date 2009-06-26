@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.189 2009-06-26 02:03:16 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.190 2009-06-26 02:32:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -455,7 +455,7 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
     ierr_exit ("cbuf_write: incorrect bytes written %d", ret);
   
   if (dropped)
-    ierr_dbg ("cbuf_write: dropped %d bytes", dropped);
+    IPMIPOWER_DEBUG (("cbuf_write: dropped %d bytes", dropped));
 
   secure_memset (buf, '\0', IPMIPOWER_PACKET_BUFLEN);
 
@@ -1053,8 +1053,11 @@ _retry_packets (ipmipower_powercmd_t ip)
     return (0);
 
   ip->retransmission_count++;
-  ierr_dbg ("_retry_packets(%s:%d): Sending retry, retry count=%d",
-            ip->ic->hostname, ip->protocol_state, ip->retransmission_count);
+
+  IPMIPOWER_DEBUG (("host = %s; p = %d; Sending retry, retry count=%d",
+                    ip->ic->hostname,
+                    ip->protocol_state,
+                    ip->retransmission_count));
 
   if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
     _send_packet (ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
@@ -1346,8 +1349,10 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
     {
       if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
         {
-          ierr_dbg ("_process_ipmi_packets(%s:%d): not none authentcation",
-                    ip->ic->hostname, ip->protocol_state);
+          IPMIPOWER_DEBUG (("host = %s; p = %d; not none authentcation",
+                            ip->ic->hostname,
+                            ip->protocol_state));
+
           ip->permsgauth_enabled = 1;
         }
     }
@@ -1356,8 +1361,10 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
     {
       if (authentication_type != cmd_args.common.authentication_type)
         {
-          ierr_dbg ("_process_ipmi_packets(%s:%d): authentication_type mismatch",
-                    ip->ic->hostname, ip->protocol_state);
+          IPMIPOWER_DEBUG (("host = %s; p = %d; authentication_type mismatch",
+                            ip->ic->hostname,
+                            ip->protocol_state));
+
           ipmipower_output (MSG_TYPE_BMC_ERROR, ip->ic->hostname);
 
           ip->retransmission_count = 0;  /* important to reset */
@@ -1809,7 +1816,9 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
        */
       if (ip->close_timeout)
         {
-          ierr_dbg ("_process_ipmi_packets: close session timeout, skip retransmission");
+          IPMIPOWER_DEBUG (("host = %s; p = %d; close session timeout, skip retransmission",
+                            ip->ic->hostname,
+                            ip->protocol_state));
           goto finish_up;
         }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.50 2009-06-10 22:56:59 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.51 2009-06-26 02:32:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -50,6 +50,7 @@
 #include <errno.h>
 
 #include "ipmipower_ping.h"
+#include "ipmipower_error.h"
 #include "ipmipower_util.h"
 
 #include "ierror.h"
@@ -178,7 +179,7 @@ ipmipower_ping_process_pings (int *timeout)
                                          buf,
                                          len,
                                          tmpl_cmd_asf_presence_ping) < 0)
-                ierr_dbg ("ipmi_dump_rmcp_packet: %s", strerror (errno));
+                IPMIPOWER_DEBUG (("ipmi_dump_rmcp_packet: %s", strerror (errno)));
             }
 #endif /* NDEBUG */
 
@@ -189,7 +190,7 @@ ipmipower_ping_process_pings (int *timeout)
             ierr_exit ("cbuf_write: incorrect bytes written %d", ret);
 
           if (dropped)
-            ierr_dbg ("cbuf_write: dropped %d bytes", dropped);
+            IPMIPOWER_DEBUG (("cbuf_write: dropped %d bytes", dropped));
 
           ics[i].last_ping_send.tv_sec = cur_time.tv_sec;
           ics[i].last_ping_send.tv_usec = cur_time.tv_usec;
@@ -235,7 +236,7 @@ ipmipower_ping_process_pings (int *timeout)
                                          buf,
                                          len,
                                          tmpl_cmd_asf_presence_pong) < 0)
-                ierr_dbg ("ipmi_dump_rmcp_packet: %s", strerror (errno));
+                IPMIPOWER_DEBUG (("ipmi_dump_rmcp_packet: %s", strerror (errno)));
             }
 #endif /* NDEBUG */
 

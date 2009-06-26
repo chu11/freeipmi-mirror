@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.82 2009-06-26 00:43:48 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.83 2009-06-26 02:32:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -284,7 +284,8 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
   /* cbuf should be empty, but if it isn't, empty it */
   if (!cbuf_is_empty (cbuf))
     {
-      ierr_dbg ("cbuf not empty, draining");
+      IPMIPOWER_DEBUG (("cbuf not empty, draining"));
+
       do
         {
           uint8_t tempbuf[IPMIPOWER_PACKET_BUFLEN];
@@ -296,10 +297,12 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
 
   if ((n = cbuf_write (cbuf, buf, rv, &dropped)) < 0)
     ierr_exit ("cbuf_write: %s", strerror (errno));
+
   if (n != rv)
     ierr_exit ("cbuf_write: rv=%d n=%d", rv, n);
+
   if (dropped)
-    ierr_dbg ("cbuf_write: read dropped %d bytes", dropped);
+    IPMIPOWER_DEBUG (("cbuf_write: read dropped %d bytes", dropped));
 }
 
 /* _poll_loop
@@ -405,12 +408,13 @@ _poll_loop (int non_interactive)
         {
           if (pfds[i*2].revents & POLLERR)
             {
-              ierr_dbg ("_poll_loop: IPMI POLLERR, %s, %d", ics[i].hostname,
-                        ics[i].ipmi_fd);
+              IPMIPOWER_DEBUG (("host = %s; IPMI POLLERR", ics[i].hostname));
               continue;
             }
+
           if (pfds[i*2].revents & POLLIN)
             _recvfrom (ics[i].ipmi_in, ics[i].ipmi_fd, &(ics[i].destaddr));
+
           if (pfds[i*2].revents & POLLOUT)
             _sendto (ics[i].ipmi_out, ics[i].ipmi_fd, &(ics[i].destaddr));
 
@@ -419,12 +423,13 @@ _poll_loop (int non_interactive)
 
           if (pfds[i*2+1].revents & POLLERR)
             {
-              ierr_dbg ("_poll_loop: PING POLLERR, %s, %d", ics[i].hostname,
-                        ics[i].ipmi_fd);
+              IPMIPOWER_DEBUG (("host = %s; PING_POLLERR", ics[i].hostname));
               continue;
             }
+
           if (pfds[i*2+1].revents & POLLIN)
             _recvfrom (ics[i].ping_in, ics[i].ping_fd, &(ics[i].destaddr));
+
           if (pfds[i*2+1].revents & POLLOUT)
             _sendto (ics[i].ping_out, ics[i].ping_fd, &(ics[i].destaddr));
         }

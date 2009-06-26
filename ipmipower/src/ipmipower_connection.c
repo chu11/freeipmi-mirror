@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.50 2009-06-26 02:03:16 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.51 2009-06-26 02:32:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -101,7 +101,7 @@ _clean_fd (int fd)
       else
         break;
 
-      ierr_dbg ("_clean_fd: removed packet: %d", rv);
+      IPMIPOWER_DEBUG (("removed packet: %d", rv));
     }
 }
 
@@ -132,17 +132,21 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 
   if ((ic->ipmi_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
     {
-      /* XXX debug here */
       if (errno == EMFILE)
-        return (-1);
+        {
+          IPMIPOWER_DEBUG (("file descriptor limit reached"));
+          return (-1);
+        }
       ierr_exit ("socket: %s", strerror (errno));
     }
 
   if ((ic->ping_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
     {
-      /* XXX debug here */
       if (errno == EMFILE)
-        return (-1);
+        {
+          IPMIPOWER_DEBUG (("file descriptor limit reached"));
+          return (-1);
+        }
       ierr_exit ("socket: %s", strerror (errno));
     }
 
@@ -352,6 +356,6 @@ ipmipower_connection_hostname_index (struct ipmipower_connection *ics,
         return (i);
     }
 
-  ierr_dbg ("ipmipower_connection_hostname_index: %s not found", hostname);
+  IPMIPOWER_DEBUG (("host = %s not found", hostname));
   return (-1);
 }
