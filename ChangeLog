@@ -10,6 +10,8 @@
 	* ipmipower/: Various re-arch to make tool more like other
 	FreeIPMI tools.  Use new debug libs.
 
+	* tagged post_ipmipower_err_handling
+
 2009-06-24  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower.h: Fix assert bug.
