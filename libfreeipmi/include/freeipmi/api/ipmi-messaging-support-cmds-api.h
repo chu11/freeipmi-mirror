@@ -35,6 +35,19 @@ extern "C" {
  *
  */
 
+int ipmi_cmd_set_bmc_global_enables (ipmi_ctx_t ctx,
+                                     uint8_t receive_message_queue_interrupt,
+                                     uint8_t event_message_buffer_full_interrupt,
+                                     uint8_t event_message_buffer,
+                                     uint8_t system_event_logging,
+                                     uint8_t oem_0,
+                                     uint8_t oem_1,
+                                     uint8_t oem_2,
+                                     fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_bmc_global_enables (ipmi_ctx_t ctx,
+                                     fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_clear_message_flags (ipmi_ctx_t ctx,
                                   uint8_t receive_message_queue,
                                   uint8_t event_message_buffer,

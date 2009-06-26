@@ -44,6 +44,48 @@
 
 #define IPMI_MAX_K_LENGTH 64
 
+fiid_template_t tmpl_cmd_set_bmc_global_enables_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "receive_message_queue_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "event_message_buffer_full_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "event_message_buffer", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "system_event_logging", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "oem_0", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "oem_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "oem_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_bmc_global_enables_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_bmc_global_enables_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_bmc_global_enables_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 1, "receive_message_queue_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "event_message_buffer_full_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "event_message_buffer", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "system_event_logging", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "oem_0", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "oem_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "oem_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_clear_message_flags_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -864,6 +906,70 @@ fiid_template_t tmpl_cmd_set_user_password_rs =
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 0, "", 0}
   };
+
+int
+fill_cmd_set_bmc_global_enables (uint8_t receive_message_queue_interrupt,
+                                 uint8_t event_message_buffer_full_interrupt,
+                                 uint8_t event_message_buffer,
+                                 uint8_t system_event_logging,
+                                 uint8_t oem_0,
+                                 uint8_t oem_1,
+                                 uint8_t oem_2,
+                                 fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_BMC_GLOBAL_ENABLES_VALID (receive_message_queue_interrupt)
+      || !IPMI_BMC_GLOBAL_ENABLES_VALID (event_message_buffer_full_interrupt)
+      || !IPMI_BMC_GLOBAL_ENABLES_VALID (event_message_buffer)
+      || !IPMI_BMC_GLOBAL_ENABLES_VALID (system_event_logging)
+      || !IPMI_BMC_GLOBAL_ENABLES_VALID (oem_0)
+      || !IPMI_BMC_GLOBAL_ENABLES_VALID (oem_1)
+      || !IPMI_BMC_GLOBAL_ENABLES_VALID (oem_2)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_bmc_global_enables_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_BMC_GLOBAL_ENABLES);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "receive_message_queue_interrupt", receive_message_queue_interrupt);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "event_message_buffer_full_interrupt", event_message_buffer_full_interrupt);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "event_message_buffer", event_message_buffer);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "system_event_logging", system_event_logging);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_0", oem_0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_1", oem_1);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_2", oem_2);
+
+  return (0);
+}
+
+int
+fill_cmd_get_bmc_global_enables (fiid_obj_t obj_cmd_rq)
+{
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_bmc_global_enables_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_BMC_GLOBAL_ENABLES);
+
+  return (0);
+}
 
 int
 fill_cmd_clear_message_flags (uint8_t receive_message_queue,

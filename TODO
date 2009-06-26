@@ -4,6 +4,11 @@ inband
 and build option??
 inband flag - discover vs. not-discover on locate
 
+bmc-device
+----------
+get/set globals
+- enable/disable sel?
+
 general
 -------
 forwarded command support (errata 35b)

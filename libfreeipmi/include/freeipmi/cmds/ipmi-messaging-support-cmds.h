@@ -34,6 +34,13 @@ extern "C" {
 #define IPMI_MAX_K_R_LENGTH                 20
 #define IPMI_MAX_K_G_LENGTH                 20
 
+#define IPMI_BMC_GLOBAL_ENABLES_ENABLED     0x1
+#define IPMI_BMC_GLOBAL_ENALBES_DISABLED    0x0
+
+#define IPMI_BMC_GLOBAL_ENABLES_VALID(__val) \
+  (((__val) == IPMI_BMC_GLOBAL_ENABLES_ENABLED \
+    || (__val) == IPMI_BMC_GLOBAL_ENALBES_DISABLED) ? 1 : 0)
+
 #define IPMI_MESSAGE_FLAGS_CLEAR            0x1
 #define IPMI_MESSAGE_FLAGS_DONT_CLEAR       0x0
 
@@ -280,6 +287,11 @@ extern "C" {
  * see freeipmi/templates/ for template definitions 
  */
 
+extern fiid_template_t tmpl_cmd_set_bmc_global_enables_rq;
+extern fiid_template_t tmpl_cmd_set_bmc_global_enables_rs;
+extern fiid_template_t tmpl_cmd_get_bmc_global_enables_rq;
+extern fiid_template_t tmpl_cmd_get_bmc_global_enables_rs;
+
 extern fiid_template_t tmpl_cmd_clear_message_flags_rq;
 extern fiid_template_t tmpl_cmd_clear_message_flags_rs;
 extern fiid_template_t tmpl_cmd_get_message_flags_rq;
@@ -370,6 +382,17 @@ extern fiid_template_t tmpl_cmd_get_user_name_rs;
 extern fiid_template_t tmpl_cmd_set_user_password_rq;
 extern fiid_template_t tmpl_cmd_set_user_password_v20_rq;
 extern fiid_template_t tmpl_cmd_set_user_password_rs;
+
+int fill_cmd_set_bmc_global_enables (uint8_t receive_message_queue_interrupt,
+                                     uint8_t event_message_buffer_full_interrupt,
+                                     uint8_t event_message_buffer,
+                                     uint8_t system_event_logging,
+                                     uint8_t oem_0,
+                                     uint8_t oem_1,
+                                     uint8_t oem_2,
+                                     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_get_bmc_global_enables (fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_clear_message_flags (uint8_t receive_message_queue,
                                   uint8_t event_message_buffer,

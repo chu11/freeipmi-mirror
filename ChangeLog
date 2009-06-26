@@ -1,3 +1,7 @@
+2009-06-26  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Add get/set bmc global enables support.
+	
 2009-06-24  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_ipmipower_err_handling
