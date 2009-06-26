@@ -41,7 +41,7 @@ Tools - Detailed Enhancements/Changes/Fixes
 -------------------------------------------
 o ipmi-dcmi
   - A new tool to support the data center managemen interface
-   (referred to as either DCM or DCMI).
+   (often referred to as either DCM or DCMI).
 o ipmi-sel
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
