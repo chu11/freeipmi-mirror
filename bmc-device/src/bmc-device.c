@@ -1375,6 +1375,131 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
 }
 
 static int
+get_bmc_global_enables (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  assert (state_data);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_bmc_global_enables_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_bmc_global_enables (state_data->ipmi_ctx,
+                                       obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_bmc_global_enables: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "receive_message_queue_interrupt", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'receive_message_queue_interrupt': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  
+  pstdout_printf (state_data->pstate,
+                  "Receive Message Queue Interrupt : %s\n",
+                  (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "event_message_buffer_full_interrupt", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'event_message_buffer_full_interrupt': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  
+  pstdout_printf (state_data->pstate,
+                  "Event Message Buffer Full       : %s\n",
+                  (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "event_message_buffer", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'event_message_buffer': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  
+  pstdout_printf (state_data->pstate,
+                  "Event Message Buffer            : %s\n",
+                  (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "system_event_logging", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'system_event_logging': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  
+  pstdout_printf (state_data->pstate,
+                  "System Event Logging            : %s\n",
+                  (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "oem_0", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'oem_0': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  
+  pstdout_printf (state_data->pstate,
+                  "OEM 0                           : %s\n",
+                  (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "oem_1", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'oem_1': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  
+  pstdout_printf (state_data->pstate,
+                  "OEM 1                           : %s\n",
+                  (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "oem_2", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'oem_2': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  
+  pstdout_printf (state_data->pstate,
+                  "OEM 2                           : %s\n",
+                  (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
 run_cmd_args (bmc_device_state_data_t *state_data)
 {
   struct bmc_device_arguments *args;
@@ -1428,6 +1553,9 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->get_bt_interface_capabilities)
     return (get_bt_interface_capabilities (state_data));
+
+  if (args->get_bmc_global_enables)
+    return (get_bmc_global_enables (state_data));
 
   rv = 0;
   return (rv);

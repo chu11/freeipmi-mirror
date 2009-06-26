@@ -208,6 +208,7 @@ o bmc-device
     each other.
   - Indicate hex code output consistently with 'h' suffix instead of
     '0x' prefix.
+  - Support --get-bmc-global-eanbles.
 o bmc-info
   - When querying active/inactive, allowed/unallowed, true/false,
     etc. status fields output all fields instead of only the

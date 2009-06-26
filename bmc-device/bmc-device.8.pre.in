@@ -99,6 +99,9 @@ Get KCS interface capabilities.
 \fB\-\-get\-bt\-interface\-capabilities\fR
 Get BT interface capabilities.
 .TP
+\fB\-\-get\-bmc\-global\-enables\fR
+Get BMC Global Enables.
+.TP
 \fB\-\-verbose\fR
 Increase verbosity in output.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>

@@ -64,42 +64,44 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    { "cold-reset", CMD_COLD_RESET_KEY, NULL, 0,
+    { "cold-reset", COLD_RESET_KEY, NULL, 0,
       "Perform a cold reset.", 30},
-    { "warm-reset", CMD_WARM_RESET_KEY, NULL, 0,
+    { "warm-reset", WARM_RESET_KEY, NULL, 0,
       "Perform a warm reset.", 31},
-    { "get-self-test-results", CMD_GET_SELF_TEST_RESULTS_KEY, NULL, 0,
+    { "get-self-test-results", GET_SELF_TEST_RESULTS_KEY, NULL, 0,
       "Output BMC self test results.", 32},
-    { "get-acpi-power-state", CMD_GET_ACPI_POWER_STATE_KEY, NULL, 0,
+    { "get-acpi-power-state", GET_ACPI_POWER_STATE_KEY, NULL, 0,
       "Get ACPI system and device power state.", 33},
-    { "set-acpi-power-state", CMD_SET_ACPI_POWER_STATE_KEY, NULL, 0,
+    { "set-acpi-power-state", SET_ACPI_POWER_STATE_KEY, NULL, 0,
       "Set ACPI power state.", 34},
     { "set-acpi-system-power-state", SET_ACPI_SYSTEM_POWER_STATE_KEY, "SYSTEM_POWER_STATE", 0,
       "Set ACPI system power state.", 35},
     { "set-acpi-device-power-state", SET_ACPI_DEVICE_POWER_STATE_KEY, "DEVICE_POWER_STATE", 0,
       "Set ACPI device power state.", 36},
-    { "get-lan-statistics", CMD_GET_LAN_STATISTICS_KEY, NULL, 0,
+    { "get-lan-statistics", GET_LAN_STATISTICS_KEY, NULL, 0,
       "Get IP, UDP, and RMCP statistics.", 37},
-    { "clear-lan-statistics", CMD_CLEAR_LAN_STATISTICS_KEY, NULL, 0,
+    { "clear-lan-statistics", CLEAR_LAN_STATISTICS_KEY, NULL, 0,
       "Clear IP, UDP, and RMCP statistics.", 38},
-    { "get-sdr-repository-time",   CMD_GET_SDR_REPOSITORY_TIME_KEY,  0, 0,
+    { "get-sdr-repository-time",   GET_SDR_REPOSITORY_TIME_KEY,  0, 0,
       "Get SDR repository time.", 39},
-    { "set-sdr-repository-time",   CMD_SET_SDR_REPOSITORY_TIME_KEY,  "TIME", 0,
+    { "set-sdr-repository-time",   SET_SDR_REPOSITORY_TIME_KEY,  "TIME", 0,
       "Set SDR repository time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 40},
-    { "get-sel-time", CMD_GET_SEL_TIME_KEY,  0, 0,
+    { "get-sel-time", GET_SEL_TIME_KEY,  0, 0,
       "Get SEL time.", 41},
-    { "set-sel-time", CMD_SET_SEL_TIME_KEY,  "TIME", 0,
+    { "set-sel-time", SET_SEL_TIME_KEY,  "TIME", 0,
       "Set SEL time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 42},
-    { "get-mca-auxiliary-log-status", CMD_GET_MCA_AUXILIARY_LOG_STATUS_KEY, NULL, 0,
+    { "get-mca-auxiliary-log-status", GET_MCA_AUXILIARY_LOG_STATUS_KEY, NULL, 0,
       "Get machine check architecture (MCA) auxiliary log status information.", 43},
-    { "get-ssif-interface-capabilities", CMD_GET_SSIF_INTERFACE_CAPABILITIES_KEY, NULL, 0,
+    { "get-ssif-interface-capabilities", GET_SSIF_INTERFACE_CAPABILITIES_KEY, NULL, 0,
       "Get SSIF interface capabilities.", 44},
-    { "get-kcs-interface-capabilities", CMD_GET_KCS_INTERFACE_CAPABILITIES_KEY, NULL, 0,
+    { "get-kcs-interface-capabilities", GET_KCS_INTERFACE_CAPABILITIES_KEY, NULL, 0,
       "Get KCS interface capabilities.", 45},
-    { "get-bt-interface-capabilities", CMD_GET_BT_INTERFACE_CAPABILITIES_KEY, NULL, 0,
+    { "get-bt-interface-capabilities", GET_BT_INTERFACE_CAPABILITIES_KEY, NULL, 0,
       "Get BT interface capabilities.", 46},
+    { "get-bmc-global-enables", GET_BMC_GLOBAL_ENABLES_KEY, NULL, 0,
+      "Get BMC Global Enables.", 47},
     { "verbose", VERBOSE_KEY, 0, 0,
-      "Increase verbosity in output.", 47},
+      "Increase verbosity in output.", 48},
     { 0 }
   };
 
@@ -123,19 +125,19 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-    case CMD_COLD_RESET_KEY:
+    case COLD_RESET_KEY:
       cmd_args->cold_reset++;
       break;
-    case CMD_WARM_RESET_KEY:
+    case WARM_RESET_KEY:
       cmd_args->warm_reset++;
       break;
-    case CMD_GET_SELF_TEST_RESULTS_KEY:
+    case GET_SELF_TEST_RESULTS_KEY:
       cmd_args->get_self_test_results++;
       break;
-    case CMD_GET_ACPI_POWER_STATE_KEY:
+    case GET_ACPI_POWER_STATE_KEY:
       cmd_args->get_acpi_power_state++;
       break;
-    case CMD_SET_ACPI_POWER_STATE_KEY:
+    case SET_ACPI_POWER_STATE_KEY:
       cmd_args->set_acpi_power_state++;
       break;
     case SET_ACPI_SYSTEM_POWER_STATE_KEY:
@@ -196,37 +198,40 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           exit (1);
         }
       break;
-    case CMD_GET_LAN_STATISTICS_KEY:
+    case GET_LAN_STATISTICS_KEY:
       cmd_args->get_lan_statistics++;
       break;
-    case CMD_CLEAR_LAN_STATISTICS_KEY:
+    case CLEAR_LAN_STATISTICS_KEY:
       cmd_args->clear_lan_statistics++;
       break;
-    case CMD_GET_SDR_REPOSITORY_TIME_KEY:
+    case GET_SDR_REPOSITORY_TIME_KEY:
       cmd_args->get_sdr_repository_time = 1;
       break;
-    case CMD_SET_SDR_REPOSITORY_TIME_KEY:
+    case SET_SDR_REPOSITORY_TIME_KEY:
       cmd_args->set_sdr_repository_time = 1;
       cmd_args->set_sdr_repository_time_arg = arg;
       break;
-    case CMD_GET_SEL_TIME_KEY:
+    case GET_SEL_TIME_KEY:
       cmd_args->get_sel_time = 1;
       break;
-    case CMD_SET_SEL_TIME_KEY:
+    case SET_SEL_TIME_KEY:
       cmd_args->set_sel_time = 1;
       cmd_args->set_sel_time_arg = arg;
       break;
-    case CMD_GET_MCA_AUXILIARY_LOG_STATUS_KEY:
+    case GET_MCA_AUXILIARY_LOG_STATUS_KEY:
       cmd_args->get_mca_auxiliary_log_status = 1;
       break;
-    case CMD_GET_SSIF_INTERFACE_CAPABILITIES_KEY:
+    case GET_SSIF_INTERFACE_CAPABILITIES_KEY:
       cmd_args->get_ssif_interface_capabilities = 1;
       break;
-    case CMD_GET_KCS_INTERFACE_CAPABILITIES_KEY:
+    case GET_KCS_INTERFACE_CAPABILITIES_KEY:
       cmd_args->get_kcs_interface_capabilities = 1;
       break;
-    case CMD_GET_BT_INTERFACE_CAPABILITIES_KEY:
+    case GET_BT_INTERFACE_CAPABILITIES_KEY:
       cmd_args->get_bt_interface_capabilities = 1;
+      break;
+    case GET_BMC_GLOBAL_ENABLES_KEY:
+      cmd_args->get_bmc_global_enables = 1;
       break;
     case VERBOSE_KEY:
       cmd_args->verbose++;
@@ -281,7 +286,8 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && !cmd_args->get_mca_auxiliary_log_status
       && !cmd_args->get_ssif_interface_capabilities
       && !cmd_args->get_kcs_interface_capabilities
-      && !cmd_args->get_bt_interface_capabilities)
+      && !cmd_args->get_bt_interface_capabilities
+      && !cmd_args->get_bmc_global_enables)
     {
       fprintf (stderr,
                "No command specified.\n");
@@ -302,7 +308,8 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
        + cmd_args->get_mca_auxiliary_log_status
        + cmd_args->get_ssif_interface_capabilities
        + cmd_args->get_kcs_interface_capabilities
-       + cmd_args->get_bt_interface_capabilities) > 1)
+       + cmd_args->get_bt_interface_capabilities
+       + cmd_args->get_bmc_global_enables) > 1)
     {
       fprintf (stderr,
                "Multiple commands specified.\n");
@@ -344,6 +351,7 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->get_ssif_interface_capabilities = 0;
   cmd_args->get_kcs_interface_capabilities = 0;
   cmd_args->get_bt_interface_capabilities = 0;
+  cmd_args->get_bmc_global_enables = 0;
   cmd_args->verbose = 0;
 
   argp_parse (&cmdline_config_file_argp,

@@ -1,6 +1,11 @@
 2009-06-26  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Add get/set bmc global enables support.
+
+	* bmc-device/: Support --get-bmc-global-enables.
+
+	* libfreeipmi/include/freeipmi/templates/: Add additional
+	documentation.  Add forgotten templates.
 	
 2009-06-24  Albert Chu <chu11@llnl.gov>
 
