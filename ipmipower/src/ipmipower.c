@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.86 2009-06-26 05:46:41 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.87 2009-06-26 05:47:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -441,13 +441,15 @@ _poll_loop (int non_interactive)
               exit (1);
             }
 
-          /* achu: If you are running ipmipower in co-process mode with
-           * powerman, this error condition will probably be hit with the file
-           * descriptor STDIN_FILENO.  The powerman daemon is usually closed
-           * by /etc/init.d/powerman stop, which kills a process through a
-           * signal.  Thus, powerman closes stdin and stdout pipes to
-           * ipmipower and the call to cbuf_write_from_fd will give us an EOF
-           * reading.  We'll consider this EOF an "ok" error.
+          /* achu: If you are running ipmipower in co-process mode
+           * with powerman, this error condition will probably be hit
+           * with the file descriptor STDIN_FILENO.  The powerman
+           * daemon is usually closed by /etc/init.d/powerman stop,
+           * which kills a process through a signal.  Thus, powerman
+           * closes stdin and stdout pipes to ipmipower and the call
+           * to cbuf_write_from_fd will give us an EOF reading.  We'll
+           * consider this EOF an "ok" error.  No need to output an
+           * error message.
            */
           if (!n)
             exit (1);
