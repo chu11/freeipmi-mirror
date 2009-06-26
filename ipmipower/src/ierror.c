@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ierror.c,v 1.10 2009-06-26 00:43:48 chu11 Exp $
+ *  $Id: ierror.c,v 1.11 2009-06-26 02:03:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -202,7 +202,9 @@ static void _verr(int syslog_level, const char *fmt, va_list ap)
         assert(ierr_prog);
         assert(ierr_cb);
         /* may call malloc - inappropriate for out of mem errs */
+#if 0
         cbuf_printf(ierr_cb, "%s: %s\n", ierr_prog, buf);
+#endif
     }
 }
 
@@ -266,22 +268,6 @@ void *lsd_nomem_error(char *file, int line, char *mesg)
     return NULL;
 }
 
-void cbuf_printf(cbuf_t cbuf, const char *fmt, ...)
-{
-    char buf[IERROR_BUFLEN];
-    va_list ap;
-    int written, dropped;
-    int len;
-
-    va_start(ap, fmt);
-    len = vsnprintf(buf, IERROR_BUFLEN, fmt, ap);  /* overflow ignored */
-
-    written = cbuf_write(cbuf, buf, len, &dropped);
-    if (written < 0)
-        ierr_exit("cbuf_printf: cbuf write: %m");
-
-    va_end(ap);
-}
 
 /*
  * vi:tabstop=4 shiftwidth=4 expandtab

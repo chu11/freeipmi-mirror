@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ierror.h,v 1.3 2009-01-13 01:02:22 chu11 Exp $
+ *  $Id: ierror.h,v 1.4 2009-06-26 02:03:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -93,8 +93,6 @@ void ierr_dbg(const char *fmt, ...);
  */
 void lsd_fatal_error(char *file, int line, char *mesg);
 void *lsd_nomem_error(char *file, int line, char *mesg);
-
-void cbuf_printf(cbuf_t cbuf, const char *fmt, ...);
 
 #endif /* IERROR_H */
 

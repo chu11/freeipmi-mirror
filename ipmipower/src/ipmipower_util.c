@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.c,v 1.33 2009-06-10 22:57:32 chu11 Exp $
+ *  $Id: ipmipower_util.c,v 1.34 2009-06-26 02:03:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -33,6 +33,7 @@
 #include <stdint.h>
 #if STDC_HEADERS
 #include <string.h>
+#include <stdarg.h>
 #endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -101,6 +102,26 @@ ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
     } while (n < 0);
 
   return n;
+}
+
+void
+ipmipower_cbuf_printf(cbuf_t cbuf, const char *fmt, ...)
+{
+  char buf[IPMIPOWER_OUTPUT_BUFLEN];
+  va_list ap;
+  int written, dropped;
+  int len;
+
+  va_start(ap, fmt);
+
+  /* overflow ignored */
+  len = vsnprintf (buf, IPMIPOWER_OUTPUT_BUFLEN, fmt, ap);
+  
+  written = cbuf_write (cbuf, buf, len, &dropped);
+  if (written < 0)
+    ierr_exit ("cbuf write: %s", strerror (errno));
+  
+  va_end(ap);
 }
 
 int

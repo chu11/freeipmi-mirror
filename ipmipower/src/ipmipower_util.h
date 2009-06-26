@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.h,v 1.20 2009-06-10 22:57:39 chu11 Exp $
+ *  $Id: ipmipower_util.h,v 1.21 2009-06-26 02:03:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -38,6 +38,11 @@
  * - Returns number of fds
  */
 int ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout);
+
+/* ipmipower_cbuf_printf
+ * - wrapper for vsnprintf and cbuf_write
+ */
+void ipmipower_cbuf_printf(cbuf_t cbuf, const char *fmt, ...);
 
 /* ipmipower_cbuf_peek_and_drop
  * - wrapper for cbuf_peek and cbuf_drop

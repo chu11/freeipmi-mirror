@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.112 2009-06-17 23:47:44 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.113 2009-06-26 02:03:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -37,6 +37,7 @@
 #include <assert.h>
 
 #include "ipmipower_check.h"
+#include "ipmipower_error.h"
 #include "ipmipower_packet.h"
 
 #include "ierror.h"
@@ -72,8 +73,8 @@ ipmipower_check_checksum (ipmipower_powercmd_t ip, packet_type_t pkt)
                ip->ic->hostname, ip->protocol_state, strerror (errno));
 
   if (!rv)
-    ierr_dbg ("ipmipower_check_checksum(%s:%d): checksum check failed",
-              ip->ic->hostname, ip->protocol_state);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; checksum check failed",
+                      ip->ic->hostname, ip->protocol_state));
 
   return (rv);
 }
@@ -156,8 +157,8 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
           && !rv
           && check_authcode_retry_flag)
         {
-          ierr_dbg ("ipmipower_check_authentication_code(%s:%d): retry authcode check",
-                    ip->ic->hostname, ip->protocol_state, strerror (errno));
+          IPMIPOWER_DEBUG (("host = %s; p = %d; retry authcode check",
+                            ip->ic->hostname, ip->protocol_state));
 
           authentication_type = cmd_args.common.authentication_type;
           if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
@@ -175,9 +176,8 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
                        ip->ic->hostname, ip->protocol_state, strerror (errno));
 
           if (rv)
-            ierr_dbg ("ipmipower_check_authentication_code(%s:%d): "
-                      "permsgauth authcode re-check passed",
-                      ip->ic->hostname, ip->protocol_state);
+            IPMIPOWER_DEBUG (("host = %s; p = %d; permsgauth authcode re-check passed",
+                              ip->ic->hostname, ip->protocol_state));
         }
     }
   else  /*
@@ -210,9 +210,8 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
     }
 
   if (!rv)
-    ierr_dbg ("ipmipower_check_authentication_code(%s:%d): "
-              "authentication code check failed",
-              ip->ic->hostname, ip->protocol_state);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; authentication code check failed",
+                      ip->ic->hostname, ip->protocol_state));
 
   return (rv);
 }
@@ -327,9 +326,11 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
     }
 
   if (!rv)
-    ierr_dbg ("ipmipower_check_outbound_sequence_number(%s:%d): session_sequence_number: %u, high: %u",
-              ip->ic->hostname, ip->protocol_state, session_sequence_number,
-              ip->highest_received_sequence_number);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; session_sequence_number failed: %u; high = %u",
+                      ip->ic->hostname,
+                      ip->protocol_state,
+                      session_sequence_number,
+                      ip->highest_received_sequence_number));
 
   return (rv);
 }
@@ -404,9 +405,11 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
     }
 
   if (session_id != expected_session_id)
-    ierr_dbg ("ipmipower_check_session_id(%s:%d): session id: %Xh expected: %Xh",
-              ip->ic->hostname, ip->protocol_state, session_id,
-              expected_session_id);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; session id failed: %Xh; expected = %Xh",
+                      ip->ic->hostname,
+                      ip->protocol_state,
+                      session_id,
+                      expected_session_id));
 
   /* IPMI Workaround (achu)
    *
@@ -453,8 +456,11 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_netfn = IPMI_NET_FN_APP_RS;
 
   if (netfn != expected_netfn)
-    ierr_dbg ("ipmipower_check_network_function(%s:%d): netfn: %Xh, expected: %Xh",
-              ip->ic->hostname, ip->protocol_state, netfn, expected_netfn);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; netfn failed: %Xh; expected = %Xh",
+                      ip->ic->hostname,
+                      ip->protocol_state,
+                      netfn,
+                      expected_netfn));
 
   return ((netfn == expected_netfn) ? 1 : 0);
 }
@@ -502,9 +508,11 @@ ipmipower_check_command (ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_cmd = IPMI_CMD_CLOSE_SESSION;
 
   if (cmd != expected_cmd)
-    ierr_dbg ("ipmipower_check_command(%s:%d): cmd: %Xh, expected: %Xh",
-              ip->ic->hostname, ip->protocol_state,
-              cmd, expected_cmd);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; cmd failed: %Xh; expected = %Xh",
+                      ip->ic->hostname,
+                      ip->protocol_state,
+                      cmd,
+                      expected_cmd));
 
   return ((cmd == expected_cmd) ? 1 : 0);
 }
@@ -533,9 +541,11 @@ ipmipower_check_requester_sequence_number (ipmipower_powercmd_t ip, packet_type_
   req_seq = val;
 
   if (req_seq != expected_req_seq)
-    ierr_dbg ("ipmipower_check_requester_sequence_number(%s:%d): req_seq: %Xh, expected: %Xh",
-              ip->ic->hostname, ip->protocol_state,
-              req_seq, expected_req_seq);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; req_seq failed: %Xh; expected = %Xh",
+                      ip->ic->hostname,
+                      ip->protocol_state,
+                      req_seq,
+                      expected_req_seq));
 
   return ((req_seq == expected_req_seq) ? 1 : 0);
 }
@@ -564,8 +574,10 @@ ipmipower_check_completion_code (ipmipower_powercmd_t ip, packet_type_t pkt)
   comp_code = val;
 
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
-    ierr_dbg ("ipmipower_check_completion_code(%s:%d): comp_code: %Xh",
-              ip->ic->hostname, ip->protocol_state, comp_code);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; comp_code failed: %Xh",
+                      ip->ic->hostname,
+                      ip->protocol_state,
+                      comp_code));
 
   return ((comp_code == IPMI_COMP_CODE_COMMAND_SUCCESS) ? 1 : 0);
 }
@@ -606,10 +618,11 @@ ipmipower_check_payload_type (ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_payload_type = IPMI_PAYLOAD_TYPE_IPMI;
 
   if (payload_type != expected_payload_type)
-    ierr_dbg ("ipmipower_check_payload_type(%s:%d): "
-              "payload_type: %Xh, expected: %Xh",
-              ip->ic->hostname, ip->protocol_state,
-              payload_type, expected_payload_type);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; payload_type failed: %Xh; expected = %Xh",
+                      ip->ic->hostname,
+                      ip->protocol_state,
+                      payload_type,
+                      expected_payload_type));
 
   return ((payload_type == expected_payload_type) ? 1 : 0);
 }
@@ -640,11 +653,11 @@ ipmipower_check_message_tag (ipmipower_powercmd_t ip, packet_type_t pkt)
   expected_message_tag = ip->initial_message_tag + ip->message_tag_count;
 
   if (message_tag != expected_message_tag)
-    ierr_dbg ("ipmipower_check_message_tag(%s:%d): "
-              "message_tag: %Xh, expected: %Xh",
-              ip->ic->hostname, ip->protocol_state,
-              message_tag,
-              expected_message_tag);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; message_tag failed: %Xh; expected = %Xh",
+                      ip->ic->hostname,
+                      ip->protocol_state,
+                      message_tag,
+                      expected_message_tag));
 
   return ((message_tag == expected_message_tag) ? 1 : 0);
 }
@@ -672,10 +685,10 @@ ipmipower_check_rmcpplus_status_code (ipmipower_powercmd_t ip, packet_type_t pkt
   rmcpplus_status_code = val;
 
   if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
-    ierr_dbg ("ipmipower_check_rmcpplus_status_code(%s:%d): "
-              "rmcpplus_status_code: %Xh",
-              ip->ic->hostname, ip->protocol_state,
-              rmcpplus_status_code);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; rmcpplus_status_code failed: %Xh",
+                      ip->ic->hostname,
+                      ip->protocol_state,
+                      rmcpplus_status_code));
 
   return ((rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS) ? 1 : 0);
 }
@@ -696,8 +709,9 @@ ipmipower_check_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
                fiid_obj_errormsg (obj_cmd));
 
   if (!ret)
-    ierr_dbg ("ipmipower_check_packet(%s:%d): packet invalid",
-              ip->ic->hostname, ip->protocol_state);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; packet invalid",
+                      ip->ic->hostname,
+                      ip->protocol_state));
 
   return (ret);
 }
@@ -739,10 +753,10 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip, packet
     }
 
   if (!rv)
-    ierr_dbg ("ipmipower_check_open_session_response_privilege(%s:%d): "
-              "invalid privilege: expected: %Xh",
-              ip->ic->hostname, ip->protocol_state,
-              cmd_args.common.privilege_level);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; invalid privilege: expected = %Xh",
+                      ip->ic->hostname,
+                      ip->protocol_state,
+                      cmd_args.common.privilege_level));
 
   return (rv);
 }
@@ -941,9 +955,9 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
                ip->ic->hostname, ip->protocol_state, strerror (errno));
 
   if (!rv)
-    ierr_dbg ("ipmipower_check_rakp_2_key_exchange_authentication_code(%s:%d): "
-              "rakp 2 check failed",
-              ip->ic->hostname, ip->protocol_state);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; rakp 2 check failed",
+                      ip->ic->hostname,
+                      ip->protocol_state));
 
   return (rv);
 }
@@ -1021,9 +1035,9 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip, packet_ty
                ip->ic->hostname, ip->protocol_state, strerror (errno));
 
   if (!rv)
-    ierr_dbg ("ipmipower_check_rakp_4_integrity_check_value(%s:%d): "
-              "rakp 4 check failed",
-              ip->ic->hostname, ip->protocol_state);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; rakp 4 check failed",
+                      ip->ic->hostname,
+                      ip->protocol_state));
 
   return (rv);
 }
@@ -1052,9 +1066,9 @@ ipmipower_check_payload_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
                ip->ic->hostname, ip->protocol_state, strerror (errno));
 
   if (!rv)
-    ierr_dbg ("ipmipower_check_payload_pad(%s:%d): "
-              "payload pad check failed",
-              ip->ic->hostname, ip->protocol_state);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; payload pad check failed",
+                      ip->ic->hostname,
+                      ip->protocol_state));
 
   return (rv);
 }
@@ -1082,9 +1096,9 @@ ipmipower_check_integrity_pad (ipmipower_powercmd_t ip, packet_type_t pkt)
                ip->ic->hostname, ip->protocol_state, strerror (errno));
 
   if (!rv)
-    ierr_dbg ("ipmipower_check_integrity_pad(%s:%d): "
-              "integrity pad check failed",
-              ip->ic->hostname, ip->protocol_state);
+    IPMIPOWER_DEBUG (("host = %s; p = %d; integrity pad check failed",
+                      ip->ic->hostname,
+                      ip->protocol_state));
 
   return (rv);
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.54 2009-06-26 00:43:48 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.55 2009-06-26 02:03:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -37,6 +37,7 @@
 
 #include "ipmipower.h"
 #include "ipmipower_output.h"
+#include "ipmipower_util.h"
 
 #include "ierror.h"
 
@@ -87,7 +88,10 @@ ipmipower_output (msg_type_t num, const char *hostname)
         ierr_exit ("hostlist_push_host: %s", strerror(errno));
     }
   else
-      cbuf_printf (ttyout, "%s: %s\n", hostname, ipmipower_outputs[num]);
+      ipmipower_cbuf_printf (ttyout,
+                             "%s: %s\n",
+                             hostname,
+                             ipmipower_outputs[num]);
 
   return;
 }
@@ -115,11 +119,16 @@ ipmipower_output_finish (void)
               
               if (rv > 0)
                 {
-                  cbuf_printf (ttyout, "----------------\n");
-                  cbuf_printf (ttyout, "%s\n", buf);
-                  cbuf_printf (ttyout, "----------------\n");
-                  cbuf_printf (ttyout, " %s\n",
-                               ipmipower_outputs[i]);
+                  ipmipower_cbuf_printf (ttyout,
+                                         "----------------\n");
+                  ipmipower_cbuf_printf (ttyout,
+                                         "%s\n",
+                                         buf);
+                  ipmipower_cbuf_printf (ttyout,
+                                         "----------------\n");
+                  ipmipower_cbuf_printf (ttyout,
+                                         " %s\n",
+                                         ipmipower_outputs[i]);
                   hostlist_delete (output_hostrange[i], buf);
                 }
               

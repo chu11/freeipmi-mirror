@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.49 2009-06-26 00:43:48 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.50 2009-06-26 02:03:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -52,6 +52,7 @@
 #include <netdb.h>
 
 #include "ipmipower_connection.h"
+#include "ipmipower_error.h"
 #include "ipmipower_output.h"
 #include "ipmipower_util.h"
 
@@ -131,6 +132,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 
   if ((ic->ipmi_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
     {
+      /* XXX debug here */
       if (errno == EMFILE)
         return (-1);
       ierr_exit ("socket: %s", strerror (errno));
@@ -138,6 +140,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 
   if ((ic->ping_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
     {
+      /* XXX debug here */
       if (errno == EMFILE)
         return (-1);
       ierr_exit ("socket: %s", strerror (errno));
@@ -210,9 +213,9 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
       else
         {
 #if HAVE_HSTRERROR
-          cbuf_printf (ttyout, "gethostbyname() %s: %s", ic->hostname, hstrerror (h_errno));
+          ierr_exit ("gethostbyname() %s: %s", ic->hostname, hstrerror (h_errno));
 #else /* !HAVE_HSTRERROR */
-          cbuf_printf (ttyout, "gethostbyname() %s: h_errno = %d", ic->hostname, h_errno);
+          ierr_exit ("gethostbyname() %s: h_errno = %d", ic->hostname, h_errno);
 #endif /* !HAVE_HSTRERROR */
         }
       return (-1);
@@ -271,7 +274,8 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
         {
           if (errno == EMFILE && !emfilecount)
             {
-              cbuf_printf (ttyout, "file descriptor limit reached\n");
+              IPMIPOWER_DEBUG (("file descriptor limit reached"));
+              /* XXX return -1? */
               emfilecount++;
             }
           errcount++;
