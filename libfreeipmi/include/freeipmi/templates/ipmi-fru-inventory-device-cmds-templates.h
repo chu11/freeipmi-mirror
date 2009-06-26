@@ -35,6 +35,8 @@ FIID_FIELD_OPTIONAL - field is optional for the payload
 FIID_FIELD_LENGTH_FIXED - field length is fixed at the number of bits listed
 FIID_FIELD_LENGTH_VARIABLE - field length is variable for the number of bits listed
 
+FIID_FIELD_MAKES_PACKET_SUFFICIENT - indicates field or fields are "sufficient" to make a valid packet
+
 Get FRU Inventory Area Info Request
 -----------------------------------
 
