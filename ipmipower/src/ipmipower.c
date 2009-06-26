@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.85 2009-06-26 03:55:27 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.86 2009-06-26 05:46:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -475,6 +475,9 @@ main (int argc, char *argv[])
 
   ipmipower_argp_parse (argc, argv, &cmd_args);
 
+  /* after ipmipower_argp_parse - IPMIPOWER_ERROR/IPMIPOWER_DEBUG
+   * macros used 
+   */
   if (cmd_args.powercmd == POWER_CMD_NONE)
     ipmipower_error_setup (IPMIPOWER_ERROR_STDERR | IPMIPOWER_ERROR_SYSLOG);
   else
