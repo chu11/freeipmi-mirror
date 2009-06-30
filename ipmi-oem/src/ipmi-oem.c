@@ -32,6 +32,7 @@
 #include "ipmi-oem.h"
 #include "ipmi-oem-argp.h"
 #include "ipmi-oem-common.h"
+#include "ipmi-oem-dell.h"
 #include "ipmi-oem-inventec.h"
 #include "ipmi-oem-supermicro.h"
 
@@ -57,34 +58,76 @@ struct ipmi_oem_id
   struct ipmi_oem_command *oem_commands;
 };
 
+struct ipmi_oem_command oem_dell[] =
+  {
+    {
+      "get-asset-tag",
+      NULL,
+      0,
+      ipmi_oem_dell_get_asset_tag
+    },
+    {
+      "get-service-tag",
+      NULL,
+      0,
+      ipmi_oem_dell_get_service_tag
+    },
+    {
+      NULL,
+      NULL,
+      0,
+      NULL
+    },
+  };
+
 struct ipmi_oem_command oem_inventec[] =
   {
-    { "get-nic-status",
+    {
+      "get-nic-status",
       NULL,
       0,
-      ipmi_oem_inventec_get_nic_status},
-    { "set-nic-status",
+      ipmi_oem_inventec_get_nic_status
+    },
+    {
+      "set-nic-status",
       "<dedicated|shared>",
       1,
-      ipmi_oem_inventec_set_nic_status},
-    { "get-mac-address",
+      ipmi_oem_inventec_set_nic_status
+    },
+    {
+      "get-mac-address",
       NULL,
       0,
-      ipmi_oem_inventec_get_mac_address},
-    { "set-mac-address",
+      ipmi_oem_inventec_get_mac_address
+    },
+    {
+      "set-mac-address",
       "<dedicated|shared> <MACADDRESS>",
       2,
-      ipmi_oem_inventec_set_mac_address},
-    { NULL, NULL, 0, NULL},
+      ipmi_oem_inventec_set_mac_address
+    },
+    {
+      NULL,
+      NULL,
+      0,
+      NULL
+    },
   };
 
 struct ipmi_oem_command oem_supermicro[] =
   {
-    { "reset-intrusion",
+    {
+      "reset-intrusion",
       NULL,
       0,
-      ipmi_oem_supermicro_reset_intrusion},
-    { NULL, NULL, 0, NULL},
+      ipmi_oem_supermicro_reset_intrusion
+    },
+    {
+      NULL,
+      NULL,
+      0,
+      NULL
+    },
   };
 
 struct ipmi_oem_id oem_cb[] =

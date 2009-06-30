@@ -54,6 +54,18 @@ List supported OEM IDs and Commands.
 .SH "SUPPORTED OEM IDS and COMMANDS"
 The currently supported OEM IDs and COMMANDs are:
 .TP
+.B dell
+.RS
+.TP
+.B get-asset-tag
+On some Dell motherboards (confirmed Poweredge R610), this command can
+retrieve the motherboard asset tag.
+.TP
+.B get-service-tag
+On some Dell motherboards (confirmed Poweredge R610), this command can
+retrieve the motherboard service tag.
+.RE
+.TP
 .B inventec
 .RS
 .TP

@@ -1,3 +1,7 @@
+2009-06-30  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Support dell oem commands.
+	
 2009-06-29  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_dell_oem
