@@ -73,6 +73,24 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_get_service_tag
     },
     {
+      "get-power-information",
+      NULL,
+      0,
+      ipmi_oem_dell_get_power_information
+    },
+    {
+      "reset-cumulative-power",
+      NULL,
+      0,
+      ipmi_oem_dell_reset_cumulative_power
+    },
+    {
+      "reset-peak-power",
+      NULL,
+      0,
+      ipmi_oem_dell_reset_peak_power
+    },
+    {
       NULL,
       NULL,
       0,

@@ -25,6 +25,16 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else  /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif  /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
@@ -190,4 +200,171 @@ ipmi_oem_dell_get_service_tag (ipmi_oem_state_data_t *state_data)
   rv = 0;
  cleanup:
   return (rv);
+}
+
+int
+ipmi_oem_dell_get_power_information (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint32_t cumulative_start_time;
+  uint32_t cumulative_reading;
+  uint32_t peak_start_time;
+  uint32_t peak_amp_time;
+  uint32_t peak_amp_reading;
+  uint32_t peak_watt_time;
+  uint32_t peak_watt_reading;
+  double cumulative_reading_val;
+  double peak_amp_reading_val;
+  time_t timetmp;
+  struct tm time_tm;
+  char time_buf[IPMI_OEM_TIME_BUFLEN + 1];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell OEM
+   *
+   * From http://linux.dell.com/files/openipmi/ipmitool/
+   *
+   * 0x30 - OEM network function
+   * 0x9c - OEM cmd
+   * 0x07 - ??
+   * 0x01 - ??
+   * 
+   * Get NIC Status Response
+   *
+   * 0x9c - OEM cmd
+   * 0x?? - Completion Code
+   * bytes 2-5 - cumulative start time
+   * bytes 6-9 - cumulative reading
+   * bytes 10-13 - peak start time
+   * bytes 14-17 - peak amp time
+   * bytes 18-21 - peak amp reading
+   * bytes 22-25 - peak watt time
+   * bytes 26-29 - peak watt reading
+   */
+
+  bytes_rq[0] = 0x9c;
+  bytes_rq[2] = 0x07;
+  bytes_rq[3] = 0x01;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   30,
+                                                   0x9c,
+                                                   0x30) < 0)
+    goto cleanup;
+
+  cumulative_start_time = bytes_rs[2];
+  cumulative_start_time |= (bytes_rs[3] << 8);
+  cumulative_start_time |= (bytes_rs[4] << 16);
+  cumulative_start_time |= (bytes_rs[5] << 24);
+
+  cumulative_reading = bytes_rs[6];
+  cumulative_reading |= (bytes_rs[7] << 8);
+  cumulative_reading |= (bytes_rs[8] << 16);
+  cumulative_reading |= (bytes_rs[9] << 24);
+
+  peak_start_time = bytes_rs[10];
+  peak_start_time |= (bytes_rs[11] << 8);
+  peak_start_time |= (bytes_rs[12] << 16);
+  peak_start_time |= (bytes_rs[13] << 24);
+
+  peak_amp_time = bytes_rs[14];
+  peak_amp_time |= (bytes_rs[15] << 8);
+  peak_amp_time |= (bytes_rs[16] << 16);
+  peak_amp_time |= (bytes_rs[17] << 24);
+
+  peak_amp_reading = bytes_rs[18];
+  peak_amp_reading |= (bytes_rs[19] << 8);
+  peak_amp_reading |= (bytes_rs[20] << 16);
+  peak_amp_reading |= (bytes_rs[21] << 24);
+
+  peak_watt_time = bytes_rs[22];
+  peak_watt_time |= (bytes_rs[23] << 8);
+  peak_watt_time |= (bytes_rs[24] << 16);
+  peak_watt_time |= (bytes_rs[25] << 24);
+
+  peak_watt_reading = bytes_rs[26];
+  peak_watt_reading |= (bytes_rs[27] << 8);
+  peak_watt_reading |= (bytes_rs[28] << 16);
+  peak_watt_reading |= (bytes_rs[29] << 24);
+
+  cumulative_reading_val = ((double)cumulative_reading) / 1000.0;
+
+  timetmp = cumulative_start_time;
+  localtime_r (&timetmp, &time_tm);
+  memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
+  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
+
+  pstdout_printf (state_data->pstate,
+                  "Cumulative Energy Start Time : %s\n",
+                  time_buf);
+
+  pstdout_printf (state_data->pstate,
+                  "Cumulative Energy            : %.2f kWh\n",
+                  cumulative_reading_val);
+
+  peak_amp_reading_val = ((double)peak_amp_reading) / 10.0;
+
+  timetmp = peak_amp_time;
+  localtime_r (&timetmp, &time_tm);
+  memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
+  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
+
+  pstdout_printf (state_data->pstate,
+                  "Peak Amp Time                : %s\n",
+                  time_buf);
+
+  pstdout_printf (state_data->pstate,
+                  "Peak Amp                     : %.2f A\n",
+                  peak_amp_reading);
+
+  timetmp = peak_watt_time;
+  localtime_r (&timetmp, &time_tm);
+  memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
+  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
+
+  pstdout_printf (state_data->pstate,
+                  "Peak Watt Time               : %s\n",
+                  time_buf);
+
+  pstdout_printf (state_data->pstate,
+                  "Peak Watt                    : %u W\n",
+                  peak_watt_reading);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_reset_cumulative_power (ipmi_oem_state_data_t *state_data)
+{
+  return (0);
+}
+
+int
+ipmi_oem_dell_reset_peak_power (ipmi_oem_state_data_t *state_data)
+{
+  return (0);
 }

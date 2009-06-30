@@ -64,6 +64,19 @@ retrieve the motherboard asset tag.
 .B get-service-tag
 On some Dell motherboards (confirmed Poweredge R610), this command can
 retrieve the motherboard service tag.
+.TP
+.B get-power-information
+On some Dell motherboards (confirmed Poweredge R610), this command can
+retrieve power information.
+.TP
+.B reset-cumulative-power
+On some Dell motherboards (confirmed Poweredge R610), this command can
+reset the cumulative power reading (viewed via
+\fBget\-power\-information\fR)
+.B reset-peak-power
+On some Dell motherboards (confirmed Poweredge R610), this command can
+reset the peak power reading (viewed via
+\fBget\-power\-information\fR)
 .RE
 .TP
 .B inventec
