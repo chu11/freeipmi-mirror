@@ -1,6 +1,10 @@
 2009-06-30  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support dell oem commands.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-netfn-spec.h: Fix
+	IPMI_NET_FN_RQ_VALID and IPMI_NET_FN_RS_VALID to allow OEM network
+	functions.
 	
 2009-06-29  Albert Chu <chu11@llnl.gov>
 
