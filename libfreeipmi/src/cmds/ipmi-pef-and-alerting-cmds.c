@@ -565,7 +565,8 @@ fill_cmd_set_pef_configuration_parameters (uint8_t parameter_selector,
                                            unsigned int configuration_parameter_data_len,
                                            fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_PEF_PARAMETER_SELECTOR_VALID (parameter_selector)
+  if ((!IPMI_PEF_PARAMETER_SELECTOR_VALID (parameter_selector)
+       && !IPMI_PEF_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
       || !configuration_parameter_data
       || !configuration_parameter_data_len
       || !fiid_obj_valid (obj_cmd_rq))
@@ -962,7 +963,8 @@ fill_cmd_get_pef_configuration_parameters (uint8_t parameter_selector,
                                            uint8_t block_selector,
                                            fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_PEF_PARAMETER_SELECTOR_VALID (parameter_selector)
+  if ((!IPMI_PEF_PARAMETER_SELECTOR_VALID (parameter_selector)
+       && !IPMI_PEF_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
       || !IPMI_GET_PEF_PARAMETER_VALID (get_parameter)
       || !fiid_obj_valid (obj_cmd_rq))
     {

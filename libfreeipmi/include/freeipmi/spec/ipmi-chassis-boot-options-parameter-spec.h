@@ -40,6 +40,9 @@ extern "C" {
   ((((__parameter_selector + 1)) > (IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SET_IN_PROGRESS+1) && \
     (__parameter_selector) <= IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_BOOT_INITIATOR_MAILBOX) ? 1 : 0)
 
+#define IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_IS_OEM(__parameter_selector) \
+  (((__parameter_selector) >= 96 && (__parameter_selector) <= 127) ? 1 : 0)
+
 #define IPMI_CHASSIS_BOOT_OPTIONS_NO_SET_SELECTOR                                    0x0
 #define IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR                                  0x0
 

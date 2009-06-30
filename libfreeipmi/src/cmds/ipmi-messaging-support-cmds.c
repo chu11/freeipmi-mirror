@@ -1307,7 +1307,9 @@ fill_cmd_set_system_info_parameters (uint8_t parameter_selector,
                                      unsigned int configuration_parameter_data_len,
                                      fiid_obj_t obj_cmd_rq)
 {
-  if (!configuration_parameter_data
+  if ((!IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_VALID (parameter_selector)
+       && !IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
+      || !configuration_parameter_data
       || !configuration_parameter_data_len
       || !fiid_obj_valid (obj_cmd_rq))
     {
@@ -1696,7 +1698,8 @@ fill_cmd_get_system_info_parameters (uint8_t get_parameter,
                                      fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_GET_SYSTEM_INFO_PARAMETER_VALID (get_parameter)
-      || !IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_VALID (parameter_selector)
+      || (!IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_VALID (parameter_selector)
+          && !IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);

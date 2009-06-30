@@ -35,6 +35,13 @@ extern "C" {
  *
  */
 
+int ipmi_cmd_set_sol_configuration_parameters (ipmi_ctx_t ctx,
+                                               uint8_t channel_number,
+                                               uint8_t parameter_selector,
+                                               const void *configuration_parameter_data,
+                                               unsigned int configuration_parameter_data_len,
+                                               fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
                                                           uint8_t channel_number,
                                                           uint8_t sol_enable,
@@ -73,6 +80,14 @@ int ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_
                                                                        uint8_t channel_number,
                                                                        uint16_t port_number,
                                                                        fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_sol_configuration_parameters (ipmi_ctx_t ctx,
+                                               uint8_t channel_number,
+                                               uint8_t parameter_selector,
+                                               uint8_t get_parameter,
+                                               uint8_t set_selector,
+                                               uint8_t block_selector,
+                                               fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_ctx_t ctx,
                                                           uint8_t channel_number,

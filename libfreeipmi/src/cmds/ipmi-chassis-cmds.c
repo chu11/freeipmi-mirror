@@ -614,7 +614,8 @@ fill_cmd_set_system_boot_options (uint8_t parameter_selector,
                                   unsigned int configuration_parameter_data_len,
                                   fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
+  if ((!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
+       && !IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
       || !configuration_parameter_data
       || !configuration_parameter_data_len
       || !fiid_obj_valid (obj_cmd_rq))
@@ -888,7 +889,8 @@ fill_cmd_get_system_boot_options (uint8_t parameter_selector,
                                   uint8_t block_selector,
                                   fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
+  if ((!IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_VALID (parameter_selector)
+       && !IPMI_CHASSIS_BOOT_OPTIONS_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);

@@ -405,7 +405,8 @@ fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
                                            fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_SOL_PARAMETER_SELECTOR_VALID (parameter_selector)
+      || (!IPMI_SOL_PARAMETER_SELECTOR_VALID (parameter_selector)
+          && !IPMI_SOL_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
       || !configuration_parameter_data
       || !configuration_parameter_data_len
       || !fiid_obj_valid (obj_cmd_rq))
@@ -659,7 +660,8 @@ fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !IPMI_GET_SOL_PARAMETER_VALID (get_parameter)
-      || !IPMI_SOL_PARAMETER_SELECTOR_VALID (parameter_selector)
+      || (!IPMI_SOL_PARAMETER_SELECTOR_VALID (parameter_selector)
+          && !IPMI_SOL_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);

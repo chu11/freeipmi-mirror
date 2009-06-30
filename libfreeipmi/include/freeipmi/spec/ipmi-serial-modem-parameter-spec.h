@@ -79,6 +79,10 @@ extern "C" {
   (((__parameter_selector+1) > (IPMI_SERIAL_MODEM_PARAMETER_SET_IN_PROGRESS+1)        \
     && (__parameter_selector) <= IPMI_SERIAL_MODEM_PARAMETER_PPP_REMOTE_CONSOLE_IP_ADDRESS) ? 1 : 0)
 
+/* To avoid gcc warnings, subtract -1 in comparison */
+#define IPMI_SERIAL_PARAMETER_SELECTOR_IS_OEM(__parameter_selector) \
+  (((__parameter_selector) >= 196 && (__parameter_selector - 1) <= (255 - 1)) ? 1 : 0)
+
 #ifdef __cplusplus
 }
 #endif

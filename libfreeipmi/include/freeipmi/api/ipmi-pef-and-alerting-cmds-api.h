@@ -16,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
  */
 
-/* $Id: ipmi-pef-and-alerting-cmds-api.h,v 1.9 2009-05-06 21:59:14 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds-api.h,v 1.10 2009-06-30 00:11:07 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_API_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_API_H
@@ -43,6 +43,12 @@ int ipmi_cmd_get_pef_capabilities (ipmi_ctx_t ctx,
 int ipmi_cmd_arm_pef_postpone_timer (ipmi_ctx_t ctx,
                                      uint8_t pef_postpone_timeout,
                                      fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_set_pef_configuration_parameters (ipmi_ctx_t ctx,
+                                               uint8_t parameter_selector,
+                                               const void *configuration_parameter_data,
+                                               unsigned int configuration_parameter_data_len,
+                                               fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
                                                            uint8_t pef,
@@ -128,6 +134,13 @@ int ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
                                                              const uint8_t *string_data,
                                                              unsigned int string_data_len,
                                                              fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_pef_configuration_parameters (ipmi_ctx_t ctx,
+                                               uint8_t parameter_selector,
+                                               uint8_t get_parameter,
+                                               uint8_t set_selector,
+                                               uint8_t block_selector,
+                                               fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
                                                            uint8_t get_parameter,

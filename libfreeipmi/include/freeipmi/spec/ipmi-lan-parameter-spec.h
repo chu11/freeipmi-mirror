@@ -54,6 +54,10 @@ extern "C" {
   (((__parameter_selector+1) > (IPMI_LAN_PARAMETER_SET_IN_PROGRESS+1)        \
     && (__parameter_selector) <= IPMI_LAN_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS) ? 1 : 0)
 
+/* To avoid gcc warnings, subtract -1 in comparison */
+#define IPMI_LAN_PARAMETER_SELECTOR_IS_OEM(__parameter_selector) \
+  (((__parameter_selector) >= 196 && (__parameter_selector - 1) <= (255 - 1)) ? 1 : 0)
+
 #ifdef __cplusplus
 }
 #endif

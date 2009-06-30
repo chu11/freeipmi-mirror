@@ -1,3 +1,13 @@
+2009-06-29  Albert Chu <chu11@llnl.gov>
+
+	* tagged pre_dell_oem
+
+	* libfreeipmi/: Add generic get/set system_info,
+	pef_configuration_parameters, lan_configuration_parameters,
+	serial_configuration_parameters, and sol_configuration_parameters
+	functions.  Allowing OEM parameter selectors for potential OEM
+	configuration.
+
 2009-06-26  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Add get/set bmc global enables support.
