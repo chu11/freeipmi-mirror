@@ -248,8 +248,8 @@ ipmi_oem_dell_get_power_information (ipmi_oem_state_data_t *state_data)
    */
 
   bytes_rq[0] = 0x9c;
-  bytes_rq[2] = 0x07;
-  bytes_rq[3] = 0x01;
+  bytes_rq[1] = 0x07;
+  bytes_rq[2] = 0x01;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
