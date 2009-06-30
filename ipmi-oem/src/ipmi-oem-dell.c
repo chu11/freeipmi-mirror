@@ -127,6 +127,8 @@ ipmi_oem_dell_get_asset_tag (ipmi_oem_state_data_t *state_data)
 
   /* Dell OEM
    *
+   * From http://linux.dell.com/files/openipmi/ipmitool/
+   *
    * Uses Get System Info command, OEM parameter number 0xC4.
    *
    * Parameter data response formatted:
@@ -162,6 +164,8 @@ ipmi_oem_dell_get_service_tag (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   /* Dell OEM
+   *
+   * From http://linux.dell.com/files/openipmi/ipmitool/
    *
    * Uses Get System Info command, OEM parameter number 0xC5.
    *
