@@ -63,8 +63,10 @@ copy ipmi-oem stuff in??
 
 ipmi-oem
 --------
-dell poweredge service tag, asset tag
-dell poweredge power monitoring/control stuff
+dell powermonitor status, clear cumulativepower, clear peakpower,
+powersupplyrating, powerconsumption, powerconsumptionhistory
+<watt|btuphr>, getpowerbudget, setpowerbudget
+<val><watt|btuphr|percent>, enablepowercap, disablepowercap
 inventec user disable
 
 sensors/monitoring

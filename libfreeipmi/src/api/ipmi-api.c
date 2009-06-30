@@ -1540,6 +1540,37 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
   ctx->lun = lun;
   ctx->net_fn = net_fn;
 
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    {
+      /* lan packets are dumped in ipmi lan code */
+      /* kcs packets are dumped in kcs code */
+      /* ssif packets are dumped in ssif code */
+      if (ctx->type != IPMI_DEVICE_LAN
+          && ctx->type != IPMI_DEVICE_LAN_2_0
+          && ctx->type != IPMI_DEVICE_KCS
+          && ctx->type != IPMI_DEVICE_SSIF)
+        {
+          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+          uint8_t cmd = 0;
+
+          cmd = ((uint8_t *)buf_rq)[0];
+          
+          debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
+                         DEBUG_UTIL_DIRECTION_REQUEST,
+                         ctx->net_fn,
+                         cmd,
+                         hdrbuf,
+                         DEBUG_UTIL_HDR_BUFLEN);
+
+          ipmi_dump_hex (STDERR_FILENO,
+                         NULL,
+                         hdrbuf,
+                         NULL,
+                         buf_rq,
+                         buf_rq_len);
+        }
+    }
+
   if (ctx->type == IPMI_DEVICE_LAN)
     rv = ipmi_lan_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)
@@ -1552,6 +1583,38 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
     rv = ipmi_openipmi_cmd_raw_api (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
   else /* ctx->type == IPMI_DEVICE_SUNBMC */
     rv = ipmi_sunbmc_cmd_raw_api (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    {
+      /* lan packets are dumped in ipmi lan code */
+      /* kcs packets are dumped in kcs code */
+      /* ssif packets are dumped in ssif code */
+      if (ctx->type != IPMI_DEVICE_LAN
+          && ctx->type != IPMI_DEVICE_LAN_2_0
+          && ctx->type != IPMI_DEVICE_KCS
+          && ctx->type != IPMI_DEVICE_SSIF)
+        {
+          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+          uint8_t cmd = 0;
+
+          cmd = ((uint8_t *)buf_rq)[0];
+
+          /* its ok to use the "request" net_fn */
+          debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
+                         DEBUG_UTIL_DIRECTION_RESPONSE,
+                         ctx->net_fn,
+                         cmd,
+                         hdrbuf,
+                         DEBUG_UTIL_HDR_BUFLEN);
+
+          ipmi_dump_hex (STDERR_FILENO,
+                         NULL,
+                         hdrbuf,
+                         NULL,
+                         buf_rs,
+                         rv);
+        }
+    }
 
   /* errnum set in ipmi_*_cmd_raw functions */
   return (rv);
