@@ -333,7 +333,7 @@ ipmi_oem_dell_get_power_information (ipmi_oem_state_data_t *state_data)
 
   pstdout_printf (state_data->pstate,
                   "Peak Amp                     : %.2f A\n",
-                  peak_amp_reading);
+                  peak_amp_reading_val);
 
   timetmp = peak_watt_time;
   localtime_r (&timetmp, &time_tm);
