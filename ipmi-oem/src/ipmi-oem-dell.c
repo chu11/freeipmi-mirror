@@ -203,7 +203,7 @@ ipmi_oem_dell_get_service_tag (ipmi_oem_state_data_t *state_data)
 }
 
 int
-ipmi_oem_dell_get_power_information (ipmi_oem_state_data_t *state_data)
+ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
@@ -229,12 +229,14 @@ ipmi_oem_dell_get_power_information (ipmi_oem_state_data_t *state_data)
    *
    * From http://linux.dell.com/files/openipmi/ipmitool/
    *
+   * Request
+   *
    * 0x30 - OEM network function
    * 0x9c - OEM cmd
    * 0x07 - ??
    * 0x01 - ??
    * 
-   * Get NIC Status Response
+   * Response
    *
    * 0x9c - OEM cmd
    * 0x?? - Completion Code
@@ -353,14 +355,78 @@ ipmi_oem_dell_get_power_information (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
-int
-ipmi_oem_dell_reset_cumulative_power (ipmi_oem_state_data_t *state_data)
+static int
+_ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data,
+                                 uint8_t field)
 {
-  return (0);
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell OEM
+   *
+   * From http://linux.dell.com/files/openipmi/ipmitool/
+   *
+   * Request
+   *
+   * 0x30 - OEM network function
+   * 0x9d - OEM cmd
+   * 0x07 - ??
+   * 0x01 - ??
+   * 0x?? - field to clear (0x1 = cumulative, 0x2 = peak)
+   * 
+   * Response
+   *
+   * 0x9d - OEM cmd
+   * 0x?? - Completion Code
+   */
+
+  bytes_rq[0] = 0x9d;
+  bytes_rq[1] = 0x07;
+  bytes_rq[2] = 0x01;
+  bytes_rq[3] = field;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              4, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   0x9d,
+                                                   0x30) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+ 
 }
 
 int
-ipmi_oem_dell_reset_peak_power (ipmi_oem_state_data_t *state_data)
+ipmi_oem_dell_reset_cumulative_power_info (ipmi_oem_state_data_t *state_data)
 {
-  return (0);
+  return (_ipmi_oem_dell_reset_power_info (state_data, 1));
+}
+
+int
+ipmi_oem_dell_reset_peak_power_info (ipmi_oem_state_data_t *state_data)
+{
+  return (_ipmi_oem_dell_reset_power_info (state_data, 2));
 }
