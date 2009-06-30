@@ -9,6 +9,8 @@
 	* libfreeipmi/src/api/: Support debug hex output for
 	openipmi/sunbmc on raw commands.
 	
+	* tagged post_dell_oem
+
 2009-06-29  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_dell_oem
