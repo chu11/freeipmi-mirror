@@ -211,9 +211,9 @@ ipmi_oem_dell_get_power_information (ipmi_oem_state_data_t *state_data)
   uint32_t cumulative_reading;
   uint32_t peak_start_time;
   uint32_t peak_amp_time;
-  uint32_t peak_amp_reading;
+  uint16_t peak_amp_reading;
   uint32_t peak_watt_time;
-  uint32_t peak_watt_reading;
+  uint16_t peak_watt_reading;
   double cumulative_reading_val;
   double peak_amp_reading_val;
   time_t timetmp;
@@ -269,7 +269,7 @@ ipmi_oem_dell_get_power_information (ipmi_oem_state_data_t *state_data)
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
-                                                   30,
+                                                   26,
                                                    0x9c,
                                                    0x30) < 0)
     goto cleanup;
@@ -296,18 +296,14 @@ ipmi_oem_dell_get_power_information (ipmi_oem_state_data_t *state_data)
 
   peak_amp_reading = bytes_rs[18];
   peak_amp_reading |= (bytes_rs[19] << 8);
-  peak_amp_reading |= (bytes_rs[20] << 16);
-  peak_amp_reading |= (bytes_rs[21] << 24);
 
-  peak_watt_time = bytes_rs[22];
-  peak_watt_time |= (bytes_rs[23] << 8);
-  peak_watt_time |= (bytes_rs[24] << 16);
-  peak_watt_time |= (bytes_rs[25] << 24);
+  peak_watt_time = bytes_rs[20];
+  peak_watt_time |= (bytes_rs[21] << 8);
+  peak_watt_time |= (bytes_rs[22] << 16);
+  peak_watt_time |= (bytes_rs[23] << 24);
 
-  peak_watt_reading = bytes_rs[26];
-  peak_watt_reading |= (bytes_rs[27] << 8);
-  peak_watt_reading |= (bytes_rs[28] << 16);
-  peak_watt_reading |= (bytes_rs[29] << 24);
+  peak_watt_reading = bytes_rs[24];
+  peak_watt_reading |= (bytes_rs[25] << 8);
 
   cumulative_reading_val = ((double)cumulative_reading) / 1000.0;
 
