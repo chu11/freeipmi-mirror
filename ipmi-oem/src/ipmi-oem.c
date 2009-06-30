@@ -132,9 +132,22 @@ struct ipmi_oem_command oem_supermicro[] =
 
 struct ipmi_oem_id oem_cb[] =
   {
-    { "inventec", oem_inventec},
-    { "supermicro", oem_supermicro},
-    { NULL, NULL},
+    {
+      "dell",
+      oem_dell
+    },
+    {
+      "inventec",
+      oem_inventec
+    },
+    {
+      "supermicro",
+      oem_supermicro
+    },
+    {
+      NULL,
+      NULL
+    },
   };
 
 static int
