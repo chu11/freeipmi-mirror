@@ -68,6 +68,10 @@ level, and SOL payload access is enabled.
 Bmc-config Testing
 ------------------
 
+General Goal: The goal of the bmc-config testing is to ensure that all
+IPMI configuration values can be read, written, and "stick" after
+being written.
+
 Test)
 
 Execute bmc-config with --checkout, verify checked out configuration
