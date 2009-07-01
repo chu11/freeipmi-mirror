@@ -1385,7 +1385,9 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
     }
 
   fiid_obj_destroy (obj_cmd_rq);
+  obj_cmd_rq = NULL;
   fiid_obj_destroy (obj_cmd_rs);
+  obj_cmd_rs = NULL;
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_session_challenge_rq)))
     {
@@ -1457,7 +1459,9 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
     }
 
   fiid_obj_destroy (obj_cmd_rq);
+  obj_cmd_rq = NULL;
   fiid_obj_destroy (obj_cmd_rs);
+  obj_cmd_rs = NULL;
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_activate_session_rq)))
     {
@@ -1595,7 +1599,9 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
     ctx->io.outofband.per_msg_auth_disabled = 0;
 
   fiid_obj_destroy (obj_cmd_rq);
+  obj_cmd_rq = NULL;
   fiid_obj_destroy (obj_cmd_rs);
+  obj_cmd_rs = NULL;
 
   /* if privilege_level == IPMI_PRIVILEGE_LEVEL_USER we shouldn't have
    * to call this, b/c it should be USER by default.  But I don't
@@ -3080,7 +3086,9 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     }
 
   fiid_obj_destroy (obj_cmd_rq);
+  obj_cmd_rq = NULL;
   fiid_obj_destroy (obj_cmd_rs);
+  obj_cmd_rs = NULL;
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_rmcpplus_open_session_request)))
     {
@@ -3238,7 +3246,9 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
   ctx->io.outofband.managed_system_session_id = val;
 
   fiid_obj_destroy (obj_cmd_rq);
+  obj_cmd_rq = NULL;
   fiid_obj_destroy (obj_cmd_rs);
+  obj_cmd_rs = NULL;
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_rmcpplus_rakp_message_1)))
     {
@@ -3610,7 +3620,9 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     }
 
   fiid_obj_destroy (obj_cmd_rq);
+  obj_cmd_rq = NULL;
   fiid_obj_destroy (obj_cmd_rs);
+  obj_cmd_rs = NULL;
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_rmcpplus_rakp_message_3)))
     {
@@ -3739,7 +3751,9 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
     }
 
   fiid_obj_destroy (obj_cmd_rq);
+  obj_cmd_rq = NULL;
   fiid_obj_destroy (obj_cmd_rs);
+  obj_cmd_rs = NULL;
 
   /* if privilege_level == IPMI_PRIVILEGE_LEVEL_USER we shouldn't have
    * to call this, b/c it should be USER by default.  But I don't
