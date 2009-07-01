@@ -115,6 +115,16 @@ _sensor_reading_corner_case_checks (struct ipmi_sensors_state_data *state_data,
                         record_id);
       return 0;
     }
+  else if (ipmi_check_completion_code(obj_get_sensor_reading_rs,
+                                      IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
+    {
+      if (state_data->prog_data->args->common.debug)
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "SDR record %u cannot be read\n",
+                        record_id);
+      return 0;
+    }
 
   return -1;
 }

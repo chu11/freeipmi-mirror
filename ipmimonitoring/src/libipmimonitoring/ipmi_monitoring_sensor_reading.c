@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40.2.11 2009-06-09 22:52:28 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.40.2.12 2009-07-01 16:32:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -438,6 +438,8 @@ _sensor_reading_corner_case_checks(ipmi_monitoring_ctx_t c, fiid_obj_t obj_cmd_r
    * invalid data.
    *
    * IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND: ??? Why is the HP returning this ???
+   *
+   * IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED: ???
    */
   
   if (ipmi_check_completion_code(obj_cmd_rs,
@@ -451,7 +453,9 @@ _sensor_reading_corner_case_checks(ipmi_monitoring_ctx_t c, fiid_obj_t obj_cmd_r
       || ipmi_check_completion_code(obj_cmd_rs,
                                     IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1
       || ipmi_check_completion_code(obj_cmd_rs,
-                                    IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND) == 1)
+                                    IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND) == 1
+      || ipmi_check_completion_code(obj_cmd_rs,
+                                    IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
     return 0;
 
   return -1;
