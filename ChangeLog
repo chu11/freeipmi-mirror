@@ -1,3 +1,10 @@
+2009-07-01  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sensor-read/ipmi-sensor-read.c
+	(_sensor_reading_corner_case_checks): Accept
+	IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED as an ok error
+	code.
+	
 2009-06-30  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support dell oem commands.
