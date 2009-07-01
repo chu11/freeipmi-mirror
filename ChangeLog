@@ -7,6 +7,9 @@
 
 	* libfreeipmi/src/api/ipmi-lan-session-common.c: Fix potential
 	segfault corner cases.
+
+	* libfreeipmi/src/sel-parse/: Alter date output format to be
+	consistent to other tools.
 	
 2009-06-30  Albert Chu <chu11@llnl.gov>
 

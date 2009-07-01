@@ -494,19 +494,24 @@ _output_date (ipmi_sel_parse_ctx_t ctx,
 
   t = timestamp;
   localtime_r (&t, &tmp);
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING)
-    {
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH)
-        strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%d/%b/%Y", &tmp);
-      else
-        strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%d-%b-%Y", &tmp);
-    }
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
+    strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%d-%b-%Y", &tmp);
   else
     {
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH)
-        strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%d/%m/%Y", &tmp);
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING)
+        {
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH)
+            strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%b/%d/%Y", &tmp);
+          else
+            strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%b-%d-%Y", &tmp);
+        }
       else
-        strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%d-%m-%Y", &tmp);
+        {
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_DATE_USE_SLASH)
+            strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%m/%d/%Y", &tmp);
+          else
+            strftime (tmpbuf, SEL_PARSE_BUFFER_LENGTH, "%m-%d-%Y", &tmp);
+        }
     }
 
   if (_SNPRINTF (buf, buflen, wlen, "%s", tmpbuf))
@@ -630,7 +635,7 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
   else
     {
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
-        {
+       { 
           if (_SNPRINTF (buf,
                          buflen,
                          wlen,
