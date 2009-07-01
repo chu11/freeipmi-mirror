@@ -33,6 +33,7 @@
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
+#include "freeipmi/spec/ipmi-system-info-parameters-spec.h"
 
 #include "libcommon/ipmi-err-wrappers.h"
 #include "libcommon/ipmi-fiid-wrappers.h"
@@ -285,6 +286,26 @@ fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rs =
    {8,  "oem_auxiliary_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
    {0, "", 0}
  };
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "get_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "block_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_system_info_parameters_rs =
+  {
+    { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,    "parameter_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1024, "configuration_parameter_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
 
 fiid_template_t tmpl_cmd_get_channel_cipher_suites_rq =
   {
@@ -854,6 +875,31 @@ fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd_rq, "get_ipmi_v2.0_extended_data", get_ipmi_v20_extended_data);
   FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_level", maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+
+  return (0);
+}
+
+int8_t
+fill_cmd_get_system_info_parameters (uint8_t get_parameter,
+                                     uint8_t parameter_selector,
+                                     uint8_t set_selector,
+                                     uint8_t block_selector,
+                                     fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (IPMI_GET_SYSTEM_INFO_PARAMETER_VALID (get_parameter)
+              && (IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_VALID (parameter_selector)
+                  || IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
+              && fiid_obj_valid (obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_system_info_parameters_rq);
+  
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "get_parameter", get_parameter);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
 
   return (0);
 }

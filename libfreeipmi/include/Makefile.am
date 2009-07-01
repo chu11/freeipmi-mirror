@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.27 2008-08-25 17:26:24 chu11 Exp $
+## $Id: Makefile.am,v 1.27.2.1 2009-07-01 00:24:58 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -69,6 +69,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-serial-modem-parameter-spec.h \
 	freeipmi/spec/ipmi-slave-address-spec.h \
 	freeipmi/spec/ipmi-sol-parameter-spec.h \
+	freeipmi/spec/ipmi-system-info-parameters-spec.h \
 	freeipmi/spec/ipmi-system-software-id-spec.h \
 	freeipmi/util/ipmi-cipher-suite-util.h \
 	freeipmi/util/ipmi-error-util.h \

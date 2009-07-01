@@ -103,6 +103,13 @@ extern "C" {
         (((__val) == IPMI_GET_IPMI_V20_EXTENDED_DATA \
 	  || (__val) == IPMI_GET_IPMI_V15_DATA) ? 1 : 0)
 
+#define IPMI_GET_SYSTEM_INFO_PARAMETER                 0x0
+#define IPMI_GET_SYSTEM_INFO_PARAMETER_REVISION_ONLY   0x1
+
+#define IPMI_GET_SYSTEM_INFO_PARAMETER_VALID(__val) \
+  (((__val) == IPMI_GET_SYSTEM_INFO_PARAMETER       \
+    || (__val) == IPMI_GET_SYSTEM_INFO_PARAMETER_REVISION_ONLY) ? 1 : 0)
+
 #define IPMI_LIST_ALGORITHMS_BY_CIPHER_SUITE 0x1
 #define IPMI_LIST_SUPPORTED_ALGORITHMS       0x0
 
@@ -265,6 +272,9 @@ extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rq;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rs;
 
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_rq;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_rs;
+
 extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_rq;
 extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_rs;
 extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_list_supported_algorithms_rs;
@@ -342,6 +352,12 @@ int8_t fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_num
 							     uint8_t maximum_privilege_level,
 							     uint8_t get_ipmi_v20_extended_data,
 							     fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_system_info_parameters (uint8_t get_parameter,
+					    uint8_t parameter_selector,
+					    uint8_t set_selector,
+					    uint8_t block_selector,
+					    fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_channel_cipher_suites (uint8_t channel_number,
                                            uint8_t payload_type,

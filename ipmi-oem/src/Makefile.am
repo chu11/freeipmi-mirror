@@ -2,6 +2,7 @@ noinst_HEADERS = \
 	ipmi-oem.h \
 	ipmi-oem-argp.h \
 	ipmi-oem-common.h \
+	ipmi-oem-dell.h \
 	ipmi-oem-inventec.h \
 	ipmi-oem-supermicro.h
 
@@ -28,6 +29,7 @@ ipmi_oem_SOURCES = \
 	ipmi-oem.c \
 	ipmi-oem-argp.c \
 	ipmi-oem-common.c \
+	ipmi-oem-dell.c \
 	ipmi-oem-inventec.c \
 	ipmi-oem-supermicro.c
 

@@ -83,6 +83,13 @@ int8_t ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
                                                              uint8_t get_ipmi_v20_extended_data,
                                                              fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_get_system_info_parameters (ipmi_ctx_t ctx,
+					    uint8_t get_parameter,
+					    uint8_t parameter_selector,
+					    uint8_t set_selector,
+					    uint8_t block_selector,
+					    fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_session_challenge (ipmi_ctx_t ctx, 
                                        uint8_t authentication_type,
                                        char *user_name,

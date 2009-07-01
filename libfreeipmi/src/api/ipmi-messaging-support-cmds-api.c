@@ -47,6 +47,7 @@
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-privilege-level-spec.h"
+#include "freeipmi/spec/ipmi-system-info-parameters-spec.h"
 
 #include "ipmi-ctx.h"
 #include "ipmi-err-wrappers-api.h"
@@ -468,6 +469,45 @@ ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
 			    obj_cmd_rq, 
 			    obj_cmd_rs);
                        
+  rv = 0;
+ cleanup:
+  API_FIID_OBJ_DESTROY(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t
+ipmi_cmd_get_system_info_parameters (ipmi_ctx_t ctx,
+                                     uint8_t get_parameter,
+                                     uint8_t parameter_selector,
+                                     uint8_t set_selector,
+                                     uint8_t block_selector,
+                                     fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t rv = -1;
+
+  API_ERR_CTX_CHECK (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  API_ERR_PARAMETERS (IPMI_GET_SYSTEM_INFO_PARAMETER_VALID (get_parameter)
+                      && (IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_VALID (parameter_selector)
+                          || IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_IS_OEM (parameter_selector))
+                      && fiid_obj_valid(obj_cmd_rs));
+  
+  API_FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_system_info_parameters_rs);
+  
+  API_FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_system_info_parameters_rq);
+
+  API_ERR_CLEANUP (!(fill_cmd_get_system_info_parameters (get_parameter,
+                                                          parameter_selector,
+                                                          set_selector,
+                                                          block_selector,
+                                                          obj_cmd_rq) < 0));
+  API_ERR_IPMI_CMD_CLEANUP (ctx,
+                            IPMI_BMC_IPMB_LUN_BMC,
+                            IPMI_NET_FN_APP_RQ,
+                            obj_cmd_rq,
+                            obj_cmd_rs);
+
   rv = 0;
  cleanup:
   API_FIID_OBJ_DESTROY(obj_cmd_rq);

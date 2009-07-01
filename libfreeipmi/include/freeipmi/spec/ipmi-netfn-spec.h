@@ -56,23 +56,13 @@ extern "C" {
           || ((__net_fn) >= 0x2C \
               && (__net_fn) <= 0x3F)) ? 1 : 0)
 
-#define IPMI_NET_FN_RQ_VALID(__net_fn) \
-        (((__net_fn) == IPMI_NET_FN_CHASSIS_RQ \
-	  || (__net_fn) == IPMI_NET_FN_BRIDGE_RQ \
-	  || (__net_fn) == IPMI_NET_FN_SENSOR_EVENT_RQ \
-	  || (__net_fn) == IPMI_NET_FN_APP_RQ \
-	  || (__net_fn) == IPMI_NET_FN_FIRMWARE_RQ \
-	  || (__net_fn) == IPMI_NET_FN_STORAGE_RQ \
-	  || (__net_fn) == IPMI_NET_FN_TRANSPORT_RQ) ? 1 : 0)
+#define IPMI_NET_FN_RQ_VALID(__net_fn)           \
+  ((IPMI_NET_FN_VALID (__net_fn)                 \
+    && (!((__net_fn) & 0x1))) ? 1 : 0)
 
-#define IPMI_NET_FN_RS_VALID(__net_fn) \
-        (((__net_fn) == IPMI_NET_FN_CHASSIS_RS \
-	  || (__net_fn) == IPMI_NET_FN_BRIDGE_RS \
-	  || (__net_fn) == IPMI_NET_FN_SENSOR_EVENT_RS \
-	  || (__net_fn) == IPMI_NET_FN_APP_RS \
-	  || (__net_fn) == IPMI_NET_FN_FIRMWARE_RS \
-	  || (__net_fn) == IPMI_NET_FN_STORAGE_RS \
-	  || (__net_fn) == IPMI_NET_FN_TRANSPORT_RS) ? 1 : 0)
+#define IPMI_NET_FN_RS_VALID(__net_fn)           \
+  ((IPMI_NET_FN_VALID (__net_fn)                 \
+    && ((__net_fn) & 0x1)) ? 1 : 0)
 
 #ifdef __cplusplus
 }

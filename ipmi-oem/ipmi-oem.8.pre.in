@@ -54,6 +54,31 @@ The currently supported OEM IDs and COMMANDs are:
 .B get-nic-status
 On some Inventec motherboards (confirmed on 5441), the NIC can be in a
 dedicated or shared status.  This command will determine the current
+.B dell
+.RS
+.TP
+.B get-asset-tag
+On some Dell motherboards (confirmed Poweredge R610), this command can
+retrieve the motherboard asset tag.
+.TP
+.B get-service-tag
+On some Dell motherboards (confirmed Poweredge R610), this command can
+retrieve the motherboard service tag.
+.TP
+.B get-power-info
+On some Dell motherboards (confirmed Poweredge R610), this command can
+retrieve power information.
+.TP
+.B reset-cumulative-power-info
+On some Dell motherboards (confirmed Poweredge R610), this command can
+reset the cumulative power information readings (viewed via
+\fBget\-power\-info\fR)
+.B reset-peak-power-info
+On some Dell motherboards (confirmed Poweredge R610), this command can
+reset the peak power information readings (viewed via
+\fBget\-power\-info\fR)
+.RE
+.TP
 NIC status.  Dedicated indicates IPMI is only available on the
 dedicated management port.  Shared indicates IPMI is also available on
 one of the primary ethernet ports.

@@ -1,6 +1,8 @@
 0.7.11 - XX/XX/XX
 -----------------
 o In ipmi-fru, fix FRU output corner cases.
+o In ipmi-oem, support Dell poweredge OEM commands.
+o In libfreeipmi, support Get System Information parameters command.
 
 0.7.10 - 06/16/09
 -----------------
