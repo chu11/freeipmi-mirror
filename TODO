@@ -4,17 +4,14 @@ inband
 and build option??
 inband flag - discover vs. not-discover on locate
 
-bmc-device
-----------
-get/set globals
-- enable/disable sel?
-
 general
 -------
 forwarded command support (errata 35b)
 
 bmc-device
 --------
+set bmc global enables
+- really should be done by firmware?  or OS distro?  Hold off for now.
 set system info support
 - really should be done by firmware?  or OS distro?  Hold off for now.
 
@@ -38,8 +35,11 @@ ipmi-sel
 freeipmi tools
 --------------
 config via environment variables too - like config file
-new ipmi-oem-config - to deal with config OEM stuff config tool style?
+ipmi-oem-config
+- to deal with config OEM stuff config tool style?
 - consider maybe down the road
+- inventec mac/shared nic stuff
+  - no, oem specific and will reboot BMC
 
 libfreeipmi
 -----------
@@ -56,10 +56,6 @@ ipmi-fru
 bmc-config
 ----------
 (TEST) that ipmi 2.0 (> 20 char) password not possible on ipmi 1.5 only mobo
-copy ipmi-oem stuff in??
-- inventec mac/shared nic stuff
-- into lan_conf?  or into new section?
-- no, oem specific and will reboot BMC
 
 ipmi-oem
 --------

@@ -46,6 +46,7 @@
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
+#include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
@@ -1010,6 +1011,48 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
+
+          /* OEM Interpretation
+           *
+           * Inventec 5441
+           *
+           * achu: The doc says "Other" for 0xFF, I'm going to just assume that's "no output".
+           */
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+              && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+              && ctx->product_id == 51
+              && system_event_record_data.generator_id == 0x21 /* "SMI" */
+              && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_MEMORY
+              && system_event_record_data.sensor_number == 0x60 /* "Memory" */
+              && system_event_record_data.event_type_code == 0x6F /* sensor specific */
+              && (system_event_record_data.offset_from_event_reading_type_code == 0x0 /* correctable ECC */
+                  || system_event_record_data.offset_from_event_reading_type_code == 0x1 /* uncorrectable ECC */
+                  || system_event_record_data.offset_from_event_reading_type_code == 0x2 /* parity */
+                  || system_event_record_data.offset_from_event_reading_type_code == 0x5) /* correctable ECC */
+              && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+              && (system_event_record_data.event_data2 == 0x00
+                  || system_event_record_data.event_data2 == 0x01
+                  || system_event_record_data.event_data2 == 0xFF))
+            {
+              if (system_event_record_data.event_data2 == 0xFF)
+                {
+                  no_output_flag++;
+                  break;
+                }
+
+              if (system_event_record_data.event_data2 == 0x00)
+                snprintf (tmpbuf,
+                          EVENT_BUFFER_LENGTH,
+                          "SBE warning threshold");
+              else /* system_event_record_data.event_data2 == 0x01 */
+                snprintf (tmpbuf,
+                          EVENT_BUFFER_LENGTH,
+                          "SBE critical threshold");
+
+              output_flag++;
+              break;
+            }
+
           if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
             snprintf (tmpbuf,
                       EVENT_BUFFER_LENGTH,
@@ -1253,6 +1296,80 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
+
+          /* OEM Interpretation
+           *
+           * Inventec 5441
+           *
+           * achu: Note that the Dimm locations are not in a pattern,
+           * this is what the doc says.
+           *
+           * If an invalid dimm location is indicated, fall through
+           * and output normal stuff.
+           */
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+              && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+              && ctx->product_id == 51
+              && system_event_record_data.generator_id == 0x21 /* "SMI" */
+              && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_MEMORY
+              && system_event_record_data.sensor_number == 0x60 /* "Memory" */
+              && system_event_record_data.event_type_code == 0x6F /* sensor specific */
+              && (system_event_record_data.offset_from_event_reading_type_code == 0x0 /* correctable ECC */
+                  || system_event_record_data.offset_from_event_reading_type_code == 0x1 /* uncorrectable ECC */
+                  || system_event_record_data.offset_from_event_reading_type_code == 0x2 /* parity */
+                  || system_event_record_data.offset_from_event_reading_type_code == 0x5) /* correctable ECC */
+              && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+              && (system_event_record_data.event_data3 == 0x01
+                  || system_event_record_data.event_data3 == 0x02
+                  || system_event_record_data.event_data3 == 0x03
+                  || system_event_record_data.event_data3 == 0x04
+                  || system_event_record_data.event_data3 == 0x05
+                  || system_event_record_data.event_data3 == 0x06
+                  || system_event_record_data.event_data3 == 0x11
+                  || system_event_record_data.event_data3 == 0x12
+                  || system_event_record_data.event_data3 == 0x13))
+            {
+              if (system_event_record_data.event_data3 == 0x01)
+                snprintf (tmpbuf,
+                          EVENT_BUFFER_LENGTH,
+                          "Dimm Number - CPU0/Ch0/DIM1");
+              else if (system_event_record_data.event_data3 == 0x02)
+                snprintf (tmpbuf,
+                          EVENT_BUFFER_LENGTH,
+                          "Dimm Number - CPU0/Ch0/DIM0");
+              else if (system_event_record_data.event_data3 == 0x03)
+                snprintf (tmpbuf,
+                          EVENT_BUFFER_LENGTH,
+                          "Dimm Number - CPU0/Ch1/DIM1");
+              else if (system_event_record_data.event_data3 == 0x04)
+                snprintf (tmpbuf,
+                          EVENT_BUFFER_LENGTH,
+                          "Dimm Number - CPU0/Ch1/DIM0");
+              else if (system_event_record_data.event_data3 == 0x05)
+                snprintf (tmpbuf,
+                          EVENT_BUFFER_LENGTH,
+                          "Dimm Number - CPU0/Ch2/DIM1");
+              else if (system_event_record_data.event_data3 == 0x06)
+                snprintf (tmpbuf,
+                          EVENT_BUFFER_LENGTH,
+                          "Dimm Number - CPU0/Ch2/DIM0");
+              else if (system_event_record_data.event_data3 == 0x11)
+                snprintf (tmpbuf,
+                          EVENT_BUFFER_LENGTH,
+                          "Dimm Number - CPU1/Ch0/DIM0");
+              else if (system_event_record_data.event_data3 == 0x12)
+                snprintf (tmpbuf,
+                          EVENT_BUFFER_LENGTH,
+                          "Dimm Number - CPU1/Ch1/DIM0");
+              else /* system_event_record_data.event_data3 == 0x13 */
+                snprintf (tmpbuf,
+                          EVENT_BUFFER_LENGTH,
+                          "Dimm Number - CPU1/Ch2/DIM0");
+
+              output_flag++;
+              break;
+            }
+          
           if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
             snprintf (tmpbuf,
                       EVENT_BUFFER_LENGTH,

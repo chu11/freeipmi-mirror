@@ -1,3 +1,8 @@
+2009-07-06  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sel-parse/: Add Inventec 5441 Memory Error OEM
+	interpretation.
+	
 2009-07-01  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sensor-read/ipmi-sensor-read.c
