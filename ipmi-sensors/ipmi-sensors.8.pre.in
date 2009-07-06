@@ -68,6 +68,7 @@ about events, other sensor types, and oem sensors.
 Show sensor data repository (SDR) information
 #include <@top_srcdir@/common/man/manpage-common-sensor-common.man>
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
+.TP
 \fB\-\-ignore\-not\-available\-sensors\fR
 Ignore not-available (i.e. N/A) sensors in output.
 #include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
