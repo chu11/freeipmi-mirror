@@ -899,6 +899,13 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
+
+          if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+            {
+              no_output_flag++;
+              break;
+            }
+
           if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
             snprintf (tmpbuf,
                       EVENT_BUFFER_LENGTH,
@@ -1053,6 +1060,12 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
               break;
             }
 
+          if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+            {
+              no_output_flag++;
+              break;
+            }
+
           if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
             snprintf (tmpbuf,
                       EVENT_BUFFER_LENGTH,
@@ -1105,6 +1118,12 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
           break;
         }
       
+      if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+        {
+          no_output_flag++;
+          break;
+        }
+
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
         snprintf (tmpbuf,
                   EVENT_BUFFER_LENGTH,
@@ -1249,6 +1268,13 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
+
+          if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+            {
+              no_output_flag++;
+              break;
+            }
+
           if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
             snprintf (tmpbuf,
                       EVENT_BUFFER_LENGTH,
@@ -1370,6 +1396,12 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
               break;
             }
           
+          if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+            {
+              no_output_flag++;
+              break;
+            }
+
           if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
             snprintf (tmpbuf,
                       EVENT_BUFFER_LENGTH,
@@ -1419,6 +1451,12 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
                     "BIOS Minor Version %02X",
                     system_event_record_data.event_data3);
           output_flag++;
+          break;
+        }
+
+      if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+        {
+          no_output_flag++;
           break;
         }
 

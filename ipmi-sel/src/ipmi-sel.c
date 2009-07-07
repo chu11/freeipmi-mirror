@@ -1180,6 +1180,10 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
       /* OEM Interpretation
        *
        * Inventec 5441
+       *
+       * Unique condition, want to output the major and minor versions
+       * of the bios as "version x.y", don't want to see "major x ;
+       * minor y" using below code.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
           && state_data->product_id == 51
@@ -1200,36 +1204,15 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
       && event_data2_flag == IPMI_SEL_EVENT_DATA_TRIGGER_READING
       && event_data3_flag == IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE)
     strcat (fmtbuf, "%c");
-  else if ((ipmi_event_reading_type_code_class (event_type_code) != IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
-            && event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
-            && event_data2_flag != IPMI_SEL_EVENT_DATA_OEM_CODE
-            && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
-            && event_data3_flag != IPMI_SEL_EVENT_DATA_OEM_CODE)
-           || (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
-               && event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
-               && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-           || (state_data->prog_data->args->verbose_count >= 2
-               && event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
-               && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE))
+  else if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
+           && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
     {
       strcat (fmtbuf, "%f ; %h");
       check_for_na++;
     }
-  else if ((ipmi_event_reading_type_code_class (event_type_code) != IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
-            && event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
-            && event_data2_flag != IPMI_SEL_EVENT_DATA_OEM_CODE)
-           || (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
-               && event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-           || (state_data->prog_data->args->verbose_count >= 2
-               && event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE))
+  else if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
     strcat (fmtbuf, "%f");
-  else if ((ipmi_event_reading_type_code_class (event_type_code) != IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
-            && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
-            && event_data3_flag != IPMI_SEL_EVENT_DATA_OEM_CODE)
-           || (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
-               && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-           || (state_data->prog_data->args->verbose_count >= 2
-               && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE))
+  else if (event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
     strcat (fmtbuf, "%h");
 
 output:

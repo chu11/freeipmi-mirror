@@ -2,6 +2,11 @@
 
 	* libfreeipmi/src/sel-parse/: Add Inventec 5441 Memory Error OEM
 	interpretation.
+
+	* ipmi-sel/src/: Alter event data output conditions.
+
+	* libfreeipmi/src/sel-parse/: Do not output oem codes when they
+	are unspecified (i.e. 0xFF).
 	
 2009-07-01  Albert Chu <chu11@llnl.gov>
 
