@@ -335,6 +335,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
   uint8_t channel_number = 0;
   uint8_t slave_address = 0;
   uint8_t reading_state, sensor_scanning;
+  unsigned int ctx_flags_orig;
   int event_reading_type_code_class = 0;
 
   if (!ctx || ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
@@ -424,6 +425,24 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
+  /* 
+   * IPMI Workaround (achu)
+   *
+   * See comments below concerning sensor_event_bitmask.
+   */
+
+  if (ipmi_ctx_get_flags (ctx->ipmi_ctx, &ctx_flags_orig) < 0)
+    {
+      SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
+  if (ipmi_ctx_set_flags (ctx->ipmi_ctx, ctx_flags_orig | IPMI_FLAGS_NO_VALID_CHECK) < 0)
+    {
+      SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
   if (slave_address == IPMI_SLAVE_ADDRESS_BMC)
     {
       if (_get_sensor_reading (ctx,
@@ -440,6 +459,18 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
                                     sensor_number,
                                     obj_cmd_rs) < 0)
         goto cleanup;
+    }
+
+  /* 
+   * IPMI Workaround (achu)
+   *
+   * See comments below concerning sensor_event_bitmask.
+   */
+
+  if (ipmi_ctx_set_flags (ctx->ipmi_ctx, ctx_flags_orig) < 0)
+    {
+      SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_INTERNAL_ERROR);
+      goto cleanup;
     }
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -507,10 +538,11 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
    *
    * Discovered on Dell 2950.
    *
-   * It seems the sensor_event_bitmask may not be returned by the server
-   * at all for some sensors.  Under this situation, there's not
-   * much that can be done.  Since there is no sensor_event_bitmask, we
-   * just assume that no states have been asserted and the
+   * It seems the sensor_event_bitmask (16 bits) may not be returned
+   * by the server at all for some sensors, despite a minimum of 8
+   * bits being required.  Under this situation, there's not much that
+   * can be done.  Since there is no sensor_event_bitmask, we just
+   * assume that no states have been asserted and the
    * sensor_event_bitmask = 0;
    */
 

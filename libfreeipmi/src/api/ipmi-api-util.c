@@ -262,6 +262,21 @@ api_ipmi_cmd (ipmi_ctx_t ctx,
       return (-1);
     }
 
+  if (ctx->flags & IPMI_FLAGS_NO_VALID_CHECK)
+    {
+      if ((ret = fiid_obj_packet_valid (obj_cmd_rs)) < 0)
+        {
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+          return (-1);
+        }
+
+      if (!ret)
+        {
+          API_SET_ERRNUM (ctx, IPMI_ERR_IPMI_ERROR);
+          return (-1);
+        }
+    }
+
   return (0);
 }
 
@@ -299,16 +314,19 @@ api_ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if ((ret = fiid_obj_packet_valid (obj_cmd_rs)) < 0)
+  if (ctx->flags & IPMI_FLAGS_NO_VALID_CHECK)
     {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!ret)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_IPMI_ERROR);
-      return (-1);
+      if ((ret = fiid_obj_packet_valid (obj_cmd_rs)) < 0)
+        {
+          API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+          return (-1);
+        }
+      
+      if (!ret)
+        {
+          API_SET_ERRNUM (ctx, IPMI_ERR_IPMI_ERROR);
+          return (-1);
+        }
     }
 
   return (0);

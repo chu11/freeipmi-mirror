@@ -190,6 +190,50 @@ ipmi_ctx_errormsg (ipmi_ctx_t ctx)
   return (ipmi_ctx_strerror (ipmi_ctx_errnum (ctx)));
 }
 
+int
+ipmi_ctx_get_flags (ipmi_ctx_t ctx, unsigned int *flags)
+{
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!flags)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  (*flags) = ctx->flags;
+  ctx->errnum = IPMI_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_ctx_set_flags (ipmi_ctx_t ctx, unsigned int flags)
+{
+  unsigned int flags_mask = (IPMI_FLAGS_NONBLOCKING
+                             | IPMI_FLAGS_DEBUG_DUMP
+                             | IPMI_FLAGS_NO_VALID_CHECK);
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (flags & ~flags_mask)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  ctx->flags = flags;
+  ctx->errnum = IPMI_ERR_SUCCESS;
+  return (0);
+}
+
 static void
 _ipmi_outofband_free (ipmi_ctx_t ctx)
 {
@@ -368,11 +412,13 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                          unsigned int workaround_flags,
                          unsigned int flags)
 {
-  unsigned int flags_mask = (IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO
-                             | IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION
-                             | IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE
-                             | IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER
-                             | IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES);
+  unsigned int workaround_flags_mask = (IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO
+                                        | IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION
+                                        | IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE
+                                        | IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER
+                                        | IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES);
+  unsigned int flags_mask = (IPMI_FLAGS_DEBUG_DUMP
+                             | IPMI_FLAGS_NO_VALID_CHECK);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -386,7 +432,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
       || (password && strlen (password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
       || !IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type)
       || !IPMI_PRIVILEGE_LEVEL_VALID (privilege_level)
-      || (workaround_flags & ~flags_mask))
+      || (workaround_flags & ~workaround_flags_mask)
+      || (flags & ~flags_mask))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -506,11 +553,13 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                              unsigned int workaround_flags,
                              unsigned int flags)
 {
-  unsigned int flags_mask = (IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES
-                             | IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION
-                             | IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
-                             | IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION
-                             | IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE);
+  unsigned int workaround_flags_mask = (IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES
+                                        | IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION
+                                        | IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
+                                        | IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION
+                                        | IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE);
+  unsigned int flags_mask = (IPMI_FLAGS_DEBUG_DUMP
+                             | IPMI_FLAGS_NO_VALID_CHECK);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -525,7 +574,8 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
       || (k_g && k_g_len > IPMI_MAX_K_G_LENGTH)
       || !IPMI_PRIVILEGE_LEVEL_VALID (privilege_level)
       || !IPMI_CIPHER_SUITE_ID_SUPPORTED (cipher_suite_id)
-      || (workaround_flags & ~flags_mask))
+      || (workaround_flags & ~workaround_flags_mask)
+      || (flags & ~flags_mask))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -698,6 +748,9 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
   struct ipmi_locate_info locate_info;
   unsigned int seedp;
   unsigned int temp_flags = 0;
+  unsigned int flags_mask = (IPMI_FLAGS_NONBLOCKING
+                             | IPMI_FLAGS_DEBUG_DUMP
+                             | IPMI_FLAGS_NO_VALID_CHECK);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -712,7 +765,8 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
        && driver_type != IPMI_DEVICE_SSIF
        && driver_type != IPMI_DEVICE_OPENIPMI
        && driver_type != IPMI_DEVICE_SUNBMC)
-      || workaround_flags)
+      || workaround_flags
+      || (flags & ~flags_mask))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);

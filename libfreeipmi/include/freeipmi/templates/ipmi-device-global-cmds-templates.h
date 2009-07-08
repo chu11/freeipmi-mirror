@@ -73,7 +73,7 @@ fiid_template_t tmpl_cmd_get_device_id_rs =
     { 20, "manufacturer_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "manufacturer_id.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "product_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 32, "auxiliary_firmware_revision_information", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 32, "auxiliary_firmware_revision_information", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 0,  "", 0}
   };
 

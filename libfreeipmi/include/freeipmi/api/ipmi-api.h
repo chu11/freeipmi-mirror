@@ -105,9 +105,19 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION             0x04000000 /* IPMI 2.0  only */
 #define IPMI_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE      0x08000000 /* IPMI 2.0  only */
 
+/* NONBLOCKING - for inband only
+ *
+ * DEBUG_DUMP - for all interfaces
+
+ * NO_VALID_CHECK - do not check if IPMI response packets are valid
+ * (i.e. all required fields set).  Useful to workaround non-compliant
+ * motherboards.
+ */
+
 #define IPMI_FLAGS_DEFAULT        0x00000000
 #define IPMI_FLAGS_NONBLOCKING    0x00000001
 #define IPMI_FLAGS_DEBUG_DUMP     0x00000010
+#define IPMI_FLAGS_NO_VALID_CHECK 0x00000100
 
 #define IPMI_ERR_IS_BAD_COMPLETION_CODE(__cc)                      \
   (((__cc) == IPMI_ERR_BAD_COMPLETION_CODE_NODE_BUSY               \
@@ -124,6 +134,11 @@ int ipmi_ctx_errnum (ipmi_ctx_t ctx);
 char *ipmi_ctx_strerror (int errnum);
 
 char *ipmi_ctx_errormsg (ipmi_ctx_t ctx);
+
+int ipmi_ctx_get_flags (ipmi_ctx_t ctx, unsigned int *flags);
+
+/* for changing flags mid-operation for corner cases */
+int ipmi_ctx_set_flags (ipmi_ctx_t ctx, unsigned int flags);
 
 int ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                              const char *hostname,
