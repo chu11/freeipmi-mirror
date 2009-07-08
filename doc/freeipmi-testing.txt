@@ -68,9 +68,9 @@ level, and SOL payload access is enabled.
 Bmc-config Testing
 ------------------
 
-General Goal: The goal of the bmc-config testing is to ensure that all
-IPMI configuration values can be read, written, and "stick" after
-being written.
+Goal: The goal of the bmc-config testing is to ensure that all IPMI
+configuration values can be read, written, and "stick" after being
+written.
 
 Test)
 
@@ -327,6 +327,8 @@ saved across a reboot.
 Bmc-info Testing
 ----------------
 
+Goal: Ensure all important values are output and are correct.
+
 Test)
 
 Execute bmc-info with no bmc-info specific options, verify tool:
@@ -353,6 +355,8 @@ Execute bmc-info with no bmc-info specific options, verify tool:
 Ipmi-chassis Testing
 --------------------
 
+Goal: Ensure all important features function properly.
+
 Test)
 
 If the remote system supports an IPMI controllable LED:
@@ -371,6 +375,8 @@ Execute ipmi-chassis with --chassis-identify=30, verify remote system:
 
 Ipmi-sensors Testing
 --------------------
+
+Goal: Ensure all important values are output and are correct.
 
 Test)
 
@@ -450,6 +456,8 @@ Testing Intrusion Sensors:
 Ipmi-sel Testing
 ----------------
 
+Goal: Ensure all important values are output and are correct.
+
 Test)
 
 Execute ipmi-sel with no ipmi-sel specific options, verify tool:
@@ -479,6 +487,8 @@ Execute ipmi-sel with --delete-all, verify tool:
 Ipmi-fru Testing
 ----------------
 
+Goal: Ensure all important values are output and are correct.
+
 Test)
 
 Execute ipmi-fru with no ipmi-fru specific options, verify tool:
@@ -490,6 +500,8 @@ Execute ipmi-fru with no ipmi-fru specific options, verify tool:
 
 Ipmiconsole Testing
 -------------------
+
+Goal: Ensure all important features function properly.
 
 Configure all BIOS settings and SOL settings to enable SOL.  Enable
 the remote machine to except sysrqs (in Linux, this requires
@@ -689,6 +701,8 @@ verify tool:
 Ipmipower Testing
 -----------------
 
+Goal: Ensure all important features function properly.
+
 Test)
 
 Begin with the remote machine currently powered off.
@@ -748,6 +762,8 @@ Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
 In-Band KCS Testing
 -------------------
 
+Goal: Ensure all important features function properly.
+
 Test)
 
 Execute bmc-info in-band, verify tool:
@@ -759,6 +775,8 @@ Execute bmc-info in-band, verify tool:
 
 Out-of-Band IPMI 1.5 Testing
 ----------------------------
+
+Goal: Ensure all important features function properly.
 
 For purpose of this set of tests, consider this set of configuration
 options from bmc-config the "pristine" BMC configuration and user
@@ -1009,6 +1027,8 @@ the past that did indeed pass this test.)
 Out-of-Band IPMI 2.0 Testing
 ----------------------------
 
+Goal: Ensure all important features function properly.
+
 For purpose of this set of tests, consider this set of configuration
 options from bmc-config the "pristine" BMC configuration and user
 configuration.
@@ -1249,6 +1269,8 @@ verify tool:
 
 Misc Testing
 ------------
+
+Goal: Ensure all important features function properly.
 
 Test)
 
