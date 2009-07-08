@@ -73,6 +73,7 @@ retrieve power information.
 On some Dell motherboards (confirmed Poweredge R610), this command can
 reset the cumulative power information readings (viewed via
 \fBget\-power\-info\fR)
+.TP
 .B reset-peak-power-info
 On some Dell motherboards (confirmed Poweredge R610), this command can
 reset the peak power information readings (viewed via
