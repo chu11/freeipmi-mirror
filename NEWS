@@ -5,6 +5,7 @@ o In ipmi-oem, support Dell poweredge OEM commands.
 o In ipmi-sensors and ipmimonitoring, continue reading sensors after a
   "request parameter not supported" error.
 o In libfreeipmi, support Get System Information parameters command.
+o Support --without-encryption build option .
 o Do not require execute permissions on driver devices.
 o Fix portability for some embedded systems.
 

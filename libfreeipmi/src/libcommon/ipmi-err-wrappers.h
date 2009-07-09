@@ -208,6 +208,16 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define ERR_EPERM(expr)                                                 \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = EPERM;                                                    \
+      __ERR_TRACE;                                                      \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
 #define ERR_ENOSPC(expr)                                                \
 do {                                                                    \
   if (!(expr))                                                          \

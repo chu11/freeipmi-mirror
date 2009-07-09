@@ -8,7 +8,7 @@ noinst_HEADERS = \
 
 noinst_LTLIBRARIES = libcommon.la
 
-libcommon_la_LDFLAGS = -lgcrypt
+libcommon_la_LDFLAGS = @GCRYPT_LIBS@
 
 libcommon_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/src/portability \
