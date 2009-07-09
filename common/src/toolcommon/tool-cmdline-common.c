@@ -670,7 +670,7 @@ verify_common_cmd_args (struct common_cmd_args *cmd_args)
 
   if (cmd_args->driver_device)
     {
-      if (access (cmd_args->driver_device, R_OK|W_OK|X_OK) != 0)
+      if (access (cmd_args->driver_device, R_OK|W_OK) != 0)
         {
           fprintf (stderr, "insufficient permission on driver device '%s'\n",
                    cmd_args->driver_device);

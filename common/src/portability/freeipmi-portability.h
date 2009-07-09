@@ -89,6 +89,10 @@ extern "C" {
 #ifndef HAVE_EXP2
 #define exp2(x)		(pow(2.0, (x)))
 #endif
+/* uClibc may not have cbrt() */
+#ifndef HAVE_CBRT
+#define cbrt(x)         (pow((x), -3.0))
+#endif
 
 /* FreeBSD don't have strdupa */
 #ifndef strdupa
