@@ -116,8 +116,7 @@ get_number_of_lan_alert_destinations (struct ipmi_pef_config_state_data *state_d
       goto cleanup;
     }
 
-  /* don't use wrapper - non-fatal error */
-  if (fiid_obj_get (obj_cmd_rs,
+  if (FIID_OBJ_GET (obj_cmd_rs,
                     "number_of_lan_destinations",
                     &val) < 0)
     {
@@ -176,8 +175,7 @@ get_number_of_alert_strings (struct ipmi_pef_config_state_data *state_data, uint
       goto cleanup;
     }
 
-  /* don't use wrapper - non-fatal error */
-  if (fiid_obj_get (obj_cmd_rs,
+  if (FIID_OBJ_GET (obj_cmd_rs,
                     "number_of_alert_strings",
                     &val) < 0)
     {
@@ -236,8 +234,7 @@ get_number_of_alert_policy_entries (struct ipmi_pef_config_state_data *state_dat
       goto cleanup;
     }
 
-  /* don't use wrapper - non-fatal error */
-  if (fiid_obj_get (obj_cmd_rs,
+  if (FIID_OBJ_GET (obj_cmd_rs,
                     "number_of_alert_policy_entries",
                     &val) < 0)
     {
@@ -296,8 +293,7 @@ get_number_of_event_filters (struct ipmi_pef_config_state_data *state_data, uint
       goto cleanup;
     }
 
-  /* don't use wrapper - non-fatal error */
-  if (fiid_obj_get (obj_cmd_rs,
+  if (FIID_OBJ_GET (obj_cmd_rs,
                     "number_of_event_filters",
                     &val) < 0)
     {

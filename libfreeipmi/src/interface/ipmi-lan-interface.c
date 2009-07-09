@@ -322,7 +322,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
       return (-1);
     }
 
-  if (fiid_obj_get (obj_lan_session_hdr,
+  if (FIID_OBJ_GET (obj_lan_session_hdr,
                     "authentication_type",
                     &val) < 0)
     {
