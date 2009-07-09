@@ -75,7 +75,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'capabilities_flags.provides_intrusion_sensor': %s\n",
+                       "FIID_OBJ_GET: 'capabilities_flags.provides_intrusion_sensor': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -90,7 +90,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'capabilities_flags.provides_front_panel_lockout': %s\n",
+                       "FIID_OBJ_GET: 'capabilities_flags.provides_front_panel_lockout': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -105,7 +105,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'capabilities_flags.provides_diagnostic_interrupt': %s\n",
+                       "FIID_OBJ_GET: 'capabilities_flags.provides_diagnostic_interrupt': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -120,7 +120,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'capabilities_flags.provides_power_interlock': %s\n",
+                       "FIID_OBJ_GET: 'capabilities_flags.provides_power_interlock': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -135,7 +135,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'fru_info_device_address': %s\n",
+                       "FIID_OBJ_GET: 'fru_info_device_address': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -152,7 +152,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'sdr_device_address': %s\n",
+                       "FIID_OBJ_GET: 'sdr_device_address': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -168,7 +168,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'sel_device_address': %s\n",
+                       "FIID_OBJ_GET: 'sel_device_address': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -184,7 +184,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'system_management_device_address': %s\n",
+                       "FIID_OBJ_GET: 'system_management_device_address': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -248,7 +248,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'current_power_state.power_is_on': %s\n",
+                       "FIID_OBJ_GET: 'current_power_state.power_is_on': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -261,7 +261,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'current_power_state.power_overload': %s\n",
+                       "FIID_OBJ_GET: 'current_power_state.power_overload': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -274,7 +274,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'current_power_state.interlock': %s\n",
+                       "FIID_OBJ_GET: 'current_power_state.interlock': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -287,7 +287,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'current_power_state.power_fault': %s\n",
+                       "FIID_OBJ_GET: 'current_power_state.power_fault': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -300,7 +300,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'current_power_state.power_control_fault': %s\n",
+                       "FIID_OBJ_GET: 'current_power_state.power_control_fault': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -313,7 +313,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'current_power_state.power_restore_policy': %s\n",
+                       "FIID_OBJ_GET: 'current_power_state.power_restore_policy': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -347,7 +347,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'last_power_event.ac_failed': %s\n",
+                       "FIID_OBJ_GET: 'last_power_event.ac_failed': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -362,7 +362,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'last_power_event.power_down_caused_by_power_overload': %s\n",
+                       "FIID_OBJ_GET: 'last_power_event.power_down_caused_by_power_overload': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -377,7 +377,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'last_power_event.power_down_caused_by_power_interlock_being_activated': %s\n",
+                       "FIID_OBJ_GET: 'last_power_event.power_down_caused_by_power_interlock_being_activated': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -392,7 +392,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'last_power_event.power_down_caused_by_power_fault': %s\n",
+                       "FIID_OBJ_GET: 'last_power_event.power_down_caused_by_power_fault': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -407,7 +407,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'last_power_event.power_on_entered_via_ipmi': %s\n",
+                       "FIID_OBJ_GET: 'last_power_event.power_on_entered_via_ipmi': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -449,7 +449,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'misc_chassis_state.chassis_intrusion_active': %s\n",
+                       "FIID_OBJ_GET: 'misc_chassis_state.chassis_intrusion_active': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -462,7 +462,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'misc_chassis_state.front_panel_lockout_active': %s\n",
+                       "FIID_OBJ_GET: 'misc_chassis_state.front_panel_lockout_active': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -475,7 +475,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'misc_chassis_state.drive_fault': %s\n",
+                       "FIID_OBJ_GET: 'misc_chassis_state.drive_fault': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -488,7 +488,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'misc_chassis_state.cooling_fan_fault_detected': %s\n",
+                       "FIID_OBJ_GET: 'misc_chassis_state.cooling_fan_fault_detected': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -501,7 +501,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'misc_chassis_state.chassis_identify_command_and_state_info_supported': %s\n",
+                       "FIID_OBJ_GET: 'misc_chassis_state.chassis_identify_command_and_state_info_supported': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -512,7 +512,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'misc_chassis_state.chassis_identify_state': %s\n",
+                           "FIID_OBJ_GET: 'misc_chassis_state.chassis_identify_state': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -561,7 +561,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'front_panel.reset_button_disabled': %s\n",
+                           "FIID_OBJ_GET: 'front_panel.reset_button_disabled': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -574,7 +574,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'front_panel.diagnostic_interrupt_button_disabled': %s\n",
+                           "FIID_OBJ_GET: 'front_panel.diagnostic_interrupt_button_disabled': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -587,7 +587,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'front_panel.standby_button_disabled': %s\n",
+                           "FIID_OBJ_GET: 'front_panel.standby_button_disabled': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -600,7 +600,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'front_panel.power_off_button_disable_allowed': %s\n",
+                           "FIID_OBJ_GET: 'front_panel.power_off_button_disable_allowed': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -613,7 +613,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'front_panel.reset_button_disable_allowed': %s\n",
+                           "FIID_OBJ_GET: 'front_panel.reset_button_disable_allowed': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -626,7 +626,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'front_panel.diagnostic_interrupt_button_disable_allowed': %s\n",
+                           "FIID_OBJ_GET: 'front_panel.diagnostic_interrupt_button_disable_allowed': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -639,7 +639,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'front_panel.standby_button_disable_allowed': %s\n",
+                           "FIID_OBJ_GET: 'front_panel.standby_button_disable_allowed': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -767,7 +767,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'powered_off_after_ac_mains_returns': %s\n",
+                           "FIID_OBJ_GET: 'powered_off_after_ac_mains_returns': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -779,7 +779,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'always_powering_up_after_ac_mains_returns': %s\n",
+                           "FIID_OBJ_GET: 'always_powering_up_after_ac_mains_returns': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -791,7 +791,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'restoring_power_to_state_when_ac_mains_was_lost': %s\n",
+                           "FIID_OBJ_GET: 'restoring_power_to_state_when_ac_mains_was_lost': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -875,7 +875,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'restart_cause': %s\n",
+                       "FIID_OBJ_GET: 'restart_cause': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -948,7 +948,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'minutes_per_counter': %s\n",
+                       "FIID_OBJ_GET: 'minutes_per_counter': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -959,7 +959,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'counter_reading': %s\n",
+                       "FIID_OBJ_GET: 'counter_reading': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1016,7 +1016,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'bios_boot_type': %s\n",
+                       "FIID_OBJ_GET: 'bios_boot_type': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1034,7 +1034,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'lock_out_reset_button': %s\n",
+                       "FIID_OBJ_GET: 'lock_out_reset_button': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1052,7 +1052,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'screen_blank': %s\n",
+                       "FIID_OBJ_GET: 'screen_blank': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1070,7 +1070,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'boot_device': %s\n",
+                       "FIID_OBJ_GET: 'boot_device': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1102,7 +1102,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'lock_keyboard': %s\n",
+                       "FIID_OBJ_GET: 'lock_keyboard': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1120,7 +1120,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'cmos_clear': %s\n",
+                       "FIID_OBJ_GET: 'cmos_clear': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1138,7 +1138,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'console_redirection': %s\n",
+                       "FIID_OBJ_GET: 'console_redirection': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1160,7 +1160,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'lock_out_sleep_button': %s\n",
+                       "FIID_OBJ_GET: 'lock_out_sleep_button': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1178,7 +1178,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'user_password_bypass': %s\n",
+                       "FIID_OBJ_GET: 'user_password_bypass': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1196,7 +1196,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'lock_out_reset_button': %s\n",
+                       "FIID_OBJ_GET: 'lock_out_reset_button': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1214,7 +1214,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'force_progress_event_traps': %s\n",
+                       "FIID_OBJ_GET: 'force_progress_event_traps': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1232,7 +1232,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'firmware_bios_verbosity': %s\n",
+                       "FIID_OBJ_GET: 'firmware_bios_verbosity': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1254,7 +1254,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'lock_out_via_power_button': %s\n",
+                       "FIID_OBJ_GET: 'lock_out_via_power_button': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1337,7 +1337,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'bios_boot_type': %s\n",
+                           "FIID_OBJ_GET: 'bios_boot_type': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -1355,7 +1355,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'lock_out_reset_button': %s\n",
+                           "FIID_OBJ_GET: 'lock_out_reset_button': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -1370,7 +1370,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'screen_blank': %s\n",
+                           "FIID_OBJ_GET: 'screen_blank': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -1385,7 +1385,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'boot_device': %s\n",
+                           "FIID_OBJ_GET: 'boot_device': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -1400,7 +1400,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'lock_keyboard': %s\n",
+                           "FIID_OBJ_GET: 'lock_keyboard': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -1415,7 +1415,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'cmos_clear': %s\n",
+                           "FIID_OBJ_GET: 'cmos_clear': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -1430,7 +1430,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'console_redirection': %s\n",
+                           "FIID_OBJ_GET: 'console_redirection': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -1443,7 +1443,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'lock_out_sleep_button': %s\n",
+                       "FIID_OBJ_GET: 'lock_out_sleep_button': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1455,7 +1455,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'user_password_bypass': %s\n",
+                           "FIID_OBJ_GET: 'user_password_bypass': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -1470,7 +1470,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'force_progress_event_traps': %s\n",
+                           "FIID_OBJ_GET: 'force_progress_event_traps': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -1485,7 +1485,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'firmware_bios_verbosity': %s\n",
+                           "FIID_OBJ_GET: 'firmware_bios_verbosity': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -1498,7 +1498,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'lock_out_via_power_button': %s\n",
+                       "FIID_OBJ_GET: 'lock_out_via_power_button': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1508,7 +1508,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'bios_mux_control_override': %s\n",
+                       "FIID_OBJ_GET: 'bios_mux_control_override': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -1518,7 +1518,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'bios_shared_mode_override': %s\n",
+                       "FIID_OBJ_GET: 'bios_shared_mode_override': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
