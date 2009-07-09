@@ -44,7 +44,9 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#if HAVE_GCRYPT_H
 #include <gcrypt.h>
+#endif /* HAVE_GCRYPT_H */
 
 #include "freeipmi/util/ipmi-util.h"
 #include "freeipmi/fiid/fiid.h"
@@ -175,8 +177,16 @@ ipmi_get_random (void *buf, unsigned int buflen)
 #endif /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */
 
  gcrypt_rand:
+/* achu: nothing to do with encryption, but the gcrypt lib isn't loaded 
+ * hopefully the user has /dev/random or /dev/urandom.
+ */
+#ifdef WITH_ENCRYPTION
   gcry_randomize ((unsigned char *)buf, buflen, GCRY_STRONG_RANDOM);
   return (buflen);
+#else /* !WITH_ENCRYPTION */
+  SET_ERRNO (EPERM);
+  return (-1);
+#endif /* !WITH_ENCRYPTION */
 }
 
 const char *

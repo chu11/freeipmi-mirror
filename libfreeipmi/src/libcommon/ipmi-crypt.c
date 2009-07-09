@@ -30,8 +30,10 @@
 #include <pthread.h>
 #endif /* HAVE_PTHREAD_H */
 #include <limits.h>
+#if HAVE_GCRYPT_H
 #include <gcrypt.h>
 GCRY_THREAD_OPTION_PTHREAD_IMPL;
+#endif /* HAVE_GCRYPT_H */
 
 #include "ipmi-crypt.h"
 #include "ipmi-trace.h"
@@ -40,6 +42,7 @@ GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
 static int ipmi_crypt_initialized = 0;
 
+#ifdef WITH_ENCRYPTION
 static int
 _gpg_error_to_errno (gcry_error_t e)
 {
@@ -49,10 +52,12 @@ _gpg_error_to_errno (gcry_error_t e)
   else
     return (EINVAL);
 }
+#endif /* !WITH_ENCRYPTION */
 
 int
 ipmi_crypt_init (void)
 {
+#ifdef WITH_ENCRYPTION
   gcry_error_t e;
 
   if ((e = gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) != GPG_ERR_NO_ERROR)
@@ -85,6 +90,10 @@ ipmi_crypt_init (void)
 
   ipmi_crypt_initialized++;
   return (0);
+#else /* !WITH_ENCRYPTION */
+  /* Can run this init, but the actual encryption functions will fail */
+  return (0);
+#endif /* !WITH_ENCRYPTION */
 }
 
 int
@@ -97,6 +106,7 @@ ipmi_crypt_hash (unsigned int hash_algorithm,
                  void *digest,
                  unsigned int digest_len)
 {
+#ifdef WITH_ENCRYPTION
   gcry_md_hd_t h = NULL;
   gcry_error_t e;
   int gcry_md_algorithm, gcry_md_flags = 0;
@@ -185,11 +195,16 @@ ipmi_crypt_hash (unsigned int hash_algorithm,
   if (h)
     gcry_md_close (h);
   return (rv);
+#else /* !WITH_ENCRYPTION */
+  SET_ERRNO (EPERM);
+  return (-1);
+#endif /* !WITH_ENCRYPTION */
 }
 
 int
 ipmi_crypt_hash_digest_len (unsigned int hash_algorithm)
 {
+#ifdef WITH_ENCRYPTION
   int gcry_md_algorithm;
 
   if (!IPMI_CRYPT_HASH_ALGORITHM_VALID (hash_algorithm))
@@ -210,8 +225,13 @@ ipmi_crypt_hash_digest_len (unsigned int hash_algorithm)
     gcry_md_algorithm = GCRY_MD_MD5;
 
   return (gcry_md_get_algo_dlen (gcry_md_algorithm));
+#else /* !WITH_ENCRYPTION */
+  SET_ERRNO (EPERM);
+  return (-1);
+#endif /* !WITH_ENCRYPTION */
 }
 
+#ifdef WITH_ENCRYPTION
 static int
 _cipher_crypt (unsigned int cipher_algorithm,
                unsigned int cipher_mode,
@@ -364,6 +384,7 @@ _cipher_crypt (unsigned int cipher_algorithm,
     gcry_cipher_close (h);
   return (rv);
 }
+#endif /* !WITH_ENCRYPTION */
 
 int
 ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
@@ -375,6 +396,7 @@ ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
                            void *data,
                            unsigned int data_len)
 {
+#ifdef WITH_ENCRYPTION
   return (_cipher_crypt (cipher_algorithm,
                          cipher_mode,
                          key,
@@ -384,6 +406,10 @@ ipmi_crypt_cipher_encrypt (unsigned int cipher_algorithm,
                          data,
                          data_len,
                          1));
+#else /* !WITH_ENCRYPTION */
+  SET_ERRNO (EPERM);
+  return (-1);
+#endif /* !WITH_ENCRYPTION */
 }
 
 int
@@ -396,6 +422,7 @@ ipmi_crypt_cipher_decrypt (unsigned int cipher_algorithm,
                            void *data,
                            unsigned int data_len)
 {
+#ifdef WITH_ENCRYPTION
   return (_cipher_crypt (cipher_algorithm,
                          cipher_mode,
                          key,
@@ -405,8 +432,13 @@ ipmi_crypt_cipher_decrypt (unsigned int cipher_algorithm,
                          data,
                          data_len,
                          0));
+#else /* !WITH_ENCRYPTION */
+  SET_ERRNO (EPERM);
+  return (-1);
+#endif /* !WITH_ENCRYPTION */
 }
 
+#ifdef WITH_ENCRYPTION
 static int
 _ipmi_crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info)
 {
@@ -452,16 +484,26 @@ _ipmi_crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info
 
   return (len);
 }
-
+#endif /* !WITH_ENCRYPTION */
 
 int
 ipmi_crypt_cipher_key_len (unsigned int cipher_algorithm)
 {
+#ifdef WITH_ENCRYPTION
   return (_ipmi_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH));
+#else /* !WITH_ENCRYPTION */
+  SET_ERRNO (EPERM);
+  return (-1);
+#endif /* !WITH_ENCRYPTION */
 }
 
 int
 ipmi_crypt_cipher_block_len (unsigned int cipher_algorithm)
 {
+#ifdef WITH_ENCRYPTION
   return (_ipmi_crypt_cipher_info (cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH));
+#else /* !WITH_ENCRYPTION */
+  SET_ERRNO (EPERM);
+  return (-1);
+#endif /* !WITH_ENCRYPTION */
 }

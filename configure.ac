@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.8.0.alpha0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.173 2009-07-09 16:55:47 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.174 2009-07-09 23:04:33 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -303,23 +303,51 @@ if test x"$enable_ipmisdrcachedir" = xno; then
 fi
 AC_SUBST(INSTALL_IPMISDRCACHEDIR)
 
+dnl Option to disable encryption in FreeIPMI
+dnl
+dnl May be useful/needed for embedded systems w/ IPMI in band only and
+dnl don't want to link to additional encryption libraries not on the
+dnl system.  If turned off and users use encryption features (i.e. in IPMI 2.0),
+dnl errors will be returned from the underlying subsystems.
+dnl
+dnl Default to it being on
+AC_MSG_CHECKING([for encryption support])
+AC_ARG_WITH([encryption],
+           AC_HELP_STRING([--without-encryption], [don't support encryption]),
+           [ case "$withval" in
+             no)  ac_with_encryption=no ;;
+             yes) ac_with_encryption=yes ;;
+             *)   ac_with_encryption=yes ;;
+           esac
+           ])
+AC_MSG_RESULT([${ac_with_encryption=yes}])
+
+if test x"${ac_with_encryption}" = xyes; then
+   AC_DEFINE([WITH_ENCRYPTION], [1], [Define if you want encryption])
+fi
+
 dnl Checks for libraries.
-AC_CHECK_LIB([gcrypt], [gcry_md_open], [have_gcrypt=yes], [have_gcrypt=no])
-if test "x${have_gcrypt}" = "xno"; then
-   AC_MSG_ERROR([libgcrypt required to build libfreeipmi])
-   AC_MSG_NOTICE([Note: libgpg-error required for libgcrypt])
+dnl don't include lib if LAN not desired
+if test x"${ac_with_encryption}" = xyes; then
+  AC_CHECK_LIB([gcrypt], [gcry_md_open], [have_gcrypt=yes], [have_gcrypt=no])
+  if test "x${have_gcrypt}" = "xno"; then
+     AC_MSG_ERROR([libgcrypt required to build libfreeipmi])
+     AC_MSG_NOTICE([Note: libgpg-error required for libgcrypt])
+  fi
+  AC_CHECK_HEADERS([gcrypt.h], [have_gcrypt_header=yes], [have_gcrypt_header=no])
+  if test "x${have_gcrypt_header}" = "xno"; then
+     AC_MSG_ERROR([gcrypt.h not found])
+  fi
+  AC_CHECK_DECL([GCRYCTL_SET_THREAD_CBS], 
+                [have_gcrypt_threads=yes],
+                [have_gcrypt_threads=no],
+                [#include <gcrypt.h>])
+  if test "x${have_gcrypt_threads}" = "xno"; then
+     AC_MSG_ERROR([libgcrypt with threads support required for libfreeipmi])
+  fi
+  GCRYPT_LIBS=-lgcrypt
 fi
-AC_CHECK_HEADER([gcrypt.h], [have_gcrypt_header=yes], [have_gcrypt_header=no])
-if test "x${have_gcrypt_header}" = "xno"; then
-   AC_MSG_ERROR([gcrypt.h not found])
-fi
-AC_CHECK_DECL([GCRYCTL_SET_THREAD_CBS], 
-              [have_gcrypt_threads=yes],
-              [have_gcrypt_threads=no],
-              [#include <gcrypt.h>])
-if test "x${have_gcrypt_threads}" = "xno"; then
-   AC_MSG_ERROR([libgcrypt with threads support required for libfreeipmi])
-fi
+AC_SUBST(GCRYPT_LIBS)
 
 dnl FreeBSD < 5 has getopt_long in a separate gnugetopt library
 AC_CHECK_FUNC([getopt_long], [have_getopt_long=yes],
@@ -388,7 +416,7 @@ AC_CHECK_LIB([m], [log2])
 
 dnl Solaris needs -lsocket
 AC_CHECK_FUNC([socket], 
-              , 
+              ,
               AC_CHECK_LIB([socket],
                            [socket]))
 
