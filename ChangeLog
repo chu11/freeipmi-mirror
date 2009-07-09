@@ -1,3 +1,14 @@
+2009-07-09  Fillod Stephane <stephane.fillod@grassvalley.com>
+
+	* configure.ac: Fix macro name typo.
+
+	* configure.ac, common/src/portability/freeipmi-portability.h: Add
+	portability for cbrt.
+
+	* common/src/toolcommon/tool-cmdline-common.c
+	(verify_common_cmd_args): Do not check for execute permissions on
+	driver device.
+	
 2009-07-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Get Device ID response field

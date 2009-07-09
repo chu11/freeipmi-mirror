@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.8.0.alpha0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.172 2009-05-26 23:29:24 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.173 2009-07-09 16:55:47 chu11 Exp $])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
@@ -309,7 +309,7 @@ if test "x${have_gcrypt}" = "xno"; then
    AC_MSG_ERROR([libgcrypt required to build libfreeipmi])
    AC_MSG_NOTICE([Note: libgpg-error required for libgcrypt])
 fi
-AC_CHECK_HEADER([gcrypt.h], [have_gcrypte_header=yes], [have_gcrypt_header=no])
+AC_CHECK_HEADER([gcrypt.h], [have_gcrypt_header=yes], [have_gcrypt_header=no])
 if test "x${have_gcrypt_header}" = "xno"; then
    AC_MSG_ERROR([gcrypt.h not found])
 fi
@@ -373,6 +373,7 @@ AC_CHECK_FUNCS([strerror strerror_r])
 AC_CHECK_FUNCS([flockfile fputs_unlocked fwrite_unlocked])
 AC_CHECK_FUNCS([iopl])
 AC_CHECK_FUNCS([asprintf])
+AC_CHECK_FUNCS([cbrt])
 
 # At least on freebsd, putc_unlocked is a macro, so the standard
 # AC_CHECK_FUNCS doesn't work well.
