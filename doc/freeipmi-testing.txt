@@ -463,7 +463,8 @@ Test)
 Execute ipmi-sel with no ipmi-sel specific options, verify tool:
 - Executes without errors
 - All dates on SEL records are correct
-  * If not, is the BMC time set correctly?
+  * If not, Is the BMC time set correctly?
+  * If not, is OS time/timezone set correctly?
 - Sensor names are output correctly.
   * If not, are the SEL records reporting the correct sensor number
     and/or sensor owner id?
