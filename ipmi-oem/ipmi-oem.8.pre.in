@@ -65,6 +65,10 @@ retrieve the motherboard asset tag.
 On some Dell motherboards (confirmed Poweredge R610), this command can
 retrieve the motherboard service tag.
 .TP
+.B get-product-name
+On some Dell motherboards (confirmed Poweredge R610), this command
+can retrieve the motherboard product name.
+.TP
 .B get-power-info
 On some Dell motherboards (confirmed Poweredge R610), this command can
 retrieve power information.

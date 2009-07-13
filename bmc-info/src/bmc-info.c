@@ -701,7 +701,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
     }
   string_count += len;
 
-  /* string_length is 8 bits, so we should call >= 17 times,
+  /* string_length is 8 bits, so we should not call >= 17 times,
    *
    * ceiling ( (255 - 14) / 16 ) + 1 = 17
    *

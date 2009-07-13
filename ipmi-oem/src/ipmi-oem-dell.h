@@ -25,6 +25,8 @@ int ipmi_oem_dell_get_asset_tag (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_service_tag (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_dell_get_product_name (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_reset_cumulative_power_info (ipmi_oem_state_data_t *state_data);

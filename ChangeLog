@@ -1,3 +1,7 @@
+2009-07-13  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Support Dell get-product-name command.
+	
 2009-07-09  Fillod Stephane <stephane.fillod@grassvalley.com>, Albert Chu <chu11@llnl.gov>
 
 	* configure.ac, libfreeipmi/: Support --without-encryption build
