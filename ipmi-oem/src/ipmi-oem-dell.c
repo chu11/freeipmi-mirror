@@ -275,7 +275,7 @@ _get_dell_system_info (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (len < 2)
+  if (len < 3)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -284,8 +284,10 @@ _get_dell_system_info (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
 
+  /* configuration_parameter_data[0] is the set selector, we don't care */
+
   /* 0h = ascii */
-  if (configuration_parameter_data[0])
+  if (configuration_parameter_data[1])
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -294,14 +296,14 @@ _get_dell_system_info (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
 
-  string_length = configuration_parameter_data[1];
+  string_length = configuration_parameter_data[2];
 
   if (!string_length)
     goto out;
 
-  if (len - 2)
+  if (len - 3)
     {
-      if ((len - 2) > (string_len - string_count))
+      if ((len - 3) > (string_len - string_count))
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -310,9 +312,9 @@ _get_dell_system_info (ipmi_oem_state_data_t *state_data,
         }
 
       memcpy (string + string_count,
-              &(configuration_parameter_data[2]),
-              (len - 2));
-      string_count += (len - 2);
+              &(configuration_parameter_data[3]),
+              (len - 3));
+      string_count += (len - 3);
     }
 
   /* string_length is 8 bits, so we should not call >= 17 times,
@@ -359,7 +361,18 @@ _get_dell_system_info (ipmi_oem_state_data_t *state_data,
           goto cleanup;
         }
       
-      if ((string_count + len) > (string_len - string_count))
+      if (len < 2)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                           len);
+          goto cleanup;
+        }
+      
+      /* configuration_parameter_data[0] is the set selector, we don't care */
+
+      if ((string_count + (len - 1)) > (string_len - string_count))
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -368,10 +381,10 @@ _get_dell_system_info (ipmi_oem_state_data_t *state_data,
         }
       
       memcpy (string + string_count,
-              &(configuration_parameter_data[0]),
-              len);
+              &(configuration_parameter_data[1]),
+              (len - 1));
       
-      string_count += len;
+      string_count += (len - 1);
       
       set_selector++;
     }
@@ -400,12 +413,14 @@ ipmi_oem_dell_get_product_name (ipmi_oem_state_data_t *state_data)
    *
    * Set Selector 0:
    *
-   * 1st byte = encoding (0h = ascii)
-   * 2nd byte = string length
+   * 1st byte = set selector
+   * 2nd byte = encoding (0h = ascii)
+   * 3rd byte = string length
    * ? bytes = string
    *
    * Set Selector > 0
    *
+   * 1st byte = set selector
    * ? bytes = string
    */
   
