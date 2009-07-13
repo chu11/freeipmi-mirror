@@ -73,6 +73,12 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_get_service_tag
     },
     {
+      "get-product-name",
+      NULL,
+      0,
+      ipmi_oem_dell_get_product_name
+    },
+    {
       "get-power-info",
       NULL,
       0,

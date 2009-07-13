@@ -50,11 +50,14 @@
 /* 256 b/c length is 8 bit field */
 #define IPMI_OEM_DELL_MAX_BYTES 256
 
+/* Will call ipmi_cmd_get_system_info_parameters only once, b/c field
+ * requested is defined by OEM to be < 16 bytes in length
+ */
 static int
-_get_dell_system_info (ipmi_oem_state_data_t *state_data,
-                       uint8_t parameter_selector,
-                       char *string,
-                       unsigned int string_len)
+_get_dell_system_info_short (ipmi_oem_state_data_t *state_data,
+                             uint8_t parameter_selector,
+                             char *string,
+                             unsigned int string_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
@@ -78,7 +81,7 @@ _get_dell_system_info (ipmi_oem_state_data_t *state_data,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
                                            parameter_selector,
                                            0,
-                                           0,
+                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -100,24 +103,41 @@ _get_dell_system_info (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
 
-  /*
-   * configuration_parameter_data[0] - string length
+  /* configuration_parameter_data[0] - string length
    * configuration_parameter_data[1-n] - string
-   *
-   * We ignore the first byte, assume its correct.
    */
 
-  if ((len - 1) > 0)
+  if (len < 1)
     {
-      if ((len - 1) > string_len)
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+
+  if (configuration_parameter_data[0] != (len - 1))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: invalid string length returned: %u\n",
+                       configuration_parameter_data[0]);
+      goto cleanup;
+    }
+
+  if (configuration_parameter_data[0])
+    {
+      if (configuration_parameter_data[0] > string_len)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "internal buffer overflow\n");
           goto cleanup;
         }
-
-      memcpy (string, &(configuration_parameter_data[1]), (len - 1));
+      
+      memcpy (string,
+              &(configuration_parameter_data[1]),
+              configuration_parameter_data[0]);
     }
 
   rv = 0;
@@ -143,20 +163,20 @@ ipmi_oem_dell_get_asset_tag (ipmi_oem_state_data_t *state_data)
    *
    * Parameter data response formatted:
    *
-   * 1 byte = length
+   * 1st byte = length
    * ? bytes = string
    */
 
   memset (asset_tag, '\0', IPMI_OEM_DELL_MAX_BYTES + 1);
 
-  if (_get_dell_system_info (state_data,
-                             0xC4,
-                             asset_tag,
-                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+  if (_get_dell_system_info_short (state_data,
+                                   0xC4,
+                                   asset_tag,
+                                   IPMI_OEM_DELL_MAX_BYTES) < 0)
     goto cleanup;
  
   pstdout_printf (state_data->pstate,
-                  "Asset Tag: %s\n",
+                  "%s\n",
                   asset_tag);
  
   rv = 0;
@@ -181,22 +201,226 @@ ipmi_oem_dell_get_service_tag (ipmi_oem_state_data_t *state_data)
    *
    * Parameter data response formatted:
    *
-   * 1 byte = length
+   * 1st byte = length
    * ? bytes = string
    */
 
   memset (service_tag, '\0', IPMI_OEM_DELL_MAX_BYTES + 1);
 
-  if (_get_dell_system_info (state_data,
-                             0xC5,
-                             service_tag,
-                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+  if (_get_dell_system_info_short (state_data,
+                                   0xC5,
+                                   service_tag,
+                                   IPMI_OEM_DELL_MAX_BYTES) < 0)
     goto cleanup;
  
   pstdout_printf (state_data->pstate,
-                  "Service Tag: %s\n",
+                  "%s\n",
                   service_tag);
  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_get_dell_system_info (ipmi_oem_state_data_t *state_data,
+                       uint8_t parameter_selector,
+                       char *string,
+                       unsigned int string_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t set_selector = 0;
+  uint8_t string_length = 0;
+  unsigned int string_count = 0;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (string);
+  assert (string_len);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+                                           IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                           parameter_selector,
+                                           set_selector,
+                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                           obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: %s\n",
+                       ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_strerror (fiid_obj_errnum (obj_cmd_rs)));
+      goto cleanup;
+    }
+
+  if (len < 2)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+
+  /* 0h = ascii */
+  if (configuration_parameter_data[0])
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: invalid string type returned: %Xh\n",
+                       configuration_parameter_data[0]);
+      goto cleanup;
+    }
+
+  string_length = configuration_parameter_data[1];
+
+  if (!string_length)
+    goto out;
+
+  if (len - 2)
+    {
+      if ((len - 2) > (string_len - string_count))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "internal buffer overflow\n");
+          goto cleanup;
+        }
+
+      memcpy (string + string_count,
+              &(configuration_parameter_data[2]),
+              (len - 2));
+      string_count += (len - 2);
+    }
+
+  /* string_length is 8 bits, so we should not call >= 17 times,
+   *
+   * ceiling ( (255 - 14) / 16 ) + 1 = 17
+   *
+   */
+
+  set_selector++;
+  while (string_count < string_length && set_selector < 17)
+    {
+      if (fiid_obj_clear (obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_clear: %s\n",
+                           fiid_strerror (fiid_obj_errnum (obj_cmd_rs)));
+          goto cleanup;
+        }
+      
+      if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+                                               IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                               parameter_selector,
+                                               set_selector,
+                                               IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                               obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_get_system_info_parameters: %s\n",
+                           ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+          goto cleanup;
+        }
+      
+      if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                    "configuration_parameter_data",
+                                    configuration_parameter_data,
+                                    IPMI_OEM_MAX_BYTES)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                           fiid_strerror (fiid_obj_errnum (obj_cmd_rs)));
+          goto cleanup;
+        }
+      
+      if ((string_count + len) > (string_len - string_count))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "internal buffer overflow\n");
+          goto cleanup;
+        }
+      
+      memcpy (string + string_count,
+              &(configuration_parameter_data[0]),
+              len);
+      
+      string_count += len;
+      
+      set_selector++;
+    }
+
+ out:
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_dell_get_product_name (ipmi_oem_state_data_t *state_data)
+{
+  char product_name[IPMI_OEM_DELL_MAX_BYTES+1];
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell OEM
+   *
+   * Uses Get System Info command, OEM parameter number 0xD1.
+   *
+   * Parameter data response formatted:
+   *
+   * Set Selector 0:
+   *
+   * 1st byte = encoding (0h = ascii)
+   * 2nd byte = string length
+   * ? bytes = string
+   *
+   * Set Selector > 0
+   *
+   * ? bytes = string
+   */
+  
+  memset (product_name, '\0', IPMI_OEM_DELL_MAX_BYTES + 1);
+
+  if (_get_dell_system_info (state_data,
+                             0xD1,
+                             product_name,
+                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+    goto cleanup;
+
+  pstdout_printf (state_data->pstate,
+                  "%s\n",
+                  product_name);
+
   rv = 0;
  cleanup:
   return (rv);
