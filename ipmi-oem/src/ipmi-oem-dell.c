@@ -286,8 +286,7 @@ _get_dell_system_info (ipmi_oem_state_data_t *state_data,
 
   /* configuration_parameter_data[0] is the set selector, we don't care */
 
-  /* 0h = ascii */
-  if (configuration_parameter_data[1])
+  if (configuration_parameter_data[1] != IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -414,7 +413,7 @@ ipmi_oem_dell_get_product_name (ipmi_oem_state_data_t *state_data)
    * Set Selector 0:
    *
    * 1st byte = set selector
-   * 2nd byte = encoding (0h = ascii)
+   * 2nd byte = encoding
    * 3rd byte = string length
    * ? bytes = string
    *
