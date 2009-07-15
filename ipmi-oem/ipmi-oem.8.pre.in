@@ -48,90 +48,87 @@ List supported OEM IDs and Commands.
 .SH "SUPPORTED OEM IDS and COMMANDS"
 The currently supported OEM IDs and COMMANDs are:
 .TP
-.B inventec
-.RS
-.TP
-.B get-nic-status
-On some Inventec motherboards (confirmed on 5441), the NIC can be in a
-dedicated or shared status.  This command will determine the current
 .B dell
 .RS
 .TP
 .B get-asset-tag
-On some Dell motherboards (confirmed Poweredge R610), this command can
-retrieve the motherboard asset tag.
+This OEM command can retrieve the motherboard asset tag.  Command
+confirmed to work on Dell Poweredge R610.
 .TP
 .B get-service-tag
-On some Dell motherboards (confirmed Poweredge R610), this command can
-retrieve the motherboard service tag.
+This OEM command can retrieve the motherboard service tag.  Command
+confirmed to work on Dell Poweredge R610.
 .TP
 .B get-product-name
-On some Dell motherboards (confirmed Poweredge R610), this command
-can retrieve the motherboard product name.
+This OEM command can retrieve the motherboard product name.  Command
+confirmed to work on Dell Poweredge R610.
 .TP
 .B get-power-info
-On some Dell motherboards (confirmed Poweredge R610), this command can
-retrieve power information.
+This OEM command can retrieve power information.  Command confirmed to
+work on Dell Poweredge R610.
 .TP
 .B reset-cumulative-power-info
-On some Dell motherboards (confirmed Poweredge R610), this command can
-reset the cumulative power information readings (viewed via
-\fBget\-power\-info\fR)
+This OEM command can reset the cumulative power information readings
+(viewed via \fBget\-power\-info\fR) Command confirmed to work on Dell
+Poweredge R610.
+.TP
 .B reset-peak-power-info
-On some Dell motherboards (confirmed Poweredge R610), this command can
-reset the peak power information readings (viewed via
-\fBget\-power\-info\fR)
+This OEM command can reset the peak power information readings (viewed
+via \fBget\-power\-info\fR) Command confirmed to work on Dell
+Poweredge R610.
 .RE
 .TP
-NIC status.  Dedicated indicates IPMI is only available on the
-dedicated management port.  Shared indicates IPMI is also available on
-one of the primary ethernet ports.
+.B inventec
+.RS
+.TP
+.B get-nic-status
+This OEM command will determine the current NIC status as dedicated or
+shared.  Dedicated indicates IPMI is only available on the dedicated
+management port.  Shared indicates IPMI is also available on one of
+the primary ethernet ports.  Command confirmed to work on Inventec
+5441.
 .TP
 .B set-nic-status \fIdedicated|shared\fR
-On some Inventec motherboards (confirmed on 5441), the NIC can be in a
-dedicated or shared status.  (See get-nic-status above for description
-on dedicated vs. shared status.)  This command will set the current
-status to the value indicated.  This command may internally reset the
-BMC, making the BMC unusable for awhile.
+This OEM command will set the current NIC status to dedicated or
+shared.  (See get-nic-status above for description on dedicated
+vs. shared status.)  This OEM command may internally reset the BMC,
+making the BMC unusable for awhile.  Command confirmed to work on
+Inventec 5441.
 .TP
 .B get-mac-address\fR
-Get the current BMC MAC address.  This is actually not an Inventec OEM
-command, but rather the normal IPMI MAC address command (identical to
-what is used in the
-.B bmc-config(8)
-tool).  This command is placed here for convenience.
+This command will retrieve the BMC MAC address.  This is actually not
+an OEM command, but rather the normal IPMI MAC address command
+(identical to what is used in the .B bmc-config(8) tool).  This
+command is placed here for convenience.
 .TP
 .B set-mac-address \fIdedicated|shared\fR \fIMACADDR\fR
-On some Inventec motherboards (confirmed on 5441), the BMC MAC address
-cannot be set through the normal IPMI MAC address command (what is
-used in the 
-.B bmc-config(8)
-tool).  Instead the dedicated or shared MAC address must specifically
-be configured via OEM commands.  This command will allow the user to
-set either the dedicated or shared BMC MAC address.  The MACADDR
-should be specified in XX:XX:XX:XX:XX:XX form.  A shared BMC MAC
-address may conflict with normal communication ethernet communication
-on the primary ethernet port.  Users may wish to configuration an
-alternate MAC address instead.  After configuration of the MAC
-address, the BMC must be reset.  This may be accomplished by executing
-a cold-reset with
-.B bmc-device(8).
+This OEM command will set the dedicated or shared BMC MAC address.
 (See get-nic-status above for description on dedicated vs. shared
-status.)
+status.)  The BMC MAC address cannot be set through the normal IPMI
+MAC address command (what is used in the
+.B bmc-config(8)
+tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
+shared BMC MAC address may conflict with normal communication ethernet
+communication on the primary ethernet port.  Users may wish to
+configuration an alternate MAC address instead.  After configuration
+of the MAC address, the BMC must be reset.  This may be accomplished
+by executing a cold-reset with
+.B bmc-device(8).
+Command confirmed to work on Inventec 5441.
 .RE
 .TP
 .B supermicro
 .RS
 .TP
-.B reset-intrusion 
-On some Supermicro motherboards (confirmed on H8QME), the motherboard intrusion flag is not
-reset after it has been triggered.  For example, in
+.B reset-intrusion
+This OEM command will reset the motherboard intrusion flag after it
+has been triggered.  For example, in
 .B ipmi-sensors
 or
 .B ipmi-sel,
 you may notice a 'General Chassis Intrusion' if the motherboard
-chassis is not open, but was opened in the past.  This command will
-reset the flag back to an untriggered state.
+chassis is not open, but was opened in the past.  Command confirmed to
+work on Supermicro H8QME.
 .RE
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
