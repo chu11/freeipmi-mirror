@@ -22,7 +22,7 @@ I have worked extensively on:
 Intel SR870BN4
 Supermicro H8QME with SIMSO daughter card
 Sun X4140
-Inventec 5441
+Inventec 5441/Xanadu2
 
 I have had some temporary access to:
 
@@ -109,18 +109,18 @@ Intel SR1520ML/X38ML: Username capabilities and/or K_g status are not
 reported properly by the Get Authentication Capabilities response.
 Resolved with a workaround ignoring those flags.
 
-Inventec 5441: The remote BMC (seems to) incorrectly calculates keys
-using the privilege specified in the open session stage rather than
-the privilege used during the RAKP1 stage.  This can be problematic if
-you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
-instead of a real privilege level.  Resolved with a workaround to
-handle this specific situation.
+Inventec 5441/Xanadu2: The remote BMC (seems to) incorrectly
+calculates keys using the privilege specified in the open session
+stage rather than the privilege used during the RAKP1 stage.  This can
+be problematic if you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
+during that stage instead of a real privilege level.  Resolved with a
+workaround to handle this specific situation.
 
-Inventec 5441: Given specific configuration of IPMI 1.5 authentication
-types, certain user privileges are not specified correctly during Get
-Authentication Capabilities and an CCh CCh = "Invalid data field in
-request" is returned during Activiate Session.  No resolution
-currently available.
+Inventec 5441/Xanadu2: Given specific configuration of IPMI 1.5
+authentication types, certain user privileges are not specified
+correctly during Get Authentication Capabilities and an CCh CCh =
+"Invalid data field in request" is returned during Activiate Session.
+No resolution currently available.
 
 Session Issues
 --------------
@@ -222,8 +222,8 @@ Intel Unknown Motherboard: The Activate Payload requires the "BMC
 asserts CTS and DCD/DSR to baseboard upon activation" flag to be set.
 Resolved with an Intel specific workaround.
 
-Inventec 5441: SOL payload sizes are reported incorrectly.  Resolved
-with a workaround to skip payload size checks.
+Inventec 5441/Xanadu2: SOL payload sizes are reported incorrectly.
+Resolved with a workaround to skip payload size checks.
 
 bmc-config
 ----------
@@ -259,22 +259,36 @@ Sun X4140: Get Username and Get User Payload commands fail with CCh =
 "Invalid data field in request" if a username was not set previously.
 Added workaround for this specific case.
 
-Inventec 5441: User access parameters Enable_IPMI_Msgs and
+Inventec 5441/Xanadu2: User access parameters Enable_IPMI_Msgs and
 Privilege_Limit are not changeable via Set User Access for some users.
 The values are not changeable for some users until a username has been
 set.  No current resolution.
 
-Inventec 5441: When disabling IPMI via Enable_IPMI_Msgs, IPMI over LAN
-still works for a user.  No current resolution.
+Inventec 5441/Xanadu2: When disabling IPMI via Enable_IPMI_Msgs, IPMI
+over LAN still works for a user.  No current resolution.
+
+Inventec 5441/Xanadu2: Setting a channel privilege limit (i.e. LAN
+channel privilege limit) does not seem to affect authentication and/or
+execution of IPMI commands.  No current resolution.
+
+Inventec 5441/Xanadu2: Setting Non-volatile settings seems to also
+change volatile settings for channel configuration.  No current
+resolution.
 
 Forgotten/Undocumented Motherboard(s): Setting a password using IPMI
 2.0 extensions (i.e. up to 20 bytes in length) does not appear to
 work.  User must configure password using IPMI 1.5 formatted payloads.
 
+Dell Poweredge R610: Configuring user access fields for user 16
+results in 0xCC completion codes.  No current resolution.
+
+Dell Poweredge R610: All Authentication Type enables fields cannot be
+configured, results in 0xCC completion codes.  No current resolution.
+
 ipmi-fru
 --------
 
-Forgotten/Undocumented Motherboard(s), Inventec 5441, Dell Poweredge
+Forgotten/Undocumented Motherboard(s), Inventec 5441/Xanadu2, Dell Poweredge
 R610: Some FRU data has invalid checksums.  Resolved with workaround
 to ignore the checksum (and pray for the best).
 
@@ -317,7 +331,7 @@ Supermicro H8QME with SIMSO daughter card: Some sensors do not return
 sensor event bitmasks in accordance to the IPMI specification.  This
 bug is confirmed to be fixed on newer firmware.
 
-Inventec 5441: Several sensors have bogus Entity IDs.  In other words,
+Inventec 5441/Xanadu2: Several sensors have bogus Entity IDs.  In other words,
 not in the valid Entity ID range, or OEM defined range.  No resolution
 required, output alternate text appropriately.
 
