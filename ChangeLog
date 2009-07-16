@@ -1,3 +1,7 @@
+2009-07-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Support Dell get-fcb-version command.
+	
 2009-07-13  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Dell get-product-name command.

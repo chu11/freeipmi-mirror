@@ -441,6 +441,67 @@ ipmi_oem_dell_get_product_name (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int32_t rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* llnlxanadu2 OEM
+   *
+   * Get FCB Version Request
+   *
+   * 0x34 - OEM network function
+   * 0x16 - OEM cmd
+   *
+   * Get FCB Version Response
+   *
+   * 0x16 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - major version (in hex)
+   * 0x?? - minor version (in hex)
+   */
+
+  bytes_rq[0] = 0x16;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x34, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   4,
+                                                   0x16,
+                                                   0x34) < 0)
+    goto cleanup;
+
+  pstdout_printf (state_data->pstate,
+                  "%X.%02X\n",
+                  bytes_rs[2],
+                  bytes_rs[3]);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
