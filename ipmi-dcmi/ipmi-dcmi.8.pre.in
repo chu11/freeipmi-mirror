@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmi-dcmi.8.pre.in,v 1.1 2009-05-26 23:35:57 chu11 Exp $
+.\"$Id: ipmi-dcmi.8.pre.in,v 1.2 2009-07-16 22:42:19 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
 .\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -30,15 +30,16 @@ ipmi-dcmi \- IPMI DCMI utility
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B Ipmi-dcmi
-is used to execute Data Center Manageability Interface (DCMI) IPMI
-extension commands.  DCMI extensions include support for asset
-management and power usage management.  Most will be interested in
-DCMI for its power management features.  By configuring an exception
-action, power limit, and correction time limit, power usage in a data
-center can be managed more affectively.  Please see
+is used to execute Data Center Manageability Interface (often referred
+to as DCM or DCMI) IPMI extension commands.  DCMI extensions include
+support for asset management and power usage management.  Most will be
+interested in DCMI for its power management features.  By configuring
+an exception action, power limit, and correction time limit, power
+usage in a data center can be managed more affectively.  Please see
 \fB\-\-set\-power\-limit\fR option below for more information.
 
-Many DCMI specification features are not implemented directly in this tool.  Please see
+The DCMI specification encompasses many traditional IPMI features that
+are not implemented directly in this tool.  Please see
 .B ipmiconsole(8)
 for Serial-over-LAN (SOL) support,
 .B ipmi-chassis(8)
