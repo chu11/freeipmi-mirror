@@ -55,10 +55,6 @@ The currently supported OEM IDs and COMMANDs are:
 This OEM command can retrieve the motherboard asset tag, service tag,
 or product name.  Command confirmed to work on Dell Poweredge R610.
 .TP
-.B get-fcb-version
-This OEM command can retrieve the fan control board (FCB) version
-number.  Command confirmed to work on Dell Xanadu2.
-.TP
 .B get-power-info
 This OEM command can retrieve power information.  Command confirmed to
 work on Dell Poweredge R610.
@@ -67,6 +63,10 @@ work on Dell Poweredge R610.
 This OEM command can reset the cumulative or peak power information
 readings (viewed via \fBget\-power\-info\fR).  Command confirmed to
 work on Dell Poweredge R610.
+.TP
+.B get-fcb-version
+This OEM command can retrieve the fan control board (FCB) version
+number.  Command confirmed to work on Dell Xanadu2.
 .RE
 .TP
 .B inventec

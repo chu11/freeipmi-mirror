@@ -67,12 +67,6 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_get_system_info
     },
     {
-      "get-fcb-version",
-      NULL,
-      0,
-      ipmi_oem_dell_get_fcb_version
-    },
-    {
       "get-power-info",
       NULL,
       0,
@@ -83,6 +77,12 @@ struct ipmi_oem_command oem_dell[] =
       "<cumulative|peak>",
       1,
       ipmi_oem_dell_reset_power_info
+    },
+    {
+      "get-fcb-version",
+      NULL,
+      0,
+      ipmi_oem_dell_get_fcb_version
     },
     {
       NULL,
