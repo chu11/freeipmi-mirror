@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmiconsole.8.pre.in,v 1.43 2009-05-27 17:45:28 chu11 Exp $
+.\"$Id: ipmiconsole.8.pre.in,v 1.44 2009-07-16 22:39:31 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -195,6 +195,14 @@ the problem.
 
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-sol-only-text.man>
+#include <@top_srcdir@/common/man/manpage-common-known-issues.man>
+.LP
+Some motherboards define an OEM SOL inactivity timeout for SOL
+sessions.  If SOL sessions stay inactive for long periods of time,
+.B ipmiconsole
+sessions may be abruptly closed, most likely resulting in session
+timeout errors.  Please see OEM notes for information on modifying
+this parameter if you wish for sessions to stay active longer.
 .SH "SPECIFIC HARDWARE NOTES"
 Intel SR1520ML/X38ML: After a reboot, the SOL session appears to
 "disconnect" from the motherboard but stay alive.  
