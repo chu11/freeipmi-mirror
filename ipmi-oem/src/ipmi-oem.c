@@ -61,22 +61,10 @@ struct ipmi_oem_id
 struct ipmi_oem_command oem_dell[] =
   {
     {
-      "get-asset-tag",
-      NULL,
-      0,
-      ipmi_oem_dell_get_asset_tag
-    },
-    {
-      "get-service-tag",
-      NULL,
-      0,
-      ipmi_oem_dell_get_service_tag
-    },
-    {
-      "get-product-name",
-      NULL,
-      0,
-      ipmi_oem_dell_get_product_name
+      "get-service-info",
+      "<asset-tag|service-tag|product-name>",
+      1,
+      ipmi_oem_dell_get_system_info
     },
     {
       "get-fcb-version",
@@ -91,16 +79,10 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_get_power_info
     },
     {
-      "reset-cumulative-power-info",
-      NULL,
-      0,
-      ipmi_oem_dell_reset_cumulative_power_info
-    },
-    {
-      "reset-peak-power-info",
-      NULL,
-      0,
-      ipmi_oem_dell_reset_peak_power_info
+      "reset-power-info",
+      "<cumulative|peak>",
+      1,
+      ipmi_oem_dell_reset_power_info
     },
     {
       NULL,

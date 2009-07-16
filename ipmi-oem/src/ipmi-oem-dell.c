@@ -146,87 +146,11 @@ _get_dell_system_info_short (ipmi_oem_state_data_t *state_data,
   return (rv);
 }
 
-int
-ipmi_oem_dell_get_asset_tag (ipmi_oem_state_data_t *state_data)
-{
-  char asset_tag[IPMI_OEM_DELL_MAX_BYTES+1];
-  int rv = -1;
-
-  assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
-
-  /* Dell OEM
-   *
-   * From http://linux.dell.com/files/openipmi/ipmitool/
-   *
-   * Uses Get System Info command, OEM parameter number 0xC4.
-   *
-   * Parameter data response formatted:
-   *
-   * 1st byte = length
-   * ? bytes = string
-   */
-
-  memset (asset_tag, '\0', IPMI_OEM_DELL_MAX_BYTES + 1);
-
-  if (_get_dell_system_info_short (state_data,
-                                   0xC4,
-                                   asset_tag,
-                                   IPMI_OEM_DELL_MAX_BYTES) < 0)
-    goto cleanup;
- 
-  pstdout_printf (state_data->pstate,
-                  "%s\n",
-                  asset_tag);
- 
-  rv = 0;
- cleanup:
-  return (rv);
-}
-
-int
-ipmi_oem_dell_get_service_tag (ipmi_oem_state_data_t *state_data)
-{
-  char service_tag[IPMI_OEM_DELL_MAX_BYTES+1];
-  int rv = -1;
-
-  assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
-
-  /* Dell OEM
-   *
-   * From http://linux.dell.com/files/openipmi/ipmitool/
-   *
-   * Uses Get System Info command, OEM parameter number 0xC5.
-   *
-   * Parameter data response formatted:
-   *
-   * 1st byte = length
-   * ? bytes = string
-   */
-
-  memset (service_tag, '\0', IPMI_OEM_DELL_MAX_BYTES + 1);
-
-  if (_get_dell_system_info_short (state_data,
-                                   0xC5,
-                                   service_tag,
-                                   IPMI_OEM_DELL_MAX_BYTES) < 0)
-    goto cleanup;
- 
-  pstdout_printf (state_data->pstate,
-                  "%s\n",
-                  service_tag);
- 
-  rv = 0;
- cleanup:
-  return (rv);
-}
-
 static int
-_get_dell_system_info (ipmi_oem_state_data_t *state_data,
-                       uint8_t parameter_selector,
-                       char *string,
-                       unsigned int string_len)
+_get_dell_system_info_long (ipmi_oem_state_data_t *state_data,
+                            uint8_t parameter_selector,
+                            char *string,
+                            unsigned int string_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
@@ -397,17 +321,52 @@ _get_dell_system_info (ipmi_oem_state_data_t *state_data,
 }
 
 int
-ipmi_oem_dell_get_product_name (ipmi_oem_state_data_t *state_data)
+ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 {
-  char product_name[IPMI_OEM_DELL_MAX_BYTES+1];
+  char string[IPMI_OEM_DELL_MAX_BYTES+1];
   int rv = -1;
 
   assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  /* achu: handle some common typo situations */
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "asset-tag")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "asset_tag")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "assettag")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "service-tag")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "service_tag")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "servicetag")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "product-name")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "product_name")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "productname"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
 
   /* Dell OEM
    *
-   * Uses Get System Info command, OEM parameter number 0xD1.
+   * From http://linux.dell.com/files/openipmi/ipmitool/
+   *
+   * Uses Get System Info command
+   *
+   * For asset-tag and service-tag, the response format is different
+   * than product name.
+   *
+   * asset-tag = 0xC4
+   * service-tag = 0xC5
+   *
+   * Parameter data response formatted:
+   *
+   * 1st byte = length
+   * ? bytes = string
+   *
+   * product-name = 0xD1
    *
    * Parameter data response formatted:
    *
@@ -423,19 +382,42 @@ ipmi_oem_dell_get_product_name (ipmi_oem_state_data_t *state_data)
    * 1st byte = set selector
    * ? bytes = string
    */
-  
-  memset (product_name, '\0', IPMI_OEM_DELL_MAX_BYTES + 1);
 
-  if (_get_dell_system_info (state_data,
-                             0xD1,
-                             product_name,
-                             IPMI_OEM_DELL_MAX_BYTES) < 0)
-    goto cleanup;
+  memset (string, '\0', IPMI_OEM_DELL_MAX_BYTES + 1);
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "asset-tag")
+      || !strcasecmp (state_data->prog_data->args->oem_options[0], "asset_tag")
+      || !strcasecmp (state_data->prog_data->args->oem_options[0], "assettag"))
+    {
+      if (_get_dell_system_info_short (state_data,
+                                       0xC4,
+                                       string,
+                                       IPMI_OEM_DELL_MAX_BYTES) < 0)
+        goto cleanup;
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "service-tag")
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "service_tag")
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "servicetag"))
+    {
+      if (_get_dell_system_info_short (state_data,
+                                       0xC5,
+                                       string,
+                                       IPMI_OEM_DELL_MAX_BYTES) < 0)
+        goto cleanup;
+    }
+  else
+    {
+      if (_get_dell_system_info_long (state_data,
+                                      0xD1,
+                                      string,
+                                      IPMI_OEM_DELL_MAX_BYTES) < 0)
+        goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "%s\n",
-                  product_name);
-
+                  string);
+ 
   rv = 0;
  cleanup:
   return (rv);
@@ -655,9 +637,8 @@ ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
-static int
-_ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data,
-                                 uint8_t field)
+int
+ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
@@ -665,7 +646,19 @@ _ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data,
   int rv = -1;
 
   assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "cumulative")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "peak"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
 
   /* Dell OEM
    *
@@ -688,8 +681,12 @@ _ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data,
   bytes_rq[0] = 0x9d;
   bytes_rq[1] = 0x07;
   bytes_rq[2] = 0x01;
-  bytes_rq[3] = field;
 
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cumulative"))
+    bytes_rq[3] = 1;
+  else
+    bytes_rq[3] = 2;
+  
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
                               0x30, /* network function */
@@ -704,7 +701,7 @@ _ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data,
                        ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
       goto cleanup;
     }
-
+  
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -712,21 +709,10 @@ _ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data,
                                                    0x9d,
                                                    0x30) < 0)
     goto cleanup;
-
+  
   rv = 0;
  cleanup:
   return (rv);
  
 }
 
-int
-ipmi_oem_dell_reset_cumulative_power_info (ipmi_oem_state_data_t *state_data)
-{
-  return (_ipmi_oem_dell_reset_power_info (state_data, 1));
-}
-
-int
-ipmi_oem_dell_reset_peak_power_info (ipmi_oem_state_data_t *state_data)
-{
-  return (_ipmi_oem_dell_reset_power_info (state_data, 2));
-}
