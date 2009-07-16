@@ -61,7 +61,7 @@ struct ipmi_oem_id
 struct ipmi_oem_command oem_dell[] =
   {
     {
-      "get-service-info",
+      "get-system-info",
       "<asset-tag|service-tag|product-name>",
       1,
       ipmi_oem_dell_get_system_info
