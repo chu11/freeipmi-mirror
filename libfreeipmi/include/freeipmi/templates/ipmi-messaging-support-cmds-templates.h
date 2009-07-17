@@ -320,6 +320,33 @@ fiid_template_t tmpl_cmd_get_bt_interface_capabilities_rs =
     { 0, "", 0}
   };
 
+Master Write-Read Request
+-------------------------
+
+fiid_template_t tmpl_cmd_master_write_read_rq = 
+  {
+    { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,    "bus_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3,    "bus_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,    "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,    "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7,    "slave_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,    "read_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2040, "data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+Master Write-Read Response
+--------------------------
+
+fiid_template_t tmpl_cmd_master_write_read_rs =
+  {
+    { 8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 2040, "data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
 Get Channel Authentication Capabilities Request
 -----------------------------------------------
 
