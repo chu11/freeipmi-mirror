@@ -1,3 +1,7 @@
+doc
+---
+list interpret oem data mobos
+
 inband
 ------
 --fail-if-ipmi-not-detected

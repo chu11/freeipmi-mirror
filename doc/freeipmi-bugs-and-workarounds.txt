@@ -22,7 +22,8 @@ I have worked extensively on:
 Intel SR870BN4
 Supermicro H8QME with SIMSO daughter card
 Sun X4140
-Inventec 5441/Xanadu2
+Inventec 5441/Dell Xanadu2
+Dell Poweredge R610
 
 I have had some temporary access to:
 
@@ -31,7 +32,6 @@ Edition)
 Sun Fire 4100 with ILOM
 Tyan S4811 with SMDC daughter card
 Supermicro X6-DHR-1G with BMC2.0 daughter card
-Dell Poweredge R610
 
 The remaining motherboards (and subsequent bugs/workarounds) listed
 below are from interaction with users in the community and I have
