@@ -19,7 +19,7 @@ of working on will probably have more issues discovered.
 
 I have worked extensively on:
 
-Intel SR870BN4
+Intel SR870BN4/Tiger 4
 Supermicro H8QME with SIMSO daughter card
 Sun X4140
 Inventec 5441/Dell Xanadu2
@@ -47,10 +47,10 @@ IPMI.
 Authentication Issues
 ---------------------
 
-Intel SR870BN4: BMCs would not respond to retransmissions of a Get
-Session Challenge Request if a previous Get Session Challenge response
-was lost.  Resolved by sending retransmitted Get Session Challenge
-requests from a different source port.
+Intel SR870BN4/Tiger 4: BMCs would not respond to retransmissions of a
+Get Session Challenge Request if a previous Get Session Challenge
+response was lost.  Resolved by sending retransmitted Get Session
+Challenge requests from a different source port.
 
 Supermicro H8QME with SIMSO daughter card: The IPMI 2.0 packet
 responses for RAKP 2 have payload lengths that are off by 1.  Resolved
@@ -125,8 +125,9 @@ No resolution currently available.
 Session Issues
 --------------
 
-Intel SR870BN4: There is no response from the IPMI close command if a
-RESET is executed.  Resolved by closing the session early.
+Intel SR870BN4/Tiger 4: There is no response from the IPMI close
+command if a RESET is executed.  Resolved by closing the session
+early.
 
 Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
 packet responses return empty session IDs to the client.  Resolved
