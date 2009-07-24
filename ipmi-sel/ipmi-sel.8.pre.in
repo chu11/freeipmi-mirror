@@ -107,6 +107,9 @@ Hex-dump SEL entries.
 #include <@top_srcdir@/common/man/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
+#include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
+.LP
+Inventec 5441/Dell Xanadu2
 .SH "EXAMPLES"
 .B # ipmi-sel 
 .PP

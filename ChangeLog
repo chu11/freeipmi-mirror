@@ -1,3 +1,10 @@
+2009-07-24  Albert Chu <chu11@llnl.gov>
+
+	* common/man/manpage-common-oem-interpretation.man: New file.
+
+	* bmc-info/, ipmi-sel/: Begin documentation of motherboards
+	supported through --interpret-oem-data.
+	
 2009-07-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Dell get-fcb-version command.
