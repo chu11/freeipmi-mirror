@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.61 2009-06-24 17:26:36 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.62 2009-07-24 21:58:30 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -51,11 +51,16 @@ configuration file
 .B ipmi_monitoring_sensors.conf(5)
 for more information on configuring sensor interpretations.
 Interpretation rules have not been written for all sensors
-permutations and types.  If additional sensor interpretation rules are
-needed, please contact the FreeIPMI maintainers.  Default
-interpretation rules may not be correct for a given motherboard.
-Users should verify that the default settings match their
-expectations.
+permutations and types.  Subsequently, there may be output differences
+between
+.B ipmi-sensors(8)
+and
+.B ipmimonitoring
+when sensor interpretations are not available.  If additional sensor
+interpretation rules are needed, please contact the FreeIPMI
+maintainers.  Default interpretation rules may not be correct for a
+given motherboard.  Users should verify that the default settings
+match their expectations.
 
 Some sensors may have a sensor state, reading or event of "N/A" if
 the information is unavailable.  This is typical of a sensor that
