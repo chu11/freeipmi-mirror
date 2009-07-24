@@ -476,7 +476,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     {
       /* OEM Interpretation
        *
-       * Intel SR870BN4
+       * Intel SR870BN4/Tiger 4
        */
       if (state_data->prog_data->args->interpret_oem_data
           && manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
