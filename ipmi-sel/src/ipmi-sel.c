@@ -1179,7 +1179,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
       
       /* OEM Interpretation
        *
-       * Inventec 5441
+       * Inventec 5441/Dell Xanadu2
        *
        * Unique condition, want to output the major and minor versions
        * of the bios as "version x.y", don't want to see "major x ;

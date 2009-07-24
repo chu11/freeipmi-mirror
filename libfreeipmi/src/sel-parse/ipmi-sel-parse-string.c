@@ -605,7 +605,7 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * Inventec 5441
+   * Inventec 5441/Dell Xanadu2
    */
   if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
       && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
@@ -714,7 +714,7 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
 
       /* OEM Interpretation
        *
-       * Inventec 5441
+       * Inventec 5441/Dell Xanadu2
        *
        * achu note: There is no official "string" defining the event
        * from the vendor.  "BMC enabled by BIOS" is simply what
@@ -1021,7 +1021,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
 
           /* OEM Interpretation
            *
-           * Inventec 5441
+           * Inventec 5441/Dell Xanadu2
            *
            * achu: The doc says "Other" for 0xFF, I'm going to just assume that's "no output".
            */
@@ -1097,7 +1097,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
 
       /* OEM Interpretation
        *
-       * Inventec 5441
+       * Inventec 5441/Dell Xanadu2
        */
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
           && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
@@ -1325,7 +1325,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
           /* OEM Interpretation
            *
-           * Inventec 5441
+           * Inventec 5441/Dell Xanadu2
            *
            * achu: Note that the Dimm locations are not in a pattern,
            * this is what the doc says.
@@ -1433,7 +1433,7 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
       /* OEM Interpretation
        *
-       * Inventec 5441
+       * Inventec 5441/Dell Xanadu2
        */
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
           && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
@@ -1620,7 +1620,7 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * Inventec 5441
+   * Inventec 5441/Dell Xanadu2
    */
   if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
       && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
