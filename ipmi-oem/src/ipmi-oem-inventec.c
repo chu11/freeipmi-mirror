@@ -461,3 +461,280 @@ ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+
+static int
+_inventec_get_bmc_services (ipmi_oem_state_data_t *state_data,
+                            uint8_t *services)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  uint8_t reservation_id;
+  int rv = -1;
+
+  assert (state_data);
+  assert (services);
+
+  /* Inventec OEM
+   *
+   * Get BMC Services Request
+   *
+   * 0x30 - OEM network function
+   * 0x02 - OEM cmd
+   * 0x?? - Reservation ID
+   * 0x04 - Configuration ID (0x04 = Security)
+   * 0x01 - Attribute ID (0x01 = Service Disabled)
+   * 0x00 - Index (unused here)
+   * 0x00 - Data Offset - LSB (unused here)
+   * 0x00 = Data Offset - MSB (unused here)
+   * 0xFF - Bytes to read (0xFF = all)
+   * 
+   * Get BMC Services Response
+   *
+   * 0x03 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x04 - Configuration ID (0x04 = Security)
+   * 0x01 - Attribute ID (0x01 = Service Disabled)
+   * 0x00 - Index (unused here)
+   * 0x01 - number of bytes returned
+   * 0xXX - services
+   *
+   * services bit 0 : All services except IPMI disabled
+   * services bit 1 : KVM/Virtual Storage disabled
+   * services bit 2 : HTTP/HTTPS disabled
+   * services bit 3 : SSH/Telnet disabled
+   */
+
+  if (_inventec_get_reservation (state_data,
+                                 &reservation_id) < 0)
+    goto cleanup;
+
+  bytes_rq[0] = 0x02;
+  bytes_rq[1] = reservation_id;
+  bytes_rq[2] = 0x04;
+  bytes_rq[3] = 0x01;
+  bytes_rq[4] = 0x00;
+  bytes_rq[5] = 0x00;
+  bytes_rq[6] = 0x00;
+  bytes_rq[7] = 0xFF;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              8, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   7,
+                                                   0x02,
+                                                   0x30) < 0)
+    goto cleanup;
+
+  (*services) = bytes_rs[6];
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_get_bmc_services (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t services = 0;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (_inventec_get_bmc_services (state_data, &services) < 0)
+    goto cleanup;
+
+  if (services)
+    {
+      /* achu: it is not clear if only one bit or multiple bits can be
+       * set.  I'm assuming if the "all" bit is set, there is no need
+       * to output anything else.
+       */
+      if (services & 0x1)
+        {
+          pstdout_printf (state_data->pstate, "All services except IPMI disabled\n");
+          goto out;
+        }
+      if (services & 0x2)
+        pstdout_printf (state_data->pstate, "KVM/Virtual Storage disabled\n");
+      if (services & 0x4)
+        pstdout_printf (state_data->pstate, "HTTP/HTTPS disabled\n");
+      if (services & 0x8)
+        pstdout_printf (state_data->pstate, "SSH/Telnet disabled\n");
+    }
+  else
+    pstdout_printf (state_data->pstate, "All services enabled\n");
+
+ out:
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int enable = 0;
+  int rs_len;
+  uint8_t reservation_id;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 2);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[1], "all")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "kvm")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "http")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "ssh"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+
+  /* Inventec OEM
+   *
+   * Disable/Enable Non-IPMI BMC Ports Request
+   *
+   * 0x30 - OEM network function
+   * 0x03 - OEM cmd
+   * 0x?? - Reservation ID
+   * 0x04 - Configuration ID (0x04 = Security)
+   * 0x01 - Attribute ID (0x01 = Service Disabled)
+   * 0x00 - Index (unused here)
+   * 0x00 - Data Offset - LSB (unused here)
+   * 0x00 = Data Offset - MSB (unused here)
+   * 0x01 - Bytes to read
+   * 0xXX - 0x00 - enable all
+   *        0x01 - disable all except IPMI
+   *        0x02 - disable KVM/Virtual Storage
+   *        0x04 - disable HTTP/HTTPS
+   *        0x08 - disable SSH/Telent
+   *
+   * Disable Non-IPMI BMC Ports Response
+   *
+   * 0x03 - OEM cmd
+   * 0x?? - Completion Code
+   */
+
+  /* achu: do bytes_rq[8] first, b/c we may call
+   * _inventec_get_bmc_services, which does a get reservation id call
+   * too.
+   */
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
+    enable = 1;
+        
+  /* if all, it's an easy special case */
+  if (!strcasecmp (state_data->prog_data->args->oem_options[1], "all"))
+    {
+      if (enable)
+        bytes_rq[8] = 0x00;
+      else
+        bytes_rq[8] = 0x01;
+    }
+  else
+    {
+      uint8_t services = 0;
+
+      if (_inventec_get_bmc_services (state_data, &services) < 0)
+        goto cleanup;
+
+      if (!strcasecmp (state_data->prog_data->args->oem_options[1], "kvm"))
+        {
+          if (enable)
+            services &= 0xFD;
+          else
+            services |= 0x2;
+        }
+      else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "http"))
+        {
+          if (enable)
+            services &= 0xFB;
+          else
+            services |= 0x4;
+        }
+      else /* !strcasecmp (state_data->prog_data->args->oem_options[1], "ssh") */
+        {
+          if (enable)
+            services &= 0xF7;
+          else
+            services |= 0x8;
+        }
+
+      bytes_rq[8] = services;
+    }
+
+  if (_inventec_get_reservation (state_data,
+                                 &reservation_id) < 0)
+    goto cleanup;
+
+  bytes_rq[0] = 0x03;
+  bytes_rq[1] = reservation_id;
+  bytes_rq[2] = 0x04;
+  bytes_rq[3] = 0x01;
+  bytes_rq[4] = 0x00;
+  bytes_rq[5] = 0x00;
+  bytes_rq[6] = 0x00;
+  bytes_rq[7] = 0x01;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              9, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   0x02,
+                                                   0x30) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}

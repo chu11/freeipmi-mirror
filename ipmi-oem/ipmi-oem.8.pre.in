@@ -77,26 +77,27 @@ This OEM command will determine the current NIC status as dedicated or
 shared.  Dedicated indicates IPMI is only available on the dedicated
 management port.  Shared indicates IPMI is also available on one of
 the primary ethernet ports.  Command confirmed to work on Inventec
-5441.
+5441 (and subsequently Dell Xanadu2).
 .TP
 .B set-nic-status \fIdedicated|shared\fR
 This OEM command will set the current NIC status to dedicated or
 shared.  (See get-nic-status above for description on dedicated
 vs. shared status.)  This OEM command may internally reset the BMC,
 making the BMC unusable for awhile.  Command confirmed to work on
-Inventec 5441.
+Inventec 5441 (and subsequently Dell Xanadu2).
 .TP
 .B get-mac-address\fR
 This command will retrieve the BMC MAC address.  This is actually not
 an OEM command, but rather the normal IPMI MAC address command
-(identical to what is used in the .B bmc-config(8) tool).  This
-command is placed here for convenience.
+(identical to what is used in the
+.B bmc-config(8)
+tool).  This command is placed here for convenience.
 .TP
 .B set-mac-address \fIdedicated|shared\fR \fIMACADDR\fR
 This OEM command will set the dedicated or shared BMC MAC address.
-(See get-nic-status above for description on dedicated vs. shared
-status.)  The BMC MAC address cannot be set through the normal IPMI
-MAC address command (what is used in the
+(See \fIget\-nic\-status\fR above for description on dedicated
+vs. shared status.)  The BMC MAC address cannot be set through the
+normal IPMI MAC address command (what is used in the
 .B bmc-config(8)
 tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
 shared BMC MAC address may conflict with normal communication ethernet
@@ -105,7 +106,18 @@ configuration an alternate MAC address instead.  After configuration
 of the MAC address, the BMC must be reset.  This may be accomplished
 by executing a cold-reset with
 .B bmc-device(8).
-Command confirmed to work on Inventec 5441.
+Command confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
+.TP
+.B get-bmc-services
+This OEM command will display the currently enables BMC services.
+Command confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
+.TP
+.B set-bmc-services \fIenable|disable\fR \fIall|kvm|http|ssh\fR
+This OEM command will enable or disable other BMC services besides
+IPMI.  \fIall\fR can be specified to enable/disable all services,
+\fIkvm\fR specifies KVM and Virtual Storage, \fIhttp\fR specifies HTTP
+and HTTPS, and \fIssh\fR specifies both SSH and Telnet.  Command
+confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
 .RE
 .TP
 .B supermicro

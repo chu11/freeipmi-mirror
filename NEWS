@@ -1,7 +1,8 @@
 0.7.11 - XX/XX/XX
 -----------------
 o In ipmi-fru, fix FRU output corner cases.
-o In ipmi-oem, support Dell poweredge OEM commands.
+o In ipmi-oem, support Dell poweredge, Dell Xanadu2, and new Inventec
+  OEM commands.
 o In ipmi-sensors and ipmimonitoring, continue reading sensors after a
   "request parameter not supported" error.
 o In libfreeipmi, support Get System Information parameters command.
