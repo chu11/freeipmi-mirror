@@ -1532,7 +1532,7 @@ _snprintf (char *buf, unsigned int buflen, char *fmt, ...)
 }
 
 static int
-get_05_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_05_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -1544,7 +1544,7 @@ get_05_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 }
 
 static int
-get_0F_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_0F_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -1560,7 +1560,7 @@ get_0F_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 }
 
 static int
-get_10_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_10_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -1574,7 +1574,7 @@ get_10_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 }
 
 static int
-_get_12_event_data2_message_offset_03 (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+_get_12_event_data2_message_offset_03 (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   fiid_template_t tmpl_event_data2 =
     {
@@ -1657,7 +1657,7 @@ _strcat12 (char *buf, unsigned int buflen, uint8_t flag, int str_len, int index)
   return (str_len);
 }
 static int
-_get_12_event_data2_message_offset_04 (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+_get_12_event_data2_message_offset_04 (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   fiid_template_t tmpl_event_data2 =
     {
@@ -1775,7 +1775,7 @@ _get_12_event_data2_message_offset_04 (int offset, uint8_t event_data2, char *bu
 }
 
 static int
-_get_12_event_data2_message_offset_05 (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+_get_12_event_data2_message_offset_05 (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   fiid_template_t tmpl_event_data2 =
     {
@@ -1834,7 +1834,7 @@ _get_12_event_data2_message_offset_05 (int offset, uint8_t event_data2, char *bu
 }
 
 static int
-get_12_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_12_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -1850,7 +1850,7 @@ get_12_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 }
 
 static int
-get_19_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_19_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -1862,7 +1862,7 @@ get_19_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 }
 
 static int
-get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_1D_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -1909,7 +1909,7 @@ get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 }
 
 static int
-get_21_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_21_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   fiid_template_t tmpl_event_data2 =
     {
@@ -1950,7 +1950,7 @@ get_21_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 }
 
 static int
-get_23_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_23_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   fiid_template_t tmpl_event_data2 =
     {
@@ -2012,7 +2012,7 @@ get_23_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 }
 
 static int
-get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_28_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   int rv = -1;
 
@@ -2087,7 +2087,7 @@ get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 }
 
 static int
-get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_2A_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2138,7 +2138,7 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 }
 
 static int
-get_2B_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_2B_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2150,7 +2150,7 @@ get_2B_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 }
 
 static int
-get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_2C_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   fiid_template_t tmpl_event_data2 =
     {
@@ -2204,7 +2204,7 @@ get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 }
 
 static int
-get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_08_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2251,7 +2251,7 @@ get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 }
 
 static int
-get_0C_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_0C_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2263,7 +2263,7 @@ get_0C_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 }
 
 static int
-get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_10_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2343,7 +2343,7 @@ get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 }
 
 static int
-get_19_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_19_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2355,7 +2355,7 @@ get_19_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 }
 
 static int
-get_1D_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_1D_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2367,7 +2367,7 @@ get_1D_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 }
 
 static int
-get_21_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_21_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2375,7 +2375,7 @@ get_21_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 }
 
 static int
-get_28_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_28_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2387,7 +2387,7 @@ get_28_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 }
 
 static int
-get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_2A_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2455,10 +2455,10 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 /***************************************************/
 
 static int
-_get_event_message (uint16_t offset,
+_get_event_message (unsigned int offset,
                     char *buf,
                     unsigned int buflen,
-                    uint16_t offset_max,
+                    unsigned int offset_max,
                     char *string_array[])
 {
   assert (buf && buflen);
@@ -2469,12 +2469,12 @@ _get_event_message (uint16_t offset,
       return (-1);
     }
 
-  return snprintf (buf, buflen, string_array[offset]);
+  return (snprintf (buf, buflen, string_array[offset]));
 }
 
 int
 ipmi_get_generic_event_message (uint8_t event_reading_type_code,
-                                uint16_t offset,
+                                unsigned int offset,
                                 char *buf,
                                 unsigned int buflen)
 {
@@ -2505,8 +2505,8 @@ ipmi_get_generic_event_message (uint8_t event_reading_type_code,
 }
 
 int
-ipmi_get_sensor_type_code_message (int sensor_type_code,
-                                   int offset,
+ipmi_get_sensor_type_code_message (uint8_t sensor_type_code,
+                                   unsigned int offset,
                                    char *buf,
                                    unsigned int buflen)
 {
@@ -2561,7 +2561,7 @@ ipmi_get_sensor_type_code_message (int sensor_type_code,
 
 int
 ipmi_get_generic_event_message_short (uint8_t event_reading_type_code,
-                                      uint16_t offset,
+                                      unsigned int offset,
                                       char *buf,
                                       unsigned int buflen)
 {
@@ -2591,8 +2591,8 @@ ipmi_get_generic_event_message_short (uint8_t event_reading_type_code,
 }
 
 int
-ipmi_get_sensor_type_code_message_short (int sensor_type_code,
-                                         int offset,
+ipmi_get_sensor_type_code_message_short (uint8_t sensor_type_code,
+                                         unsigned int offset,
                                          char *buf,
                                          unsigned int buflen)
 {
@@ -2645,8 +2645,8 @@ ipmi_get_sensor_type_code_message_short (int sensor_type_code,
 }
 
 int
-ipmi_get_event_data2_message (int sensor_type_code,
-                              int offset,
+ipmi_get_event_data2_message (uint8_t sensor_type_code,
+                              unsigned int offset,
                               uint8_t event_data2,
                               char *buf,
                               unsigned int buflen)
@@ -2677,8 +2677,8 @@ ipmi_get_event_data2_message (int sensor_type_code,
 }
 
 int
-ipmi_get_event_data3_message (int sensor_type_code,
-                              int offset,
+ipmi_get_event_data3_message (uint8_t sensor_type_code,
+                              unsigned int offset,
                               uint8_t event_data2,
                               uint8_t event_data3,
                               char *buf,
