@@ -95,14 +95,15 @@ Inventec 5441 (and subsequently Dell Xanadu2).
 .B get-mac-address\fR
 This command will retrieve the BMC MAC address.  This is actually not
 an OEM command, but rather the normal IPMI MAC address command
-(identical to what is used in the .B bmc-config(8) tool).  This
-command is placed here for convenience.
+(identical to what is used in the
+.B bmc-config(8)
+tool).  This command is placed here for convenience.
 .TP
 .B set-mac-address \fIdedicated|shared\fR \fIMACADDR\fR
 This OEM command will set the dedicated or shared BMC MAC address.
-(See get-nic-status above for description on dedicated vs. shared
-status.)  The BMC MAC address cannot be set through the normal IPMI
-MAC address command (what is used in the
+(See \fIget\-nic\-status\fR above for description on dedicated
+vs. shared status.)  The BMC MAC address cannot be set through the
+normal IPMI MAC address command (what is used in the
 .B bmc-config(8)
 tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
 shared BMC MAC address may conflict with normal communication ethernet
