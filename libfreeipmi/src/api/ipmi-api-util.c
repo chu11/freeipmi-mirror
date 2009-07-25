@@ -262,7 +262,7 @@ api_ipmi_cmd (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (ctx->flags & IPMI_FLAGS_NO_VALID_CHECK)
+  if (!(ctx->flags & IPMI_FLAGS_NO_VALID_CHECK))
     {
       if ((ret = fiid_obj_packet_valid (obj_cmd_rs)) < 0)
         {
@@ -314,7 +314,7 @@ api_ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (ctx->flags & IPMI_FLAGS_NO_VALID_CHECK)
+  if (!(ctx->flags & IPMI_FLAGS_NO_VALID_CHECK))
     {
       if ((ret = fiid_obj_packet_valid (obj_cmd_rs)) < 0)
         {
