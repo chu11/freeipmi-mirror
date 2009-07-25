@@ -73,6 +73,28 @@ work on Dell Poweredge R610.
 .B get-fcb-version
 This OEM command can retrieve the fan control board (FCB) version
 number.  Command confirmed to work on Dell Xanadu2.
+.if 0 \{
+.TP
+.B get-dhcp-retry
+This OEM command will retrieve DHCP retry information.
+.TP
+.B set-dhcp-retry \fIretry-count\fR \fIretry-interval\fR \fIretry-timeout\fR
+This OEM command will set DHCP retry information.  The
+\fIretry\-count\fR is one-based, max of 254, 0 or "none" will
+configure no retries, 255 or "infinite" with configure constant
+retries.  The \fIretry\-interval\fR is one-based, in 10 second
+increments (i.e. 1 = 10 seconds).  The \fIretry\-timeout\fR is
+one-based, in 1 minute increments (i.e. 1 = 1 minute).  Command
+confirmed to work on Dell Xanadu2.
+\}
+.TP
+.B get-sol-inactivity-timeout
+This OEM command will retrieve the SOL inactivity timeout.
+.TP
+.B set-sol-inactivity-timeout \fIinactivity-timeout\fR
+This OEM command will set the SOL inactivity timeout.  The
+\fIinactivity-timeout\fR is one-based, max of 65535, in 1 minute
+increments (i.e. 1 = 1 minute), 0 or "none" will configure no timeout.
 .RE
 .TP
 .B inventec

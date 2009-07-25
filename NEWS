@@ -22,6 +22,7 @@ o Support non-abbreviated units (i.e. "Amps" instead of "A") in most
   tools.
 o Output IANA Manufacturer Name when appropriate in most tools.
 o Output additional information in many tools.
+o Support OEM output through --interpret-oem-data in many tools.
 o "Library-ize" much of the functionality originally only inside the
   tools.  
 o Re-work libipmimonitoring to return sensor events for all sensors,
@@ -283,6 +284,8 @@ o ipmi-pef-config/pef-config
   - Support ability to report read only field error.
   - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
+o ipmi-oem
+  - Add additional Dell OEM commands.
 o bmc-watchdog
   - Removed the following short options.
     - 'h' (legacy -?)

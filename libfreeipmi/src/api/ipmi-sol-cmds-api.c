@@ -541,8 +541,8 @@ ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_ctx_t ct
 int
 ipmi_cmd_get_sol_configuration_parameters (ipmi_ctx_t ctx,
                                            uint8_t channel_number,
-                                           uint8_t parameter_selector,
                                            uint8_t get_parameter,
+                                           uint8_t parameter_selector,
                                            uint8_t set_selector,
                                            uint8_t block_selector,
                                            fiid_obj_t obj_cmd_rs)

@@ -84,6 +84,33 @@ struct ipmi_oem_command oem_dell[] =
       0,
       ipmi_oem_dell_get_fcb_version
     },
+#if 0
+    /* cannot verify */
+    {
+      "get-dhcp-retry",
+      NULL,
+      0,
+      ipmi_oem_dell_get_dhcp_retry
+    },
+    {
+      "set-dhcp-retry",
+      "<retry-count> <retry-interval> <retry-timeout>",
+      3,
+      ipmi_oem_dell_set_dhcp_retry
+    },
+#endif
+    {
+      "get-sol-inactivity-timeout",
+      NULL,
+      0,
+      ipmi_oem_dell_get_sol_inactivity_timeout
+    },
+    {
+      "set-sol-inactivity-timeout",
+      "<inactivity-timeout>",
+      1,
+      ipmi_oem_dell_set_sol_inactivity_timeout
+    },
     {
       NULL,
       NULL,

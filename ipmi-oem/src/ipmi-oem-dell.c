@@ -714,3 +714,299 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+
+#if 0
+/* cannot verify */
+
+int
+ipmi_oem_dell_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t lan_channel_number;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell OEM
+   *
+   * Uses Get/Set Lan Configuration
+   *
+   * parameter = 192
+   *
+   * Data format
+   *
+   * 1st byte = retry count, 1 based, 0h = no retries, ffh = infinite
+   * 2nd byte = retry interval, 1 based, 10 second increments
+   * 3rd byte = retry timeout, 1 based, 1 minute increments
+   *
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_channel_number: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters (state_data->ipmi_ctx,
+                                                 lan_channel_number,
+                                                 IPMI_GET_LAN_PARAMETER,
+                                                 192,
+                                                 0,
+                                                 0,
+                                                 obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_lan_configuration_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (len < 3)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_lan_configuration_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+
+  if (!configuration_parameter_data[0])
+    pstdout_printf (state_data->pstate, "Retry Count    : no retries\n");
+  else if (configuration_parameter_data[0] == 0xFF)
+    pstdout_printf (state_data->pstate, "Retry Count    : infinite retries\n");
+  else
+    pstdout_printf (state_data->pstate, "Retry Count    : %u\n", configuration_parameter_data[0]);
+  pstdout_printf (state_data->pstate, "Retry Interval : %u seconds\n", configuration_parameter_data[1] * 10);
+  pstdout_printf (state_data->pstate, "Retry Timeout  : %u minutes\n", configuration_parameter_data[2]);
+                  
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_dell_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 3);
+
+  return (0);
+}
+#endif
+
+int
+ipmi_oem_dell_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t lan_channel_number;
+  uint16_t sol_inactivity_timeout;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell OEM
+   *
+   * Uses Get/Set SOL Configuration
+   *
+   * parameter = 192
+   *
+   * Data format
+   *
+   * 1st & 2nd byte = inactivity timeout, 1 based, 1 minute
+   * increments, LSbyte first
+   *
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sol_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_channel_number: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sol_configuration_parameters (state_data->ipmi_ctx,
+                                                 lan_channel_number,
+                                                 IPMI_GET_SOL_PARAMETER,
+                                                 192,
+                                                 0,
+                                                 0,
+                                                 obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_sol_configuration_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (len < 2)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_sol_configuration_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+
+  sol_inactivity_timeout = 0;
+  sol_inactivity_timeout |= configuration_parameter_data[0];
+  sol_inactivity_timeout |= (configuration_parameter_data[1] << 8);
+
+  if (sol_inactivity_timeout)
+    pstdout_printf (state_data->pstate, "SOL Inactivity Timeout : %u minutes\n", sol_inactivity_timeout);
+  else
+    pstdout_printf (state_data->pstate, "SOL Inactivity Timeout : no timeout\n", sol_inactivity_timeout);
+                  
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_dell_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t lan_channel_number;
+  uint16_t sol_inactivity_timeout = 0;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "none"))
+    {
+      char *ptr = NULL;
+
+      errno = 0;
+      
+      sol_inactivity_timeout = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+      if (errno || ptr[0] != '\0')
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s'\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[0]);
+          goto cleanup;
+        }
+    }
+  else
+    sol_inactivity_timeout = 0;
+  
+  /* Dell OEM
+   *
+   * Uses Get/Set SOL Configuration
+   *
+   * parameter = 192
+   *
+   * Data format
+   *
+   * 1st & 2nd byte = inactivity timeout, 1 based, 1 minute
+   * increments, LSbyte first
+   *
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sol_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_channel_number: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  configuration_parameter_data[0] = sol_inactivity_timeout & 0x00FF;
+  configuration_parameter_data[1] = (sol_inactivity_timeout & 0xFF00) >> 8;
+
+  if (ipmi_cmd_set_sol_configuration_parameters (state_data->ipmi_ctx,
+                                                 lan_channel_number,
+                                                 192,
+                                                 configuration_parameter_data,
+                                                 2,
+                                                 obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_sol_configuration_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}

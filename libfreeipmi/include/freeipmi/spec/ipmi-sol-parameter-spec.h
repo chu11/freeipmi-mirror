@@ -41,7 +41,7 @@ extern "C" {
 
 /* To avoid gcc warnings, subtract -1 in comparison */
 #define IPMI_SOL_PARAMETER_SELECTOR_IS_OEM(__parameter_selector) \
-  (((__parameter_selector) >= 196 && (__parameter_selector - 1) <= (255 - 1)) ? 1 : 0)
+  (((__parameter_selector) >= 192 && (__parameter_selector - 1) <= (255 - 1)) ? 1 : 0)
 
 #ifdef __cplusplus
 }

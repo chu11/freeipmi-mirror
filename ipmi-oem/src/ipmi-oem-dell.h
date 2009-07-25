@@ -29,4 +29,15 @@ int ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data);
 
+#if 0
+/* cannot verify */
+int ipmi_oem_dell_get_dhcp_retry (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_dell_set_dhcp_retry (ipmi_oem_state_data_t *state_data);
+#endif
+
+int ipmi_oem_dell_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_dell_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data);
+
 #endif
