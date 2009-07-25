@@ -4,7 +4,20 @@
 
 	* bmc-info/, ipmi-sel/: Begin documentation of motherboards
 	supported through --interpret-oem-data.
-	
+
+	*
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-and-event-code-tables-util.h,
+	libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c:
+	Make parameter types consistent to rest of FreeIPMI.
+
+	*
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-and-event-code-tables-util.h,
+	libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c
+	(ipmi_get_oem_generic_event_message,
+	ipmi_get_oem_sensor_type_code_message): New functions.
+
+	* ipmi-sensors/, ipmi-sel/: Support Dell Poweredge R610 sensors.
+
 2009-07-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Dell get-fcb-version command.

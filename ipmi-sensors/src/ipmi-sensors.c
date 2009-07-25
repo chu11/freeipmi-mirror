@@ -584,15 +584,20 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                                                   IPMI_SENSORS_NO_EVENT_STRING) < 0)
         goto cleanup;
     }
-#if 0
-  /* No OEM sensors to interpret at this moment in time */
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
            && state_data->prog_data->args->interpret_oem_data
-           && state_data->manufacturer_id == FOO
-           && state_data->product_id == FOO)
+           && state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+           && state_data->product_id == 256
+           && event_reading_type_code == 0x70)
     {
+      if (get_generic_event_message_list (state_data,
+                                          &event_message_list,
+                                          &event_message_list_len,
+                                          event_reading_type_code,
+                                          sensor_event_bitmask,
+                                          IPMI_SENSORS_NO_EVENT_STRING) < 0)
+        goto cleanup;
     }
-#endif
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM)
     {
       char *event_message = NULL;

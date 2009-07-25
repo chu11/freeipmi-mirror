@@ -703,10 +703,29 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
         output_flag++;
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE:
-      ret = ipmi_get_sensor_type_code_message_short (system_event_record_data.sensor_type,
+      /* OEM Interpretation
+       *
+       * Dell Poweredge R610
+       */
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+          && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+          && ctx->product_id == 256
+          && (system_event_record_data.sensor_type == 0xC0
+              || system_event_record_data.sensor_type == 0xC1
+              || system_event_record_data.sensor_type == 0xC2
+              || system_event_record_data.sensor_type == 0xC3
+              || system_event_record_data.sensor_type == 0xC4))
+        ret = ipmi_get_oem_sensor_type_code_message (ctx->manufacturer_id,
+                                                     ctx->product_id,
+                                                     system_event_record_data.sensor_type,
                                                      system_event_record_data.offset_from_event_reading_type_code,
                                                      tmpbuf,
                                                      EVENT_BUFFER_LENGTH);
+      else
+        ret = ipmi_get_sensor_type_code_message_short (system_event_record_data.sensor_type,
+                                                       system_event_record_data.offset_from_event_reading_type_code,
+                                                       tmpbuf,
+                                                       EVENT_BUFFER_LENGTH);
       if (ret > 0)
         output_flag++;
       break;
@@ -734,6 +753,44 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
           snprintf (tmpbuf,
                     EVENT_BUFFER_LENGTH,
                     "BMC enabled by BIOS");
+          output_flag++;
+          break;
+        }
+
+      /* OEM Interpretation
+       *
+       * Dell Poweredge R610
+       */
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+          && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+          && ctx->product_id == 256
+          && system_event_record_data.event_type_code == 0x70)
+        {
+          ret = ipmi_get_oem_generic_event_message (ctx->manufacturer_id,
+                                                    ctx->product_id,
+                                                    system_event_record_data.event_type_code,
+                                                    system_event_record_data.offset_from_event_reading_type_code,
+                                                    tmpbuf,
+                                                    EVENT_BUFFER_LENGTH);
+          if (ret > 0)
+            output_flag++;
+          break;
+        }
+
+      /* OEM Interpretation
+       *
+       * Dell Poweredge R610
+       *
+       * achu: Unique special case
+       */
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+          && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+          && ctx->product_id == 256
+          && system_event_record_data.event_type_code == 0x7E)
+        {
+          snprintf (tmpbuf,
+                    EVENT_BUFFER_LENGTH,
+                    "OEM Diagnostic Data Event");
           output_flag++;
           break;
         }

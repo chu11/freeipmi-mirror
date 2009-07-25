@@ -209,16 +209,36 @@ get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
       bit = 0x1 << i;
       if (sensor_event_bitmask & bit)
         {
-          if (!state_data->prog_data->args->verbose_count)
-            ret = ipmi_get_generic_event_message_short (event_reading_type_code,
+          /* OEM Interpretation
+           *
+           * Dell Poweredge R610
+           */
+          if (IPMI_EVENT_READING_TYPE_CODE_IS_OEM (event_reading_type_code)
+              && state_data->prog_data->args->interpret_oem_data
+              && state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+              && state_data->product_id == 256
+              && event_reading_type_code == 0x70)
+            {
+              ret = ipmi_get_oem_generic_event_message (state_data->manufacturer_id,
+                                                        state_data->product_id,
+                                                        event_reading_type_code,
                                                         i,
                                                         buf,
                                                         IPMI_SENSORS_BUFLEN);
+            }
           else
-            ret = ipmi_get_generic_event_message (event_reading_type_code,
-                                                  i,
-                                                  buf,
-                                                  IPMI_SENSORS_BUFLEN);
+            {
+              if (!state_data->prog_data->args->verbose_count)
+                ret = ipmi_get_generic_event_message_short (event_reading_type_code,
+                                                            i,
+                                                            buf,
+                                                            IPMI_SENSORS_BUFLEN);
+              else
+                ret = ipmi_get_generic_event_message (event_reading_type_code,
+                                                      i,
+                                                      buf,
+                                                      IPMI_SENSORS_BUFLEN);
+            }
 
           if (ret < 0)
             {
@@ -309,16 +329,40 @@ get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_da
 
       if (sensor_event_bitmask & bit)
         {
-          if (!state_data->prog_data->args->verbose_count)
-            ret = ipmi_get_sensor_type_code_message_short (sensor_type,
+          /* OEM Interpretation
+           *
+           * Dell Poweredge R610
+           */
+          if (IPMI_SENSOR_TYPE_IS_OEM (sensor_type)
+              && state_data->prog_data->args->interpret_oem_data
+              && state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+              && state_data->product_id == 256
+              && (sensor_type == 0xC0
+                  || sensor_type == 0xC1
+                  || sensor_type == 0xC2
+                  || sensor_type == 0xC3
+                  || sensor_type == 0xC4))
+            {
+              ret = ipmi_get_oem_sensor_type_code_message (state_data->manufacturer_id,
+                                                           state_data->product_id,
+                                                           sensor_type,
                                                            i,
                                                            buf,
                                                            IPMI_SENSORS_BUFLEN);
+            }
           else
-            ret = ipmi_get_sensor_type_code_message (sensor_type,
-                                                     i,
-                                                     buf,
-                                                     IPMI_SENSORS_BUFLEN);
+            {
+              if (!state_data->prog_data->args->verbose_count)
+                ret = ipmi_get_sensor_type_code_message_short (sensor_type,
+                                                               i,
+                                                               buf,
+                                                               IPMI_SENSORS_BUFLEN);
+              else
+                ret = ipmi_get_sensor_type_code_message (sensor_type,
+                                                         i,
+                                                         buf,
+                                                         IPMI_SENSORS_BUFLEN);
+            }
 
           if (ret < 0)
             {

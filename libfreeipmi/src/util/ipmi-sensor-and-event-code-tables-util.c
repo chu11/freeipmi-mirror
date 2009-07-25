@@ -32,6 +32,7 @@
 
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
+#include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/fiid/fiid.h"
 
 #include "libcommon/ipmi-fiid-util.h"
@@ -1516,6 +1517,82 @@ static char * ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_
   };
 static int ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc_max = 0x03;
 
+/***************************************
+ * Generic Event Reading Strings (OEM) *
+ ***************************************/
+
+static char * ipmi_generic_event_reading_type_code_dell_oem_70_desc[] =
+  {
+    "Standby",
+    "IPMI Function ready",
+    "Fully ready",
+    "Offline",
+    "Failed",
+    "Active",
+    "Booting",
+    "Write protected",
+    NULL
+  };
+static int ipmi_generic_event_reading_type_code_dell_oem_70_desc_max = 0x07;
+
+/*****************************
+ * Sensor Type Strings (OEM) *
+ *****************************/
+
+/* achu:
+ *
+ * I have a feeling "good" is the random string they choose in some
+ * code, it's not the real string.  But that's all I got to go on.
+ *
+ */
+
+static char * ipmi_sensor_type_code_dell_oem_C0_desc[] =
+  {
+    "Good",
+    "Degraded, other",
+    "Degraded, thermal protection",
+    "Degraded, cooling capacity change",
+    "Degraded, power capacity change",
+    "Degraded, user defined power capacity",
+    "Halted, system power exceeds capacity",
+    "Degraded, system power exceeds capacity",
+    NULL
+  };
+static int ipmi_sensor_type_code_dell_oem_C0_desc_max = 0x07;
+
+static char * ipmi_sensor_type_code_dell_oem_C1_desc[] =
+  {
+    "Good",
+    "Failed to program virtual MAC address",
+    "Device option ROM failed to support link tuning or flex address",
+    "Failed to get link tuning or flex address data",
+    NULL
+  };
+static int ipmi_sensor_type_code_dell_oem_C1_desc_max = 0x03;
+
+static char * ipmi_sensor_type_code_dell_oem_C2_desc[] =
+  {
+    "PCIe error",
+    NULL
+  };
+static int ipmi_sensor_type_code_dell_oem_C2_desc_max = 0x00;
+
+static char * ipmi_sensor_type_code_dell_oem_C3_desc[] =
+  {
+    "Successful",
+    "Fatal IO error",
+    NULL
+  };
+static int ipmi_sensor_type_code_dell_oem_C3_desc_max = 0x01;
+
+static char * ipmi_sensor_type_code_dell_oem_C4_desc[] =
+  {
+    "Successful",
+    "Failed",
+    NULL
+  };
+static int ipmi_sensor_type_code_dell_oem_C4_desc_max = 0x01;
+
 static int
 _snprintf (char *buf, unsigned int buflen, char *fmt, ...)
 {
@@ -2706,3 +2783,62 @@ ipmi_get_event_data3_message (uint8_t sensor_type_code,
   return (-1);
 }
 
+int
+ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
+                                    uint16_t product_id,
+                                    uint8_t event_reading_type_code,
+                                    unsigned int offset,
+                                    char *buf,
+                                    unsigned int buflen)
+{
+  if (!buf || !buflen)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  /* Dell Poweredge R610 */
+  if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && product_id == 256)
+    {
+      switch (event_reading_type_code)
+        {
+        case 0x70: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_dell_oem_70_desc_max, ipmi_generic_event_reading_type_code_dell_oem_70_desc));
+        }
+    }
+
+  SET_ERRNO (EINVAL);
+  return (-1);
+}
+
+int
+ipmi_get_oem_sensor_type_code_message (uint32_t manufacturer_id,
+                                       uint16_t product_id,
+                                       uint8_t sensor_type_code,
+                                       unsigned int offset,
+                                       char *buf,
+                                       unsigned int buflen)
+{
+  if (!buf || !buflen)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  /* Dell Poweredge R610 */
+  if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && product_id == 256)
+    {
+      switch (sensor_type_code)
+        {
+        case 0xC0: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_dell_oem_C0_desc_max, ipmi_sensor_type_code_dell_oem_C0_desc));
+        case 0xC1: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_dell_oem_C1_desc_max, ipmi_sensor_type_code_dell_oem_C1_desc));
+        case 0xC2: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_dell_oem_C2_desc_max, ipmi_sensor_type_code_dell_oem_C2_desc));
+        case 0xC3: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_dell_oem_C3_desc_max, ipmi_sensor_type_code_dell_oem_C3_desc));
+        case 0xC4: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_dell_oem_C4_desc_max, ipmi_sensor_type_code_dell_oem_C4_desc));
+        }
+    }
+
+  SET_ERRNO (EINVAL);
+  return (-1);
+}
