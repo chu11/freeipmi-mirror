@@ -18,6 +18,9 @@
 
 	* ipmi-sensors/, ipmi-sel/: Support Dell Poweredge R610 sensors.
 
+	* Add documentation throughout on what motherboards are OEM
+	supported.
+
 2009-07-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Dell get-fcb-version command.
