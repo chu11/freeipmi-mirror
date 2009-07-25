@@ -1,3 +1,7 @@
+2009-07-25  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Support get/set-bmc-services.
+	
 2009-07-24  Albert Chu <chu11@llnl.gov>
 
 	* common/man/manpage-common-oem-interpretation.man: New file.

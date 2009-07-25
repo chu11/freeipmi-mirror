@@ -119,6 +119,18 @@ struct ipmi_oem_command oem_inventec[] =
       ipmi_oem_inventec_set_mac_address
     },
     {
+      "get-bmc-services",
+      NULL,
+      0,
+      ipmi_oem_inventec_get_bmc_services
+    },
+    {
+      "set-bmc-services",
+      "<enable|disable> <all|kvm|http|ssh>",
+      2,
+      ipmi_oem_inventec_set_bmc_services
+    },
+    {
       NULL,
       NULL,
       0,
