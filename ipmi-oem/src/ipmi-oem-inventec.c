@@ -468,7 +468,7 @@ _inventec_get_bmc_services (ipmi_oem_state_data_t *state_data,
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  int rs_len;
+  int32_t rs_len;
   uint8_t reservation_id;
   int rv = -1;
 
@@ -592,7 +592,7 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   int enable = 0;
-  int rs_len;
+  int32_t rs_len;
   uint8_t reservation_id;
   int rv = -1;
 
@@ -672,6 +672,13 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
 
       if (_inventec_get_bmc_services (state_data, &services) < 0)
         goto cleanup;
+
+      if (enable && (services & 0x1))
+        {
+          /* clear out "all" bit, and replace with remaining bits */
+          services &= 0xFE;
+          services |= 0x0E;
+        }
 
       if (!strcasecmp (state_data->prog_data->args->oem_options[1], "kvm"))
         {
