@@ -674,24 +674,25 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
       if (_inventec_get_bmc_services (state_data, &services) < 0)
         goto cleanup;
 
+      /* achu: if you are enabling, you also clear out the "all" bit */
       if (!strcasecmp (state_data->prog_data->args->oem_options[1], "kvm"))
         {
           if (enable)
-            services &= 0xFD;
+            services &= 0xFC;
           else
             services |= 0x2;
         }
       else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "http"))
         {
           if (enable)
-            services &= 0xFB;
+            services &= 0xFA;
           else
             services |= 0x4;
         }
       else /* !strcasecmp (state_data->prog_data->args->oem_options[1], "ssh") */
         {
           if (enable)
-            services &= 0xF7;
+            services &= 0xF6;
           else
             services |= 0x8;
         }
