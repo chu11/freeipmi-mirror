@@ -10,7 +10,10 @@ is used to execute OEM specific IPMI commands.  It is intended to provide
 a better user interface for OEM specific IPMI commands better than
 .B ipmi-raw(8).
 
-See SUPPORTED OEM below for currently supported OEM IDs and COMMANDs.
+Please see SUPPORTED OEM IDS and COMMANDS below for a list of
+supported OEM specific IPMI commands.  A list of supported OEM
+specific commands may also be generated using the \fB\-\-list\fR
+option.
 
 #include <@top_srcdir@/common/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-driver.man>
