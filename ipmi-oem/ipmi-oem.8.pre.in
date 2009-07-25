@@ -122,8 +122,7 @@ Command confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
 This OEM command will enable or disable other BMC services besides
 IPMI.  \fIall\fR can be specified to enable/disable all services,
 \fIkvm\fR specifies KVM and Virtual Storage, \fIhttp\fR specifies HTTP
-and HTTPS, and \fIssh\fR specifies both SSH and Telnet.  This OEM
-command will display the currently enables BMC services.  Command
+and HTTPS, and \fIssh\fR specifies both SSH and Telnet.  Command
 confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
 .RE
 .TP
