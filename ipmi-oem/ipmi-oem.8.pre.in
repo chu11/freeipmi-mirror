@@ -11,6 +11,11 @@ provide a better user interface for OEM specific IPMI commands rather
 than using
 .B ipmi-raw(8).
 
+Please see SUPPORTED OEM IDS and COMMANDS below for a list of
+supported OEM specific IPMI commands.  A list of supported OEM
+specific commands may also be generated using the \fB\-\-list\fR
+option.
+
 There are no guarantees that the below OEM commands will work on any
 particular motherboard.  OEM extensions may or may not exist on
 particular hardware revisions and/or firmware revisions of
