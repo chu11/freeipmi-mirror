@@ -73,6 +73,9 @@ sensors/monitoring
 ------------------
 (TEST) make sure bridging still works w/ sensor-read lib
 (TEST) make sure oem still outputs fine
+specify sensors by name too
+- useful in libipmimonitoring, if heterogenous firmware versions, but
+same sensor names?
 
 ipmi-chassis-config
 -------------------
