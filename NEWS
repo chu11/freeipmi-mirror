@@ -1,4 +1,4 @@
-0.7.11 - XX/XX/XX
+0.7.11 - 07/28/09
 -----------------
 o In ipmi-fru, fix FRU output corner cases.
 o In ipmi-oem, support Dell poweredge, Dell Xanadu2, and new Inventec
