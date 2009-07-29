@@ -164,7 +164,7 @@ display_intel_sr870bn4 (bmc_info_state_data_t *state_data, fiid_obj_t device_id_
   pia_minor = val;
 
   pstdout_printf (state_data->pstate,
-                  "Auxiliary Firmware Revision Information\n",
+                  "Auxiliary Firmware Revision Information\n"
                   "Boot Code : v%02x.%2x\n"
                   "PIA       : v%02x.%2x\n",
                   boot_code_major,
@@ -494,7 +494,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
                && product_id == 256)
         {
           pstdout_printf (state_data->pstate,
-                          "Auxiliary Firmware Revision Information\n",
+                          "Auxiliary Firmware Revision Information\n"
                           "Build Number : %u\n",
                           auxiliary_firmware_revision_information);
         }
