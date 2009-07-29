@@ -610,15 +610,23 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
   if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
       && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == 51
-      && system_event_record_data.generator_id == 0x01 /* "BIOS" */
-      && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
-      && system_event_record_data.sensor_number == 0x81 /* "BIOS Start" */
-      && system_event_record_data.event_type_code == 0x70) /* OEM */
+      && ((system_event_record_data.generator_id == 0x01
+           && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
+           && system_event_record_data.sensor_number == 0x81
+           && system_event_record_data.event_type_code == 0x70) /* OEM */
+          || (system_event_record_data.generator_id == 0x01
+              && system_event_record_data.sensor_type == 0x12 /* System Event */
+              && system_event_record_data.sensor_number == 0x85
+              && system_event_record_data.event_type_code == 0x6F)
+          || (system_event_record_data.generator_id == 0x31
+              && system_event_record_data.sensor_type == 0x0F /* System Firmware Progress */
+              && system_event_record_data.sensor_number == 0x06
+              && system_event_record_data.event_type_code == 0x6F)))
     {
       if (_SNPRINTF (buf,
                      buflen,
                      wlen,
-                     "BIOS Start"))
+                     "BIOS"))
         return (1);
       return (0);
     }
