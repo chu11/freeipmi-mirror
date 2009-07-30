@@ -281,11 +281,15 @@ Forgotten/Undocumented Motherboard(s): Setting a password using IPMI
 2.0 extensions (i.e. up to 20 bytes in length) does not appear to
 work.  User must configure password using IPMI 1.5 formatted payloads.
 
-Dell Poweredge R610: Configuring user access fields for user 16
-results in 0xCC completion codes.  No current resolution.
+Dell Poweredge R610: User cannot be enabled/disabled until after the
+password has been configured.  No current resolution.
 
-Dell Poweredge R610: All Authentication Type enables fields cannot be
-configured, results in 0xCC completion codes.  No current resolution.
+Dell Poweredge R610: Default Authentication Type Enables configure
+several OEM authentications on.  However, the motherboard does not
+support these OEM authentications, and any subsequent configuration of
+them results in a bad parameter completion code (0xCC).  No current
+resolution.
+
 
 ipmi-fru
 --------
