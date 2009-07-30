@@ -535,8 +535,8 @@ enable_user_commit (const char *section_name,
        * Save info to possibly retry the enable_user after a password
        * is set.
        */
-      else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-          && (ipmi_check_completion_code (obj_cmd_rs,
+      else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+	       && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1))
         {
           state_data->enable_user_after_password[userid-1].enable_user_failed = 1;
@@ -688,8 +688,7 @@ password_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (state_data->enable_user_after_password_len
-      && state_data->enable_user_after_password[userid-1].enable_user_failed)
+  if (state_data->enable_user_after_password[userid-1].enable_user_failed)
     {
       config_err_t ret;
 
@@ -708,7 +707,7 @@ password_commit (const char *section_name,
           state_data->enable_user_after_password[userid-1].enable_user_failed  = 0;
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "RETRY: Success on retry to commit`%s:%s'\n",
+                           "RETRY: Success on retry to commit `%s:%s'\n",
                            section_name,
                            state_data->enable_user_after_password[userid-1].kv->key->key_name);
         }
@@ -883,8 +882,7 @@ password20_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (state_data->enable_user_after_password_len
-      && state_data->enable_user_after_password[userid-1].enable_user_failed)
+  if (state_data->enable_user_after_password[userid-1].enable_user_failed)
     {
       config_err_t ret;
 
