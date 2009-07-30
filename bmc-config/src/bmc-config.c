@@ -299,12 +299,12 @@ _bmc_config (pstdout_state_t pstate,
                       if ((kv = config_find_keyvalue (pstate,
                                                       section,
                                                       "Lan_Session_Limit")))
-                        state_data.lan_user_session_limit[userid] = atoi (kv->value_input);
+                        state_data.lan_user_session_limit[userid-1] = atoi (kv->value_input);
 
                       if ((kv = config_find_keyvalue (pstate,
                                                       section,
                                                       "Serial_Session_Limit")))
-                        state_data.serial_user_session_limit[userid] = atoi (kv->value_input);
+                        state_data.serial_user_session_limit[userid-1] = atoi (kv->value_input);
                     }
                 }
               section = section->next;

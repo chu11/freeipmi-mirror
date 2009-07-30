@@ -243,12 +243,12 @@ _set_user_access (bmc_config_state_data_t *state_data,
   if (stristr (key_name, "Serial"))
     {
       if (state_data->serial_user_session_limit_len)
-        ua->session_limit = state_data->serial_user_session_limit[userid];
+        ua->session_limit = state_data->serial_user_session_limit[userid-1];
     }
   if (stristr (key_name, "Lan"))
     {
       if (state_data->lan_user_session_limit_len)
-        ua->session_limit = state_data->lan_user_session_limit[userid];
+        ua->session_limit = state_data->lan_user_session_limit[userid-1];
     }
 
   if (ipmi_cmd_set_user_access (state_data->ipmi_ctx,
