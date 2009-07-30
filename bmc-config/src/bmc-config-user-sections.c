@@ -944,7 +944,7 @@ password_commit (const char *section_name,
           pstdout_fprintf (state_data->pstate,
                            stderr, 
                            "RETRY: Success on retry to commit`%s:%s'\n",
-                           section->section_name,
+                           section_name,
                            state_data->enable_user_after_password[userid-1].kv->key->key_name);
         }
     }
