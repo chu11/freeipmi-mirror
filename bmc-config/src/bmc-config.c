@@ -341,7 +341,7 @@ _bmc_config (pstdout_state_t pstate,
             {
               datasize = sizeof (bmc_config_enable_user_after_password_t) * user_count;
               
-              if (!(state_data.enable_user_after_password = (uint8_t *)malloc (datasize)))
+              if (!(state_data.enable_user_after_password = (bmc_config_enable_user_after_password_t *)malloc (datasize)))
                 {
                   pstdout_perror (pstate,
                                   "malloc");
