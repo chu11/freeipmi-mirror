@@ -641,9 +641,9 @@ enable_user_commit (const char *section_name,
        *
        * Dell Poweredge R610
        *
-       * Dell says this can only go after a set password command.
-       * Save info to possibly retry the enable_user after a password
-       * is set.
+       * Dell says this can only go after a set password command, and
+       * you configure a non-null password.  Save info to possibly
+       * retry the enable_user after a password is set.
        */
       else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
 	       && (ipmi_check_completion_code (obj_cmd_rs,
