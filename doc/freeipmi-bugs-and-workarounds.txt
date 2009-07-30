@@ -282,8 +282,9 @@ Forgotten/Undocumented Motherboard(s): Setting a password using IPMI
 2.0 extensions (i.e. up to 20 bytes in length) does not appear to
 work.  User must configure password using IPMI 1.5 formatted payloads.
 
-Dell Poweredge R610: User cannot be enabled/disabled until after the
-password has been configured.  No current resolution.
+Dell Poweredge R610: User cannot be enabled/disabled until after a
+non-null password has been configured.  Added workaround for this
+specific case.
 
 Dell Poweredge R610: Default Authentication Type Enables configure
 several OEM authentications on.  However, the motherboard does not
