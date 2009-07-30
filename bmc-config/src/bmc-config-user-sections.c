@@ -1766,16 +1766,6 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
 
   if (config_section_add_key (state_data->pstate,
                               user_section,
-                              "Enable_User",
-                              "Possible values: Yes/No or blank to not set",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                              enable_user_checkout,
-                              enable_user_commit,
-                              config_yes_no_validate) < 0)
-    goto cleanup;
-
-  if (config_section_add_key (state_data->pstate,
-                              user_section,
                               "Password",
                               "Give password or blank to clear. MAX 16 chars.",
                               CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
@@ -1792,6 +1782,16 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               password20_checkout,
                               password20_commit,
                               password20_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              user_section,
+                              "Enable_User",
+                              "Possible values: Yes/No or blank to not set",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              enable_user_checkout,
+                              enable_user_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,
