@@ -649,11 +649,10 @@ enable_user_commit (const char *section_name,
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1))
         {
-          if (state_data->enable_user_after_password_len)
-            {
-              state_data->enable_user_after_password[userid-1].enable_user_failed = 1;
-              state_data->enable_user_after_password[userid-1].kv = (struct config_keyvalue *)kv;
-            }
+          state_data->enable_user_after_password[userid-1].enable_user_failed = 1;
+          state_data->enable_user_after_password[userid-1].kv = (struct config_keyvalue *)kv;
+          rv = CONFIG_ERR_NON_FATAL_ERROR;
+          goto cleanup;
         }
       else
         {
@@ -873,7 +872,6 @@ password_commit (const char *section_name,
   uint8_t userid = atoi (section_name + strlen ("User"));
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_user_password_rs)))
     {
@@ -928,6 +926,8 @@ password_commit (const char *section_name,
   if (state_data->enable_user_after_password_len
       && state_data->enable_user_after_password[userid-1].enable_user_failed)
     {
+      config_err_t ret;
+
       /* ignore non-fatal error, consider success */
       ret = enable_user_commit (section_name,
                                 state_data->enable_user_after_password[userid-1].kv,
@@ -941,6 +941,11 @@ password_commit (const char *section_name,
         {
           /* now it has passed, reset to 0 just in case */
           state_data->enable_user_after_password[userid-1].enable_user_failed  = 0;
+          pstdout_fprintf (state_data->pstate,
+                           stderr, 
+                           "RETRY: Success on retry to commit`%s:%s'\n",
+                           section->section_name,
+                           state_data->enable_user_after_password[userid-1].kv->key->key_name);
         }
     }
 
