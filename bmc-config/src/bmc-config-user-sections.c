@@ -937,6 +937,11 @@ password_commit (const char *section_name,
           rv = CONFIG_ERR_FATAL_ERROR;
           goto cleanup;
         }
+      if (ret == CONFIG_ERR_SUCCESS)
+        {
+          /* now it has passed, reset to 0 just in case */
+          state_data->enable_user_after_password[userid-1].enable_user_failed  = 0;
+        }
     }
 
   rv = CONFIG_ERR_SUCCESS;
