@@ -709,7 +709,7 @@ password_commit (const char *section_name,
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "RETRY: Success on retry to commit`%s:%s'\n",
-                           section->section_name,
+                           section_name,
                            state_data->enable_user_after_password[userid-1].kv->key->key_name);
         }
     }
@@ -740,7 +740,6 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
 
   assert(state_data);
   assert(password);
@@ -905,7 +904,7 @@ password20_commit (const char *section_name,
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "RETRY: Success on retry to commit`%s:%s'\n",
-                           section->section_name,
+                           section_name,
                            state_data->enable_user_after_password[userid-1].kv->key->key_name);
         }
     }
