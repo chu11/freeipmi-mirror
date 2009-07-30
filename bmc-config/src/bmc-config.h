@@ -51,6 +51,12 @@ typedef struct bmc_config_prog_data
   int hosts_count;
 } bmc_config_prog_data_t;
 
+typedef struct bmc_config_enable_user_after_password
+{
+  int enable_user_failed;
+  struct config_keyvalue *kv;
+} bmc_config_enable_user_after_password_t;
+
 typedef struct bmc_config_state_data
 {
   bmc_config_prog_data_t *prog_data;
@@ -63,6 +69,10 @@ typedef struct bmc_config_state_data
   int serial_user_session_limit_len;
   uint8_t *serial_user_session_limit;
 
+  /* achu: workaround for OEM compliance issue, see user section */
+  int enable_user_after_password_len;
+  bmc_config_enable_user_after_password_t *enable_user_after_password;
+  
   /* achu: caching to make lan authentication enables go faster */
   int authentication_type_initialized;
   uint8_t authentication_type_none;

@@ -1,7 +1,9 @@
 2009-07-30  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Fix Lan Session Limit corner case.
-	
+
+	* bmc-config/: Workaround Dell Poweredge enable user bug.
+
 2009-07-29  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/: Support Dell Poweredge R610 Aux Info.

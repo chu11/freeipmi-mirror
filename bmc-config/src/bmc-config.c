@@ -52,6 +52,9 @@ _bmc_config_state_data_init (bmc_config_state_data_t *state_data)
   state_data->serial_user_session_limit_len = 0;
   state_data->serial_user_session_limit = NULL;
 
+  state_data->enable_user_after_password_len = 0;
+  state_data->enable_user_after_password = NULL;
+
   state_data->authentication_type_initialized = 0;
 
   state_data->cipher_suite_entry_count = 0;
@@ -240,9 +243,15 @@ _bmc_config (pstdout_state_t pstate,
         }
     }
 
-  /* Special case: There is no way to checkout the user session limit,
-   * so we have to store before hand it if we intend to commit it
-   * (along with the other calls to set user access that commit things)
+  /* Special case(s): 
+   *
+   * A) There is no way to checkout the user session limit, so we have
+   * to store before hand it if we intend to commit it (along with the
+   * other calls to set user access that commit things)
+   *
+   * B) On some motherboards, the "Enable_User" must come after the
+   * "Password" configure.  So we store information for this fact.
+   * See workaround details in user section code.
    */
   if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT)
     {
@@ -258,31 +267,16 @@ _bmc_config (pstdout_state_t pstate,
           section = section->next;
         }
 
-      /* Second, make the arrays of stored values */
       if (user_count)
         {
-          unsigned int datasize = sizeof (uint8_t) * user_count;
+          unsigned int lan_session_limit_found = 0;
+          unsigned int serial_session_limit_found = 0;
+          unsigned int enable_user_found = 0;
+          unsigned int datasize;
 
-          if (!(state_data.lan_user_session_limit = (uint8_t *)malloc (datasize)))
-            {
-              pstdout_perror (pstate,
-                              "malloc");
-              goto cleanup;
-            }
-          memset (state_data.lan_user_session_limit, '\0', datasize);
-
-          if (!(state_data.serial_user_session_limit = (uint8_t *)malloc (datasize)))
-            {
-              pstdout_perror (pstate,
-                              "malloc");
-              goto cleanup;
-            }
-          memset (state_data.serial_user_session_limit, '\0', datasize);
-
-          state_data.lan_user_session_limit_len = user_count;
-          state_data.serial_user_session_limit_len = user_count;
-
-          /* Third, store the info */
+          /* Two, is the user configuring anything these special cases
+           * care about?
+           */
           section = sections;
           while (section)
             {
@@ -299,15 +293,101 @@ _bmc_config (pstdout_state_t pstate,
                       if ((kv = config_find_keyvalue (pstate,
                                                       section,
                                                       "Lan_Session_Limit")))
-                        state_data.lan_user_session_limit[userid-1] = atoi (kv->value_input);
+                        lan_session_limit_found = 1;
 
                       if ((kv = config_find_keyvalue (pstate,
                                                       section,
                                                       "Serial_Session_Limit")))
-                        state_data.serial_user_session_limit[userid-1] = atoi (kv->value_input);
+                        serial_session_limit_found = 1;
+
+                      if ((kv = config_find_keyvalue (pstate,
+                                                      section,
+                                                      "Enable_User")))
+                        enable_user_found = 0;
                     }
                 }
               section = section->next;
+            }
+
+          if (lan_session_limit_found)
+            {
+              datasize = sizeof (uint8_t) * user_count;
+              
+              if (!(state_data.lan_user_session_limit = (uint8_t *)malloc (datasize)))
+                {
+                  pstdout_perror (pstate,
+                                  "malloc");
+                  goto cleanup;
+                }
+              state_data.lan_user_session_limit_len = user_count;
+              memset (state_data.lan_user_session_limit, '\0', datasize);
+            }
+
+          if (serial_session_limit_found)
+            {
+              datasize = sizeof (uint8_t) * user_count;
+              
+              if (!(state_data.serial_user_session_limit = (uint8_t *)malloc (datasize)))
+                {
+                  pstdout_perror (pstate,
+                                  "malloc");
+                  goto cleanup;
+                }
+              state_data.serial_user_session_limit_len = user_count;
+              memset (state_data.serial_user_session_limit, '\0', datasize);
+            }
+
+          if (enable_user_found)
+            {
+              datasize = sizeof (bmc_config_enable_user_after_password_t) * user_count;
+              
+              if (!(state_data.enable_user_after_password = (uint8_t *)malloc (datasize)))
+                {
+                  pstdout_perror (pstate,
+                                  "malloc");
+                  goto cleanup;
+                }
+              state_data.enable_user_after_password_len = user_count;
+              memset (state_data.enable_user_after_password, '\0', datasize);
+            }
+          
+          /* Third, store the info we care about */
+          if (lan_session_limit_found 
+              || serial_session_limit_found)
+            {
+              section = sections;
+              while (section)
+                {
+                  struct config_keyvalue *kv;
+                  
+                  if (stristr (section->section_name, "User"))
+                    {
+                      uint8_t userid;
+                      
+                      userid = atoi (section->section_name + strlen ("User"));
+                      
+                      if (userid < user_count)
+                        {
+                          if (lan_session_limit_found)
+                            {
+                              if ((kv = config_find_keyvalue (pstate,
+                                                              section,
+                                                              "Lan_Session_Limit")))
+                                state_data.lan_user_session_limit[userid-1] = atoi (kv->value_input);
+                            }
+                             
+                          if (serial_session_limit_found)
+                            {
+                              if ((kv = config_find_keyvalue (pstate,
+                                                              section,
+                                                              "Serial_Session_Limit")))
+                                state_data.serial_user_session_limit[userid-1] = atoi (kv->value_input);
+                            }
+                        }
+                    }
+
+                  section = section->next;
+                }
             }
         }
     }

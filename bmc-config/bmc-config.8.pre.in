@@ -77,17 +77,8 @@ determine the correct IP address and MAC address to use.
 .SH "BMC-CONFIG SPECIAL CASE CONFIGURATION INFORMATION"
 The 
 .B UserN:Password 
-and 
-.B UserN:Password20
 fields (where N is a number) cannot be checked out on some systems,
 therefore the checked out value will always be blank.
-
-The
-.B UserN:Password20
-field (where N is a number) cannot be committed on some systems
-(confirmed on Dell 1950 Server), therefore the
-.B UserN:Password
-(where N is a number) field should be used instead.
 
 The
 .B UserN:Enable_User
@@ -117,6 +108,16 @@ cannot be committed in parallel via hostrange support.  Each machine
 must be configured with a unique IP Address and MAC Address tuple,
 therefore we disallow this configuration in
 .B bmc-config.
+
+On some motherboards,
+.B Lan_Conf:MAC_Address
+may be read only and the MAC address is automatically configured.
+
+On some motherboards, a number of user configuration fields cannot be
+read or configured until after a username is configured.  In these
+cases, an appropriate output in the config file will indicate this
+situation.
+
 
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-text-shell.man>
