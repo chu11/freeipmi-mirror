@@ -1986,22 +1986,22 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
 
   if (config_section_add_key (state_data->pstate,
                               section,
-                              "Enable_User",
-                              "Possible values: Yes/No or blank to not set",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                              enable_user_checkout,
-                              enable_user_commit,
-                              config_yes_no_validate) < 0)
-    goto cleanup;
-
-  if (config_section_add_key (state_data->pstate,
-                              section,
                               "Password",
                               "Give password or blank to clear. MAX 16 chars (20 chars if IPMI 2.0 supported).",
                               CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
                               password_checkout,
                               password_commit,
                               password_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Enable_User",
+                              "Possible values: Yes/No or blank to not set",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              enable_user_checkout,
+                              enable_user_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to earlier bmc-config, now "absorbed" into Password */

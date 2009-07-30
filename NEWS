@@ -259,6 +259,7 @@ o ipmi-raw
   - Removed the following short options (long options remain).
     - 'f' (--file)
 o bmc-config
+  - Configure "Password" before "Enable_User" for security.
   - Collapse "Password20" field into "Password" field so "Password"
     supports both IPMI 1.5 and IPMI 2.0 length passwords.
     "Password20" still supported as legacy support.
