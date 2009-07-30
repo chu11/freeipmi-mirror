@@ -303,7 +303,7 @@ _bmc_config (pstdout_state_t pstate,
                       if ((kv = config_find_keyvalue (pstate,
                                                       section,
                                                       "Enable_User")))
-                        enable_user_found = 0;
+                        enable_user_found = 1;
                     }
                 }
               section = section->next;
