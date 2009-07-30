@@ -1,3 +1,7 @@
+0.7.12 - xx/xx/09
+-----------------
+o In bmc-config, add workarounds for Dell Poweredge servers.
+
 0.7.11 - 07/28/09
 -----------------
 o In ipmi-fru, fix FRU output corner cases.

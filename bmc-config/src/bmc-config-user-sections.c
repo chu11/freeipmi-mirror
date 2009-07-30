@@ -526,6 +526,25 @@ enable_user_commit (const char *section_name,
               goto cleanup;
             }
         }
+      /*
+       * IPMI Workaround
+       *
+       * Dell Poweredge R610
+       *
+       * Dell says this can only go after a set password command.
+       * Save info to possibly retry the enable_user after a password
+       * is set.
+       */
+      else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && (ipmi_check_completion_code (obj_cmd_rs,
+                                          IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1))
+        {
+          if (state_data->enable_user_after_password_len)
+            {
+              state_data->enable_user_after_password[userid-1].enable_user_failed = 1;
+              state_data->enable_user_after_password[userid-1].kv = (struct config_keyvalue *)kv;
+            }
+        }
       else
         {
           if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
@@ -670,6 +689,27 @@ password_commit (const char *section_name,
       goto cleanup;
     }
 
+  if (state_data->enable_user_after_password_len
+      && state_data->enable_user_after_password[userid-1].enable_user_failed)
+    {
+      config_err_t ret;
+
+      /* ignore non-fatal error, consider success */
+      ret = enable_user_commit (section_name,
+                                state_data->enable_user_after_password[userid-1].kv,
+                                state_data);
+      if (ret == CONFIG_ERR_FATAL_ERROR)
+        {
+          rv = CONFIG_ERR_FATAL_ERROR;
+          goto cleanup;
+        }
+      if (ret == CONFIG_ERR_SUCCESS)
+        {
+          /* now it has passed, reset to 0 just in case */
+          state_data->enable_user_after_password[userid-1].enable_user_failed  = 0;
+        }
+    }
+  
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   _FIID_OBJ_DESTROY(obj_cmd_rs);
@@ -696,6 +736,7 @@ _check_bmc_user_password20 (bmc_config_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
 
   assert(state_data);
   assert(password);
@@ -837,6 +878,27 @@ password20_commit (const char *section_name,
       if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR(state_data->ipmi_ctx))
         rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
+    }
+
+  if (state_data->enable_user_after_password_len
+      && state_data->enable_user_after_password[userid-1].enable_user_failed)
+    {
+      config_err_t ret;
+
+      /* ignore non-fatal error, consider success */
+      ret = enable_user_commit (section_name,
+                                state_data->enable_user_after_password[userid-1].kv,
+                                state_data);
+      if (ret == CONFIG_ERR_FATAL_ERROR)
+        {
+          rv = CONFIG_ERR_FATAL_ERROR;
+          goto cleanup;
+        }
+      if (ret == CONFIG_ERR_SUCCESS)
+        {
+          /* now it has passed, reset to 0 just in case */
+          state_data->enable_user_after_password[userid-1].enable_user_failed  = 0;
+        }
     }
 
   rv = CONFIG_ERR_SUCCESS;
