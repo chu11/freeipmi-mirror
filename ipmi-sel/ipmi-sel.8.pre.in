@@ -111,6 +111,8 @@ Hex-dump SEL entries.
 .LP
 Inventec 5441/Dell Xanadu2
 .TP
+Dell Poweredge 2900
+.TP
 Dell Poweredge R610
 .SH "EXAMPLES"
 .B # ipmi-sel 
