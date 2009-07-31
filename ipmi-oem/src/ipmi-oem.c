@@ -67,6 +67,18 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_get_system_info
     },
     {
+      "get-nic-selection",
+      NULL,
+      0,
+      ipmi_oem_dell_get_nic_selection
+    },
+    {
+      "set-nic-selection",
+      "<dedicated|shared|shared_failover_nic2|shared_failover_all>",
+      1,
+      ipmi_oem_dell_set_nic_selection
+    },
+    {
       "get-power-info",
       NULL,
       0,

@@ -1,5 +1,9 @@
 2009-07-31  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Support Dell get/set NIC selection.
+	
+2009-07-31  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/, ipmi-sensors/, ipmi-sel/, bmc-info/: Collapse API
 	"BAD_COMPLETION_CODE" variants into single "BAD_COMPLETION_CODE"
 	error code.
