@@ -289,8 +289,10 @@ specific case.
 Dell Poweredge R610: Default Authentication Type Enables configure
 several OEM authentications on.  However, the motherboard does not
 support these OEM authentications, and any subsequent configuration of
-them results in a bad parameter completion code (0xCC).  No current
-resolution.
+them results in a bad parameter completion code (0xCC).  Added
+workaround to aid in configuration of these fields by allowing
+bmc-config to "absorb" future configuration values, so that multiple
+fields can be configured simultaneously instead of just one field.
 
 
 ipmi-fru
