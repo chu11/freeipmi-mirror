@@ -55,6 +55,16 @@ _bmc_config_state_data_init(bmc_config_state_data_t *state_data)
   state_data->enable_user_after_password_len = 0;
   state_data->enable_user_after_password = NULL;
 
+  state_data->lan_conf_auth_callback_level_oem_proprietary_set = 0;
+  state_data->lan_conf_auth_user_level_oem_proprietary_set = 0;
+  state_data->lan_conf_auth_operator_level_oem_proprietary_set = 0;
+  state_data->lan_conf_auth_admin_level_oem_proprietary_set = 0;
+  state_data->lan_conf_auth_oem_level_none_set = 0;
+  state_data->lan_conf_auth_oem_level_md2_set = 0;
+  state_data->lan_conf_auth_oem_level_md5_set = 0;
+  state_data->lan_conf_auth_oem_level_straight_password_set = 0;
+  state_data->lan_conf_auth_oem_level_oem_proprietary_set = 0;
+
   state_data->authentication_type_initialized = 0;
 
   state_data->cipher_suite_entry_count = 0;
@@ -252,6 +262,11 @@ _bmc_config (pstdout_state_t pstate,
    * B) On some motherboards, the "Enable_User" must come after the
    * "Password" configure.  So we store information for this fact.
    * See workaround details in user section code.
+   *
+   * C) On some motherboards, the default motherboard settings set
+   * MD2/MD5 authentication at the OEM privilege, but you cannot
+   * configure them to that.  See workaround details in the lan conf
+   * authentication section.
    */
   if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT)
     {
@@ -272,6 +287,7 @@ _bmc_config (pstdout_state_t pstate,
           unsigned int lan_session_limit_found = 0;
           unsigned int serial_session_limit_found = 0;
           unsigned int enable_user_found = 0;
+          unsigned int lan_conf_auth_found = 0;
           unsigned int datasize;
 
           /* Two, is the user configuring anything these special cases
@@ -306,6 +322,10 @@ _bmc_config (pstdout_state_t pstate,
                         enable_user_found = 1;
                     }
                 }
+
+              if (stristr (section->section_name, "Lan_Conf_Auth"))
+                lan_conf_auth_found = 1;
+
               section = section->next;
             }
 
@@ -353,7 +373,8 @@ _bmc_config (pstdout_state_t pstate,
 
           /* Third, store the info we care about */
           if (lan_session_limit_found 
-              || serial_session_limit_found)
+              || serial_session_limit_found
+              || lan_conf_auth_found)
             {
               section = sections;
               while (section)
@@ -386,6 +407,81 @@ _bmc_config (pstdout_state_t pstate,
                         }
                     }
 
+                  if (stristr (section->section_name, "Lan_Conf_Auth"))
+                    {
+                      if ((kv = config_find_keyvalue (pstate,
+                                                      section,
+                                                      "Callback_Enable_Auth_Type_OEM_Proprietary")))
+                        {
+                          state_data.lan_conf_auth_callback_level_oem_proprietary_set = 1;
+                          state_data.lan_conf_auth_callback_level_oem_proprietary = same (kv->value_input, "yes");
+                        }
+                      
+                      if ((kv = config_find_keyvalue (pstate,
+                                                      section,
+                                                      "User_Enable_Auth_Type_OEM_Proprietary")))
+                        {
+                          state_data.lan_conf_auth_user_level_oem_proprietary_set = 1;
+                          state_data.lan_conf_auth_user_level_oem_proprietary = same (kv->value_input, "yes");
+                        }
+                      
+                      if ((kv = config_find_keyvalue (pstate,
+                                                      section,
+                                                      "Operator_Enable_Auth_Type_OEM_Proprietary")))
+                        {
+                          state_data.lan_conf_auth_operator_level_oem_proprietary_set = 1;
+                          state_data.lan_conf_auth_operator_level_oem_proprietary = same (kv->value_input, "yes");
+                        }
+                      
+                      if ((kv = config_find_keyvalue (pstate,
+                                                      section,
+                                                      "Admin_Enable_Auth_Type_OEM_Proprietary")))
+                        {
+                          state_data.lan_conf_auth_admin_level_oem_proprietary_set = 1;
+                          state_data.lan_conf_auth_admin_level_oem_proprietary = same (kv->value_input, "yes");
+                        }
+                      
+                      if ((kv = config_find_keyvalue (pstate,
+                                                      section,
+                                                      "OEM_Enable_Auth_Type_None")))
+                        {
+                          state_data.lan_conf_auth_oem_level_none_set = 1;
+                          state_data.lan_conf_auth_oem_level_none = same (kv->value_input, "yes");
+                        }
+                      
+                      if ((kv = config_find_keyvalue (pstate,
+                                                      section,
+                                                      "OEM_Enable_Auth_Type_MD2")))
+                        {
+                          state_data.lan_conf_auth_oem_level_md2_set = 1;
+                          state_data.lan_conf_auth_oem_level_md2 = same (kv->value_input, "yes");
+                        }
+                      
+                      if ((kv = config_find_keyvalue (pstate,
+                                                      section,
+                                                      "OEM_Enable_Auth_Type_MD5")))
+                        {
+                          state_data.lan_conf_auth_oem_level_md5_set = 1;
+                          state_data.lan_conf_auth_oem_level_md5 = same (kv->value_input, "yes");
+                        }
+                      
+                      if ((kv = config_find_keyvalue (pstate,
+                                                      section,
+                                                      "OEM_Enable_Auth_Type_Straight_Password")))
+                        {
+                          state_data.lan_conf_auth_oem_level_straight_password_set = 1;
+                          state_data.lan_conf_auth_oem_level_straight_password = same (kv->value_input, "yes");
+                        }
+                      
+                      if ((kv = config_find_keyvalue (pstate,
+                                                      section,
+                                                      "OEM_Enable_Auth_Type_OEM_Proprietary")))
+                        {
+                          state_data.lan_conf_auth_oem_level_oem_proprietary_set = 1;
+                          state_data.lan_conf_auth_oem_level_oem_proprietary = same (kv->value_input, "yes");
+                        }
+                    }
+                  
                   section = section->next;
                 }
             }
