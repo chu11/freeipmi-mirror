@@ -72,7 +72,27 @@ typedef struct bmc_config_state_data
   /* achu: workaround for OEM compliance issue, see user section */
   int enable_user_after_password_len;
   bmc_config_enable_user_after_password_t *enable_user_after_password;
-  
+
+  /* achu: workaround for OEM compliance issue, see lan_conf_auth section */
+  int lan_conf_auth_callback_level_oem_proprietary_set;
+  uint8_t lan_conf_auth_callback_level_oem_proprietary;
+  int lan_conf_auth_user_level_oem_proprietary_set;
+  uint8_t lan_conf_auth_user_level_oem_proprietary;
+  int lan_conf_auth_operator_level_oem_proprietary_set;
+  uint8_t lan_conf_auth_operator_level_oem_proprietary;
+  int lan_conf_auth_admin_level_oem_proprietary_set;
+  uint8_t lan_conf_auth_admin_level_oem_proprietary;
+  int lan_conf_auth_oem_level_none_set;
+  uint8_t lan_conf_auth_oem_level_none;
+  int lan_conf_auth_oem_level_md2_set;
+  uint8_t lan_conf_auth_oem_level_md2;
+  int lan_conf_auth_oem_level_md5_set;
+  uint8_t lan_conf_auth_oem_level_md5;
+  int lan_conf_auth_oem_level_straight_password_set;
+  uint8_t lan_conf_auth_oem_level_straight_password;
+  int lan_conf_auth_oem_level_oem_proprietary_set;
+  uint8_t lan_conf_auth_oem_level_oem_proprietary;
+
   /* achu: caching to make lan authentication enables go faster */
   int authentication_type_initialized;
   uint8_t authentication_type_none;

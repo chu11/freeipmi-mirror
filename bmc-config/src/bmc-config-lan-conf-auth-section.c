@@ -525,11 +525,91 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
         {
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          /*
+           * IPMI Workaround
+           *
+           * Dell Poweredge R610
+           *
+           * Nodes come default w/ OEM authentication enables turned
+           * on, but you cannot configure them on.  So this always
+           * leads to invalid data errors (0xCC) b/c we are
+           * configuring one field at a time (and continuing
+           * non-this-field to whatever is on the motherboard).  So we
+           * will "absorb" the OEM configuration of later fields and
+           * try again, hoping that the user has tried to "right" the
+           * badness already sitting on the motherboard.
+           */
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
               && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER) == 1))
+                                              IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
+            {
+              if (state_data->lan_conf_auth_callback_level_oem_proprietary_set)
+                al->callback_level_oem_proprietary = state_data->lan_conf_auth_callback_level_oem_proprietary;
+              if (state_data->lan_conf_auth_user_level_oem_proprietary_set)
+                al->user_level_oem_proprietary = state_data->lan_conf_auth_user_level_oem_proprietary;
+              if (state_data->lan_conf_auth_operator_level_oem_proprietary_set)
+                al->operator_level_oem_proprietary = state_data->lan_conf_auth_operator_level_oem_proprietary;
+              if (state_data->lan_conf_auth_admin_level_oem_proprietary_set)
+                al->admin_level_oem_proprietary = state_data->lan_conf_auth_admin_level_oem_proprietary;
+              if (state_data->lan_conf_auth_oem_level_none_set)
+                al->oem_level_none = state_data->lan_conf_auth_oem_level_none;
+              if (state_data->lan_conf_auth_oem_level_md2_set)
+                al->oem_level_md2 = state_data->lan_conf_auth_oem_level_md2;
+              if (state_data->lan_conf_auth_oem_level_md5_set)
+                al->oem_level_md5 = state_data->lan_conf_auth_oem_level_md5;
+              if (state_data->lan_conf_auth_oem_level_straight_password_set)
+                al->oem_level_straight_password = state_data->lan_conf_auth_oem_level_straight_password;
+              if (state_data->lan_conf_auth_oem_level_oem_proprietary_set)
+                al->oem_level_oem_proprietary = state_data->lan_conf_auth_oem_level_oem_proprietary;
+
+              if (ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (state_data->ipmi_ctx,
+                                                                                         channel_number,
+                                                                                         al->callback_level_none,
+                                                                                         al->callback_level_md2,
+                                                                                         al->callback_level_md5,
+                                                                                         al->callback_level_straight_password,
+                                                                                         al->callback_level_oem_proprietary,
+                                                                                         al->user_level_none,
+                                                                                         al->user_level_md2,
+                                                                                         al->user_level_md5,
+                                                                                         al->user_level_straight_password,
+                                                                                         al->user_level_oem_proprietary,
+                                                                                         al->operator_level_none,
+                                                                                         al->operator_level_md2,
+                                                                                         al->operator_level_md5,
+                                                                                         al->operator_level_straight_password,
+                                                                                         al->operator_level_oem_proprietary,
+                                                                                         al->admin_level_none,
+                                                                                         al->admin_level_md2,
+                                                                                         al->admin_level_md5,
+                                                                                         al->admin_level_straight_password,
+                                                                                         al->admin_level_oem_proprietary,
+                                                                                         al->oem_level_none,
+                                                                                         al->oem_level_md2,
+                                                                                         al->oem_level_md5,
+                                                                                         al->oem_level_straight_password,
+                                                                                         al->oem_level_oem_proprietary,
+                                                                                         obj_cmd_rs) < 0)
+                {
+                  if (state_data->prog_data->args->config_args.common.debug)
+                    pstdout_fprintf (state_data->pstate,
+                                     stderr,
+                                     "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
+                                     ipmi_ctx_errormsg (state_data->ipmi_ctx));
+                  rv = CONFIG_ERR_NON_FATAL_ERROR;
+                  goto cleanup;
+                }
+              
+              /* success!! */
+              goto out;
+
+            }
+          else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                   && (ipmi_check_completion_code (obj_cmd_rs,
+                                                   IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER) == 1))
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
@@ -537,6 +617,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
+ out:
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -743,7 +824,9 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
     "authentication to \"Yes\" and the rest to \"No\".  If you have "
     "configured a NULL username and a NULL password, you "
     "will also want to configure some of the \"None\" fields to \"Yes\" "
-    "to allow \"None\" authentication to work.";
+    "to allow \"None\" authentication to work.  Some motherboards do not "
+    "allow you to enable OEM authentication, so you may wish to set all "
+    "OEM related fields to \"No\".";
 
   if (!(section = config_section_create (state_data->pstate,
                                          "Lan_Conf_Auth",
