@@ -324,6 +324,14 @@ Power off the machine and power it back on.
 Using the --diff option, verify that newly configured fields have been
 saved across a reboot.
 
+Test)
+
+If any parameters on the system are read only, does bmc-config output
+"Read Only Field" appropriately?
+
+If not, is the field returning the proper completion code (typically
+0x82).
+
 Bmc-info Testing
 ----------------
 

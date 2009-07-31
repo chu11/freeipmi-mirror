@@ -100,20 +100,6 @@ api_set_api_errnum_by_bad_response (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
       || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_FIRMWARE_UPDATE_MODE) == 1
       || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_BMC_INIT_MODE) == 1)
     ctx->errnum = IPMI_ERR_BMC_BUSY;
-  else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID) == 1
-           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID_FOR_LUN) == 1)
-    ctx->errnum = IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND;
-  else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_TRUNCATED) == 1
-           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1
-           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_LENGTH_LIMIT_EXCEEDED) == 1
-           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1
-           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1
-           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1
-           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
-           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_DESTINATION_UNAVAILABLE) == 1
-           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1
-           || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_PARAMETER_ILLEGAL) == 1)
-    ctx->errnum = IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID;
   else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL) == 1)
     ctx->errnum = IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
   else

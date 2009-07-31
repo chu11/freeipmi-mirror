@@ -309,8 +309,8 @@ threshold_checkout (const char *section_name,
        * even if this command isn't supported.  The user just doesn't
        * get to configure these thresholds.
        */
-      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND)
-          && (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID) == 1))
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID) == 1)
         rv = CONFIG_ERR_NON_FATAL_ERROR;
 
       goto cleanup;

@@ -120,21 +120,18 @@ static char *ipmi_errmsg[] =
     "driver timeout",                                                   /* 19 */
     "message timeout",                                                  /* 20 */
     "command invalid for selected interface",                           /* 21 */
-    "bad completion code: node busy/out of resources",                  /* 22 */
-    "bad completion code: command invalid/not supported",               /* 23 */
-    "bad completion code: request data/parameter invalid",              /* 24 */
-    "bad completion code",                                              /* 25 */
-    "bad rmcpplus status code",                                         /* 26 */
-    "not found",                                                        /* 27 */
-    "BMC busy",                                                         /* 28 */
-    "out of memory",                                                    /* 29 */
-    "invalid hostname",                                                 /* 30 */
-    "invalid parameters",                                               /* 31 */
-    "driver path required",                                             /* 32 */
-    "internal IPMI error",                                              /* 33 */
-    "internal system error",                                            /* 34 */
-    "internal error",                                                   /* 35 */
-    "errnum out of range",                                              /* 36 */
+    "bad completion code",                                              /* 22 */
+    "bad rmcpplus status code",                                         /* 23 */
+    "not found",                                                        /* 24 */
+    "BMC busy",                                                         /* 25 */
+    "out of memory",                                                    /* 26 */
+    "invalid hostname",                                                 /* 27 */
+    "invalid parameters",                                               /* 28 */
+    "driver path required",                                             /* 29 */
+    "internal IPMI error",                                              /* 30 */
+    "internal system error",                                            /* 31 */
+    "internal error",                                                   /* 32 */
+    "errnum out of range",                                              /* 33 */
   };
 
 static void

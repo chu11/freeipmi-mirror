@@ -542,7 +542,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
            * try again, hoping that the user has tried to "right" the
            * badness already sitting on the motherboard.
            */
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs,
                                               IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
             {

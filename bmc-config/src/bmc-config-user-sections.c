@@ -132,7 +132,7 @@ _get_user_access (bmc_config_state_data_t *state_data,
        * to assume it's possible on some other motherboards.
        */
 
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
         (*username_not_set_yet) = 1;
@@ -268,7 +268,7 @@ _set_user_access (bmc_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (comp_code
-          && IPMI_ERR_IS_BAD_COMPLETION_CODE (ipmi_ctx_errnum (state_data->ipmi_ctx)))
+          && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
         {
           (*comp_code) = 0;
           if (FIID_OBJ_GET (obj_cmd_rs, "comp_code", &val) < 0)
@@ -341,7 +341,7 @@ username_checkout (const char *section_name,
        * previously.
        */
 
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
         {
@@ -575,7 +575,7 @@ enable_user_commit (const char *section_name,
        * ignored)
        */
 
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1))
         {
@@ -645,7 +645,7 @@ enable_user_commit (const char *section_name,
        * you configure a non-null password.  Save info to possibly
        * retry the enable_user after a password is set.
        */
-      else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+      else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
 	       && (ipmi_check_completion_code (obj_cmd_rs,
 					       IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1))
         {
@@ -1461,7 +1461,7 @@ sol_payload_access_checkout (const char *section_name,
        * to assume it's possible on some other motherboards.
        */
 
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
         {

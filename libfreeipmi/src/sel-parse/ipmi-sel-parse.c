@@ -697,7 +697,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
                           record_id) < 0)
         {
           if (record_id == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
-              && ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+              && ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && ipmi_check_completion_code (obj_cmd_rs,
                                              IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
             {
@@ -706,7 +706,7 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
             }
           else if (record_id_start != IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
                    && !parsed_atleast_one_entry
-                   && ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+                   && ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
                    && ipmi_check_completion_code (obj_cmd_rs,
                                                   IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
             {
@@ -832,7 +832,7 @@ ipmi_sel_parse_record_ids (ipmi_sel_parse_ctx_t ctx,
                           &reservation_id_initialized,
                           record_ids[i]) < 0)
         {
-          if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+          if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && ipmi_check_completion_code (obj_cmd_rs,
                                              IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
             {
@@ -1786,7 +1786,7 @@ ipmi_sel_parse_delete_sel_entry (ipmi_sel_parse_ctx_t ctx, uint16_t record_id)
                                      record_id,
                                      obj_cmd_rs) < 0)
         {
-          if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+          if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
               && (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1
                   || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1))
             {

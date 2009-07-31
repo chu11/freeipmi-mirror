@@ -301,7 +301,7 @@ _set_channel_access (bmc_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (comp_code
-          && IPMI_ERR_IS_BAD_COMPLETION_CODE (ipmi_ctx_errnum (state_data->ipmi_ctx)))
+          && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
         {
           (*comp_code) = 0;
           if (FIID_OBJ_GET (obj_cmd_rs, "comp_code", &val) < 0)

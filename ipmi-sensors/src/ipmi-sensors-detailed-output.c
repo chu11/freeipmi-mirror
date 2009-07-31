@@ -837,7 +837,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
                          "ipmi_cmd_get_sensor_hysteresis: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID)
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
               || ipmi_check_completion_code (obj_cmd_rs,
@@ -1119,7 +1119,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                          "ipmi_cmd_get_sensor_hysteresis: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID)
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
               || ipmi_check_completion_code (obj_cmd_rs,
