@@ -294,6 +294,9 @@ workaround to aid in configuration of these fields by allowing
 bmc-config to "absorb" future configuration values, so that multiple
 fields can be configured simultaneously instead of just one field.
 
+Dell Poweredge R610: Read only fields return an error code of 0xD5
+(request parameter not supported) instead of 0x82 (read only
+parameter).  No current resolution.
 
 ipmi-fru
 --------
