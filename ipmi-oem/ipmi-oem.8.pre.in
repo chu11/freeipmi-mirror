@@ -58,6 +58,22 @@ The currently supported OEM IDs and COMMANDs are:
 This OEM command can retrieve the motherboard asset tag, service tag,
 or product name.  Command confirmed to work on Dell Poweredge R610.
 .TP
+.B get-nic-selection
+This OEM command will determine the current NIC selection for IPMI as
+dedicated, shared, shared w/ failover to NIC2, or shared w/ failover
+to all.  Dedicated indicates IPMI is only available on an expansion
+card, shared indicates IPMI is available on NIC1, shared w/ failover
+to NIC2 indicates IPMI is available on NIC1 w/ failover to NIC2 on
+NIC1's failure, and shared w/ failover to all indicates IPMI is
+available on NIC1 w/ failover to all other NICs in the event of NIC
+failure.  Command confirmed to work on Dell Poweredge R610.
+.TP
+.B set-nic-section \fIdedicated|shared|shared_failover_nic2|shared_failover_all\fR
+This OEM command will set the current NIC selection to dedicated,
+shared, shared_failover_nic2, or shared_failover_all.  (See
+\fIget\-nic\-selection\fR above for description on inputs.)  Command
+confirmed to work on Dell Poweredge R610.
+.TP
 .B get-power-info
 This OEM command can retrieve power information.  Command confirmed to
 work on Dell Poweredge R610.
@@ -84,7 +100,7 @@ the primary ethernet ports.  Command confirmed to work on Inventec
 .TP
 .B set-nic-status \fIdedicated|shared\fR
 This OEM command will set the current NIC status to dedicated or
-shared.  (See get-nic-status above for description on dedicated
+shared.  (See \fIget\-nic\-status\fR above for description on dedicated
 vs. shared status.)  This OEM command may internally reset the BMC,
 making the BMC unusable for awhile.  Command confirmed to work on
 Inventec 5441 (and subsequently Dell Xanadu2).

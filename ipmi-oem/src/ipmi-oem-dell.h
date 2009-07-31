@@ -23,6 +23,10 @@
 
 int ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_dell_get_nic_selection (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_dell_set_nic_selection (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data);

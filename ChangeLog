@@ -1,3 +1,7 @@
+2009-07-31  Albert Chu <chu11@llnl.gov>
+
+        * ipmi-oem/: Support Dell get/set NIC selection.
+	
 2009-07-30  Albert Chu <chu11@llnl.gov>
 
         * bmc-config/: Configure "Password" before "Enable_User" for
