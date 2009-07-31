@@ -91,7 +91,14 @@ _get_pef_control (pstdout_state_t pstate,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+        {
+          if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED) == 1)
+            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
+          else
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       goto cleanup;
     }
 
@@ -179,9 +186,13 @@ _set_pef_control (pstdout_state_t pstate,
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (ipmi_ctx))
         {
           if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER) == 1))
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER) == 1)
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
+          else if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                   && ipmi_check_completion_code (obj_cmd_rs,
+                                                  IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED) == 1)
+            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
         }
@@ -403,7 +414,14 @@ _get_pef_action_global_control (pstdout_state_t pstate,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+        {
+          if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED) == 1)
+            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
+          else
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       goto cleanup;
     }
 
@@ -513,9 +531,13 @@ _set_pef_action_global_control (pstdout_state_t pstate,
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (ipmi_ctx))
         {
           if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER) == 1))
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER) == 1)
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
+          else if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                   && ipmi_check_completion_code (obj_cmd_rs,
+                                                  IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED) == 1)
+            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
         }
@@ -823,7 +845,14 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+        {
+          if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED) == 1)
+            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
+          else
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       goto cleanup;
     }
 
@@ -883,9 +912,13 @@ pef_startup_delay_commit (pstdout_state_t pstate,
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (ipmi_ctx))
         {
           if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER) == 1))
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER) == 1)
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
+          else if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                   && ipmi_check_completion_code (obj_cmd_rs,
+                                                  IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED) == 1)
+            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
         }
@@ -935,7 +968,14 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+        {
+          if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED) == 1)
+            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
+          else
+            rv = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       goto cleanup;
     }
 
@@ -995,9 +1035,13 @@ pef_alert_startup_delay_commit (pstdout_state_t pstate,
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (ipmi_ctx))
         {
           if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER) == 1))
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER) == 1)
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
+          else if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                   && ipmi_check_completion_code (obj_cmd_rs,
+                                                  IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED) == 1)
+            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
         }

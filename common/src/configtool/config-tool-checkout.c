@@ -135,11 +135,20 @@ config_checkout_section (pstdout_state_t pstate,
       if (CONFIG_IS_NON_FATAL_ERROR(this_ret))
         {
           if (cmd_args->verbose_count)
-            PSTDOUT_FPRINTF (pstate,
-                             fp,
-                             "\t## Unable to checkout %s:%s\n",
-                             section->section_name,
-                             kv->key->key_name);
+            {
+              if (this_ret == CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED)
+                PSTDOUT_FPRINTF (pstate,
+                                 fp,
+                                 "\t## Unable to checkout %s:%s : Not Supported\n",
+                                 section->section_name,
+                                 kv->key->key_name);
+              else
+                PSTDOUT_FPRINTF (pstate,
+                                 fp,
+                                 "\t## Unable to checkout %s:%s\n",
+                                 section->section_name,
+                                 kv->key->key_name);
+            }
           ret = CONFIG_ERR_NON_FATAL_ERROR;
         }
       else

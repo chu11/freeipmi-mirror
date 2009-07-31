@@ -84,7 +84,14 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
                              "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
           if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-            rv = CONFIG_ERR_NON_FATAL_ERROR;
+            {
+              if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                  && ipmi_check_completion_code (obj_cmd_count_rs,
+                                                 IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED) == 1)
+                rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
+              else
+                rv = CONFIG_ERR_NON_FATAL_ERROR;
+            }
           goto cleanup;
         }
 
@@ -127,7 +134,14 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
                              "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
           if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-            rv = CONFIG_ERR_NON_FATAL_ERROR;
+            {
+              if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                  && ipmi_check_completion_code (obj_cmd_id_rs,
+                                                 IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED) == 1)
+                rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
+              else
+                rv = CONFIG_ERR_NON_FATAL_ERROR;
+            }
           goto cleanup;
         }
 
@@ -208,7 +222,14 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data)
                              "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_level: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
           if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-            rv = CONFIG_ERR_NON_FATAL_ERROR;
+            {
+              if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                  && ipmi_check_completion_code (obj_cmd_priv_rs,
+                                                 IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED) == 1)
+                rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
+              else
+                rv = CONFIG_ERR_NON_FATAL_ERROR;
+            }
           goto cleanup;
         }
 
@@ -375,9 +396,13 @@ id_commit (const char *section_name,
       if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
         {
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER) == 1))
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER) == 1)
             rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
+          else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                   && ipmi_check_completion_code (obj_cmd_rs,
+                                                  IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED) == 1)
+            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
           else
             rv = CONFIG_ERR_NON_FATAL_ERROR;
         }
