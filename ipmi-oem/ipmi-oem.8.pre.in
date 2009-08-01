@@ -62,8 +62,8 @@ The currently supported OEM IDs and COMMANDs are:
 .TP
 .B get-system-info \fIasset-tag|service-tag|product-name\fR
 This OEM command can retrieve the motherboard asset tag, service tag,
-or product name.  Command confirmed to work on Dell Poweredge 2900 and
-R610.
+or product name.  Command confirmed to work on Dell Poweredge 2900,
+2950 and R610.
 .TP
 .B get-nic-selection
 This OEM command will determine the current NIC selection for IPMI as
@@ -73,15 +73,16 @@ card, shared indicates IPMI is available on NIC1, shared w/ failover
 to NIC2 indicates IPMI is available on NIC1 w/ failover to NIC2 on
 NIC1's failure, and shared w/ failover to all indicates IPMI is
 available on NIC1 w/ failover to all other NICs in the event of NIC
-failure.  On older Poweredge systems, 'shared w/ failover to NIC2' may
-have been documented as just 'failover'.  Command confirmed to work on
-Dell Poweredge 2900 and R610.
+failure.  Command confirmed to work on Dell Poweredge 2900, 2950, and
+R610.
 .TP
 .B set-nic-section \fIdedicated|shared|shared_failover_nic2|shared_failover_all\fR
 This OEM command will set the current NIC selection to dedicated,
 shared, shared_failover_nic2, or shared_failover_all.  (See
-\fIget\-nic\-selection\fR above for description on inputs.)  Command
-confirmed to work on Dell Poweredge 2900 and R610.
+\fIget\-nic\-selection\fR above for description on inputs.)  On older
+Poweredge systems, \fIshared_failover_nic2\fR may have ben documented
+as just \fIfailover\fR.  Command confirmed to work on Dell Poweredge
+2900, 2950, and R610.
 .TP
 .B get-power-info
 This OEM command can retrieve power information.  Command confirmed to
