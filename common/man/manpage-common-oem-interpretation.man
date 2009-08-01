@@ -1,3 +1,5 @@
 .SH "OEM INTERPRETATION"
-The following motherboards are supported through the
-\fB\-\-interpret-oem-data\fR option.
+The following motherboards are confirmed to be supported by the
+\fB\-\-interpret-oem-data\fR option.  While highly probable the
+interpretations would work across other motherboards by the same
+manufacturer, there are no guarantees.
