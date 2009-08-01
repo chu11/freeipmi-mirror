@@ -74,6 +74,17 @@ written.
 
 Test)
 
+Execute bmc-config with --checkout on a default/unmodified
+manufacturered system.
+
+Using the --commit and --filename options, commit the checked out
+configuration file back to the BMC.
+
+Ensure that the default checked out configuration can be written back.
+If it cannot, is there an "default" configuration that is "invalid"?
+
+Test)
+
 Execute bmc-config with --checkout, verify checked out configuration
 contains all appropriate configurable fields.  At minimum, the fields
 listed below should be output:
