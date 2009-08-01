@@ -203,15 +203,12 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        {
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && ipmi_check_completion_code (obj_cmd_rs,
-                                             IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED) == 1)
-            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
-          else
-            rv = CONFIG_ERR_NON_FATAL_ERROR;
-        }
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
+
       goto cleanup;
     }
 
@@ -614,16 +611,10 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
               goto out;
 
             }
-          else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-                   && ipmi_check_completion_code (obj_cmd_rs,
-                                                  IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER) == 1)
-            rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
-          else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-                   && ipmi_check_completion_code (obj_cmd_rs,
-                                                  IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED) == 1)
-            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
-          else
-            rv = CONFIG_ERR_NON_FATAL_ERROR;
+          else if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                              obj_cmd_rs,
+                                              &ret))
+            rv = ret;
         }
       goto cleanup;
     }

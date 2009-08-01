@@ -79,20 +79,19 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
                                                    IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
                                                    obj_cmd_rs) < 0)
     {
+      config_err_t ret;
+
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_system_boot_options_boot_flags: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        {
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && ipmi_check_completion_code (obj_cmd_rs,
-                                             IPMI_COMP_CODE_SET_BOOT_OPTION_PARAMETER_NOT_SUPPORTED) == 1)
-            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
-          else
-            rv = CONFIG_ERR_NON_FATAL_ERROR;
-        }
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
+
       goto cleanup;
     }
 
@@ -297,24 +296,19 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
                                                    data->bios_shared_mode_override,
                                                    obj_cmd_rs) < 0)
     {
+      config_err_t ret;
+
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_system_boot_options_boot_flags: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        {
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && ipmi_check_completion_code (obj_cmd_rs,
-                                             IPMI_COMP_CODE_SET_BOOT_OPTION_WRITE_READ_ONLY_PARAMETER) == 1)
-            rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
-          else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-                   && ipmi_check_completion_code (obj_cmd_rs,
-                                                  IPMI_COMP_CODE_SET_BOOT_OPTION_PARAMETER_NOT_SUPPORTED) == 1)
-            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
-          else
-            rv = CONFIG_ERR_NON_FATAL_ERROR;
-        }
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
+
       goto cleanup;
     }
 
@@ -714,24 +708,19 @@ chassis_boot_flags_post (const char *section_name,
                                                               &boot_info_acknowledge,
                                                               obj_cmd_rs) < 0)
     {
+      config_err_t ret;
+
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_system_boot_options_boot_info_acknowledge: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        {
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && ipmi_check_completion_code (obj_cmd_rs,
-                                             IPMI_COMP_CODE_SET_BOOT_OPTION_WRITE_READ_ONLY_PARAMETER) == 1)
-            rv = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
-          else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-                   && ipmi_check_completion_code (obj_cmd_rs,
-                                                  IPMI_COMP_CODE_SET_BOOT_OPTION_PARAMETER_NOT_SUPPORTED) == 1)
-            rv = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
-          else
-            rv = CONFIG_ERR_NON_FATAL_ERROR;
-        }
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
+
       goto cleanup;
     }
 

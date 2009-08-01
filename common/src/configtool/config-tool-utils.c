@@ -467,3 +467,41 @@ config_find_keyvalue (pstdout_state_t pstate,
 
   return (kv);
 }
+
+int
+config_is_non_fatal_error (ipmi_ctx_t ipmi_ctx,
+                           fiid_obj_t obj_cmd_rs,
+                           config_err_t *non_fatal_err)
+{
+  assert (ipmi_ctx);
+  assert (obj_cmd_rs);
+  assert (fiid_obj_valid (obj_cmd_rs));
+  assert (non_fatal_err);
+
+  /* should all be the same, this is just to check */
+
+  assert (IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED == IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED);
+  assert (IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED == IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED);
+  assert (IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED == IPMI_COMP_CODE_SET_BOOT_OPTION_PARAMETER_NOT_SUPPORTED);
+
+  assert (IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER == IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER);
+  assert (IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER == IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER);
+  assert (IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER == IPMI_COMP_CODE_SET_BOOT_OPTION_WRITE_READ_ONLY_PARAMETER);
+  
+  if (!IPMI_ERRNUM_IS_FATAL_ERROR (ipmi_ctx))
+    {
+      if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && ipmi_check_completion_code (obj_cmd_rs,
+                                         IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER) == 1)
+        (*non_fatal_err) = CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
+      else if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+               && ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED) == 1)
+        (*non_fatal_err) = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
+      else
+        (*non_fatal_err) = CONFIG_ERR_NON_FATAL_ERROR;
+      return (1);
+    }
+
+  return (0);
+}
