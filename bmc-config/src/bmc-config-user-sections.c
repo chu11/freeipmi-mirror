@@ -1984,6 +1984,10 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                               username_validate) < 0)
     goto cleanup;
 
+  /* config Password before Enable_User, to remove the off-chance a
+   * user is configured "on" before a password is set, allowing a null
+   * connection to be established.
+   */
   if (config_section_add_key (state_data->pstate,
                               section,
                               "Password",
