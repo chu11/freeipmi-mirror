@@ -285,6 +285,7 @@ o ipmi-pef-config/pef-config
   - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
 o ipmi-oem
+  - Support common 'list' command to all OEM IDs.
   - Add additional Dell OEM commands.
 o bmc-watchdog
   - Removed the following short options.
