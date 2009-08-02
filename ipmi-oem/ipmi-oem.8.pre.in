@@ -57,7 +57,10 @@ The following options are specific to
 \fB\-L\fR, \fB\-\-list\fR
 List supported OEM IDs and Commands.
 .SH "SUPPORTED OEM IDS and COMMANDS"
-The currently supported OEM IDs and COMMANDs are:
+The currently supported OEM IDs and COMMANDs are listed below.  The
+special command
+.B list
+may be passed to any OEM ID to list commands supported by that OEM ID.
 .TP
 .B dell
 .RS

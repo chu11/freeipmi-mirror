@@ -1,3 +1,7 @@
+2009-08-02  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Support 'list' command to all OEM IDs.
+	
 2009-08-01  Albert Chu <chu11@llnl.gov>
 
 	* common/src/configtool/config-tool-utils.h,

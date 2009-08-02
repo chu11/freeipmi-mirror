@@ -196,15 +196,15 @@ struct ipmi_oem_command oem_supermicro[] =
 struct ipmi_oem_id oem_cb[] =
   {
     {
-      "dell",
+      "Dell",
       oem_dell
     },
     {
-      "inventec",
+      "Inventec",
       oem_inventec
     },
     {
-      "supermicro",
+      "Supermicro",
       oem_supermicro
     },
     {
@@ -263,6 +263,25 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
           int cmd_found = 0;
 
           id_found++;
+
+          if (!strcasecmp (args->oem_command, "list"))
+            {
+              while (oem_cmd && oem_cmd->oem_command)
+                {
+                  if (oem_cmd->command_options)
+                    printf ("%s Command: %s %s\n",
+                            oem_id->oem_id,
+                            oem_cmd->oem_command,
+                            oem_cmd->command_options);
+                  else
+                    printf ("%s Command: %s\n",
+                            oem_id->oem_id,
+                            oem_cmd->oem_command);
+                  oem_cmd++;
+                }
+
+              break;
+            }
 
           while (oem_cmd && oem_cmd->oem_command)
             {
