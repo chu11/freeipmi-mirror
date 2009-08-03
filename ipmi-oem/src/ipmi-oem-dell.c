@@ -50,14 +50,38 @@
 /* 256 b/c length is 8 bit field */
 #define IPMI_OEM_DELL_MAX_BYTES 256
 
+#define IPMI_OEM_DELL_SYSTEM_INFO_ASSET_TAG          0xC4
+#define IPMI_OEM_DELL_SYSTEM_INFO_SERVICE_TAG        0xC5
+#define IPMI_OEM_DELL_SYSTEM_INFO_PRODUCT_NAME       0xD1
+#define IPMI_OEM_DELL_SYSTEM_INFO_10G_MAC_ADDRESSES  0xCB
+#define IPMI_OEM_DELL_SYSTEM_INFO_11G_MAC_ADDRESSES  0xDA
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_VALIDATOR    0xDD
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_10G            0x08
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_11G_MONOLITHIC 0x0A
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_11G_MODULAR    0x0B
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_ETHERNET  0
+#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_ISCSI     1
+#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_RESERVED  3
+
+#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_ENABLED      0
+#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_DISABLED     1
+#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_PLAYING_DEAD 2
+#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_RESERVED     3
+
+#define IPMI_OEM_DELL_MAC_ADDRESS_LENGTH 6
+
+#define IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH 8 
+
 /* Will call ipmi_cmd_get_system_info_parameters only once, b/c field
  * requested is defined by OEM to be < 16 bytes in length
  */
 static int
-_get_dell_system_info_short (ipmi_oem_state_data_t *state_data,
-                             uint8_t parameter_selector,
-                             char *string,
-                             unsigned int string_len)
+_get_dell_system_info_short_string (ipmi_oem_state_data_t *state_data,
+                                    uint8_t parameter_selector,
+                                    char *string,
+                                    unsigned int string_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
@@ -147,10 +171,10 @@ _get_dell_system_info_short (ipmi_oem_state_data_t *state_data,
 }
 
 static int
-_get_dell_system_info_long (ipmi_oem_state_data_t *state_data,
-                            uint8_t parameter_selector,
-                            char *string,
-                            unsigned int string_len)
+_get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
+                                   uint8_t parameter_selector,
+                                   char *string,
+                                   unsigned int string_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
@@ -319,6 +343,331 @@ _get_dell_system_info_long (ipmi_oem_state_data_t *state_data,
   return (rv);
 }
 
+/* returns 1 on success, 0 on not supported, -1 on error */
+static int
+_get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
+                                  uint8_t *idrac_type)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (idrac_type);
+
+  /* Dell OEM
+   *
+   * From Dell Provided Source Code
+   *
+   * Uses Get System Info command
+   *
+   * iDRAC Validator Parameter = 0xDD
+   * iDRAC Validator Set Selector = 0x02
+   *
+   * Parameter data response formatted:
+   *
+   * 1st byte = ??
+   * 2nd byte = ??
+   * 3rd byte = ??
+   * 4th byte = ??
+   * 5th byte = ??
+   * 6th byte = ??
+   * 7th byte = ??
+   * 8th byte = ??
+   * 9th byte = ??
+   * 10th byte = iDRAC type
+   * - 0x08 = iDRAC 10g
+   * - 0x0A = iDRAC 11g monolithic
+   * - 0x0B = iDRAC 11g modular
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+                                           IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                           IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_VALIDATOR,
+                                           0x02,
+                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                           obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && (ipmi_check_completion_code (obj_cmd_rs,
+                                          IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETER_NOT_SUPPORTED) == 1))
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
+
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (len < 1)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+
+  (*idrac_type) = configuration_parameter_data[9];
+
+  rv = 1;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+_get_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t number_of_nics;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  int len;
+  int i;
+  int rv = -1;
+
+  assert (state_data);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+                                           IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                           IPMI_OEM_DELL_SYSTEM_INFO_10G_MAC_ADDRESSES,
+                                           0,
+                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                           obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  number_of_nics = configuration_parameter_data[0];
+
+  if (!number_of_nics)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  if ((number_of_nics * IPMI_OEM_DELL_MAC_ADDRESS_LENGTH) != (len - 1))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: number of nics = %u, bytes = %d\n",
+		       number_of_nics,
+                       len);
+      goto cleanup;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "NIC Number\tMAC Address\n");
+  for (i = 0; i < number_of_nics; i++)
+    pstdout_printf (state_data->pstate,
+		    "%u\t\t%02X:%02X:%02X:%02X:%02X:%02X\n",
+		    i,
+		    configuration_parameter_data[i*6 + 1],
+		    configuration_parameter_data[i*6 + 2],
+		    configuration_parameter_data[i*6 + 3],
+		    configuration_parameter_data[i*6 + 4],
+		    configuration_parameter_data[i*6 + 5],
+		    configuration_parameter_data[i*6 + 6]);
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+_get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint8_t total_bytes;
+  int rs_len;
+  int i;
+  int rv = -1;
+
+  assert (state_data);
+
+  /* see info below in ipmi_oem_dell_get_system_info() for packet
+   * format.  We cannot use normal Get System Info b/c Dell hacked it
+   * to include/support extra bytes. 
+   */
+
+  bytes_rq[0] = IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS;
+  bytes_rq[1] = 0x00;		/* get parameter */
+  bytes_rq[2] = IPMI_OEM_DELL_SYSTEM_INFO_11G_MAC_ADDRESSES; /* parameter selector */
+  bytes_rq[3] = 0x00;		/* set selector */
+  bytes_rq[4] = 0x00;		/* block selector */
+  bytes_rq[5] = 0x00;		/* offset */
+  bytes_rq[6] = 0x00;		/* length */
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_APP_RQ, /* network function */
+                              bytes_rq, /* data */
+                              7, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   3,
+                                                   IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS,
+                                                   IPMI_NET_FN_APP_RQ) < 0)
+    goto cleanup;
+  
+  total_bytes = bytes_rs[3];
+
+  if (!total_bytes)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
+  if (total_bytes % 8)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "invalid total bytes of data returned: %u\n",
+		       total_bytes);
+      goto cleanup;
+    }
+
+  /* see record format below in ipmi_oem_dell_get_system_info(), record length = 8 */
+  pstdout_printf (state_data->pstate,
+		  "NIC Number\tMAC Address\t\tNIC Status\n");
+  for (i = 0; i < (total_bytes / IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH); i++)
+    {
+      uint8_t mac_type;
+      
+      bytes_rq[0] = IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS;
+      bytes_rq[1] = 0x00;		/* get parameter */
+      bytes_rq[2] = IPMI_OEM_DELL_SYSTEM_INFO_11G_MAC_ADDRESSES; /* parameter selector */
+      bytes_rq[3] = 0x00;		/* set selector */
+      bytes_rq[4] = 0x00;		/* block selector */
+      bytes_rq[5] = i * IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH; /* offset */
+      bytes_rq[6] = IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH; /* length */
+      
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+				  0, /* lun */
+				  IPMI_NET_FN_APP_RQ, /* network function */
+				  bytes_rq, /* data */
+				  7, /* num bytes */
+				  bytes_rs,
+				  IPMI_OEM_MAX_BYTES)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_raw: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
+      
+      /* 11 = IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH + 3 (for cmd, completion code, parameter revision) */
+      if (ipmi_oem_check_response_and_completion_code (state_data,
+						       bytes_rs,
+						       rs_len,
+						       11,
+						       IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS,
+						       IPMI_NET_FN_APP_RQ) < 0)
+	goto cleanup;
+      
+      mac_type = (bytes_rs[3] & 0x30) >> 4;
+      
+      if (mac_type == IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_ETHERNET)
+	{
+	  uint8_t nic_number;
+	  uint8_t nic_status;
+	  char *nic_status_str = NULL;
+
+	  nic_status = (bytes_rs[3] & 0xC0) >> 6;
+	  nic_number = (bytes_rs[4] & 0x1F);
+
+	  if (nic_status == IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_ENABLED)
+	    nic_status_str = "Enabled";
+	  else if (nic_status == IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_DISABLED)
+	    nic_status_str = "Disabled";
+	  else if (nic_status == IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_PLAYING_DEAD)
+	    nic_status_str = "Playing Dead";
+	  else
+	    nic_status_str = "Unknown";
+
+	  pstdout_printf (state_data->pstate,
+			  "%u\t\t%02X:%02X:%02X:%02X:%02X:%02X\t%s\n",
+			  nic_number,
+			  bytes_rs[5],
+			  bytes_rs[6],
+			  bytes_rs[7],
+			  bytes_rs[8],
+			  bytes_rs[9],
+			  bytes_rs[10],
+			  nic_status_str);
+	}
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
 int
 ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 {
@@ -337,7 +686,10 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "servicetag")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "product-name")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "product_name")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "productname"))
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "productname")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "mac_addresses")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "macaddresses"))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -350,22 +702,27 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 
   /* Dell OEM
    *
-   * From http://linux.dell.com/files/openipmi/ipmitool/
+   * Some from http://linux.dell.com/files/openipmi/ipmitool/
+   * Some from Dell Provided Source Code
    *
    * Uses Get System Info command
    *
    * For asset-tag and service-tag, the response format is different
    * than product name.
    *
-   * asset-tag = 0xC4
-   * service-tag = 0xC5
+   * Format #1)
+   *
+   * asset-tag parameter = 0xC4
+   * service-tag parameter = 0xC5
    *
    * Parameter data response formatted:
    *
    * 1st byte = length
    * ? bytes = string
    *
-   * product-name = 0xD1
+   * Format #2)
+   *
+   * product-name parameter = 0xD1
    *
    * Parameter data response formatted:
    *
@@ -380,6 +737,48 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    *
    * 1st byte = set selector
    * ? bytes = string
+   *
+   * Format #3)
+   *
+   * Dell 10G systems, mac-addresses = 0xCB
+   *
+   * Parameter data response formatted:
+   *
+   * 1st byte = number of NICs
+   * ? bytes = MAC address of NICS, number of NICS * 6 total bytes
+   *
+   * Format #4)
+   *
+   * Dell 11G systems, mac-addresses = 0xDA
+   * + 2 extra bytes
+   * byte 5 : offset into data to read
+   * byte 6 : length of data to read
+   *
+   *
+   * Parameter data response formatted:
+   *
+   * if byte 5 and byte 6 are 0x00
+   *
+   * 1st byte - total bytes of MAC address data
+   *
+   * if byte 5 and byte 6 have real offsets/lengths
+   *
+   * parameter revision byte = total number of bytes returned
+   * ? bytes = record stored in following format
+   *   byte 1 - 0:3 - blade slot number
+   *   byte 1 - 4:5 - mac address type
+   *                - 0 = ethernet
+   *                - 1 = iSCSI
+   *                - 2 = ???
+   *                - 3 = reserved
+   *   byte 1 - 6:7 - ethernet status
+   *                - 0 = enabled
+   *                - 1 = disabled
+   *                - 2 = playing dead
+   *                - 3 = reserved
+   *   byte 2 - 0:4 - NIC number
+   *   byte 2 - 5:7 - reserved
+   *   bytes 3 - 8 - MAC address
    */
 
   memset (string, '\0', IPMI_OEM_DELL_MAX_BYTES + 1);
@@ -388,34 +787,87 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       || !strcasecmp (state_data->prog_data->args->oem_options[0], "asset_tag")
       || !strcasecmp (state_data->prog_data->args->oem_options[0], "assettag"))
     {
-      if (_get_dell_system_info_short (state_data,
-                                       0xC4,
-                                       string,
-                                       IPMI_OEM_DELL_MAX_BYTES) < 0)
+      if (_get_dell_system_info_short_string (state_data,
+                                              IPMI_OEM_DELL_SYSTEM_INFO_ASSET_TAG,
+                                              string,
+                                              IPMI_OEM_DELL_MAX_BYTES) < 0)
         goto cleanup;
+
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
     }
   else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "service-tag")
            || !strcasecmp (state_data->prog_data->args->oem_options[0], "service_tag")
            || !strcasecmp (state_data->prog_data->args->oem_options[0], "servicetag"))
     {
-      if (_get_dell_system_info_short (state_data,
-                                       0xC5,
-                                       string,
-                                       IPMI_OEM_DELL_MAX_BYTES) < 0)
+      if (_get_dell_system_info_short_string (state_data,
+                                              IPMI_OEM_DELL_SYSTEM_INFO_SERVICE_TAG,
+                                              string,
+                                              IPMI_OEM_DELL_MAX_BYTES) < 0)
         goto cleanup;
-    }
-  else
-    {
-      if (_get_dell_system_info_long (state_data,
-                                      0xD1,
-                                      string,
-                                      IPMI_OEM_DELL_MAX_BYTES) < 0)
-        goto cleanup;
-    }
 
-  pstdout_printf (state_data->pstate,
-                  "%s\n",
-                  string);
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "product-name")
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "product_name")
+           || !strcasecmp (state_data->prog_data->args->oem_options[0], "productname"))
+    {
+      if (_get_dell_system_info_long_string (state_data,
+                                             IPMI_OEM_DELL_SYSTEM_INFO_PRODUCT_NAME,
+                                             string,
+                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+        goto cleanup;
+
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      string);
+
+    }
+  else /* (!strcasecmp (state_data->prog_data->args->oem_options[0], "mac-addresses")
+          || !strcasecmp (state_data->prog_data->args->oem_options[0], "mac_addresses")
+          || !strcasecmp (state_data->prog_data->args->oem_options[0], "macaddresses")) */
+    {
+      uint8_t idrac_type = 0;
+      int ret;
+      
+      if ((ret = _get_dell_system_info_idrac_info (state_data, &idrac_type)) < 0)
+	goto cleanup;
+
+      if (ret)
+	{
+	  /* iDRAC 10g */
+	  if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_10G)
+	    {
+	      if (_get_dell_system_info_10g_mac_addresses (state_data) < 0)
+		goto cleanup;
+	    }
+	  /* iDRAC 11g */
+	  else if (idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_11G_MONOLITHIC
+		   || idrac_type == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_11G_MODULAR)
+	    {
+	      if (_get_dell_system_info_11g_mac_addresses (state_data) < 0)
+		goto cleanup;
+	    }
+	  else
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "Unrecognized iDRAC system %02Xh\n",
+			       idrac_type);
+	      goto cleanup;
+	    }
+	}
+      else
+	{
+	  /* assume iDRAC 10g */
+	  if (_get_dell_system_info_10g_mac_addresses (state_data) < 0)
+	    goto cleanup;
+	}
+
+    }
  
   rv = 0;
  cleanup:
