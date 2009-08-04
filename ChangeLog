@@ -3,6 +3,9 @@
 	* ipmi-oem/: Support Dell OEM to read NIC MAC addresses.
 
 	* ipmi-oem/: Support Dell power supply info OEM command.
+
+	* libfreeipmi/src/sel-parse/, ipmi-sel/: Add additional Inventec
+	OEM interpretations.
 	
 2009-08-02  Albert Chu <chu11@llnl.gov>
 

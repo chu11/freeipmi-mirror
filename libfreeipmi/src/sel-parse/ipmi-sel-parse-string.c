@@ -610,15 +610,15 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
   if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
       && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == 51
-      && ((system_event_record_data.generator_id == 0x01
+      && ((system_event_record_data.generator_id == 0x01 /* BIOS */
            && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
            && system_event_record_data.sensor_number == 0x81
            && system_event_record_data.event_type_code == 0x70) /* OEM */
-          || (system_event_record_data.generator_id == 0x01
+          || (system_event_record_data.generator_id == 0x01 /* BIOS */
               && system_event_record_data.sensor_type == 0x12 /* System Event */
               && system_event_record_data.sensor_number == 0x85
               && system_event_record_data.event_type_code == 0x6F)
-          || (system_event_record_data.generator_id == 0x31
+          || (system_event_record_data.generator_id == 0x31 /* POST error */
               && system_event_record_data.sensor_type == 0x0F /* System Firmware Progress */
               && system_event_record_data.sensor_number == 0x06
               && system_event_record_data.event_type_code == 0x6F)))
@@ -1704,6 +1704,172 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                      "BIOS Version %X.%02X",
                      system_event_record_data.event_data2,
                      system_event_record_data.event_data3))
+        return (1);
+      return (0);
+    }
+
+  /* OEM Interpretation
+   *
+   * Inventec 5441/Dell Xanadu2
+   */
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+      && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+      && ctx->product_id == 51
+      && system_event_record_data.generator_id == 0x31 /* POST error */
+      && system_event_record_data.sensor_type == 0x0F /* System Firmware Progress */
+      && system_event_record_data.sensor_number == 0x06
+      && system_event_record_data.event_type_code == 0x6F)
+    {
+      uint16_t error_code;
+      char *error_code_str = NULL;
+
+      error_code = system_event_record_data.event_data2;
+      error_code |= (system_event_record_data.event_data3 << 8);
+
+      if (error_code == 0x0000)
+        error_code_str = "Timer Count Read/Write Error";
+      else if (error_code == 0x0001)
+        error_code_str = "Master PIC Error";
+      else if (error_code == 0x0002)
+        error_code_str = "Slave PIC Error";
+      else if (error_code == 0x0003)
+        error_code_str = "CMOS Battery Error";
+      else if (error_code == 0x0004)
+        error_code_str = "CMOS Diagnostic Status Error";
+      else if (error_code == 0x0005)
+        error_code_str = "CMOS Checksum Error";
+      else if (error_code == 0x0006)
+        error_code_str = "CMOS Config Error";
+      else if (error_code == 0x0008)
+        error_code_str = "Keyboard Lock Error";
+      else if (error_code == 0x0009)
+        error_code_str = "No Keyboard Error";
+      else if (error_code == 0x000A)
+        error_code_str = "KBC Bat Test Error";
+      else if (error_code == 0x000B)
+        error_code_str = "CMOS Memory Size Error";
+      else if (error_code == 0x000C)
+        error_code_str = "RAM Read/Write Test Error";
+      else if (error_code == 0x000E)
+        error_code_str = "FDD 0 Error";
+      else if (error_code == 0x0010)
+        error_code_str = "Floppy Controller Error";
+      else if (error_code == 0x0012)
+        error_code_str = "CMOS Date Time Error";
+      else if (error_code == 0x0014)
+        error_code_str = "No PS2 Mouse Error";
+      else if (error_code == 0x0040)
+        error_code_str = "Refresh Timer Error";
+      else if (error_code == 0x0041)
+        error_code_str = "Display Memory Error";
+      else if (error_code == 0x0043)
+        error_code_str = "Post the <INS> key Error";
+      else if (error_code == 0x0044)
+        error_code_str = "DMAC Page Register Error";
+      else if (error_code == 0x0045)
+        error_code_str = "DMAC1 Channel Register Error";
+      else if (error_code == 0x0046)
+        error_code_str = "DMAC2 Channel Register Error";
+      else if (error_code == 0x0047)
+        error_code_str = "PMM Memory Allocation Error";
+      else if (error_code == 0x0048)
+        error_code_str = "Password Check Error";
+      else if (error_code == 0x004A)
+        error_code_str = "ADM Module Error";
+      else if (error_code == 0x004B)
+        error_code_str = "Language Module Error";
+      else if (error_code == 0x004C)
+        error_code_str = "KBC Interface Error";
+      else if (error_code == 0x004D)
+        error_code_str = "HDD 0 Error";
+      else if (error_code == 0x004E)
+        error_code_str = "HDD 1 Error";
+      else if (error_code == 0x004F)
+        error_code_str = "HDD 2 Error";
+      else if (error_code == 0x0050)
+        error_code_str = "HDD 3 Error";
+      else if (error_code == 0x0051)
+        error_code_str = "HDD 4 Error";
+      else if (error_code == 0x0052)
+        error_code_str = "HDD 5 Error";
+      else if (error_code == 0x0053)
+        error_code_str = "HDD 6 Error";
+      else if (error_code == 0x0054)
+        error_code_str = "HDD 7 Error";
+      else if (error_code == 0x0055)
+        error_code_str = "ATAPI 0 Error";
+      else if (error_code == 0x0056)
+        error_code_str = "ATAPI 1 Error";
+      else if (error_code == 0x0057)
+        error_code_str = "ATAPI 2 Error";
+      else if (error_code == 0x0058)
+        error_code_str = "ATAPI 3 Error";
+      else if (error_code == 0x0059)
+        error_code_str = "ATAPI 4 Error";
+      else if (error_code == 0x005A)
+        error_code_str = "ATAPI 5 Error";
+      else if (error_code == 0x005B)
+        error_code_str = "ATAPI 6 Error";
+      else if (error_code == 0x005C)
+        error_code_str = "ATAPI 7 Error";
+      else if (error_code == 0x005D)
+        error_code_str = "ATA SMART Feature Error";
+      else if (error_code == 0x005E)
+        error_code_str = "Non-Critical Password Check Error";
+      else if (error_code == 0x00FF)
+        error_code_str = "Dummy BIOS Error";
+      else if (error_code == 0x8101)
+        error_code_str = "USB HC Not Found";
+      else if (error_code == 0x8102)
+        error_code_str = "USB Device Init Error";
+      else if (error_code == 0x8103)
+        error_code_str = "USB Device Disabled";
+      else if (error_code == 0x8104)
+        error_code_str = "USB OHCI EMUL Not Supported";
+      else if (error_code == 0x8105)
+        error_code_str = "USB EHCI 64bit Data Structure Error";
+      else if (error_code == 0x8301)
+        error_code_str = "SMBIOS Not Enough Space In F000";
+      else if (error_code == 0x0110)
+        error_code_str = "AP (Application Processor) failed BIST";
+      else if (error_code == 0x0120)
+        error_code_str = "CPU1 Thermal Failure due to PROCHOT#";
+      else if (error_code == 0x0121)
+        error_code_str = "CPU2 Thermal Failure due to PROCHOT#";
+      else if (error_code == 0x0122)
+        error_code_str = "CPU3 Thermal Failure due to PROCHOT#";
+      else if (error_code == 0x0123)
+        error_code_str = "CPU4 Thermal Failure due to PROCHOT#";
+      else if (error_code == 0x0150)
+        error_code_str = "Processor failed BIST (BSP)";
+      else if (error_code == 0x0160)
+        error_code_str = "CPU1 Processor missing microcode";
+      else if (error_code == 0x0161)
+        error_code_str = "CPU2 Processor missing microcode";
+      else if (error_code == 0x0162)
+        error_code_str = "CPU3 Processor missing microcode";
+      else if (error_code == 0x0163)
+        error_code_str = "CPU4 Processor missing microcode";
+      else if (error_code == 0x0192)
+        error_code_str = "L2 cache size mismatch";
+      else if (error_code == 0x0193)
+        error_code_str = "CPUID, Processor stepping are different";
+      else if (error_code == 0x0194)
+        error_code_str = "CPUID, Processor family are different";
+      else if (error_code == 0x0195)
+        error_code_str = "Front side bus mismatch";
+      else if (error_code == 0x0196)
+        error_code_str = "CPUID, Processor Model are different";
+      else if (error_code == 0x0197)
+        error_code_str = "Processor speeds mismatched";
+      else
+        error_code_str = "Undefined BIOS Error";
+
+      if (_SNPRINTF (buf,
+                     buflen,
+                     wlen,
+                     "%s",
+                     error_code_str))
         return (1);
       return (0);
     }

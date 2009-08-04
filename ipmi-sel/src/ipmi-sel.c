@@ -1198,6 +1198,25 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
           strcat (fmtbuf, "%c");
           goto output;
         }
+
+      /* OEM Interpretation
+       *
+       * Inventec 5441/Dell Xanadu2
+       *
+       * Unique condition, event data 2 and 3 are one error code from
+       * the bios.  So there is no individual event data 2/3 output,
+       * the only output is the combined output.
+       */
+      if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+          && state_data->product_id == 51
+          && generator_id == 0x31 /* POST error */
+          && sensor_type == 0x0F /* System Firmware Progress */
+          && sensor_number == 0x06 
+          && event_type_code == 0x6F) /* Sensor Specific */
+        {
+          strcat (fmtbuf, "%c");
+          goto output;
+        }
     }
 
   if (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
