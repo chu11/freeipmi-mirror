@@ -102,6 +102,14 @@ Command confirmed to work on Dell Poweredge R610.
 This OEM command can read power headroom information.  Command
 confirmed to work on Dell Poweredge R610.
 .TP
+.B get-average-power-history
+This OEM command can read average power usage history.  Command
+confirmed to work on Dell Poweredge R610.
+.TP
+.B get-peak-power-history
+This OEM command can read peak power usage history.  Command confirmed
+to work on Dell Poweredge R610.
+.TP
 .B get-fcb-version
 This OEM command can retrieve the fan control board (FCB) version
 number.  Command confirmed to work on Dell Xanadu2.

@@ -103,6 +103,18 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_get_power_headroom_info
     },
     {
+      "get-average-power-history",
+      NULL,
+      0,
+      ipmi_oem_dell_get_average_power_history
+    },
+    {
+      "get-peak-power-history",
+      NULL,
+      0,
+      ipmi_oem_dell_get_peak_power_history
+    },
+    {
       "get-fcb-version",
       NULL,
       0,
