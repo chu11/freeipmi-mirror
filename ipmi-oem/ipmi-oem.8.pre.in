@@ -140,12 +140,14 @@ confirmed to work on Dell Xanadu2.
 \}
 .TP
 .B get-sol-inactivity-timeout
-This OEM command will retrieve the SOL inactivity timeout.
+This OEM command will retrieve the SOL inactivity timeout.  Command
+confirmed to work on Dell Xanadu2.
 .TP
 .B set-sol-inactivity-timeout \fIinactivity-timeout\fR
 This OEM command will set the SOL inactivity timeout.  The
 \fIinactivity-timeout\fR is one-based, max of 65535, in 1 minute
 increments (i.e. 1 = 1 minute), 0 or "none" will configure no timeout.
+Command confirmed to work on Dell Xanadu2.
 .RE
 .TP
 .B inventec
