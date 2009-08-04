@@ -672,7 +672,8 @@ Establish a SOL session.
 While a session is currently active, in a different window, execute
 ipmiconsole w/ the --deactivate option, authenticating with SOL1, verify tool:
 - Does not establish an SOL session.
-- The original SOL session has been terminated.
+- The original SOL session has been terminated.  Most likely/best
+  error message "SOL session stolen".
 * If this does not work, does proper SOL payload deactivation work?
 
 Test)
