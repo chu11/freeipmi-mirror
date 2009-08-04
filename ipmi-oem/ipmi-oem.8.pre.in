@@ -121,6 +121,24 @@ confirmed to work on Dell Poweredge R610.
 This OEM command can read peak power usage history.  Command confirmed
 to work on Dell Poweredge R610.
 .TP
+.B get-power-capacity
+This OEM command can read the current power capacity.  Command
+confirmed to work on Dell Poweredge R610.
+.TP
+.B set-power-capacity \fIpower-capacity\fR
+This OEM command can write the current power capacity (specified in
+Watts).  Command confirmed to work on Dell Poweredge R610.
+.TP
+.B get-power-capacity-status
+This OEM command can determine if the current power capacity is
+enabled or disabled.  Command confirmed to work on Dell Poweredge
+R610.
+.TP
+.B set-power-capacity-status \fIenable|disable\fR
+This OEM command can configure the current power capacity to be
+enabled or disabled.  Command confirmed to work on Dell Poweredge
+R610.
+.TP
 .B get-fcb-version
 This OEM command can retrieve the fan control board (FCB) version
 number.  Command confirmed to work on Dell Xanadu2.

@@ -122,6 +122,30 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_get_peak_power_history
     },
     {
+      "get-power-capacity",
+      NULL,
+      0,
+      ipmi_oem_dell_get_power_capacity
+    },
+    {
+      "set-power-capacity",
+      "<power-capacity>",
+      1,
+      ipmi_oem_dell_set_power_capacity
+    },
+    {
+      "get-power-capacity-status",
+      NULL,
+      0,
+      ipmi_oem_dell_get_power_capacity_status
+    },
+    {
+      "set-power-capacity-status",
+      "<enable|disable>",
+      1,
+      ipmi_oem_dell_set_power_capacity_status
+    },
+    {
       "get-fcb-version",
       NULL,
       0,

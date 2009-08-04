@@ -41,6 +41,14 @@ int ipmi_oem_dell_get_average_power_history (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_peak_power_history (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_dell_get_power_capacity (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_dell_get_power_capacity_status (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data);
 
 #if 0

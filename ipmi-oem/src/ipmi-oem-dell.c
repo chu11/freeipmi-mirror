@@ -58,6 +58,7 @@
 #define IPMI_OEM_DELL_SYSTEM_INFO_10G_MAC_ADDRESSES      0xCB
 #define IPMI_OEM_DELL_SYSTEM_INFO_11G_MAC_ADDRESSES      0xDA
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_VALIDATOR        0xDD
+#define IPMI_OEM_DELL_SYSTEM_INFO_POWER_CAPACITY         0xEA
 #define IPMI_OEM_DELL_SYSTEM_INFO_AVERAGE_POWER_HISTORY  0xEB
 #define IPMI_OEM_DELL_SYSTEM_INFO_PEAK_POWER_HISTORY     0xEC
 
@@ -1953,6 +1954,450 @@ ipmi_oem_dell_get_peak_power_history (ipmi_oem_state_data_t *state_data)
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+_get_power_capacity (ipmi_oem_state_data_t *state_data,
+		     uint8_t *configuration_parameter_data,
+		     unsigned int configuration_parameter_data_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Source Code
+   *
+   * Uses Get System Info command
+   *
+   * Parameter data response formatted:
+   *
+   * bytes 1-2 - power capacity
+   * bytes 3 - units
+   *         - 0x00 watts (?)
+   *         - 0x01 btuphr (?)
+   *         - 0x03 percent (???)
+   * bytes 4-5 - maximum power consumption
+   * bytes 6-7 - minimum power consumption
+   * bytes 8 - total number of power supplies
+   * bytes 9-10 - available power
+   * bytes 11 - system throttling
+   * bytes 12 - reserved
+   *
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+                                           IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                           IPMI_OEM_DELL_SYSTEM_INFO_POWER_CAPACITY,
+                                           0,
+                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                           obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                configuration_parameter_data_len)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  
+  if (len < 12)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_get_power_capacity_status (ipmi_oem_state_data_t *state_data,
+			    uint8_t *power_capacity_status,
+			    uint8_t *power_capacity_is_settable)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+  
+  assert (state_data);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Source Code
+   *
+   * Power Capacity Status Request
+   *
+   * 0x30 - OEM network function
+   * 0xBA - OEM cmd
+   * 0x01 - ?? (I'm guessing a "get" option)
+   * 0xFF - ?? (I'm guessing a "get all" bitmask)
+   * 
+   * Power Capacity Status Response
+   *
+   * 0xBA - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - status
+   *      - 0x01 bitmask = 0b = disabled, 1b = enabled
+   *      - 0x02 bitmask = 0b = not-settable, 1b = settable
+   */
+
+  bytes_rq[0] = 0xBA;
+  bytes_rq[1] = 0x01;
+  bytes_rq[2] = 0xFF;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   3,
+                                                   0xBA,
+                                                   0x30) < 0)
+    goto cleanup;
+
+  if (power_capacity_status)
+    (*power_capacity_status) = (bytes_rs[2] & 0x01);
+
+  if (power_capacity_is_settable)
+    (*power_capacity_is_settable) = ((bytes_rs[2] & 0x02) >> 1); 
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_get_power_capacity (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint16_t power_capacity;
+  uint8_t units;
+  uint16_t maximum_power_consumption;
+  uint16_t minimum_power_consumption;
+  uint8_t total_number_power_supplies;
+  uint16_t available_power;
+  uint8_t system_throttling;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (_get_power_capacity (state_data,
+			   configuration_parameter_data,
+			   IPMI_OEM_MAX_BYTES) < 0)
+    goto cleanup;
+  
+  power_capacity = configuration_parameter_data[0];
+  power_capacity |= (configuration_parameter_data[1] << 8);
+
+  units = configuration_parameter_data[2];
+
+  maximum_power_consumption = configuration_parameter_data[3];
+  maximum_power_consumption |= (configuration_parameter_data[4] << 8);
+
+  minimum_power_consumption = configuration_parameter_data[5];
+  minimum_power_consumption |= (configuration_parameter_data[6] << 8);
+
+  total_number_power_supplies = configuration_parameter_data[7];
+
+  available_power = configuration_parameter_data[8];
+  available_power |= (configuration_parameter_data[9] << 8);
+
+  system_throttling = configuration_parameter_data[10];
+
+  pstdout_printf (state_data->pstate,
+                  "Power Capacity                 : %u W\n",
+		  power_capacity);
+
+  pstdout_printf (state_data->pstate,
+                  "Minimum Power Consumption      : %u W\n",
+		  minimum_power_consumption);
+
+  pstdout_printf (state_data->pstate,
+                  "Maximum Power Consumption      : %u W\n",
+		  maximum_power_consumption);
+
+  pstdout_printf (state_data->pstate,
+		  "Total Number of Power Supplies : %u\n",
+		  total_number_power_supplies);
+
+  pstdout_printf (state_data->pstate,
+		  "Available Power                : %u W\n",
+		  available_power);
+
+#if 0
+  pstdout_printf (state_data->pstate,
+		  "System Throttling              : %u\n",
+		  system_throttling);
+#endif
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t power_capacity_is_settable = 0;
+  uint16_t power_capacity;
+  uint16_t maximum_power_consumption;
+  uint16_t minimum_power_consumption;
+  char *ptr = NULL;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Source Code
+   *
+   * Uses Set System Info command
+   *
+   * Configuration Parameter Data formatted:
+   *
+   * bytes 1-2 - power capacity
+   * bytes 3 - units
+   *         - 0x00 watts (?)
+   *         - 0x01 btuphr (?)
+   *         - 0x03 percent (???)
+   * bytes 4-5 - maximum power consumption
+   * bytes 6-7 - minimum power consumption
+   * bytes 8 - total number of power supplies
+   * bytes 9-10 - available power
+   * bytes 11 - system throttling
+   * bytes 12 - reserved
+   *
+   */
+
+  if (_get_power_capacity_status (state_data, NULL, &power_capacity_is_settable) < 0)
+    goto cleanup;
+
+  if (!power_capacity_is_settable)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Power Capacity not settable\n");
+      goto cleanup;
+    }
+
+  if (_get_power_capacity (state_data,
+			   configuration_parameter_data,
+			   IPMI_OEM_MAX_BYTES) < 0)
+    goto cleanup;
+
+  errno = 0;
+  power_capacity = strtoul (state_data->prog_data->args->oem_options[0], &ptr, 10);
+  if (errno || ptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  maximum_power_consumption = configuration_parameter_data[3];
+  maximum_power_consumption |= (configuration_parameter_data[4] << 8);
+
+  minimum_power_consumption = configuration_parameter_data[5];
+  minimum_power_consumption |= (configuration_parameter_data[6] << 8);
+
+  if (power_capacity < minimum_power_consumption || power_capacity > maximum_power_consumption)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Power Capacity '%u' out of range\n",
+		       power_capacity);
+      goto cleanup;
+    }
+
+  configuration_parameter_data[0] = (power_capacity & 0x00FF);
+  configuration_parameter_data[1] = ((power_capacity & 0xFF00) >> 8);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+  
+  if (ipmi_cmd_set_system_info_parameters (state_data->ipmi_ctx,
+                                           IPMI_OEM_DELL_SYSTEM_INFO_POWER_CAPACITY,
+					   configuration_parameter_data,
+					   12,
+					   obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_set_system_info_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_dell_get_power_capacity_status (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t power_capacity_status = 0;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (_get_power_capacity_status (state_data, &power_capacity_status, NULL) < 0)
+    goto cleanup;
+
+  if (power_capacity_status)
+    pstdout_printf (state_data->pstate, "enabled\n");
+  else
+    pstdout_printf (state_data->pstate, "disabled\n");
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint8_t power_capacity_is_settable = 0;
+  int rs_len;
+  int rv = -1;
+  
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Source Code
+   *
+   * Power Capacity Status Request
+   *
+   * 0x30 - OEM network function
+   * 0xBA - OEM cmd
+   * 0x00 - ?? (I'm guessing a "set" option)
+   * 0x?? - ?? (I'm guessing a bitmask)
+   *      - 0x01 bitmask = 0b = disable, 1b = enable
+   * 
+   * Power Capacity Status Response
+   *
+   * 0xBA - OEM cmd
+   * 0x?? - Completion Code
+   */
+
+  if (_get_power_capacity_status (state_data, NULL, &power_capacity_is_settable) < 0)
+    goto cleanup;
+
+  if (!power_capacity_is_settable)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Power Capacity not settable\n");
+      goto cleanup;
+    }
+
+  bytes_rq[0] = 0xBA;
+  bytes_rq[1] = 0x00;
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
+    bytes_rq[2] = 0x01;
+  else
+    bytes_rq[2] = 0x00;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   0xBA,
+                                                   0x30) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
   return (rv);
 }
 
