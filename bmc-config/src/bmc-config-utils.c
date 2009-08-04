@@ -134,7 +134,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
         {
           /* Assume LAN channel */
           state_data->sol_channel_number_initialized = 1;
-          state_data->sol_channel_number = val;
+          state_data->sol_channel_number = channel_number;
           *channel_num = state_data->sol_channel_number;
           goto out;
         }
