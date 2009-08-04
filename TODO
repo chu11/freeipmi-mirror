@@ -19,6 +19,11 @@ set bmc global enables
 set system info support
 - really should be done by firmware?  or OS distro?  Hold off for now.
 
+ipmiconsole
+-----------
+Handle SOL Activating asynchronous cmd
+- like deactivating flag apparently
+
 ipmi-locate
 -----------
 (TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi
