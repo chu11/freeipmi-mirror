@@ -52,12 +52,14 @@
 /* 256 b/c length is 8 bit field */
 #define IPMI_OEM_DELL_MAX_BYTES 256
 
-#define IPMI_OEM_DELL_SYSTEM_INFO_ASSET_TAG          0xC4
-#define IPMI_OEM_DELL_SYSTEM_INFO_SERVICE_TAG        0xC5
-#define IPMI_OEM_DELL_SYSTEM_INFO_PRODUCT_NAME       0xD1
-#define IPMI_OEM_DELL_SYSTEM_INFO_10G_MAC_ADDRESSES  0xCB
-#define IPMI_OEM_DELL_SYSTEM_INFO_11G_MAC_ADDRESSES  0xDA
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_VALIDATOR    0xDD
+#define IPMI_OEM_DELL_SYSTEM_INFO_ASSET_TAG              0xC4
+#define IPMI_OEM_DELL_SYSTEM_INFO_SERVICE_TAG            0xC5
+#define IPMI_OEM_DELL_SYSTEM_INFO_PRODUCT_NAME           0xD1
+#define IPMI_OEM_DELL_SYSTEM_INFO_10G_MAC_ADDRESSES      0xCB
+#define IPMI_OEM_DELL_SYSTEM_INFO_11G_MAC_ADDRESSES      0xDA
+#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_VALIDATOR        0xDD
+#define IPMI_OEM_DELL_SYSTEM_INFO_AVERAGE_POWER_HISTORY  0xEB
+#define IPMI_OEM_DELL_SYSTEM_INFO_PEAK_POWER_HISTORY     0xEC
 
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_10G            0x08
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_11G_MONOLITHIC 0x0A
@@ -1668,6 +1670,289 @@ ipmi_oem_dell_get_power_headroom_info (ipmi_oem_state_data_t *state_data)
 
   rv = 0;
  cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_get_average_power_history (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint16_t last_minute_average_power;
+  uint16_t last_hour_average_power;
+  uint16_t last_day_average_power;
+  uint16_t last_week_average_power;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Source Code
+   *
+   * Uses Get System Info command
+   *
+   * Parameter data response formatted:
+   *
+   * bytes 1-2 - last minute average power
+   * bytes 3-4 - last hour average power
+   * bytes 5-6 - last day average power
+   * bytes 7-8 - last week average power
+   *
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+                                           IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                           IPMI_OEM_DELL_SYSTEM_INFO_AVERAGE_POWER_HISTORY,
+                                           0,
+                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                           obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (len < 8)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+  
+  last_minute_average_power = configuration_parameter_data[0];
+  last_minute_average_power |= (configuration_parameter_data[1] << 8);
+
+  last_hour_average_power = configuration_parameter_data[2];
+  last_hour_average_power |= (configuration_parameter_data[3] << 8);
+
+  last_day_average_power = configuration_parameter_data[4];
+  last_day_average_power |= (configuration_parameter_data[5] << 8);
+
+  last_week_average_power = configuration_parameter_data[6];
+  last_week_average_power |= (configuration_parameter_data[7] << 8);
+
+  pstdout_printf (state_data->pstate,
+                  "Last Minute Average Power : %u W\n",
+		  last_minute_average_power);
+
+  pstdout_printf (state_data->pstate,
+                  "Last Hour Average Power   : %u W\n",
+		  last_hour_average_power);
+
+  pstdout_printf (state_data->pstate,
+                  "Last Day Average Power    : %u W\n",
+		  last_day_average_power);
+
+  pstdout_printf (state_data->pstate,
+                  "Last Week Average Power   : %u W\n",
+		  last_week_average_power);
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_dell_get_peak_power_history (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint16_t last_minute_peak_power;
+  uint16_t last_hour_peak_power;
+  uint16_t last_day_peak_power;
+  uint16_t last_week_peak_power;
+  uint32_t last_minute_peak_power_time;
+  uint32_t last_hour_peak_power_time;
+  uint32_t last_day_peak_power_time;
+  uint32_t last_week_peak_power_time;
+  time_t timetmp;
+  struct tm time_tm;
+  char time_buf[IPMI_OEM_TIME_BUFLEN + 1];
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Source Code
+   *
+   * Uses Get System Info command
+   *
+   * Parameter data response formatted:
+   *
+   * bytes 1-2 - last minute peak power
+   * bytes 3-4 - last hour peak power
+   * bytes 5-6 - last day peak power
+   * bytes 7-8 - last week peak power
+   * bytes 9-12 - last minute peak power time
+   * bytes 13-16 - last hour peak power time
+   * bytes 17-20 - last day peak power time
+   * bytes 21-24 - last week peak power time
+   *
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+                                           IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                           IPMI_OEM_DELL_SYSTEM_INFO_PEAK_POWER_HISTORY,
+                                           0,
+                                           IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
+                                           obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (len < 24)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+  
+  last_minute_peak_power = configuration_parameter_data[0];
+  last_minute_peak_power |= (configuration_parameter_data[1] << 8);
+
+  last_hour_peak_power = configuration_parameter_data[2];
+  last_hour_peak_power |= (configuration_parameter_data[3] << 8);
+
+  last_day_peak_power = configuration_parameter_data[4];
+  last_day_peak_power |= (configuration_parameter_data[5] << 8);
+
+  last_week_peak_power = configuration_parameter_data[6];
+  last_week_peak_power |= (configuration_parameter_data[7] << 8);
+
+  last_minute_peak_power_time = configuration_parameter_data[8];
+  last_minute_peak_power_time |= (configuration_parameter_data[9] << 8);
+  last_minute_peak_power_time |= (configuration_parameter_data[10] << 16);
+  last_minute_peak_power_time |= (configuration_parameter_data[11] << 24);
+
+  last_hour_peak_power_time = configuration_parameter_data[12];
+  last_hour_peak_power_time |= (configuration_parameter_data[13] << 8);
+  last_hour_peak_power_time |= (configuration_parameter_data[14] << 16);
+  last_hour_peak_power_time |= (configuration_parameter_data[15] << 24);
+
+  last_day_peak_power_time = configuration_parameter_data[16];
+  last_day_peak_power_time |= (configuration_parameter_data[17] << 8);
+  last_day_peak_power_time |= (configuration_parameter_data[18] << 16);
+  last_day_peak_power_time |= (configuration_parameter_data[19] << 24);
+
+  last_week_peak_power_time = configuration_parameter_data[20];
+  last_week_peak_power_time |= (configuration_parameter_data[21] << 8);
+  last_week_peak_power_time |= (configuration_parameter_data[22] << 16);
+  last_week_peak_power_time |= (configuration_parameter_data[23] << 24);
+
+  pstdout_printf (state_data->pstate,
+                  "Last Minute Peak Power      : %u W\n",
+		  last_minute_peak_power);
+
+  timetmp = last_minute_peak_power_time;
+  localtime_r (&timetmp, &time_tm);
+  memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
+  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
+
+  pstdout_printf (state_data->pstate,
+                  "Last Minute Peak Power Time : %s\n",
+                  time_buf);
+
+  pstdout_printf (state_data->pstate,
+                  "Last Hour Peak Power        : %u W\n",
+		  last_hour_peak_power);
+
+  timetmp = last_hour_peak_power_time;
+  localtime_r (&timetmp, &time_tm);
+  memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
+  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
+
+  pstdout_printf (state_data->pstate,
+                  "Last Hour Peak Power Time   : %s\n",
+                  time_buf);
+
+  pstdout_printf (state_data->pstate,
+                  "Last Day Peak Power         : %u W\n",
+		  last_day_peak_power);
+
+  timetmp = last_day_peak_power_time;
+  localtime_r (&timetmp, &time_tm);
+  memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
+  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
+
+  pstdout_printf (state_data->pstate,
+                  "Last Day Peak Power Time    : %s\n",
+                  time_buf);
+
+  pstdout_printf (state_data->pstate,
+                  "Last Week Peak Power        : %u W\n",
+		  last_week_peak_power);
+
+  timetmp = last_week_peak_power_time;
+  localtime_r (&timetmp, &time_tm);
+  memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
+  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
+
+  pstdout_printf (state_data->pstate,
+                  "Last Week Peak Power Time   : %s\n",
+                  time_buf);
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
