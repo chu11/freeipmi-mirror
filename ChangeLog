@@ -2,6 +2,9 @@
 
 	* ipmi-oem/: Support Dell OEM to read NIC MAC addresses.
 	
+	* ipmi-oem/: Support Dell instantaneous power and Dell headroom
+ 	OEM commands.
+	
 2009-07-31  Albert Chu <chu11@llnl.gov>
 
         * ipmi-oem/: Support Dell get/set NIC selection.
