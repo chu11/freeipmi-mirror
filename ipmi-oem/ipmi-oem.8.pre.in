@@ -105,6 +105,14 @@ This OEM command can read and output power supply ratings and other
 information.  This OEM command requires access to the SDR.  Command
 confirmed to work on Dell Poweredge R610.
 .TP
+.B get-instantaneous-power-consumption-info
+This OEM command can read instantaneous power consumption information.
+Command confirmed to work on Dell Poweredge R610.
+.TP
+.B get-power-headroom-info
+This OEM command can read power headroom information.  Command
+confirmed to work on Dell Poweredge R610.
+.TP
 .B get-fcb-version
 This OEM command can retrieve the fan control board (FCB) version
 number.  Command confirmed to work on Dell Xanadu2.

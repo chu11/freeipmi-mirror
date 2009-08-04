@@ -98,6 +98,18 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_get_power_supply_info
     },
     {
+      "get-instantaneous-power-consumption-info",
+      NULL,
+      0,
+      ipmi_oem_dell_get_instantaneous_power_consumption_info
+    },
+    {
+      "get-power-headroom-info",
+      NULL,
+      0,
+      ipmi_oem_dell_get_power_headroom_info
+    },
+    {
       "get-fcb-version",
       NULL,
       0,

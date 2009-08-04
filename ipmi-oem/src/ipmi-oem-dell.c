@@ -1516,6 +1516,162 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_dell_get_instantaneous_power_consumption_info (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint16_t instantaneous_power_consumption;
+  uint16_t instantaneous_amps;
+  double instantaneous_amps_val;
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Source Code
+   *
+   * Request
+   *
+   * 0x30 - OEM network function
+   * 0xB3 - OEM cmd
+   * 0x0A - ??
+   * 0x00 - ??
+   * 
+   * Response
+   *
+   * 0xB3 - OEM cmd
+   * 0x?? - Completion Code
+   * bytes 2-3 - instantaneous power consumption
+   * bytes 4-5 - instantaneous amps
+   * bytes 6-8 - reserved
+   */
+
+  bytes_rq[0] = 0xB3;
+  bytes_rq[1] = 0x0A;
+  bytes_rq[2] = 0x00;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   9,
+                                                   0xB3,
+                                                   0x30) < 0)
+    goto cleanup;
+
+  instantaneous_power_consumption = bytes_rs[2];
+  instantaneous_power_consumption |= (bytes_rs[3] << 8);
+
+  instantaneous_amps = bytes_rs[4];
+  instantaneous_amps |= (bytes_rs[5] << 8);
+
+  instantaneous_amps_val = ((double)instantaneous_amps) / 10.0;
+
+  pstdout_printf (state_data->pstate,
+		  "Instantaneous Power Consumption : %u W\n",
+		  instantaneous_power_consumption);
+
+  pstdout_printf (state_data->pstate,
+		  "Instantaneous Amperage          : %.2f A\n",
+		  instantaneous_amps_val);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_get_power_headroom_info (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint16_t instantaneous_power_headroom;
+  uint16_t peak_power_headroom;
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Source Code
+   *
+   * Request
+   *
+   * 0x30 - OEM network function
+   * 0xBB - OEM cmd
+   * 
+   * Response
+   *
+   * 0xB3 - OEM cmd
+   * 0x?? - Completion Code
+   * bytes 2-3 - instantaneous power headroom
+   * bytes 4-5 - peak power headroom
+   */
+
+  bytes_rq[0] = 0xBB;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   6,
+                                                   0xBB,
+                                                   0x30) < 0)
+    goto cleanup;
+
+  instantaneous_power_headroom = bytes_rs[2];
+  instantaneous_power_headroom |= (bytes_rs[3] << 8);
+
+  peak_power_headroom = bytes_rs[4];
+  peak_power_headroom |= (bytes_rs[5] << 8);
+
+  pstdout_printf (state_data->pstate,
+		  "Instantaneous Power Headroom : %u W\n",
+		  instantaneous_power_headroom);
+
+  pstdout_printf (state_data->pstate,
+		  "Peak Power Headroom          : %u W\n",
+		  peak_power_headroom);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];

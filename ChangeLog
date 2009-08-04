@@ -7,6 +7,9 @@
 	* libfreeipmi/src/sel-parse/, ipmi-sel/: Add additional Inventec
 	OEM interpretations.
 	
+	* ipmi-oem/: Support Dell instantaneous power and Dell headroom
+	OEM commands.
+
 2009-08-02  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support 'list' command to all OEM IDs.
