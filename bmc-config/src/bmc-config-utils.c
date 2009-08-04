@@ -112,6 +112,18 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
 								     BLOCK_SELECTOR,
 								     obj_cmd_rs) < 0)
     {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && (ipmi_check_completion_code (obj_cmd_rs,
+                                          IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED) == 1))
+        {
+          /* Assume LAN channel */
+          state_data->sol_channel_number_initialized = 1;
+          state_data->sol_channel_number = val;
+          *channel_num = state_data->sol_channel_number;
+          goto out;
+        }
+
+
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf(state_data->pstate,
                         stderr, 
@@ -133,8 +145,9 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
 
   state_data->sol_channel_number_initialized = 1;
   state_data->sol_channel_number = val;
-
   *channel_num = state_data->sol_channel_number;
+
+ out:
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   _FIID_OBJ_DESTROY(obj_cmd_rs);
