@@ -68,6 +68,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
+    ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "list", LIST_KEY, 0, 0,
@@ -137,6 +138,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     default:
       ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      if (ret == ARGP_ERR_UNKNOWN) 
+        ret = sdr_parse_opt (key, arg, state, &(cmd_args->sdr));
       if (ret == ARGP_ERR_UNKNOWN)
         ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
       return (ret);
@@ -151,9 +154,9 @@ _ipmi_oem_config_file_parse (struct ipmi_oem_arguments *cmd_args)
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
-                         NULL,
+                         &(cmd_args->sdr),
                          &(cmd_args->hostrange),
-                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_OEM,
                          NULL) < 0)
     {
@@ -166,6 +169,7 @@ void
 ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
 {
   init_common_cmd_args_admin (&(cmd_args->common));
+  init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->list = 0;

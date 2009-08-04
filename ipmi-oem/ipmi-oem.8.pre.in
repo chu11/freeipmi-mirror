@@ -44,6 +44,7 @@ required user privilege will depend on the oem commands executed.
 #include <@top_srcdir@/common/man/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/common/man/manpage-common-debug.man>
 #include <@top_srcdir@/common/man/manpage-common-misc.man>
+#include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-consolidate.man>
@@ -98,6 +99,11 @@ work on Dell Poweredge R610.
 This OEM command can reset the cumulative or peak power information
 readings (viewed via \fBget\-power\-info\fR).  Command confirmed to
 work on Dell Poweredge R610.
+.TP
+.B get-power-supply-info
+This OEM command can read and output power supply ratings and other
+information.  This OEM command requires access to the SDR.  Command
+confirmed to work on Dell Poweredge R610.
 .TP
 .B get-fcb-version
 This OEM command can retrieve the fan control board (FCB) version

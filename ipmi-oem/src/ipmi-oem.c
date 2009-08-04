@@ -40,6 +40,7 @@
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-sdr-cache-common.h"
 #include "tool-hostrange-common.h"
 
 typedef int (*oem_callback)(ipmi_oem_state_data_t *);
@@ -89,6 +90,12 @@ struct ipmi_oem_command oem_dell[] =
       "<cumulative|peak>",
       1,
       ipmi_oem_dell_reset_power_info
+    },
+    {
+      "get-power-supply-info",
+      NULL,
+      0,
+      ipmi_oem_dell_get_power_supply_info
     },
     {
       "get-fcb-version",
@@ -244,6 +251,21 @@ _list (void)
 }
 
 static int
+_flush_cache (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  
+  if (sdr_cache_flush_cache (state_data->sdr_cache_ctx,
+                             state_data->pstate,
+                             state_data->prog_data->args->sdr.quiet_cache,
+                             state_data->hostname,
+                             state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
+    return (-1);
+  
+  return (0);
+}
+
+static int
 _run_oem_cmd (ipmi_oem_state_data_t *state_data)
 {
   struct ipmi_oem_arguments *args;
@@ -354,6 +376,9 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
    */
   assert (!args->list);
 
+  if (args->sdr.flush_cache)
+    return (_flush_cache (state_data));
+
   if (!args->oem_id)
     {
       pstdout_fprintf (state_data->pstate,
@@ -393,29 +418,73 @@ _ipmi_oem (pstdout_state_t pstate,
 
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
+  state_data.hostname = (char *)hostname;
 
-  if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
-                                         hostname,
-                                         &(prog_data->args->common),
-                                         errmsg,
-                                         IPMI_OPEN_ERRMSGLEN)))
+  /* Special case, just flush, don't do an IPMI connection */
+  if (!prog_data->args->sdr.flush_cache)
     {
-      pstdout_fprintf (pstate,
-                       stderr,
-                       "%s\n",
-                       errmsg);
+      if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
+					     hostname,
+					     &(prog_data->args->common),
+					     errmsg,
+					     IPMI_OPEN_ERRMSGLEN)))
+	{
+	  pstdout_fprintf (pstate,
+			   stderr,
+			   "%s\n",
+			   errmsg);
+	  exit_code = EXIT_FAILURE;
+	  goto cleanup;
+	}
+    }
+
+  if (!(state_data.sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
+    {
+      pstdout_perror (pstate, "ipmi_sdr_cache_ctx_create()");
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
 
+  if (state_data.prog_data->args->common.debug)
+    {
+      /* Don't error out, if this fails we can still continue */
+      if (ipmi_sdr_cache_ctx_set_flags (state_data.sdr_cache_ctx,
+                                        IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
+        pstdout_fprintf (pstate,
+                         stderr,
+                         "ipmi_sdr_cache_ctx_set_flags: %s\n",
+                         ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (state_data.sdr_cache_ctx)));
+      
+      if (hostname)
+        {
+          if (ipmi_sdr_cache_ctx_set_debug_prefix (state_data.sdr_cache_ctx,
+                                                   hostname) < 0)
+            pstdout_fprintf (pstate,
+                             stderr,
+                             "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
+                             ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (state_data.sdr_cache_ctx)));
+        }
+    }
+  
+  if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
+    {
+      pstdout_perror (pstate, "ipmi_sdr_parse_ctx_create()");
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+ 
   if (run_cmd_args (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
-
+  
   exit_code = 0;
  cleanup:
+  if (state_data.sdr_cache_ctx)
+    ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
+  if (state_data.sdr_parse_ctx)
+    ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
   if (state_data.ipmi_ctx)
     {
       ipmi_ctx_close (state_data.ipmi_ctx);

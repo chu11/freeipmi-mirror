@@ -32,6 +32,7 @@ enum ipmi_sensors_argp_option_keys
 struct ipmi_oem_arguments
 {
   struct common_cmd_args common;
+  struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
   int list;
   char *oem_id;
@@ -52,6 +53,9 @@ typedef struct ipmi_oem_state_data
   ipmi_oem_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
+  char *hostname;
+  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
+  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
 } ipmi_oem_state_data_t;
 
 #endif

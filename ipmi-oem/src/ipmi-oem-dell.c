@@ -46,6 +46,8 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+#include "tool-sdr-cache-common.h"
+#include "tool-sensor-common.h"
 
 /* 256 b/c length is 8 bit field */
 #define IPMI_OEM_DELL_MAX_BYTES 256
@@ -356,7 +358,7 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
   assert (state_data);
   assert (idrac_type);
 
-  /* Dell OEM
+  /* Dell Poweredge OEM
    *
    * From Dell Provided Source Code
    *
@@ -700,7 +702,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  /* Dell OEM
+  /* Dell Poweredge OEM
    *
    * Some from http://linux.dell.com/files/openipmi/ipmitool/
    * Some from Dell Provided Source Code
@@ -885,7 +887,7 @@ ipmi_oem_dell_get_nic_selection (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Dell OEM
+  /* Dell Poweredge OEM
    *
    * Get NIC Selection Request
    *
@@ -977,7 +979,7 @@ ipmi_oem_dell_set_nic_selection (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  /* Dell OEM
+  /* Dell Poweredge OEM
    *
    * Set NIC Selection Request
    *
@@ -1057,7 +1059,7 @@ ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Dell OEM
+  /* Dell Poweredge OEM
    *
    * From http://linux.dell.com/files/openipmi/ipmitool/
    *
@@ -1210,7 +1212,7 @@ ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  /* Dell OEM
+  /* Dell Poweredge OEM
    *
    * From http://linux.dell.com/files/openipmi/ipmitool/
    *
@@ -1267,6 +1269,253 @@ ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
+{
+  struct sensor_entity_id_counts entity_id_counts;
+  uint16_t record_count;
+  int i;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+                                 state_data->pstate,
+                                 state_data->ipmi_ctx,
+                                 state_data->prog_data->args->sdr.quiet_cache,
+                                 state_data->prog_data->args->sdr.sdr_cache_recreate,
+                                 state_data->hostname,
+                                 state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
+    goto cleanup;
+
+  if (calculate_entity_id_counts (state_data->pstate,
+				  state_data->sdr_cache_ctx,
+				  state_data->sdr_parse_ctx,
+				  &entity_id_counts) < 0)
+    goto cleanup;
+
+  if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_sdr_cache_record_count: %s\n",
+		       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+      goto cleanup;
+    }
+
+  /* Dell Poweredge OEM
+   *
+   * Get Power Supply Info Request
+   *
+   * 0x30 - OEM network function
+   * 0xB0 - OEM cmd
+   * 0x?? - Power Supply Entity ID
+   * 0x?? - Power Supply Entity Instance
+   *
+   * Get Power Supply Info Response
+   *
+   * 0xB0 - OEM cmd
+   * 0x?? - Completion Code
+   * bytes 2-3 - rated watts
+   * bytes 4-5 - rated amps
+   * bytes 6-7 - rated volts
+   * bytes 8-11 - vendor ID
+   * bytes 12-19 - firmware version (string, non-null terminated)
+   * bytes 20 - power supply type
+   * - 0x00 - AC
+   * - 0x01 - DC
+   * bytes 21-22 - rated dc watts
+   * bytes 23-24 - reserved
+   */
+
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
+    {
+      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      int sdr_record_len = 0;
+      uint16_t record_id;
+      uint8_t record_type;
+
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+							sdr_record,
+							IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_cache_record_read: %s\n",
+			   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+	  goto cleanup;
+	}
+      
+      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+					     sdr_record,
+					     sdr_record_len,
+					     &record_id,
+					     &record_type) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_parse_record_id_and_type: %s\n",
+			   ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+	  goto cleanup;
+	}
+      
+      if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+	  || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+	{
+	  uint8_t entity_id;
+	  uint8_t entity_instance;
+	  uint8_t entity_instance_type;
+	  uint8_t sensor_type;
+	  
+	  if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_parse_ctx,
+						      sdr_record,
+						      sdr_record_len,
+						      &entity_id,
+						      &entity_instance,
+						      &entity_instance_type) < 0)
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "ipmi_sdr_parse_entity_id_instance_type: %s\n",
+			       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+	      goto cleanup;
+	    }
+	  
+	  if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
+					  sdr_record,
+					  sdr_record_len,
+					  &sensor_type) < 0)
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "ipmi_sdr_parse_sensor_type: %s\n",
+			       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+	      goto cleanup;
+	    }
+	  
+	  if (entity_id == IPMI_ENTITY_ID_POWER_SUPPLY
+	      && entity_instance_type == IPMI_SDR_PHYSICAL_ENTITY
+	      && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
+	    {
+	      uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+	      uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+	      int32_t rs_len;
+	      uint16_t ratedwatts;
+	      uint16_t ratedamps;
+	      uint16_t ratedvolts;
+	      uint32_t vendorid;
+	      char firmwareversion[IPMI_OEM_MAX_BYTES];
+	      uint8_t powersupplytype;
+	      uint16_t rateddcwatts;
+	      char sensor_name_buf[MAX_ENTITY_ID_SENSOR_NAME_STRING + 1];
+	      
+	      memset (firmwareversion, '\0', IPMI_OEM_MAX_BYTES);
+
+	      if (get_entity_sensor_name_string (state_data->pstate,
+						 state_data->sdr_parse_ctx,
+						 sdr_record,
+						 sdr_record_len,
+						 &entity_id_counts,
+						 sensor_name_buf,
+						 MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
+		goto cleanup;
+	      
+	      bytes_rq[0] = 0xB0;
+	      bytes_rq[1] = entity_id;
+	      bytes_rq[2] = entity_instance;
+	      
+	      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+					  0, /* lun */
+					  0x30, /* network function */
+					  bytes_rq, /* data */
+					  3, /* num bytes */
+					  bytes_rs,
+					  IPMI_OEM_MAX_BYTES)) < 0)
+		{
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "ipmi_cmd_raw: %s\n",
+				   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+		  goto cleanup;
+		}
+	      
+	      if (ipmi_oem_check_response_and_completion_code (state_data,
+							       bytes_rs,
+							       rs_len,
+							       25,
+							       0xB0,
+							       0x30) < 0)
+		goto cleanup;
+	      
+	      ratedwatts = bytes_rs[2];
+	      ratedwatts |= (bytes_rs[3] << 8);
+	      
+	      ratedamps = bytes_rs[4];
+	      ratedamps |= (bytes_rs[5] << 8);
+	      
+	      ratedvolts = bytes_rs[6];
+	      ratedvolts |= (bytes_rs[7] << 8);
+	      
+	      vendorid = bytes_rs[8];
+	      vendorid |= (bytes_rs[9] << 8);
+	      vendorid |= (bytes_rs[10] << 16);
+	      vendorid |= (bytes_rs[11] << 24);
+	      
+	      memcpy(firmwareversion, &(bytes_rs[12]), 8);
+	      
+	      powersupplytype = bytes_rs[20];
+	      
+	      rateddcwatts = bytes_rs[21];
+	      rateddcwatts |= (bytes_rs[22] << 8);
+	      
+	      pstdout_printf (state_data->pstate,
+			      "Power Supply        : %s\n",
+			      sensor_name_buf);
+
+	      pstdout_printf (state_data->pstate,
+			      "Rated Input Wattage : %u W\n",
+			      ratedwatts);
+	      
+	      pstdout_printf (state_data->pstate,
+			      "Rated Ouput Wattage : %u W\n",
+			      rateddcwatts);
+	      
+#if 0
+	      pstdout_printf (state_data->pstate,
+			      "Rated Amps          : %u A\n",
+			      ratedamps);
+	      
+	      pstdout_printf (state_data->pstate,
+			      "Rated Volts         : %u V\n",
+			      ratedvolts);
+#endif
+	      
+	      pstdout_printf (state_data->pstate,
+			      "Power Supply Type   : %s\n",
+			      (powersupplytype == 0x01) ? "DC" : "AC");
+	      
+	      pstdout_printf (state_data->pstate,
+			      "Firmare Version     : %s\n",
+			      firmwareversion);
+	      
+#if 0
+	      pstdout_printf (state_data->pstate,
+			      "Vendor              : %u\n",
+			      vendorid);
+#endif
+
+	      pstdout_printf (state_data->pstate,
+			      "\n");
+	    }
+	}
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
@@ -1277,7 +1526,7 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* llnlxanadu2 OEM
+  /* Dell Xanadu2 OEM
    *
    * Get FCB Version Request
    *
@@ -1342,7 +1591,7 @@ ipmi_oem_dell_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Dell OEM
+  /* Dell Poweredge OEM
    *
    * Uses Get/Set Lan Configuration
    *
@@ -1450,7 +1699,7 @@ ipmi_oem_dell_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Dell OEM
+  /* Dell Poweredge OEM
    *
    * Uses Get/Set SOL Configuration
    *
@@ -1567,7 +1816,7 @@ ipmi_oem_dell_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
   else
     sol_inactivity_timeout = 0;
   
-  /* Dell OEM
+  /* Dell Poweredge OEM
    *
    * Uses Get/Set SOL Configuration
    *

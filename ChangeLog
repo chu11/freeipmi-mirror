@@ -1,6 +1,8 @@
 2009-08-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Dell OEM to read NIC MAC addresses.
+
+	* ipmi-oem/: Support Dell power supply info OEM command.
 	
 2009-08-02  Albert Chu <chu11@llnl.gov>
 
