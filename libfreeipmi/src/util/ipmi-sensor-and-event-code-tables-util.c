@@ -2126,7 +2126,7 @@ get_21_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 {
   assert(buf && buflen);
 
-  return _snprintf (buf, buflen, "Slot/Connector# %d", event_data3);
+  return _snprintf (buf, buflen, "Slot/Connector #%d", event_data3);
 }
 
 static int
