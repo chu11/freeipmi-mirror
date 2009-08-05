@@ -971,7 +971,8 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
                               section,
                               "Boot_Device",
                               "Possible values: NO-OVERRIDE/PXE/HARD-DRIVE/HARD-DRIVE-SAFE-MODE/\n"
-                              "                 DIAGNOSTIC_PARTITION/CD-DVD/BIOS-SETUP/FLOPPY",
+                              "                 DIAGNOSTIC_PARTITION/CD-DVD/BIOS-SETUP/REMOTE-FLOPPY\n"
+			      "                 PRIMARY-REMOTE-MEDIA/REMOTE-CD-DVD/REMOTE-HARD-DRIVE/FLOPPY",
                               0,
                               boot_device_checkout,
                               boot_device_commit,

@@ -1117,6 +1117,8 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
   uint8_t event_data3_flag;
   uint8_t event_data2;
   uint8_t event_data3;
+  uint8_t sensor_type;
+  uint8_t event_data1_offset;
   int check_for_na = 0;
   int ret;
 
@@ -1135,6 +1137,21 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
   if (!ret)
     return (0);
 
+  if (ipmi_sel_parse_read_sensor_type (state_data->sel_parse_ctx, &sensor_type) < 0)
+    {
+      if (_sel_parse_err_handle (state_data,
+                                 "ipmi_sel_parse_read_sensor_type") < 0)
+        return (-1);
+    }
+  
+  
+  if (ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (state_data->sel_parse_ctx, &event_data1_offset) < 0)
+    {
+      if (_sel_parse_err_handle (state_data,
+                                 "ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code") < 0)
+        return (-1);
+    }
+  
   /* note: previously set sel parse library separator to " ; "
    * so some places where there could be two outputs
    * would be separated by a semi-colon
@@ -1145,9 +1162,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
   if (state_data->prog_data->args->interpret_oem_data)
     {
       uint8_t generator_id;
-      uint8_t sensor_type;
       uint8_t sensor_number;
-      uint8_t event_data1_offset;
 
       if (ipmi_sel_parse_read_generator_id (state_data->sel_parse_ctx, &generator_id) < 0)
         {
@@ -1156,27 +1171,13 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
             return (-1);
         }
 
-      if (ipmi_sel_parse_read_sensor_type (state_data->sel_parse_ctx, &sensor_type) < 0)
-        {
-          if (_sel_parse_err_handle (state_data,
-                                     "ipmi_sel_parse_read_sensor_type") < 0)
-            return (-1);
-        }
-      
       if (ipmi_sel_parse_read_sensor_number (state_data->sel_parse_ctx, &sensor_number) < 0)
         {
           if (_sel_parse_err_handle (state_data,
                                      "ipmi_sel_parse_read_sensor_number") < 0)
             return (-1);
         }
-      
-      if (ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (state_data->sel_parse_ctx, &event_data1_offset) < 0)
-        {
-          if (_sel_parse_err_handle (state_data,
-                                     "ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code") < 0)
-            return (-1);
-        }
-      
+    
       /* OEM Interpretation
        *
        * Inventec 5441/Dell Xanadu2
@@ -1222,6 +1223,15 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
   if (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
       && event_data2_flag == IPMI_SEL_EVENT_DATA_TRIGGER_READING
       && event_data3_flag == IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE)
+    strcat (fmtbuf, "%c");
+  /* special case, event_data3 describes event_data2 type, so really
+   * only want the one output
+   */
+  else if (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+           && sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
+           && event_data1_offset == 0x06
+           && event_data2_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
+           && event_data3_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE)
     strcat (fmtbuf, "%c");
   else if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
            && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)

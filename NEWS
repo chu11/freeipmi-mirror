@@ -266,6 +266,7 @@ o bmc-config
   - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
 o ipmi-chassis-config
+  - Update for new configurable boot options in IPMI errata.
   - Support ability to report read only field error.
   - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
@@ -340,6 +341,7 @@ o libfreeipmi
   - Always output debug key fields (i.e. 'raw_data' from ipmi-raw) in
     byte array format instead of an integer even if the field length
     is < 64 bits.
+  - Update various macros, fields, etc. for IPMI errata updates.
   - Support 'session_handle' in close session packets (IPMI errata
     387).  Results in API change for all close session packet calls.
 o libipmimonitoring

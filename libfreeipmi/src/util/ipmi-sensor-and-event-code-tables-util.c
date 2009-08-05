@@ -261,9 +261,11 @@ static char * ipmi_sensor_type_code_07_desc[] =
     "Processor disabled",
     "Terminator Presence Detected",
     "Processor Automatically Throttled (processor throttling triggered by a hardware-based mechanism operating independent from system software, such as automatic thermal throttling or throttling to limit power consumption.)",
+    "Machine Check Exception (Uncorrectable)",
+    "Correctable Machine Check Error",
     NULL
   };
-static int ipmi_sensor_type_code_07_desc_max = 0x0A;
+static int ipmi_sensor_type_code_07_desc_max = 0x0C;
 
 static char * ipmi_sensor_type_code_08_desc[] =
   {
@@ -343,9 +345,10 @@ static char * ipmi_sensor_type_code_10_desc[] =
     "All Event Logging Disabled",
     "SEL Full",
     "SEL Almost Full",
+    "Correctable Machine Check Error Logging Disabled",
     NULL
   };
-static int ipmi_sensor_type_code_10_desc_max = 0x05;
+static int ipmi_sensor_type_code_10_desc_max = 0x06;
 
 static char * ipmi_sensor_type_code_11_desc[] =
   {
@@ -570,13 +573,15 @@ static char * ipmi_sensor_type_code_29_desc[] =
   };
 static int ipmi_sensor_type_code_29_desc_max = 0x02;
 
+/* achu: new additions as stated in errata */
 static char * ipmi_sensor_type_code_2A_desc[] =
   {
     "Session Activated",
     "Session Deactivated",
+    "Invalid Username of Password",
     NULL
   };
-static int ipmi_sensor_type_code_2A_desc_max = 0x01;
+static int ipmi_sensor_type_code_2A_desc_max = 0x02;
 
 static char * ipmi_sensor_type_code_2B_desc[] =
   {
@@ -819,9 +824,11 @@ static char * ipmi_sensor_type_code_07_short_desc[] =
     "Processor disabled",
     "Terminator Presence Detected",
     "Processor Automatically Throttled",
+    "Machine Check Exception",
+    "Correctable Machine Check Error",
     NULL
   };
-static int ipmi_sensor_type_code_07_short_desc_max = 0x0A;
+static int ipmi_sensor_type_code_07_short_desc_max = 0x0C;
 
 static char * ipmi_sensor_type_code_08_short_desc[] =
   {
@@ -901,9 +908,10 @@ static char * ipmi_sensor_type_code_10_short_desc[] =
     "All Event Logging Disabled",
     "SEL Full",
     "SEL Almost Full",
+    "Correctable Machine Check Error Logging Disabled",
     NULL
   };
-static int ipmi_sensor_type_code_10_short_desc_max = 0x05;
+static int ipmi_sensor_type_code_10_short_desc_max = 0x06;
 
 static char * ipmi_sensor_type_code_11_short_desc[] =
   {
@@ -1132,9 +1140,10 @@ static char * ipmi_sensor_type_code_2A_short_desc[] =
   {
     "Session Activated",
     "Session Deactivated",
+    "Invalid Username of Password",
     NULL
   };
-static int ipmi_sensor_type_code_2A_short_desc_max = 0x01;
+static int ipmi_sensor_type_code_2A_short_desc_max = 0x02;
 
 static char * ipmi_sensor_type_code_2B_short_desc[] =
   {
@@ -1350,9 +1359,13 @@ static char * ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type
     "Slot/Connector Type = AdvancedTCA",
     "Slot/Connector Type = DIMM/memory device",
     "Slot/Connector Type = FAN",
+    "Slot/Connector Type = PCI Express",
+    "Slot/Connector Type = SCSI (parallel)",
+    "Slot/Connector Type = SATA / SAS",
+    "Slot/Connector Type = USB",
     NULL
   };
-static int ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max = 0x08;
+static int ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max = 0x0C;
 
 static char * ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc[] =
   {
@@ -1593,6 +1606,13 @@ static char * ipmi_sensor_type_code_dell_oem_C4_desc[] =
   };
 static int ipmi_sensor_type_code_dell_oem_C4_desc_max = 0x01;
 
+/*****************************
+ * FLAGS                     *
+ *****************************/
+
+#define IPMI_SENSOR_TYPE_CODE_10_EVENT_DATA_OFFSET3_ENTITY_INSTANCE_NUMBER           0x0
+#define IPMI_SENSOR_TYPE_CODE_10_EVENT_DATA_OFFSET3_VENDOR_SPECIFIC_PROCESSOR_NUMBER 0x1
+
 static int
 _snprintf (char *buf, unsigned int buflen, char *fmt, ...)
 {
@@ -1645,6 +1665,8 @@ get_10_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
     return (_snprintf (buf, buflen, "Memory module/device #%d", event_data2));
   if (offset == 0x01)
     return (_snprintf (buf, buflen, "Event/Reading Type Code #%d", event_data2));
+  if (offset == 0x06)
+    return (_snprintf (buf, buflen, "Instance ID #%d", event_data2));
 
   SET_ERRNO (EINVAL);
   return (-1);
@@ -2368,33 +2390,33 @@ get_10_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
         if (!(obj = fiid_obj_create (tmpl_event_data3)))
           {
             ERRNO_TRACE (errno);
-            goto cleanup;
+            goto cleanup1;
           }
 
         if (fiid_obj_set_all (obj, &event_data3, sizeof (uint8_t)) < 0)
           {
             FIID_OBJECT_ERROR_TO_ERRNO (obj);
-            goto cleanup;
+            goto cleanup1;
           }
 
         if (FIID_OBJ_GET (obj, "event_offset", &val) < 0)
           {
             FIID_OBJECT_ERROR_TO_ERRNO (obj);
-            goto cleanup;
+            goto cleanup1;
           }
         event_offset = val;
 
         if (FIID_OBJ_GET (obj, "assertion_deassertion_e", &val) < 0)
           {
             FIID_OBJECT_ERROR_TO_ERRNO (obj);
-            goto cleanup;
+            goto cleanup1;
           }
         assertion_deassertion_event = val;
 
         if (FIID_OBJ_GET (obj, "logging_disabled_all_ev", &val) < 0)
           {
             FIID_OBJECT_ERROR_TO_ERRNO (obj);
-            goto cleanup;
+            goto cleanup1;
           }
         logging_disabled_all_events = val;
 
@@ -2407,12 +2429,60 @@ get_10_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
         rv = _snprintf (buf, buflen, "Event Offset #%d; %s%s%s",
                         event_offset, (str1 ? str1 : ""), ((str1 && str2 && strlen (str2)) ? "; " : ""), (str2 ? str2 : ""));
 
-      cleanup:
+      cleanup1:
         fiid_obj_destroy (obj);
         return (rv);
       }
     case 0x05:
       return (_snprintf (buf, buflen, "%d% full", event_data3));
+    case 0x06:
+      {
+        fiid_template_t tmpl_event_data3 =
+          {
+            { 7, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+            { 1, "number_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+            { 0, "", 0}
+          };
+        uint64_t val;
+        uint8_t number_type;
+        char *str = NULL;
+        fiid_obj_t obj = NULL;
+        int rv = -1;
+        
+        if (!(obj = fiid_obj_create (tmpl_event_data3)))
+          {
+            ERRNO_TRACE (errno);
+            goto cleanup2;
+          }
+        
+        if (fiid_obj_set_all (obj, &event_data3, sizeof (uint8_t)) < 0)
+          {
+            FIID_OBJECT_ERROR_TO_ERRNO (obj);
+            goto cleanup2;
+          }
+        
+        if (FIID_OBJ_GET (obj, "number_type", &val) < 0)
+          {
+            FIID_OBJECT_ERROR_TO_ERRNO (obj);
+            goto cleanup2;
+          }
+        number_type = val;
+        
+        if (number_type == IPMI_SENSOR_TYPE_CODE_10_EVENT_DATA_OFFSET3_ENTITY_INSTANCE_NUMBER)
+          str = "Entity Instance Number";
+        else 
+          str = "Vendor-specific Processor Number";
+
+        rv = _snprintf (buf,
+                        buflen,
+                        "%s = #%d \n",
+                        str,
+                        event_data2);
+        
+      cleanup2:
+        fiid_obj_destroy (obj);
+        return (rv);
+      }
     }
 
   SET_ERRNO (EINVAL);
@@ -2448,7 +2518,7 @@ get_21_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
 {
   assert (buf && buflen);
 
-  return (_snprintf (buf, buflen, "Slot/Connector# %d", event_data3));
+  return (_snprintf (buf, buflen, "Slot/Connector #%d", event_data3));
 }
 
 static int

@@ -1683,6 +1683,43 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       /* else fall through to normal output */
     }
 
+  /* Special case
+   *
+   * The event_data3 indicates what "type" event_data2 is, and
+   * subsequently what should be output.  So we only need to output
+   * event_data3.
+   */
+
+  if (ipmi_event_reading_type_code_class (system_event_record_data.event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+      && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
+      && system_event_record_data.offset_from_event_reading_type_code == 0x06 
+      && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
+      && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE)
+    {
+      if ((data3_ret = _output_event_data3 (ctx,
+					    sel_parse_entry,
+					    sel_record_type,
+					    tmpbufdata3,
+					    EVENT_BUFFER_LENGTH,
+					    flags,
+					    &tmpbufdata3_wlen)) < 0)
+	return (-1);
+      
+      if (data3_ret)
+	{
+	  SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+	  return (-1);
+	}
+
+      if (_SNPRINTF (buf,
+                     buflen,
+                     wlen,
+                     "%s",
+                     tmpbufdata3))
+        return (1);
+      return (0);
+    }
+
   /* OEM Interpretation
    *
    * Inventec 5441/Dell Xanadu2

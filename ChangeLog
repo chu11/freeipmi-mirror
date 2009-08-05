@@ -11,7 +11,16 @@
 
 	* libfreeipmi/src/dcmi/, common/src/debugutil/: Update to use new
 	macros appropriately and output more correct output.
+
+	* libfreeipmi/src/util/: Update sensor and event code tables for
+	new errata.
+
+	* ipmi-sel/, libfreeipmi/src/sel-parse/: Handle unique corner case
+	output of new sensor type events from errata.
 	
+	* libfreeipmi/include/freeipmi/cmds/, libfreeipmi/src/cmds/,
+	ipmi-chassis-config/: Support new boot flag options.
+
 2009-08-04  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Fix bmc-config corner case, assume LAN channel is
