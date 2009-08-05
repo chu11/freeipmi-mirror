@@ -1667,7 +1667,9 @@ ipmi_lan_close_session (ipmi_ctx_t ctx)
       return (-1);
     }
 
-  if (fill_cmd_close_session (ctx->io.outofband.session_id, obj_cmd_rq) < 0)
+  if (fill_cmd_close_session (ctx->io.outofband.session_id,
+                              NULL,
+                              obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -3821,7 +3823,9 @@ ipmi_lan_2_0_close_session (ipmi_ctx_t ctx)
       return (-1);
     }
 
-  if (fill_cmd_close_session (ctx->io.outofband.managed_system_session_id, obj_cmd_rq) < 0)
+  if (fill_cmd_close_session (ctx->io.outofband.managed_system_session_id,
+                              NULL,
+                              obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;

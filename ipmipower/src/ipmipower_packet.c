@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.121 2009-06-26 03:43:18 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.122 2009-08-05 21:24:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1193,7 +1193,9 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
     }
   else if (pkt == CLOSE_SESSION_REQ)
     {
-      if (fill_cmd_close_session (session_id, ip->obj_close_session_req) < 0)
+      if (fill_cmd_close_session (session_id,
+                                  NULL,
+                                  ip->obj_close_session_req) < 0)
         {
           IPMIPOWER_ERROR (("fill_cmd_close_session: %s", strerror (errno)));
           exit (1);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.50 2009-06-24 20:37:05 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.51 2009-08-05 21:24:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1195,6 +1195,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
   else /* p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ */
     {
       if (fill_cmd_close_session (session_id,
+                                  NULL,
                                   c->connection.obj_close_session_rq) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fill_cmd_close_session: p = %d; %s", p, strerror (errno)));

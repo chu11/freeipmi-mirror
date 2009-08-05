@@ -1,3 +1,10 @@
+2009-08-05  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Update Full Sensor Record for errata 372 changes.
+
+	* libfreeipmi/: Support session handle in close session (errata
+	387).
+	
 2009-08-04  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Fix bmc-config corner case, assume LAN channel is

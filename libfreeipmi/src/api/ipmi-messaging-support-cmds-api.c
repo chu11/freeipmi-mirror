@@ -2377,7 +2377,8 @@ ipmi_cmd_set_session_privilege_level (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_close_session (ipmi_ctx_t ctx,
-                        uint32_t close_session_id,
+                        uint32_t session_id,
+                        uint8_t *session_handle,
                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2389,7 +2390,8 @@ ipmi_cmd_close_session (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!fiid_obj_valid (obj_cmd_rs))
+  if (!fiid_obj_valid (obj_cmd_rs)
+      || (session_handle && session_id))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
@@ -2408,7 +2410,9 @@ ipmi_cmd_close_session (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (fill_cmd_close_session (close_session_id, obj_cmd_rq) < 0)
+  if (fill_cmd_close_session (session_id,
+                              session_handle,
+                              obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;

@@ -340,6 +340,8 @@ o libfreeipmi
   - Always output debug key fields (i.e. 'raw_data' from ipmi-raw) in
     byte array format instead of an integer even if the field length
     is < 64 bits.
+  - Support 'session_handle' in close session packets (IPMI errata
+    387).  Results in API change for all close session packet calls.
 o libipmimonitoring
   - Support callback functions in API to monitor sensors as they
     are read/analyzed instead of after all sensors have been

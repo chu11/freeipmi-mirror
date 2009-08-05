@@ -684,6 +684,7 @@ fiid_template_t tmpl_cmd_close_session_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "session_handle", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -1870,10 +1871,13 @@ fill_cmd_set_session_privilege_level (uint8_t privilege_level,
 }
 
 int
-fill_cmd_close_session (uint32_t close_session_id,
+fill_cmd_close_session (uint32_t session_id,
+                        uint8_t *session_handle,
                         fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid (obj_cmd_rq))
+  /* if session_handle, session_id must be 0, see spec */
+  if (!fiid_obj_valid (obj_cmd_rq)
+      || (session_handle && session_id))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -1887,7 +1891,9 @@ fill_cmd_close_session (uint32_t close_session_id,
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CLOSE_SESSION);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "session_id", close_session_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "session_id", session_id);
+  if (session_handle)
+    FILL_FIID_OBJ_SET (obj_cmd_rq, "session_handle", (*session_handle));
   return (0);
 }
 

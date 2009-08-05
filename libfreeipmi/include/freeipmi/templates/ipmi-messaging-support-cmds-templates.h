@@ -852,6 +852,7 @@ fiid_template_t tmpl_cmd_close_session_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "session_handle", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
