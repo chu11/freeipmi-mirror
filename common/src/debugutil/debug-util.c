@@ -75,8 +75,10 @@ debug_hdr_str (uint8_t packet_type,
   else
     str_direction = "";
 
-  if (packet_flags & DEBUG_UTIL_FLAGS_DCMI)
-    str_prefix = "DCMI - ";
+  if (packet_flags & DEBUG_UTIL_FLAGS_GROUP_EXTENSION)
+    str_prefix = "Group Extension - ";
+  else if (packet_flags & DEBUG_UTIL_FLAGS_OEM_GROUP)
+    str_prefix = "OEM Group - ";
   else
     str_prefix = "";
   
@@ -123,11 +125,17 @@ debug_hdr_cmd (uint8_t packet_type,
   const char *str_cmd;
   unsigned int packet_flags = 0;
 
-  if (net_fn == IPMI_NET_FN_DCMI_RQ
-      || net_fn == IPMI_NET_FN_DCMI_RS)
+  if (net_fn == IPMI_NET_FN_GROUP_EXTENSION_RQ
+      || net_fn == IPMI_NET_FN_GROUP_EXTENSION_RS)
     {
       str_cmd = ipmi_dcmi_cmd_str (cmd);
-      packet_flags = DEBUG_UTIL_FLAGS_DCMI;
+      packet_flags = DEBUG_UTIL_FLAGS_GROUP_EXTENSION;
+    }
+  else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
+      || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
+    {
+      str_cmd = ipmi_dcmi_cmd_str (cmd);
+      packet_flags = DEBUG_UTIL_FLAGS_OEM_GROUP;
     }
   else
     str_cmd = ipmi_cmd_str (net_fn, cmd);

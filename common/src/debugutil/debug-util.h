@@ -40,8 +40,9 @@
 #define DEBUG_UTIL_RMCPPING_STR       "RMCP Ping"
 #define DEBUG_UTIL_RMCPPONG_STR       "RMCP Pong"
 
-#define DEBUG_UTIL_FLAGS_DEFAULT      0x0000
-#define DEBUG_UTIL_FLAGS_DCMI         0x0001
+#define DEBUG_UTIL_FLAGS_DEFAULT         0x0000
+#define DEBUG_UTIL_FLAGS_GROUP_EXTENSION 0x0001
+#define DEBUG_UTIL_FLAGS_OEM_GROUP       0x0002
 
 int debug_hdr_str (uint8_t packet_type,
                    uint8_t packet_direction,

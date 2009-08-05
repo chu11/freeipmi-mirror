@@ -4,6 +4,13 @@
 
 	* libfreeipmi/: Support session handle in close session (errata
 	387).
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-netfn-spec.h: Add Group
+	Extension codes, OEM Group codes, Group Extension Identification,
+	and extra macros.
+
+	* libfreeipmi/src/dcmi/, common/src/debugutil/: Update to use new
+	macros appropriately and output more correct output.
 	
 2009-08-04  Albert Chu <chu11@llnl.gov>
 

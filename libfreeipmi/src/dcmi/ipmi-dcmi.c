@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.3 2009-06-11 23:35:00 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.4 2009-08-05 21:59:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -56,6 +56,7 @@
 
 #include "freeipmi/dcmi/ipmi-dcmi.h"
 #include "freeipmi/fiid/fiid.h"
+#include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/util/ipmi-error-util.h"
@@ -354,7 +355,7 @@ fill_dcmi_cmd_get_dcmi_capability_info (uint8_t parameter_selector,
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_DCMI_CMD_GET_DCMI_CAPABILITIY_INFO);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_DCMI_GROUP_EXTENSION_IDENTIFICATION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
   
   return (0);
@@ -380,7 +381,7 @@ fill_dcmi_cmd_get_power_reading (uint8_t mode,
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_DCMI_CMD_GET_POWER_READING);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_DCMI_GROUP_EXTENSION_IDENTIFICATION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "mode", mode);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "mode_attributes", mode_attributes);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
@@ -405,7 +406,7 @@ fill_dcmi_cmd_get_power_limit (fiid_obj_t obj_cmd_rq)
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_DCMI_CMD_GET_POWER_LIMIT);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_DCMI_GROUP_EXTENSION_IDENTIFICATION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
   return (0);
@@ -433,7 +434,7 @@ fill_dcmi_cmd_set_power_limit (uint8_t exception_actions,
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_DCMI_CMD_SET_POWER_LIMIT);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_DCMI_GROUP_EXTENSION_IDENTIFICATION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "exception_actions", exception_actions);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "power_limit_requested", power_limit_requested);
@@ -463,7 +464,7 @@ fill_dcmi_cmd_activate_deactivate_power_limit (uint8_t power_limit_activation,
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_DCMI_CMD_ACTIVATE_DEACTIVATE_POWER_LIMIT);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_DCMI_GROUP_EXTENSION_IDENTIFICATION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "power_limit_activation", power_limit_activation);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
@@ -490,7 +491,7 @@ fill_dcmi_cmd_get_asset_tag (uint8_t offset_to_read,
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_DCMI_CMD_GET_ASSET_TAG);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_DCMI_GROUP_EXTENSION_IDENTIFICATION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "offset_to_read", offset_to_read);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "number_of_bytes_to_read", number_of_bytes_to_read);
 
@@ -521,7 +522,7 @@ fill_dcmi_cmd_get_dcmi_sensor_info (uint8_t sensor_type,
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_DCMI_CMD_GET_DCMI_SENSOR_INFO);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_DCMI_GROUP_EXTENSION_IDENTIFICATION);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_id", entity_id);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_instance", entity_instance);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_instance_start", entity_instance_start);
@@ -575,7 +576,7 @@ ipmi_dcmi_cmd_get_dcmi_capability_info (ipmi_ctx_t ctx,
 
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_DCMI_RQ,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
@@ -630,7 +631,7 @@ ipmi_dcmi_cmd_get_dcmi_capability_info_supported_dcmi_capabilities (ipmi_ctx_t c
 
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_DCMI_RQ,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
@@ -685,7 +686,7 @@ ipmi_dcmi_cmd_get_dcmi_capability_info_mandatory_platform_attributes (ipmi_ctx_t
 
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_DCMI_RQ,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
@@ -740,7 +741,7 @@ ipmi_dcmi_cmd_get_dcmi_capability_info_optional_platform_attributes (ipmi_ctx_t 
 
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_DCMI_RQ,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
@@ -795,7 +796,7 @@ ipmi_dcmi_cmd_get_dcmi_capability_info_manageability_access_attributes (ipmi_ctx
 
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_DCMI_RQ,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
@@ -850,7 +851,7 @@ ipmi_dcmi_cmd_get_dcmi_capability_info_enhanced_system_power_statistics_attribut
   
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_DCMI_RQ,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
@@ -909,7 +910,7 @@ ipmi_dcmi_cmd_get_power_reading (ipmi_ctx_t ctx,
 
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_DCMI_RQ,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
@@ -963,7 +964,7 @@ ipmi_dcmi_cmd_get_power_limit (ipmi_ctx_t ctx,
 
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_DCMI_RQ,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
@@ -1026,7 +1027,7 @@ ipmi_dcmi_cmd_set_power_limit (ipmi_ctx_t ctx,
 
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_DCMI_RQ,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
@@ -1083,7 +1084,7 @@ ipmi_dcmi_cmd_activate_deactivate_power_limit (ipmi_ctx_t ctx,
 
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_DCMI_RQ,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
@@ -1142,7 +1143,7 @@ ipmi_dcmi_cmd_get_asset_tag (ipmi_ctx_t ctx,
 
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_DCMI_RQ,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
@@ -1207,7 +1208,7 @@ ipmi_dcmi_cmd_get_dcmi_sensor_info (ipmi_ctx_t ctx,
 
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_DCMI_RQ,
+                    IPMI_NET_FN_GROUP_EXTENSION_RQ,
                     obj_cmd_rq,
                     obj_cmd_rs) < 0)
     {
@@ -1239,8 +1240,8 @@ ipmi_dcmi_completion_code_strerror_r (uint8_t cmd,
       return (-1);
     }
 
-  if (netfn == IPMI_NET_FN_DCMI_RQ
-      || netfn == IPMI_NET_FN_DCMI_RS)
+  if (netfn == IPMI_NET_FN_GROUP_EXTENSION_RQ
+      || netfn == IPMI_NET_FN_GROUP_EXTENSION_RS)
     {
       switch (cmd)
         {

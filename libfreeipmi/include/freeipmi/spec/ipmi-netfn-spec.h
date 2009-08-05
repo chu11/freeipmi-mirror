@@ -41,12 +41,20 @@ extern "C" {
 #define IPMI_NET_FN_STORAGE_RS         0x0B
 #define IPMI_NET_FN_TRANSPORT_RQ       0x0C
 #define IPMI_NET_FN_TRANSPORT_RS       0x0D
+#define IPMI_NET_FN_GROUP_EXTENSION_RQ 0x2C
+#define IPMI_NET_FN_GROUP_EXTENSION_RS 0x2D
+#define IPMI_NET_FN_OEM_GROUP_RQ       0x2E
+#define IPMI_NET_FN_OEM_GROUP_RS       0x2F
 /*
    0x0E to 0x2B RESERVED
-   0x2C to 0x2D IPMI_NET_FN_GRP
-   0x2E to 0x2F IPMI_NET_FN_OEM_GRP
    0x30 to 0x3F IPMI_NET_FN_CNTRLR_OEM_GRP
  */
+
+#define IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_PICMG 0x00
+#define IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DMTF  0x01
+#define IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_SSI   0x02
+#define IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_VITA  0x03
+#define IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI  0xDC
 
 /* To avoid gcc warnings, add +1 in comparison */
 /* Include checks for possible oem network functions */
@@ -63,6 +71,18 @@ extern "C" {
 #define IPMI_NET_FN_RS_VALID(__net_fn)           \
   ((IPMI_NET_FN_VALID (__net_fn)                 \
     && ((__net_fn) & 0x1)) ? 1 : 0)
+
+#define IPMI_NET_FN_GROUP_EXTENSION(__net_fn)    \
+  (((__net_fn) >= 0x2C                           \
+    && (__net_fn) <= 0x2D) ? 1 : 0)
+
+#define IPMI_NET_FN_OEM_GROUP(__net_fn)          \
+  (((__net_fn) >= 0x2E                           \
+    && (__net_fn) <= 0x2F) ? 1 : 0)
+
+#define IPMI_NET_FN_CONTROLLER_SPECIFIC_OEM_GROUP(__net_fn) \
+  (((__net_fn) >= 0x30                                      \
+    && (__net_fn) <= 0x3F) ? 1 : 0)
 
 #ifdef __cplusplus
 }
