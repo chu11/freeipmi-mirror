@@ -72,6 +72,7 @@ bmc-config
 ----------
 (TEST) that ipmi 2.0 (> 20 char) password not possible on ipmi 1.5 only mobo
 destination address vlan tags (or would be in ipmi-pef-config?)
+all lan destination config (or would be in ipmi-pef-config?)
 
 ipmi-oem
 --------
