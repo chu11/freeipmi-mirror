@@ -262,12 +262,13 @@ o bmc-config
   - Collapse "Password20" field into "Password" field so "Password"
     supports both IPMI 1.5 and IPMI 2.0 length passwords.
     "Password20" still supported as legacy support.
+  - Update to include new BMC Password Threshold configuration.
   - Support ability to report read only field error.
   - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
 o ipmi-chassis-config
-  - Update for new configurable boot options in IPMI errata.
-  - Update for new device instance selector in IPMI errata.
+  - Update to include new configurable boot options in IPMI errata.
+  - Update to include new device instance selector in IPMI errata.
   - Support ability to report read only field error.
   - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.

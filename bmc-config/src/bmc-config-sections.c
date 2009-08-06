@@ -38,6 +38,7 @@
 #include "bmc-config-lan-conf-auth-section.h"
 #include "bmc-config-lan-conf-security-keys-section.h"
 #include "bmc-config-lan-conf-misc-section.h"
+#include "bmc-config-lan-conf-user-security-section.h"
 #include "bmc-config-pef-conf-section.h"
 #include "bmc-config-rmcpplus-conf-privilege-section.h"
 #include "bmc-config-serial-channel-section.h"
@@ -89,6 +90,11 @@ bmc_config_sections_create (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (!(section = bmc_config_lan_conf_security_keys_section_get (state_data)))
+    goto cleanup;
+  if (config_section_append (state_data->pstate, &sections, section) < 0)
+    goto cleanup;
+
+  if (!(section = bmc_config_lan_conf_user_security_section_get (state_data)))
     goto cleanup;
   if (config_section_append (state_data->pstate, &sections, section) < 0)
     goto cleanup;

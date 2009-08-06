@@ -1,3 +1,10 @@
+2009-08-06  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-config-lan-conf-user-security.h,
+	bmc-config/src/bmc-config-lan-conf-user-security.c: New files.
+
+	* bmc-config/src/: Support Bad Password Threshold configuration.
+	
 2009-08-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Update Full Sensor Record for errata 372 changes.

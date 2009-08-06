@@ -9,6 +9,7 @@ noinst_HEADERS = \
 	bmc-config-lan-conf-misc-section.h \
 	bmc-config-lan-conf-section.h \
 	bmc-config-lan-conf-security-keys-section.h \
+	bmc-config-lan-conf-user-security-section.h \
 	bmc-config-rmcpplus-conf-privilege-section.h \
 	bmc-config-serial-channel-section.h \
 	bmc-config-serial-conf-section.h \
@@ -54,6 +55,7 @@ bmc_config_SOURCES = \
 	bmc-config-lan-conf-auth-section.c \
 	bmc-config-lan-conf-security-keys-section.c \
 	bmc-config-lan-conf-misc-section.c \
+	bmc-config-lan-conf-user-security-section.c \
 	bmc-config-rmcpplus-conf-privilege-section.c \
 	bmc-config-serial-conf-section.c \
 	bmc-config-pef-conf-section.c \
