@@ -33,6 +33,10 @@ int boot_device_number (const char *string);
 
 char *boot_device_string (uint8_t value);
 
+int device_instance_selector_number (const char *string);
+
+char *device_instance_selector_string (uint8_t value);
+
 int firmware_bios_verbosity_number (const char *string);
 
 char *firmware_bios_verbosity_string (uint8_t value);

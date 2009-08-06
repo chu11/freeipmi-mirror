@@ -267,6 +267,7 @@ o bmc-config
   - Support additional options in FreeIPMI config file.
 o ipmi-chassis-config
   - Update for new configurable boot options in IPMI errata.
+  - Update for new device instance selector in IPMI errata.
   - Support ability to report read only field error.
   - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
@@ -344,6 +345,8 @@ o libfreeipmi
   - Update various macros, fields, etc. for IPMI errata updates.
   - Support 'session_handle' in close session packets (IPMI errata
     387).  Results in API change for all close session packet calls.
+  - Support 'device instance locator' in chassis boot configuration.
+    Results in API change.
 o libipmimonitoring
   - Support callback functions in API to monitor sensors as they
     are read/analyzed instead of after all sensors have been

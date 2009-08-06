@@ -146,6 +146,106 @@ boot_device_string (uint8_t value)
 }
 
 int
+device_instance_selector_number (const char *string)
+{
+  uint8_t device_instance_selector;
+  char *str = NULL;
+
+  if (same (string, "none"))
+    return (0);
+
+  if ((str = stristr (string, "external-")))
+    {
+      device_instance_selector = atoi (str + strlen ("external-"));
+
+      if (IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_RANGE_VALID (device_instance_selector))
+        return (device_instance_selector);
+    }
+
+  if ((str = stristr (string, "internal-")))
+    {
+      device_instance_selector = atoi (str + strlen ("internal-"));
+
+      if (IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_RANGE_VALID (device_instance_selector))
+        return (device_instance_selector | IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_INTERNAL_BITMASK);
+    }
+
+  return (-1);
+}
+
+char *
+device_instance_selector_string (uint8_t value)
+{
+  /* achu: this is dumb, but that's the way these map functions work */
+  switch (value)
+    {
+    case 0x00:
+      return "None";
+    case 0x01:
+      return "External-1";
+    case 0x02:
+      return "External-2";
+    case 0x03:
+      return "External-3";
+    case 0x04:
+      return "External-4";
+    case 0x05:
+      return "External-5";
+    case 0x06:
+      return "External-6";
+    case 0x07:
+      return "External-7";
+    case 0x08:
+      return "External-8";
+    case 0x09:
+      return "External-9";
+    case 0x0A:
+      return "External-10";
+    case 0x0B:
+      return "External-11";
+    case 0x0C:
+      return "External-12";
+    case 0x0D:
+      return "External-13";
+    case 0x0E:
+      return "External-14";
+    case 0x0F:
+      return "External-15";
+    case 0x11:
+      return "Internal-1";
+    case 0x12:
+      return "Internal-2";
+    case 0x13:
+      return "Internal-3";
+    case 0x14:
+      return "Internal-4";
+    case 0x15:
+      return "Internal-5";
+    case 0x16:
+      return "Internal-6";
+    case 0x17:
+      return "Internal-7";
+    case 0x18:
+      return "Internal-8";
+    case 0x19:
+      return "Internal-9";
+    case 0x1A:
+      return "Internal-10";
+    case 0x1B:
+      return "Internal-11";
+    case 0x1C:
+      return "Internal-12";
+    case 0x1D:
+      return "Internal-13";
+    case 0x1E:
+      return "Internal-14";
+    case 0x1F:
+      return "Internal-15";
+    }
+  return "";
+}
+
+int
 firmware_bios_verbosity_number (const char *string)
 {
   if (same (string, "DEFAULT"))

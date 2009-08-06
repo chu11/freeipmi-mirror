@@ -52,6 +52,7 @@ struct boot_flags_data
   uint8_t console_redirection;
   uint8_t bios_shared_mode_override;
   uint8_t bios_mux_control_override;
+  uint8_t device_instance_selector;
 };
 
 static config_err_t
@@ -245,6 +246,16 @@ _get_boot_flags (ipmi_chassis_config_state_data_t *state_data,
     }
   data->bios_shared_mode_override = val;
 
+  if (FIID_OBJ_GET (obj_cmd_rs, "device_instance_selector", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'device_instance_selector': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  data->device_instance_selector = val;
+
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -294,6 +305,7 @@ _set_boot_flags (ipmi_chassis_config_state_data_t *state_data,
                                                    data->lock_out_power_button,
                                                    data->bios_mux_control_override,
                                                    data->bios_shared_mode_override,
+                                                   data->device_instance_selector,
                                                    obj_cmd_rs) < 0)
     {
       config_err_t ret;
@@ -555,6 +567,46 @@ boot_device_commit (const char *section_name,
   if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
+  return (CONFIG_ERR_SUCCESS);
+}
+
+static config_err_t
+device_instance_selector_checkout (const char *section_name,
+                                   struct config_keyvalue *kv,
+                                   void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return (ret);
+
+  if (config_section_update_keyvalue_output (state_data->pstate,
+                                             kv,
+                                             device_instance_selector_string (data.device_instance_selector)) < 0)
+    return (CONFIG_ERR_FATAL_ERROR);
+
+  return (CONFIG_ERR_SUCCESS);
+}
+
+static config_err_t
+device_instance_selector_commit (const char *section_name,
+                                 const struct config_keyvalue *kv,
+                                 void *arg)
+{
+  ipmi_chassis_config_state_data_t *state_data = (ipmi_chassis_config_state_data_t *)arg;
+  struct boot_flags_data data;
+  config_err_t ret;
+
+  if ((ret = _get_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return (ret);
+
+  data.device_instance_selector = device_instance_selector_number (kv->value_input);
+
+  if ((ret = _set_boot_flags (state_data, &data)) != CONFIG_ERR_SUCCESS)
+    return (ret);
+  
   return (CONFIG_ERR_SUCCESS);
 }
 
@@ -906,7 +958,8 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
     "boot off of.  Most users may wish to select NO-OVERRIDE to select the "
     "configuration currently determined by the BIOS.  Note that the configuration "
     "value BIOS-SETUP refers to booting *into* the BIOS Setup, not from it.  FLOPPY "
-    "may refer to any type of removeable media.";
+    "may refer to any type of removeable media.  \"Device_Instance_Selector\" may "
+    "be be used to select a specific device instance for booting.";
 
   if (!(section = config_section_create (state_data->pstate,
                                          "Chassis_Boot_Flags",
@@ -977,6 +1030,16 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
                               boot_device_checkout,
                               boot_device_commit,
                               boot_device_number_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (state_data->pstate,
+                              section,
+                              "Device_Instance_Selector",
+                              "Possible values: None/Internal-{1-15}/External-{1-15} (i.e. Internal-5)",
+                              0,
+                              device_instance_selector_checkout,
+                              device_instance_selector_commit,
+                              device_instance_selector_number_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (state_data->pstate,

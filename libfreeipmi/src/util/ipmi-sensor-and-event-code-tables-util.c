@@ -408,9 +408,10 @@ static int ipmi_sensor_type_code_14_desc_max = 0x04;
 static char * ipmi_sensor_type_code_19_desc[] =
   {
     "Soft Power Control Failure (chipset did not respond to BMC request to change system power state)",
+    "Thermal Trip",
     NULL
   };
-static int ipmi_sensor_type_code_19_desc_max = 0x00;
+static int ipmi_sensor_type_code_19_desc_max = 0x01;
 
 static char * ipmi_sensor_type_code_1B_desc[] =
   {
@@ -971,6 +972,7 @@ static int ipmi_sensor_type_code_14_short_desc_max = 0x04;
 static char * ipmi_sensor_type_code_19_short_desc[] =
   {
     "Soft Power Control Failure",
+    "Thermal Trip",
     NULL
   };
 static int ipmi_sensor_type_code_19_short_desc_max = 0x00;

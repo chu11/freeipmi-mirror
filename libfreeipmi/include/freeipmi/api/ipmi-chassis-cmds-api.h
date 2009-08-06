@@ -103,6 +103,7 @@ int ipmi_cmd_set_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                                  uint8_t lock_out_via_power_button,
                                                  uint8_t bios_mux_control_override,
                                                  uint8_t bios_shared_mode_override,
+                                                 uint8_t device_instance_selector,
                                                  fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,

@@ -37,6 +37,11 @@ config_validate_t boot_device_number_validate (const char *section_name,
                                                const char *value,
                                                void *arg);
 
+config_validate_t device_instance_selector_number_validate (const char *section_name,
+                                                            const char *key_name,
+                                                            const char *value,
+                                                            void *arg);
+
 config_validate_t firmware_bios_verbosity_number_validate (const char *section_name,
                                                            const char *key_name,
                                                            const char *value,

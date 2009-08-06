@@ -67,6 +67,17 @@ boot_device_number_validate (const char *section_name,
 }
 
 config_validate_t
+device_instance_selector_number_validate (const char *section_name,
+                                          const char *key_name,
+                                          const char *value,
+                                          void *arg)
+{
+  if (device_instance_selector_number (value) != -1)
+    return (CONFIG_VALIDATE_VALID_VALUE);
+  return (CONFIG_VALIDATE_INVALID_VALUE);
+}
+
+config_validate_t
 firmware_bios_verbosity_number_validate (const char *section_name,
                                          const char *key_name,
                                          const char *value,
