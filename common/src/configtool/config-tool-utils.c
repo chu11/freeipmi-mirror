@@ -109,6 +109,16 @@ config_keypair_parse_string (const char *str,
         }
       *value = ptr;
     }
+  else
+    {
+      /* values can be empty strings */
+      if (!(ptr = strdup ("")))
+        {
+          perror ("strdup");
+          goto cleanup;
+        }
+      *value = ptr;
+    }
 
   rv = 0;
  cleanup:

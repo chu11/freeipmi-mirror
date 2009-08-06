@@ -7,6 +7,9 @@
 
 	* libfreeipmi/: Support 'change bits' flag in set user access
 	command.
+
+	* common/src/configtool/: Allow empty strings as valid empty on
+	command line.
 	
 2009-08-05  Albert Chu <chu11@llnl.gov>
 
