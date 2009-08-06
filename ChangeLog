@@ -25,6 +25,8 @@
 
 	* libfreeipmi/include/freeipmi/spec/: Update entity ids from errata.
 
+	* libfreeipmi/: Support LAN config bad password threshold.
+
 2009-08-04  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Fix bmc-config corner case, assume LAN channel is

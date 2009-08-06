@@ -48,11 +48,13 @@ extern "C" {
 #define IPMI_LAN_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_ENTRY_SUPPORT    22
 #define IPMI_LAN_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_ENTRIES          23
 #define IPMI_LAN_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS 24
+#define IPMI_LAN_PARAMETER_DESTINATION_ADDRESS_VLAN_TAGS                    25
+#define IPMI_LAN_PARAMETER_BAD_PASSWORD_THRESHOLD                           26
 
 /* To avoid gcc warnings, add +1 in comparison */
-#define IPMI_LAN_PARAMETER_SELECTOR_VALID(__parameter_selector)                         \
+#define IPMI_LAN_PARAMETER_SELECTOR_VALID(__parameter_selector)             \
   (((__parameter_selector+1) > (IPMI_LAN_PARAMETER_SET_IN_PROGRESS+1)        \
-    && (__parameter_selector) <= IPMI_LAN_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS) ? 1 : 0)
+    && (__parameter_selector) <= IPMI_LAN_PARAMETER_BAD_PASSWORD_THRESHOLD) ? 1 : 0)
 
 /* To avoid gcc warnings, subtract -1 in comparison */
 #define IPMI_LAN_PARAMETER_SELECTOR_IS_OEM(__parameter_selector) \

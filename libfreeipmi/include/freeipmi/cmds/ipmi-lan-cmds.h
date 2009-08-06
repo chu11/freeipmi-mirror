@@ -87,7 +87,7 @@ extern "C" {
 #define IPMI_ALERT_ACKNOWLEDGED                         1
 
 #define IPMI_ALERT_VALID(__val)           \
-  (((__val) ==  IPMI_ALERT_UNACKNOWLEDGED \
+  (((__val) == IPMI_ALERT_UNACKNOWLEDGED \
     || (__val) == IPMI_ALERT_ACKNOWLEDGED) ? 1 : 0)
 
 #define IPMI_ADDRESS_FORMAT_IPV4                        0
@@ -96,7 +96,7 @@ extern "C" {
 #define IPMI_GATEWAY_SELECTOR_BACKUP                    1
 
 #define IPMI_GATEWAY_SELECTOR_VALID(__val)    \
-  (((__val) ==  IPMI_GATEWAY_SELECTOR_DEFAULT \
+  (((__val) == IPMI_GATEWAY_SELECTOR_DEFAULT \
     || (__val) == IPMI_GATEWAY_SELECTOR_BACKUP) ? 1 : 0)
 
 /* 3 bit number */
@@ -106,22 +106,29 @@ extern "C" {
 #define IPMI_VLAN_ID_DISABLE                            0x0
 
 #define IPMI_VLAN_ID_ENABLE_VALID(__val) \
-  (((__val) ==  IPMI_VLAN_ID_ENABLE      \
+  (((__val) == IPMI_VLAN_ID_ENABLE      \
     || (__val) == IPMI_VLAN_ID_DISABLE) ? 1 : 0)
 
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND    0x0
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND           0x1
 
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(__val)           \
-  (((__val) ==  IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND \
+  (((__val) == IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND \
     || (__val) == IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND) ? 1 : 0)
 
 #define IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND      0x0
 #define IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPEND             0x1
 
 #define IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(__val)           \
-  (((__val) ==  IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND \
+  (((__val) == IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND \
     || (__val) == IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPEND) ? 1 : 0)
+
+#define IPMI_USER_DISABLED_EVENT_MESSAGE_ON             0x1
+#define IPMI_USER_DISABLED_EVENT_MESSAGE_OFF            0x0
+
+#define IPMI_USER_DISABLED_EVENT_MESSAGE_VALID(__val) \
+  (((__val) == IPMI_USER_DISABLED_EVENT_MESSAGE_ON \
+    || (__val) == IPMI_USER_DISABLED_EVENT_MESSAGE_OFF) ? 1 : 0)
 
 #define IPMI_GET_LAN_PARAMETER                          0x0
 #define IPMI_GET_LAN_PARAMETER_REVISION_ONLY            0x1
@@ -166,6 +173,7 @@ extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_destination_add
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_vlan_id_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_vlan_priority_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_bad_password_threshold_rq;
 
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rs;
@@ -191,6 +199,7 @@ extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_vlan_priority_r
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_bad_password_threshold_rs;
 
 extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rq;
 extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rs;
@@ -320,6 +329,13 @@ int fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_pr
                                                                                                 uint8_t maximum_privilege_for_cipher_suite_15,
                                                                                                 uint8_t maximum_privilege_for_cipher_suite_16,
                                                                                                 fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_bad_password_threshold (uint8_t channel_number,
+                                                                      uint8_t user_disabled_event_message,
+                                                                      uint8_t bad_password_threshold_number,
+                                                                      uint16_t attempt_count_reset_interval,
+                                                                      uint16_t user_lockout_interval,
+                                                                      fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
                                                uint8_t get_parameter,

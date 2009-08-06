@@ -176,6 +176,13 @@ int ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_pr
                                                                                                 uint8_t maximum_privilege_for_cipher_suite_16,
                                                                                                 fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_set_lan_configuration_parameters_bad_password_threshold (ipmi_ctx_t ctx,
+                                                                      uint8_t channel_number,
+                                                                      uint8_t user_disabled_event_message,
+                                                                      uint8_t bad_password_threshold_number,
+                                                                      uint16_t attempt_count_reset_interval,
+                                                                      uint16_t user_lockout_interval,
+                                                                      fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_lan_configuration_parameters (ipmi_ctx_t ctx,
                                                uint8_t channel_number,
@@ -332,6 +339,12 @@ int ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_pr
                                                                                                 uint8_t block_selector,
                                                                                                 fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_get_lan_configuration_parameters_bad_password_threshold (ipmi_ctx_t ctx,
+                                                                      uint8_t channel_number,
+                                                                      uint8_t get_parameter,
+                                                                      uint8_t set_selector,
+                                                                      uint8_t block_selector,
+                                                                      fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
                                uint8_t channel_number,

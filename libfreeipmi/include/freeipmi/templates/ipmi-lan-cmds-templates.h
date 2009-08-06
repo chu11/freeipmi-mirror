@@ -359,6 +359,23 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cip
     { 0, "", 0}
   };
 
+Set LAN Configuration Parameters (Bad Password Threshold) Request
+-----------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_bad_password_threshold_rq =
+  {
+    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "user_disabled_event_message", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "bad_password_threshold_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "attempt_count_reset_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "user_lockout_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 Get LAN Configuration Parameters Request
 ----------------------------------------
 
@@ -759,6 +776,23 @@ fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cip
     { 4, "maximum_privilege_for_cipher_suite_14", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 4, "maximum_privilege_for_cipher_suite_15", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 4, "maximum_privilege_for_cipher_suite_16", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+Get LAN Configuration Parameters (Bad Password Threshold) Response
+------------------------------------------------------------------
+
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_bad_password_threshold_rs =
+  {
+    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 4,  "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,  "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "user_disabled_event_message", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "bad_password_threshold_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "attempt_count_reset_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "user_lockout_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
