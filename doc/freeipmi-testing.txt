@@ -728,7 +728,8 @@ Test)
 
 Begin with the remote machine currently powered off.
 
-Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
+Execute ipmipower w/ -l user and --stat, authenticating with USER1,
+verify tool:
 - Executes without errors.
 - Properly reports the state of the machine as "off".
 
@@ -738,7 +739,8 @@ Execute ipmipower w/ --on, authenticating with USER1, verify tool:
 Execute ipmipower w/ --on, authenticating with OPERATOR1, verify tool:
 - Returns "ok" and turns on the node.
 
-Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
+Execute ipmipower w/ -l user and --stat, authenticating with USER1,
+verify tool:
 - Executes without errors.
 - Properly reports the state of the machine as "on".
 
@@ -756,7 +758,8 @@ Test)
 
 Begin with the remote machine currently powered off.
 
-Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
+Execute ipmipower w/ -l user and --stat, authenticating with USER1,
+verify tool:
 - Executes without errors.
 - Properly reports the state of the machine as "off".
 
@@ -766,7 +769,8 @@ Execute ipmipower w/ --on, authenticating with USER1, verify tool:
 Execute ipmipower w/ --on, authenticating with ADMIN1, verify tool:
 - Returns "ok" and turns on the node.
 
-Execute ipmipower w/ --stat, authenticating with USER1, verify tool:
+Execute ipmipower w/ -l user and --stat, authenticating with USER1,
+verify tool:
 - Executes without errors.
 - Properly reports the state of the machine as "on".
 
