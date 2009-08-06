@@ -28,6 +28,11 @@ ipmi-locate
 -----------
 (TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi
 
+entity ids
+-----------
+0x41, 0x42, are "identical" to other entries
+- should map them together for entity-id-names output in sensors?
+
 hostrange
 ---------
 exclude hosts option

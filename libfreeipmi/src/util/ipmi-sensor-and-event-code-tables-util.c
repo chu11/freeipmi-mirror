@@ -286,7 +286,7 @@ static char * ipmi_sensor_type_code_09_desc[] =
     "Power Cycle",
     "240VA Power Down",
     "Interlock Power Down",
-    "AC lost",
+    "AC lost/Power input lost (The power source for the power unit was lost)",
     "Soft Power Control Failure (unit did not respond to request to turn on)",
     "Power Unit Failure detected",
     "Predictive Failure",
@@ -850,7 +850,7 @@ static char * ipmi_sensor_type_code_09_short_desc[] =
     "Power Cycle",
     "240VA Power Down",
     "Interlock Power Down",
-    "AC lost",
+    "AC lost/Power input lost",
     "Soft Power Control Failure",
     "Power Unit Failure detected",
     "Predictive Failure",
@@ -1482,9 +1482,11 @@ static char * ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc[] =
     "Vendor mismatch",
     "Revision mismatch",
     "Processor missing or unexpected/unsupported condition",
+    "Power Supply rating mismatch",
+    "Voltage rating mismatch",
     NULL
   };
-static int ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc_max = 0x02;
+static int ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc_max = 0x04;
 
 static char * ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc[] =
   {

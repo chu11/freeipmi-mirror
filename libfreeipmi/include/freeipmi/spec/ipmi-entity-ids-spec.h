@@ -77,11 +77,18 @@ extern "C" {
 #define IPMI_ENTITY_ID_SATA_SAS_BUS                              0x33
 #define IPMI_ENTITY_ID_PROCESSOR_FRONT_SIDE_BUS                  0x34
 #define IPMI_ENTITY_ID_REAL_TIME_CLOCK                           0x35
+/* 0x36 - reserved */
+/* 0x37 - listed as air inlet, but not markup not consistent to errata, assume errata correct and markup has typo */
+#define IPMI_ENTITY_ID_AIR_INLET                                 0x40
+#define IPMI_ENTITY_ID_PROCESSOR_CPU                             0x41 /* considered same as 0x03, to match DCMI */
+#define IPMI_ENTITY_ID_BASEBOARD_MAIN_SYSTEM_BOARD               0x42 /* considered same as 0x07, to match DCMI */
 
 /* To avoid gcc warnings, add +1 in comparison */
-#define IPMI_ENTITY_ID_VALID(__entity_id)              \
-  (((__entity_id + 1) >= (IPMI_ENTITY_ID_UNSPECIFIED + 1) \
-    && (__entity_id) <= IPMI_ENTITY_ID_REAL_TIME_CLOCK) ? 1 : 0)
+#define IPMI_ENTITY_ID_VALID(__entity_id)                  \
+  ((((__entity_id + 1) >= (IPMI_ENTITY_ID_UNSPECIFIED + 1) \
+     && (__entity_id) <= IPMI_ENTITY_ID_REAL_TIME_CLOCK)   \
+    || ((__entity_id) >= IPMI_ENTITY_ID_AIR_INLET          \
+        && (__entity_id) <= IPMI_ENTITY_ID_BASEBOARD_MAIN_SYSTEM_BOARD)) ? 1 : 0)
 
 #define IPMI_ENTITY_ID_IS_CHASSIS_SPECIFIC(__entity_id) \
   (((__entity_id) >= 0x90                    \

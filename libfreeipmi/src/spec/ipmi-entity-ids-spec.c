@@ -84,6 +84,19 @@ const char *const ipmi_entity_ids[] =
     "SATA/SAS bus",
     "Processor/front-side bus",
     "Real Time Clock",
+    "reserved",
+    "reserved",                 /* listed as air-inlet, assume is typo */
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "air inlet",
+    "processor/CPU",
+    "baseboard/main system board",
     NULL
   };
 
@@ -143,5 +156,18 @@ const char *const ipmi_entity_ids_pretty[] =
     "SATA/SAS bus",
     "Processor/front-side bus",
     "Real Time Clock",
+    "reserved",
+    "reserved",                 /* listed as air-inlet, assume is typo */
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "Air Inlet",
+    "Processor",                /* equivalent to 0x03, see errata */
+    "System Board",             /* equivalent to 0x07, see errata */
     NULL
   };
