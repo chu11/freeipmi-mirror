@@ -214,6 +214,7 @@ _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
                    unsigned int pkt_len,
                    uint8_t cmd,
                    uint8_t net_fn,
+		   uint8_t group_extension,
                    fiid_obj_t obj_cmd_rq)
 {
   fiid_field_t *tmpl_cmd = NULL;
@@ -235,6 +236,7 @@ _ipmi_lan_dump_rq (ipmi_ctx_t ctx,
                      DEBUG_UTIL_DIRECTION_REQUEST,
                      net_fn,
                      cmd,
+		     group_extension,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
 
@@ -269,6 +271,7 @@ _ipmi_lan_dump_rs (ipmi_ctx_t ctx,
                    unsigned int pkt_len,
                    uint8_t cmd,
                    uint8_t net_fn,
+		   uint8_t group_extension,
                    fiid_obj_t obj_cmd_rs)
 {
   fiid_field_t *tmpl_cmd = NULL;
@@ -290,6 +293,7 @@ _ipmi_lan_dump_rs (ipmi_ctx_t ctx,
                      DEBUG_UTIL_DIRECTION_RESPONSE,
                      net_fn,
                      cmd,
+		     group_extension,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
 
@@ -388,6 +392,7 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
                     const char *password,
                     unsigned int password_len,
                     uint8_t cmd, /* for debug dumping */
+		    uint8_t group_extension, /* for debug dumping */
                     fiid_obj_t obj_cmd_rq)
 {
   uint8_t *pkt = NULL;
@@ -479,7 +484,13 @@ _ipmi_lan_cmd_send (ipmi_ctx_t ctx,
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && send_len)
-    _ipmi_lan_dump_rq (ctx, pkt, send_len, cmd, net_fn, obj_cmd_rq);
+    _ipmi_lan_dump_rq (ctx,
+		       pkt,
+		       send_len,
+		       cmd,
+		       net_fn,
+		       group_extension,
+		       obj_cmd_rq);
 
   do
     {
@@ -518,6 +529,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                     unsigned int retransmission_count,
                     uint8_t cmd, /* for debug dumping */
                     uint8_t net_fn, /* for debug dumping */
+		    uint8_t group_extension, /* for debug dumping */
                     fiid_obj_t obj_cmd_rs)
 {
   struct sockaddr_in from;
@@ -601,6 +613,7 @@ _ipmi_lan_cmd_recv (ipmi_ctx_t ctx,
                        recv_len,
                        cmd,
                        net_fn,
+		       group_extension,
                        obj_cmd_rs);
 
   if ((ret = unassemble_ipmi_lan_pkt (pkt,
@@ -808,6 +821,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
   uint8_t pkt[IPMI_MAX_PKT_LEN];
   struct socket_to_close *sockets = NULL;
   uint8_t cmd = 0;             /* used for debugging */
+  uint8_t group_extension = 0; /* used for debugging */
   uint64_t val;
 
   assert (ctx
@@ -842,6 +856,17 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
         API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
       else
         cmd = val;
+
+      if (IPMI_NET_FN_GROUP_EXTENSION (net_fn))
+	{
+	  /* ignore error, continue on */
+	  if (FIID_OBJ_GET (obj_cmd_rq,
+			    "group_extension_identification",
+			    &val) < 0)
+	    API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+	  else
+	    group_extension = val;
+	}
     }
 
   if (_ipmi_lan_cmd_send (ctx,
@@ -854,6 +879,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                           password,
                           password_len,
                           cmd,  /* for debug dumping */
+			  group_extension,  /* for debug dumping */
                           obj_cmd_rq) < 0)
     goto cleanup;
 
@@ -876,6 +902,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                                           retransmission_count,
                                           cmd, /* for debug dumping */
                                           net_fn, /* for debug dumping */
+					  group_extension,  /* for debug dumping */
                                           obj_cmd_rs)) < 0)
         break;
 
@@ -962,6 +989,7 @@ ipmi_lan_cmd_wrapper (ipmi_ctx_t ctx,
                                   password,
                                   password_len,
                                   cmd,  /* for debug dumping */
+				  group_extension,  /* for debug dumping */
                                   obj_cmd_rq) < 0)
             goto cleanup;
 
@@ -1118,6 +1146,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
   uint8_t cmd = 0;             /* used for debugging */
+  uint8_t group_extension = 0; /* used for debugging */
   uint8_t rq_seq_orig;
   uint64_t val;
 
@@ -1139,6 +1168,17 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
         API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
       else
         cmd = val;
+
+      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+	{
+	  /* ignore error, continue on */
+	  if (FIID_OBJ_GET (obj_cmd_rq,
+			    "group_extension_identification",
+			    &val) < 0)
+	    API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+	  else
+	    group_extension = val;
+	}
     }
 
   /* for debugging */
@@ -1180,6 +1220,7 @@ ipmi_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
                                           retransmission_count,
                                           cmd, /* for debug dumping */
                                           ctx->net_fn, /* for debug dumping */
+					  group_extension,  /* for debug dumping */
                                           obj_cmd_rs)) < 0)
         break;
 
@@ -1730,6 +1771,7 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
                        unsigned int pkt_len,
                        uint8_t cmd,
                        uint8_t net_fn,
+		       uint8_t group_extension,
                        fiid_obj_t obj_cmd_rq)
 {
   fiid_field_t *tmpl_cmd = NULL;
@@ -1748,64 +1790,69 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
 
   if ((tmpl_cmd = fiid_obj_template (obj_cmd_rq)))
     {
-      const char *cmd_str;
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      const char *cmd_str = NULL;
 
-      if ((cmd_str = ipmi_cmd_str (net_fn, cmd)))
-        {
-          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      /* Handle a few IPMI 2.0 special cases */
+      if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_open_session_request) == 1)
+	cmd_str = DEBUG_UTIL_OPEN_SESSION_STR;
+      else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_1) == 1)
+	cmd_str = DEBUG_UTIL_RAKP_1_STR;
+      else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_3) == 1)
+	cmd_str = DEBUG_UTIL_RAKP_3_STR;
 
-          /* Handle a few IPMI 2.0 special cases */
-          if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_open_session_request) == 1)
-            cmd_str = DEBUG_UTIL_OPEN_SESSION_STR;
-          else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_1) == 1)
-            cmd_str = DEBUG_UTIL_RAKP_1_STR;
-          else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_3) == 1)
-            cmd_str = DEBUG_UTIL_RAKP_3_STR;
+      if (cmd_str)
+	debug_hdr_str (DEBUG_UTIL_TYPE_IPMI_2_0,
+		       DEBUG_UTIL_DIRECTION_REQUEST,
+		       DEBUG_UTIL_FLAGS_DEFAULT,
+		       cmd_str,
+		       hdrbuf,
+		       DEBUG_UTIL_HDR_BUFLEN);
+      else
+	debug_hdr_cmd (DEBUG_UTIL_TYPE_IPMI_2_0,
+		       DEBUG_UTIL_DIRECTION_REQUEST,
+		       net_fn,
+		       cmd,
+		       group_extension,
+		       hdrbuf,
+		       DEBUG_UTIL_HDR_BUFLEN);
 
-          debug_hdr_str (DEBUG_UTIL_TYPE_IPMI_2_0,
-                         DEBUG_UTIL_DIRECTION_REQUEST,
-			 DEBUG_UTIL_FLAGS_DEFAULT,
-                         cmd_str,
-                         hdrbuf,
-                         DEBUG_UTIL_HDR_BUFLEN);
+      if (ctx->tmpl_ipmb_cmd_rq)
+	ipmi_dump_rmcpplus_packet_ipmb (STDERR_FILENO,
+					ctx->io.outofband.hostname,
+					hdrbuf,
+					NULL,
+					authentication_algorithm,
+					integrity_algorithm,
+					confidentiality_algorithm,
+					integrity_key,
+					integrity_key_len,
+					confidentiality_key,
+					confidentiality_key_len,
+					pkt,
+					pkt_len,
+					tmpl_lan_msg_hdr_rs,
+					tmpl_cmd,
+					tmpl_ipmb_msg_hdr_rq,
+					ctx->tmpl_ipmb_cmd_rq);
+      else
+	ipmi_dump_rmcpplus_packet (STDERR_FILENO,
+				   ctx->io.outofband.hostname,
+				   hdrbuf,
+				   NULL,
+				   authentication_algorithm,
+				   integrity_algorithm,
+				   confidentiality_algorithm,
+				   integrity_key,
+				   integrity_key_len,
+				   confidentiality_key,
+				   confidentiality_key_len,
+				   pkt,
+				   pkt_len,
+				   tmpl_lan_msg_hdr_rq,
+				   tmpl_cmd);
 
-          if (ctx->tmpl_ipmb_cmd_rq)
-            ipmi_dump_rmcpplus_packet_ipmb (STDERR_FILENO,
-                                            ctx->io.outofband.hostname,
-                                            hdrbuf,
-                                            NULL,
-                                            authentication_algorithm,
-                                            integrity_algorithm,
-                                            confidentiality_algorithm,
-                                            integrity_key,
-                                            integrity_key_len,
-                                            confidentiality_key,
-                                            confidentiality_key_len,
-                                            pkt,
-                                            pkt_len,
-                                            tmpl_lan_msg_hdr_rs,
-                                            tmpl_cmd,
-                                            tmpl_ipmb_msg_hdr_rq,
-                                            ctx->tmpl_ipmb_cmd_rq);
-          else
-            ipmi_dump_rmcpplus_packet (STDERR_FILENO,
-                                       ctx->io.outofband.hostname,
-                                       hdrbuf,
-                                       NULL,
-                                       authentication_algorithm,
-                                       integrity_algorithm,
-                                       confidentiality_algorithm,
-                                       integrity_key,
-                                       integrity_key_len,
-                                       confidentiality_key,
-                                       confidentiality_key_len,
-                                       pkt,
-                                       pkt_len,
-                                       tmpl_lan_msg_hdr_rq,
-                                       tmpl_cmd);
-
-          fiid_template_free (tmpl_cmd);
-        }
+      fiid_template_free (tmpl_cmd);
     }
 }
 
@@ -1822,6 +1869,7 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
                        unsigned int pkt_len,
                        uint8_t cmd,
                        uint8_t net_fn,
+		       uint8_t group_extension,
                        fiid_obj_t obj_cmd_rs)
 {
   fiid_field_t *tmpl_cmd = NULL;
@@ -1840,45 +1888,50 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
 
   if ((tmpl_cmd = fiid_obj_template (obj_cmd_rs)))
     {
-      const char *cmd_str;
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      const char *cmd_str = NULL;
 
-      if ((cmd_str = ipmi_cmd_str (net_fn, cmd)))
-        {
-          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      /* Handle a few IPMI 2.0 special cases */
+      if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_open_session_response) == 1)
+	cmd_str = DEBUG_UTIL_OPEN_SESSION_STR;
+      else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_2) == 1)
+	cmd_str = DEBUG_UTIL_RAKP_2_STR;
+      else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_4) == 1)
+	cmd_str = DEBUG_UTIL_RAKP_4_STR;
 
-          /* Handle a few IPMI 2.0 special cases */
-          if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_open_session_response) == 1)
-            cmd_str = DEBUG_UTIL_OPEN_SESSION_STR;
-          else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_2) == 1)
-            cmd_str = DEBUG_UTIL_RAKP_2_STR;
-          else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_4) == 1)
-            cmd_str = DEBUG_UTIL_RAKP_4_STR;
+      if (cmd_str)
+	debug_hdr_str (DEBUG_UTIL_TYPE_IPMI_2_0,
+		       DEBUG_UTIL_DIRECTION_RESPONSE,
+		       DEBUG_UTIL_FLAGS_DEFAULT,
+		       cmd_str,
+		       hdrbuf,
+		       DEBUG_UTIL_HDR_BUFLEN);
+      else
+	debug_hdr_cmd (DEBUG_UTIL_TYPE_IPMI_2_0,
+		       DEBUG_UTIL_DIRECTION_RESPONSE,
+		       net_fn,
+		       cmd,
+		       group_extension,
+		       hdrbuf,
+		       DEBUG_UTIL_HDR_BUFLEN);
 
-          debug_hdr_str (DEBUG_UTIL_TYPE_IPMI_2_0,
-                         DEBUG_UTIL_DIRECTION_RESPONSE,
-			 DEBUG_UTIL_FLAGS_DEFAULT,
-                         cmd_str,
-                         hdrbuf,
-                         DEBUG_UTIL_HDR_BUFLEN);
-
-          ipmi_dump_rmcpplus_packet (STDERR_FILENO,
-                                     ctx->io.outofband.hostname,
-                                     hdrbuf,
-                                     NULL,
-                                     authentication_algorithm,
-                                     integrity_algorithm,
-                                     confidentiality_algorithm,
-                                     integrity_key,
-                                     integrity_key_len,
-                                     confidentiality_key,
-                                     confidentiality_key_len,
-                                     pkt,
-                                     pkt_len,
-                                     tmpl_lan_msg_hdr_rs,
-                                     tmpl_cmd);
-
-          fiid_template_free (tmpl_cmd);
-        }
+      ipmi_dump_rmcpplus_packet (STDERR_FILENO,
+				 ctx->io.outofband.hostname,
+				 hdrbuf,
+				 NULL,
+				 authentication_algorithm,
+				 integrity_algorithm,
+				 confidentiality_algorithm,
+				 integrity_key,
+				 integrity_key_len,
+				 confidentiality_key,
+				 confidentiality_key_len,
+				 pkt,
+				 pkt_len,
+				 tmpl_lan_msg_hdr_rs,
+				 tmpl_cmd);
+      
+      fiid_template_free (tmpl_cmd);
     }
 }
 
@@ -1902,6 +1955,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                         const char *password,
                         unsigned int password_len,
                         uint8_t cmd, /* for debug dumping */
+			uint8_t group_extension, /* for debug dumping */
                         fiid_obj_t obj_cmd_rq)
 {
   uint8_t *pkt = NULL;
@@ -2034,6 +2088,7 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                            send_len,
                            cmd,
                            net_fn,
+			   group_extension,
                            obj_cmd_rq);
 
   do
@@ -2080,6 +2135,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                         unsigned int retransmission_count,
                         uint8_t cmd, /* for debug dumping */
                         uint8_t net_fn, /* for debug dumping */
+			uint8_t group_extension, /* for debug dumping */
                         fiid_obj_t obj_cmd_rs)
 {
   struct sockaddr_in from;
@@ -2182,6 +2238,7 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                            recv_len,
                            cmd,
                            net_fn,
+			   group_extension,
                            obj_cmd_rs);
 
   if ((ret = unassemble_ipmi_rmcpplus_pkt (authentication_algorithm,
@@ -2572,6 +2629,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
   uint8_t cmd = 0;             /* used for debugging */
+  uint8_t group_extension = 0; /* used for debugging */
   uint64_t val;
 
   assert (ctx
@@ -2613,6 +2671,17 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
         API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
       else
         cmd = val;
+
+      if (IPMI_NET_FN_GROUP_EXTENSION (net_fn))
+	{
+	  /* ignore error, continue on */
+	  if (FIID_OBJ_GET (obj_cmd_rq,
+			    "group_extension_identification",
+			    &val) < 0)
+	    API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+	  else
+	    group_extension = val;
+	}
     }
 
   if (_ipmi_lan_2_0_cmd_send (ctx,
@@ -2634,6 +2703,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                               password,
                               password_len,
                               cmd, /* for debug dumping */
+			      group_extension, /* for debug dumping */
                               obj_cmd_rq) < 0)
     goto cleanup;
 
@@ -2663,6 +2733,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                               retransmission_count,
                                               cmd, /* for debug dumping */
                                               net_fn, /* for debug dumping */
+					      group_extension, /* for debug dumping */
                                               obj_cmd_rs)) < 0)
         break;
 
@@ -2723,6 +2794,7 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
                                       password,
                                       password_len,
                                       cmd, /* for debug dumping */
+				      group_extension, /* for debug dumping */
                                       obj_cmd_rq) < 0)
             goto cleanup;
 
@@ -2784,6 +2856,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   unsigned int retransmission_count = 0;
   uint8_t pkt[IPMI_MAX_PKT_LEN];
   uint8_t cmd = 0;             /* used for debugging */
+  uint8_t group_extension = 0; /* used for debugging */
   uint8_t rq_seq_orig;
   uint64_t val;
 
@@ -2804,6 +2877,17 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
         API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
       else
         cmd = val;
+
+      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+	{
+	  /* ignore error, continue on */
+	  if (FIID_OBJ_GET (obj_cmd_rq,
+			    "group_extension_identification",
+			    &val) < 0)
+	    API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+	  else
+	    group_extension = val;
+	}
     }
 
   /* for debugging */
@@ -2852,6 +2936,7 @@ ipmi_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
                                               retransmission_count,
                                               cmd, /* for debug dumping */
                                               ctx->net_fn, /* for debug dumping */
+					      group_extension, /* for debug dumping */
                                               obj_cmd_rs)) < 0)
         {
           rv = -1;

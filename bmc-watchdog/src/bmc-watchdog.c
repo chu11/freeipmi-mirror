@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.126 2009-05-22 01:31:12 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.127 2009-08-06 23:46:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2004-2007 The Regents of the University of California.
@@ -652,6 +652,7 @@ _cmd (char *str,
                      DEBUG_UTIL_DIRECTION_REQUEST,
                      netfn,
                      cmd,
+		     0,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
 
@@ -801,6 +802,7 @@ _cmd (char *str,
                      DEBUG_UTIL_DIRECTION_REQUEST,
                      netfn,
                      cmd,
+		     0,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
 

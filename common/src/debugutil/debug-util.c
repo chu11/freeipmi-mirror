@@ -79,6 +79,8 @@ debug_hdr_str (uint8_t packet_type,
     str_prefix = "Group Extension - ";
   else if (packet_flags & DEBUG_UTIL_FLAGS_OEM_GROUP)
     str_prefix = "OEM Group - ";
+  else if (packet_flags & DEBUG_UTIL_FLAGS_OEM)
+    str_prefix = "OEM - ";
   else
     str_prefix = "";
   
@@ -119,24 +121,31 @@ debug_hdr_cmd (uint8_t packet_type,
                uint8_t packet_direction,
                uint8_t net_fn,
                uint8_t cmd,
+	       uint8_t group_extension,
                char *hdrbuf,
                unsigned int hdrbuf_len)
 {
   const char *str_cmd;
   unsigned int packet_flags = 0;
 
-  if (net_fn == IPMI_NET_FN_GROUP_EXTENSION_RQ
-      || net_fn == IPMI_NET_FN_GROUP_EXTENSION_RS)
+  if (IPMI_NET_FN_GROUP_EXTENSION (net_fn))
     {
-      str_cmd = ipmi_dcmi_cmd_str (cmd);
+      if (group_extension == IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI)
+	str_cmd = ipmi_dcmi_cmd_str (cmd);
+      else
+	str_cmd = "Unknown";
       packet_flags = DEBUG_UTIL_FLAGS_GROUP_EXTENSION;
     }
-  else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
-      || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
+  else if (IPMI_NET_FN_OEM_GROUP (net_fn))
     {
-      str_cmd = ipmi_dcmi_cmd_str (cmd);
+      str_cmd = "Unknown";
       packet_flags = DEBUG_UTIL_FLAGS_OEM_GROUP;
     }
+  else if (IPMI_NET_FN_CONTROLLER_SPECIFIC_OEM_GROUP (net_fn))
+    {
+      str_cmd = "Unknown";
+      packet_flags = DEBUG_UTIL_FLAGS_OEM;
+    } 
   else
     str_cmd = ipmi_cmd_str (net_fn, cmd);
 

@@ -1366,6 +1366,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
         {
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint8_t cmd = 0;
+	  uint8_t group_extension = 0;
           uint64_t val;
 
           /* ignore error, continue on */
@@ -1376,10 +1377,22 @@ ipmi_cmd (ipmi_ctx_t ctx,
           else
             cmd = val;
 
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+	    {
+	      /* ignore error, continue on */
+	      if (FIID_OBJ_GET (obj_cmd_rq,
+				"group_extension_identification",
+				&val) < 0)
+		API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+	      else
+		group_extension = val;
+	    }
+
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_REQUEST,
                          ctx->net_fn,
                          cmd,
+			 group_extension,
                          hdrbuf,
                          DEBUG_UTIL_HDR_BUFLEN);
 
@@ -1428,6 +1441,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
         {
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint8_t cmd = 0;
+	  uint8_t group_extension = 0;
           uint64_t val;
 
           /* ignore error, continue on */
@@ -1438,11 +1452,23 @@ ipmi_cmd (ipmi_ctx_t ctx,
           else
             cmd = val;
 
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+	    {
+	      /* ignore error, continue on */
+	      if (FIID_OBJ_GET (obj_cmd_rq,
+				"group_extension_identification",
+				&val) < 0)
+		API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+	      else
+		group_extension = val;
+	    }
+
           /* its ok to use the "request" net_fn */
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_RESPONSE,
                          ctx->net_fn,
                          cmd,
+			 group_extension,
                          hdrbuf,
                          DEBUG_UTIL_HDR_BUFLEN);
 
@@ -1603,13 +1629,20 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
         {
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint8_t cmd = 0;
+	  uint8_t group_extension = 0;
 
           cmd = ((uint8_t *)buf_rq)[0];
-          
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+	    {
+	      if (buf_rq_len > 1)
+		group_extension = ((uint8_t *)buf_rq)[1];
+	    }
+    
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_REQUEST,
                          ctx->net_fn,
                          cmd,
+			 group_extension,
                          hdrbuf,
                          DEBUG_UTIL_HDR_BUFLEN);
 
@@ -1647,14 +1680,21 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
         {
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint8_t cmd = 0;
+	  uint8_t group_extension = 0;
 
           cmd = ((uint8_t *)buf_rq)[0];
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+	    {
+	      if (buf_rq_len > 1)
+		group_extension = ((uint8_t *)buf_rq)[1];
+	    }
 
           /* its ok to use the "request" net_fn */
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_RESPONSE,
                          ctx->net_fn,
                          cmd,
+			 group_extension,
                          hdrbuf,
                          DEBUG_UTIL_HDR_BUFLEN);
 

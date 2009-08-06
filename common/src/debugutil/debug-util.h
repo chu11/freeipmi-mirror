@@ -43,6 +43,7 @@
 #define DEBUG_UTIL_FLAGS_DEFAULT         0x0000
 #define DEBUG_UTIL_FLAGS_GROUP_EXTENSION 0x0001
 #define DEBUG_UTIL_FLAGS_OEM_GROUP       0x0002
+#define DEBUG_UTIL_FLAGS_OEM             0x0004
 
 int debug_hdr_str (uint8_t packet_type,
                    uint8_t packet_direction,
@@ -55,6 +56,7 @@ int debug_hdr_cmd (uint8_t packet_type,
                    uint8_t packet_direction,
                    uint8_t net_fn,
                    uint8_t cmd,
+		   uint8_t group_extension,
                    char *hdrbuf,
                    unsigned int hdrbuf_len);
 

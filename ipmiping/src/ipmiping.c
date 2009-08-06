@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.71 2009-06-10 22:56:40 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.72 2009-08-06 23:46:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -137,6 +137,7 @@ createpacket (const char *destination,
                      DEBUG_UTIL_DIRECTION_REQUEST,
                      IPMI_NET_FN_APP_RQ,
                      IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES,
+		     0,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
 
@@ -214,6 +215,7 @@ parsepacket (const char *destination,
                      DEBUG_UTIL_DIRECTION_RESPONSE,
                      IPMI_NET_FN_APP_RQ,
                      IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES,
+		     0,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
 

@@ -1,6 +1,9 @@
 2009-08-06  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Dell reset-to-defaults command.
+
+	* common/src/debugutil/, libfreeipmi/: Properly handle group
+	extensions in debug output.  Support better OEM debug output.
 	
 2009-08-06  Albert Chu <chu11@llnl.gov>
 
