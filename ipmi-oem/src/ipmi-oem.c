@@ -79,6 +79,12 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_set_nic_selection
     },
     {
+      "reset-to-defaults",
+      NULL,
+      0,
+      ipmi_oem_dell_reset_to_defaults
+    },
+    {
       "get-power-info",
       NULL,
       0,

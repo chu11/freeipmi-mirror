@@ -35,6 +35,9 @@
 #include <time.h>
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
@@ -1032,6 +1035,103 @@ ipmi_oem_dell_set_nic_selection (ipmi_oem_state_data_t *state_data)
                                                    0x30) < 0)
     goto cleanup;
 
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell Poweredge OEM
+   *
+   * From Dell Provided Source Code
+   *
+   * Request
+   *
+   * 0x30 - OEM network function
+   * 0x21 - OEM cmd
+   * 0x00 | 0xaa - 0x00 = get status
+   *             - 0xaa = initiate reset to defaults
+   * 
+   * Response
+   *
+   * 0x21 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x00 | 0x01 - 0x00 = reset to defaults in progress
+   *             - 0x01 = reset to defaults complete 
+   */
+
+  bytes_rq[0] = 0x21;
+  bytes_rq[1] = 0xaa;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x30, /* network function */
+                              bytes_rq, /* data */
+                              2, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   3,
+                                                   0x21,
+                                                   0x30) < 0)
+    goto cleanup;
+
+
+  /* don't quit until it is done */
+  while (1)
+    {
+      bytes_rq[0] = 0x21;
+      bytes_rq[1] = 0x00;
+      
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+				  0, /* lun */
+				  0x30, /* network function */
+				  bytes_rq, /* data */
+				  2, /* num bytes */
+				  bytes_rs,
+				  IPMI_OEM_MAX_BYTES)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_raw: %s\n",
+			   ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+	  goto cleanup;
+	}
+      
+      if (ipmi_oem_check_response_and_completion_code (state_data,
+						       bytes_rs,
+						       rs_len,
+						       3,
+						       0x21,
+						       0x30) < 0)
+	goto cleanup;
+
+      if (bytes_rs[2] == 0x01)
+	break;
+
+      sleep (1);
+    }
+  
   rv = 0;
  cleanup:
   return (rv);

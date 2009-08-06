@@ -1,3 +1,7 @@
+2009-08-06  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Support Dell reset-to-defaults command.
+	
 2009-08-04  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Fix bmc-config corner case, assume LAN channel is
