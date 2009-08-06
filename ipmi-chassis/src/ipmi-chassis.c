@@ -1541,6 +1541,7 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
                                                    lock_out_via_power_button,
                                                    bios_mux_control_override,
                                                    bios_shared_mode_override,
+                                                   0, /* no device instance, legacy input */
                                                    obj_cmd_rs) < 0)
     {
       pstdout_fprintf (state_data->pstate,
