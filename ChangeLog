@@ -1,5 +1,9 @@
 2009-08-06  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Support Dell reset-to-defaults command.
+	
+2009-08-06  Albert Chu <chu11@llnl.gov>
+
 	* bmc-config/src/bmc-config-lan-conf-user-security.h,
 	bmc-config/src/bmc-config-lan-conf-user-security.c: New files.
 
