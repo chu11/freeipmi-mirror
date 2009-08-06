@@ -92,6 +92,7 @@ ipmi-chassis-config
 -------------------
 * conf.5 manpage
 (NEVER TESTED) panel button config - need hardware w/ this
+(NEVER TESTED) device instance selector
 
 general
 -------
