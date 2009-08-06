@@ -166,8 +166,8 @@ what OEM vendors can add
 
 DCMI functionality
 ------------------
-- test capability info > revision 1
-- test everything else
+(NEVER TESTED) capability info > revision 1
+(NEVER TESTED) everything else
 
 ipmi proxy daemon
 -----------------
