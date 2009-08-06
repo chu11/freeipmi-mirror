@@ -437,10 +437,9 @@ ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
   if (!IPMI_CIPHER_SUITE_COMBINATION_VALID (authentication_algorithm,
                                             integrity_algorithm,
                                             confidentiality_algorithm)
-      || !IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-      || !IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
-      || (confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-          && confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+      || !IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+      || !IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
+      || !IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
       || !sik_key
       || !(*sik_key)
       || !sik_key_len

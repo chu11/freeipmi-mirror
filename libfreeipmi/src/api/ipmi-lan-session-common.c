@@ -1737,9 +1737,9 @@ _ipmi_lan_2_0_dump_rq (ipmi_ctx_t ctx,
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
           && (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
-          && IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-          && IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
-          && IPMI_CONFIDENTIALITY_ALGORITHM_VALID (confidentiality_algorithm)
+          && IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+          && IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
+          && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
           && pkt
           && pkt_len
           && fiid_obj_valid (obj_cmd_rq));
@@ -1829,9 +1829,9 @@ _ipmi_lan_2_0_dump_rs (ipmi_ctx_t ctx,
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
           && (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
-          && IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-          && IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
-          && IPMI_CONFIDENTIALITY_ALGORITHM_VALID (confidentiality_algorithm)
+          && IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+          && IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
+          && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
           && pkt
           && pkt_len
           && fiid_obj_valid (obj_cmd_rs));
@@ -1921,9 +1921,9 @@ _ipmi_lan_2_0_cmd_send (ipmi_ctx_t ctx,
               || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
           && IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID (payload_authenticated)
           && IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID (payload_encrypted)
-          && IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-          && IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
-          && IPMI_CONFIDENTIALITY_ALGORITHM_VALID (confidentiality_algorithm)
+          && IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+          && IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
+          && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
           && !(password && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1);
@@ -2093,9 +2093,9 @@ _ipmi_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
           && ctx->io.outofband.sockfd
-          && IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-          && IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
-          && IPMI_CONFIDENTIALITY_ALGORITHM_VALID (confidentiality_algorithm)
+          && IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+          && IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
+          && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
           && pkt
           && pkt_len
           && fiid_obj_valid (obj_cmd_rs));
@@ -2247,7 +2247,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
               || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
               || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
               || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
-          && IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
+          && IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
           && !(password && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
           && fiid_obj_valid (obj_cmd_rs)
           && pkt
@@ -2586,9 +2586,9 @@ ipmi_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
               || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
           && IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID (payload_authenticated)
           && IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID (payload_encrypted)
-          && IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-          && IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
-          && IPMI_CONFIDENTIALITY_ALGORITHM_VALID (confidentiality_algorithm)
+          && IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+          && IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
+          && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
           && !(password && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1

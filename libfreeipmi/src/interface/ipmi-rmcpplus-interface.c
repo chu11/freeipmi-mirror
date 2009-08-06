@@ -930,9 +930,8 @@ _construct_payload (uint8_t payload_type,
            || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
-          && IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-          && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-              || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+          && IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+	  && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
           && !(payload_type == IPMI_PAYLOAD_TYPE_IPMI
                && !fiid_obj_valid (obj_lan_msg_hdr))
           && fiid_obj_valid (obj_cmd)
@@ -976,7 +975,7 @@ _construct_session_trlr_pad (uint8_t integrity_algorithm,
                                                      IPMI_INTEGRITY_PAD_DATA,
                                                      IPMI_INTEGRITY_PAD_DATA};
 
-  assert (IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
+  assert (IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
           && fiid_obj_valid (obj_rmcpplus_session_trlr)
           && fiid_obj_template_compare (obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr) == 1);
 
@@ -1243,13 +1242,12 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    *
    * If integrity_algorithm != NONE, technically the key can be NULL
    */
-  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-      || !IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
+  if (!IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+      || !IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
       || (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
           && authentication_code_data
           && authentication_code_data_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
-      || (confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-          && confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+      || !IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
       || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
           && !(confidentiality_key
                && confidentiality_key_len))
@@ -2084,9 +2082,8 @@ _deconstruct_payload (uint8_t payload_type,
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
           && IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID (payload_encrypted)
-          && IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-          && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-              || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+          && IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+	  && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
           && fiid_obj_valid (obj_rmcpplus_payload)
           && fiid_obj_template_compare (obj_rmcpplus_payload, tmpl_rmcpplus_payload) == 1
           && fiid_obj_valid (obj_cmd)
@@ -2157,10 +2154,9 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    *
    * If integrity_algorithm != NONE, technically the key can be NULL
    */
-  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-      || !IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
-      || (confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-          && confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+  if (!IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+      || !IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
+      || !IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
       || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
           && !(confidentiality_key
                && confidentiality_key_len))

@@ -924,9 +924,8 @@ _dump_rmcpplus_payload (int fd,
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-          && IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-          && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-              || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+          && IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+          && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
           && !(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
                && !(confidentiality_key
                     && confidentiality_key_len))
@@ -1015,7 +1014,7 @@ _dump_rmcpplus_session_trlr (int fd,
   fiid_obj_t obj_rmcpplus_session_trlr = NULL;
   unsigned int indx = 0;
 
-  assert (IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm));
+  assert (IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm));
 
   if (!session_id || payload_authenticated == IPMI_PAYLOAD_FLAG_UNAUTHENTICATED)
     return (1);
@@ -1203,10 +1202,9 @@ _ipmi_dump_rmcpplus_packet (int fd,
   unsigned int indx = 0;
 
   assert (pkt);
-  assert (IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm));
-  assert (IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm));
-  assert (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-          || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128);
+  assert (IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm));
+  assert (IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm));
+  assert (IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm));
   assert (!(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
             && !(confidentiality_key
                  && confidentiality_key_len)));
@@ -1295,10 +1293,9 @@ _ipmi_dump_rmcpplus_packet (int fd,
        && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
        && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
        && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-      || !IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-      || !IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
-      || !(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-           || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+      || !IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+      || !IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
+      || !IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
       || !ipmi_payload_len)
     goto dump_extra;
 
@@ -1497,10 +1494,9 @@ ipmi_dump_rmcpplus_packet (int fd,
                            fiid_template_t tmpl_cmd)
 {
   if (!pkt
-      || !IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-      || !IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
-      || (confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-          && confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+      || !IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+      || !IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
+      || !IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
       || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
           && (!confidentiality_key
               || !confidentiality_key_len))
@@ -1551,10 +1547,9 @@ ipmi_dump_rmcpplus_packet_ipmb (int fd,
   int ret1, ret2;
 
   if (!pkt
-      || !IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-      || !IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
-      || (confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-          && confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+      || !IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+      || !IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
+      || !IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
       || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
           && (!confidentiality_key
               || !confidentiality_key_len))

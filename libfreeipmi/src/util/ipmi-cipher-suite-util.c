@@ -100,9 +100,9 @@ ipmi_algorithms_to_cipher_suite_id (uint8_t authentication_algorithm,
                                     uint8_t confidentiality_algorithm,
                                     uint8_t *cipher_suite_id)
 {
-  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID (authentication_algorithm)
-      || !IPMI_INTEGRITY_ALGORITHM_VALID (integrity_algorithm)
-      || !IPMI_CONFIDENTIALITY_ALGORITHM_VALID (confidentiality_algorithm)
+  if (!IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
+      || !IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
+      || !IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
       || !IPMI_CIPHER_SUITE_COMBINATION_VALID (authentication_algorithm,
                                                integrity_algorithm,
                                                confidentiality_algorithm)

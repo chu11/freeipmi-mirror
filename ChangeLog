@@ -21,6 +21,8 @@
 	* libfreeipmi/include/freeipmi/cmds/, libfreeipmi/src/cmds/,
 	ipmi-chassis-config/: Support new boot flag options.
 
+	* libfreeipmi/: Supporte HMAC-SHA256 macros.
+
 2009-08-04  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Fix bmc-config corner case, assume LAN channel is

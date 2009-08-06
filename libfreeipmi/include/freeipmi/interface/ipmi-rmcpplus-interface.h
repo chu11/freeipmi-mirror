@@ -84,10 +84,17 @@ extern "C" {
 #define IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE           0x00
 #define IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1      0x01
 #define IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5       0x02
+#define IPMI_AUTHENTICATION_ALGOIRTHM_RAKP_HMAC_SHA256    0x03
 /* C0h - FFh - OEM */
 /* all other reserved */
 
 #define IPMI_AUTHENTICATION_ALGORITHM_VALID(__algorithm)             \
+  (((__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE         \
+    || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1 \
+    || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5  \
+    || (__algorithm) == IPMI_AUTHENTICATION_ALGOIRTHM_RAKP_HMAC_SHA256) ? 1 : 0)
+
+#define IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED(__algorithm)         \
   (((__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE         \
     || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1 \
     || (__algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5) ? 1 : 0)
@@ -100,9 +107,17 @@ extern "C" {
 #define IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96             0x01
 #define IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128             0x02
 #define IPMI_INTEGRITY_ALGORITHM_MD5_128                  0x03
+#define IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128          0x04
 /* C0h - FFh - OEM */
 /* all other reserved */
 #define IPMI_INTEGRITY_ALGORITHM_VALID(__algorithm)           \
+  (((__algorithm) == IPMI_INTEGRITY_ALGORITHM_NONE            \
+    || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96 \
+    || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128 \
+    || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_MD5_128      \
+    || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128) ? 1 : 0)
+
+#define IPMI_INTEGRITY_ALGORITHM_SUPPORTED(__algorithm)       \
   (((__algorithm) == IPMI_INTEGRITY_ALGORITHM_NONE            \
     || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96 \
     || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128 \
@@ -124,6 +139,10 @@ extern "C" {
     || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 \
     || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128    \
     || (__algorithm) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40) ? 1 : 0)
+
+#define IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED(__algorithm)       \
+  (((__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_NONE           \
+    || (__algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128) ? 1 : 0)
 
 /***************************************
 * IPMI 2.0 Misc Flags and Definitions *
