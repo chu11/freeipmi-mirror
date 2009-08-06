@@ -4,6 +4,9 @@
 	bmc-config/src/bmc-config-lan-conf-user-security.c: New files.
 
 	* bmc-config/src/: Support Bad Password Threshold configuration.
+
+	* libfreeipmi/: Support 'change bits' flag in set user access
+	command.
 	
 2009-08-05  Albert Chu <chu11@llnl.gov>
 

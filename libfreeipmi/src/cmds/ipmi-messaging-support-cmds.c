@@ -2060,6 +2060,7 @@ fill_cmd_set_user_access (uint8_t channel_number,
                           uint8_t user_ipmi_messaging,
                           uint8_t user_link_authentication,
                           uint8_t user_restricted_to_callback,
+                          uint8_t change_bits_in_byte,
                           uint8_t user_id,
                           uint8_t user_privilege_level_limit,
                           uint8_t user_session_limit,
@@ -2069,6 +2070,7 @@ fill_cmd_set_user_access (uint8_t channel_number,
       || !IPMI_USER_IPMI_MESSAGING_VALID (user_ipmi_messaging)
       || !IPMI_USER_LINK_AUTHENTICATION_VALID (user_link_authentication)
       || !IPMI_USER_RESTRICTED_TO_CALLBACK_VALID (user_restricted_to_callback)
+      || !IPMI_CHANGE_BITS_VALID (change_bits_in_byte)
       || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID (user_privilege_level_limit)
       || !fiid_obj_valid (obj_cmd_rq))
     {
@@ -2088,7 +2090,7 @@ fill_cmd_set_user_access (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "user_ipmi_messaging", user_ipmi_messaging);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "user_link_authentication", user_link_authentication);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "user_restricted_to_callback", user_restricted_to_callback);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "change_bits_in_byte", 1);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "change_bits_in_byte", change_bits_in_byte);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "user_privilege_level_limit", user_privilege_level_limit);

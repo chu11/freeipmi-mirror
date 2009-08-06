@@ -231,6 +231,13 @@ extern "C" {
   (((__val) == IPMI_USER_IPMI_MESSAGING_ENABLE \
     || (__val) == IPMI_USER_IPMI_MESSAGING_DISABLE) ? 1 : 0)
 
+#define IPMI_CHANGE_BITS_YES   0x1
+#define IPMI_CHANGE_BITS_NO    0x0
+
+#define IPMI_CHANGE_BITS_VALID(__val)  \
+  (((__val) == IPMI_CHANGE_BITS_YES \
+    || (__val) == IPMI_CHANGE_BITS_NO) ? 1 : 0)
+
 #define IPMI_SESSION_SUPPORT_SESSION_LESS   0x00
 #define IPMI_SESSION_SUPPORT_SINGLE_SESSION 0x01
 #define IPMI_SESSION_SUPPORT_MULTI_SESSION  0x02
@@ -556,6 +563,7 @@ int fill_cmd_set_user_access (uint8_t channel_number,
                               uint8_t user_ipmi_messaging,
                               uint8_t user_link_authentication,
                               uint8_t user_restricted_to_callback,
+                              uint8_t change_bits_in_byte,
                               uint8_t user_id,
                               uint8_t user_privilege_level_limit,
                               uint8_t user_session_limit,

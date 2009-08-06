@@ -2707,6 +2707,7 @@ ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
                           uint8_t user_ipmi_messaging,
                           uint8_t user_link_authentication,
                           uint8_t user_restricted_to_callback,
+                          uint8_t change_bits_in_byte,
                           uint8_t user_id,
                           uint8_t user_privilege_level_limit,
                           uint8_t user_session_number_limit,
@@ -2725,6 +2726,7 @@ ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
       || !IPMI_USER_IPMI_MESSAGING_VALID (user_ipmi_messaging)
       || !IPMI_USER_LINK_AUTHENTICATION_VALID (user_link_authentication)
       || !IPMI_USER_RESTRICTED_TO_CALLBACK_VALID (user_restricted_to_callback)
+      || !IPMI_CHANGE_BITS_VALID (change_bits_in_byte)
       || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID (user_privilege_level_limit)
       || !fiid_obj_valid (obj_cmd_rs))
     {
@@ -2749,6 +2751,7 @@ ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
                                 user_ipmi_messaging,
                                 user_link_authentication,
                                 user_restricted_to_callback,
+                                change_bits_in_byte,
                                 user_id,
                                 user_privilege_level_limit,
                                 user_session_number_limit,

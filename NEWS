@@ -348,6 +348,8 @@ o libfreeipmi
     387).  Results in API change for all close session packet calls.
   - Support 'device instance locator' in chassis boot configuration.
     Results in API change.
+  - Support 'change_bits' flag in Set User Access.  Results in API
+    change.
 o libipmimonitoring
   - Support callback functions in API to monitor sensors as they
     are read/analyzed instead of after all sensors have been
