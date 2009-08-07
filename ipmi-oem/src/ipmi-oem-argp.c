@@ -73,6 +73,8 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     { "list", LIST_KEY, 0, 0,
       "List supported OEM IDs and Commands.", 30},
+    { "verbose", VERBOSE_KEY, 0, 0,
+      "Increase verbosity in output.  May be specified multiple times.", 31},
     { 0 }
   };
 
@@ -98,6 +100,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     {
     case LIST_KEY:
       cmd_args->list = 1;
+      break;
+    case VERBOSE_KEY:
+      cmd_args->verbose_count++;
       break;
     case ARGP_KEY_ARG:
       {
@@ -151,6 +156,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 static void
 _ipmi_oem_config_file_parse (struct ipmi_oem_arguments *cmd_args)
 {
+  struct config_file_data_ipmi_oem config_file_data;
+
+  memset (&config_file_data,
+          '\0',
+          sizeof (struct config_file_data_ipmi_oem));
+
   if (config_file_parse (cmd_args->common.config_file,
                          0,
                          &(cmd_args->common),
@@ -158,11 +169,14 @@ _ipmi_oem_config_file_parse (struct ipmi_oem_arguments *cmd_args)
                          &(cmd_args->hostrange),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_OEM,
-                         NULL) < 0)
+                         &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
       exit (1);
     }
+
+  if (config_file_data.verbose_count_count)
+    cmd_args->verbose_count = config_file_data.verbose_count;
 }
 
 void
@@ -173,6 +187,7 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->list = 0;
+  cmd_args->verbose_count = 0;
   cmd_args->oem_id = NULL;
   cmd_args->oem_command = NULL;
   errno = 0;

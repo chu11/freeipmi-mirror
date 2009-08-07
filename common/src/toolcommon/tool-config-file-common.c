@@ -1167,6 +1167,9 @@ config_file_parse (const char *filename,
   struct config_file_data_ipmi_fru ipmi_fru_data;
   struct config_file_data_ipmi_fru *ipmi_fru_data_ptr;
 
+  struct config_file_data_ipmi_oem ipmi_oem_data;
+  struct config_file_data_ipmi_oem *ipmi_oem_data_ptr;
+
   struct config_file_data_ipmi_pef_config ipmi_pef_config_data;
   struct config_file_data_ipmi_pef_config *ipmi_pef_config_data_ptr;
 
@@ -2271,6 +2274,17 @@ config_file_parse (const char *filename,
         &ipmi_oem_workaround_flags_count,
         &cmd_args_config,
         0
+      },
+      {
+        "ipmi-oem-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        config_file_non_negative_int,
+        1,
+        0,
+        &(ipmi_oem_data.verbose_count_count),
+        &(ipmi_oem_data.verbose_count),
+        0,
       },
     };
 
@@ -3813,7 +3827,7 @@ config_file_parse (const char *filename,
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_DCMI) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_FRU) && tool_data)
-              || ((tool_support & CONFIG_FILE_TOOL_IPMI_OEM) && !tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_IPMI_OEM) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_PEF_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_RAW) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SEL) && tool_data)
@@ -4084,6 +4098,7 @@ config_file_parse (const char *filename,
   memset (&bmc_watchdog_data, '\0', sizeof (struct config_file_data_bmc_watchdog));
   memset (&ipmi_chassis_config_data, '\0', sizeof (struct config_file_data_ipmi_chassis_config));
   memset (&ipmi_fru_data, '\0', sizeof (struct config_file_data_ipmi_fru));
+  memset (&ipmi_oem_data, '\0', sizeof (struct config_file_data_ipmi_oem));
   memset (&ipmi_pef_config_data, '\0', sizeof (struct config_file_data_ipmi_pef_config));
   memset (&ipmi_sel_data, '\0', sizeof (struct config_file_data_ipmi_sel));
   memset (&ipmi_sensors_data, '\0', sizeof (struct config_file_data_ipmi_sensors));
@@ -4203,6 +4218,13 @@ config_file_parse (const char *filename,
       memcpy (ipmi_fru_data_ptr,
               &ipmi_fru_data,
               sizeof (struct config_file_data_ipmi_fru));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_OEM)
+    {
+      ipmi_oem_data_ptr = (struct config_file_data_ipmi_oem *)tool_data;
+      memcpy (ipmi_oem_data_ptr,
+              &ipmi_oem_data,
+              sizeof (struct config_file_data_ipmi_oem));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMI_PEF_CONFIG)
     {

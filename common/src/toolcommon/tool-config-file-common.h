@@ -92,6 +92,12 @@ struct config_file_data_ipmi_fru
   int interpret_oem_data_count;
 };
 
+struct config_file_data_ipmi_oem
+{
+  int verbose_count;
+  int verbose_count_count;
+};
+
 struct config_file_data_ipmi_pef_config
 {
   int verbose_count;

@@ -27,6 +27,7 @@
 enum ipmi_sensors_argp_option_keys
   {
     LIST_KEY = 'L',
+    VERBOSE_KEY = 'v',
   };
 
 struct ipmi_oem_arguments
@@ -35,6 +36,7 @@ struct ipmi_oem_arguments
   struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
   int list;
+  int verbose_count;
   char *oem_id;
   char *oem_command;
   char **oem_options;
