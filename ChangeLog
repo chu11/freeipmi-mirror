@@ -1,7 +1,16 @@
+2009-08-07  Albert Chu <chu11@llnl.gov>
+
+        * ipmi-oem/: Support verbose option.
+
 2009-08-06  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Dell reset-to-defaults command.
-	
+
+2009-08-05  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-utils.c:
+	Fix output typo.
+
 2009-08-04  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Fix bmc-config corner case, assume LAN channel is

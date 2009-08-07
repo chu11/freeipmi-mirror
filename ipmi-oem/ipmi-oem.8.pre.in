@@ -54,6 +54,10 @@ The following options are specific to
 .TP
 \fB\-L\fR, \fB\-\-list\fR
 List supported OEM IDs and Commands.
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Output verbose information.  Additional output will depend on specific
+OEM ID and OEM COMMANDS specified.
 .SH "SUPPORTED OEM IDS and COMMANDS"
 The currently supported OEM IDs and COMMANDs are:
 .TP
