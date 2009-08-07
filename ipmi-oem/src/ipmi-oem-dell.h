@@ -29,9 +29,15 @@ int ipmi_oem_dell_set_nic_selection (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_ssh_config (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_dell_get_telnet_config (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_dell_get_web_server_config (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data);
 

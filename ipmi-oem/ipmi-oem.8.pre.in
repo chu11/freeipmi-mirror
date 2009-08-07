@@ -93,12 +93,24 @@ as just \fIfailover\fR.  Command confirmed to work on Dell Poweredge
 This OEM command will get the current SSH configuration on the IPMI
 card.  Command confirmed to work on Dell Poweredge R610.
 .TP
+.B set-ssh-config \fIenable|disable\fR \fImaxconnections\fR \fIactiveconnections\fR \fIidletimeout\fR \fIportnumber\fR
+This OEM command will set the current SSH configuration on the IPMI
+card.  Command confirmed to work on Dell Poweredge R610.
+.TP
 .B get-telnet-config
 This OEM command will get the current telnet configuration on the IPMI
 card.  Command confirmed to work on Dell Poweredge R610.
 .TP
+.B set-telnet-config \fIenable|disable\fR \fImaxsessions\fR \fIactivesessions\fR \fIsessiontimeout\fR\ \fIportnumber\fR \fI7flsenable|7flsdisable\fR
+This OEM command will set the current Telnet configuration on the IPMI
+card.  Command confirmed to work on Dell Poweredge R610.
+.TP
 .B get-web-server-config
 This OEM command will get the current web server configuration on the
+IPMI card.  Command confirmed to work on Dell Poweredge R610.
+.TP
+.B set-web-server-config \fIenable|disable\fR \fImaxsessions\fR \fIactivesessions\fR \fIsessiontimeout\fR \fIhttpportnumber\fR \fIhttpsportnumber\fR
+This OEM command will get the current Web Server configuration on the
 IPMI card.  Command confirmed to work on Dell Poweredge R610.
 .TP
 .B reset-to-defaults

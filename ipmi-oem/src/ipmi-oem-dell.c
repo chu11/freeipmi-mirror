@@ -1140,7 +1140,7 @@ _dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
 
   /* Dell Poweredge OEM
    *
-   * Request
+   * Get Extended Configuration Request
    *
    * 0x2E - OEM network function
    * 0x02 - OEM cmd
@@ -1154,7 +1154,7 @@ _dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
    * 0x?? - data offset - MSB
    * 0x?? - byts to read (1 based, 0xFF = all)
    *
-   * Response
+   * Get Extended Configuration Response
    *
    * 0x02 - OEM cmd
    * 0x?? - Completion Code
@@ -1248,6 +1248,117 @@ _dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
   return (rv);
 }
 
+static int
+_dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
+                                  uint8_t token_id,
+                                  uint8_t *token_data,
+                                  unsigned int token_data_len,
+                                  unsigned int valid_field_mask)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint16_t token_len; 
+  uint8_t reservation_id = 0;
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (token_data);
+  assert (token_data_len);
+  assert (valid_field_mask);
+
+  /* Dell Poweredge OEM
+   *
+   * Set Extended Configuration Request
+   *
+   * 0x2E - OEM network function
+   * 0x03 - OEM cmd
+   * 0x?? - Dell IANA (LSB first)
+   * 0x?? - Dell IANA
+   * 0x?? - Dell IANA
+   * 0x?? - reservation id
+   * 0x?? - token ID
+   * 0x?? - index (used by index objects only)
+   * 0x?? - data offset - LSB
+   * 0x?? - data offset - MSB
+   * 0x?? - [7:4] - reserved
+   *      - [3:0] - in progress
+   *              - 0 in progress
+   *              - 1 last token data being transfered in this request
+   * 0x??+ - token data
+   *
+   * Response
+   *
+   * 0x03 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - Dell IANA (LSB first)
+   * 0x?? - Dell IANA
+   * 0x?? - Dell IANA
+   * 0x?? - bytes written
+   */
+
+  if (_dell_reserve_extended_configuration (state_data,
+                                            &reservation_id) < 0)
+    goto cleanup;
+
+  bytes_rq[0] = 0x03;
+  bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x0000FF);
+  bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x00FF00) >> 8;
+  bytes_rq[3] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0xFF0000) >> 16;
+  bytes_rq[4] = reservation_id;
+  bytes_rq[5] = token_id;
+  bytes_rq[6] = 0x00;
+  bytes_rq[7] = 0x00;
+  bytes_rq[8] = 0x00;
+  bytes_rq[9] = 0x01;
+
+  /* common header */
+  token_len = IPMI_OEM_DELL_TOKEN_DATA_COMMON_HEADER_LEN + token_data_len;
+  bytes_rq[10] = (token_len & 0x00FF);
+  bytes_rq[11] = (token_len & 0xFF00) >> 8;
+  bytes_rq[12] = IPMI_OEM_DELL_TOKEN_VERSION;
+  bytes_rq[13] = (valid_field_mask & 0x00FF); 
+  bytes_rq[14] = (valid_field_mask & 0xFF00) >> 8; 
+
+  memcpy (&bytes_rq[15], token_data, token_data_len);
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x2E, /* network function */
+                              bytes_rq, /* data */
+                              15 + token_data_len, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   6,
+                                                   0x03,
+                                                   0x2E) < 0)
+    goto cleanup;
+
+  if (bytes_rs[5] != token_len)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "invalid data length written: expected = %u, returned %u\n",
+                       token_len, bytes_rs[5]);
+      goto cleanup;
+    }
+ 
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
 int
 ipmi_oem_dell_get_ssh_config (ipmi_oem_state_data_t *state_data)
 {
@@ -1272,6 +1383,9 @@ ipmi_oem_dell_get_ssh_config (ipmi_oem_state_data_t *state_data)
    * byte 3 - token version (0x01)
    * byte 4 - valid field mask (LSB)
    * byte 5 - valid field mask (MSB)
+   *
+   * SSH data
+   *
    * byte 6 - SSHEnable
    * byte 7 - MaxConnections
    * byte 8 - ActiveConnections
@@ -1338,6 +1452,146 @@ ipmi_oem_dell_get_ssh_config (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t token_data[IPMI_OEM_MAX_BYTES];
+  uint16_t valid_field_mask = 0x1F; /* 5 fields */
+  unsigned int temp;
+  uint8_t sshenable;
+  uint8_t maxconnections;
+  uint8_t activeconnections;
+  uint32_t idletimeout;
+  uint16_t portnumber;
+  char *ptr = NULL;
+  int rv = -1;
+
+  /* Dell OEM
+   *
+   * SSH Token Data - Token ID 0Ah
+   *
+   * Common Header
+   *
+   * byte 1 - total size of token data (including common header) - LSB
+   * byte 2 - total size of token data (including common header) - MSB
+   * byte 3 - token version (0x01)
+   * byte 4 - valid field mask (LSB)
+   * byte 5 - valid field mask (MSB)
+   *
+   * SSH data
+   *
+   * byte 6 - SSHEnable
+   * byte 7 - MaxConnections
+   * byte 8 - ActiveConnections
+   * byte 9 - 12 - IdleTimeout
+   * byte 13 - 14 - PortNumber
+   */
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 5);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
+    sshenable = 1;
+  else
+    sshenable = 0;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[1], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0'
+      || temp > 255)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+  maxconnections = temp;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[2], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0'
+      || temp > 255)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[2]);
+      goto cleanup;
+    }
+  activeconnections = temp;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[3], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[3]);
+      goto cleanup;
+    }
+  idletimeout = temp;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[4], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0'
+      || temp > 65535)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[4]);
+      goto cleanup;
+    }
+  portnumber = temp;
+  
+  token_data[0] = sshenable;
+  token_data[1] = maxconnections;
+  token_data[2] = activeconnections;
+  token_data[3] = (idletimeout & 0x000000FF);
+  token_data[4] = (idletimeout & 0x0000FF00) >> 8;
+  token_data[5] = (idletimeout & 0x00FF0000) >> 16;
+  token_data[6] = (idletimeout & 0xFF000000) >> 24;
+  token_data[7] = (portnumber & 0x00FF);
+  token_data[8] = (portnumber & 0xFF00) >> 8;
+
+  if (_dell_set_extended_configuration (state_data,
+                                        IPMI_OEM_DELL_TOKEN_ID_SSH,
+                                        token_data,
+                                        9,
+                                        valid_field_mask) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_dell_get_telnet_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t token_data[IPMI_OEM_MAX_BYTES];
@@ -1353,7 +1607,7 @@ ipmi_oem_dell_get_telnet_config (ipmi_oem_state_data_t *state_data)
 
   /* Dell OEM
    *
-   * SSH Token Data - Token ID 0Ah
+   * Telnet Token Data - Token ID 0Bh
    *
    * Common Header
    *
@@ -1362,6 +1616,9 @@ ipmi_oem_dell_get_telnet_config (ipmi_oem_state_data_t *state_data)
    * byte 3 - token version (0x01)
    * byte 4 - valid field mask (LSB)
    * byte 5 - valid field mask (MSB)
+   *
+   * Telnet data
+   *
    * byte 6 - telnetenable
    * byte 7 - maxsessions;
    * byte 8 - activesessions;
@@ -1435,6 +1692,166 @@ ipmi_oem_dell_get_telnet_config (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t token_data[IPMI_OEM_MAX_BYTES];
+  uint16_t valid_field_mask = 0x3F; /* 6 fields */
+  unsigned int temp;
+  uint8_t telnetenable;
+  uint8_t maxsessions;
+  uint8_t activesessions;
+  uint32_t sessiontimeout;
+  uint16_t portnumber;
+  uint8_t _7flsenable;
+  char *ptr = NULL;
+  int rv = -1;
+
+  /* Dell OEM
+   *
+   * Telnet Token Data - Token ID 0Bh
+   *
+   * Common Header
+   *
+   * byte 1 - total size of token data (including common header) - LSB
+   * byte 2 - total size of token data (including common header) - MSB
+   * byte 3 - token version (0x01)
+   * byte 4 - valid field mask (LSB)
+   * byte 5 - valid field mask (MSB)
+   *
+   * Telnet data
+   *
+   * byte 6 - telnetenable
+   * byte 7 - maxsessions;
+   * byte 8 - activesessions;
+   * byte 9 - 12 - sessiontimeout
+   * byte 13 - 14 - portnumber
+   * byte 15 - telnet7flsbackspace
+   */
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 6);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
+    telnetenable = 1;
+  else
+    telnetenable = 0;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[1], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0'
+      || temp > 255)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+  maxsessions = temp;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[2], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0'
+      || temp > 255)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[2]);
+      goto cleanup;
+    }
+  activesessions = temp;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[3], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[3]);
+      goto cleanup;
+    }
+  sessiontimeout = temp;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[4], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0'
+      || temp > 65535)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[4]);
+      goto cleanup;
+    }
+  portnumber = temp;
+  
+  if (strcasecmp (state_data->prog_data->args->oem_options[5], "7flsenable")
+      && strcasecmp (state_data->prog_data->args->oem_options[5], "7flsdisable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[5]);
+      goto cleanup;
+    }
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[5], "7flsenable"))
+    _7flsenable = 1;
+  else
+    _7flsenable = 0;
+
+  token_data[0] = telnetenable;
+  token_data[1] = maxsessions;
+  token_data[2] = activesessions;
+  token_data[3] = (sessiontimeout & 0x000000FF);
+  token_data[4] = (sessiontimeout & 0x0000FF00) >> 8;
+  token_data[5] = (sessiontimeout & 0x00FF0000) >> 16;
+  token_data[6] = (sessiontimeout & 0xFF000000) >> 24;
+  token_data[7] = (portnumber & 0x00FF);
+  token_data[8] = (portnumber & 0xFF00) >> 8;
+  token_data[9] = _7flsenable;
+
+  if (_dell_set_extended_configuration (state_data,
+                                        IPMI_OEM_DELL_TOKEN_ID_TELNET,
+                                        token_data,
+                                        10,
+                                        valid_field_mask) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_dell_get_web_server_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t token_data[IPMI_OEM_MAX_BYTES];
@@ -1450,7 +1867,7 @@ ipmi_oem_dell_get_web_server_config (ipmi_oem_state_data_t *state_data)
 
   /* Dell OEM
    *
-   * SSH Token Data - Token ID 0Ah
+   * Web Server Token Data - Token ID 0Ch
    *
    * Common Header
    *
@@ -1459,6 +1876,9 @@ ipmi_oem_dell_get_web_server_config (ipmi_oem_state_data_t *state_data)
    * byte 3 - token version (0x01)
    * byte 4 - valid field mask (LSB)
    * byte 5 - valid field mask (MSB)
+   *
+   * Web Server data
+   *
    * byte 6 - webserverenable
    * byte 7 - maxsessions;
    * byte 8 - activesessions;
@@ -1527,6 +1947,166 @@ ipmi_oem_dell_get_web_server_config (ipmi_oem_state_data_t *state_data)
 		  httpsportnumber);
 
 
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t token_data[IPMI_OEM_MAX_BYTES];
+  uint16_t valid_field_mask = 0x3F; /* 6 fields */
+  unsigned int temp;
+  uint8_t webserverenable;
+  uint8_t maxsessions;
+  uint8_t activesessions;
+  uint32_t sessiontimeout;
+  uint16_t httpportnumber;
+  uint16_t httpsportnumber;
+  char *ptr = NULL;
+  int rv = -1;
+
+  /* Dell OEM
+   *
+   * Web Server Token Data - Token ID 0Ch
+   *
+   * Common Header
+   *
+   * byte 1 - total size of token data (including common header) - LSB
+   * byte 2 - total size of token data (including common header) - MSB
+   * byte 3 - token version (0x01)
+   * byte 4 - valid field mask (LSB)
+   * byte 5 - valid field mask (MSB)
+   *
+   * Web Server data
+   *
+   * byte 6 - webserverenable
+   * byte 7 - maxsessions;
+   * byte 8 - activesessions;
+   * byte 9 - 12 - sessiontimeout
+   * byte 13 - 14 - httpportnumber
+   * byte 15 - 16 - httpsportnumber
+   */
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 6);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
+    webserverenable = 1;
+  else
+    webserverenable = 0;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[1], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0'
+      || temp > 255)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+  maxsessions = temp;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[2], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0'
+      || temp > 255)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[2]);
+      goto cleanup;
+    }
+  activesessions = temp;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[3], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[3]);
+      goto cleanup;
+    }
+  sessiontimeout = temp;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[4], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0'
+      || temp > 65535)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[4]);
+      goto cleanup;
+    }
+  httpportnumber = temp;
+
+  errno = 0;
+  temp = strtoul (state_data->prog_data->args->oem_options[5], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0'
+      || temp > 65535)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[5]);
+      goto cleanup;
+    }
+  httpsportnumber = temp;
+
+  token_data[0] = webserverenable;
+  token_data[1] = maxsessions;
+  token_data[2] = activesessions;
+  token_data[3] = (sessiontimeout & 0x000000FF);
+  token_data[4] = (sessiontimeout & 0x0000FF00) >> 8;
+  token_data[5] = (sessiontimeout & 0x00FF0000) >> 16;
+  token_data[6] = (sessiontimeout & 0xFF000000) >> 24;
+  token_data[7] = (httpportnumber & 0x00FF);
+  token_data[8] = (httpportnumber & 0xFF00) >> 8;
+  token_data[9] = (httpsportnumber & 0x00FF);
+  token_data[10] = (httpsportnumber & 0xFF00) >> 8;
+
+  if (_dell_set_extended_configuration (state_data,
+                                        IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER,
+                                        token_data,
+                                        11,
+                                        valid_field_mask) < 0)
+    goto cleanup;
+  
   rv = 0;
  cleanup:
   return (rv);
