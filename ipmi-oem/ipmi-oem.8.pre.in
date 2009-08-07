@@ -89,6 +89,18 @@ Poweredge systems, \fIshared_failover_nic2\fR may have ben documented
 as just \fIfailover\fR.  Command confirmed to work on Dell Poweredge
 2900, 2950, and R610.
 .TP
+.B get-ssh-config
+This OEM command will get the current SSH configuration on the IPMI
+card.  Command confirmed to work on Dell Poweredge R610.
+.TP
+.B get-telnet-config
+This OEM command will get the current telnet configuration on the IPMI
+card.  Command confirmed to work on Dell Poweredge R610.
+.TP
+.B get-web-server-config
+This OEM command will get the current web server configuration on the
+IPMI card.  Command confirmed to work on Dell Poweredge R610.
+.TP
 .B reset-to-defaults
 This OEM command will reset the BMC configuration back to default
 values.  The command will spin until the reset is confirmed to be

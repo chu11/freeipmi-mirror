@@ -79,6 +79,24 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_set_nic_selection
     },
     {
+      "get-ssh-config",
+      NULL,
+      0,
+      ipmi_oem_dell_get_ssh_config
+    },
+    {
+      "get-telnet-config",
+      NULL,
+      0,
+      ipmi_oem_dell_get_telnet_config
+    },
+    {
+      "get-web-server-config",
+      NULL,
+      0,
+      ipmi_oem_dell_get_web_server_config
+    },
+    {
       "reset-to-defaults",
       NULL,
       0,
