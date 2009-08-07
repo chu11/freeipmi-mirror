@@ -441,6 +441,14 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
+  /* Special case, just output list, don't do anything else */
+  if (!strcasecmp (args->oem_id, "list"))
+    {
+      if (_list () < 0)
+        goto cleanup;
+      goto out;
+    }
+
   if (!args->oem_command)
     {
       pstdout_fprintf (state_data->pstate,
@@ -452,6 +460,7 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
   if (_run_oem_cmd (state_data) < 0)
     goto cleanup;
 
+ out:
   rv = 0;
  cleanup:
   return (rv);

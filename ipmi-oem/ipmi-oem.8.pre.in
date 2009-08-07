@@ -59,7 +59,10 @@ The following options are specific to
 List supported OEM IDs and Commands.
 .SH "SUPPORTED OEM IDS and COMMANDS"
 The currently supported OEM IDs and COMMANDs are listed below.  The
-special command
+special OEM ID of 
+.B list
+may be passed into the list all supported OEM IDs and Commands.  The
+special OEM command
 .B list
 may be passed to any OEM ID to list commands supported by that OEM ID.
 .TP
