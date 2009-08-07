@@ -78,6 +78,14 @@
 #define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_PLAYING_DEAD 2
 #define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_RESERVED     3
 
+#define IPMI_OEM_DELL_TOKEN_ID_SSH                 0x0A
+#define IPMI_OEM_DELL_TOKEN_ID_TELNET              0x0B
+#define IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER          0x0C
+
+#define IPMI_OEM_DELL_TOKEN_VERSION                0x01
+
+#define IPMI_OEM_DELL_TOKEN_DATA_COMMON_HEADER_LEN 5
+
 #define IPMI_OEM_DELL_MAC_ADDRESS_LENGTH 6
 
 #define IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH 8 
@@ -1042,6 +1050,488 @@ ipmi_oem_dell_set_nic_selection (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
+static int
+_dell_reserve_extended_configuration (ipmi_oem_state_data_t *state_data,
+				      uint8_t *reservation_id)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  /* Dell OEM
+   *
+   * Reserve Extended Configuration Request
+   *
+   * 0x2E - OEM Group
+   * 0x01 - OEM cmd
+   * 0x?? - Dell IANA (LSB first)
+   * 0x?? - Dell IANA
+   * 0x?? - Dell IANA
+   *
+   * Reserve Extended Configuration Response
+   *
+   * 0x01 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - Dell IANA (LSB first)
+   * 0x?? - Dell IANA
+   * 0x?? - Dell IANA
+   * 0x?? - reservation id
+   */
+
+  assert (state_data);
+  assert (reservation_id);
+
+  bytes_rq[0] = 0x01;
+  bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x0000FF);
+  bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x00FF00) >> 8;
+  bytes_rq[3] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0xFF0000) >> 16;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x2E, /* network function */
+                              bytes_rq, /* data */
+                              4, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   6,
+                                                   0x01,
+                                                   0x2E) < 0)
+    goto cleanup;
+  
+  (*reservation_id) = bytes_rs[5];
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
+				  uint8_t token_id,
+				  uint8_t *token_data,
+				  unsigned int token_data_len,
+				  unsigned int expected_token_data_len)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint16_t token_len; 
+  uint8_t token_version; 
+  uint8_t reservation_id = 0;
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (token_data);
+  assert (token_data_len);
+  assert (expected_token_data_len);
+  assert (token_data_len >= expected_token_data_len);
+
+  /* Dell Poweredge OEM
+   *
+   * Request
+   *
+   * 0x2E - OEM network function
+   * 0x02 - OEM cmd
+   * 0x?? - Dell IANA (LSB first)
+   * 0x?? - Dell IANA
+   * 0x?? - Dell IANA
+   * 0x?? - reservation id
+   * 0x?? - token ID
+   * 0x?? - index (used by index objects only)
+   * 0x?? - data offset - LSB
+   * 0x?? - data offset - MSB
+   * 0x?? - byts to read (1 based, 0xFF = all)
+   *
+   * Response
+   *
+   * 0x02 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - Dell IANA (LSB first)
+   * 0x?? - Dell IANA
+   * 0x?? - Dell IANA
+   * 0x?? - token ID
+   * 0x?? - index (used by index objects only)
+   * 0x?? - bytes of data returned (1 based)
+   * 0x??+ - token data
+   */
+
+  if (_dell_reserve_extended_configuration (state_data,
+					    &reservation_id) < 0)
+    goto cleanup;
+
+  bytes_rq[0] = 0x02;
+  bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x0000FF);
+  bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x00FF00) >> 8;
+  bytes_rq[3] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0xFF0000) >> 16;
+  bytes_rq[4] = reservation_id;
+  bytes_rq[5] = token_id;
+  bytes_rq[6] = 0x00;
+  bytes_rq[7] = 0x00;
+  bytes_rq[8] = 0x00;
+  bytes_rq[9] = 0xFF;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              0x2E, /* network function */
+                              bytes_rq, /* data */
+                              10, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  /* atleast 8 bytes of non-token-data */
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   8 + expected_token_data_len,
+                                                   0x02,
+                                                   0x2E) < 0)
+    goto cleanup;
+
+  if (bytes_rs[7] != expected_token_data_len)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "invalid data length returned: expected = %u, returned %u\n",
+		       expected_token_data_len, bytes_rs[7]);
+      goto cleanup;
+    }
+
+  /* check token common header */
+
+  token_len = bytes_rs[8];
+  token_len |= (bytes_rs[9] << 8);
+
+  if (token_len != expected_token_data_len)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "invalid token data length returned: expected = %u, returned %u\n",
+		       expected_token_data_len, token_len);
+      goto cleanup;
+    }
+  
+  token_version = bytes_rs[10];
+
+  if (token_version != IPMI_OEM_DELL_TOKEN_VERSION)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "invalid token version returned: expected = %Xh, returned %Xh\n",
+		       IPMI_OEM_DELL_TOKEN_VERSION, token_version);
+      goto cleanup;
+    }
+
+  /* length checked above */
+  memcpy (token_data, &bytes_rs[8], expected_token_data_len);
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_get_ssh_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t token_data[IPMI_OEM_MAX_BYTES];
+  uint16_t valid_field_mask;
+  uint16_t expected_field_mask = 0x1F; /* 5 fields */
+  uint8_t sshenable;
+  uint8_t maxconnections;
+  uint8_t activeconnections;
+  uint32_t idletimeout;
+  uint16_t portnumber;
+  int rv = -1;
+
+  /* Dell OEM
+   *
+   * SSH Token Data - Token ID 0Ah
+   *
+   * Common Header
+   *
+   * byte 1 - total size of token data (including common header) - LSB
+   * byte 2 - total size of token data (including common header) - MSB
+   * byte 3 - token version (0x01)
+   * byte 4 - valid field mask (LSB)
+   * byte 5 - valid field mask (MSB)
+   * byte 6 - SSHEnable
+   * byte 7 - MaxConnections
+   * byte 8 - ActiveConnections
+   * byte 9 - 12 - IdleTimeout
+   * byte 13 - 14 - PortNumber
+   */
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (_dell_get_extended_configuration (state_data,
+					IPMI_OEM_DELL_TOKEN_ID_SSH,
+					token_data,
+					IPMI_OEM_MAX_BYTES,
+					IPMI_OEM_DELL_TOKEN_DATA_COMMON_HEADER_LEN + 9) < 0)
+    goto cleanup;
+
+  valid_field_mask = token_data[3];
+  valid_field_mask |= (token_data[4] << 8);
+ 
+  if (valid_field_mask != expected_field_mask)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "invalid field mask returned: expected = %Xh, returned %Xh\n",
+		       expected_field_mask, valid_field_mask);
+      goto cleanup;
+    }
+
+  sshenable = token_data[5];
+  maxconnections = token_data[6];
+  activeconnections = token_data[7];
+  idletimeout = token_data[8];
+  idletimeout |= (token_data[9] << 8);
+  idletimeout |= (token_data[10] << 16);
+  idletimeout |= (token_data[11] << 24);
+  portnumber = token_data[12];
+  portnumber |= (token_data[13] << 8);
+
+  pstdout_printf (state_data->pstate,
+		  "SSH                : %s\n",
+		  (sshenable) ? "Enabled" : "Disabled");
+
+  pstdout_printf (state_data->pstate,
+		  "Max Connections    : %u\n",
+		  maxconnections);
+
+  pstdout_printf (state_data->pstate,
+		  "Active Connections : %u\n",
+		  activeconnections);
+
+  /* XXX need units */
+  pstdout_printf (state_data->pstate,
+		  "Idle Timeout       : %u seconds\n",
+		  idletimeout);
+
+  pstdout_printf (state_data->pstate,
+		  "Port Number        : %u\n",
+		  portnumber);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_get_telnet_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t token_data[IPMI_OEM_MAX_BYTES];
+  uint16_t valid_field_mask;
+  uint16_t expected_field_mask = 0x3F; /* 6 fields */
+  uint8_t telnetenable;
+  uint8_t maxsessions;
+  uint8_t activesessions;
+  uint32_t sessiontimeout;
+  uint16_t portnumber;
+  uint8_t telnet7flsbackspace;
+  int rv = -1;
+
+  /* Dell OEM
+   *
+   * SSH Token Data - Token ID 0Ah
+   *
+   * Common Header
+   *
+   * byte 1 - total size of token data (including common header) - LSB
+   * byte 2 - total size of token data (including common header) - MSB
+   * byte 3 - token version (0x01)
+   * byte 4 - valid field mask (LSB)
+   * byte 5 - valid field mask (MSB)
+   * byte 6 - telnetenable
+   * byte 7 - maxsessions;
+   * byte 8 - activesessions;
+   * byte 9 - 12 - sessiontimeout
+   * byte 13 - 14 - portnumber
+   * byte 15 - telnet7flsbackspace
+   */
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (_dell_get_extended_configuration (state_data,
+					IPMI_OEM_DELL_TOKEN_ID_TELNET,
+					token_data,
+					IPMI_OEM_MAX_BYTES,
+					IPMI_OEM_DELL_TOKEN_DATA_COMMON_HEADER_LEN + 10) < 0)
+    goto cleanup;
+
+  valid_field_mask = token_data[3];
+  valid_field_mask |= (token_data[4] << 8);
+ 
+  if (valid_field_mask != expected_field_mask)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "invalid field mask returned: expected = %Xh, returned %Xh\n",
+		       expected_field_mask, valid_field_mask);
+      goto cleanup;
+    }
+
+  telnetenable = token_data[5];
+  maxsessions = token_data[6];
+  activesessions = token_data[7];
+  sessiontimeout = token_data[8];
+  sessiontimeout |= (token_data[9] << 8);
+  sessiontimeout |= (token_data[10] << 16);
+  sessiontimeout |= (token_data[11] << 24);
+  portnumber = token_data[12];
+  portnumber |= (token_data[13] << 8);
+  telnet7flsbackspace = token_data[14];
+
+  pstdout_printf (state_data->pstate,
+		  "Telnet             : %s\n",
+		  (telnetenable) ? "Enabled" : "Disabled");
+
+  pstdout_printf (state_data->pstate,
+		  "Max Sessions       : %u\n",
+		  maxsessions);
+
+  pstdout_printf (state_data->pstate,
+		  "Active Sessions    : %u\n",
+		  activesessions);
+
+  /* XXX need units */
+  pstdout_printf (state_data->pstate,
+		  "Session Timeout    : %u seconds\n",
+		  sessiontimeout);
+
+  pstdout_printf (state_data->pstate,
+		  "Port Number        : %u\n",
+		  portnumber);
+
+  /* XXX what is this */
+  pstdout_printf (state_data->pstate,
+		  "7 FLS Backspace    : %s\n",
+		  (telnet7flsbackspace) ? "Enabled" : "Disabled");
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_get_web_server_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t token_data[IPMI_OEM_MAX_BYTES];
+  uint16_t valid_field_mask;
+  uint16_t expected_field_mask = 0x3F; /* 6 fields */
+  uint8_t webserverenable;
+  uint8_t maxsessions;
+  uint8_t activesessions;
+  uint32_t sessiontimeout;
+  uint16_t httpportnumber;
+  uint16_t httpsportnumber;
+  int rv = -1;
+
+  /* Dell OEM
+   *
+   * SSH Token Data - Token ID 0Ah
+   *
+   * Common Header
+   *
+   * byte 1 - total size of token data (including common header) - LSB
+   * byte 2 - total size of token data (including common header) - MSB
+   * byte 3 - token version (0x01)
+   * byte 4 - valid field mask (LSB)
+   * byte 5 - valid field mask (MSB)
+   * byte 6 - webserverenable
+   * byte 7 - maxsessions;
+   * byte 8 - activesessions;
+   * byte 9 - 12 - sessiontimeout
+   * byte 13 - 14 - httpportnumber
+   * byte 15 - 16 - httpsportnumber
+   */
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (_dell_get_extended_configuration (state_data,
+					IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER,
+					token_data,
+					IPMI_OEM_MAX_BYTES,
+					IPMI_OEM_DELL_TOKEN_DATA_COMMON_HEADER_LEN + 11) < 0)
+    goto cleanup;
+
+  valid_field_mask = token_data[3];
+  valid_field_mask |= (token_data[4] << 8);
+ 
+  if (valid_field_mask != expected_field_mask)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "invalid field mask returned: expected = %Xh, returned %Xh\n",
+		       expected_field_mask, valid_field_mask);
+      goto cleanup;
+    }
+
+  webserverenable = token_data[5];
+  maxsessions = token_data[6];
+  activesessions = token_data[7];
+  sessiontimeout = token_data[8];
+  sessiontimeout |= (token_data[9] << 8);
+  sessiontimeout |= (token_data[10] << 16);
+  sessiontimeout |= (token_data[11] << 24);
+  httpportnumber = token_data[12];
+  httpportnumber |= (token_data[13] << 8);
+  httpsportnumber = token_data[14];
+  httpsportnumber |= (token_data[15] << 8);
+
+  pstdout_printf (state_data->pstate,
+		  "Web Server         : %s\n",
+		  (webserverenable) ? "Enabled" : "Disabled");
+
+  pstdout_printf (state_data->pstate,
+		  "Max Sessions       : %u\n",
+		  maxsessions);
+
+  pstdout_printf (state_data->pstate,
+		  "Active Sessions    : %u\n",
+		  activesessions);
+
+  /* XXX need units */
+  pstdout_printf (state_data->pstate,
+		  "Session Timeout    : %u seconds\n",
+		  sessiontimeout);
+
+  pstdout_printf (state_data->pstate,
+		  "http Port Number   : %u\n",
+		  httpportnumber);
+
+  pstdout_printf (state_data->pstate,
+		  "https Port Number  : %u\n",
+		  httpsportnumber);
+
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
 int
 ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
 {
@@ -1583,6 +2073,7 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 			      "Rated Ouput Wattage : %u W\n",
 			      rateddcwatts);
 	      
+	      /* XXX need info */
 #if 0
 	      pstdout_printf (state_data->pstate,
 			      "Rated Amps          : %u A\n",
@@ -1601,6 +2092,7 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 			      "Firmare Version     : %s\n",
 			      firmwareversion);
 	      
+	      /* XXX need info */
 #if 0
 	      pstdout_printf (state_data->pstate,
 			      "Vendor              : %u\n",
@@ -2268,6 +2760,7 @@ ipmi_oem_dell_get_power_capacity (ipmi_oem_state_data_t *state_data)
 		  "Available Power                : %u W\n",
 		  available_power);
 
+  /* XXX need info */
 #if 0
   pstdout_printf (state_data->pstate,
 		  "System Throttling              : %u\n",

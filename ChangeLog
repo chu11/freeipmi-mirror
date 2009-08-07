@@ -1,6 +1,8 @@
 2009-08-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support verbose option.
+
+	* ipmi-oem/: Suppor dell get services info commands.
 	
 2009-08-06  Albert Chu <chu11@llnl.gov>
 
