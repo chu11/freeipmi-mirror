@@ -671,6 +671,10 @@ above.  Multiple workarounds can be specified separated by whitespace.
 Please see 
 .B ipmi-oem(8) 
 manpage for available workarounds.
+.TP
+\fBipmi-oem-verbose-count\fR \fICOUNT\fR
+Specify default verbose count to use for
+.B ipmi-oem(8).
 
 .SH "IPMI-PEF-CONFIG OPTIONS"
 The following options are specific to 
