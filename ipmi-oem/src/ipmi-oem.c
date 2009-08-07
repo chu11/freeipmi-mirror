@@ -86,16 +86,34 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_get_ssh_config
     },
     {
+      "set-ssh-config",
+      "<enable|disable> <maxconnections> <activeconnections> <idletimeout> <portnumber>",
+      5,
+      ipmi_oem_dell_set_ssh_config
+    },
+    {
       "get-telnet-config",
       NULL,
       0,
       ipmi_oem_dell_get_telnet_config
     },
     {
+      "set-telnet-config",
+      "<enable|disable> <maxsessions> <activesessions> <sessiontimeout> <portnumber> <7flsenable|disable>",
+      6,
+      ipmi_oem_dell_set_telnet_config
+    },
+    {
       "get-web-server-config",
       NULL,
       0,
       ipmi_oem_dell_get_web_server_config
+    },
+    {
+      "set-web-server-config",
+      "<enable|disable> <maxsessions> <activesessions> <sessiontimeout> <httpportnumber> <httpsportnumber>",
+      6,
+      ipmi_oem_dell_set_web_server_config
     },
     {
       "reset-to-defaults",

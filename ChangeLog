@@ -2,7 +2,7 @@
 
 	* ipmi-oem/: Support verbose option.
 
-	* ipmi-oem/: Suppor dell get services info commands.
+	* ipmi-oem/: Suppor dell get/set services commands.
 	
 2009-08-06  Albert Chu <chu11@llnl.gov>
 
