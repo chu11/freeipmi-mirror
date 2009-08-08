@@ -1063,7 +1063,7 @@ _dell_reserve_extended_configuration (ipmi_oem_state_data_t *state_data,
    *
    * Reserve Extended Configuration Request
    *
-   * 0x2E - OEM Group
+   * 0x2E - OEM Group (is IPMI_NET_FN_OEM_GROUP_RQ)
    * 0x01 - OEM cmd
    * 0x?? - Dell IANA (LSB first)
    * 0x?? - Dell IANA
@@ -1089,7 +1089,7 @@ _dell_reserve_extended_configuration (ipmi_oem_state_data_t *state_data,
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x2E, /* network function */
+                              IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
                               bytes_rq, /* data */
                               4, /* num bytes */
                               bytes_rs,
@@ -1107,7 +1107,7 @@ _dell_reserve_extended_configuration (ipmi_oem_state_data_t *state_data,
                                                    rs_len,
                                                    6,
                                                    0x01,
-                                                   0x2E) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RQ) < 0)
     goto cleanup;
   
   (*reservation_id) = bytes_rs[5];
@@ -1142,7 +1142,7 @@ _dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
    *
    * Get Extended Configuration Request
    *
-   * 0x2E - OEM network function
+   * 0x2E - OEM network function (is IPMI_NET_FN_OEM_GROUP_RQ)
    * 0x02 - OEM cmd
    * 0x?? - Dell IANA (LSB first)
    * 0x?? - Dell IANA
@@ -1184,7 +1184,7 @@ _dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x2E, /* network function */
+                              IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
                               bytes_rq, /* data */
                               10, /* num bytes */
                               bytes_rs,
@@ -1203,7 +1203,7 @@ _dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
                                                    rs_len,
                                                    8 + expected_token_data_len,
                                                    0x02,
-                                                   0x2E) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RQ) < 0)
     goto cleanup;
 
   if (bytes_rs[7] != expected_token_data_len)
@@ -1271,7 +1271,7 @@ _dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
    *
    * Set Extended Configuration Request
    *
-   * 0x2E - OEM network function
+   * 0x2E - OEM network function (is IPMI_NET_FN_OEM_GROUP_RQ)
    * 0x03 - OEM cmd
    * 0x?? - Dell IANA (LSB first)
    * 0x?? - Dell IANA
@@ -1324,7 +1324,7 @@ _dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x2E, /* network function */
+                              IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
                               bytes_rq, /* data */
                               15 + token_data_len, /* num bytes */
                               bytes_rs,
@@ -1342,7 +1342,7 @@ _dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
                                                    rs_len,
                                                    6,
                                                    0x03,
-                                                   0x2E) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RQ) < 0)
     goto cleanup;
 
   if (bytes_rs[5] != token_len)

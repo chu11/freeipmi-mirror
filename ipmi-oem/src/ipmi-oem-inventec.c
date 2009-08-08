@@ -413,7 +413,7 @@ ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
    *
    * Set MAC Address Request
    *
-   * 0x2E - OEM network function
+   * 0x2E - OEM network function (is IPMI_NET_FN_OEM_GROUP_RQ)
    * 0x21 | 0x23 - OEM cmd - 0x21 = dedicated, 0x23 = shared
    * bytes 1-17: MAC address in ASCII (including semicolons)
    * 0x00 - sentinel value 0x00
@@ -437,7 +437,7 @@ ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
   
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x2E, /* network function */
+                              IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
                               bytes_rq, /* data */
                               19, /* num bytes */
                               bytes_rs,
@@ -455,7 +455,7 @@ ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    cmd,
-                                                   0x2E) < 0)
+                                                   IPMI_NET_FN_OEM_GROUP_RQ) < 0)
     goto cleanup;
   
   rv = 0;
