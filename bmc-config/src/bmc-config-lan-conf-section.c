@@ -86,9 +86,9 @@ ip_address_source_checkout (const char *section_name,
                          "ipmi_cmd_get_lan_configuration_parameters_ip_address_source: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -152,9 +152,9 @@ ip_address_source_commit (const char *section_name,
                          "ipmi_cmd_set_lan_configuration_parameters_ip_address_source: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -207,9 +207,9 @@ ip_address_checkout (const char *section_name,
                          "ipmi_cmd_get_lan_configuration_parameters_ip_address: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -290,9 +290,9 @@ ip_address_commit (const char *section_name,
                          "ipmi_cmd_set_lan_configuration_parameters_ip_address: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -345,9 +345,9 @@ mac_address_checkout (const char *section_name,
                          "ipmi_cmd_get_lan_configuration_parameters_mac_address: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -431,9 +431,9 @@ mac_address_commit (const char *section_name,
                          "ipmi_cmd_set_lan_configuration_parameters_mac_address: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -486,9 +486,9 @@ subnet_mask_checkout (const char *section_name,
                          "ipmi_cmd_get_lan_configuration_parameters_subnet_mask: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -569,9 +569,9 @@ subnet_mask_commit (const char *section_name,
                          "ipmi_cmd_set_lan_configuration_parameters_subnet_mask: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -624,9 +624,9 @@ default_gateway_address_checkout (const char *section_name,
                          "ipmi_cmd_get_lan_configuration_parameters_default_gateway_address: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -708,9 +708,9 @@ default_gateway_address_commit (const char *section_name,
                          "ipmi_cmd_set_lan_configuration_parameters_default_gateway_address: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -763,9 +763,9 @@ default_gateway_mac_address_checkout (const char *section_name,
                          "ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -849,9 +849,9 @@ default_gateway_mac_address_commit (const char *section_name,
                          "ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -904,9 +904,9 @@ backup_gateway_address_checkout (const char *section_name,
                          "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -987,9 +987,9 @@ backup_gateway_address_commit (const char *section_name,
                          "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -1042,9 +1042,9 @@ backup_gateway_mac_address_checkout (const char *section_name,
                          "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -1127,9 +1127,9 @@ backup_gateway_mac_address_commit (const char *section_name,
                          "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -1182,9 +1182,9 @@ _get_vlan_id (bmc_config_state_data_t *state_data,
                          "ipmi_cmd_get_lan_configuration_parameters_vlan_id: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -1255,9 +1255,9 @@ _set_vlan_id (bmc_config_state_data_t *state_data,
                          "ipmi_cmd_set_lan_configuration_parameters_vlan_id: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -1393,9 +1393,9 @@ vlan_priority_checkout (const char *section_name,
                          "ipmi_cmd_get_lan_configuration_parameters_vlan_priority: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -1459,9 +1459,9 @@ vlan_priority_commit (const char *section_name,
                          "ipmi_cmd_set_lan_configuration_parameters_vlan_priority: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;

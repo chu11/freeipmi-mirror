@@ -146,9 +146,9 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
                          "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &rc))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &rc))
         rv = rc;
 
       goto cleanup;

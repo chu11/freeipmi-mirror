@@ -94,9 +94,9 @@ enable_sol_checkout (const char *section_name,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_enable: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -159,9 +159,9 @@ enable_sol_commit (const char *section_name,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_enable: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -214,9 +214,9 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_authentication: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -298,9 +298,9 @@ _set_sol_sol_authentication (bmc_config_state_data_t *state_data,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_authentication: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -464,9 +464,9 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
                          "ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -537,9 +537,9 @@ _set_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
                          "ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -666,9 +666,9 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_retry: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -736,9 +736,9 @@ _set_sol_sol_retry (bmc_config_state_data_t *state_data,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_retry: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -866,9 +866,9 @@ non_volatile_bit_rate_checkout (const char *section_name,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -932,9 +932,9 @@ non_volatile_bit_rate_commit (const char *section_name,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -987,9 +987,9 @@ volatile_bit_rate_checkout (const char *section_name,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -1053,9 +1053,9 @@ volatile_bit_rate_commit (const char *section_name,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -1108,9 +1108,9 @@ sol_payload_port_checkout (const char *section_name,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -1174,9 +1174,9 @@ sol_payload_port_commit (const char *section_name,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;

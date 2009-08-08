@@ -132,7 +132,7 @@ config_checkout_section (pstdout_state_t pstate,
             goto cleanup;
         }
 
-      if (CONFIG_IS_NON_FATAL_ERROR(this_ret))
+      if (CONFIG_IS_NON_FATAL_ERROR (this_ret))
         {
           if (cmd_args->verbose_count)
             {

@@ -120,9 +120,9 @@ _get_event_filter_table (struct ipmi_pef_config_state_data *state_data,
                          "ipmi_cmd_get_pef_configuration_parameters_event_filter_table: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -478,9 +478,9 @@ _set_event_filter_table (struct ipmi_pef_config_state_data *state_data,
                          "ipmi_cmd_set_pef_configuration_parameters_event_filter_table: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;

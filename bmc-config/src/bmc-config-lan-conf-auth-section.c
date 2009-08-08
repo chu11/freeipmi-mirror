@@ -101,8 +101,12 @@ _get_authentication_type_support (bmc_config_state_data_t *state_data)
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_authentication_type_support: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
+        rv = ret;
+
       goto cleanup;
     }
 
@@ -204,9 +208,9 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
                          "ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -603,7 +607,12 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
                                      stderr,
                                      "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
                                      ipmi_ctx_errormsg (state_data->ipmi_ctx));
-                  rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+                  if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                              obj_cmd_rs,
+                                                              &ret))
+                    rv = ret;
+
                   goto cleanup;
                 }
               
@@ -611,9 +620,9 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
               goto out;
 
             }
-          else if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                              obj_cmd_rs,
-                                              &ret))
+          else if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                           obj_cmd_rs,
+                                                           &ret))
             rv = ret;
         }
       goto cleanup;

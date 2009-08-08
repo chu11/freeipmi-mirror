@@ -94,9 +94,9 @@ _get_pef_control (pstdout_state_t pstate,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
 
-      if (config_is_non_fatal_error (ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -186,9 +186,9 @@ _set_pef_control (pstdout_state_t pstate,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_control: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
 
-      if (config_is_non_fatal_error (ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -411,9 +411,9 @@ _get_pef_action_global_control (pstdout_state_t pstate,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
 
-      if (config_is_non_fatal_error (ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -525,9 +525,9 @@ _set_pef_action_global_control (pstdout_state_t pstate,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
 
-      if (config_is_non_fatal_error (ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -836,9 +836,9 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
 
-      if (config_is_non_fatal_error (ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -900,9 +900,9 @@ pef_startup_delay_commit (pstdout_state_t pstate,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
 
-      if (config_is_non_fatal_error (ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -953,9 +953,9 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
 
-      if (config_is_non_fatal_error (ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -1017,9 +1017,9 @@ pef_alert_startup_delay_commit (pstdout_state_t pstate,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
                          ipmi_ctx_errormsg (ipmi_ctx));
 
-      if (config_is_non_fatal_error (ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;

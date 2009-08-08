@@ -83,9 +83,9 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
                          "ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -156,9 +156,9 @@ _set_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
                          "ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -284,9 +284,9 @@ gratuitous_arp_interval_checkout (const char *section_name,
                          "ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;
@@ -350,9 +350,9 @@ gratuitous_arp_interval_commit (const char *section_name,
                          "ipmi_cmd_set_lan_configuration_parameters_gratuitous_arp_interval: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+                                                  obj_cmd_rs,
+                                                  &ret))
         rv = ret;
 
       goto cleanup;

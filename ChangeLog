@@ -1,6 +1,8 @@
 2009-08-08  Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-oem/: Code cleanup.
+
+	* common/src/configtool/: Support invalid/unsupported data non-fatal error.
 	
 2009-08-07  Albert Chu <chu11@llnl.gov>
 
