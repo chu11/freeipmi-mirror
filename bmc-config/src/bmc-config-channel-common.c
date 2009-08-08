@@ -177,8 +177,12 @@ _get_channel_access (bmc_config_state_data_t *state_data,
                          stderr,
                          "ipmi_cmd_get_channel_access: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
+
       goto cleanup;
     }
 
@@ -315,8 +319,11 @@ _set_channel_access (bmc_config_state_data_t *state_data,
           (*comp_code) = val;
         }
 
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
+
       goto cleanup;
     }
 
@@ -429,7 +436,7 @@ _enable_user_level_authentication_commit (const char *section_name,
                                   &ch,
                                   &comp_code)) != CONFIG_ERR_SUCCESS)
     {
-      if (ret == CONFIG_ERR_NON_FATAL_ERROR
+      if (ret == CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG
           && comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
         ret = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
       return (ret);

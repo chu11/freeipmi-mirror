@@ -294,8 +294,10 @@ threshold_checkout (const char *section_name,
                          "ipmi_cmd_get_sensor_thresholds: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
 
       /*
        * IPMI Workaround (achu)
@@ -497,8 +499,12 @@ threshold_commit (const char *section_name,
                          stderr,
                          "ipmi_cmd_set_sensor_thresholds: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
+
       goto cleanup;
     }
 
@@ -536,13 +542,19 @@ _get_hysteresis (ipmi_sensors_config_state_data_t *state_data,
                                       IPMI_SENSOR_HYSTERESIS_MASK,
                                       obj_cmd_rs) < 0)
     {
+      config_err_t ret;
+
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sensor_hysteresis: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
+
       goto cleanup;
     }
 
@@ -801,8 +813,12 @@ hysteresis_threshold_commit (const char *section_name,
                          stderr,
                          "ipmi_cmd_set_sensor_hysteresis: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
+
       goto cleanup;
     }
 

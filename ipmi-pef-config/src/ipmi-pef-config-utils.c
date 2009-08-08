@@ -111,8 +111,12 @@ get_number_of_lan_alert_destinations (struct ipmi_pef_config_state_data *state_d
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_number_of_destinations: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &rc))
+        rv = rc;
+
       goto cleanup;
     }
 
@@ -140,6 +144,7 @@ get_number_of_alert_strings (struct ipmi_pef_config_state_data *state_data, uint
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t rc;
 
   assert (state_data);
   assert (number_of_alert_strings);
@@ -170,8 +175,12 @@ get_number_of_alert_strings (struct ipmi_pef_config_state_data *state_data, uint
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &rc))
+        rv = rc;
+
       goto cleanup;
     }
 
@@ -199,6 +208,7 @@ get_number_of_alert_policy_entries (struct ipmi_pef_config_state_data *state_dat
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t rc;
 
   assert (state_data);
   assert (number_of_alert_policy_entries);
@@ -229,8 +239,12 @@ get_number_of_alert_policy_entries (struct ipmi_pef_config_state_data *state_dat
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &rc))
+        rv = rc;
+
       goto cleanup;
     }
 
@@ -258,6 +272,7 @@ get_number_of_event_filters (struct ipmi_pef_config_state_data *state_data, uint
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t rc;
 
   assert (state_data);
   assert (number_of_event_filters);
@@ -288,8 +303,12 @@ get_number_of_event_filters (struct ipmi_pef_config_state_data *state_data, uint
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &rc))
+        rv = rc;
+
       goto cleanup;
     }
 

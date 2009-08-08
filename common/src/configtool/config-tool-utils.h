@@ -74,11 +74,9 @@ struct config_keyvalue *config_find_keyvalue (pstdout_state_t pstate,
                                               struct config_section *section,
                                               const char *key_name);
 
-#if 0
 int config_is_non_fatal_error (ipmi_ctx_t ipmi_ctx,
                                fiid_obj_t obj_cmd_rs,
                                config_err_t *non_fatal_err);
-#endif
 
 int config_is_config_param_non_fatal_error (ipmi_ctx_t ipmi_ctx,
                                             fiid_obj_t obj_cmd_rs,

@@ -76,13 +76,19 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
 
   if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
+      config_err_t ret;
+
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_chassis_status: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
+
       goto cleanup;
     }
 
@@ -246,13 +252,19 @@ _set_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
                                         data->standby,
                                         obj_cmd_rs) < 0)
     {
+      config_err_t ret;
+
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_front_panel_enables: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (config_is_non_fatal_error (state_data->ipmi_ctx,
+                                     obj_cmd_rs,
+                                     &ret))
+        rv = ret;
+
       goto cleanup;
     }
 
