@@ -1,3 +1,8 @@
+2009-08-10  Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolsdr/tool-sdr-cache-common.c (sdr_cache_create):
+	Fix output corner case.
+	
 2009-08-08  Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-oem/: Code cleanup.
