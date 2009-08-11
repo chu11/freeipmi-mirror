@@ -1,5 +1,10 @@
 2009-08-10  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/fru-parse/ipmi-fru-parse.c
+	(ipmi_fru_parse_next): Fix parsing corner case.
+	
+2009-08-10  Albert Chu <chu11@llnl.gov>
+
 	* common/src/toolsdr/tool-sdr-cache-common.c (sdr_cache_create):
 	Fix output corner case.
 	

@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.11 2009-06-20 05:17:17 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.12 2009-08-11 22:36:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -923,8 +923,11 @@ ipmi_fru_parse_next (ipmi_fru_parse_ctx_t ctx)
 
       if (end_of_list)
         {
+	  /* achu: end_of_list means this is the last record, possibly
+	   * with FRU data, and there are no more *after* this record.
+	   * So we should return 1.
+	   */
           ctx->multirecord_area_parsed++;
-          goto out;
         }
       
       ctx->multirecord_area_offset_in_bytes += multirecord_header_length;
