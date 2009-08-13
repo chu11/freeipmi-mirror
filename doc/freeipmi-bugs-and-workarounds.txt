@@ -165,6 +165,13 @@ sequence number is within range.
 HP Proliant DL 145 server: IPMI 1.5 sessions are not supported, only
 IPMI 2.0 sessions are supported.
 
+SDR Issues
+----------
+
+Fujitsu RX 100: The record count reported by a Get SDR Repository Info
+command is not consistent to the number of records that exist on the
+motherboard.  Resolved with workaround to handle situation.
+
 Tool Issues
 -----------
 
