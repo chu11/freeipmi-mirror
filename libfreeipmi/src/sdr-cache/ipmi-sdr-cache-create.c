@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.37 2009-05-26 23:29:26 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.38 2009-08-13 22:49:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -612,22 +612,22 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
     {
       if (create_flags == IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT
           && errno == EEXIST)
-        ctx->errnum = IPMI_SDR_CACHE_ERR_CACHE_CREATE_CACHE_EXISTS;
+        SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_CREATE_CACHE_EXISTS);
       else if (errno == EPERM
                || errno == EACCES
                || errno == EISDIR
                || errno == EROFS)
-        ctx->errnum = IPMI_SDR_CACHE_ERR_PERMISSION;
+        SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_PERMISSION);
       else if (errno == ENAMETOOLONG
                || errno == ENOENT
                || errno == ELOOP)
-        ctx->errnum = IPMI_SDR_CACHE_ERR_FILENAME_INVALID;
+        SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_FILENAME_INVALID);
       else if (errno == ENOSPC
                || errno == EMFILE
                || errno == ENFILE)
-        ctx->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
+        SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_FILESYSTEM);
       else
-        ctx->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
+        SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
@@ -761,8 +761,53 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
 
   if (record_count_written != ctx->record_count)
     {
-      SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_CREATE_INVALID_RECORD_COUNT);
-      goto cleanup;
+      /*
+       * IPMI Workaround (achu)
+       *
+       * Discovered on Fujitsu RX 100
+       *
+       * The record_count listed from the Get SDR Repository Info command
+       * is not consistent with the length of SDR records stored.
+       *
+       * We will assume that if we reached the end of the SDR record list
+       * (i.e. next_record_id == 0xFFFF), a non-zero number of records
+       * were written, and it is less than the record_count given, it's ok
+       * and we can continue on.
+       */
+      if (next_record_id == IPMI_SDR_RECORD_ID_LAST
+          && record_count_written
+          && record_count_written < ctx->record_count)
+        {
+          unsigned int total_bytes_written_temp = 0;
+
+          ctx->record_count = record_count_written;
+          
+          /* need to seek back to the beginning of the file and
+           * re-write the header info with the correct number of
+           * records
+           */
+
+          if (lseek (fd, 0, SEEK_SET) < 0)
+            {
+              SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_SYSTEM_ERROR);
+              goto cleanup;
+            }
+
+          if (_sdr_cache_header_write (ctx,
+                                       ipmi_ctx,
+                                       fd,
+                                       &total_bytes_written_temp,
+                                       ctx->sdr_version,
+                                       ctx->record_count,
+                                       ctx->most_recent_addition_timestamp,
+                                       ctx->most_recent_erase_timestamp) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_CREATE_INVALID_RECORD_COUNT);
+          goto cleanup;
+        }
     }
 
   if (fsync (fd) < 0)

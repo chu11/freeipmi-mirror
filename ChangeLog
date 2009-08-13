@@ -1,3 +1,8 @@
+2009-08-13  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sdr-cache/ipmi-sdr-cache-create.c
+	(ipmi_sdr_cache_create): Add workaround for Fujitsu RX 100.
+	
 2009-08-10  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fru-parse/ipmi-fru-parse.c
