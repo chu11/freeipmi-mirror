@@ -617,6 +617,10 @@ sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                             quiet_cache ? NULL : _sdr_cache_create_callback,
                             quiet_cache ? NULL : (void *)&count) < 0)
     {
+      /* unique output corner case */
+      if (count && !quiet_cache)
+        fprintf (stderr, "\n");
+      
       PSTDOUT_FPRINTF(pstate,
                       stderr,
                       "ipmi_sdr_cache_create: %s\n",

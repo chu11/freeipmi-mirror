@@ -2,9 +2,10 @@
 -----------------
 o In bmc-config, fix SOL config corner case.  Assume LAN channel if
   SOL channel cannot be read.
-o In bmc-config, add workarounds for Dell Poweredge servers.
 o In bmc-config, configure Password before Enable_User by default for
   security.
+o Add SDR reading/loading workarounds for Fujitsu RX 100 servers.
+o In bmc-config, add workarounds for Dell Poweredge servers.
 o In ipmi-oem, support additional Dell Poweredge OEM commands.
 o Fix several error output corner cases.
 
