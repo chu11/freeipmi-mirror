@@ -6,16 +6,18 @@ Albert Chu
 chu11@llnl.gov
 
 These are some short descriptions of the bugs and (if possible)
-workarounds I've found and discovered in IPMI.  When it was documented
-(or I remember them), the motherboards these issues were found on are
-also documented.
+workarounds I've found and discovered while developing FreeIPMI on
+various motherboards.  When it was documented (or I remember them),
+the motherboards these issues were found on are also documented.
 
 This is mostly to document compliance issues I've discovered.  When I
 talk to vendors and they say, "IPMI is 100% compliant, we don't know
 what you're talking about.", well, here's this document :-)
 
-Naturally those motherboards I have much more access to and am capable
-of working on will probably have more issues discovered.
+Naturally the motherboards I have much more access to and am capable
+of working on will probably have more issues discovered.  Possible
+bugs/compliance issues on other manufacturer's motherboards may be
+masked by workarounds added to earlier motherboards.
 
 I have worked extensively on:
 
@@ -33,6 +35,7 @@ Sun Fire 4100 with ILOM
 Tyan S4811 with SMDC daughter card
 Supermicro X6-DHR-1G with BMC2.0 daughter card
 Dell Poweredge 2900
+Dell Poweredge 2950
 
 The remaining motherboards (and subsequent bugs/workarounds) listed
 below are from interaction with users in the community and I have
@@ -40,7 +43,7 @@ never personally accessed.
 
 For the record, I have nothing against the companies and these issues.
 I am just as prone to programming bugs as they are.  The IPMI
-specification is gigantic, mistakes will happen.  This is more
+specification is gigantic and mistakes will happen.  This is more
 documentation for historical purposes, people searching for
 information, and to document the difficulty of developing against
 IPMI.
@@ -52,6 +55,10 @@ Intel SR870BN4/Tiger 4: BMCs would not respond to retransmissions of a
 Get Session Challenge Request if a previous Get Session Challenge
 response was lost.  Resolved by sending retransmitted Get Session
 Challenge requests from a different source port.
+
+Forgotten/Undocumented Motherboard(s): The only authentication
+supported by the motherboard is an OEM specific authentication.  No
+resolution implemented.
 
 Supermicro H8QME with SIMSO daughter card: The IPMI 2.0 packet
 responses for RAKP 2 have payload lengths that are off by 1.  Resolved
@@ -110,18 +117,23 @@ Intel SR1520ML/X38ML: Username capabilities and/or K_g status are not
 reported properly by the Get Authentication Capabilities response.
 Resolved with a workaround ignoring those flags.
 
-Inventec 5441/Dell Xanadu2: The remote BMC (seems to) incorrectly
-calculates keys using the privilege specified in the open session
-stage rather than the privilege used during the RAKP1 stage.  This can
-be problematic if you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
-during that stage instead of a real privilege level.  Resolved with a
-workaround to handle this specific situation.
+Inventec 5441/Dell Xanadu2: The remote BMC incorrectly calculates keys
+using the privilege specified in the open session stage rather than
+the privilege used during the RAKP1 stage.  This can be problematic if
+you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
+instead of a real privilege level.  Resolved with a workaround to
+handle this specific situation.
 
 Inventec 5441/Dell Xanadu2: Given specific configuration of IPMI 1.5
 authentication types, certain user privileges are not specified
-correctly during Get Authentication Capabilities and an CCh CCh =
-"Invalid data field in request" is returned during Activiate Session.
-No resolution currently available.
+correctly during Get Authentication Capabilities and a CCh = "Invalid
+data field in request" is returned during Activiate Session.  No
+resolution currently available.
+
+Forgotten/Undocumented Motherboard(s): The maximum privilege level
+assigned to a cipher suite ID require authentication with that
+specific privilege level, rather than a privilege level less than or
+equal to it.
 
 Session Issues
 --------------
@@ -131,9 +143,10 @@ command if a RESET is executed.  Resolved by closing the session
 early.
 
 Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
-packet responses return empty session IDs to the client.  Resolved
-with a workaround allowing empty session IDs to be accepted by the client.
-This problem is apparently fixed in later firmware releases.
+packet responses return empty session IDs (i.e. 00000000h) to the
+client.  Resolved with a workaround allowing empty session IDs to be
+accepted by the client.  This problem is apparently fixed in later
+firmware releases.
 
 Dell PowerEdge 2850,SC1425: When Per-Message Authentication is
 disabled, packet responses contain non-null authentication data (when
@@ -172,20 +185,15 @@ Fujitsu RX 100: The record count reported by a Get SDR Repository Info
 command is not consistent to the number of records that exist on the
 motherboard.  Resolved with workaround to handle situation.
 
-Tool Issues
------------
-
-ipmipower
+Misc IPMI
 ---------
-
-Forgotten/Undocumented Motherboard(s): The maximum privilege level
-assigned to a cipher suite ID required authentication with that
-specific privilege level, rather than a privilege level less than or
-equal to it.
 
 Sun Fire 4100 with ILOM: The tag bits for some of the cipher records
 are wrong.  Resolved with a workaround to parse cipher
 records.
+
+Tool Issues
+-----------
 
 ipmiconsole/libipmiconsole
 --------------------------
@@ -198,7 +206,7 @@ the default SOL port anyways.
 
 Sun Fire 4100 with ILOM: The Get Channel Payload Support command is
 not supported.  Resolved with a workaround to skip this point in the
-state machine (and praying things still work).
+state machine (and pray things still work).
 
 Supermicro H8QME with SIMSO daughter card: SOL sessions are not
 deactivated after a Deactivate Payload request, despite the response
@@ -260,6 +268,13 @@ access parameters Enable_IPMI_Msgs and Privilege_Limit are not
 changeable via Set User Access.  No workaround in FreeIPMI
 implemented.  Worked with vendor to implement fix in firmware.
 
+Supermicro H8QME with SIMSO daughter card: Default Channel
+configuration had a privilege limit of OEM.  However, the motherboard
+did not support an OEM privilege, and any subsequent configuration of
+them results in a parameter out of range error (0xC9).  No workaround
+in FreeIPMI implemented.  Worked with vendor to implement fix in
+firmware.
+
 Tyan S4811 with SMDC daughter card: The ability to authenticate under
 IPMI 1.5 is tied to it being supported as an OEM authentication type.
 Resolved via different configuration w/ bmc-config.
@@ -305,6 +320,10 @@ fields can be configured simultaneously instead of just one field.
 Dell Poweredge R610: Read only fields return an error code of 0xD5
 (request parameter not supported) instead of 0x82 (read only
 parameter).  No current resolution.
+
+Dell Poweredge R610: User IPMI messaging being enabled/disabled does
+not seem to affect authentication and/or execution of IPMI commands.
+No current resolution.
 
 ipmi-fru
 --------
