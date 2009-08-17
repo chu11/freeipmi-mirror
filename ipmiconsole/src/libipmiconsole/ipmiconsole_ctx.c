@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.54 2009-06-17 20:17:58 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.55 2009-08-17 23:20:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -624,13 +624,13 @@ ipmiconsole_ctx_connection_setup (ipmiconsole_ctx_t c)
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
-  if (!(c->connection.obj_authentication_capabilities_v20_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rq)))
+  if (!(c->connection.obj_authentication_capabilities_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
-  if (!(c->connection.obj_authentication_capabilities_v20_rs = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rs)))
+  if (!(c->connection.obj_authentication_capabilities_rs = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rs)))
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_create: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
@@ -896,10 +896,10 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
     fiid_obj_destroy (c->connection.obj_rmcpplus_session_trlr_rq);
   if (c->connection.obj_rmcpplus_session_trlr_rs)
     fiid_obj_destroy (c->connection.obj_rmcpplus_session_trlr_rs);
-  if (c->connection.obj_authentication_capabilities_v20_rq)
-    fiid_obj_destroy (c->connection.obj_authentication_capabilities_v20_rq);
-  if (c->connection.obj_authentication_capabilities_v20_rs)
-    fiid_obj_destroy (c->connection.obj_authentication_capabilities_v20_rs);
+  if (c->connection.obj_authentication_capabilities_rq)
+    fiid_obj_destroy (c->connection.obj_authentication_capabilities_rq);
+  if (c->connection.obj_authentication_capabilities_rs)
+    fiid_obj_destroy (c->connection.obj_authentication_capabilities_rs);
   if (c->connection.obj_open_session_request)
     fiid_obj_destroy (c->connection.obj_open_session_request);
   if (c->connection.obj_open_session_response)

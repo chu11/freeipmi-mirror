@@ -1331,6 +1331,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 
   if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                                         ctx->io.outofband.privilege_level,
+                                                        IPMI_GET_IPMI_V15_DATA,
                                                         obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -3068,21 +3069,21 @@ ipmi_lan_2_0_open_session (ipmi_ctx_t ctx)
 
   ctx->io.outofband.rq_seq = (uint8_t)((double)(IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX) * (rand ()/(RAND_MAX + 1.0)));
 
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rs)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
-  if (fill_cmd_get_channel_authentication_capabilities_v20 (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                                            ctx->io.outofband.privilege_level,
-                                                            IPMI_GET_IPMI_V20_EXTENDED_DATA,
-                                                            obj_cmd_rq) < 0)
+  if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
+                                                        ctx->io.outofband.privilege_level,
+                                                        IPMI_GET_IPMI_V20_EXTENDED_DATA,
+                                                        obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;

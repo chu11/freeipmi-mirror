@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.141 2009-06-24 20:42:44 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.142 2009-08-17 23:20:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -114,30 +114,28 @@ typedef enum
  */
 typedef enum
   {
-    AUTHENTICATION_CAPABILITIES_V20_REQ = 0x101,
-    AUTHENTICATION_CAPABILITIES_V20_RES = 0x201,
-    AUTHENTICATION_CAPABILITIES_REQ     = 0x102,
-    AUTHENTICATION_CAPABILITIES_RES     = 0x202,
-    GET_SESSION_CHALLENGE_REQ           = 0x103,
-    GET_SESSION_CHALLENGE_RES           = 0x203,
-    ACTIVATE_SESSION_REQ                = 0x104,
-    ACTIVATE_SESSION_RES                = 0x204,
-    OPEN_SESSION_REQ                    = 0x105,
-    OPEN_SESSION_RES                    = 0x205,
-    RAKP_MESSAGE_1_REQ                  = 0x106,
-    RAKP_MESSAGE_2_RES                  = 0x206,
-    RAKP_MESSAGE_3_REQ                  = 0x107,
-    RAKP_MESSAGE_4_RES                  = 0x207,
-    SET_SESSION_PRIVILEGE_LEVEL_REQ     = 0x108,
-    SET_SESSION_PRIVILEGE_LEVEL_RES     = 0x208,
-    GET_CHASSIS_STATUS_REQ              = 0x109,
-    GET_CHASSIS_STATUS_RES              = 0x209,
-    CHASSIS_CONTROL_REQ                 = 0x10A,
-    CHASSIS_CONTROL_RES                 = 0x20A,
-    CHASSIS_IDENTIFY_REQ                = 0x10B,
-    CHASSIS_IDENTIFY_RES                = 0x20B,
-    CLOSE_SESSION_REQ                   = 0x10C,
-    CLOSE_SESSION_RES                   = 0x20C,
+    AUTHENTICATION_CAPABILITIES_REQ     = 0x101,
+    AUTHENTICATION_CAPABILITIES_RES     = 0x201,
+    GET_SESSION_CHALLENGE_REQ           = 0x102,
+    GET_SESSION_CHALLENGE_RES           = 0x202,
+    ACTIVATE_SESSION_REQ                = 0x103,
+    ACTIVATE_SESSION_RES                = 0x203,
+    OPEN_SESSION_REQ                    = 0x104,
+    OPEN_SESSION_RES                    = 0x204,
+    RAKP_MESSAGE_1_REQ                  = 0x105,
+    RAKP_MESSAGE_2_RES                  = 0x205,
+    RAKP_MESSAGE_3_REQ                  = 0x106,
+    RAKP_MESSAGE_4_RES                  = 0x206,
+    SET_SESSION_PRIVILEGE_LEVEL_REQ     = 0x107,
+    SET_SESSION_PRIVILEGE_LEVEL_RES     = 0x207,
+    GET_CHASSIS_STATUS_REQ              = 0x108,
+    GET_CHASSIS_STATUS_RES              = 0x208,
+    CHASSIS_CONTROL_REQ                 = 0x109,
+    CHASSIS_CONTROL_RES                 = 0x209,
+    CHASSIS_IDENTIFY_REQ                = 0x10A,
+    CHASSIS_IDENTIFY_RES                = 0x20A,
+    CLOSE_SESSION_REQ                   = 0x10B,
+    CLOSE_SESSION_RES                   = 0x20B,
   } packet_type_t;
 
 #define PACKET_TYPE_REQ_MASK           0x100
@@ -160,19 +158,18 @@ typedef enum
 typedef enum
   {
     PROTOCOL_STATE_START                                = 0x00,
-    PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT = 0x01,
-    PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT     = 0x02,
-    PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT           = 0x03,
-    PROTOCOL_STATE_ACTIVATE_SESSION_SENT                = 0x04,
-    PROTOCOL_STATE_OPEN_SESSION_SENT                    = 0x05,
-    PROTOCOL_STATE_RAKP_MESSAGE_1_SENT                  = 0x06,
-    PROTOCOL_STATE_RAKP_MESSAGE_3_SENT                  = 0x07,
-    PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT     = 0x08,
-    PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT              = 0x09,
-    PROTOCOL_STATE_CHASSIS_CONTROL_SENT                 = 0x0A,
-    PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT                = 0x0B,
-    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x0C,
-    PROTOCOL_STATE_END                                  = 0x0D,
+    PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT     = 0x01,
+    PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT           = 0x02,
+    PROTOCOL_STATE_ACTIVATE_SESSION_SENT                = 0x03,
+    PROTOCOL_STATE_OPEN_SESSION_SENT                    = 0x04,
+    PROTOCOL_STATE_RAKP_MESSAGE_1_SENT                  = 0x05,
+    PROTOCOL_STATE_RAKP_MESSAGE_3_SENT                  = 0x06,
+    PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT     = 0x07,
+    PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT              = 0x08,
+    PROTOCOL_STATE_CHASSIS_CONTROL_SENT                 = 0x09,
+    PROTOCOL_STATE_CHASSIS_IDENTIFY_SENT                = 0x0A,
+    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x0B,
+    PROTOCOL_STATE_END                                  = 0x0C,
   } protocol_state_t;
 
 #define PROTOCOL_STATE_VALID(__s)    \
@@ -300,8 +297,6 @@ struct ipmipower_powercmd {
   fiid_obj_t obj_rmcpplus_session_trlr_req;
   fiid_obj_t obj_rmcpplus_session_trlr_res;
 
-  fiid_obj_t obj_authentication_capabilities_v20_req;
-  fiid_obj_t obj_authentication_capabilities_v20_res;
   fiid_obj_t obj_authentication_capabilities_req;
   fiid_obj_t obj_authentication_capabilities_res;
   fiid_obj_t obj_get_session_challenge_req;

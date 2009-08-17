@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.51 2009-08-05 21:24:59 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.52 2009-08-17 23:20:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -62,10 +62,10 @@ ipmiconsole_packet_template (ipmiconsole_ctx_t c,
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (IPMICONSOLE_PACKET_TYPE_VALID (p));
 
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ)
-    return (&tmpl_cmd_get_channel_authentication_capabilities_v20_rq[0]);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
-    return (&tmpl_cmd_get_channel_authentication_capabilities_v20_rs[0]);
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ)
+    return (&tmpl_cmd_get_channel_authentication_capabilities_rq[0]);
+  else if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS)
+    return (&tmpl_cmd_get_channel_authentication_capabilities_rs[0]);
   else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST)
     return (&tmpl_rmcpplus_open_session_request[0]);
   else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE)
@@ -126,10 +126,10 @@ ipmiconsole_packet_object (ipmiconsole_ctx_t c,
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (IPMICONSOLE_PACKET_TYPE_VALID (p));
 
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ)
-    return (c->connection.obj_authentication_capabilities_v20_rq);
-  else if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
-    return (c->connection.obj_authentication_capabilities_v20_rs);
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ)
+    return (c->connection.obj_authentication_capabilities_rq);
+  else if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS)
+    return (c->connection.obj_authentication_capabilities_rs);
   else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST)
     return (c->connection.obj_open_session_request);
   else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE)
@@ -198,14 +198,14 @@ _packet_dump_hdr (ipmiconsole_ctx_t c,
   assert (hdr);
   assert (hdrlen);
 
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
-      || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ
+      || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS)
     packet_type = DEBUG_UTIL_TYPE_IPMI_1_5;
   else
     packet_type = DEBUG_UTIL_TYPE_IPMI_2_0;
 
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
-      || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ
+      || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS)
     str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
   else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST
            || p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE)
@@ -311,8 +311,8 @@ ipmiconsole_packet_dump (ipmiconsole_ctx_t c,
     return (-1);
 
   /* IPMI 1.5 Style Packets */
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
-      || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ
+      || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS)
     {
       if (ipmi_dump_lan_packet (fd,
                                 c->config.hostname,
@@ -812,7 +812,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
     }
 
   /* Determine Password */
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ)
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ)
     password = NULL;
   else
     {
@@ -836,11 +836,11 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
 
   /* Determine Authentication Type */
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ)
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ)
     authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
 
   /* Determine Session ID */
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ
       || p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST
       || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1
       || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3)
@@ -876,7 +876,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
     }
 
   /* Determine Sequence Number */
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ
       || p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST
       || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1
       || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3)
@@ -885,7 +885,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
     session_sequence_number = c->session.session_sequence_number;
 
   /* Determine Network Function */
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ
       || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ
       || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ
       || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ
@@ -957,18 +957,18 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
 
   /* Fill/Determine Object */
 
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ)
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ)
     {
-      if (fill_cmd_get_channel_authentication_capabilities_v20 (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                                                c->config.privilege_level,
-                                                                IPMI_GET_IPMI_V20_EXTENDED_DATA,
-                                                                c->connection.obj_authentication_capabilities_v20_rq) < 0)
+      if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
+                                                            c->config.privilege_level,
+                                                            IPMI_GET_IPMI_V20_EXTENDED_DATA,
+                                                            c->connection.obj_authentication_capabilities_rq) < 0)
         {
-          IPMICONSOLE_CTX_DEBUG (c, ("fill_cmd_get_channel_authentication_capabilities_v20: p = %d; %s", p, strerror (errno)));
+          IPMICONSOLE_CTX_DEBUG (c, ("fill_cmd_get_channel_authentication_capabilities: p = %d; %s", p, strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           return (-1);
         }
-      obj_cmd_rq = c->connection.obj_authentication_capabilities_v20_rq;
+      obj_cmd_rq = c->connection.obj_authentication_capabilities_rq;
     }
   else if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST)
     {
@@ -1206,7 +1206,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
     }
 
   /* IPMI 1.5 Style Packets */
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ)
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ)
     {
       if ((pkt_len = _ipmi_1_5_packet_assemble (c,
                                                 p,
@@ -1446,8 +1446,8 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
 
   if (ret)
     {
-      if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT)
-        pkt = IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS;
+      if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_SENT)
+        pkt = IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS;
       else
         {
           /* Unexpected packet, throw it away */
@@ -1701,7 +1701,7 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
           return (-1);
         }
 
-      if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
+      if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS
           && comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE);

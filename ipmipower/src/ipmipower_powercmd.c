@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.191 2009-06-26 03:43:18 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.192 2009-08-17 23:20:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -96,8 +96,6 @@ _destroy_ipmipower_powercmd (ipmipower_powercmd_t ip)
   fiid_obj_destroy (ip->obj_rmcpplus_payload_res);
   fiid_obj_destroy (ip->obj_rmcpplus_session_trlr_req);
   fiid_obj_destroy (ip->obj_rmcpplus_session_trlr_res);
-  fiid_obj_destroy (ip->obj_authentication_capabilities_v20_req);
-  fiid_obj_destroy (ip->obj_authentication_capabilities_v20_res);
   fiid_obj_destroy (ip->obj_authentication_capabilities_req);
   fiid_obj_destroy (ip->obj_authentication_capabilities_res);
   fiid_obj_destroy (ip->obj_get_session_challenge_req);
@@ -399,16 +397,6 @@ ipmipower_powercmd_queue (power_cmd_t cmd, struct ipmipower_connection *ic)
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
       exit (1);
     }
-  if (!(ip->obj_authentication_capabilities_v20_req = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rq)))
-    {
-      IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
-    }
-  if (!(ip->obj_authentication_capabilities_v20_res = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rs)))
-    {
-      IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
-    }
   if (!(ip->obj_authentication_capabilities_req = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
@@ -596,9 +584,7 @@ _send_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   secure_memset (buf, '\0', IPMIPOWER_PACKET_BUFLEN);
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
-    ip->protocol_state = PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT;
-  else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
+  if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     ip->protocol_state = PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT;
   else if (pkt == GET_SESSION_CHALLENGE_REQ)
     ip->protocol_state = PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT;
@@ -689,8 +675,7 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
       goto cleanup;
     }
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
-      || pkt == AUTHENTICATION_CAPABILITIES_RES
+  if (pkt == AUTHENTICATION_CAPABILITIES_RES
       || pkt == GET_SESSION_CHALLENGE_RES)
     {
       if (!ipmipower_check_checksum (ip, pkt))
@@ -1167,8 +1152,7 @@ _has_timed_out (ipmipower_powercmd_t ip)
       if (ip->protocol_state != PROTOCOL_STATE_CLOSE_SESSION_SENT)
         {
           /* Special cases */
-          if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT
-              || ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
+          if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
             ipmipower_output (MSG_TYPE_CONNECTION_TIMEOUT, ip->ic->hostname);
           else if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT)
             ipmipower_output (MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT, ip->ic->hostname);
@@ -1232,9 +1216,7 @@ _retry_packets (ipmipower_powercmd_t ip)
                     ip->protocol_state,
                     ip->retransmission_count));
 
-  if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
-    _send_packet (ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
-  else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
+  if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
     _send_packet (ip, AUTHENTICATION_CAPABILITIES_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT)
     {
@@ -1342,7 +1324,6 @@ _retry_packets (ipmipower_powercmd_t ip)
  * Check the contents of a ipmi 1.5 or 2.0 authentication capabilities
  * response.
  *
- * Returns  1 if authentication capabilities should be retried,
  * Returns  0 if authentication passed and the protocol should continue
  * Returns -1 on ipmi protocol error or discovery error
  */
@@ -1352,23 +1333,16 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
 {
   uint8_t authentication_status_per_message_authentication;
   uint64_t val;
-  fiid_obj_t obj_authentication_capabilities_res;
   int ret;
 
-  assert (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
-          || pkt == AUTHENTICATION_CAPABILITIES_RES);
+  assert (pkt == AUTHENTICATION_CAPABILITIES_RES);
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES)
-    obj_authentication_capabilities_res = ip->obj_authentication_capabilities_v20_res;
-  else
-    obj_authentication_capabilities_res = ip->obj_authentication_capabilities_res;
-
-  if (FIID_OBJ_GET (obj_authentication_capabilities_res,
+  if (FIID_OBJ_GET (ip->obj_authentication_capabilities_res,
                     "authentication_status.per_message_authentication",
                     &val) < 0)
     {
       IPMIPOWER_ERROR (("FIID_OBJ_GET: 'authentication_status.per_message_authentication': %s",
-                        fiid_obj_errormsg (obj_authentication_capabilities_res)));
+                        fiid_obj_errormsg (ip->obj_authentication_capabilities_res)));
       exit (1);
     }
   authentication_status_per_message_authentication = val;
@@ -1385,7 +1359,7 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
     {
       if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common.username,
                                                                   cmd_args.common.password,
-                                                                  obj_authentication_capabilities_res)) < 0)
+                                                                  ip->obj_authentication_capabilities_res)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_username: %s",
                             strerror (errno)));
@@ -1400,7 +1374,7 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
     }
 
   if ((ret = ipmi_check_authentication_capabilities_authentication_type (cmd_args.common.authentication_type,
-                                                                         obj_authentication_capabilities_res)) < 0)
+                                                                         ip->obj_authentication_capabilities_res)) < 0)
     {
       IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_authentication_type: %s",
                         strerror (errno)));
@@ -1446,7 +1420,7 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
   void *tmp_k_g_ptr = NULL;
   int ret;
 
-  if ((ret = ipmi_check_authentication_capabilities_ipmi_2_0 (ip->obj_authentication_capabilities_v20_res)) < 0)
+  if ((ret = ipmi_check_authentication_capabilities_ipmi_2_0 (ip->obj_authentication_capabilities_res)) < 0)
     {
       IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_ipmi_2_0: %s", strerror (errno)));
       exit (1);
@@ -1474,7 +1448,7 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
     {
       if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common.username,
                                                                   cmd_args.common.password,
-                                                                  ip->obj_authentication_capabilities_v20_res)) < 0)
+                                                                  ip->obj_authentication_capabilities_res)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_username: %s",
                             strerror (errno)));
@@ -1491,7 +1465,7 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
         tmp_k_g_ptr = cmd_args.common.k_g;
 
       if ((ret = ipmi_check_authentication_capabilities_k_g (tmp_k_g_ptr,
-                                                             ip->obj_authentication_capabilities_v20_res)) < 0)
+                                                             ip->obj_authentication_capabilities_res)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_k_g: %s",
                             strerror (errno)));
@@ -1729,10 +1703,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           && (executing_count >= cmd_args.hostrange.fanout))
         return (cmd_args.common.session_timeout);
 
-      if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
-        _send_packet (ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
-      else
-        _send_packet (ip, AUTHENTICATION_CAPABILITIES_REQ);
+      _send_packet (ip, AUTHENTICATION_CAPABILITIES_REQ);
 
       if (gettimeofday (&(ip->time_begin), NULL) < 0)
         {
@@ -1740,20 +1711,6 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           exit (1);
         }
       executing_count++;
-    }
-  else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
-    {
-      if ((rv = _recv_packet (ip, AUTHENTICATION_CAPABILITIES_V20_RES)) != 1)
-        {
-          if (rv < 0)
-            return (-1);
-          goto done;
-        }
-
-      if (_check_ipmi_2_0_authentication_capabilities (ip) < 0)
-        return (-1);
-
-      _send_packet (ip, OPEN_SESSION_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
     {
@@ -1763,19 +1720,21 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
             return (-1);
           goto done;
         }
-
-      if ((rv = _check_ipmi_1_5_authentication_capabilities (ip, AUTHENTICATION_CAPABILITIES_RES)) < 0)
-        return (-1);
-
-      if (rv)
+      
+      if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
         {
-          /* Don't consider this a retransmission */
-          _send_packet (ip, AUTHENTICATION_CAPABILITIES_REQ);
-          goto done;
+          if (_check_ipmi_2_0_authentication_capabilities (ip) < 0)
+            return (-1);
+          
+          _send_packet (ip, OPEN_SESSION_REQ);
         }
-      /* else we continue with the IPMI 1.5 protocol */
-
-      _send_packet (ip, GET_SESSION_CHALLENGE_REQ);
+      else
+        {
+          if (_check_ipmi_1_5_authentication_capabilities (ip, AUTHENTICATION_CAPABILITIES_RES) < 0)
+            return (-1);
+          
+          _send_packet (ip, GET_SESSION_CHALLENGE_REQ);
+        }
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT)
     {

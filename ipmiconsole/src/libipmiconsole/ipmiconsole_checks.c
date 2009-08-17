@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.38 2009-06-17 23:47:44 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.39 2009-08-17 23:20:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -59,7 +59,7 @@ ipmiconsole_check_checksum (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (IPMICONSOLE_PACKET_TYPE_RESPONSE (p));
-  assert (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
+  assert (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS
           || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
           || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
           || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
@@ -250,7 +250,7 @@ ipmiconsole_check_network_function (ipmiconsole_ctx_t c, ipmiconsole_packet_type
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (IPMICONSOLE_PACKET_TYPE_RESPONSE (p));
-  assert (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
+  assert (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS
           || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
           || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
           || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
@@ -287,7 +287,7 @@ ipmiconsole_check_command (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (IPMICONSOLE_PACKET_TYPE_RESPONSE (p));
-  assert (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
+  assert (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS
           || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
           || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
           || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
@@ -308,7 +308,7 @@ ipmiconsole_check_command (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
     }
   cmd = val;
 
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS)
     expected_cmd = IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES;
   else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS)
     expected_cmd = IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL;
@@ -340,7 +340,7 @@ ipmiconsole_check_requester_sequence_number (ipmiconsole_ctx_t c, ipmiconsole_pa
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (IPMICONSOLE_PACKET_TYPE_RESPONSE (p));
-  assert (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
+  assert (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS
           || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
           || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
           || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
@@ -377,7 +377,7 @@ ipmiconsole_check_completion_code (ipmiconsole_ctx_t c, ipmiconsole_packet_type_
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (IPMICONSOLE_PACKET_TYPE_RESPONSE (p));
-  assert (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
+  assert (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS
           || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
           || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
           || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS

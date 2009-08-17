@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.72 2009-08-06 23:46:55 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.73 2009-08-17 23:20:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -63,7 +63,6 @@ createpacket (const char *destination,
   fiid_obj_t obj_lan_session_hdr = NULL;
   fiid_obj_t obj_lan_msg_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
-  fiid_field_t *tmpl_cmd_get_channel_authentication_capabilities_ptr = NULL;
   int len;
 
   assert (destination);
@@ -73,18 +72,13 @@ createpacket (const char *destination,
   if (!buflen)
     return (0);
 
-  if (version == IPMI_PING_VERSION_1_5)
-    tmpl_cmd_get_channel_authentication_capabilities_ptr = (fiid_field_t *)&tmpl_cmd_get_channel_authentication_capabilities_rq[0];
-  else
-    tmpl_cmd_get_channel_authentication_capabilities_ptr = (fiid_field_t *)&tmpl_cmd_get_channel_authentication_capabilities_v20_rq[0];
-
   if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
   if (!(obj_lan_session_hdr = fiid_obj_create (tmpl_lan_session_hdr)))
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
   if (!(obj_lan_msg_hdr = fiid_obj_create (tmpl_lan_msg_hdr_rq)))
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
-  if (!(obj_cmd = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_ptr)))
+  if (!(obj_cmd = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
 
   if (fill_rmcp_hdr_ipmi (obj_rmcp_hdr) < 0)
@@ -107,16 +101,17 @@ createpacket (const char *destination,
     {
       if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                                             IPMI_PRIVILEGE_LEVEL_USER,
+                                                            IPMI_GET_IPMI_V15_DATA,
                                                             obj_cmd) < 0)
         ipmi_ping_err_exit ("fill_cmd_get_channel_authentication_capabilities: %s", strerror (errno));
     }
   else
     {
-      if (fill_cmd_get_channel_authentication_capabilities_v20 (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                                                IPMI_PRIVILEGE_LEVEL_USER,
-                                                                IPMI_GET_IPMI_V20_EXTENDED_DATA,
-                                                                obj_cmd) < 0)
-        ipmi_ping_err_exit ("fill_cmd_get_channel_authentication_capabilities_v20: %s", strerror (errno));
+      if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
+                                                            IPMI_PRIVILEGE_LEVEL_USER,
+                                                            IPMI_GET_IPMI_V20_EXTENDED_DATA,
+                                                            obj_cmd) < 0)
+        ipmi_ping_err_exit ("fill_cmd_get_channel_authentication_capabilities: %s", strerror (errno));
     }
 
   if ((len = assemble_ipmi_lan_pkt (obj_rmcp_hdr,
@@ -148,7 +143,7 @@ createpacket (const char *destination,
                                 buf,
                                 len,
                                 tmpl_lan_msg_hdr_rq,
-                                tmpl_cmd_get_channel_authentication_capabilities_ptr) < 0)
+                                tmpl_cmd_get_channel_authentication_capabilities_rq) < 0)
         ipmi_ping_err_exit ("ipmi_dump_lan_packet: %s", strerror (errno));
     }
 
@@ -180,7 +175,6 @@ parsepacket (const char *destination,
     user_level_authentication, per_message_authentication,
     k_g, ipmi_v20_extended_capabilities_available, ipmi_v15, ipmi_v20;
   uint64_t val;
-  fiid_field_t *tmpl_cmd_get_channel_authentication_capabilities_ptr = NULL;
   int ret, rv = -1;
 
   assert (destination);
@@ -191,18 +185,13 @@ parsepacket (const char *destination,
   if (!buflen)
     return (0);
 
-  if (version == IPMI_PING_VERSION_1_5)
-    tmpl_cmd_get_channel_authentication_capabilities_ptr = (fiid_field_t *)&tmpl_cmd_get_channel_authentication_capabilities_rs[0];
-  else
-    tmpl_cmd_get_channel_authentication_capabilities_ptr = (fiid_field_t *)&tmpl_cmd_get_channel_authentication_capabilities_v20_rs[0];
-
   if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
   if (!(obj_lan_session_hdr = fiid_obj_create (tmpl_lan_session_hdr)))
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
   if (!(obj_lan_msg_hdr = fiid_obj_create (tmpl_lan_msg_hdr_rs)))
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
-  if (!(obj_cmd = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_ptr)))
+  if (!(obj_cmd = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rs)))
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
   if (!(obj_lan_msg_trlr = fiid_obj_create (tmpl_lan_msg_trlr)))
     ipmi_ping_err_exit ("fiid_obj_create: %s", strerror (errno));
@@ -226,7 +215,7 @@ parsepacket (const char *destination,
                                 buf,
                                 buflen,
                                 tmpl_lan_msg_hdr_rs,
-                                tmpl_cmd_get_channel_authentication_capabilities_ptr) < 0)
+                                tmpl_cmd_get_channel_authentication_capabilities_rs) < 0)
         ipmi_ping_err_exit ("ipmi_dump_lan_packet: %s", strerror (errno));
     }
 

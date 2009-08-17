@@ -318,8 +318,7 @@ ipmi_check_authentication_capabilities_authentication_type (uint8_t authenticati
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_rs) < 0
-      && FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_v20_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_rs) < 0)
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -401,8 +400,7 @@ ipmi_check_authentication_capabilities_username (const char *username,
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_rs) < 0
-      && FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_v20_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_rs) < 0)
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -456,7 +454,7 @@ ipmi_check_authentication_capabilities_ipmi_2_0 (fiid_obj_t obj_cmd)
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_v20_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_rs) < 0)
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -500,7 +498,7 @@ ipmi_check_authentication_capabilities_k_g (const void *k_g,
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_v20_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_rs) < 0)
     {
       SET_ERRNO (EINVAL);
       return (-1);

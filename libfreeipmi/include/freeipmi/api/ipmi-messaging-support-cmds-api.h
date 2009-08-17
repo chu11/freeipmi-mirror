@@ -106,13 +106,8 @@ int ipmi_cmd_master_write_read (ipmi_ctx_t ctx,
 int ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx,
                                                       uint8_t channel_number,
                                                       uint8_t maximum_privilege_level,
+                                                      uint8_t get_ipmi_v20_extended_data,
                                                       fiid_obj_t obj_cmd_rs);
-
-int ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
-                                                          uint8_t channel_number,
-                                                          uint8_t maximum_privilege_level,
-                                                          uint8_t get_ipmi_v20_extended_data,
-                                                          fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_system_guid (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs);
 

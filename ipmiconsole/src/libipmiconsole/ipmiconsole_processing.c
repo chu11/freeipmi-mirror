@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.99 2009-06-17 22:22:27 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.100 2009-08-17 23:20:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -91,7 +91,7 @@ _send_ipmi_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 
   secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
-  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ
       || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ
       || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ
       || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ
@@ -559,7 +559,7 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
     /* It's debugging, who cares if the call succeeds or fails */
     ipmiconsole_packet_dump (c, *p, pkt, pkt_len);
 
-  if (*p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
+  if (*p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS)
     {
       /* Notes: These checks are for IPMI 1.5 pre-session packets, so
        * there is no authentication code, session sequence number, or
@@ -1326,7 +1326,7 @@ _close_session (ipmiconsole_ctx_t c)
    * Close the session differently depending on the state of the session
    */
   if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_START
-      || c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT
+      || c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_SENT
       || c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT
       || c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
     {
@@ -1474,9 +1474,9 @@ _ipmi_retransmission_timeout (ipmiconsole_ctx_t c)
    * states do not have to be changed.  These are retransmissions,
    * so the protocol state can stay the same.
    */
-  if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT)
+  if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_SENT)
     {
-      if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ) < 0)
+      if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ) < 0)
         return (-1);
     }
   else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT)
@@ -1707,9 +1707,9 @@ _check_for_ipmi_2_0_support (ipmiconsole_ctx_t c)
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT);
+  assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_SENT);
 
-  if ((ret = ipmi_check_authentication_capabilities_ipmi_2_0 (c->connection.obj_authentication_capabilities_v20_rs)) < 0)
+  if ((ret = ipmi_check_authentication_capabilities_ipmi_2_0 (c->connection.obj_authentication_capabilities_rs)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("ipmi_check_authentication_capabilities_ipmi_2_0: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1739,7 +1739,7 @@ _check_for_authentication_support (ipmiconsole_ctx_t c)
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT);
+  assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_SENT);
 
   /* IPMI Workaround
    *
@@ -1765,7 +1765,7 @@ _check_for_authentication_support (ipmiconsole_ctx_t c)
       
       if ((ret = ipmi_check_authentication_capabilities_username (tmp_username_ptr,
                                                                   tmp_password_ptr,
-                                                                  c->connection.obj_authentication_capabilities_v20_rs)) < 0)
+                                                                  c->connection.obj_authentication_capabilities_rs)) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("ipmi_check_authentication_capabilities_username: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1782,7 +1782,7 @@ _check_for_authentication_support (ipmiconsole_ctx_t c)
         tmp_k_g_ptr = c->config.k_g;
       
       if ((ret = ipmi_check_authentication_capabilities_k_g (tmp_k_g_ptr,
-                                                             c->connection.obj_authentication_capabilities_v20_rs)) < 0)
+                                                             c->connection.obj_authentication_capabilities_rs)) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("ipmi_check_authentication_capabilities_k_g: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -2740,10 +2740,10 @@ _process_protocol_state_start (ipmiconsole_ctx_t c)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ) < 0)
+  if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ) < 0)
     /* The session isn't setup, no need to attempt to close it cleanly */
     return (-1);
-  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT;
+  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_SENT;
   return (0);
 }
 
@@ -2751,7 +2751,7 @@ _process_protocol_state_start (ipmiconsole_ctx_t c)
  * sent), -1 to close the session (non-cleanly)
  */
 static int
-_process_protocol_state_get_authentication_capabilities_v20_sent (ipmiconsole_ctx_t c)
+_process_protocol_state_get_authentication_capabilities_sent (ipmiconsole_ctx_t c)
 {
   int ret;
 
@@ -3556,10 +3556,10 @@ _process_protocol_state_close_session_sent (ipmiconsole_ctx_t c)
 
       IPMICONSOLE_CTX_DEBUG (c, ("trying new port: %Xh", c->session.console_port));
 
-      if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ) < 0)
+      if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ) < 0)
         /* Session is closed, just exit on error */
         return (-1);
-      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_SENT;
       return (0);
     }
 
@@ -3610,7 +3610,7 @@ _process_ctx (ipmiconsole_ctx_t c, unsigned int *timeout)
 
   if (ret)
     {
-      if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT)
+      if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_SENT)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("closing connection due to connection timeout"));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_CONNECTION_TIMEOUT);
@@ -3704,11 +3704,11 @@ _process_ctx (ipmiconsole_ctx_t c, unsigned int *timeout)
 
   /* Below here, the state machine handles packet receives */
  state_machine:
-  if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT)
+  if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_SENT)
     {
-      assert (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS);
+      assert (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS);
 
-      if (_process_protocol_state_get_authentication_capabilities_v20_sent (c) < 0)
+      if (_process_protocol_state_get_authentication_capabilities_sent (c) < 0)
         goto close_session;
       /* fallthrough to calculate_timeout */
     }

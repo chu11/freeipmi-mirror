@@ -883,6 +883,7 @@ int
 ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx,
                                                   uint8_t channel_number,
                                                   uint8_t maximum_privilege_level,
+                                                  uint8_t get_ipmi_v20_extended_data,
                                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -896,6 +897,7 @@ ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx,
 
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !IPMI_PRIVILEGE_LEVEL_VALID (maximum_privilege_level)
+      || !IPMI_GET_IPMI_DATA_VALID (get_ipmi_v20_extended_data)
       || !fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
@@ -917,70 +919,8 @@ ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_channel_authentication_capabilities (channel_number,
                                                         maximum_privilege_level,
+                                                        get_ipmi_v20_extended_data,
                                                         obj_cmd_rq) < 0)
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (api_ipmi_cmd (ctx,
-                    IPMI_BMC_IPMB_LUN_BMC,
-                    IPMI_NET_FN_APP_RQ,
-                    obj_cmd_rq,
-                    obj_cmd_rs) < 0)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      goto cleanup;
-    }
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rq);
-  return (rv);
-}
-
-int
-ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_ctx_t ctx,
-                                                      uint8_t channel_number,
-                                                      uint8_t maximum_privilege_level,
-                                                      uint8_t get_ipmi_v20_extended_data,
-                                                      fiid_obj_t obj_cmd_rs)
-{
-  fiid_obj_t obj_cmd_rq = NULL;
-  int rv = -1;
-
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_PRIVILEGE_LEVEL_VALID (maximum_privilege_level)
-      || !IPMI_GET_IPMI_DATA_VALID (get_ipmi_v20_extended_data)
-      || !fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_get_channel_authentication_capabilities_v20_rs) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
-      return (-1);
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_v20_rq)))
-    {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (fill_cmd_get_channel_authentication_capabilities_v20 (channel_number,
-                                                            maximum_privilege_level,
-                                                            get_ipmi_v20_extended_data,
-                                                            obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;

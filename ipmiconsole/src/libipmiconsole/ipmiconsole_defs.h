@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.73 2009-06-17 20:17:58 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.74 2009-08-17 23:20:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -64,7 +64,7 @@
 typedef enum
   {
     IPMICONSOLE_PROTOCOL_STATE_START                                    = 0x00,
-    IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT = 0x01,
+    IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_SENT     = 0x01,
     IPMICONSOLE_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT                = 0x02,
     IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT                      = 0x03,
     IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT                      = 0x04,
@@ -83,8 +83,8 @@ typedef enum
  */
 typedef enum
   {
-    IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ = 0x00,
-    IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS = 0x01,
+    IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ     = 0x00,
+    IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS     = 0x01,
     IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST                   = 0x02,
     IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE                  = 0x03,
     IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1                         = 0x04,
@@ -110,7 +110,7 @@ typedef enum
   } ipmiconsole_packet_type_t;
 
 #define IPMICONSOLE_PACKET_TYPE_REQUEST(__p)                                \
-  (((__p) == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ \
+  (((__p) == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RQ     \
     || (__p) == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST                \
     || (__p) == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1                      \
     || (__p) == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3                      \
@@ -124,7 +124,7 @@ typedef enum
     || (__p) == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) ? 1 : 0)
 
 #define IPMICONSOLE_PACKET_TYPE_RESPONSE(__p)                               \
-  (((__p) == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS \
+  (((__p) == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_RS     \
     || (__p) == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE               \
     || (__p) == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2                      \
     || (__p) == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4                      \
@@ -286,8 +286,8 @@ struct ipmiconsole_ctx_connection {
   fiid_obj_t obj_rmcpplus_session_trlr_rq;
   fiid_obj_t obj_rmcpplus_session_trlr_rs;
 
-  fiid_obj_t obj_authentication_capabilities_v20_rq;
-  fiid_obj_t obj_authentication_capabilities_v20_rs;
+  fiid_obj_t obj_authentication_capabilities_rq;
+  fiid_obj_t obj_authentication_capabilities_rs;
   fiid_obj_t obj_open_session_request;
   fiid_obj_t obj_open_session_response;
   fiid_obj_t obj_rakp_message_1;

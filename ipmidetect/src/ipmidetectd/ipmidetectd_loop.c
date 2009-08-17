@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetectd_loop.c,v 1.20 2009-05-16 05:29:55 chu11 Exp $
+ *  $Id: ipmidetectd_loop.c,v 1.21 2009-08-17 23:20:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -291,6 +291,7 @@ _ipmi_ping_build (struct ipmidetectd_info *info, uint8_t *buf, unsigned int bufl
 
   if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                                         IPMI_PRIVILEGE_LEVEL_USER,
+                                                        IPMI_GET_IPMI_V15_DATA,
                                                         obj_cmd) < 0)
     IPMIDETECTD_EXIT (("fill_cmd_get_channel_authentication_capabilities: %s", strerror (errno)));
 

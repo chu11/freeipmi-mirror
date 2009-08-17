@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.122 2009-08-05 21:24:59 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.123 2009-08-17 23:20:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -55,11 +55,7 @@ ipmipower_packet_cmd_template (ipmipower_powercmd_t ip, packet_type_t pkt)
   assert (ip);
   assert (PACKET_TYPE_VALID_PKT (pkt));
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
-    return (&tmpl_cmd_get_channel_authentication_capabilities_v20_rq[0]);
-  else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES)
-    return (&tmpl_cmd_get_channel_authentication_capabilities_v20_rs[0]);
-  else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
+  if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     return (&tmpl_cmd_get_channel_authentication_capabilities_rq[0]);
   else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
     return (&tmpl_cmd_get_channel_authentication_capabilities_rs[0]);
@@ -119,11 +115,7 @@ ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, packet_type_t pkt)
   assert (ip);
   assert (PACKET_TYPE_VALID_PKT (pkt));
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
-    return (ip->obj_authentication_capabilities_v20_req);
-  else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES)
-    return (ip->obj_authentication_capabilities_v20_res);
-  else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
+  if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     return (ip->obj_authentication_capabilities_req);
   else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
     return (ip->obj_authentication_capabilities_res);
@@ -199,9 +191,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip, packet_type_t pkt,
       else
         packet_type = DEBUG_UTIL_TYPE_IPMI_2_0;
 
-      if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ
-          || pkt == AUTHENTICATION_CAPABILITIES_V20_RES
-          || pkt == AUTHENTICATION_CAPABILITIES_REQ
+      if (pkt == AUTHENTICATION_CAPABILITIES_REQ
           || pkt == AUTHENTICATION_CAPABILITIES_RES)
         str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
       else if (pkt == GET_SESSION_CHALLENGE_REQ
@@ -393,8 +383,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
       exit (1);
     }
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
-      || pkt == AUTHENTICATION_CAPABILITIES_RES
+  if (pkt == AUTHENTICATION_CAPABILITIES_RES
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
       || cmd_args.common.driver_type == IPMI_DEVICE_LAN)
@@ -920,23 +909,18 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
     }
 
   /* Calculate/Fill Command Object */
-  if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
+  if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     {
-      if (fill_cmd_get_channel_authentication_capabilities_v20 (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                                                cmd_args.common.privilege_level,
-                                                                IPMI_GET_IPMI_V20_EXTENDED_DATA,
-                                                                ip->obj_authentication_capabilities_v20_req) < 0)
-        {
-          IPMIPOWER_ERROR (("fill_cmd_get_channel_authentication_capabilities_v20: %s",
-                            strerror (errno)));
-          exit (1);
-        }
-      obj_cmd_req = ip->obj_authentication_capabilities_v20_req;
-    }
-  else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
-    {
+      uint8_t get_ipmi_v20_extended_data;
+      
+      if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
+        get_ipmi_v20_extended_data = IPMI_GET_IPMI_V20_EXTENDED_DATA;
+      else
+        get_ipmi_v20_extended_data = IPMI_GET_IPMI_V15_DATA;
+      
       if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                                             cmd_args.common.privilege_level,
+                                                            get_ipmi_v20_extended_data,
                                                             ip->obj_authentication_capabilities_req) < 0)
         {
           IPMIPOWER_ERROR (("fill_cmd_get_channel_authentication_capabilities: %s",
@@ -1204,8 +1188,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
     }
 
   /* Construct packets */
-  if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ
-      || pkt == AUTHENTICATION_CAPABILITIES_REQ
+  if (pkt == AUTHENTICATION_CAPABILITIES_REQ
       || pkt == GET_SESSION_CHALLENGE_REQ
       || pkt == ACTIVATE_SESSION_REQ
       || (cmd_args.common.driver_type == IPMI_DEVICE_LAN
@@ -1348,7 +1331,8 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, packet_type_t pkt)
                             ip->ic->hostname, ip->protocol_state, pkt));
           exit (1);
         }
-      else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
+      else if (pkt == AUTHENTICATION_CAPABILITIES_RES
+               && cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
                && comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
         return (MSG_TYPE_IPMI_2_0_UNAVAILABLE);
       else if (pkt == GET_SESSION_CHALLENGE_RES

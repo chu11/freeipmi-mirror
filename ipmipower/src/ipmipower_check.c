@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.114 2009-06-26 03:43:18 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.115 2009-08-17 23:20:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -52,8 +52,7 @@ ipmipower_check_checksum (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
-  assert (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
-          || pkt == AUTHENTICATION_CAPABILITIES_RES
+  assert (pkt == AUTHENTICATION_CAPABILITIES_RES
           || pkt == GET_SESSION_CHALLENGE_RES
           || pkt == ACTIVATE_SESSION_RES
           || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES /* IPMI 1.5 or 2.0 */
@@ -227,8 +226,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip, packet_type_t
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
-  assert (pkt != AUTHENTICATION_CAPABILITIES_V20_RES
-          && pkt != AUTHENTICATION_CAPABILITIES_RES
+  assert (pkt != AUTHENTICATION_CAPABILITIES_RES
           && pkt != GET_SESSION_CHALLENGE_RES
           && pkt != ACTIVATE_SESSION_RES
           && pkt != OPEN_SESSION_RES
@@ -358,8 +356,7 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert (ip);
   assert (PACKET_TYPE_VALID_RES (pkt));
-  assert (pkt != AUTHENTICATION_CAPABILITIES_V20_RES
-          && pkt != AUTHENTICATION_CAPABILITIES_RES
+  assert (pkt != AUTHENTICATION_CAPABILITIES_RES
           && pkt != GET_SESSION_CHALLENGE_RES
           && pkt != ACTIVATE_SESSION_RES);
 
@@ -521,8 +518,7 @@ ipmipower_check_command (ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   cmd = val;
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
-      || pkt == AUTHENTICATION_CAPABILITIES_RES)
+  if (pkt == AUTHENTICATION_CAPABILITIES_RES)
     expected_cmd = IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES;
   else if (pkt == GET_SESSION_CHALLENGE_RES)
     expected_cmd = IPMI_CMD_GET_SESSION_CHALLENGE;
