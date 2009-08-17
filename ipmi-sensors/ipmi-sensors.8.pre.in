@@ -25,9 +25,13 @@ is not enabled or not owned by a BMC.  Please see
 \fB\-\-bridge\-sensors\fR option below to deal with sensors not owned
 by a BMC.  Sensors may output a sensor event of "Unknown" if the
 sensor reading cannot be read.  This is typical of a sensor that is
-busy or a reading that cannot be calculated.  Sensors need not always
-report a sensor event.  When a sensor event is not present, "NONE" is
-reported for the sensor event.
+busy or a reading that cannot be calculated.  If sensors report
+"Unrecognized State", it is indicative of an unkown sensor type,
+typically an OEM sensor.  If the sensor OEM interpretation is
+available, the \fB\-\-intepret\-oem\-data\fR may be able to report
+the appropriate sensor state.  Sensors need not always report a sensor
+event.  When a sensor event is not present, "OK" is typically
+reported.
 
 #include <@top_srcdir@/common/man/manpage-common-table-of-contents.man>
 To perform IPMI sensor configuration, please see
