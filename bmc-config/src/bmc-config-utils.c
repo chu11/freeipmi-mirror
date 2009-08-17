@@ -34,7 +34,7 @@
 config_err_t
 get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_num)
 {
-  uint8_t channel_number;
+  uint8_t lan_channel_number;
 
   if (state_data->lan_channel_number_initialized)
     {
@@ -44,7 +44,7 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
 
   if (ipmi_get_channel_number (state_data->ipmi_ctx,
                                IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
-                               &channel_number) < 0)
+                               &lan_channel_number) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
@@ -55,7 +55,7 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
     }
 
   state_data->lan_channel_number_initialized = 1;
-  state_data->lan_channel_number = channel_number;
+  state_data->lan_channel_number = lan_channel_number;
   *channel_num = state_data->lan_channel_number;
 
   return (CONFIG_ERR_SUCCESS);
@@ -64,7 +64,7 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
 config_err_t
 get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_num)
 {
-  uint8_t channel_number;
+  uint8_t serial_channel_number;
 
   if (state_data->serial_channel_number_initialized)
     {
@@ -74,7 +74,7 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel
 
   if (ipmi_get_channel_number (state_data->ipmi_ctx,
                                IPMI_CHANNEL_MEDIUM_TYPE_RS232,
-                               &channel_number) < 0)
+                               &serial_channel_number) < 0)
     {
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
@@ -85,7 +85,7 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel
     }
 
   state_data->serial_channel_number_initialized = 1;
-  state_data->serial_channel_number = channel_number;
+  state_data->serial_channel_number = serial_channel_number;
   *channel_num = state_data->serial_channel_number;
 
   return (CONFIG_ERR_SUCCESS);
@@ -98,7 +98,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t rc;
   uint64_t val;
-  uint8_t channel_number;
+  uint8_t lan_channel_number;
 
   if (state_data->sol_channel_number_initialized)
     {
@@ -115,14 +115,14 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
       goto cleanup;
     }
 
-  if ((rc = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((rc = get_lan_channel_number (state_data, &lan_channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = rc;
       goto cleanup;
     }
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (state_data->ipmi_ctx,
-                                                                     channel_number,
+                                                                     lan_channel_number,
                                                                      IPMI_GET_SOL_PARAMETER,
                                                                      CONFIG_SET_SELECTOR,
                                                                      CONFIG_BLOCK_SELECTOR,
@@ -134,7 +134,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
         {
           /* Assume LAN channel */
           state_data->sol_channel_number_initialized = 1;
-          state_data->sol_channel_number = channel_number;
+          state_data->sol_channel_number = lan_channel_number;
           *channel_num = state_data->sol_channel_number;
           goto out;
         }
@@ -180,7 +180,7 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t rc;
   uint64_t val;
-  uint8_t channel_number;
+  uint8_t lan_channel_number;
 
   if (state_data->number_of_users_initialized)
     {
@@ -197,14 +197,14 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
       goto cleanup;
     }
 
-  if ((rc = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((rc = get_lan_channel_number (state_data, &lan_channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = rc;
       goto cleanup;
     }
 
   if (ipmi_cmd_get_user_access (state_data->ipmi_ctx,
-                                channel_number,
+                                lan_channel_number,
                                 1, /* user_id number */
                                 obj_cmd_rs) < 0)
     {
