@@ -325,6 +325,9 @@ Dell Poweredge R610: User IPMI messaging being enabled/disabled does
 not seem to affect authentication and/or execution of IPMI commands.
 No current resolution.
 
+HP DL 380 G5: No IPMI over LAN channel is reported by the motherboard.
+No current resolution.
+
 ipmi-fru
 --------
 
