@@ -352,6 +352,8 @@ o libfreeipmi
     change.
   - Collapse v1.5 and v2.0 "Get Authentication Capabilities"
     templates, functions, etc. into one.  Results in API change.
+  - Collapse v1.5 and v2.0 "Set User Password" templates, functions,
+    etc. into one.  Results in API change.
 o libipmimonitoring
   - Support callback functions in API to monitor sensors as they
     are read/analyzed instead of after all sensors have been

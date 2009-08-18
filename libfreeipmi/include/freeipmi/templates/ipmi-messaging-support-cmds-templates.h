@@ -1056,25 +1056,11 @@ fiid_template_t tmpl_cmd_get_user_name_rs =
 Set User Password Command Request
 ---------------------------------
 
-fiid_template_t tmpl_cmd_set_user_password_rq =
-  {
-    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "user_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "user_id.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "operation.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "password", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
-
-Set User Password Command (IPMI 2.0) Request
---------------------------------------------
-
 /* achu: Note that the password is variable length, but it must be
  * fixed to 0, 16, or 20 bytes.  We may try and amend this situation
  * in fiid at a later time.
  */
-fiid_template_t tmpl_cmd_set_user_password_v20_rq =
+fiid_template_t tmpl_cmd_set_user_password_rq =
   {
     { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 6,   "user_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

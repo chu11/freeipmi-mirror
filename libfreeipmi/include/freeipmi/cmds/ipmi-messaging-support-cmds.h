@@ -385,7 +385,6 @@ extern fiid_template_t tmpl_cmd_get_user_name_rq;
 extern fiid_template_t tmpl_cmd_get_user_name_rs;
 
 extern fiid_template_t tmpl_cmd_set_user_password_rq;
-extern fiid_template_t tmpl_cmd_set_user_password_v20_rq;
 extern fiid_template_t tmpl_cmd_set_user_password_rs;
 
 int fill_cmd_set_bmc_global_enables (uint8_t receive_message_queue_interrupt,
@@ -575,17 +574,11 @@ int fill_cmd_set_user_name (uint8_t user_id,
 int fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_user_password (uint8_t user_id,
+                                uint8_t password_size,
                                 uint8_t operation,
                                 const char *password,
                                 unsigned int password_len,
                                 fiid_obj_t obj_cmd_rq);
-
-int fill_cmd_set_user_password_v20 (uint8_t user_id,
-                                    uint8_t password_size,
-                                    uint8_t operation,
-                                    const char *password,
-                                    unsigned int password_len,
-                                    fiid_obj_t obj_cmd_rq);
 
 
 #ifdef __cplusplus

@@ -496,6 +496,7 @@ static config_err_t
 _check_bmc_user_password (bmc_config_state_data_t *state_data,
                           uint8_t userid,
                           char *password,
+                          uint8_t password_size,
                           int *is_same)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -503,6 +504,8 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
 
   assert (state_data);
   assert (password);
+  assert (password_size == IPMI_PASSWORD_SIZE_16_BYTES
+          || password_size == IPMI_PASSWORD_SIZE_20_BYTES);
   assert (is_same);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_user_password_rs)))
@@ -516,6 +519,7 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
 
   if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
                                   userid,
+                                  password_size,
                                   IPMI_PASSWORD_OPERATION_TEST_PASSWORD,
                                   password,
                                   strlen (password),
@@ -568,85 +572,6 @@ _check_bmc_user_password (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-_check_bmc_user_password20 (bmc_config_state_data_t *state_data,
-                            uint8_t userid,
-                            char *password,
-                            int *is_same)
-
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
-
-  assert (state_data);
-  assert (password);
-  assert (is_same);
-
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_user_password_rs)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (ipmi_cmd_set_user_password_v20 (state_data->ipmi_ctx,
-                                      userid,
-                                      IPMI_PASSWORD_SIZE_20_BYTES,
-                                      IPMI_PASSWORD_OPERATION_TEST_PASSWORD,
-                                      password,
-                                      strlen (password),
-                                      obj_cmd_rs) < 0)
-    {
-      uint8_t comp_code;
-      uint64_t val;
-
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "comp_code",
-                        &val) < 0)
-        {
-          if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                         obj_cmd_rs,
-                                         &ret))
-            rv = ret;
-
-          goto cleanup;
-        }
-      comp_code = val;
-
-      if (comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT
-          || comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT)
-        {
-          *is_same = 0;
-          goto done;
-        }
-      else
-        {
-          if (state_data->prog_data->args->config_args.common.debug)
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "ipmi_cmd_set_user_password_v20: %s\n",
-                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
-          if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                         obj_cmd_rs,
-                                         &ret))
-            rv = ret;
-        }
-      goto cleanup;
-    }
-  else
-    *is_same = 1;
-
- done:
-  rv = CONFIG_ERR_SUCCESS;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
-  return (rv);
-}
-
-static config_err_t
 password_checkout (const char *section_name,
                    struct config_keyvalue *kv,
                    void *arg)
@@ -669,10 +594,11 @@ password_checkout (const char *section_name,
       /* Password length validated before the diff */
       if (strlen (kv->value_input) > IPMI_1_5_MAX_PASSWORD_LENGTH)
         {
-          if ((ret = _check_bmc_user_password20 (state_data,
-                                                 userid,
-                                                 kv->value_input,
-                                                 &is_same)) != CONFIG_ERR_SUCCESS)
+          if ((ret = _check_bmc_user_password (state_data,
+                                               userid,
+                                               kv->value_input,
+                                               IPMI_PASSWORD_SIZE_20_BYTES,
+                                               &is_same)) != CONFIG_ERR_SUCCESS)
             return (ret);
         }
       else
@@ -680,6 +606,7 @@ password_checkout (const char *section_name,
           if ((ret = _check_bmc_user_password (state_data,
                                                userid,
                                                kv->value_input,
+                                               IPMI_PASSWORD_SIZE_16_BYTES,
                                                &is_same)) != CONFIG_ERR_SUCCESS)
             return (ret);
         }
@@ -721,20 +648,20 @@ password_commit (const char *section_name,
   /* Password length validated before the commit */
   if (strlen (kv->value_input) > IPMI_1_5_MAX_PASSWORD_LENGTH)
     {
-      if (ipmi_cmd_set_user_password_v20 (state_data->ipmi_ctx,
-                                          userid,
-                                          IPMI_PASSWORD_SIZE_20_BYTES,
-                                          IPMI_PASSWORD_OPERATION_SET_PASSWORD,
-                                          kv->value_input,
-                                          strlen (kv->value_input),
-                                          obj_cmd_rs) < 0)
+      if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
+                                      userid,
+                                      IPMI_PASSWORD_SIZE_20_BYTES,
+                                      IPMI_PASSWORD_OPERATION_SET_PASSWORD,
+                                      kv->value_input,
+                                      strlen (kv->value_input),
+                                      obj_cmd_rs) < 0)
         {
           config_err_t ret;
 
           if (state_data->prog_data->args->config_args.common.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
-                             "ipmi_cmd_set_user_password_v20: %s\n",
+                             "ipmi_cmd_set_user_password: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
           if (config_is_non_fatal_error (state_data->ipmi_ctx,
@@ -749,6 +676,7 @@ password_commit (const char *section_name,
     {
       if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
                                       userid,
+                                      IPMI_PASSWORD_SIZE_16_BYTES,
                                       IPMI_PASSWORD_OPERATION_SET_PASSWORD,
                                       kv->value_input,
                                       strlen (kv->value_input),
@@ -818,13 +746,14 @@ password_validate (const char *section_name,
       config_err_t ret;
       int is_same;
 
-      /* if _check_bmc_user_password20() fails, that means IPMI 2.0
+      /* if _check_bmc_user_password() fails, that means IPMI 2.0
        * isn't supported, so this password is too long 
        */
-      if ((ret = _check_bmc_user_password20 (state_data,
-                                             userid,
-                                             "foobar",
-                                             &is_same)) != CONFIG_ERR_SUCCESS)
+      if ((ret = _check_bmc_user_password (state_data,
+                                           userid,
+                                           "foobar",
+                                           IPMI_PASSWORD_SIZE_20_BYTES,
+                                           &is_same)) != CONFIG_ERR_SUCCESS)
         return (CONFIG_VALIDATE_INVALID_VALUE);
 
       return (CONFIG_VALIDATE_VALID_VALUE);
@@ -861,10 +790,11 @@ password20_checkout (const char *section_name,
   /* achu: password can't be checked out, but we should make sure IPMI
    * 2.0 exists on the system.
    */
-  if ((ret = _check_bmc_user_password20 (state_data,
-                                         userid,
-                                         "foobar",
-                                         &is_same)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _check_bmc_user_password (state_data,
+                                       userid,
+                                       "foobar",
+                                       IPMI_PASSWORD_SIZE_20_BYTES,
+                                       &is_same)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (state_data->prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
@@ -874,10 +804,11 @@ password20_checkout (const char *section_name,
        * If it is, return the inputted password back for proper
        * diffing.
        */
-      if ((ret = _check_bmc_user_password20 (state_data,
-                                             userid,
-                                             kv->value_input,
-                                             &is_same)) != CONFIG_ERR_SUCCESS)
+      if ((ret = _check_bmc_user_password (state_data,
+                                           userid,
+                                           kv->value_input,
+                                           IPMI_PASSWORD_SIZE_20_BYTES,
+                                           &is_same)) != CONFIG_ERR_SUCCESS)
         return (ret);
 
       if (is_same)
@@ -913,20 +844,20 @@ password20_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_user_password_v20 (state_data->ipmi_ctx,
-                                      userid,
-                                      IPMI_PASSWORD_SIZE_20_BYTES,
-                                      IPMI_PASSWORD_OPERATION_SET_PASSWORD,
-                                      kv->value_input,
-                                      strlen (kv->value_input),
-                                      obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
+                                  userid,
+                                  IPMI_PASSWORD_SIZE_20_BYTES,
+                                  IPMI_PASSWORD_OPERATION_SET_PASSWORD,
+                                  kv->value_input,
+                                  strlen (kv->value_input),
+                                  obj_cmd_rs) < 0)
     {
       config_err_t ret;
 
       if (state_data->prog_data->args->config_args.common.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "ipmi_cmd_set_user_password_v20: %s\n",
+                         "ipmi_cmd_set_user_password: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (config_is_non_fatal_error (state_data->ipmi_ctx,
@@ -1038,6 +969,7 @@ enable_user_commit (const char *section_name,
   memset (password, 0, IPMI_1_5_MAX_PASSWORD_LENGTH);
   if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
                                   userid,
+                                  IPMI_PASSWORD_SIZE_16_BYTES,
                                   user_status,
                                   password,
                                   0,
@@ -1080,6 +1012,7 @@ enable_user_commit (const char *section_name,
             }
 
           if (fill_cmd_set_user_password (userid,
+                                          IPMI_PASSWORD_SIZE_16_BYTES,
                                           user_status,
                                           password,
                                           0,

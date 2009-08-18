@@ -840,22 +840,11 @@ fiid_template_t tmpl_cmd_get_user_name_rs =
     { 0,  "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_user_password_rq =
-  {
-    { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "user_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "user_id.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 2,   "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6,   "operation.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "password", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 0, "", 0}
-  };
-
 /* achu: Note that the password is variable length, but it must be
  * fixed to 0, 16, or 20 bytes.  We may try and amend this situation
  * in fiid at a later time.
  */
-fiid_template_t tmpl_cmd_set_user_password_v20_rq =
+fiid_template_t tmpl_cmd_set_user_password_rq =
   {
     { 8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 6,   "user_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -2131,58 +2120,11 @@ fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_cmd_rq)
 
 int
 fill_cmd_set_user_password (uint8_t user_id,
+                            uint8_t password_size,
                             uint8_t operation,
                             const char *password,
                             unsigned int password_len,
                             fiid_obj_t obj_cmd_rq)
-{
-  /* achu: password can be the max length.  Null termination in IPMI
-   * packet not required.
-   */
-  if (!IPMI_PASSWORD_OPERATION_VALID (operation)
-      || (password && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
-      || !fiid_obj_valid (obj_cmd_rq))
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_user_password_rq) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_COMMAND);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "operation.reserved", 0);
-
-  if (operation == IPMI_PASSWORD_OPERATION_SET_PASSWORD
-      || operation == IPMI_PASSWORD_OPERATION_TEST_PASSWORD)
-    {
-      char buf[IPMI_1_5_MAX_PASSWORD_LENGTH];
-
-      /* achu: password must be zero extended */
-      memset (buf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
-      if (password)
-        strncpy (buf, password, IPMI_1_5_MAX_PASSWORD_LENGTH);
-
-      FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, IPMI_1_5_MAX_PASSWORD_LENGTH);
-    }
-
-  return (0);
-}
-
-int
-fill_cmd_set_user_password_v20 (uint8_t user_id,
-                                uint8_t password_size,
-                                uint8_t operation,
-                                const char *password,
-                                unsigned int password_len,
-                                fiid_obj_t obj_cmd_rq)
 {
   /* achu: password can be the max length.  Null termination in IPMI
    * packet not required.
@@ -2204,7 +2146,7 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_user_password_v20_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_user_password_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);

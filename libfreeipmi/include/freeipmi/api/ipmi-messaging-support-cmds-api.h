@@ -307,18 +307,11 @@ int ipmi_cmd_get_user_name (ipmi_ctx_t ctx,
 
 int ipmi_cmd_set_user_password (ipmi_ctx_t ctx,
                                 uint8_t user_id,
+                                uint8_t password_size,
                                 uint8_t operation,
                                 const char *password,
                                 unsigned int password_len,
                                 fiid_obj_t obj_cmd_rs);
-
-int ipmi_cmd_set_user_password_v20 (ipmi_ctx_t ctx,
-                                    uint8_t user_id,
-                                    uint8_t password_size,
-                                    uint8_t operation,
-                                    const char *password,
-                                    unsigned int password_len,
-                                    fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

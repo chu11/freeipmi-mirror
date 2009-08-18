@@ -3,6 +3,9 @@
 	* Collapse get authentication capabilities v1.5 and v2.0 into one
 	template, function, packet, etc. throughout.
 
+	* Collapse set user password v1.5 and v2.0 into one template,
+	function, packet, etc. throughout.
+	
 	* Various minor code cleanup.
 	
 2009-08-13  Albert Chu <chu11@llnl.gov>
