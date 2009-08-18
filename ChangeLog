@@ -3,6 +3,8 @@
 	* ipmi-oem/: Redo Dell additions due to extra info given from
 	Dell.
 
+	* ipmi-oem/: Redo "api" to set various dell configurations.
+
 2009-08-17  Albert Chu <chu11@llnl.gov>
 
 	* Collapse get authentication capabilities v1.5 and v2.0 into one

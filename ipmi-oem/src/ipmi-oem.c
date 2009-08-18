@@ -87,8 +87,8 @@ struct ipmi_oem_command oem_dell[] =
     },
     {
       "set-ssh-config",
-      "<enable|disable> <idletimeout> <portnumber>",
-      3,
+      "KEY=VALUE ...",
+      1,
       ipmi_oem_dell_set_ssh_config
     },
     {
@@ -99,8 +99,8 @@ struct ipmi_oem_command oem_dell[] =
     },
     {
       "set-telnet-config",
-      "<enable|disable> <sessiontimeout> <portnumber> <7flsenable|7flsdisable>",
-      4,
+      "KEY=VALUE ...",
+      1,
       ipmi_oem_dell_set_telnet_config
     },
     {
@@ -111,8 +111,8 @@ struct ipmi_oem_command oem_dell[] =
     },
     {
       "set-web-server-config",
-      "<enable|disable> <sessiontimeout> <httpportnumber> <httpsportnumber>",
-      4,
+      "KEY=VALUE ...",
+      1,
       ipmi_oem_dell_set_web_server_config
     },
     {
@@ -402,7 +402,7 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
                 {
                   cmd_found++;
 
-                  if (state_data->prog_data->args->oem_options_count != oem_cmd->required_oem_options)
+                  if (state_data->prog_data->args->oem_options_count < oem_cmd->required_oem_options)
                     {
                       pstdout_fprintf (state_data->pstate,
                                        stderr,

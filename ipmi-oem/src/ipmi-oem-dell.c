@@ -84,6 +84,7 @@
 #define IPMI_OEM_DELL_TOKEN_ID_SSH                 0x0A
 #define IPMI_OEM_DELL_TOKEN_ID_TELNET              0x0B
 #define IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER          0x0C
+#define IPMI_OEM_DELL_TOKEN_ID_ACTIVE_DIRECTORY    0x07
 
 #define IPMI_OEM_DELL_TOKEN_VERSION                0x01
 
@@ -1453,17 +1454,178 @@ ipmi_oem_dell_get_ssh_config (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
+static int 
+_parse_key_value (ipmi_oem_state_data_t *state_data,
+                  unsigned int option_num,
+                  char **key,
+                  char **value)
+{  
+  char *tempstr = NULL;
+  char *tempptr = NULL;
+  char *tempkey = NULL;
+  char *tempvalue = NULL;
+  int rv = -1;
+   
+  assert (state_data);
+  assert (key);
+  assert (value);
+   
+  if (!(tempstr = strdup (state_data->prog_data->args->oem_options[option_num])))
+    {
+      pstdout_perror (state_data->pstate,
+                      "strdup");
+      goto cleanup;
+    }
+   
+  tempptr = strchr (tempstr, '=');
+  if (!tempptr)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : no equal sign\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      goto cleanup;
+    }
+
+  (*tempptr) = '\0'; 
+  tempptr++;
+
+  if (!(tempkey = strdup (tempstr)))
+    {
+      pstdout_perror (state_data->pstate,
+                      "strdup");
+      goto cleanup;
+    }
+
+  if (!(tempvalue = strdup (tempptr)))
+    {
+      pstdout_perror (state_data->pstate,
+                      "strdup");
+      goto cleanup; 
+    }
+  
+  (*key) = tempkey;
+  (*value) = tempvalue;
+  
+  rv = 0;
+ cleanup:
+  free (tempstr);
+  if (rv < 0)
+    {
+      free (tempkey);
+      free (tempvalue);
+    }
+  return (rv);
+}
+
+static int
+_parse_enable (ipmi_oem_state_data_t *state_data,
+               unsigned int option_num,
+               const char *value,
+               uint8_t *enable)
+{
+  assert (state_data);
+  assert (value);
+  assert (enable);
+
+  if (strcasecmp (value, "enable") && strcasecmp (value, "disable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+  
+  if (!strcasecmp (value, "enable"))
+    (*enable) = 1;
+  else
+    (*enable) = 0;
+  
+  return (0);
+}
+
+static int
+_parse_timeout (ipmi_oem_state_data_t *state_data,
+                unsigned int option_num,
+                const char *value,
+                uint32_t *timeout)
+{ 
+  unsigned int temp;
+  char *ptr = NULL;
+  
+  assert (state_data);
+  assert (value);
+  assert (timeout);
+  
+  errno = 0;
+  
+  temp = strtoul (value, &ptr, 10);
+  
+  if (errno
+      || ptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+  
+  (*timeout) = temp;
+  return (0);
+}
+
+static int
+_parse_port (ipmi_oem_state_data_t *state_data,
+             unsigned int option_num,
+             const char *value,
+             uint16_t *port)
+{
+  unsigned int temp;
+  char *ptr = NULL;
+
+  assert (state_data);
+  assert (value);
+  assert (port);
+
+  errno = 0;
+  
+  temp = strtoul (value, &ptr, 10);
+  
+  if (errno
+      || ptr[0] != '\0'
+      || temp > 65535)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+  
+  (*port) = temp;
+  return (0);
+}
+
 int
 ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t token_data[IPMI_OEM_MAX_BYTES];
-  uint16_t valid_field_mask = 0x19; /* 2nd/3rd field not set */
-  unsigned int temp;
-  uint8_t sshenable;
-  uint32_t idletimeout;
-  uint16_t portnumber;
-  char *ptr = NULL;
+  uint16_t valid_field_mask = 0;
+  uint8_t sshenable = 0;
+  uint32_t idletimeout = 0;
+  uint16_t portnumber = 0;
   int rv = -1;
+  int i;
 
   /* Dell OEM
    *
@@ -1480,66 +1642,65 @@ ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
    * SSH data
    *
    * byte 6 - SSHEnable
-   * byte 7 - MaxConnections
+   * byte 7 - MaxConnections (read only)
    * byte 8 - ActiveConnections (read only)
    * byte 9 - 12 - IdleTimeout
    * byte 13 - 14 - PortNumber
    */
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 3);
+  assert (state_data->prog_data->args->oem_options_count >= 1);
 
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[0]);
-      goto cleanup;
-    }
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (_parse_key_value (state_data,
+                            i,
+                            &key,
+                            &value) < 0)
+        goto cleanup;
 
-  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
-    sshenable = 1;
-  else
-    sshenable = 0;
+      if (!strcasecmp (key, "ssh"))
+        {
+          if (_parse_enable (state_data, i, value, &sshenable) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x01;
+        }
+      else if (!strcasecmp (key, "idletimeout"))
+        {
+          if (_parse_timeout (state_data, i, value, &idletimeout) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x08;
+        }
+      else if (!strcasecmp (key, "portnumber"))
+        {
+          if (_parse_port (state_data, i, value, &portnumber) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x10;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
 
-  errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[1], &ptr, 10);
-  if (errno
-      || ptr[0] != '\0')
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[1]);
-      goto cleanup;
+      free (key);
+      free (value);
     }
-  idletimeout = temp;
-
-  errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[2], &ptr, 10);
-  if (errno
-      || ptr[0] != '\0'
-      || temp > 65535)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[2]);
-      goto cleanup;
-    }
-  portnumber = temp;
-  
+      
   token_data[0] = sshenable;
-  token_data[1] = 0;		/* maxconnections is read only */
-  token_data[2] = 0;		/* activeconnections is read only */
+  token_data[1] = 0;            /* maxconnections is read only */
+  token_data[2] = 0;            /* activeconnections is read only */
   token_data[3] = (idletimeout & 0x000000FF);
   token_data[4] = (idletimeout & 0x0000FF00) >> 8;
   token_data[5] = (idletimeout & 0x00FF0000) >> 16;
@@ -1664,14 +1825,13 @@ int
 ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t token_data[IPMI_OEM_MAX_BYTES];
-  uint16_t valid_field_mask = 0x39; /* 2nd/3rd field not set */
-  unsigned int temp;
-  uint8_t telnetenable;
-  uint32_t sessiontimeout;
-  uint16_t portnumber;
-  uint8_t _7flsenable;
-  char *ptr = NULL;
+  uint16_t valid_field_mask = 0;
+  uint8_t telnetenable = 0;
+  uint32_t sessiontimeout = 0;
+  uint16_t portnumber = 0;
+  uint8_t _7flsenable = 0;
   int rv = -1;
+  int i;
 
   /* Dell OEM
    *
@@ -1688,7 +1848,7 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
    * Telnet data
    *
    * byte 6 - telnetenable
-   * byte 7 - maxsessions
+   * byte 7 - maxsessions (read only)
    * byte 8 - activesessions (read only)
    * byte 9 - 12 - sessiontimeout
    * byte 13 - 14 - portnumber
@@ -1696,76 +1856,65 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
    */
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 4);
+  assert (state_data->prog_data->args->oem_options_count >= 1);
 
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[0]);
-      goto cleanup;
-    }
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (_parse_key_value (state_data,
+                            i,
+                            &key,
+                            &value) < 0)
+        goto cleanup;
 
-  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
-    telnetenable = 1;
-  else
-    telnetenable = 0;
+      if (!strcasecmp (key, "telnet"))
+        {
+          if (_parse_enable (state_data, i, value, &telnetenable) < 0)
+            goto cleanup;
 
-  errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[1], &ptr, 10);
-  if (errno
-      || ptr[0] != '\0')
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[1]);
-      goto cleanup;
-    }
-  sessiontimeout = temp;
+          valid_field_mask |= 0x01;
+        }
+      else if (!strcasecmp (key, "sessiontimeout"))
+        {
+          if (_parse_timeout (state_data, i, value, &sessiontimeout) < 0)
+            goto cleanup;
 
-  errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[2], &ptr, 10);
-  if (errno
-      || ptr[0] != '\0'
-      || temp > 65535)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[2]);
-      goto cleanup;
-    }
-  portnumber = temp;
-  
-  if (strcasecmp (state_data->prog_data->args->oem_options[3], "7flsenable")
-      && strcasecmp (state_data->prog_data->args->oem_options[3], "7flsdisable"))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[3]);
-      goto cleanup;
-    }
+          valid_field_mask |= 0x08;
+        }
+      else if (!strcasecmp (key, "portnumber"))
+        {
+          if (_parse_port (state_data, i, value, &portnumber) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x10;
+        }
+      else if (!strcasecmp (key, "7fls"))
+        {
+          if (_parse_enable (state_data, i, value, &_7flsenable) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x20;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
 
-  if (!strcasecmp (state_data->prog_data->args->oem_options[3], "7flsenable"))
-    _7flsenable = 1;
-  else
-    _7flsenable = 0;
+      free (key);
+      free (value);
+    }
 
   token_data[0] = telnetenable;
-  token_data[1] = 0;		/* maxsessions is read only */
-  token_data[2] = 0;		/* activesessions is read only */
+  token_data[1] = 0;            /* maxsessions is read only */
+  token_data[2] = 0;            /* activesessions is read only */
   token_data[3] = (sessiontimeout & 0x000000FF);
   token_data[4] = (sessiontimeout & 0x0000FF00) >> 8;
   token_data[5] = (sessiontimeout & 0x00FF0000) >> 16;
@@ -1890,14 +2039,13 @@ int
 ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t token_data[IPMI_OEM_MAX_BYTES];
-  uint16_t valid_field_mask = 0x39; /* 5 fields - 3rd field not set */
-  unsigned int temp;
-  uint8_t webserverenable;
-  uint32_t sessiontimeout;
-  uint16_t httpportnumber;
-  uint16_t httpsportnumber;
-  char *ptr = NULL;
+  uint16_t valid_field_mask = 0;
+  uint8_t webserverenable = 0;
+  uint32_t sessiontimeout = 0;
+  uint16_t httpportnumber = 0;
+  uint16_t httpsportnumber = 0;
   int rv = -1;
+  int i;
 
   /* Dell OEM
    *
@@ -1914,7 +2062,7 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
    * Web Server data
    *
    * byte 6 - webserverenable
-   * byte 7 - maxsessions
+   * byte 7 - maxsessions (read only)
    * byte 8 - activesessions (read only)
    * byte 9 - 12 - sessiontimeout
    * byte 13 - 14 - httpportnumber
@@ -1922,75 +2070,65 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
    */
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 4);
+  assert (state_data->prog_data->args->oem_options_count >= 1);
 
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[0]);
-      goto cleanup;
-    }
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (_parse_key_value (state_data,
+                            i,
+                            &key,
+                            &value) < 0)
+        goto cleanup;
 
-  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
-    webserverenable = 1;
-  else
-    webserverenable = 0;
+      if (!strcasecmp (key, "webserver"))
+        {
+          if (_parse_enable (state_data, i, value, &webserverenable) < 0)
+            goto cleanup;
 
-  errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[1], &ptr, 10);
-  if (errno
-      || ptr[0] != '\0')
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[1]);
-      goto cleanup;
-    }
-  sessiontimeout = temp;
+          valid_field_mask |= 0x01;
+        }
+      else if (!strcasecmp (key, "sessiontimeout"))
+        {
+          if (_parse_timeout (state_data, i, value, &sessiontimeout) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x08;
+        }
+      else if (!strcasecmp (key, "httpportnumber"))
+        {
+          if (_parse_port (state_data, i, value, &httpportnumber) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x10;
+        }
+      else if (!strcasecmp (key, "httpsportnumber"))
+        {
+          if (_parse_port (state_data, i, value, &httpsportnumber) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x20;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
 
-  errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[2], &ptr, 10);
-  if (errno
-      || ptr[0] != '\0'
-      || temp > 65535)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[2]);
-      goto cleanup;
+      free (key);
+      free (value);
     }
-  httpportnumber = temp;
-
-  errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[3], &ptr, 10);
-  if (errno
-      || ptr[0] != '\0'
-      || temp > 65535)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[3]);
-      goto cleanup;
-    }
-  httpsportnumber = temp;
 
   token_data[0] = webserverenable;
-  token_data[1] = 0;		/* maxessions is read only */
-  token_data[2] = 0;		/* activesessions is read only */
+  token_data[1] = 0;            /* maxessions is read only */
+  token_data[2] = 0;            /* activesessions is read only */
   token_data[3] = (sessiontimeout & 0x000000FF);
   token_data[4] = (sessiontimeout & 0x0000FF00) >> 8;
   token_data[5] = (sessiontimeout & 0x00FF0000) >> 16;

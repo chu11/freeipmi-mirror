@@ -102,28 +102,39 @@ as just \fIfailover\fR.  Command confirmed to work on Dell Poweredge
 This OEM command will get the current SSH configuration on the IPMI
 card.  Command confirmed to work on Dell Poweredge R610.
 .TP
-.B set-ssh-config \fIenable|disable\fR \fIidletimeout\fR \fIportnumber\fR
+.B set-ssh-config \fIKEY=VALUE ...\fR
 This OEM command will set the current SSH configuration on the IPMI
-card.  The \fIidletimeout\fR should be specified in seconds.  Command
-confirmed to work on Dell Poweredge R610.
+card.  The possible keys and values are
+\fIssh=enable|disable\fR, \fIidletimeout=seconds\fR, and
+\fIportnumber=num\fR.  Multiple key=value pairs may be
+specified.  Some fields may be read-only on specific Poweredge systems.
+Command confirmed to work on Dell Poweredge R610.
 .TP
 .B get-telnet-config
 This OEM command will get the current telnet configuration on the IPMI
 card.  Command confirmed to work on Dell Poweredge R610.
 .TP
-.B set-telnet-config \fIenable|disable\fR \fIsessiontimeout\fR\ \fIportnumber\fR \fI7flsenable|7flsdisable\fR
+.B set-telnet-config \fIKEY=VALUE ...\fR
 This OEM command will set the current Telnet configuration on the IPMI
-card.  The \fIsessiontimeout\fR\ should be specified in seconds.
-Command confirmed to work on Dell Poweredge R610.
+card.  The possible keys and values are
+\fItelnet=enable|disable\fR, \fIsessiontimeout=seconds\fR,
+\fIportnumber=num\fR, and \fI7fls=enable|disable\fR.
+Multiple key=value pairs may be specified.  Some fields may be
+read-only on specific Poweredge systems.  Command confirmed to work on
+Dell Poweredge R610.
 .TP
 .B get-web-server-config
 This OEM command will get the current web server configuration on the
 IPMI card.  Command confirmed to work on Dell Poweredge R610.
 .TP
-.B set-web-server-config \fIenable|disable\fR \fIsessiontimeout\fR \fIhttpportnumber\fR \fIhttpsportnumber\fR
+.B set-web-server-config \fIKEY=VALUE ...\fR
 This OEM command will get the current Web Server configuration on the
-IPMI card.  The \fIsessiontimeout\fR\ should be specified in seconds.
-Command confirmed to work on Dell Poweredge R610.
+IPMI card.  The possible keys and values are
+\fIwebserver=enable|disable\fR,
+\fIsessiontimeout=seconds\fR, \fIhttpportnumber=num\fR,
+and \fIhttpsportnumber=num\fR.  Multiple key=value pairs may be
+specified.  Some fields may be read-only on specific Poweredge
+systems.  Command confirmed to work on Dell Poweredge R610.
 .TP
 .B reset-to-defaults
 This OEM command will reset the BMC configuration back to default
