@@ -1457,10 +1457,9 @@ int
 ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t token_data[IPMI_OEM_MAX_BYTES];
-  uint16_t valid_field_mask = 0x1B; /* 4 fields - 3rd field not set */
+  uint16_t valid_field_mask = 0x19; /* 2nd/3rd field not set */
   unsigned int temp;
   uint8_t sshenable;
-  uint8_t maxconnections;
   uint32_t idletimeout;
   uint16_t portnumber;
   char *ptr = NULL;
@@ -1488,7 +1487,7 @@ ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
    */
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 4);
+  assert (state_data->prog_data->args->oem_options_count == 3);
 
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
@@ -1510,8 +1509,7 @@ ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
   errno = 0;
   temp = strtoul (state_data->prog_data->args->oem_options[1], &ptr, 10);
   if (errno
-      || ptr[0] != '\0'
-      || temp > 255)
+      || ptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1521,25 +1519,10 @@ ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[1]);
       goto cleanup;
     }
-  maxconnections = temp;
-
-  errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[2], &ptr, 10);
-  if (errno
-      || ptr[0] != '\0')
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[2]);
-      goto cleanup;
-    }
   idletimeout = temp;
 
   errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[3], &ptr, 10);
+  temp = strtoul (state_data->prog_data->args->oem_options[2], &ptr, 10);
   if (errno
       || ptr[0] != '\0'
       || temp > 65535)
@@ -1549,13 +1532,13 @@ ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
                        "%s:%s invalid OEM option argument '%s'\n",
                        state_data->prog_data->args->oem_id,
                        state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[3]);
+                       state_data->prog_data->args->oem_options[2]);
       goto cleanup;
     }
   portnumber = temp;
   
   token_data[0] = sshenable;
-  token_data[1] = maxconnections;
+  token_data[1] = 0;		/* maxconnections is read only */
   token_data[2] = 0;		/* activeconnections is read only */
   token_data[3] = (idletimeout & 0x000000FF);
   token_data[4] = (idletimeout & 0x0000FF00) >> 8;
@@ -1681,10 +1664,9 @@ int
 ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t token_data[IPMI_OEM_MAX_BYTES];
-  uint16_t valid_field_mask = 0x3B; /* 5 fields - 3rd field not set */
+  uint16_t valid_field_mask = 0x39; /* 2nd/3rd field not set */
   unsigned int temp;
   uint8_t telnetenable;
-  uint8_t maxsessions;
   uint32_t sessiontimeout;
   uint16_t portnumber;
   uint8_t _7flsenable;
@@ -1714,7 +1696,7 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
    */
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 5);
+  assert (state_data->prog_data->args->oem_options_count == 4);
 
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
@@ -1736,8 +1718,7 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
   errno = 0;
   temp = strtoul (state_data->prog_data->args->oem_options[1], &ptr, 10);
   if (errno
-      || ptr[0] != '\0'
-      || temp > 255)
+      || ptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1747,25 +1728,10 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[1]);
       goto cleanup;
     }
-  maxsessions = temp;
-
-  errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[2], &ptr, 10);
-  if (errno
-      || ptr[0] != '\0')
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[2]);
-      goto cleanup;
-    }
   sessiontimeout = temp;
 
   errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[3], &ptr, 10);
+  temp = strtoul (state_data->prog_data->args->oem_options[2], &ptr, 10);
   if (errno
       || ptr[0] != '\0'
       || temp > 65535)
@@ -1775,30 +1741,30 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
                        "%s:%s invalid OEM option argument '%s'\n",
                        state_data->prog_data->args->oem_id,
                        state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[3]);
+                       state_data->prog_data->args->oem_options[2]);
       goto cleanup;
     }
   portnumber = temp;
   
-  if (strcasecmp (state_data->prog_data->args->oem_options[4], "7flsenable")
-      && strcasecmp (state_data->prog_data->args->oem_options[4], "7flsdisable"))
+  if (strcasecmp (state_data->prog_data->args->oem_options[3], "7flsenable")
+      && strcasecmp (state_data->prog_data->args->oem_options[3], "7flsdisable"))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "%s:%s invalid OEM option argument '%s'\n",
                        state_data->prog_data->args->oem_id,
                        state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[4]);
+                       state_data->prog_data->args->oem_options[3]);
       goto cleanup;
     }
 
-  if (!strcasecmp (state_data->prog_data->args->oem_options[4], "7flsenable"))
+  if (!strcasecmp (state_data->prog_data->args->oem_options[3], "7flsenable"))
     _7flsenable = 1;
   else
     _7flsenable = 0;
 
   token_data[0] = telnetenable;
-  token_data[1] = maxsessions;
+  token_data[1] = 0;		/* maxsessions is read only */
   token_data[2] = 0;		/* activesessions is read only */
   token_data[3] = (sessiontimeout & 0x000000FF);
   token_data[4] = (sessiontimeout & 0x0000FF00) >> 8;
@@ -1924,10 +1890,9 @@ int
 ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
 {
   uint8_t token_data[IPMI_OEM_MAX_BYTES];
-  uint16_t valid_field_mask = 0x3B; /* 5 fields - 3rd field not set */
+  uint16_t valid_field_mask = 0x39; /* 5 fields - 3rd field not set */
   unsigned int temp;
   uint8_t webserverenable;
-  uint8_t maxsessions;
   uint32_t sessiontimeout;
   uint16_t httpportnumber;
   uint16_t httpsportnumber;
@@ -1957,7 +1922,7 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
    */
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 5);
+  assert (state_data->prog_data->args->oem_options_count == 4);
 
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
@@ -1979,8 +1944,7 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
   errno = 0;
   temp = strtoul (state_data->prog_data->args->oem_options[1], &ptr, 10);
   if (errno
-      || ptr[0] != '\0'
-      || temp > 255)
+      || ptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1990,12 +1954,13 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[1]);
       goto cleanup;
     }
-  maxsessions = temp;
+  sessiontimeout = temp;
 
   errno = 0;
   temp = strtoul (state_data->prog_data->args->oem_options[2], &ptr, 10);
   if (errno
-      || ptr[0] != '\0')
+      || ptr[0] != '\0'
+      || temp > 65535)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -2005,7 +1970,7 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[2]);
       goto cleanup;
     }
-  sessiontimeout = temp;
+  httpportnumber = temp;
 
   errno = 0;
   temp = strtoul (state_data->prog_data->args->oem_options[3], &ptr, 10);
@@ -2021,26 +1986,10 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[3]);
       goto cleanup;
     }
-  httpportnumber = temp;
-
-  errno = 0;
-  temp = strtoul (state_data->prog_data->args->oem_options[4], &ptr, 10);
-  if (errno
-      || ptr[0] != '\0'
-      || temp > 65535)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[4]);
-      goto cleanup;
-    }
   httpsportnumber = temp;
 
   token_data[0] = webserverenable;
-  token_data[1] = maxsessions;
+  token_data[1] = 0;		/* maxessions is read only */
   token_data[2] = 0;		/* activesessions is read only */
   token_data[3] = (sessiontimeout & 0x000000FF);
   token_data[4] = (sessiontimeout & 0x0000FF00) >> 8;
