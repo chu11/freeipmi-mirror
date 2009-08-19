@@ -1,6 +1,8 @@
 2009-08-19  Albert Chu <chu11@llnl.gov>
 
         * freeipmi.spec.in: Update URL to gnu.org.
+
+	* ipmi-oem/: Complete get active directory config.	
 	
 2009-08-18  Albert Chu <chu11@llnl.gov>
 
