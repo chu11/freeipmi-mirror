@@ -2435,6 +2435,73 @@ ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data)
   ad_certificate_validation_enable = token_data[offset];
   offset++;
 
+  pstdout_printf (state_data->pstate,
+		  "Active Directory                : %s\n",
+		  (ad_enable) ? "Enabled" : "Disabled");
+
+  pstdout_printf (state_data->pstate,
+		  "Timeout                         : %u seconds\n",
+		  ad_timeout);
+
+  pstdout_printf (state_data->pstate,
+		  "Root Domain                     : %s\n",
+		  ad_root_domain_string);
+
+  pstdout_printf (state_data->pstate,
+		  "Remote Access Controller Domain : %s\n",
+		  ad_rac_domain_string);
+
+  pstdout_printf (state_data->pstate,
+		  "Remote Access Controller Name   : %s\n",
+		  ad_rac_name_string);
+
+  /* XXX - what is this? */
+  pstdout_printf (state_data->pstate,
+		  "Type                            : %u\n",
+		  ad_type);
+
+  /* XXX - what is this? */
+  pstdout_printf (state_data->pstate,
+		  "SCL State                       : %u\n",
+		  scl_state);
+
+  /* XXX - what is this? */
+  pstdout_printf (state_data->pstate,
+		  "CRL State                       : %u\n",
+		  crl_state);
+  
+  pstdout_printf (state_data->pstate,
+		  "Single Sign On                  : %s\n",
+		  (ad_sso_enable) ? "Enabled" : "Disabled");
+
+  pstdout_printf (state_data->pstate,
+		  "Domain Controller Filter 1      : %s\n",
+		  ad_dc_filter1_string);
+
+  pstdout_printf (state_data->pstate,
+		  "Domain Controller Filter 2      : %s\n",
+		  ad_dc_filter2_string);
+
+  pstdout_printf (state_data->pstate,
+		  "Domain Controller Filter 3      : %s\n",
+		  ad_dc_filter3_string);
+
+  pstdout_printf (state_data->pstate,
+		  "Global Catalog Filter 1         : %s\n",
+		  ad_gc_filter1_string);
+
+  pstdout_printf (state_data->pstate,
+		  "Global Catalog Filter 2         : %s\n",
+		  ad_gc_filter2_string);
+
+  pstdout_printf (state_data->pstate,
+		  "Global Catalog Filter 3         : %s\n",
+		  ad_gc_filter3_string);
+
+  pstdout_printf (state_data->pstate,
+		  "Certificate Validation          : %s\n",
+		  (ad_certificate_validation_enable) ? "Enabled" : "Disabled");
+
   rv = 0;
  cleanup:
   return (rv);
