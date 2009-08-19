@@ -50,6 +50,7 @@ struct ipmi_oem_command
   char *oem_command;
   char *command_options;
   int required_oem_options;
+  int oem_options_count_variable;
   oem_callback func;
 };
 
@@ -65,11 +66,13 @@ struct ipmi_oem_command oem_dell[] =
       "get-system-info",
       "<asset-tag|service-tag|product-name|mac-addresses>",
       1,
+      0,
       ipmi_oem_dell_get_system_info
     },
     {
       "get-nic-selection",
       NULL,
+      0,
       0,
       ipmi_oem_dell_get_nic_selection
     },
@@ -77,11 +80,13 @@ struct ipmi_oem_command oem_dell[] =
       "set-nic-selection",
       "<dedicated|shared|shared_failover_nic2|shared_failover_all>",
       1,
+      0,
       ipmi_oem_dell_set_nic_selection
     },
     {
       "get-ssh-config",
       NULL,
+      0,
       0,
       ipmi_oem_dell_get_ssh_config
     },
@@ -89,11 +94,13 @@ struct ipmi_oem_command oem_dell[] =
       "set-ssh-config",
       "KEY=VALUE ...",
       1,
+      1,
       ipmi_oem_dell_set_ssh_config
     },
     {
       "get-telnet-config",
       NULL,
+      0,
       0,
       ipmi_oem_dell_get_telnet_config
     },
@@ -101,11 +108,13 @@ struct ipmi_oem_command oem_dell[] =
       "set-telnet-config",
       "KEY=VALUE ...",
       1,
+      1,
       ipmi_oem_dell_set_telnet_config
     },
     {
       "get-web-server-config",
       NULL,
+      0,
       0,
       ipmi_oem_dell_get_web_server_config
     },
@@ -113,17 +122,27 @@ struct ipmi_oem_command oem_dell[] =
       "set-web-server-config",
       "KEY=VALUE ...",
       1,
+      1,
       ipmi_oem_dell_set_web_server_config
     },
     {
       "get-active-directory-config",
       NULL,
       0,
+      0,
       ipmi_oem_dell_get_active_directory_config
+    },
+    {
+      "set-active-directory-config",
+      "KEY=VALUE ...",
+      1,
+      1,
+      ipmi_oem_dell_set_active_directory_config
     },
     {
       "reset-to-defaults",
       NULL,
+      0,
       0,
       ipmi_oem_dell_reset_to_defaults
     },
@@ -131,17 +150,20 @@ struct ipmi_oem_command oem_dell[] =
       "get-power-info",
       NULL,
       0,
+      0,
       ipmi_oem_dell_get_power_info
     },
     {
       "reset-power-info",
       "<cumulative|peak>",
       1,
+      0,
       ipmi_oem_dell_reset_power_info
     },
     {
       "get-power-supply-info",
       NULL,
+      0,
       0,
       ipmi_oem_dell_get_power_supply_info
     },
@@ -149,11 +171,13 @@ struct ipmi_oem_command oem_dell[] =
       "get-instantaneous-power-consumption-info",
       NULL,
       0,
+      0,
       ipmi_oem_dell_get_instantaneous_power_consumption_info
     },
     {
       "get-power-headroom-info",
       NULL,
+      0,
       0,
       ipmi_oem_dell_get_power_headroom_info
     },
@@ -161,11 +185,13 @@ struct ipmi_oem_command oem_dell[] =
       "get-average-power-history",
       NULL,
       0,
+      0,
       ipmi_oem_dell_get_average_power_history
     },
     {
       "get-peak-power-history",
       NULL,
+      0,
       0,
       ipmi_oem_dell_get_peak_power_history
     },
@@ -173,17 +199,20 @@ struct ipmi_oem_command oem_dell[] =
       "get-power-capacity",
       NULL,
       0,
+      0,
       ipmi_oem_dell_get_power_capacity
     },
     {
       "set-power-capacity",
       "<power-capacity>",
       1,
+      0,
       ipmi_oem_dell_set_power_capacity
     },
     {
       "get-power-capacity-status",
       NULL,
+      0,
       0,
       ipmi_oem_dell_get_power_capacity_status
     },
@@ -191,11 +220,13 @@ struct ipmi_oem_command oem_dell[] =
       "set-power-capacity-status",
       "<enable|disable>",
       1,
+      0,
       ipmi_oem_dell_set_power_capacity_status
     },
     {
       "get-fcb-version",
       NULL,
+      0,
       0,
       ipmi_oem_dell_get_fcb_version
     },
@@ -205,12 +236,14 @@ struct ipmi_oem_command oem_dell[] =
       "get-dhcp-retry",
       NULL,
       0,
+      0,
       ipmi_oem_dell_get_dhcp_retry
     },
     {
       "set-dhcp-retry",
       "<retry-count> <retry-interval> <retry-timeout>",
       3,
+      0,
       ipmi_oem_dell_set_dhcp_retry
     },
 #endif
@@ -218,17 +251,20 @@ struct ipmi_oem_command oem_dell[] =
       "get-sol-inactivity-timeout",
       NULL,
       0,
+      0,
       ipmi_oem_dell_get_sol_inactivity_timeout
     },
     {
       "set-sol-inactivity-timeout",
       "<inactivity-timeout>",
       1,
+      0,
       ipmi_oem_dell_set_sol_inactivity_timeout
     },
     {
       NULL,
       NULL,
+      0,
       0,
       NULL
     },
@@ -240,17 +276,20 @@ struct ipmi_oem_command oem_inventec[] =
       "get-nic-status",
       NULL,
       0,
+      0,
       ipmi_oem_inventec_get_nic_status
     },
     {
       "set-nic-status",
       "<dedicated|shared>",
       1,
+      0,
       ipmi_oem_inventec_set_nic_status
     },
     {
       "get-mac-address",
       NULL,
+      0,
       0,
       ipmi_oem_inventec_get_mac_address
     },
@@ -258,11 +297,13 @@ struct ipmi_oem_command oem_inventec[] =
       "set-mac-address",
       "<dedicated|shared> <MACADDRESS>",
       2,
+      0,
       ipmi_oem_inventec_set_mac_address
     },
     {
       "get-bmc-services",
       NULL,
+      0,
       0,
       ipmi_oem_inventec_get_bmc_services
     },
@@ -270,11 +311,13 @@ struct ipmi_oem_command oem_inventec[] =
       "set-bmc-services",
       "<enable|disable> <all|kvm|http|ssh>",
       2,
+      0,
       ipmi_oem_inventec_set_bmc_services
     },
     {
       NULL,
       NULL,
+      0,
       0,
       NULL
     },
@@ -286,11 +329,13 @@ struct ipmi_oem_command oem_supermicro[] =
       "reset-intrusion",
       NULL,
       0,
+      0,
       ipmi_oem_supermicro_reset_intrusion
     },
     {
       NULL,
       NULL,
+      0,
       0,
       NULL
     },
@@ -408,7 +453,10 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
                 {
                   cmd_found++;
 
-                  if (state_data->prog_data->args->oem_options_count < oem_cmd->required_oem_options)
+                  if ((oem_cmd->oem_options_count_variable
+		       && (state_data->prog_data->args->oem_options_count < oem_cmd->required_oem_options))
+		      || (!oem_cmd->oem_options_count_variable
+			  && state_data->prog_data->args->oem_options_count != oem_cmd->required_oem_options))
                     {
                       pstdout_fprintf (state_data->pstate,
                                        stderr,

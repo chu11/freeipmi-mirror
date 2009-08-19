@@ -3,6 +3,8 @@
 	* freeipmi.spec.in: Update URL to gnu.org.
 
 	* ipmi-oem/: Complete get active directory config.
+
+	* ipmi-oem/: Complete set active directory config.
 	
 2009-08-18  Albert Chu <chu11@llnl.gov>
 	
