@@ -94,9 +94,9 @@
 
 #define IPMI_OEM_DELL_TOKEN_DATA_COMMON_HEADER_LEN 5
 
-#define IPMI_OEM_DELL_MAC_ADDRESS_LENGTH 6
+#define IPMI_OEM_DELL_MAC_ADDRESS_LENGTH           6
 
-#define IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH 8 
+#define IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH       8 
 
 
 /* Will call ipmi_cmd_get_system_info_parameters only once, b/c field
