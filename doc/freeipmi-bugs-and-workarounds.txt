@@ -135,6 +135,10 @@ assigned to a cipher suite ID require authentication with that
 specific privilege level, rather than a privilege level less than or
 equal to it.
 
+Intel SR2500: Supported authentication types are not properly reported
+by the Get Authentication Capabilities response.  Resolved with a
+workaround ignoring those flags.
+
 Session Issues
 --------------
 
