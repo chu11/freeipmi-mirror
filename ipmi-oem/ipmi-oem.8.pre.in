@@ -119,7 +119,7 @@ This OEM command will get the current web server configuration on the
 IPMI card.  Command confirmed to work on Dell Poweredge R610.
 .TP
 .B set-web-server-config \fIKEY=VALUE ...\fR
-This OEM command will get the current Web Server configuration on the
+This OEM command will set the current Web Server configuration on the
 IPMI card.  The possible keys and values are
 \fIwebserver=enable|disable\fR,
 \fIsessiontimeout=seconds\fR, \fIhttpportnumber=num\fR,
@@ -130,6 +130,29 @@ systems.  Command confirmed to work on Dell Poweredge R610.
 .B get-active-directory-config
 This OEM command will get the current active directory configuration
 on the IPMI card.  Command confirmed to work on Dell Poweredge R610.
+.TP
+.B set-active-directory-config
+This OEM command will set the current Web Server configuration on the
+IPMI card.  The possible keys and values are
+\fIactivedirectory=enable|disable\fR, \fItimeout=seconds\fR,
+.if 0 \{
+\fIrootdomain=string\fR,
+\fIracdomain=string\fR,
+\fIracname=string\fR,
+\}
+\fIsso=enable|disable\fR,
+.if 0 \{
+\fIdcfilter1=string\fR,
+\fIdcfilter2=string\fR,
+\fIdcfilter3=string\fR,
+\fIgcfilter1=string\fR,
+\fIgcfilter2=string\fR,
+\fIgcfilter3=string\fR,
+\}
+and
+\fIcertificatevalidation=enable|disable\fR.  Some fields may be
+read-only on specific Poweredge systems.  Command confirmed to work on
+Dell Poweredge R610.
 .TP
 .B reset-to-defaults
 This OEM command will reset the BMC configuration back to default

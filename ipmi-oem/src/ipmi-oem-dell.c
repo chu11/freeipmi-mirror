@@ -89,6 +89,8 @@
 
 #define IPMI_OEM_DELL_TOKEN_STRING_MAX             255
 
+#define IPMI_OEM_DELL_TOKEN_WRITE_MAX              128
+
 #define IPMI_OEM_DELL_TOKEN_DATA_COMMON_HEADER_LEN 5
 
 #define IPMI_OEM_DELL_MAC_ADDRESS_LENGTH 6
@@ -1289,7 +1291,7 @@ _dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "invalid token length returned: expected = %u, read %u\n",
+                       "invalid token length returned: expected = %u, read = %u\n",
                        token_len, offset);
       goto cleanup;
     }
@@ -1303,15 +1305,16 @@ _dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
 
 static int
 _dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
-				  uint8_t token_id,
-				  uint8_t *token_data,
-				  unsigned int token_data_len,
-				  unsigned int valid_field_mask)
+                                  uint8_t token_id,
+                                  uint8_t *token_data,
+                                  unsigned int token_data_len,
+                                  unsigned int valid_field_mask)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   uint16_t token_len; 
   uint8_t reservation_id = 0;
+  uint16_t offset = 0;
   int rs_len;
   int rv = -1;
 
@@ -1324,7 +1327,7 @@ _dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
    *
    * Set Extended Configuration Request
    *
-   * 0x2E - OEM network function
+   * 0x2E - OEM network function (is IPMI_NET_FN_OEM_GROUP_RQ)
    * 0x03 - OEM cmd
    * 0x?? - Dell IANA (LSB first)
    * 0x?? - Dell IANA
@@ -1350,63 +1353,119 @@ _dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
    * 0x?? - bytes written
    */
 
-  if (_dell_reserve_extended_configuration (state_data,
-                                            &reservation_id) < 0)
-    goto cleanup;
-
-  bytes_rq[0] = 0x03;
-  bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x0000FF);
-  bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x00FF00) >> 8;
-  bytes_rq[3] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0xFF0000) >> 16;
-  bytes_rq[4] = reservation_id;
-  bytes_rq[5] = token_id;
-  bytes_rq[6] = 0x00;
-  bytes_rq[7] = 0x00;
-  bytes_rq[8] = 0x00;
-  bytes_rq[9] = 0x01;
-
-  /* common header */
   token_len = IPMI_OEM_DELL_TOKEN_DATA_COMMON_HEADER_LEN + token_data_len;
-  bytes_rq[10] = (token_len & 0x00FF);
-  bytes_rq[11] = (token_len & 0xFF00) >> 8;
-  bytes_rq[12] = IPMI_OEM_DELL_TOKEN_VERSION;
-  bytes_rq[13] = (valid_field_mask & 0x00FF); 
-  bytes_rq[14] = (valid_field_mask & 0xFF00) >> 8; 
+          
+  while (offset < 0xFFFF)
+    {
+      unsigned int write_length = 0;
+      unsigned int token_write_length = 0;
 
-  memcpy (&bytes_rq[15], token_data, token_data_len);
+      if (_dell_reserve_extended_configuration (state_data,
+                                                &reservation_id) < 0)
+        goto cleanup;
 
-  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                              0, /* lun */
-                              0x2E, /* network function */
-                              bytes_rq, /* data */
-                              15 + token_data_len, /* num bytes */
-                              bytes_rs,
-                              IPMI_OEM_MAX_BYTES)) < 0)
+      /* bytes_written response is 1 byte, so presumably you can write
+       * up to 255 bytes of data.  However, IPMI over LAN has a max
+       * payload length of 255 total.  At this point stage of the API,
+       * there's no way to know what is legit to use.  So we round
+       * down IPMI_OEM_DELL_TOKEN_WRITE_MAX to some reasonable
+       * guestimate of what is good.
+       */
+
+      bytes_rq[0] = 0x03;
+      bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x0000FF);
+      bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x00FF00) >> 8;
+      bytes_rq[3] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0xFF0000) >> 16;
+      bytes_rq[4] = reservation_id;
+      bytes_rq[5] = token_id;
+      bytes_rq[6] = 0x00;
+      bytes_rq[7] = (offset & 0x00FF);
+      bytes_rq[8] = (offset & 0xFF00) >> 8;
+      bytes_rq[9] = 0x01;
+
+      if (!offset)
+        {
+          /* common header */
+          
+          bytes_rq[10] = (token_len & 0x00FF);
+          bytes_rq[11] = (token_len & 0xFF00) >> 8;
+          bytes_rq[12] = IPMI_OEM_DELL_TOKEN_VERSION;
+          bytes_rq[13] = (valid_field_mask & 0x00FF); 
+          bytes_rq[14] = (valid_field_mask & 0xFF00) >> 8; 
+
+          /* - 5 for the common header */
+          if ((token_data_len - offset) > (IPMI_OEM_DELL_TOKEN_WRITE_MAX - 5))
+            write_length = IPMI_OEM_DELL_TOKEN_WRITE_MAX - 5;
+          else
+            write_length = (token_data_len - offset);
+          
+          memcpy (&bytes_rq[15],
+                  token_data + offset,
+                  write_length);
+
+          token_write_length = 5 + write_length;
+        }
+      else
+        {
+          if ((token_data_len - offset) > IPMI_OEM_DELL_TOKEN_WRITE_MAX)
+            write_length = IPMI_OEM_DELL_TOKEN_WRITE_MAX;
+          else
+            write_length = (token_data_len - offset);
+
+          memcpy (&bytes_rq[10],
+                  token_data + offset,
+                  write_length);
+	  
+          token_write_length = write_length;
+        }
+      
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                                  0, /* lun */
+                                  IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
+                                  bytes_rq, /* data */
+                                  10 + token_write_length, /* num bytes */
+                                  bytes_rs,
+                                  IPMI_OEM_MAX_BYTES)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_raw: %s\n",
+			   ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+          goto cleanup;
+        }
+      
+      if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                       bytes_rs,
+                                                       rs_len,
+                                                       6,
+                                                       0x03,
+                                                       IPMI_NET_FN_OEM_GROUP_RQ) < 0)
+        goto cleanup;
+      
+      if (bytes_rs[5] != token_write_length)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "invalid data length written: expected = %u, returned %u\n",
+                           token_write_length, bytes_rs[5]);
+          goto cleanup;
+        }
+      
+      offset += bytes_rs[5];
+      
+      if (token_len <= offset)
+        break;
+    }
+  
+  if (offset != token_len)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_cmd_raw: %s\n",
-                       ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+                       "invalid token length written: expected = %u, write = %u\n",
+                       token_len, offset);
       goto cleanup;
     }
   
-  if (ipmi_oem_check_response_and_completion_code (state_data,
-                                                   bytes_rs,
-                                                   rs_len,
-                                                   6,
-                                                   0x03,
-                                                   0x2E) < 0)
-    goto cleanup;
-
-  if (bytes_rs[5] != token_len)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "invalid data length written: expected = %u, returned %u\n",
-                       token_len, bytes_rs[5]);
-      goto cleanup;
-    }
- 
   rv = 0;
  cleanup:
   return (rv);
@@ -1666,6 +1725,45 @@ _parse_port (ipmi_oem_state_data_t *state_data,
   return (0);
 }
 
+#if 0
+/* don't support for now */
+static int
+_parse_string (ipmi_oem_state_data_t *state_data,
+	       unsigned int option_num,
+	       const char *value,
+	       uint8_t *string_length,
+	       char *stringbuf,
+	       unsigned int stringbuflen)
+{
+  assert (state_data);
+  assert (value);
+  assert (string_length);
+  assert (stringbuf);
+  assert (stringbuflen);
+  
+  if (strlen (value) > stringbuflen)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : string length too long\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+
+  (*string_length) = strlen (value);
+
+  /* use memcpy, do not need NULL termination */
+  if ((*string_length))
+    memcpy (stringbuf,
+	    value,
+	    (*string_length));
+  
+  return (0);
+}
+#endif
+
 int
 ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
 {
@@ -1717,21 +1815,21 @@ ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
           if (_parse_enable (state_data, i, value, &sshenable) < 0)
             goto cleanup;
           
-          valid_field_mask |= 0x01;
+          valid_field_mask |= 0x0001;
         }
       else if (!strcasecmp (key, "idletimeout"))
         {
           if (_parse_timeout (state_data, i, value, &idletimeout) < 0)
             goto cleanup;
           
-          valid_field_mask |= 0x08;
+          valid_field_mask |= 0x0008;
         }
       else if (!strcasecmp (key, "portnumber"))
         {
           if (_parse_port (state_data, i, value, &portnumber) < 0)
             goto cleanup;
           
-          valid_field_mask |= 0x10;
+          valid_field_mask |= 0x0010;
         }
       else
         {
@@ -1925,28 +2023,28 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
           if (_parse_enable (state_data, i, value, &telnetenable) < 0)
             goto cleanup;
 
-          valid_field_mask |= 0x01;
+          valid_field_mask |= 0x0001;
         }
       else if (!strcasecmp (key, "sessiontimeout"))
         {
           if (_parse_timeout (state_data, i, value, &sessiontimeout) < 0)
             goto cleanup;
 
-          valid_field_mask |= 0x08;
+          valid_field_mask |= 0x0008;
         }
       else if (!strcasecmp (key, "portnumber"))
         {
           if (_parse_port (state_data, i, value, &portnumber) < 0)
             goto cleanup;
           
-          valid_field_mask |= 0x10;
+          valid_field_mask |= 0x0010;
         }
       else if (!strcasecmp (key, "7fls"))
         {
           if (_parse_enable (state_data, i, value, &_7flsenable) < 0)
             goto cleanup;
           
-          valid_field_mask |= 0x20;
+          valid_field_mask |= 0x0020;
         }
       else
         {
@@ -2139,28 +2237,28 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
           if (_parse_enable (state_data, i, value, &webserverenable) < 0)
             goto cleanup;
 
-          valid_field_mask |= 0x01;
+          valid_field_mask |= 0x0001;
         }
       else if (!strcasecmp (key, "sessiontimeout"))
         {
           if (_parse_timeout (state_data, i, value, &sessiontimeout) < 0)
             goto cleanup;
           
-          valid_field_mask |= 0x08;
+          valid_field_mask |= 0x0008;
         }
       else if (!strcasecmp (key, "httpportnumber"))
         {
           if (_parse_port (state_data, i, value, &httpportnumber) < 0)
             goto cleanup;
           
-          valid_field_mask |= 0x10;
+          valid_field_mask |= 0x0010;
         }
       else if (!strcasecmp (key, "httpsportnumber"))
         {
           if (_parse_port (state_data, i, value, &httpsportnumber) < 0)
             goto cleanup;
           
-          valid_field_mask |= 0x20;
+          valid_field_mask |= 0x0020;
         }
       else
         {
@@ -2503,6 +2601,383 @@ ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data)
 		  "Certificate Validation          : %s\n",
 		  (ad_certificate_validation_enable) ? "Enabled" : "Disabled");
 
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t token_data[IPMI_OEM_DELL_TOKEN_DATA_MAX];
+  uint16_t valid_field_mask = 0;
+  uint8_t ad_enable = 0;
+  uint32_t ad_timeout = 0;
+  uint8_t ad_root_domain_string_length = 0;
+  char ad_root_domain_string[IPMI_OEM_DELL_TOKEN_STRING_MAX+1];
+  uint8_t ad_rac_domain_string_length = 0;
+  char ad_rac_domain_string[IPMI_OEM_DELL_TOKEN_STRING_MAX+1];
+  uint8_t ad_rac_name_string_length = 0;
+  char ad_rac_name_string[IPMI_OEM_DELL_TOKEN_STRING_MAX+1];
+  uint8_t ad_type = 0;
+  uint8_t scl_state = 0;
+  uint8_t crl_state = 0;
+  uint8_t ad_sso_enable = 0;
+  uint8_t ad_dc_filter1_string_length = 0;
+  char ad_dc_filter1_string[IPMI_OEM_DELL_TOKEN_STRING_MAX+1];
+  uint8_t ad_dc_filter2_string_length = 0;
+  char ad_dc_filter2_string[IPMI_OEM_DELL_TOKEN_STRING_MAX+1];
+  uint8_t ad_dc_filter3_string_length = 0;
+  char ad_dc_filter3_string[IPMI_OEM_DELL_TOKEN_STRING_MAX+1];
+  uint8_t ad_gc_filter1_string_length = 0;
+  char ad_gc_filter1_string[IPMI_OEM_DELL_TOKEN_STRING_MAX+1];
+  uint8_t ad_gc_filter2_string_length = 0;
+  char ad_gc_filter2_string[IPMI_OEM_DELL_TOKEN_STRING_MAX+1];
+  uint8_t ad_gc_filter3_string_length = 0;
+  char ad_gc_filter3_string[IPMI_OEM_DELL_TOKEN_STRING_MAX+1];
+  uint8_t ad_certificate_validation_enable = 0; 
+  unsigned int offset = 0;
+  int rv = -1;
+  int i;
+
+  /* Dell OEM
+   *
+   * Active Directory Token Data - Token ID 07h
+   *
+   * Common Header
+   *
+   * byte 1 - total size of token data (including common header) - LSB
+   * byte 2 - total size of token data (including common header) - MSB
+   * byte 3 - token version (0x01)
+   * byte 4 - valid field mask (LSB)
+   * byte 5 - valid field mask (MSB)
+   *
+   * Active Directory Token data
+   *
+   * byte 6 - active directory enable
+   * byte 7-10 - active directory timeout
+   * byte 11 - active directory root domain string length
+   * byte y-z (0-255) - active directory root domain string
+   * byte x - active directory remote access controller domain string length
+   * byte y-z (0-255) - active directory remote access controller domain string
+   * byte x - active directory remote access controller name string length
+   * byte y-z (0-255) - active directory remote access controller name string
+   * byte x - active directory type
+   * byte x - SCL State (iDRAC5 only)
+   * byte x - CRL State (iDRAC5 only)
+   * byte x - active directory single sign on enable
+   * byte x - active directory domain controller filter 1 string length
+   * byte y-z (0-255) - active directory domain controller filter 1 string
+   * byte x - active directory domain controller filter 2 string length
+   * byte y-z (0-255) - active directory domain controller filter 2 string
+   * byte x - active directory domain controller filter 3 string length
+   * byte y-z (0-255) - active directory domain controller filter 3 string
+   * byte x - active directory global catalog filter 1 string length
+   * byte y-z (0-255) - active directory global catalog filter 1 string
+   * byte x - active directory global catalog filter 2 string length
+   * byte y-z (0-255) - active directory global catalog filter 2 string
+   * byte x - active directory global catalog filter 3 string length
+   * byte y-z (0-255) - active directory global catalog filter 3 string
+   * byte x - active directory certificate validate enable
+   */
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count >= 1);
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (_parse_key_value (state_data,
+                            i,
+                            &key,
+                            &value) < 0)
+        goto cleanup;
+
+      if (!strcasecmp (key, "activedirectory"))
+        {
+          if (_parse_enable (state_data, i, value, &ad_enable) < 0)
+            goto cleanup;
+
+          valid_field_mask |= 0x0001;
+        }
+      else if (!strcasecmp (key, "timeout"))
+        {
+          if (_parse_timeout (state_data, i, value, &ad_timeout) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x0002;
+        }
+#if 0
+/* don't support for now */
+      else if (!strcasecmp (key, "rootdomain"))
+        {
+          if (_parse_string (state_data,
+			     i,
+			     value,
+			     &ad_root_domain_string_length,
+			     ad_root_domain_string,
+			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x0004;
+        }
+      else if (!strcasecmp (key, "racdomain"))
+        {
+          if (_parse_string (state_data,
+			     i,
+			     value,
+			     &ad_rac_domain_string_length,
+			     ad_rac_domain_string,
+			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x0008;
+        }
+      else if (!strcasecmp (key, "racname"))
+        {
+          if (_parse_string (state_data,
+			     i,
+			     value,
+			     &ad_rac_name_string_length,
+			     ad_rac_name_string,
+			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x0010;
+        }
+#endif
+      else if (!strcasecmp (key, "sso"))
+        {
+          if (_parse_enable (state_data, i, value, &ad_sso_enable) < 0)
+            goto cleanup;
+
+          valid_field_mask |= 0x0100;
+        }
+#if 0
+/* don't support for now */
+      else if (!strcasecmp (key, "dcfilter1"))
+        {
+          if (_parse_string (state_data,
+			     i,
+			     value,
+			     &ad_dc_filter1_string_length,
+			     ad_dc_filter1_string,
+			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x0200;
+        }
+      else if (!strcasecmp (key, "dcfilter2"))
+        {
+          if (_parse_string (state_data,
+			     i,
+			     value,
+			     &ad_dc_filter2_string_length,
+			     ad_dc_filter2_string,
+			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x0400;
+        }
+      else if (!strcasecmp (key, "dcfilter3"))
+        {
+          if (_parse_string (state_data,
+			     i,
+			     value,
+			     &ad_dc_filter3_string_length,
+			     ad_dc_filter3_string,
+			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x0800;
+        }
+      else if (!strcasecmp (key, "gcfilter1"))
+        {
+          if (_parse_string (state_data,
+			     i,
+			     value,
+			     &ad_gc_filter1_string_length,
+			     ad_gc_filter1_string,
+			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x1000;
+        }
+      else if (!strcasecmp (key, "gcfilter2"))
+        {
+          if (_parse_string (state_data,
+			     i,
+			     value,
+			     &ad_gc_filter2_string_length,
+			     ad_gc_filter2_string,
+			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x2000;
+        }
+      else if (!strcasecmp (key, "gcfilter3"))
+        {
+          if (_parse_string (state_data,
+			     i,
+			     value,
+			     &ad_gc_filter3_string_length,
+			     ad_gc_filter3_string,
+			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+            goto cleanup;
+          
+          valid_field_mask |= 0x4000;
+        }
+#endif
+      else if (!strcasecmp (key, "certificatevalidation"))
+        {
+          if (_parse_enable (state_data, i, value, &ad_certificate_validation_enable) < 0)
+            goto cleanup;
+
+          valid_field_mask |= 0x8000;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
+
+      free (key);
+      free (value);
+    }
+
+  offset = 0;
+  
+  token_data[offset] = ad_enable;
+  offset++;
+
+  token_data[offset] = (ad_timeout & 0x000000FF);
+  offset++;
+  token_data[offset] = (ad_timeout & 0x0000FF00) >> 8;
+  offset++;
+  token_data[offset] = (ad_timeout & 0x00FF0000) >> 16;
+  offset++;
+  token_data[offset] = (ad_timeout & 0xFF000000) >> 24;
+  offset++;
+
+  token_data[offset] = ad_root_domain_string_length;
+  offset++;
+  if (ad_root_domain_string_length)
+    {
+      memcpy (&token_data[offset],
+	      ad_root_domain_string,
+	      ad_root_domain_string_length);
+      offset += ad_root_domain_string_length;
+    }
+
+  token_data[offset] = ad_rac_domain_string_length;
+  offset++;
+  if (ad_rac_domain_string_length)
+    {
+      memcpy (&token_data[offset],
+	      ad_rac_domain_string,
+	      ad_rac_domain_string_length);
+      offset += ad_rac_domain_string_length;
+    }
+
+  token_data[offset] = ad_rac_name_string_length;
+  offset++;
+  if (ad_rac_name_string_length)
+    {
+      memcpy (&token_data[offset],
+	      ad_rac_name_string,
+	      ad_rac_name_string_length);
+      offset += ad_rac_name_string_length;
+    }
+
+  token_data[offset] = ad_type;
+  offset++;
+
+  token_data[offset] = scl_state;
+  offset++;
+
+  token_data[offset] = crl_state;
+  offset++;
+
+  token_data[offset] = ad_sso_enable;
+  offset++;
+
+  token_data[offset] = ad_dc_filter1_string_length;
+  offset++;
+  if (ad_dc_filter1_string_length)
+    {
+      memcpy (&token_data[offset],
+	      ad_dc_filter1_string,
+	      ad_dc_filter1_string_length);
+      offset += ad_dc_filter1_string_length;
+    }
+
+  token_data[offset] = ad_dc_filter2_string_length;
+  offset++;
+  if (ad_dc_filter2_string_length)
+    {
+      memcpy (&token_data[offset],
+	      ad_dc_filter2_string,
+	      ad_dc_filter2_string_length);
+      offset += ad_dc_filter2_string_length;
+    }
+
+  token_data[offset] = ad_dc_filter3_string_length;
+  offset++;
+  if (ad_dc_filter3_string_length)
+    {
+      memcpy (&token_data[offset],
+	      ad_dc_filter3_string,
+	      ad_dc_filter3_string_length);
+      offset += ad_dc_filter3_string_length;
+    }
+
+  token_data[offset] = ad_gc_filter1_string_length;
+  offset++;
+  if (ad_gc_filter1_string_length)
+    {
+      memcpy (&token_data[offset],
+	      ad_gc_filter1_string,
+	      ad_gc_filter1_string_length);
+      offset += ad_gc_filter1_string_length;
+    }
+
+  token_data[offset] = ad_gc_filter2_string_length;
+  offset++;
+  if (ad_gc_filter2_string_length)
+    {
+      memcpy (&token_data[offset],
+	      ad_gc_filter2_string,
+	      ad_gc_filter2_string_length);
+      offset += ad_gc_filter2_string_length;
+    }
+
+  token_data[offset] = ad_gc_filter3_string_length;
+  offset++;
+  if (ad_gc_filter3_string_length)
+    {
+      memcpy (&token_data[offset],
+	      ad_gc_filter3_string,
+	      ad_gc_filter3_string_length);
+      offset += ad_gc_filter3_string_length;
+    }
+
+  token_data[offset] = ad_certificate_validation_enable;
+  offset++;
+
+  if (_dell_set_extended_configuration (state_data,
+					IPMI_OEM_DELL_TOKEN_ID_ACTIVE_DIRECTORY,
+					token_data,
+					offset,
+					valid_field_mask) < 0)
+    goto cleanup;
+  
   rv = 0;
  cleanup:
   return (rv);
