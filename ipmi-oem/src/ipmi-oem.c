@@ -116,6 +116,12 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_set_web_server_config
     },
     {
+      "get-active-directory-config",
+      NULL,
+      0,
+      ipmi_oem_dell_get_active_directory_config
+    },
+    {
       "reset-to-defaults",
       NULL,
       0,

@@ -5,6 +5,8 @@
 
 	* ipmi-oem/: Redo "api" to set various dell configurations.
 
+	* ipmi-oem/: Begin active directory config support.
+
 2009-08-17  Albert Chu <chu11@llnl.gov>
 
 	* Collapse get authentication capabilities v1.5 and v2.0 into one
