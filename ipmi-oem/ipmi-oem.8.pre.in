@@ -299,6 +299,10 @@ confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
 .B supermicro
 .RS
 .TP
+.B extra-firmware-info
+This OEM command will output additional firmware version information.
+Command confirmed to work on Supermicro H8QME.
+.TP
 .B reset-intrusion 
 This OEM command will reset the motherboard intrusion flag after it
 has been triggered.  For example, in
