@@ -259,6 +259,13 @@ struct ipmi_oem_command oem_inventec[] =
 struct ipmi_oem_command oem_supermicro[] =
   {
     {
+      "extra-firmware-info",
+      NULL,
+      0,
+      0,
+      ipmi_oem_supermicro_extra_firmware_info
+    },
+    {
       "reset-intrusion",
       NULL,
       0,
