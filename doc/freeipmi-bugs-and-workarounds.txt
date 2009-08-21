@@ -34,8 +34,6 @@ Edition)
 Sun Fire 4100 with ILOM
 Tyan S4811 with SMDC daughter card
 Supermicro X6-DHR-1G with BMC2.0 daughter card
-Dell Poweredge 2900
-Dell Poweredge 2950
 
 The remaining motherboards (and subsequent bugs/workarounds) listed
 below are from interaction with users in the community and I have
