@@ -794,6 +794,12 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
           && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
           && ctx->product_id == 256
+#if 0
+	  /* it appears these don't need to match, 0x7E is the primary indicator */
+	  && system_event_record_data.generator_id == 0xB1
+	  && system_event_record_data.sensor_type == 0xC1 /* OEM */
+	  && system_event_record_data.sensor_number == 0x1A
+#endif
           && system_event_record_data.event_type_code == 0x7E)
         {
           snprintf (tmpbuf,
@@ -1124,7 +1130,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
               output_flag++;
               break;
             }
-
+	  
           if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
             {
               no_output_flag++;
@@ -1182,6 +1188,35 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
           output_flag++;
           break;
         }
+      
+      /* OEM Interpretation
+       *
+       * Dell Poweredge R610
+       */
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+	  && ctx->product_id == 256
+#if 0
+	  /* it appears these don't need to match, 0x7E is the primary indicator */
+	  && system_event_record_data.generator_id == 0xB1
+	  && system_event_record_data.sensor_type == 0xC1 /* OEM */
+	  && system_event_record_data.sensor_number == 0x1A
+#endif
+	  && system_event_record_data.event_type_code == 0x7E) /* OEM */
+	{
+	  uint16_t register_offset;
+	  
+	  register_offset = system_event_record_data.event_data2;
+	  register_offset |= (system_event_record_data.offset_from_event_reading_type_code) << 8;
+	  
+	  snprintf (tmpbuf,
+		    EVENT_BUFFER_LENGTH,
+		    "Register Offset = %Xh",
+		    register_offset);
+	  
+	  output_flag++;
+	  break;
+	}
       
       if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
         {
@@ -1519,6 +1554,30 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
           break;
         }
 
+      /* OEM Interpretation
+       *
+       * Dell Poweredge R610
+       */
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+	  && ctx->product_id == 256
+#if 0
+	  /* it appears these don't need to match, 0x7E is the primary indicator */
+	  && system_event_record_data.generator_id == 0xB1
+	  && system_event_record_data.sensor_type == 0xC1 /* OEM */
+	  && system_event_record_data.sensor_number == 0x1A
+#endif
+	  && system_event_record_data.event_type_code == 0x7E) /* OEM */
+	{
+	  snprintf (tmpbuf,
+		    EVENT_BUFFER_LENGTH,
+		    "Register Value = %02Xh",
+		    system_event_record_data.event_data3);
+	  
+	  output_flag++;
+	  break;
+	}
+      
       if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
         {
           no_output_flag++;

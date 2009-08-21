@@ -1218,6 +1218,29 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
           strcat (fmtbuf, "%c");
           goto output;
         }
+
+      /* OEM Interpretation
+       * 
+       * Dell Poweredge R610
+       *
+       * Unique condition, event_data2_flag and event_data3_flag are
+       * listed as "unspecified", so we need to handle this as a
+       * special case.
+       */
+      if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+          && state_data->product_id == 256
+#if 0
+          /* it appears these don't need to match, 0x7E is the primary indicator */
+          && generator_id == 0xB1
+          && sensor_type == 0xC1 /* OEM */
+          && sensor_number == 0x1A
+#endif
+          && event_type_code == 0x7E)
+        {
+	  strcat (fmtbuf, "%f ; %h");
+	  goto output;
+        }
+
     }
 
   if (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
