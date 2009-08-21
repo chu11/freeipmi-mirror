@@ -127,16 +127,6 @@ Dell Poweredge R610.
 This OEM command will get the current web server configuration on the
 IPMI card.  Command confirmed to work on Dell Poweredge R610.
 .TP
-<<<<<<< ipmi-oem.8.pre.in
-.B set-web-server-config \fIKEY=VALUE ...\fR
-This OEM command will get the current Web Server configuration on the
-IPMI card.  The possible keys and values are
-\fIwebserver=enable|disable\fR,
-\fIsessiontimeout=seconds\fR, \fIhttpportnumber=num\fR,
-and \fIhttpsportnumber=num\fR.  Multiple key=value pairs may be
-specified.  Some fields may be read-only on specific Poweredge
-systems.  Command confirmed to work on Dell Poweredge R610.
-=======
 .B set-web-server-config \fIKEY=VALUE ...\fR
 This OEM command will set the current Web Server configuration on the
 IPMI card.  The possible keys and values are
@@ -172,7 +162,6 @@ and
 \fIcertificatevalidation=enable|disable\fR.  Some fields may be
 read-only on specific Poweredge systems.  Command confirmed to work on
 Dell Poweredge R610.
->>>>>>> 1.73
 .TP
 .B reset-to-defaults
 This OEM command will reset the BMC configuration back to default
