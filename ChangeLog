@@ -2,6 +2,10 @@
 
 	* ipmi-sel/, libfreeipmi/src/sel-parse/: Support Dell OEM sel
 	event.
+
+	* ipmi-raw/: Change default privilege from user to admin.
+
+	* etc/freeipmi.conf: Document correct default privileges.
 	
 2009-08-20  Albert Chu <chu11@llnl.gov>
 

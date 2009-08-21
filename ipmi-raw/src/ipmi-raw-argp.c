@@ -171,7 +171,7 @@ _ipmi_raw_config_file_parse (struct ipmi_raw_arguments *cmd_args)
 void
 ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
 {
-  init_common_cmd_args_user (&(cmd_args->common));
+  init_common_cmd_args_admin (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
 
   cmd_args->cmd_file = NULL;
