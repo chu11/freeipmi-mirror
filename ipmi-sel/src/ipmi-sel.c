@@ -695,7 +695,7 @@ _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "Unknown SEL Record Type: %X\n",
+                       "Unknown SEL Record Type: %Xh\n",
                        record_type);
       goto out;
     }
