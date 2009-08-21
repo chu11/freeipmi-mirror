@@ -34,6 +34,7 @@ enum ipmi_sel_argp_option_keys
     DELETE_KEY = 'd', 
     DELETE_RANGE_KEY = 'R',
     HEX_DUMP_KEY = 'x', 
+    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 166,
   };
 
 struct ipmi_sel_arguments
@@ -51,6 +52,7 @@ struct ipmi_sel_arguments
   unsigned int delete_range2;
   int hex_dump;
   char *hex_dump_filename;
+  int assume_system_event_records;
 };
 
 typedef struct ipmi_sel_prog_data

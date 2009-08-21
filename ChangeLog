@@ -1,5 +1,9 @@
 2009-08-21  Albert Chu <chu11@llnl.gov>
 
+        * ipmi-sel/: Support --assume-system-event-records.
+	
+2009-08-21  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/, ipmipower/, common/man/: Support 'authcap'
 	workaround for motherboard that do not properly report
 	authentication support.

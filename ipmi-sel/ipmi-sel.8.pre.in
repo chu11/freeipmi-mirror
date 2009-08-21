@@ -54,6 +54,12 @@ Delete record ids from START to END in the SEL.
 .TP
 \fB\-x [FILE]\fR, \fB\-\-hex-dump[=FILE]\fR
 Hex-dump SEL entries optionally into a FILE.
+.TP
+\fB\-\-assume\-system\-event\-records\fR
+Some motherboards have invalid SEL record types listed, leading to
+errors such as 'Unknown SEL Record Type'.  The records may actually be
+formatted correctly.  Use this option to assume these invalid record
+types are system event records and pray for the best.
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-ignore-sdr-cache.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>

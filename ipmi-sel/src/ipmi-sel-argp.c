@@ -81,6 +81,8 @@ static struct argp_option cmdline_options[] =
      "Delete record ids from START to END in the SEL.", 35},
     {"hex-dump",   HEX_DUMP_KEY,   "FILE", OPTION_ARG_OPTIONAL, 
      "Hex-dump SEL records optionally into a FILE.", 36},
+    {"assume-system-event-records", ASSUME_SYSTEM_EVENT_RECORDS_KEY, 0, 0,
+     "Assume invalid record types are system event records.", 37},
     { 0 }
   };
 
@@ -209,6 +211,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  cmd_args->hex_dump_filename = strdup (arg);
 	}
       break;
+    case ASSUME_SYSTEM_EVENT_RECORDS_KEY:
+      cmd_args->assume_system_event_records = 1;
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -263,6 +268,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->delete_range2 = 0;
   cmd_args->hex_dump = 0;
   cmd_args->hex_dump_filename = NULL;
+  cmd_args->assume_system_event_records = 0;
   
   argp_parse (&cmdline_config_file_argp, argc, argv, ARGP_IN_ORDER, NULL, &(cmd_args->common));
 
