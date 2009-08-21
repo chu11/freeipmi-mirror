@@ -360,7 +360,7 @@ Dell 2650: Some sensors return parameter out of range completion codes
 (0xC9) for unknown reasons.  Resolved by ignoring sensors that return
 this return code.
 
-HP DL585: The get sensor thresholds command is not supported on these
+HP DL 585: The get sensor thresholds command is not supported on these
 motherboards.  Resolved by reading threshold data from the SDR or not
 allowing sensor threshold configuration.
 
@@ -394,7 +394,7 @@ Supermicro H8QME with SIMSO daughter card: It appears different record
 ids (i.e. 280 vs. 281) can be used to retrieve identical SEL records.
 No workaround provided, assumed to be a non-issue.
 
-HP DL585: The Get SEL entry command and Reserve SEL command do not
+HP DL 585: The Get SEL entry command and Reserve SEL command do not
 function.  No current resolution.
 
 HP DL 380 G5: Some SEL records report a record type of 0x00, which is
