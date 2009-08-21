@@ -1,6 +1,9 @@
 2009-08-21  Albert Chu <chu11@llnl.gov>
 
         * ipmi-sel/: Support --assume-system-event-records.
+
+	* bmc-config/, pef-config/: Report some fatal errors under
+	non-veborse mode.
 	
 2009-08-21  Albert Chu <chu11@llnl.gov>
 
