@@ -95,16 +95,18 @@ static struct argp_option cmdline_options[] =
       "Output only OEM event records.", 39},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
       "Hex-dump SEL records.", 40},
+    { "assume-system-event-records", ASSUME_SYSTEM_EVENT_RECORDS_KEY, 0, 0,
+      "Assume invalid record types are system event records.", 41},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 41},
+      "Attempt to interpret OEM data.", 42},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 42},
+      "Output sensor names with entity ids and instances.", 43},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 43},
+      "Output fields in comma separated format.", 44},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 44},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 45},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 45},
+      "Output in legacy format.", 46},
     { 0 }
   };
 
@@ -303,6 +305,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case HEX_DUMP_KEY:
       cmd_args->hex_dump = 1;
       break;
+    case ASSUME_SYSTEM_EVENT_RECORDS_KEY:
+      cmd_args->assume_system_event_records = 1;
+      break;
     case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
       break;
@@ -364,6 +369,8 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
     cmd_args->system_event_only = config_file_data.system_event_only;
   if (config_file_data.oem_event_only_count)
     cmd_args->oem_event_only = config_file_data.oem_event_only;
+  if (config_file_data.assume_system_event_records_count)
+    cmd_args->assume_system_event_records = config_file_data.assume_system_event_records;
   if (config_file_data.interpret_oem_data_count)
     cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
   if (config_file_data.entity_sensor_names_count)
@@ -413,6 +420,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->system_event_only = 0;
   cmd_args->oem_event_only = 0;
   cmd_args->hex_dump = 0;
+  cmd_args->assume_system_event_records = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->entity_sensor_names = 0;
   cmd_args->comma_separated_output = 0;

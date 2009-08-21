@@ -87,6 +87,12 @@ Output only OEM event records.
 .TP
 \fB\-\-hex\-dump\fR
 Hex-dump SEL entries.
+.TP
+\fB\-\-assume\-system\-event\-records\fR
+Some motherboards have invalid SEL record types listed, leading to
+errors such as 'Unknown SEL Record Type'.  The records may actually be
+formatted correctly.  Use this option to assume these invalid record
+types are system event records and pray for the best.
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
 #include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>
