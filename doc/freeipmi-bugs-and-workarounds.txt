@@ -397,6 +397,9 @@ No workaround provided, assumed to be a non-issue.
 HP DL585: The Get SEL entry command and Reserve SEL command do not
 function.  No current resolution.
 
+HP DL 380 G5: Some SEL records report a record type of 0x00, which is
+illegal.  Resolved with workaround to assume a valid record type.
+
 Misc
 ----
 
