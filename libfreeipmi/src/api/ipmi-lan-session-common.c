@@ -1168,7 +1168,6 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
    * vs. null vs non-null username capabilities.  The workaround is to
    * skip these checks.
    */
-
   if (!(ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
       API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs,
@@ -1211,38 +1210,49 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   else
     ctx->io.outofband.per_msg_auth_disabled = 0;
 
-  switch (ctx->io.outofband.authentication_type)
+
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Intel S5000PAL.
+   *
+   * Authentication capabilities flags are not listed properly in the
+   * response.  The workaround is to skip these checks.
+   */
+  if (!(ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
-    case IPMI_AUTHENTICATION_TYPE_NONE:
-      API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
-				"authentication_type.none", 
-				&supported_authentication_type);
-      break;
-    case IPMI_AUTHENTICATION_TYPE_MD2:
-      API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
-				"authentication_type.md2", 
-				&supported_authentication_type);
-      break;
-    case IPMI_AUTHENTICATION_TYPE_MD5:
-      API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
-				"authentication_type.md5", 
-				&supported_authentication_type);
-      break;
-    case IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY:
-      API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
-				"authentication_type.straight_password_key", 
-				&supported_authentication_type);
-      break;
-    case IPMI_AUTHENTICATION_TYPE_OEM_PROP:
-      API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
-				"authentication_type.oem_prop", 
-				&supported_authentication_type);
-      break;
+      switch (ctx->io.outofband.authentication_type)
+        {
+        case IPMI_AUTHENTICATION_TYPE_NONE:
+          API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+                                    "authentication_type.none", 
+                                    &supported_authentication_type);
+          break;
+        case IPMI_AUTHENTICATION_TYPE_MD2:
+          API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+                                    "authentication_type.md2", 
+                                    &supported_authentication_type);
+          break;
+        case IPMI_AUTHENTICATION_TYPE_MD5:
+          API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+                                    "authentication_type.md5", 
+                                    &supported_authentication_type);
+          break;
+        case IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY:
+          API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+                                    "authentication_type.straight_password_key", 
+                                    &supported_authentication_type);
+          break;
+        case IPMI_AUTHENTICATION_TYPE_OEM_PROP:
+          API_FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+                                    "authentication_type.oem_prop", 
+                                    &supported_authentication_type);
+          break;
+        }
+      
+      if (!supported_authentication_type)
+        API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE);
     }
-
-  if (!supported_authentication_type)
-    API_ERR_SET_ERRNUM_CLEANUP(IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE);
-
+      
   API_FIID_OBJ_DESTROY(obj_cmd_rq);
   API_FIID_OBJ_DESTROY(obj_cmd_rs);
 

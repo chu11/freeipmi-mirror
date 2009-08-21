@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.160.4.4 2009-06-11 23:49:20 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.160.4.5 2009-08-21 20:58:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -997,18 +997,28 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
         }
     }
 
+   /* IPMI Workaround (achu)
+    *
+    * Discovered on Intel S5000PAL.
+    *
+    * Authentication capabilities flags are not listed properly in the
+    * response.  The workaround is to skip these checks.
+    */
   /* Can we authenticate with the specified authentication type? */
-  if (!((cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
-         && authentication_type_none)
-        || (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
-            && authentication_type_md2)
-        || (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
-            && authentication_type_md5)
-        || (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
-            && authentication_type_straight_password_key)))
+  if (!(cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
-      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
-      return -1;
+      if (!((cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
+             && authentication_type_none)
+            || (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
+                && authentication_type_md2)
+            || (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
+                && authentication_type_md5)
+            || (cmd_args.common.authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
+                && authentication_type_straight_password_key)))
+        {
+          ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
+          return -1;
+        }
     }
 
   /* IPMI Workaround (achu)
