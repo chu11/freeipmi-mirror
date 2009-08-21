@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.192 2009-08-17 23:20:23 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.193 2009-08-21 20:54:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -1373,20 +1373,30 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip,
         }
     }
 
-  if ((ret = ipmi_check_authentication_capabilities_authentication_type (cmd_args.common.authentication_type,
-                                                                         ip->obj_authentication_capabilities_res)) < 0)
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Intel S5000PAL.
+   *
+   * Authentication capabilities flags are not listed properly in the
+   * response.  The workaround is to skip these checks.
+   */
+  if (!(cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
-      IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_authentication_type: %s",
-                        strerror (errno)));
-      exit (1);
+      if ((ret = ipmi_check_authentication_capabilities_authentication_type (cmd_args.common.authentication_type,
+                                                                             ip->obj_authentication_capabilities_res)) < 0)
+        {
+          IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_authentication_type: %s",
+                            strerror (errno)));
+          exit (1);
+        }
+      
+      if (!ret)
+        {
+          ipmipower_output (MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);
+          return (-1);
+        }
     }
-
-  if (!ret)
-    {
-      ipmipower_output (MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);
-      return (-1);
-    }
-
+      
   /* IPMI Workaround (achu)
    *
    * Discovered on IBM eServer 325

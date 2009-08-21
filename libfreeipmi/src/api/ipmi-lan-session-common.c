@@ -1368,7 +1368,6 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
    * vs. null vs non-null username capabilities.  The workaround is to
    * skip these checks.
    */
-
   if (!(ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
       if (strlen (ctx->io.outofband.username))
@@ -1413,17 +1412,27 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
   else
     ctx->io.outofband.per_msg_auth_disabled = 0;
 
-  if ((ret = ipmi_check_authentication_capabilities_authentication_type (ctx->io.outofband.authentication_type,
-                                                                         obj_cmd_rs)) < 0)
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Intel S5000PAL. 
+   *
+   * Authentication capabilities flags are not listed properly in the
+   * response.  The workaround is to skip these checks.
+   */
+  if (!(ctx->workaround_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (!ret)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE);
-      goto cleanup;
+      if ((ret = ipmi_check_authentication_capabilities_authentication_type (ctx->io.outofband.authentication_type,
+                                                                             obj_cmd_rs)) < 0)
+        {
+          API_ERRNO_TO_API_ERRNUM (ctx, errno);
+          goto cleanup;
+        }
+      
+      if (!ret)
+        {
+          API_SET_ERRNUM (ctx, IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE);
+          goto cleanup;
+        }
     }
 
   fiid_obj_destroy (obj_cmd_rq);
