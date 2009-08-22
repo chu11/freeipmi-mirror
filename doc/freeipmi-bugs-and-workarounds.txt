@@ -446,4 +446,3 @@ resolution.
 HP DL 380 G5: Some SEL records report a record type of 0x00, which is
 illegal.  Resolved with workaround to assume a valid record type.
 
-
