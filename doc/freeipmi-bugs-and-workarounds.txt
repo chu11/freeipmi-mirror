@@ -311,6 +311,11 @@ them results in a parameter out of range error (0xC9).  No workaround
 in FreeIPMI implemented.  Worked with vendor to implement fix in
 firmware.
 
+Supermicro H8QME with SIMSO daughter card: Setting a channel privilege
+limit (i.e. LAN channel privilege limit) does not seem to affect
+authentication and/or execution of IPMI commands.  No current
+resolution.
+
 Tyan S4811 with SMDC daughter card: The ability to authenticate under
 IPMI 1.5 is tied to it being supported as an OEM authentication type.
 Resolved via different configuration w/ bmc-config.
