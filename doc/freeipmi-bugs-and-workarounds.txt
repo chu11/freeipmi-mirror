@@ -15,7 +15,9 @@ talk to vendors and they say, "IPMI is 100% compliant, we don't know
 what you're talking about.", well, here's this document :-)
 
 Naturally the motherboards I have much more access to and am capable
-of working on will probably have more issues discovered.  Possible
+of working on will probably have more issues discovered.  As I develop
+FreeIPMI and know more about IPMI, I am more likely to find more
+issues on the most recent motherboard I worked on.  Possible
 bugs/compliance issues on other manufacturer's motherboards may be
 masked by workarounds added to earlier motherboards.
 
@@ -36,15 +38,16 @@ Tyan S4811 with SMDC daughter card
 Supermicro X6-DHR-1G with BMC2.0 daughter card
 
 The remaining motherboards (and subsequent bugs/workarounds) listed
-below are from interaction with users in the community and I have
-never personally accessed.
+below are from interaction with users in the community and I never
+personally accessed (atleast at the time of documentation of the
+bug/workaround).
 
 For the record, I have nothing against the companies and these issues.
 I am just as prone to programming bugs as they are.  The IPMI
 specification is gigantic and mistakes will happen.  This is more
 documentation for historical purposes, people searching for
-information, and to document the difficulty of developing against
-IPMI.
+information, and to document the difficulty of developing portable
+IPMI code.
 
 Authentication Issues
 ---------------------
@@ -56,7 +59,8 @@ Challenge requests from a different source port.
 
 Forgotten/Undocumented Motherboard(s): The only authentication
 supported by the motherboard is an OEM specific authentication.  No
-resolution implemented.
+resolution implemented.  (Al comment: I think this was some really old
+Supermicro motherboard, but I am not really sure.)
 
 Supermicro H8QME with SIMSO daughter card: The IPMI 2.0 packet
 responses for RAKP 2 have payload lengths that are off by 1.  Resolved
@@ -131,7 +135,7 @@ resolution currently available.
 Forgotten/Undocumented Motherboard(s): The maximum privilege level
 assigned to a cipher suite ID require authentication with that
 specific privilege level, rather than a privilege level less than or
-equal to it.
+equal to it.  
 
 Intel S5000PAL: Supported authentication types are not properly
 reported by the Get Authentication Capabilities response.  Resolved
@@ -187,12 +191,18 @@ Fujitsu RX 100: The record count reported by a Get SDR Repository Info
 command is not consistent to the number of records that exist on the
 motherboard.  Resolved with workaround to handle situation.
 
+Supermicro X6-DHR-1G with BMC2.0 daughter card: The record ID returned
+from a Get SDR Record command would be different from the record ID
+passed in. No resolution in FreeIPMI required.  Resolved in IPMItool
+with workaround to detect issue and use input record ID instead of
+output record ID.
+
 Misc IPMI
 ---------
 
 Sun Fire 4100 with ILOM: The tag bits for some of the cipher records
-are wrong.  Resolved with a workaround to parse cipher
-records.
+are wrong.  Resolved with a workaround to parse cipher records
+properly.
 
 Tool Issues
 -----------
@@ -208,7 +218,9 @@ the default SOL port anyways.
 
 Sun Fire 4100 with ILOM: The Get Channel Payload Support command is
 not supported.  Resolved with a workaround to skip this point in the
-state machine (and pray things still work).
+state machine (and pray things still work).  Note that while this
+command is listed as optional in the IPMI spec, it is not optional if
+SOL is supported.
 
 Supermicro H8QME with SIMSO daughter card: SOL sessions are not
 deactivated after a Deactivate Payload request, despite the response
@@ -217,6 +229,12 @@ continually believes a SOL session is active, tries to deactivate it,
 believes it is deactivated, then checks again if it is active.
 Resolved by exiting after a number of failed deactivations.  This
 bug is confirmed to be fixed on newer firmware.
+
+Supermicro H8QME with SIMSO daughter card: When a SOL session is
+closed by another session, the initial SOL session is not given a "SOL
+is deactivating" flag in a BMC to Remote Console packet.  Not a severe
+issue, since the SOL session will eventually timeout.  Resolved with
+firmware fix.
 
 Intel SR1520ML/X38ML: SOL payload sizes are reported incorrectly.
 Resolved with a workaround to skip payload size checks.
@@ -244,13 +262,29 @@ Resolved with an Intel specific workaround.
 Inventec 5441/Dell Xanadu2: SOL payload sizes are reported
 incorrectly.  Resolved with a workaround to skip payload size checks.
 
+Inventec 5441/Dell Xanadu2: When a SOL session is closed by another
+session, the initial SOL session is not given a "SOL is deactivating"
+flag in a BMC to Remote Console packet.  Not a severe issue, since the
+SOL session will eventually timeout.  No current resolution.
+
+Inventec 5441/Dell Xanadu2: If the remote system requires encryption,
+but the user attempts to connect without encryption, an error response
+other than "Cannot activate payload without encryption." is returned.
+Not a severe issue, since the SOL session will connect with another
+error.  Resolved with firmware fix.
+
+Dell Poweredge R610: When a SOL session is closed by another session,
+the initial SOL session is not given a "SOL is deactivating" flag in a
+BMC to Remote Console packet.  Not a severe issue, since the SOL
+session will eventually timeout.  No current resolution.
+
 bmc-config
 ----------
 
-Forgotten/Undocumented Motherboard(s) and Sun X4140: Some BMCs require
-that a password must be passed to the Set User Password command even
-if you are just trying to enable/disable a user.  Resolved by retrying
-a failed Set User Password command with a dummy password.
+Sun X4140: BMCs require that a password must be passed to the Set User
+Password command even if you are just trying to enable/disable a user.
+Resolved by retrying a failed Set User Password command with a dummy
+password.
 
 Supermicro H8QME with SIMSO daughter card: Users cannot be
 enabled/disabled via Set User Password.  No workaround in FreeIPMI
@@ -281,10 +315,13 @@ Tyan S4811 with SMDC daughter card: The ability to authenticate under
 IPMI 1.5 is tied to it being supported as an OEM authentication type.
 Resolved via different configuration w/ bmc-config.
 
-Sun X4140, Inventec 5441/Dell Xanadu2: Get Username and Get User
-Payload commands fail with CCh = "Invalid data field in request" if a
-username was not set previously.  Added workaround for this specific
-case.
+Sun X4140: Get Username and Get User Payload commands fail with CCh =
+"Invalid data field in request" if a username was not set previously.
+Added workaround for this specific case.
+
+Inventec 5441/Dell Xanadu2: Get Username and Get User Payload commands
+fail with CCh = "Invalid data field in request" if a username was not
+set previously.  Added workaround for this specific case.
 
 Inventec 5441/Dell Xanadu2: User access parameters Enable_IPMI_Msgs
 and Privilege_Limit are not changeable via Set User Access for some
@@ -302,6 +339,10 @@ resolution.
 Inventec 5441/Dell Xanadu2: Setting Non-volatile settings seems to
 also change volatile settings for channel configuration.  No current
 resolution.
+
+Inventec 5441/Dell Xanadu2: ARP response configuration is not
+functional even though the BMC ARP responds.  Resolved via firmware
+fix.
 
 Forgotten/Undocumented Motherboard(s): Setting a password using IPMI
 2.0 extensions (i.e. up to 20 bytes in length) does not appear to
@@ -327,12 +368,23 @@ Dell Poweredge R610: User IPMI messaging being enabled/disabled does
 not seem to affect authentication and/or execution of IPMI commands.
 No current resolution.
 
+Dell Poweredge R610: ARP response configuration is not available even
+though the BMC ARP responds.  No current resolution.
+
 ipmi-fru
 --------
 
-Forgotten/Undocumented Motherboard(s), Inventec 5441/Dell Xanadu2,
+Inventec 5441/Dell Xanadu2: Some FRU data has invalid checksums.
+Resolved with workaround to ignore the checksum (and pray for the
+best).
+
 Dell Poweredge R610: Some FRU data has invalid checksums.  Resolved
 with workaround to ignore the checksum (and pray for the best).
+
+Forgotten/Undocumented Motherboard(s): Some FRU data has invalid
+checksums.  Resolved with workaround to ignore the checksum (and pray
+for the best).  (Al comment: I think this was either an Intel Tiger2
+or Intel Tiger4 motherboard, but I can't remember which one.)
 
 ipmi-sensors/ipmimonitoring
 ---------------------------
@@ -358,15 +410,11 @@ Dell 2650: Some sensors return parameter out of range completion codes
 (0xC9) for unknown reasons.  Resolved by ignoring sensors that return
 this return code.
 
-HP DL 585: The get sensor thresholds command is not supported on these
-motherboards.  Resolved by reading threshold data from the SDR or not
-allowing sensor threshold configuration.
-
 HP ProLiant DL145 G2: The get sensor reading command returns
 IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND for some sensors.  Resolved by
 ignoring sensors that return this return code.
 
-Sun X4140: The get sensor event enable command always returns "sensor
+Sun X4140: The Get Sensor Event Enable command always returns "sensor
 scanning disabled" bit.  No current resolution.
 
 Supermicro H8QME with SIMSO daughter card: Some sensors do not return
@@ -377,7 +425,7 @@ Inventec 5441/Dell Xanadu2: Several sensors have bogus Entity IDs.  In
 other words, not in the valid Entity ID range, or OEM defined range.
 No resolution required, output alternate text appropriately.
 
-Sun Fire X4450 w/ELOM 3.0.0: Several sensors show
+Sun Fire X4450 w/ ELOM 3.0.0: Several sensors show
 IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED (0xD5 for some sensors.
 Resolved by ignoring sensors that return this return code.
 
@@ -392,18 +440,10 @@ Supermicro H8QME with SIMSO daughter card: It appears different record
 ids (i.e. 280 vs. 281) can be used to retrieve identical SEL records.
 No workaround provided, assumed to be a non-issue.
 
-HP DL 585: The Get SEL entry command and Reserve SEL command do not
-function.  No current resolution.
+HP DL 585: The Get SEL Entry command is not supported.  No current
+resolution.
 
 HP DL 380 G5: Some SEL records report a record type of 0x00, which is
 illegal.  Resolved with workaround to assume a valid record type.
 
-Misc
-----
-
-Supermicro X6-DHR-1G with BMC2.0 daughter card: The record ID returned
-from a Get SDR Record command would be different from the record ID
-passed in. No resolution in FreeIPMI required.  Resolved in IPMItool
-with workaround to detect issue and use input record ID instead of
-output record ID.
 
