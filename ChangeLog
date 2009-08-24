@@ -1,3 +1,7 @@
+2009-08-24  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/: Re-work format of interpret-oem-data output.
+	
 2009-08-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Support --assume-system-event-records.
