@@ -1,6 +1,10 @@
 2009-08-24  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/: Re-work format of interpret-oem-data output.
+
+	* bmc-device/: Add --set-system-firmware-version,
+	--set-system-name, --set-primary-operating-system-name, and
+	--set-operating-system-name support.
 	
 2009-08-21  Albert Chu <chu11@llnl.gov>
 

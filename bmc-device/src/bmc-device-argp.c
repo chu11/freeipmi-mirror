@@ -100,8 +100,16 @@ static struct argp_option cmdline_options[] =
       "Get BT interface capabilities.", 46},
     { "get-bmc-global-enables", GET_BMC_GLOBAL_ENABLES_KEY, NULL, 0,
       "Get BMC Global Enables.", 47},
+    { "set-system-firmware-version", SET_SYSTEM_FIRMWARE_VERSION_KEY, NULL, 0,
+      "Set System Firmware Version.", 48},
+    { "set-system-name", SET_SYSTEM_NAME_KEY, NULL, 0,
+      "Set System Name.", 49},
+    { "set-primary-operating-system-name", SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY, NULL, 0,
+      "Set Primary Operating System Name.", 50},
+    { "set-operating-system-name", SET_OPERATING_SYSTEM_NAME_KEY, NULL, 0,
+      "Set Operating System Name.", 51},
     { "verbose", VERBOSE_KEY, 0, 0,
-      "Increase verbosity in output.", 48},
+      "Increase verbosity in output.", 52},
     { 0 }
   };
 
@@ -233,6 +241,22 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case GET_BMC_GLOBAL_ENABLES_KEY:
       cmd_args->get_bmc_global_enables = 1;
       break;
+    case SET_SYSTEM_FIRMWARE_VERSION_KEY:
+      cmd_args->set_system_firmware_version = 1;
+      cmd_args->set_system_firmware_version_arg = arg;
+      break;
+    case SET_SYSTEM_NAME_KEY:
+      cmd_args->set_system_name = 1;
+      cmd_args->set_system_name_arg = arg;
+      break;
+    case SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY:
+      cmd_args->set_primary_operating_system_name = 1;
+      cmd_args->set_primary_operating_system_name_arg = arg;
+      break;
+    case SET_OPERATING_SYSTEM_NAME_KEY:
+      cmd_args->set_operating_system_name = 1;
+      cmd_args->set_operating_system_name_arg = arg;
+      break;
     case VERBOSE_KEY:
       cmd_args->verbose++;
       break;
@@ -287,7 +311,11 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && !cmd_args->get_ssif_interface_capabilities
       && !cmd_args->get_kcs_interface_capabilities
       && !cmd_args->get_bt_interface_capabilities
-      && !cmd_args->get_bmc_global_enables)
+      && !cmd_args->get_bmc_global_enables
+      && !cmd_args->set_system_firmware_version
+      && !cmd_args->set_system_name
+      && !cmd_args->set_primary_operating_system_name
+      && !cmd_args->set_operating_system_name)
     {
       fprintf (stderr,
                "No command specified.\n");
@@ -309,7 +337,12 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
        + cmd_args->get_ssif_interface_capabilities
        + cmd_args->get_kcs_interface_capabilities
        + cmd_args->get_bt_interface_capabilities
-       + cmd_args->get_bmc_global_enables) > 1)
+       + cmd_args->get_bmc_global_enables
+       + cmd_args->set_system_firmware_version
+       + cmd_args->set_system_name
+       + cmd_args->set_primary_operating_system_name
+       + cmd_args->set_operating_system_name) > 1)
+    
     {
       fprintf (stderr,
                "Multiple commands specified.\n");
@@ -322,6 +355,38 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
     {
       fprintf (stderr,
                "No acpi power state configuration changes specified\n");
+      exit (1);
+    }
+
+  if (cmd_args->set_system_firmware_version
+      && strlen (cmd_args->set_system_firmware_version_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
+    {
+      fprintf (stderr,
+	       "system firmware version string too long\n");
+      exit (1);
+    }
+  
+  if (cmd_args->set_system_name
+      && strlen (cmd_args->set_system_name_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
+    {
+      fprintf (stderr,
+	       "system name string too long\n");
+      exit (1);
+    }
+  
+  if (cmd_args->set_primary_operating_system_name
+      && strlen (cmd_args->set_primary_operating_system_name_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
+    {
+      fprintf (stderr,
+	       "primary operating system name string too long\n");
+      exit (1);
+    }
+  
+  if (cmd_args->set_operating_system_name
+      && strlen (cmd_args->set_operating_system_name_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
+    {
+      fprintf (stderr,
+	       "operating system name string too long\n");
       exit (1);
     }
 }
@@ -352,6 +417,10 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->get_kcs_interface_capabilities = 0;
   cmd_args->get_bt_interface_capabilities = 0;
   cmd_args->get_bmc_global_enables = 0;
+  cmd_args->set_system_firmware_version = 0;
+  cmd_args->set_system_name = 0;
+  cmd_args->set_primary_operating_system_name = 0;
+  cmd_args->set_operating_system_name = 0;
   cmd_args->verbose = 0;
 
   argp_parse (&cmdline_config_file_argp,

@@ -102,6 +102,18 @@ Get BT interface capabilities.
 \fB\-\-get\-bmc\-global\-enables\fR
 Get BMC Global Enables.
 .TP
+\fB\-\-set\-system\-firmware\-version\fR=\fISTR\fR
+Set System Firmware Version.
+.TP
+\fB\-\-set\-system\-name\fR=\fISTR\fR
+Set System Name.
+.TP
+\fB\-\-set\-primary\-operating\-system\-name\fR=\fISTR\fR
+Set Primary Operating System Name.
+.TP
+\fB\-\-set\-operating\-system\-name\fR=\fISTR\fR
+Set Operating System Name.
+.TP
 \fB\-\-verbose\fR
 Increase verbosity in output.
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>

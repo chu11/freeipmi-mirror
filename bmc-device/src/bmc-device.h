@@ -42,14 +42,20 @@ enum bmc_device_argp_option_keys
     GET_KCS_INTERFACE_CAPABILITIES_KEY = 173,
     GET_BT_INTERFACE_CAPABILITIES_KEY = 174,
     GET_BMC_GLOBAL_ENABLES_KEY = 175,
-    VERBOSE_KEY = 176,
+    SET_SYSTEM_FIRMWARE_VERSION_KEY=176,
+    SET_SYSTEM_NAME_KEY=177,
+    SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY=178,
+    SET_OPERATING_SYSTEM_NAME_KEY=179,
+    VERBOSE_KEY = 180,
   };
 
 enum bmc_device_set_acpi_power_state_options
   {
-    SET_ACPI_SYSTEM_POWER_STATE_KEY = 180,
-    SET_ACPI_DEVICE_POWER_STATE_KEY = 181,
+    SET_ACPI_SYSTEM_POWER_STATE_KEY = 190,
+    SET_ACPI_DEVICE_POWER_STATE_KEY = 191,
   };
+
+#define SYSTEM_INFO_STRING_MAX 255
 
 struct bmc_device_set_acpi_power_state
 {
@@ -80,6 +86,14 @@ struct bmc_device_arguments
   int get_kcs_interface_capabilities;
   int get_bt_interface_capabilities;
   int get_bmc_global_enables;
+  int set_system_firmware_version;
+  char *set_system_firmware_version_arg;
+  int set_system_name;
+  char *set_system_name_arg;
+  int set_primary_operating_system_name;
+  char *set_primary_operating_system_name_arg;
+  int set_operating_system_name;
+  char *set_operating_system_name_arg;
   int verbose;
 };
 

@@ -1318,9 +1318,9 @@ fill_cmd_set_system_info_parameters_system_firmware_version (uint8_t set_selecto
                                                              unsigned int string_block_length,
                                                              fiid_obj_t obj_cmd_rq)
 {
-  uint8_t stringbuf[IPMI_SYSTEM_INFO_STRING_LEN_MAX];
+  uint8_t stringbuf[IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX];
 
-  if (string_block_length > IPMI_SYSTEM_INFO_STRING_LEN_MAX
+  if (string_block_length > IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -1344,10 +1344,10 @@ fill_cmd_set_system_info_parameters_system_firmware_version (uint8_t set_selecto
   /* achu: spec is not clear if this data should be 0 extended, we
    * will do it to be on the safe side
    */
-  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
   if (string_block && string_block_length)
     memcpy (stringbuf, string_block, string_block_length);
-  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
 
   return (0);
 }
@@ -1404,9 +1404,9 @@ fill_cmd_set_system_info_parameters_system_name (uint8_t set_selector,
                                                  unsigned int string_block_length,
                                                  fiid_obj_t obj_cmd_rq)
 {
-  uint8_t stringbuf[IPMI_SYSTEM_INFO_STRING_LEN_MAX];
+  uint8_t stringbuf[IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX];
 
-  if (string_block_length > IPMI_SYSTEM_INFO_STRING_LEN_MAX
+  if (string_block_length > IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -1430,10 +1430,10 @@ fill_cmd_set_system_info_parameters_system_name (uint8_t set_selector,
   /* achu: spec is not clear if this data should be 0 extended, we
    * will do it to be on the safe side
    */
-  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
   if (string_block && string_block_length)
     memcpy (stringbuf, string_block, string_block_length);
-  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
 
   return (0);
 }
@@ -1484,10 +1484,10 @@ fill_cmd_set_system_info_parameters_primary_operating_system_name_first_set (uin
   /* achu: spec is not clear if this data should be 0 extended, we
    * will do it to be on the safe side
    */
-  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
   if (string_block && string_block_length)
     memcpy (stringbuf, string_block, string_block_length);
-  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
 
   return (0);
 }
@@ -1498,9 +1498,9 @@ fill_cmd_set_system_info_parameters_primary_operating_system_name (uint8_t set_s
                                                                    unsigned int string_block_length,
                                                                    fiid_obj_t obj_cmd_rq)
 {
-  uint8_t stringbuf[IPMI_SYSTEM_INFO_STRING_LEN_MAX];
+  uint8_t stringbuf[IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX];
 
-  if (string_block_length > IPMI_SYSTEM_INFO_STRING_LEN_MAX
+  if (string_block_length > IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -1524,10 +1524,10 @@ fill_cmd_set_system_info_parameters_primary_operating_system_name (uint8_t set_s
   /* achu: spec is not clear if this data should be 0 extended, we
    * will do it to be on the safe side
    */
-  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
   if (string_block && string_block_length)
     memcpy (stringbuf, string_block, string_block_length);
-  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
 
   return (0);
 }
@@ -1584,9 +1584,9 @@ fill_cmd_set_system_info_parameters_operating_system_name (uint8_t set_selector,
                                                            unsigned int string_block_length,
                                                            fiid_obj_t obj_cmd_rq)
 {
-  uint8_t stringbuf[IPMI_SYSTEM_INFO_STRING_LEN_MAX];
+  uint8_t stringbuf[IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX];
 
-  if (string_block_length > IPMI_SYSTEM_INFO_STRING_LEN_MAX
+  if (string_block_length > IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -1610,10 +1610,10 @@ fill_cmd_set_system_info_parameters_operating_system_name (uint8_t set_selector,
   /* achu: spec is not clear if this data should be 0 extended, we
    * will do it to be on the safe side
    */
-  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  memset (stringbuf, '\0', IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
   if (string_block && string_block_length)
     memcpy (stringbuf, string_block, string_block_length);
-  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_STRING_LEN_MAX);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
 
   return (0);
 }
