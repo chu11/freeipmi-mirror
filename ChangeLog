@@ -1,5 +1,10 @@
 2009-08-24  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Fix Dell active directory output.  Support type
+	configuration.
+	
+2009-08-24  Albert Chu <chu11@llnl.gov>
+
 	* bmc-info/: Re-work format of interpret-oem-data output.
 
 	* bmc-device/: Add --set-system-firmware-version,

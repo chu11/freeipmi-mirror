@@ -149,6 +149,11 @@ IPMI card.  The possible keys and values are
 \fIracdomain=string\fR,
 \fIracname=string\fR,
 \}
+\fItype=extended|standard\fR,
+.if 0 \{
+\fIsmartcardlogon=enable|disable\fR,
+\fIcertificaterevocationlist=enable|disable\fR,
+\}
 \fIsso=enable|disable\fR,
 .if 0 \{
 \fIdcfilter1=string\fR,
