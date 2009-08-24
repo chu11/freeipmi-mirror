@@ -33,12 +33,12 @@ Everything below assumes reasonable knowledge of IPMI and knowledge of
 FreeIPMI tools.  Please see FreeIPMI documentation/manpages for
 additional information.
 
-All tool testing listed below is general agnostic to execution in-band
-vs. out-of-band with obvious exceptions (i.e. testing ipmipower
-in-band, configuring the MAC address out-of-band, etc).  Naturally,
-the testing below assumes the tester is not configuring/using FreeIPMI
-workarounds.  That defeats the point of testing for IPMI compliance
-:-)
+All tool testing listed below is generally agnostic to execution
+in-band vs. out-of-band with obvious exceptions (i.e. testing
+ipmipower in-band, configuring the MAC address out-of-band, etc).
+Naturally, the testing below assumes the tester is not
+configuring/using FreeIPMI workarounds.  That defeats the point of
+testing for IPMI compliance :-)
 
 Out of Band Configuration Definitions
 -------------------------------------
