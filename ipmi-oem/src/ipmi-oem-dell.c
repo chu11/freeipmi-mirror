@@ -2315,6 +2315,7 @@ ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data)
   uint8_t ad_rac_name_string_length;
   char ad_rac_name_string[IPMI_OEM_DELL_TOKEN_STRING_MAX+1];
   uint8_t ad_type;
+  char *ad_type_str;
   uint8_t scl_state;
   uint8_t crl_state;
   uint8_t ad_sso_enable;
@@ -2356,9 +2357,9 @@ ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data)
    * byte y-z (0-255) - active directory remote access controller domain string
    * byte x - active directory remote access controller name string length
    * byte y-z (0-255) - active directory remote access controller name string
-   * byte x - active directory type
-   * byte x - SCL State (iDRAC5 only)
-   * byte x - CRL State (iDRAC5 only)
+   * byte x - active directory type (1 == extended schema, 2 == standard schema)
+   * byte x - Smart Card Logon State (a boolean on iDRAC6, possibly not on iDRAC5??)
+   * byte x - Certificate Revocation List State (a boolean on iDRAC6, possibly not on iDRAC5??)
    * byte x - active directory single sign on enable
    * byte x - active directory domain controller filter 1 string length
    * byte y-z (0-255) - active directory domain controller filter 1 string
@@ -2554,20 +2555,24 @@ ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data)
 		  "Remote Access Controller Name   : %s\n",
 		  ad_rac_name_string);
 
-  /* XXX - what is this? */
+  if (ad_type == 1)
+    ad_type_str = "Extended Schema";
+  else if (ad_type == 2)
+    ad_type_str = "Standard Schema"; 
+  else
+    ad_type_str = "Unknown";
+  
   pstdout_printf (state_data->pstate,
-		  "Type                            : %u\n",
-		  ad_type);
+		  "Type                            : %s\n",
+		  ad_type_str);
 
-  /* XXX - what is this? */
   pstdout_printf (state_data->pstate,
-		  "SCL State                       : %u\n",
-		  scl_state);
+		  "Smart Card Logon                : %s\n",
+		  (scl_state) ? "Enabled" : "Disabled");
 
-  /* XXX - what is this? */
   pstdout_printf (state_data->pstate,
-		  "CRL State                       : %u\n",
-		  crl_state);
+		  "Certificate Revocation List     : %s\n",
+		  (crl_state) ? "Enabled" : "Disabled");
   
   pstdout_printf (state_data->pstate,
 		  "Single Sign On                  : %s\n",
@@ -2662,9 +2667,9 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
    * byte y-z (0-255) - active directory remote access controller domain string
    * byte x - active directory remote access controller name string length
    * byte y-z (0-255) - active directory remote access controller name string
-   * byte x - active directory type
-   * byte x - SCL State (iDRAC5 only)
-   * byte x - CRL State (iDRAC5 only)
+   * byte x - active directory type (1 == extended schema, 2 == standard schema)
+   * byte x - Smart Card Logon State (a boolean on iDRAC6, possibly not on iDRAC5??)
+   * byte x - Certificate Revocation List State (a boolean on iDRAC6, possibly not on iDRAC5??)
    * byte x - active directory single sign on enable
    * byte x - active directory domain controller filter 1 string length
    * byte y-z (0-255) - active directory domain controller filter 1 string
@@ -2746,6 +2751,46 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
             goto cleanup;
           
           valid_field_mask |= 0x0010;
+        }
+#endif
+      else if (!strcasecmp (key, "type"))
+	{
+	  if (strcasecmp (value, "extended") && strcasecmp (value, "standard"))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid value\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      return (-1);
+	    }
+	  
+	  if (!strcasecmp (value, "extended"))
+	    ad_type = 1;
+	  else
+	    ad_type = 2;
+
+	  valid_field_mask |= 0x0020;
+	}
+#if 0
+      /* read only on iDRAC6 */
+      else if (!strcasecmp (key, "smartcardlogon"))
+        {
+          if (_parse_enable (state_data, i, value, &scl_state) < 0)
+            goto cleanup;
+
+          valid_field_mask |= 0x0040;
+        }
+#endif
+#if 0
+      /* read only on iDRAC6 */
+      else if (!strcasecmp (key, "certificaterevocationlist"))
+        {
+          if (_parse_enable (state_data, i, value, &crl_state) < 0)
+            goto cleanup;
+
+          valid_field_mask |= 0x0080;
         }
 #endif
       else if (!strcasecmp (key, "sso"))
