@@ -1741,7 +1741,7 @@ run_cmd_args (bmc_device_state_data_t *state_data)
     return (get_bmc_global_enables (state_data));
 
   if (args->set_system_firmware_version)
-    return (set_operating_system_name (state_data));
+    return (set_system_firmware_version (state_data));
 
   if (args->set_system_name)
     return (set_system_name (state_data));

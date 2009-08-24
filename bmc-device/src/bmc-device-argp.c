@@ -100,13 +100,13 @@ static struct argp_option cmdline_options[] =
       "Get BT interface capabilities.", 46},
     { "get-bmc-global-enables", GET_BMC_GLOBAL_ENABLES_KEY, NULL, 0,
       "Get BMC Global Enables.", 47},
-    { "set-system-firmware-version", SET_SYSTEM_FIRMWARE_VERSION_KEY, NULL, 0,
+    { "set-system-firmware-version", SET_SYSTEM_FIRMWARE_VERSION_KEY, "STR", 0,
       "Set System Firmware Version.", 48},
-    { "set-system-name", SET_SYSTEM_NAME_KEY, NULL, 0,
+    { "set-system-name", SET_SYSTEM_NAME_KEY, "STR", 0,
       "Set System Name.", 49},
-    { "set-primary-operating-system-name", SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY, NULL, 0,
+    { "set-primary-operating-system-name", SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY, "STR", 0,
       "Set Primary Operating System Name.", 50},
-    { "set-operating-system-name", SET_OPERATING_SYSTEM_NAME_KEY, NULL, 0,
+    { "set-operating-system-name", SET_OPERATING_SYSTEM_NAME_KEY, "STR", 0,
       "Set Operating System Name.", 51},
     { "verbose", VERBOSE_KEY, 0, 0,
       "Increase verbosity in output.", 52},
@@ -418,9 +418,13 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->get_bt_interface_capabilities = 0;
   cmd_args->get_bmc_global_enables = 0;
   cmd_args->set_system_firmware_version = 0;
+  cmd_args->set_system_firmware_version_arg = NULL;
   cmd_args->set_system_name = 0;
+  cmd_args->set_system_name_arg = NULL;
   cmd_args->set_primary_operating_system_name = 0;
+  cmd_args->set_primary_operating_system_name_arg = NULL;
   cmd_args->set_operating_system_name = 0;
+  cmd_args->set_operating_system_name_arg = NULL;
   cmd_args->verbose = 0;
 
   argp_parse (&cmdline_config_file_argp,
