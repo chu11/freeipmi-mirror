@@ -4,6 +4,8 @@
 	IPMI spec.
 
 	* libfreeipmi/src/sel-parse/: Cleanup OEM code.
+
+	* ipmi-sensors/: Cleanup OEM code.
 	
 2009-08-24  Albert Chu <chu11@llnl.gov>
 

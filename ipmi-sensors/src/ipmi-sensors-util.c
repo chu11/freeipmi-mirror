@@ -181,6 +181,25 @@ get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
   return (-1);
 }
 
+static int
+_event_reading_type_code_is_oem_interpretable (struct ipmi_sensors_state_data *state_data,
+                                               uint8_t event_reading_type_code)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->interpret_oem_data);
+  
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   */
+  if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && state_data->product_id == 256
+      && event_reading_type_code == 0x70)
+    return (1);
+
+  return (0);
+}
+
 int
 get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
                                 char ***event_message_list,
@@ -209,15 +228,9 @@ get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
       bit = 0x1 << i;
       if (sensor_event_bitmask & bit)
         {
-          /* OEM Interpretation
-           *
-           * Dell Poweredge R610
-           */
           if (IPMI_EVENT_READING_TYPE_CODE_IS_OEM (event_reading_type_code)
               && state_data->prog_data->args->interpret_oem_data
-              && state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-              && state_data->product_id == 256
-              && event_reading_type_code == 0x70)
+              && _event_reading_type_code_is_oem_interpretable (state_data, event_reading_type_code))
             {
               ret = ipmi_get_oem_generic_event_message (state_data->manufacturer_id,
                                                         state_data->product_id,
@@ -300,6 +313,29 @@ get_generic_event_message_list (struct ipmi_sensors_state_data *state_data,
   return (-1);
 }
 
+static int
+_sensor_type_is_oem_interpretable (struct ipmi_sensors_state_data *state_data,
+                                   uint8_t sensor_type)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->interpret_oem_data);
+  
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   */
+  if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && state_data->product_id == 256
+      && (sensor_type == 0xC0
+          || sensor_type == 0xC1
+          || sensor_type == 0xC2
+          || sensor_type == 0xC3
+          || sensor_type == 0xC4))
+    return (1);
+  
+  return (0);
+}
+
 int
 get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_data,
                                         char ***event_message_list,
@@ -329,19 +365,9 @@ get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_da
 
       if (sensor_event_bitmask & bit)
         {
-          /* OEM Interpretation
-           *
-           * Dell Poweredge R610
-           */
           if (IPMI_SENSOR_TYPE_IS_OEM (sensor_type)
               && state_data->prog_data->args->interpret_oem_data
-              && state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-              && state_data->product_id == 256
-              && (sensor_type == 0xC0
-                  || sensor_type == 0xC1
-                  || sensor_type == 0xC2
-                  || sensor_type == 0xC3
-                  || sensor_type == 0xC4))
+              && _sensor_type_is_oem_interpretable (state_data, sensor_type))
             {
               ret = ipmi_get_oem_sensor_type_code_message (state_data->manufacturer_id,
                                                            state_data->product_id,
