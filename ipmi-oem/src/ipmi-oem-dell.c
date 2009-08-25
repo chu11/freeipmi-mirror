@@ -1797,7 +1797,15 @@ ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
    */
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count >= 1);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: ssh=enable|disable\n"
+		      "Option: idletimeout=seconds\n"
+		      "Option: portnumber=num\n");
+      return (0); 
+    }
 
   for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {
@@ -2005,7 +2013,16 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
    */
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count >= 1);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: telnet=enable|disable\n"
+		      "Option: sessiontimeout=seconds\n"
+		      "Option: portnumber=num\n"
+		      "Option: 7fls=enable|disable");
+      return (0); 
+    }
 
   for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {
@@ -2219,7 +2236,16 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
    */
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count >= 1);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: webserver=enable|disable\n"
+		      "Option: sessiontimeout=seconds\n"
+		      "Option: httpportnumber=num\n"
+		      "Option: httpsportnumber=num\n");
+      return (0); 
+    }
 
   for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {
@@ -2687,7 +2713,17 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
    */
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count >= 1);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: activedirectory=enable|disable\n"
+		      "Option: timeout=seconds\n"
+		      "Option: type=extended|standard\n"
+		      "Option: sso=enable|disable\n"
+		      "Option: certificatevalidation=enable|disable\n");
+      return (0); 
+    }
 
   for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {

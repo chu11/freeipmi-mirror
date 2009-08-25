@@ -64,7 +64,7 @@ The currently supported OEM IDs and COMMANDs are:
 .B dell
 .RS
 .TP
-.B get-system-info \fIasset-tag|service-tag|product-name|mac-addresses\fR
+.B get-system-info \fIasset\-tag|service\-tag|product\-name|mac\-addresses\fR
 This OEM command can retrieve the motherboard asset tag, service tag,
 product name, or mac addresses.  Command confirmed to work on Dell
 Poweredge 2900, 2950 and R610.  However, specific system information
@@ -98,7 +98,8 @@ This OEM command will set the current SSH configuration on the IPMI
 card.  The possible keys and values are
 \fIssh=enable|disable\fR, \fIidletimeout=seconds\fR, and
 \fIportnumber=num\fR.  Multiple key=value pairs may be
-specified.  Some fields may be read-only on specific Poweredge systems.
+specified.  If no key=value pairs are specifed, available pairs are
+output.  Some fields may be read-only on specific Poweredge systems.
 Command confirmed to work on Dell Poweredge R610.
 .TP
 .B get-telnet-config
@@ -110,9 +111,10 @@ This OEM command will set the current Telnet configuration on the IPMI
 card.  The possible keys and values are
 \fItelnet=enable|disable\fR, \fIsessiontimeout=seconds\fR,
 \fIportnumber=num\fR, and \fI7fls=enable|disable\fR.
-Multiple key=value pairs may be specified.  Some fields may be
-read-only on specific Poweredge systems.  Command confirmed to work on
-Dell Poweredge R610.
+Multiple key=value pairs may be specified.
+If no key=value pairs are specifed, available pairs are output.  Some
+fields may be read-only on specific Poweredge systems.  Command
+confirmed to work on Dell Poweredge R610.
 .TP
 .B get-web-server-config
 This OEM command will get the current web server configuration on the
@@ -124,8 +126,9 @@ IPMI card.  The possible keys and values are
 \fIwebserver=enable|disable\fR,
 \fIsessiontimeout=seconds\fR, \fIhttpportnumber=num\fR,
 and \fIhttpsportnumber=num\fR.  Multiple key=value pairs may be
-specified.  Some fields may be read-only on specific Poweredge
-systems.  Command confirmed to work on Dell Poweredge R610.
+specified.  If no key=value pairs are specifed, available pairs are
+output.  Some fields may be read-only on specific Poweredge systems.
+Command confirmed to work on Dell Poweredge R610.
 .TP
 .B get-active-directory-config
 This OEM command will get the current active directory configuration
@@ -155,9 +158,10 @@ IPMI card.  The possible keys and values are
 \fIgcfilter3=string\fR,
 \}
 and
-\fIcertificatevalidation=enable|disable\fR.  Some fields may be
-read-only on specific Poweredge systems.  Command confirmed to work on
-Dell Poweredge R610.
+\fIcertificatevalidation=enable|disable\fR.
+If no key=value pairs are specifed, available pairs are output.  Some
+fields may be read-only on specific Poweredge systems.  Command
+confirmed to work on Dell Poweredge R610.
 .TP
 .B reset-to-defaults
 This OEM command will reset the BMC configuration back to default

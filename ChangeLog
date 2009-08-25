@@ -3,6 +3,9 @@
  	* ipmi-oem/: Fix Dell active directory output.  Support type
  	configuration.
 
+ 	* ipmi-oem/: Output potential key=value pair inputs when user does
+ 	not specify any.
+	
 2009-08-21  Albert Chu <chu11@llnl.gov>
 
         * ipmi-sel/: Support --assume-system-event-records.
