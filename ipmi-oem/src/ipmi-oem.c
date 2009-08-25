@@ -461,7 +461,8 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
                   cmd_found++;
 
                   if ((oem_cmd->oem_options_count_variable
-		       && (state_data->prog_data->args->oem_options_count < oem_cmd->required_oem_options))
+		       && state_data->prog_data->args->oem_options_count
+		       && state_data->prog_data->args->oem_options_count < oem_cmd->required_oem_options)
 		      || (!oem_cmd->oem_options_count_variable
 			  && state_data->prog_data->args->oem_options_count != oem_cmd->required_oem_options))
                     {
