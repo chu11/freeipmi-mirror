@@ -4107,6 +4107,9 @@ _get_power_capacity (ipmi_oem_state_data_t *state_data,
    * bytes 8 - total number of power supplies
    * bytes 9-10 - available power
    * bytes 11 - system throttling
+   *          - 0 - Normal system operation
+   *          - 1 - System needs to be throttled
+   *          - 2 - System is overconfigured
    * bytes 12 - reserved
    *
    */
@@ -4241,6 +4244,7 @@ ipmi_oem_dell_get_power_capacity (ipmi_oem_state_data_t *state_data)
   uint8_t total_number_power_supplies;
   uint16_t available_power;
   uint8_t system_throttling;
+  char *system_throttling_str;
   int rv = -1;
 
   assert (state_data);
@@ -4289,12 +4293,18 @@ ipmi_oem_dell_get_power_capacity (ipmi_oem_state_data_t *state_data)
 		  "Available Power                : %u W\n",
 		  available_power);
 
-  /* XXX need info */
-#if 0
+  if (system_throttling == 0)
+    system_throttling_str = "Normal system operation";
+  else if (system_throttling == 1)
+    system_throttling_str = "System needs to be throttled";
+  else if (system_throttling == 2)
+    system_throttling_str = "System is overconfigured";
+  else
+    system_throttling_str = "Unknown";
+
   pstdout_printf (state_data->pstate,
-		  "System Throttling              : %u\n",
-		  system_throttling);
-#endif
+		  "System Throttling              : %s\n",
+		  system_throttling_str);
 
   rv = 0;
  cleanup:
