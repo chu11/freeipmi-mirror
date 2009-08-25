@@ -543,15 +543,10 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
           goto cleanup;
         }
 
-      /*
-       * IPMI Workaround (achu)
-       *
-       * Discovered on HP DL585
-       *
-       * Seems that the HP machine doesn't support the "Get Sensor
-       * Thresholds" command.  When this occurs, we assume the
-       * information in the SDR is legit and up to date.  Go get it
-       * and fill in the object respectively.
+      /* 
+       * Get Sensor Thresholds is an optional IPMI command.  First
+       * discovered on HP DL 585.  If it's not supported, use the SDR
+       * information.
        */
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID) == 1))
