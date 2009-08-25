@@ -626,7 +626,9 @@ display_system_info_common (bmc_info_state_data_t *state_data,
   assert (tmpl_cmd_first_set);
   assert (tmpl_cmd);
   assert (func_cmd_first_set);
+  assert (func_cmd_first_set_str);
   assert (func_cmd);
+  assert (func_cmd_str);
   assert (string_prefix);
 
   assert (state_data);
