@@ -60,6 +60,8 @@ o ipmi-sel
   - Support Inventec 5441 OEM SEL records.
   - Support Dell Poweredge R610 OEM SEL records.
   - Support --comma-separated-output option.
+  - Rename --delete-all to --clear for consistency to IPMI spec.
+    Backwards compatability maintained.
   - Output manufacturer name with "Manufacturer ID" if name available.
   - Support sensor unit percentages, rates and modifiers (i.e. "%
     hit", "gigabyte per minute", "pounds / cu in").

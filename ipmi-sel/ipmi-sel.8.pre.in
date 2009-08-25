@@ -69,8 +69,8 @@ Display SEL records from record id START to END.
 \fB\-\-exclude\-display-range\fR=\fBSTART\-END\fR
 Exclude display of SEL records from record id START to END.
 .TP
-\fB\-\-delete-all\fR
-Delete all SEL records.
+\fB\-\-clear\fR
+Clear SEL.
 .TP
 \fB\-\-delete\fR=\fBREC\-LIST\fR
 Delete records by record id in the SEL.  Accepts space or comma

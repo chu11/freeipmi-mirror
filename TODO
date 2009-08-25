@@ -1,7 +1,3 @@
-doc
----
-list interpret oem data mobos
-
 inband
 ------
 --fail-if-ipmi-not-detected
@@ -15,8 +11,6 @@ forwarded command support (errata 35b)
 bmc-device
 --------
 set bmc global enables
-- really should be done by firmware?  or OS distro?  Hold off for now.
-set system info support
 - really should be done by firmware?  or OS distro?  Hold off for now.
 
 ipmiconsole
@@ -44,7 +38,6 @@ if user inputs hostname of localhost, do inband not outofband?
 ipmi-sel
 --------
 - head/tail on record counts
-- clear records, not delete-all?
 
 freeipmi tools
 --------------

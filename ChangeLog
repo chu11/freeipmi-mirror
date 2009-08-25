@@ -1,3 +1,8 @@
+2009-08-25  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/: Rename --delete-all to --clear for consistency to
+	IPMI spec.
+	
 2009-08-24  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Fix Dell active directory output.  Support type

@@ -36,18 +36,19 @@ enum ipmi_sel_argp_option_keys
     EXCLUDE_DISPLAY_KEY,
     DISPLAY_RANGE_KEY,
     EXCLUDE_DISPLAY_RANGE_KEY,
-    DELETE_ALL_KEY = 160,
-    DELETE_KEY = 161,
-    DELETE_RANGE_KEY = 162,
-    SYSTEM_EVENT_ONLY_KEY = 163,
-    OEM_EVENT_ONLY_KEY = 164,
-    HEX_DUMP_KEY = 165,
-    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 166,
-    INTERPRET_OEM_DATA_KEY = 167,
-    ENTITY_SENSOR_NAMES_KEY = 168,
-    COMMA_SEPARATED_OUTPUT_KEY = 169,
-    NON_ABBREVIATED_UNITS_KEY = 170,
-    LEGACY_OUTPUT_KEY = 171,
+    CLEAR_KEY = 160,
+    DELETE_ALL_KEY = 161,       /* legacy */
+    DELETE_KEY = 162,
+    DELETE_RANGE_KEY = 163,
+    SYSTEM_EVENT_ONLY_KEY = 164,
+    OEM_EVENT_ONLY_KEY = 165,
+    HEX_DUMP_KEY = 166,
+    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 167,
+    INTERPRET_OEM_DATA_KEY = 168,
+    ENTITY_SENSOR_NAMES_KEY = 169,
+    COMMA_SEPARATED_OUTPUT_KEY = 170,
+    NON_ABBREVIATED_UNITS_KEY = 171,
+    LEGACY_OUTPUT_KEY = 172,
   };
 
 struct ipmi_sel_arguments
@@ -69,7 +70,7 @@ struct ipmi_sel_arguments
   int exclude_display_range;
   uint16_t exclude_display_range1;
   uint16_t exclude_display_range2;
-  int delete_all;
+  int clear;
   int delete;
   uint16_t delete_record_list[IPMI_SEL_MAX_RECORD];
   unsigned int delete_record_list_length;

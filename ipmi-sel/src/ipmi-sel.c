@@ -1912,7 +1912,7 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
   if (args->sdr.flush_cache)
     return (_flush_cache (state_data));
 
-  if (args->delete_all)
+  if (args->clear)
     return (_clear_entries (state_data));
 
   if (args->delete)
