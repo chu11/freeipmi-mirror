@@ -13,11 +13,6 @@ bmc-device
 set bmc global enables
 - really should be done by firmware?  or OS distro?  Hold off for now.
 
-ipmiconsole
------------
-Handle SOL Activating asynchronous cmd
-- like deactivating flag apparently
-
 ipmi-locate
 -----------
 (TEST) ensure no breakage on itanium, dell, sun machine for acpi/spmi
@@ -68,14 +63,6 @@ destination address vlan tags (or would be in ipmi-pef-config?)
 all lan destination config (or would be in ipmi-pef-config?)
 (NEVER TESTED) bmc password threshold
 
-ipmi-oem
---------
-dell powermonitor status, clear cumulativepower, clear peakpower,
-powersupplyrating, powerconsumption, powerconsumptionhistory
-<watt|btuphr>, getpowerbudget, setpowerbudget
-<val><watt|btuphr|percent>, enablepowercap, disablepowercap
-inventec user disable
-
 sensors/monitoring
 ------------------
 (TEST) make sure bridging still works w/ sensor-read lib
@@ -94,7 +81,6 @@ general
 -------
 beginning doc for developers
 event handling
--x option for excluding hosts??
 perl extensions
 - api support?
 - raw support?
