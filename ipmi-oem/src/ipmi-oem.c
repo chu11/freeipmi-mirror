@@ -434,7 +434,9 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
 
           id_found++;
 
-          if (!strcasecmp (args->oem_command, "list"))
+	  /* offer "help" as well as list, for those used to ipmitool */
+          if (!strcasecmp (args->oem_command, "list")
+	      || !strcasecmp (args->oem_command, "help"))
             {
               while (oem_cmd && oem_cmd->oem_command)
                 {
@@ -540,7 +542,9 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
     }
 
   /* Special case, just output list, don't do anything else */
-  if (!strcasecmp (args->oem_id, "list"))
+  /* offer "help" as well as list, for those used to ipmitool */
+  if (!strcasecmp (args->oem_id, "list")
+      || !strcasecmp (args->oem_id, "help"))
     {
       if (_list () < 0)
         goto cleanup;
