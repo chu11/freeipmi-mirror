@@ -2,6 +2,8 @@
 
 	* ipmi-sel/: Rename --delete-all to --clear for consistency to
 	IPMI spec.
+
+	* libfreeipmi/src/sel-parse/: Cleanup OEM code.
 	
 2009-08-24  Albert Chu <chu11@llnl.gov>
 

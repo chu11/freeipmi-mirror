@@ -418,13 +418,10 @@ _get_sensor_reading (ipmi_sel_parse_ctx_t ctx,
   return (rv);
 }
 
-/* output functions
- *
- * return (0) - continue on
+/* return (0) - continue on
  * return (1) - buffer full, return full buffer to user
  * return (-1) - error, cleanup and return error
  */
-
 static int
 _output_time (ipmi_sel_parse_ctx_t ctx,
               struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -464,6 +461,10 @@ _output_time (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _output_date (ipmi_sel_parse_ctx_t ctx,
               struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -520,6 +521,10 @@ _output_date (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _output_sensor_group (ipmi_sel_parse_ctx_t ctx,
                       struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -557,6 +562,73 @@ _output_sensor_group (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * in oem_rv, return
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+static int
+_output_oem_sensor_name (ipmi_sel_parse_ctx_t ctx,
+                         struct ipmi_sel_parse_entry *sel_parse_entry,
+                         uint8_t sel_record_type,
+                         char *buf,
+                         unsigned int buflen,
+                         unsigned int flags,
+                         unsigned int *wlen,
+                         struct ipmi_sel_system_event_record_data *system_event_record_data,
+                         int *oem_rv)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (oem_rv);
+
+  /* OEM Interpretation
+   *
+   * Inventec 5441/Dell Xanadu2
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+      && ctx->product_id == 51
+      && ((system_event_record_data->generator_id == 0x01 /* BIOS */
+           && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
+           && system_event_record_data->sensor_number == 0x81
+           && system_event_record_data->event_type_code == 0x70) /* OEM */
+          || (system_event_record_data->generator_id == 0x01 /* BIOS */
+              && system_event_record_data->sensor_type == 0x12 /* System Event */
+              && system_event_record_data->sensor_number == 0x85
+              && system_event_record_data->event_type_code == 0x6F)
+          || (system_event_record_data->generator_id == 0x31 /* POST error */
+              && system_event_record_data->sensor_type == 0x0F /* System Firmware Progress */
+              && system_event_record_data->sensor_number == 0x06
+              && system_event_record_data->event_type_code == 0x6F)))
+    {
+      if (_SNPRINTF (buf,
+                     buflen,
+                     wlen,
+                     "BIOS"))
+        (*oem_rv) = 1;
+      else
+        (*oem_rv) = 0;
+      
+      return (1);
+    }
+  
+  return (0);
+}
+
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
                      struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -603,32 +675,23 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
     }
   /* else fall through */
 
-  /* OEM Interpretation
-   *
-   * Inventec 5441/Dell Xanadu2
-   */
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-      && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && ctx->product_id == 51
-      && ((system_event_record_data.generator_id == 0x01 /* BIOS */
-           && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
-           && system_event_record_data.sensor_number == 0x81
-           && system_event_record_data.event_type_code == 0x70) /* OEM */
-          || (system_event_record_data.generator_id == 0x01 /* BIOS */
-              && system_event_record_data.sensor_type == 0x12 /* System Event */
-              && system_event_record_data.sensor_number == 0x85
-              && system_event_record_data.event_type_code == 0x6F)
-          || (system_event_record_data.generator_id == 0x31 /* POST error */
-              && system_event_record_data.sensor_type == 0x0F /* System Firmware Progress */
-              && system_event_record_data.sensor_number == 0x06
-              && system_event_record_data.event_type_code == 0x6F)))
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
     {
-      if (_SNPRINTF (buf,
-                     buflen,
-                     wlen,
-                     "BIOS"))
-        return (1);
-      return (0);
+      int oem_rv = 0;
+
+      if ((ret = _output_oem_sensor_name (ctx,
+                                          sel_parse_entry,
+                                          sel_record_type,
+                                          buf,
+                                          buflen,
+                                          flags,
+                                          wlen,
+                                          &system_event_record_data,
+                                          &oem_rv)) < 0)
+        return (-1);
+
+      if (ret)
+        return (oem_rv);
     }
 
   if (flags & IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE)
@@ -666,6 +729,165 @@ _output_sensor_name (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+static int
+_output_oem_event_offset_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ctx,
+                                                         struct ipmi_sel_parse_entry *sel_parse_entry,
+                                                         uint8_t sel_record_type,
+                                                         char *tmpbuf,
+                                                         unsigned int tmpbuflen,
+                                                         unsigned int flags,
+                                                         unsigned int *wlen,
+                                                         struct ipmi_sel_system_event_record_data *system_event_record_data)
+
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && (system_event_record_data->sensor_type == 0xC0
+          || system_event_record_data->sensor_type == 0xC1
+          || system_event_record_data->sensor_type == 0xC2
+          || system_event_record_data->sensor_type == 0xC3
+          || system_event_record_data->sensor_type == 0xC4))
+    {
+      int ret;
+
+      ret = ipmi_get_oem_sensor_type_code_message (ctx->manufacturer_id,
+                                                   ctx->product_id,
+                                                   system_event_record_data->sensor_type,
+                                                   system_event_record_data->offset_from_event_reading_type_code,
+                                                   tmpbuf,
+                                                   tmpbuflen);
+      
+      if (ret > 0)
+        return (1);
+    }
+  
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+static int
+_output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
+                                    struct ipmi_sel_parse_entry *sel_parse_entry,
+                                    uint8_t sel_record_type,
+                                    char *tmpbuf,
+                                    unsigned int tmpbuflen,
+                                    unsigned int flags,
+                                    unsigned int *wlen,
+                                    struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+
+  /* OEM Interpretation
+   *
+   * Inventec 5441/Dell Xanadu2
+   *
+   * achu note: There is no official "string" defining the event
+   * from the vendor.  "BMC enabled by BIOS" is simply what
+   * occurs, so that's what I'm going to say.
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+      && ctx->product_id == 51
+      && system_event_record_data->generator_id == 0x01 /* "BIOS" */
+      && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
+      && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
+      && system_event_record_data->event_type_code == 0x70 /* OEM */
+      && !system_event_record_data->offset_from_event_reading_type_code /* no event */
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "BMC enabled by BIOS");
+
+      return (1);
+    }
+
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && system_event_record_data->event_type_code == 0x70)
+    {
+      int ret;
+
+      ret = ipmi_get_oem_generic_event_message (ctx->manufacturer_id,
+                                                ctx->product_id,
+                                                system_event_record_data->event_type_code,
+                                                system_event_record_data->offset_from_event_reading_type_code,
+                                                tmpbuf,
+                                                tmpbuflen);
+
+      if (ret > 0)
+        return (1);
+    }
+
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   *
+   * achu: Unique special case
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+#if 0
+      /* it appears these don't need to match, 0x7E is the primary indicator */
+      && system_event_record_data->generator_id == 0xB1
+      && system_event_record_data->sensor_type == 0xC1 /* OEM */
+      && system_event_record_data->sensor_number == 0x1A
+#endif
+      && system_event_record_data->event_type_code == 0x7E)
+    {
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "OEM Diagnostic Data Event");
+      
+      return (1);
+    }
+
+  return (0);
+}
+
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _output_event_offset (ipmi_sel_parse_ctx_t ctx,
                       struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -711,102 +933,52 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
         output_flag++;
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE:
-      /* OEM Interpretation
-       *
-       * Dell Poweredge R610
-       */
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-          && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && ctx->product_id == 256
-          && (system_event_record_data.sensor_type == 0xC0
-              || system_event_record_data.sensor_type == 0xC1
-              || system_event_record_data.sensor_type == 0xC2
-              || system_event_record_data.sensor_type == 0xC3
-              || system_event_record_data.sensor_type == 0xC4))
-        ret = ipmi_get_oem_sensor_type_code_message (ctx->manufacturer_id,
-                                                     ctx->product_id,
-                                                     system_event_record_data.sensor_type,
+
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+        {
+          if ((ret = _output_oem_event_offset_class_sensor_specific_discrete (ctx,
+                                                                              sel_parse_entry,
+                                                                              sel_record_type,
+                                                                              tmpbuf,
+                                                                              EVENT_BUFFER_LENGTH,
+                                                                              flags,
+                                                                              wlen,
+                                                                              &system_event_record_data)) < 0)
+            return (-1);
+          
+          if (ret)
+            {
+              output_flag++;
+              break;
+            }
+        }
+      
+      ret = ipmi_get_sensor_type_code_message_short (system_event_record_data.sensor_type,
                                                      system_event_record_data.offset_from_event_reading_type_code,
                                                      tmpbuf,
                                                      EVENT_BUFFER_LENGTH);
-      else
-        ret = ipmi_get_sensor_type_code_message_short (system_event_record_data.sensor_type,
-                                                       system_event_record_data.offset_from_event_reading_type_code,
-                                                       tmpbuf,
-                                                       EVENT_BUFFER_LENGTH);
       if (ret > 0)
         output_flag++;
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
 
-      /* OEM Interpretation
-       *
-       * Inventec 5441/Dell Xanadu2
-       *
-       * achu note: There is no official "string" defining the event
-       * from the vendor.  "BMC enabled by BIOS" is simply what
-       * occurs, so that's what I'm going to say.
-       */
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-          && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-          && ctx->product_id == 51
-          && system_event_record_data.generator_id == 0x01 /* "BIOS" */
-          && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
-          && system_event_record_data.sensor_number == 0x81 /* "BIOS Start" */
-          && system_event_record_data.event_type_code == 0x70 /* OEM */
-          && !system_event_record_data.offset_from_event_reading_type_code /* no event */
-          && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-          && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
-          snprintf (tmpbuf,
-                    EVENT_BUFFER_LENGTH,
-                    "BMC enabled by BIOS");
-          output_flag++;
-          break;
-        }
-
-      /* OEM Interpretation
-       *
-       * Dell Poweredge R610
-       */
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-          && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && ctx->product_id == 256
-          && system_event_record_data.event_type_code == 0x70)
-        {
-          ret = ipmi_get_oem_generic_event_message (ctx->manufacturer_id,
-                                                    ctx->product_id,
-                                                    system_event_record_data.event_type_code,
-                                                    system_event_record_data.offset_from_event_reading_type_code,
-                                                    tmpbuf,
-                                                    EVENT_BUFFER_LENGTH);
-          if (ret > 0)
-            output_flag++;
-          break;
-        }
-
-      /* OEM Interpretation
-       *
-       * Dell Poweredge R610
-       *
-       * achu: Unique special case
-       */
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-          && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && ctx->product_id == 256
-#if 0
-	  /* it appears these don't need to match, 0x7E is the primary indicator */
-	  && system_event_record_data.generator_id == 0xB1
-	  && system_event_record_data.sensor_type == 0xC1 /* OEM */
-	  && system_event_record_data.sensor_number == 0x1A
-#endif
-          && system_event_record_data.event_type_code == 0x7E)
-        {
-          snprintf (tmpbuf,
-                    EVENT_BUFFER_LENGTH,
-                    "OEM Diagnostic Data Event");
-          output_flag++;
-          break;
+          if ((ret = _output_oem_event_offset_class_oem (ctx,
+                                                         sel_parse_entry,
+                                                         sel_record_type,
+                                                         tmpbuf,
+                                                         EVENT_BUFFER_LENGTH,
+                                                         flags,
+                                                         wlen,
+                                                         &system_event_record_data)) < 0)
+            return (-1);
+          
+          if (ret)
+            {
+              output_flag++;
+              break;
+            }
         }
 
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_LEGACY)
@@ -879,6 +1051,155 @@ _round_double2 (double d)
   return ((long) d + ((long) r / 100.0));
 }
 
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+static int
+_output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
+                                      struct ipmi_sel_parse_entry *sel_parse_entry,
+                                      uint8_t sel_record_type,
+                                      char *tmpbuf,
+                                      unsigned int tmpbuflen,
+                                      unsigned int flags,
+                                      unsigned int *wlen,
+                                      struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+
+  /* OEM Interpretation
+   *
+   * Inventec 5441/Dell Xanadu2
+   *
+   * achu: The doc says "Other" for 0xFF, I'm going to just assume that's "no output".
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+      && ctx->product_id == 51
+      && system_event_record_data->generator_id == 0x21 /* "SMI" */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && system_event_record_data->sensor_number == 0x60 /* "Memory" */
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && (system_event_record_data->offset_from_event_reading_type_code == 0x0 /* correctable ECC */
+          || system_event_record_data->offset_from_event_reading_type_code == 0x1 /* uncorrectable ECC */
+          || system_event_record_data->offset_from_event_reading_type_code == 0x2 /* parity */
+          || system_event_record_data->offset_from_event_reading_type_code == 0x5) /* correctable ECC */
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && (system_event_record_data->event_data2 == 0x00
+          || system_event_record_data->event_data2 == 0x01
+          || system_event_record_data->event_data2 == 0xFF))
+    {
+      if (system_event_record_data->event_data2 == 0xFF)
+        return (0);
+
+      if (system_event_record_data->event_data2 == 0x00)
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "SBE warning threshold");
+      else /* system_event_record_data->event_data2 == 0x01 */
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "SBE critical threshold");
+
+      return (1);
+    }
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+static int
+_output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
+                                   struct ipmi_sel_parse_entry *sel_parse_entry,
+                                   uint8_t sel_record_type,
+                                   char *tmpbuf,
+                                   unsigned int tmpbuflen,
+                                   unsigned int flags,
+                                   unsigned int *wlen,
+                                   struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+
+  /* OEM Interpretation
+   *
+   * Inventec 5441/Dell Xanadu2
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+      && ctx->product_id == 51
+      && system_event_record_data->generator_id == 0x01 /* "BIOS" */
+      && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
+      && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
+      && system_event_record_data->event_type_code == 0x70 /* OEM */
+      && !system_event_record_data->offset_from_event_reading_type_code /* no event */
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "BIOS Major Version %X",
+                system_event_record_data->event_data2);
+
+      return (1);
+    }
+  
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+#if 0
+      /* it appears these don't need to match, 0x7E is the primary indicator */
+      && system_event_record_data->generator_id == 0xB1
+      && system_event_record_data->sensor_type == 0xC1 /* OEM */
+      && system_event_record_data->sensor_number == 0x1A
+#endif
+      && system_event_record_data->event_type_code == 0x7E) /* OEM */
+    {
+      uint16_t register_offset;
+      
+      register_offset = system_event_record_data->event_data2;
+      register_offset |= (system_event_record_data->offset_from_event_reading_type_code) << 8;
+      
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "Register Offset = %Xh",
+                register_offset);
+      
+      return (1);
+    }
+  
+  return (0);
+}
+
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
                      struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -1089,46 +1410,24 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
-
-          /* OEM Interpretation
-           *
-           * Inventec 5441/Dell Xanadu2
-           *
-           * achu: The doc says "Other" for 0xFF, I'm going to just assume that's "no output".
-           */
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-              && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-              && ctx->product_id == 51
-              && system_event_record_data.generator_id == 0x21 /* "SMI" */
-              && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_MEMORY
-              && system_event_record_data.sensor_number == 0x60 /* "Memory" */
-              && system_event_record_data.event_type_code == 0x6F /* sensor specific */
-              && (system_event_record_data.offset_from_event_reading_type_code == 0x0 /* correctable ECC */
-                  || system_event_record_data.offset_from_event_reading_type_code == 0x1 /* uncorrectable ECC */
-                  || system_event_record_data.offset_from_event_reading_type_code == 0x2 /* parity */
-                  || system_event_record_data.offset_from_event_reading_type_code == 0x5) /* correctable ECC */
-              && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-              && (system_event_record_data.event_data2 == 0x00
-                  || system_event_record_data.event_data2 == 0x01
-                  || system_event_record_data.event_data2 == 0xFF))
+          
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
             {
-              if (system_event_record_data.event_data2 == 0xFF)
+              if ((ret = _output_oem_event_data2_discrete_oem (ctx,
+                                                               sel_parse_entry,
+                                                               sel_record_type,
+                                                               tmpbuf,
+                                                               EVENT_BUFFER_LENGTH,
+                                                               flags,
+                                                               wlen,
+                                                               &system_event_record_data)) < 0)
+                return (-1);
+              
+              if (ret)
                 {
-                  no_output_flag++;
+                  output_flag++;
                   break;
                 }
-
-              if (system_event_record_data.event_data2 == 0x00)
-                snprintf (tmpbuf,
-                          EVENT_BUFFER_LENGTH,
-                          "SBE warning threshold");
-              else /* system_event_record_data.event_data2 == 0x01 */
-                snprintf (tmpbuf,
-                          EVENT_BUFFER_LENGTH,
-                          "SBE critical threshold");
-
-              output_flag++;
-              break;
             }
 	  
           if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
@@ -1166,57 +1465,24 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
 
-      /* OEM Interpretation
-       *
-       * Inventec 5441/Dell Xanadu2
-       */
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-          && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-          && ctx->product_id == 51
-          && system_event_record_data.generator_id == 0x01 /* "BIOS" */
-          && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
-          && system_event_record_data.sensor_number == 0x81 /* "BIOS Start" */
-          && system_event_record_data.event_type_code == 0x70 /* OEM */
-          && !system_event_record_data.offset_from_event_reading_type_code /* no event */
-          && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-          && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
-          snprintf (tmpbuf,
-                    EVENT_BUFFER_LENGTH,
-                    "BIOS Major Version %X",
-                    system_event_record_data.event_data2);
-          output_flag++;
-          break;
+          if ((ret = _output_oem_event_data2_class_oem (ctx,
+                                                        sel_parse_entry,
+                                                        sel_record_type,
+                                                        tmpbuf,
+                                                        EVENT_BUFFER_LENGTH,
+                                                        flags,
+                                                        wlen,
+                                                        &system_event_record_data)) < 0)
+            return (-1);
+          
+          if (ret)
+            {
+              output_flag++;
+              break;
+            }
         }
-      
-      /* OEM Interpretation
-       *
-       * Dell Poweredge R610
-       */
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-	  && ctx->product_id == 256
-#if 0
-	  /* it appears these don't need to match, 0x7E is the primary indicator */
-	  && system_event_record_data.generator_id == 0xB1
-	  && system_event_record_data.sensor_type == 0xC1 /* OEM */
-	  && system_event_record_data.sensor_number == 0x1A
-#endif
-	  && system_event_record_data.event_type_code == 0x7E) /* OEM */
-	{
-	  uint16_t register_offset;
-	  
-	  register_offset = system_event_record_data.event_data2;
-	  register_offset |= (system_event_record_data.offset_from_event_reading_type_code) << 8;
-	  
-	  snprintf (tmpbuf,
-		    EVENT_BUFFER_LENGTH,
-		    "Register Offset = %Xh",
-		    register_offset);
-	  
-	  output_flag++;
-	  break;
-	}
       
       if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
         {
@@ -1285,6 +1551,185 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+static int
+_output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
+                                      struct ipmi_sel_parse_entry *sel_parse_entry,
+                                      uint8_t sel_record_type,
+                                      char *tmpbuf,
+                                      unsigned int tmpbuflen,
+                                      unsigned int flags,
+                                      unsigned int *wlen,
+                                      struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+
+  /* OEM Interpretation
+   *
+   * Inventec 5441/Dell Xanadu2
+   *
+   * achu: Note that the Dimm locations are not in a pattern,
+   * this is what the doc says.
+   *
+   * If an invalid dimm location is indicated, fall through
+   * and output normal stuff.
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+      && ctx->product_id == 51
+      && system_event_record_data->generator_id == 0x21 /* "SMI" */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && system_event_record_data->sensor_number == 0x60 /* "Memory" */
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && (system_event_record_data->offset_from_event_reading_type_code == 0x0 /* correctable ECC */
+          || system_event_record_data->offset_from_event_reading_type_code == 0x1 /* uncorrectable ECC */
+          || system_event_record_data->offset_from_event_reading_type_code == 0x2 /* parity */
+          || system_event_record_data->offset_from_event_reading_type_code == 0x5) /* correctable ECC */
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && (system_event_record_data->event_data3 == 0x01
+          || system_event_record_data->event_data3 == 0x02
+          || system_event_record_data->event_data3 == 0x03
+          || system_event_record_data->event_data3 == 0x04
+          || system_event_record_data->event_data3 == 0x05
+          || system_event_record_data->event_data3 == 0x06
+          || system_event_record_data->event_data3 == 0x11
+          || system_event_record_data->event_data3 == 0x12
+          || system_event_record_data->event_data3 == 0x13))
+    {
+      if (system_event_record_data->event_data3 == 0x01)
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Dimm Number - CPU0/Ch0/DIM1");
+      else if (system_event_record_data->event_data3 == 0x02)
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Dimm Number - CPU0/Ch0/DIM0");
+      else if (system_event_record_data->event_data3 == 0x03)
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Dimm Number - CPU0/Ch1/DIM1");
+      else if (system_event_record_data->event_data3 == 0x04)
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Dimm Number - CPU0/Ch1/DIM0");
+      else if (system_event_record_data->event_data3 == 0x05)
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Dimm Number - CPU0/Ch2/DIM1");
+      else if (system_event_record_data->event_data3 == 0x06)
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Dimm Number - CPU0/Ch2/DIM0");
+      else if (system_event_record_data->event_data3 == 0x11)
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Dimm Number - CPU1/Ch0/DIM0");
+      else if (system_event_record_data->event_data3 == 0x12)
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Dimm Number - CPU1/Ch1/DIM0");
+      else /* system_event_record_data->event_data3 == 0x13 */
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Dimm Number - CPU1/Ch2/DIM0");
+
+      return (1);
+    }
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+static int
+_output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
+                                   struct ipmi_sel_parse_entry *sel_parse_entry,
+                                   uint8_t sel_record_type,
+                                   char *tmpbuf,
+                                   unsigned int tmpbuflen,
+                                   unsigned int flags,
+                                   unsigned int *wlen,
+                                   struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+
+  /* OEM Interpretation
+   *
+   * Inventec 5441/Dell Xanadu2
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+      && ctx->product_id == 51
+      && system_event_record_data->generator_id == 0x01 /* "BIOS" */
+      && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
+      && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
+      && system_event_record_data->event_type_code == 0x70 /* OEM */
+      && !system_event_record_data->offset_from_event_reading_type_code /* no event */
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "BIOS Minor Version %02X",
+                system_event_record_data->event_data3);
+      
+      return (1);
+    }
+  
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+#if 0
+      /* it appears these don't need to match, 0x7E is the primary indicator */
+      && system_event_record_data->generator_id == 0xB1
+      && system_event_record_data->sensor_type == 0xC1 /* OEM */
+      && system_event_record_data->sensor_number == 0x1A
+#endif
+      && system_event_record_data->event_type_code == 0x7E) /* OEM */
+    {
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "Register Value = %02Xh",
+                system_event_record_data->event_data3);
+      
+      return (1);
+    }
+  
+  return (0);
+}
+
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
                      struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -1423,77 +1868,23 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
 
-          /* OEM Interpretation
-           *
-           * Inventec 5441/Dell Xanadu2
-           *
-           * achu: Note that the Dimm locations are not in a pattern,
-           * this is what the doc says.
-           *
-           * If an invalid dimm location is indicated, fall through
-           * and output normal stuff.
-           */
-          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-              && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-              && ctx->product_id == 51
-              && system_event_record_data.generator_id == 0x21 /* "SMI" */
-              && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_MEMORY
-              && system_event_record_data.sensor_number == 0x60 /* "Memory" */
-              && system_event_record_data.event_type_code == 0x6F /* sensor specific */
-              && (system_event_record_data.offset_from_event_reading_type_code == 0x0 /* correctable ECC */
-                  || system_event_record_data.offset_from_event_reading_type_code == 0x1 /* uncorrectable ECC */
-                  || system_event_record_data.offset_from_event_reading_type_code == 0x2 /* parity */
-                  || system_event_record_data.offset_from_event_reading_type_code == 0x5) /* correctable ECC */
-              && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-              && (system_event_record_data.event_data3 == 0x01
-                  || system_event_record_data.event_data3 == 0x02
-                  || system_event_record_data.event_data3 == 0x03
-                  || system_event_record_data.event_data3 == 0x04
-                  || system_event_record_data.event_data3 == 0x05
-                  || system_event_record_data.event_data3 == 0x06
-                  || system_event_record_data.event_data3 == 0x11
-                  || system_event_record_data.event_data3 == 0x12
-                  || system_event_record_data.event_data3 == 0x13))
+          if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
             {
-              if (system_event_record_data.event_data3 == 0x01)
-                snprintf (tmpbuf,
-                          EVENT_BUFFER_LENGTH,
-                          "Dimm Number - CPU0/Ch0/DIM1");
-              else if (system_event_record_data.event_data3 == 0x02)
-                snprintf (tmpbuf,
-                          EVENT_BUFFER_LENGTH,
-                          "Dimm Number - CPU0/Ch0/DIM0");
-              else if (system_event_record_data.event_data3 == 0x03)
-                snprintf (tmpbuf,
-                          EVENT_BUFFER_LENGTH,
-                          "Dimm Number - CPU0/Ch1/DIM1");
-              else if (system_event_record_data.event_data3 == 0x04)
-                snprintf (tmpbuf,
-                          EVENT_BUFFER_LENGTH,
-                          "Dimm Number - CPU0/Ch1/DIM0");
-              else if (system_event_record_data.event_data3 == 0x05)
-                snprintf (tmpbuf,
-                          EVENT_BUFFER_LENGTH,
-                          "Dimm Number - CPU0/Ch2/DIM1");
-              else if (system_event_record_data.event_data3 == 0x06)
-                snprintf (tmpbuf,
-                          EVENT_BUFFER_LENGTH,
-                          "Dimm Number - CPU0/Ch2/DIM0");
-              else if (system_event_record_data.event_data3 == 0x11)
-                snprintf (tmpbuf,
-                          EVENT_BUFFER_LENGTH,
-                          "Dimm Number - CPU1/Ch0/DIM0");
-              else if (system_event_record_data.event_data3 == 0x12)
-                snprintf (tmpbuf,
-                          EVENT_BUFFER_LENGTH,
-                          "Dimm Number - CPU1/Ch1/DIM0");
-              else /* system_event_record_data.event_data3 == 0x13 */
-                snprintf (tmpbuf,
-                          EVENT_BUFFER_LENGTH,
-                          "Dimm Number - CPU1/Ch2/DIM0");
-
-              output_flag++;
-              break;
+              if ((ret = _output_oem_event_data3_discrete_oem (ctx,
+                                                               sel_parse_entry,
+                                                               sel_record_type,
+                                                               tmpbuf,
+                                                               EVENT_BUFFER_LENGTH,
+                                                               flags,
+                                                               wlen,
+                                                               &system_event_record_data)) < 0)
+                return (-1);
+              
+              if (ret)
+                {
+                  output_flag++;
+                  break;
+                }
             }
           
           if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
@@ -1531,53 +1922,25 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
       break;
     case IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM:
 
-      /* OEM Interpretation
-       *
-       * Inventec 5441/Dell Xanadu2
-       */
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-          && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-          && ctx->product_id == 51
-          && system_event_record_data.generator_id == 0x01 /* "BIOS" */
-          && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
-          && system_event_record_data.sensor_number == 0x81 /* "BIOS Start" */
-          && system_event_record_data.event_type_code == 0x70 /* OEM */
-          && !system_event_record_data.offset_from_event_reading_type_code /* no event */
-          && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-          && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
-          snprintf (tmpbuf,
-                    EVENT_BUFFER_LENGTH,
-                    "BIOS Minor Version %02X",
-                    system_event_record_data.event_data3);
-          output_flag++;
-          break;
+          if ((ret = _output_oem_event_data3_class_oem (ctx,
+                                                        sel_parse_entry,
+                                                        sel_record_type,
+                                                        tmpbuf,
+                                                        EVENT_BUFFER_LENGTH,
+                                                        flags,
+                                                        wlen,
+                                                        &system_event_record_data)) < 0)
+            return (-1);
+          
+          if (ret)
+            {
+              output_flag++;
+              break;
+            }
         }
-
-      /* OEM Interpretation
-       *
-       * Dell Poweredge R610
-       */
-      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-	  && ctx->product_id == 256
-#if 0
-	  /* it appears these don't need to match, 0x7E is the primary indicator */
-	  && system_event_record_data.generator_id == 0xB1
-	  && system_event_record_data.sensor_type == 0xC1 /* OEM */
-	  && system_event_record_data.sensor_number == 0x1A
-#endif
-	  && system_event_record_data.event_type_code == 0x7E) /* OEM */
-	{
-	  snprintf (tmpbuf,
-		    EVENT_BUFFER_LENGTH,
-		    "Register Value = %02Xh",
-		    system_event_record_data.event_data3);
-	  
-	  output_flag++;
-	  break;
-	}
-      
+     
       if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
         {
           no_output_flag++;
@@ -1645,182 +2008,79 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * in oem_rv, return
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
 static int
-_output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
-                                 struct ipmi_sel_parse_entry *sel_parse_entry,
-                                 uint8_t sel_record_type,
-                                 char *buf,
-                                 unsigned int buflen,
-                                 unsigned int flags,
-                                 unsigned int *wlen)
+_output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
+                                     struct ipmi_sel_parse_entry *sel_parse_entry,
+                                     uint8_t sel_record_type,
+                                     char *buf,
+                                     unsigned int buflen,
+                                     unsigned int flags,
+                                     unsigned int *wlen,
+                                     struct ipmi_sel_system_event_record_data *system_event_record_data,
+                                     int *oem_rv)
 {
-  struct ipmi_sel_system_event_record_data system_event_record_data;
-  char tmpbuf[EVENT_BUFFER_LENGTH];
-  char tmpbufdata2[EVENT_BUFFER_LENGTH + 1];
-  char tmpbufdata3[EVENT_BUFFER_LENGTH + 1];
-  unsigned int tmpbufdata2_wlen = 0;
-  unsigned int tmpbufdata3_wlen = 0;
-  int data2_ret;
-  int data3_ret;
-
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
   assert (sel_parse_entry);
   assert (buf);
   assert (buflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
-
-  if (ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
-    return (_invalid_sel_entry_common (ctx, buf, buflen, flags, wlen));
-
-  if (sel_parse_get_system_event_record (ctx, sel_parse_entry, &system_event_record_data) < 0)
-    return (-1);
-
-  memset (tmpbuf, '\0', EVENT_BUFFER_LENGTH);
-  memset (tmpbufdata2, '\0', EVENT_BUFFER_LENGTH+1);
-  memset (tmpbufdata3, '\0', EVENT_BUFFER_LENGTH+1);
-
-  if (ipmi_event_reading_type_code_class (system_event_record_data.event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
-      && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_TRIGGER_READING
-      && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE)
-    {
-      double trigger_reading;
-      double threshold_reading;
-      char trigger_sensor_units_buf[UNITS_BUFFER_LENGTH+1];
-      char threshold_sensor_units_buf[UNITS_BUFFER_LENGTH+1];
-      
-      memset (trigger_sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
-      if ((data2_ret = _get_sensor_reading (ctx,
-                                            &system_event_record_data,
-                                            flags,
-                                            system_event_record_data.event_data2,
-                                            &trigger_reading,
-                                            trigger_sensor_units_buf,
-                                            UNITS_BUFFER_LENGTH)) < 0)
-        return (-1);
-      
-      memset (threshold_sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
-      if ((data3_ret = _get_sensor_reading (ctx,
-                                            &system_event_record_data,
-                                            flags,
-                                            system_event_record_data.event_data3,
-                                            &threshold_reading,
-                                            threshold_sensor_units_buf,
-                                            UNITS_BUFFER_LENGTH)) < 0)
-        return (-1);
-
-      if (data2_ret && data3_ret)
-        {
-          /* achu:
-           *
-           * IPMI implementations aren't trustworthy for the > or < so
-           * I'm doing an actual math check to determine the output.
-           *
-           * It really should be:
-           *
-           * if assertion_event
-           *   if offset_from_event_reading_type_code & 0x1
-           *     use ">"
-           *   else
-           *     use "<"
-           * else
-           *   < do opposite for deassertion event >
-           */
-          if (_SNPRINTF (buf,
-                         buflen,
-                         wlen,
-                         "Sensor Reading = %.2f %s %s Threshold %.2f %s",
-                         _round_double2 (trigger_reading),
-                         trigger_sensor_units_buf,
-                         _round_double2 (trigger_reading) < _round_double2 (threshold_reading) ? "<" : ">",
-                         _round_double2 (threshold_reading),
-                         threshold_sensor_units_buf))
-            return (1);
-          return (0);
-        }
-      /* else fall through to normal output */
-    }
-
-  /* Special case
-   *
-   * The event_data3 indicates what "type" event_data2 is, and
-   * subsequently what should be output.  So we only need to output
-   * event_data3.
-   */
-
-  if (ipmi_event_reading_type_code_class (system_event_record_data.event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
-      && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
-      && system_event_record_data.offset_from_event_reading_type_code == 0x06 
-      && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
-      && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE)
-    {
-      if ((data3_ret = _output_event_data3 (ctx,
-					    sel_parse_entry,
-					    sel_record_type,
-					    tmpbufdata3,
-					    EVENT_BUFFER_LENGTH,
-					    flags,
-					    &tmpbufdata3_wlen)) < 0)
-	return (-1);
-      
-      if (data3_ret)
-	{
-	  SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
-	  return (-1);
-	}
-
-      if (_SNPRINTF (buf,
-                     buflen,
-                     wlen,
-                     "%s",
-                     tmpbufdata3))
-        return (1);
-      return (0);
-    }
+  assert (system_event_record_data);
+  assert (oem_rv);
 
   /* OEM Interpretation
    *
    * Inventec 5441/Dell Xanadu2
    */
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-      && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == 51
-      && system_event_record_data.generator_id == 0x01 /* "BIOS" */
-      && system_event_record_data.sensor_type == 0xC1 /* OEM Reserved */
-      && system_event_record_data.sensor_number == 0x81 /* "BIOS Start" */
-      && system_event_record_data.event_type_code == 0x70 /* OEM */
-      && !system_event_record_data.offset_from_event_reading_type_code /* no event */
-      && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-      && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+      && system_event_record_data->generator_id == 0x01 /* "BIOS" */
+      && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
+      && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
+      && system_event_record_data->event_type_code == 0x70 /* OEM */
+      && !system_event_record_data->offset_from_event_reading_type_code /* no event */
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
       if (_SNPRINTF (buf,
                      buflen,
                      wlen,
                      "BIOS Version %X.%02X",
-                     system_event_record_data.event_data2,
-                     system_event_record_data.event_data3))
-        return (1);
-      return (0);
+                     system_event_record_data->event_data2,
+                     system_event_record_data->event_data3))
+        (*oem_rv) = 1;
+      else
+        (*oem_rv) = 0;
+      
+      return (1);
     }
 
   /* OEM Interpretation
    *
    * Inventec 5441/Dell Xanadu2
    */
-  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
-      && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == 51
-      && system_event_record_data.generator_id == 0x31 /* POST error */
-      && system_event_record_data.sensor_type == 0x0F /* System Firmware Progress */
-      && system_event_record_data.sensor_number == 0x06
-      && system_event_record_data.event_type_code == 0x6F)
+      && system_event_record_data->generator_id == 0x31 /* POST error */
+      && system_event_record_data->sensor_type == 0x0F /* System Firmware Progress */
+      && system_event_record_data->sensor_number == 0x06
+      && system_event_record_data->event_type_code == 0x6F)
     {
       uint16_t error_code;
       char *error_code_str = NULL;
 
-      error_code = system_event_record_data.event_data2;
-      error_code |= (system_event_record_data.event_data3 << 8);
+      error_code = system_event_record_data->event_data2;
+      error_code |= (system_event_record_data->event_data3 << 8);
 
       if (error_code == 0x0000)
         error_code_str = "Timer Count Read/Write Error";
@@ -1960,14 +2220,178 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
         error_code_str = "Processor speeds mismatched";
       else
         error_code_str = "Undefined BIOS Error";
-
+      
       if (_SNPRINTF (buf,
                      buflen,
                      wlen,
                      "%s",
                      error_code_str))
+        (*oem_rv) = 1;
+      else
+        (*oem_rv) = 0;
+      
+      return (1);
+    }
+
+  return (0);
+}
+
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
+static int
+_output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
+                                 struct ipmi_sel_parse_entry *sel_parse_entry,
+                                 uint8_t sel_record_type,
+                                 char *buf,
+                                 unsigned int buflen,
+                                 unsigned int flags,
+                                 unsigned int *wlen)
+{
+  struct ipmi_sel_system_event_record_data system_event_record_data;
+  char tmpbuf[EVENT_BUFFER_LENGTH];
+  char tmpbufdata2[EVENT_BUFFER_LENGTH + 1];
+  char tmpbufdata3[EVENT_BUFFER_LENGTH + 1];
+  unsigned int tmpbufdata2_wlen = 0;
+  unsigned int tmpbufdata3_wlen = 0;
+  int data2_ret;
+  int data3_ret;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_PARSE_CTX_MAGIC);
+  assert (sel_parse_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
+  assert (wlen);
+
+  if (ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
+    return (_invalid_sel_entry_common (ctx, buf, buflen, flags, wlen));
+
+  if (sel_parse_get_system_event_record (ctx, sel_parse_entry, &system_event_record_data) < 0)
+    return (-1);
+
+  memset (tmpbuf, '\0', EVENT_BUFFER_LENGTH);
+  memset (tmpbufdata2, '\0', EVENT_BUFFER_LENGTH+1);
+  memset (tmpbufdata3, '\0', EVENT_BUFFER_LENGTH+1);
+
+  if (ipmi_event_reading_type_code_class (system_event_record_data.event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
+      && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_TRIGGER_READING
+      && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE)
+    {
+      double trigger_reading;
+      double threshold_reading;
+      char trigger_sensor_units_buf[UNITS_BUFFER_LENGTH+1];
+      char threshold_sensor_units_buf[UNITS_BUFFER_LENGTH+1];
+      
+      memset (trigger_sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
+      if ((data2_ret = _get_sensor_reading (ctx,
+                                            &system_event_record_data,
+                                            flags,
+                                            system_event_record_data.event_data2,
+                                            &trigger_reading,
+                                            trigger_sensor_units_buf,
+                                            UNITS_BUFFER_LENGTH)) < 0)
+        return (-1);
+      
+      memset (threshold_sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
+      if ((data3_ret = _get_sensor_reading (ctx,
+                                            &system_event_record_data,
+                                            flags,
+                                            system_event_record_data.event_data3,
+                                            &threshold_reading,
+                                            threshold_sensor_units_buf,
+                                            UNITS_BUFFER_LENGTH)) < 0)
+        return (-1);
+
+      if (data2_ret && data3_ret)
+        {
+          /* achu:
+           *
+           * IPMI implementations aren't trustworthy for the > or < so
+           * I'm doing an actual math check to determine the output.
+           *
+           * It really should be:
+           *
+           * if assertion_event
+           *   if offset_from_event_reading_type_code & 0x1
+           *     use ">"
+           *   else
+           *     use "<"
+           * else
+           *   < do opposite for deassertion event >
+           */
+          if (_SNPRINTF (buf,
+                         buflen,
+                         wlen,
+                         "Sensor Reading = %.2f %s %s Threshold %.2f %s",
+                         _round_double2 (trigger_reading),
+                         trigger_sensor_units_buf,
+                         _round_double2 (trigger_reading) < _round_double2 (threshold_reading) ? "<" : ">",
+                         _round_double2 (threshold_reading),
+                         threshold_sensor_units_buf))
+            return (1);
+          return (0);
+        }
+      /* else fall through to normal output */
+    }
+
+  /* Special case
+   *
+   * The event_data3 indicates what "type" event_data2 is, and
+   * subsequently what should be output.  So we only need to output
+   * event_data3.
+   */
+
+  if (ipmi_event_reading_type_code_class (system_event_record_data.event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+      && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
+      && system_event_record_data.offset_from_event_reading_type_code == 0x06 
+      && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
+      && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE)
+    {
+      if ((data3_ret = _output_event_data3 (ctx,
+					    sel_parse_entry,
+					    sel_record_type,
+					    tmpbufdata3,
+					    EVENT_BUFFER_LENGTH,
+					    flags,
+					    &tmpbufdata3_wlen)) < 0)
+	return (-1);
+      
+      if (data3_ret)
+	{
+	  SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+	  return (-1);
+	}
+
+      if (_SNPRINTF (buf,
+                     buflen,
+                     wlen,
+                     "%s",
+                     tmpbufdata3))
         return (1);
       return (0);
+    }
+
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA)
+    {
+      int ret;
+      int oem_rv = 0;
+
+      if ((ret = _output_oem_event_data2_event_data3 (ctx,
+                                                      sel_parse_entry,
+                                                      sel_record_type,
+                                                      buf,
+                                                      buflen,
+                                                      flags,
+                                                      wlen,
+                                                      &system_event_record_data,
+                                                      &oem_rv)) < 0)
+        return (-1);
+      
+      if (ret)
+        return (oem_rv);
     }
 
   if ((data2_ret = _output_event_data2 (ctx,
@@ -2041,6 +2465,10 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
                                                 struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -2187,6 +2615,10 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _output_event_data2_previous_state (ipmi_sel_parse_ctx_t ctx,
                                     struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -2206,6 +2638,10 @@ _output_event_data2_previous_state (ipmi_sel_parse_ctx_t ctx,
                                                           1));
 }
 
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _output_event_data2_severity (ipmi_sel_parse_ctx_t ctx,
                               struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -2225,6 +2661,10 @@ _output_event_data2_severity (ipmi_sel_parse_ctx_t ctx,
                                                           0));
 }
 
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _output_event_direction (ipmi_sel_parse_ctx_t ctx,
                          struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -2262,6 +2702,10 @@ _output_event_direction (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _output_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
                          struct ipmi_sel_parse_entry *sel_parse_entry,
@@ -2320,6 +2764,10 @@ _output_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+/* return (0) - continue on
+ * return (1) - buffer full, return full buffer to user
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _output_oem (ipmi_sel_parse_ctx_t ctx,
              struct ipmi_sel_parse_entry *sel_parse_entry,
