@@ -1161,6 +1161,36 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       return (1);
     }
 
+  /* OEM Interpretation
+   *
+   * From Dell Provided Source Code
+   * - Handle for Dell Poweredge R610
+   *
+   * Specifically for Intrusion sensors
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
+    {
+      if (system_event_record_data->event_data2 == 0x01)
+        {
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Intrusion while system On");
+          
+          return (1);
+        }
+      else if (system_event_record_data->event_data2 == 0x02)
+        {
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Intrusion while system Off");
+          
+          return (1);
+        }
+    }
+
   return (0);
 }
 
