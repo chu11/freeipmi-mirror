@@ -953,6 +953,28 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
             }
         }
       
+      /* IPMI Workaround (achu)
+       *
+       * From Dell Provided Source Code
+       * - Handle for Dell Poweredge R610
+       *
+       * Apparently System Firmware Progress sensors can have this
+       * event occur even though its out of range.
+       */
+      if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+	  && ctx->product_id == 256
+	  && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
+	  && system_event_record_data.system_event_record_data.offset_from_event_reading_type_code == 0xF)
+	{
+	  snprintf (tmpbuf,
+		    EVENT_BUFFER_LENGTH,
+		    "POST Fatal Error");
+
+	  output_flag++;
+	  break;
+	}
+
       ret = ipmi_get_sensor_type_code_message_short (system_event_record_data.sensor_type,
                                                      system_event_record_data.offset_from_event_reading_type_code,
                                                      tmpbuf,
@@ -2231,6 +2253,35 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
         (*oem_rv) = 0;
       
       return (1);
+    }
+
+
+  /* OEM Interpretation
+   *
+   * From Dell Provided Source Code
+   * - Handle for Dell Poweredge R610
+   *
+   * 
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
+          || system_event_record_data->sensor_type == 0xC1
+          || system_event_record_data->sensor_type == 0xC2
+          || system_event_record_data->sensor_type == 0xC3
+          || system_event_record_data->sensor_type == 0xC4))
+    {
+      int ret;
+
+      ret = ipmi_get_oem_sensor_type_code_message (ctx->manufacturer_id,
+                                                   ctx->product_id,
+                                                   system_event_record_data->sensor_type,
+                                                   system_event_record_data->offset_from_event_reading_type_code,
+                                                   tmpbuf,
+                                                   tmpbuflen);
+      
+      if (ret > 0)
+        return (1);
     }
 
   return (0);
