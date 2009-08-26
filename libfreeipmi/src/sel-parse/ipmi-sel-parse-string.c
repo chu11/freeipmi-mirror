@@ -965,7 +965,7 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
 	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
 	  && ctx->product_id == 256
 	  && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
-	  && system_event_record_data.system_event_record_data.offset_from_event_reading_type_code == 0xF)
+	  && system_event_record_data.offset_from_event_reading_type_code == 0xF)
 	{
 	  snprintf (tmpbuf,
 		    EVENT_BUFFER_LENGTH,
@@ -1099,6 +1099,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
   assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
+  assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
   /* OEM Interpretation
    *
@@ -1133,6 +1134,30 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
                   tmpbuflen,
                   "SBE critical threshold");
 
+      return (1);
+    }
+
+  /* OEM Interpretation
+   *
+   * From Dell Provided Source Code
+   * - Handle for Dell Poweredge R610
+   *
+   * Specifically for Power Supply sensors with an event offset 0x01
+   *
+   * achu: XXX: why "event_data2 == 0x01", I don't know, need to get
+   * more info from Dell.
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
+      && system_event_record_data->offset_from_event_reading_type_code == 0x01
+      && system_event_record_data->event_data2 == 0x01)
+    {
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "PMBus Communication Error");
+      
       return (1);
     }
 
@@ -1599,6 +1624,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
   assert (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
+  assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
   /* OEM Interpretation
    *
@@ -1620,7 +1646,6 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == 0x1 /* uncorrectable ECC */
           || system_event_record_data->offset_from_event_reading_type_code == 0x2 /* parity */
           || system_event_record_data->offset_from_event_reading_type_code == 0x5) /* correctable ECC */
-      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && (system_event_record_data->event_data3 == 0x01
           || system_event_record_data->event_data3 == 0x02
           || system_event_record_data->event_data3 == 0x03
@@ -2255,33 +2280,45 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       return (1);
     }
 
-
   /* OEM Interpretation
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
    *
-   * 
+   * Specifically for Power Supply sensors with an event offset 0x06
+   *
+   * achu: XXX: why "(event_data3 & 0x0F) == 0x03"??, I don't know,
+   * need to get more info from Dell.  The comments in their code said
+   * "check for error type in byte 3".
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == 256
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
-          || system_event_record_data->sensor_type == 0xC1
-          || system_event_record_data->sensor_type == 0xC2
-          || system_event_record_data->sensor_type == 0xC3
-          || system_event_record_data->sensor_type == 0xC4))
+      && system_event_record_data->offset_from_event_reading_type_code == 0x06
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && (system_event_record_data->event_data3 & 0x0F) == 0x03)
     {
-      int ret;
+      unsigned int watts;
 
-      ret = ipmi_get_oem_sensor_type_code_message (ctx->manufacturer_id,
-                                                   ctx->product_id,
-                                                   system_event_record_data->sensor_type,
-                                                   system_event_record_data->offset_from_event_reading_type_code,
-                                                   tmpbuf,
-                                                   tmpbuflen);
+      /* achu: that's not a typo, it's '+=' not a '|=', I'm just
+       * copying Dell source at this point in time, don't know why
+       * this is 
+       */
+      watts = system_event_record_data->event_data2 << 4;
+      watts += system_event_record_data->event_data3 >> 4;
       
-      if (ret > 0)
-        return (1);
+      if (_SNPRINTF (buf,
+                     buflen,
+                     wlen,
+                     "Power Supply Mismatch (%u Watts)",
+                     watts))
+        (*oem_rv) = 1;
+      else
+        (*oem_rv) = 0;
+      
+      return (1);
     }
 
   return (0);
