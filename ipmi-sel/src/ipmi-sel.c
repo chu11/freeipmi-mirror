@@ -1197,24 +1197,6 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * Unique condition, want to output the major and minor versions
        * of the bios as "version x.y", don't want to see "major x ;
        * minor y" using below code.
-       */
-      if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-          && state_data->product_id == 51
-          && generator_id == 0x01 /* "BIOS" */
-          && sensor_type == 0xC1 /* OEM Reserved */
-          && sensor_number == 0x81 /* "BIOS Start" */
-          && event_type_code == 0x70 /* OEM */
-          && !event_data1_offset
-          && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-          && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-        {
-          strcat (fmtbuf, "%c");
-          goto output;
-        }
-
-      /* OEM Interpretation
-       *
-       * Inventec 5441/Dell Xanadu2
        *
        * Unique condition, event data 2 and 3 are one error code from
        * the bios.  So there is no individual event data 2/3 output,
@@ -1222,10 +1204,17 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
           && state_data->product_id == 51
-          && generator_id == 0x31 /* POST error */
-          && sensor_type == 0x0F /* System Firmware Progress */
-          && sensor_number == 0x06 
-          && event_type_code == 0x6F) /* Sensor Specific */
+          && ((generator_id == 0x01 /* "BIOS" */
+               && sensor_type == 0xC1 /* OEM Reserved */
+               && sensor_number == 0x81 /* "BIOS Start" */
+               && event_type_code == 0x70 /* OEM */
+               && !event_data1_offset
+               && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+               && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+              || (generator_id == 0x31 /* POST error */
+                  && sensor_type == 0x0F /* System Firmware Progress */
+                  && sensor_number == 0x06 
+                  && event_type_code == 0x6F))) /* Sensor Specific */
         {
           strcat (fmtbuf, "%c");
           goto output;
@@ -1257,20 +1246,28 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * 
        * Dell Poweredge R610
        *
-       * Unique condition, event_data 2 a nd 3 are a single watt
+       * Unique condition, event_data 2 and 3 are a single watt
        * output.  So there is no individual event data 2/3 output, the
        * only output is the combined output.
+       *
+       * Unique condition, event_data 2 and 3 together hold slot, bus,
+       * device, function information.
        *
        * achu: XXX: why "(event_data3 & 0x0F) == 0x03"??, I don't
        * know, need to get more info from Dell.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
           && state_data->product_id == 256
-          && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
-          && event_data1_offset == 0x06
-          && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-          && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-          && (event_data3 & 0x0F) == 0x03)
+          && ((sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
+               && event_data1_offset == 0x06
+               && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+               && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+               && (event_data3 & 0x0F) == 0x03)
+              || ((sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+                   || sensor_type == 0xC2 /* OEM */
+                   || sensor_type == 0xC3) /* OEM */
+                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)))
         {
           strcat (fmtbuf, "%c");
           goto output;

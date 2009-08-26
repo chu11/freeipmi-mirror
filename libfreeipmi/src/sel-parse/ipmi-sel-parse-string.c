@@ -66,7 +66,7 @@
 #define ASSERTION_EVENT   "Assertion Event"
 #define DEASSERTION_EVENT "Deassertion Event"
 
-#define EVENT_BUFFER_LENGTH     1024
+#define EVENT_BUFFER_LENGTH     2048
 #define SEL_PARSE_BUFFER_LENGTH 256
 #define SDR_RECORD_LENGTH       256
 #define ID_STRING_LENGTH        256
@@ -2319,6 +2319,59 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
         (*oem_rv) = 0;
       
       return (1);
+    }
+
+  /* OEM Interpretation
+   *
+   * From Dell Provided Source Code
+   * - Handle for Dell Poweredge R610
+   *
+   * Specifically for Critical Interrupt Sensors and several Dell OEM sensors.
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+          || system_event_record_data->sensor_type == 0xC2 /* OEM */
+          || system_event_record_data->sensor_type == 0xC3) /* OEM */
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      /* achu: XXX: what about event_data2?? Need info from Dell */
+      if (system_event_record_data->event_data3 & 0x80)
+        {
+          if (_SNPRINTF (buf,
+                         buflen,
+                         wlen,
+                         "Slot %u",
+                         (system_event_record_data->event_data3 & 0x7F)))
+            (*oem_rv) = 1;
+          else
+            (*oem_rv) = 0;
+          
+          return (1);
+        }
+      else
+        {
+          uint8_t bus, device, function;
+
+          bus = system_event_record_data->event_data3 & 0x7F;
+          device = (system_event_record_data->event_data2 & 0xF8) >> 3;
+          function = system_event_record_data->event_data2 & 0x7;
+
+          if (_SNPRINTF (buf,
+                         buflen,
+                         wlen,
+                         "Bus %u, Device %u, Function %u",
+                         bus,
+                         device,
+                         function))
+            (*oem_rv) = 1;
+          else
+            (*oem_rv) = 0;
+
+          return (1);
+        }
     }
 
   return (0);
