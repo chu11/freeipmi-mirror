@@ -91,6 +91,12 @@ int ipmi_sel_parse_ctx_set_manufacturer_id (ipmi_sel_parse_ctx_t ctx, uint32_t m
 /* for use w/ string parsing w/ IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA */
 int ipmi_sel_parse_ctx_get_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t *product_id);
 int ipmi_sel_parse_ctx_set_product_id (ipmi_sel_parse_ctx_t ctx, uint16_t product_id);
+int ipmi_sel_parse_ctx_get_ipmi_version (ipmi_sel_parse_ctx_t ctx,
+                                         uint8_t *ipmi_version_major,
+                                         uint8_t *ipmi_vesion_minor);
+int ipmi_sel_parse_ctx_set_ipmi_version (ipmi_sel_parse_ctx_t ctx,
+                                         uint8_t ipmi_version_major,
+                                         uint8_t ipmi_version_minor);
 char *ipmi_sel_parse_ctx_get_debug_prefix (ipmi_sel_parse_ctx_t ctx);
 int ipmi_sel_parse_ctx_set_debug_prefix (ipmi_sel_parse_ctx_t ctx, const char *debug_prefix);
 

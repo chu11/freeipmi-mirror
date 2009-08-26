@@ -2,6 +2,9 @@
 
 	* libfreeipmi/src/sel-parse/: Add additional Dell OEM
 	interpretations.
+
+	* ipmi-sel/, libfreeipmi/src/sel-parse/: Support ipmi version in
+	OEM interpretations.
 	
 2009-08-25  Albert Chu <chu11@llnl.gov>
 

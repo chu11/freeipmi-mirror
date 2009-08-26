@@ -1844,6 +1844,26 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         }
       state_data->product_id = val;
 
+      if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_major", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'ipmi_version_major': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      state_data->ipmi_version_major = val;
+
+      if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_minor", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'ipmi_version_minor': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      state_data->ipmi_version_minor = val;
+
       if (ipmi_sel_parse_ctx_set_manufacturer_id (state_data->sel_parse_ctx,
                                                   state_data->manufacturer_id) < 0)
         {
@@ -1860,6 +1880,17 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sel_parse_ctx_set_product_id: %s\n",
+                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+          goto cleanup;
+        }
+
+      if (ipmi_sel_parse_ctx_set_ipmi_version (state_data->sel_parse_ctx,
+                                               state_data->ipmi_version_major,
+                                               state_data->ipmi_version_minor) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse_ctx_set_ipmi_version: %s\n",
                            ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }

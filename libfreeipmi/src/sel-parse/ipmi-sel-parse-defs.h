@@ -71,6 +71,8 @@ struct ipmi_sel_parse_ctx {
   unsigned int flags;
   uint32_t manufacturer_id;
   uint16_t product_id;
+  uint8_t ipmi_version_major;
+  uint8_t ipmi_version_minor;
   char *debug_prefix;
   char *separator;
 

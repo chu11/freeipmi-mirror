@@ -109,6 +109,8 @@ typedef struct ipmi_sel_state_data
   unsigned int event_column_width;
   uint32_t manufacturer_id;
   uint16_t product_id;
+  uint8_t ipmi_version_major;
+  uint8_t ipmi_version_minor;
 } ipmi_sel_state_data_t;
 
 #endif
