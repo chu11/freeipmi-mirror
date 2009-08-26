@@ -1259,6 +1259,10 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * Unique condition 3 and 4, event data 2 and 3 hold version
        * mismatch information.
        *
+       * Unique condition 5, event_data 2 and 3 together hold slot,
+       * mezzanine, bus, device, function information for specific
+       * offsets.
+       *
        * achu: XXX: data2 & 0x0F == 2 ???  Need to ask Dell.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
@@ -1284,7 +1288,12 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                   && state_data->ipmi_version_minor == 0
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-                  && (event_data2 & 0x0F) == 0x02)))
+                  && (event_data2 & 0x0F) == 0x02)
+              || (sensor_type == 0xC1 /* OEM */
+                  && (event_data1_offset == 0x01
+                      || event_data1_offset == 0x02)
+                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)))
         {
           strcat (fmtbuf, "%c");
           goto output;

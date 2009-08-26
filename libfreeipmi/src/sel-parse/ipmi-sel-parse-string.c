@@ -2526,6 +2526,133 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       return (1);
     }
 
+  /* OEM Interpretation
+   *
+   * From Dell Provided Source Code
+   * - Handle for Dell Poweredge R610
+   *
+   * Specifically for Dell OEM sensor 0xC1 w/ event offset 0x01 .
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->sensor_type == 0xC1 /* OEM */
+      && system_event_record_data->offset_from_event_reading_type_code == 0x01
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      uint8_t bus, device, function;
+      
+      bus = system_event_record_data->event_data3 & 0x7F;
+      device = (system_event_record_data->event_data2 & 0xF8) >> 3;
+      function = system_event_record_data->event_data2 & 0x7;
+
+      if (_SNPRINTF (buf,
+                     buflen,
+                     wlen,
+                     "Bus %u, Device %u, Function %u",
+                     bus,
+                     device,
+                     function))
+        (*oem_rv) = 1;
+      else
+        (*oem_rv) = 0;
+      
+      return (1);
+    }
+
+  /* OEM Interpretation
+   *
+   * From Dell Provided Source Code
+   * - Handle for Dell Poweredge R610
+   *
+   * Specifically for Dell OEM sensor 0xC1 w/ event offset 0x01.
+   *
+   * achu: XXX: data3 & 0x01 => 'B' or 'C' ???  Need to ask Dell
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->sensor_type == 0xC1 /* OEM */
+      && system_event_record_data->offset_from_event_reading_type_code == 0x02
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      if (system_event_record_data->event_data3 & 0x80)
+        {
+          uint8_t data2_slotspernode;
+          uint8_t slotspernode;
+
+          data2_slotspernode = system_event_record_data->event_data2 >> 6;
+          
+          /* Comments in Dell code referred to this as:
+           *
+           * "Single Height Blade Format" (1)
+           * vs.
+           * "Double Heigh Blade Format" (2)
+           * vs.
+           " "Double Height Double Width Blade Format" (4)
+           */
+          if (data2_slotspernode == 1)
+            slotspernode = 2;
+          else if (data2_slotspernode == 2)
+            slotspernode = 4;
+          else
+            slotspernode = 1;   /* default to 1 */
+          
+          /* Comments in Dell code refer to 
+           *
+           * "Odd number is B"
+           *
+           * "Event number is C"
+           *
+           * I will assume this is some labeling of Dell hardware.
+           */
+          if (slotspernode >= 2)
+            {
+              uint8_t slot;
+              uint8_t slot_position;
+
+              /* need slot zero based */
+              slot = (system_event_record_data->event_data3 & 0x7F) - 1;
+              slot_position = (slot/slotspernode) + 1;
+
+              if (_SNPRINTF (buf,
+                             buflen,
+                             wlen,
+                             "Mezzanine %c%c",
+                             (system_event_record_data->event_data3 & 0x01) ? 'B' : 'C',
+                             '0' + slot_position))
+                (*oem_rv) = 1;
+              else
+                (*oem_rv) = 0;
+            }
+          else
+            {
+              if (_SNPRINTF (buf,
+                             buflen,
+                             wlen,
+                             "Mezzanine %c",
+                             (system_event_record_data->event_data3 & 0x01) ? 'B' : 'C'))
+                (*oem_rv) = 1;
+              else
+                (*oem_rv) = 0;
+            }
+        }
+      else
+        {
+          if (_SNPRINTF (buf,
+                         buflen,
+                         wlen,
+                         "Device embedded"))
+            (*oem_rv) = 1;
+          else
+            (*oem_rv) = 0;
+        }
+      
+      return (1);
+    }
+
   return (0);
 }
 
