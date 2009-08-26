@@ -1,3 +1,8 @@
+2009-08-26  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/: Fix seg-fault corner cases related to recent
+	workaround additions.
+	
 2009-08-24  Albert Chu <chu11@llnl.gov>
 
  	* ipmi-oem/: Fix Dell active directory output.  Support type

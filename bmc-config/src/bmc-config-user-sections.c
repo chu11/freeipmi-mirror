@@ -539,8 +539,12 @@ enable_user_commit (const char *section_name,
 	       && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1))
         {
-          state_data->enable_user_after_password[userid-1].enable_user_failed = 1;
-          state_data->enable_user_after_password[userid-1].kv = (struct config_keyvalue *)kv;
+          if (state_data->enable_user_after_password_len)
+            {
+              state_data->enable_user_after_password[userid-1].enable_user_failed = 1;
+              state_data->enable_user_after_password[userid-1].kv = (struct config_keyvalue *)kv;
+            }
+
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -688,7 +692,8 @@ password_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (state_data->enable_user_after_password[userid-1].enable_user_failed)
+  if (state_data->enable_user_after_password_len
+      && state_data->enable_user_after_password[userid-1].enable_user_failed)
     {
       config_err_t ret;
 
@@ -882,7 +887,8 @@ password20_commit (const char *section_name,
       goto cleanup;
     }
 
-  if (state_data->enable_user_after_password[userid-1].enable_user_failed)
+  if (state_data->enable_user_after_password_len
+      && state_data->enable_user_after_password[userid-1].enable_user_failed)
     {
       config_err_t ret;
 
