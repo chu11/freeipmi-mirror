@@ -1194,13 +1194,13 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        *
        * Inventec 5441/Dell Xanadu2
        *
-       * Unique condition, want to output the major and minor versions
-       * of the bios as "version x.y", don't want to see "major x ;
-       * minor y" using below code.
+       * Unique condition 1, want to output the major and minor
+       * versions of the bios as "version x.y", don't want to see
+       * "major x ; minor y" using below code.
        *
-       * Unique condition, event data 2 and 3 are one error code from
-       * the bios.  So there is no individual event data 2/3 output,
-       * the only output is the combined output.
+       * Unique condition 2, event data 2 and 3 are one error code
+       * from the bios.  So there is no individual event data 2/3
+       * output, the only output is the combined output.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
           && state_data->product_id == 51
@@ -1246,15 +1246,20 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * 
        * Dell Poweredge R610
        *
-       * Unique condition, event_data 2 and 3 are a single watt
+       * Unique condition 1, event_data 2 and 3 are a single watt
        * output.  So there is no individual event data 2/3 output, the
        * only output is the combined output.
        *
-       * Unique condition, event_data 2 and 3 together hold slot, bus,
-       * device, function information.
-       *
        * achu: XXX: why "(event_data3 & 0x0F) == 0x03"??, I don't
        * know, need to get more info from Dell.
+       *
+       * Unique condition 2, event_data 2 and 3 together hold slot,
+       * bus, device, function information.
+       *
+       * Unique condition 3 and 4, event data 2 and 3 hold version
+       * mismatch information.
+       *
+       * achu: XXX: data2 & 0x0F == 2 ???  Need to ask Dell.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
           && state_data->product_id == 256
@@ -1267,7 +1272,19 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                    || sensor_type == 0xC2 /* OEM */
                    || sensor_type == 0xC3) /* OEM */
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)))
+                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+              || (sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
+                  && state_data->ipmi_version_major == 2
+                  && state_data->ipmi_version_minor == 0
+                  && event_data1_offset == 0x03
+                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+              || (sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
+                  && state_data->ipmi_version_major == 2
+                  && state_data->ipmi_version_minor == 0
+                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+                  && (event_data2 & 0x0F) == 0x02)))
         {
           strcat (fmtbuf, "%c");
           goto output;

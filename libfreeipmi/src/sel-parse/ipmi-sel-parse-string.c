@@ -1696,6 +1696,32 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       return (1);
     }
 
+  /* OEM Interpretation
+   *
+   * From Dell Provided Source Code
+   * - Handle for Dell Poweredge R610
+   *
+   * Specifically for Version Change Sensors with an event offset 0x06
+   *
+   * achu: XXX: event_data3 & 0x80 == 0x80 ??? need to ask dell
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && ctx->ipmi_version_major == 2
+      && ctx->ipmi_version_minor == 0
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
+      && system_event_record_data->offset_from_event_reading_type_code == 0x06
+      && (system_event_record_data->event_data3 & 0x80) == 0x80)
+    {
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "Device Slot %u\n",
+                system_event_record_data->event_data3 & 0x7F);
+      
+      return (1);
+    }
+
   return (0);
 }
 
@@ -2055,6 +2081,23 @@ _output_event_data3 (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+static char *
+_dell_version_change_entity_string (uint8_t data_entity)
+{
+  if (data_entity == 0)
+    return "BIOS";
+  else if (data_entity == 1)
+    return "BMC";
+  else if (data_entity == 2)
+    return "iDRAC";
+  else if (data_entity == 3)
+    return "CMC";
+  else if (data_entity == 4)
+    return "NIC";
+  else
+    return "Unrecognized Entity";
+}
+
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
@@ -2372,6 +2415,115 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
           return (1);
         }
+    }
+
+  /* OEM Interpretation
+   *
+   * From Dell Provided Source Code
+   * - Handle for Dell Poweredge R610
+   *
+   * Specifically for Version Change Sensors with an event offset 0x03
+   *
+   * achu: XXX: dataX & 0x1F != 1F ???  Need to ask Dell.
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && ctx->ipmi_version_major == 2
+      && ctx->ipmi_version_minor == 0
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
+      && system_event_record_data->offset_from_event_reading_type_code == 0x03
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      uint8_t data2_entity, data3_entity;
+      uint8_t data2_number, data3_number;
+      char *data2_entity_str = NULL;
+      char *data3_entity_str = NULL;
+      char data2_number_str[EVENT_BUFFER_LENGTH];
+      char data3_number_str[EVENT_BUFFER_LENGTH];
+
+      data2_entity = system_event_record_data->event_data2 >> 3;
+      data2_number = system_event_record_data->event_data2 & 0x1F;
+      data3_entity = system_event_record_data->event_data3 >> 3;
+      data3_number = system_event_record_data->event_data3 & 0x1F;
+
+      data2_entity_str = _dell_version_change_entity_string (data2_entity);
+      data3_entity_str = _dell_version_change_entity_string (data3_entity);
+
+      memset (data2_number_str, '\0', EVENT_BUFFER_LENGTH);
+      memset (data3_number_str, '\0', EVENT_BUFFER_LENGTH);
+
+      if (data2_number != 0x1F)
+        snprintf (data2_number_str,
+                  EVENT_BUFFER_LENGTH,
+                  "%u",
+                  data2_number);
+
+      if (data3_number != 0x1F)
+        snprintf (data3_number_str,
+                  EVENT_BUFFER_LENGTH,
+                  "%u",
+                  data3_number);
+
+      if (_SNPRINTF (buf,
+                     buflen,
+                     wlen,
+                     "%s%s%s with %s%s%s",
+                     data2_entity_str,
+                     strlen (data2_number_str) ? " " : "",
+                     data2_number_str,
+                     data3_entity_str,
+                     strlen (data3_number_str) ? " " : "",
+                     data3_number_str))
+        (*oem_rv) = 1;
+      else
+        (*oem_rv) = 0;
+      
+      return (1);     
+    }
+
+  /* OEM Interpretation
+   *
+   * From Dell Provided Source Code
+   * - Handle for Dell Poweredge R610
+   *
+   * Specifically for Version Change Sensors
+   *
+   * achu: XXX: data2 & 0x0F == 2 ???  Need to ask Dell.
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && ctx->ipmi_version_major == 2
+      && ctx->ipmi_version_minor == 0
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && (system_event_record_data->event_data2 & 0x0F) == 0x02)
+    {
+      char *data3_str = NULL;
+      
+      switch (system_event_record_data->event_data3 & 0x0F)
+        {
+        case 0:
+          data3_str = "other hardware";
+        case 1:
+          data3_str = "CPU";
+        default:
+          data3_str = "unknown hardware";
+        }
+      
+      if (_SNPRINTF (buf,
+                     buflen,
+                     wlen,
+                     "BMC Firmware and %s mismatch",
+                     data3_str))
+        (*oem_rv) = 1;
+      else
+        (*oem_rv) = 0;
+      
+      return (1);
     }
 
   return (0);
