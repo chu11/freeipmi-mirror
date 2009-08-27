@@ -1191,6 +1191,62 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
         }
     }
 
+  /* OEM Interpretation
+   *
+   * From Dell Provided Source Code
+   * - Handle for Dell Poweredge R610
+   *
+   * Specifically for Memory Sensors
+   *
+   * achu: XXX: event_data2 & 0x0F != 0x0F ??? Need info from Dell
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && ctx->ipmi_version_major == 1
+      && ctx->ipmi_version_minor == 5
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY)
+    {
+      uint8_t memory_board;
+      uint8_t bank_number;
+      char memory_board_char;
+      
+      memory_board = system_event_record_data->event_data2 >> 4;
+
+      /* Dell comments say "0x0F" means card not present */
+
+      if (memory_board != 0x0F)
+        memory_board_char = 'A' + memory_board;
+
+      bank_number = system_event_record_data->event_data2 & 0x0F;
+      
+      if (bank_number != 0x0F && memory_board != 0x0F)
+        {
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Memory Board %c, Bank %u",
+                    memory_board_char,
+                    bank_number);
+          return (1);
+        }
+      else if (memory_board != 0x0F)
+        {
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Memory Board %c",
+                    memory_board_char);
+          return (1);
+        }
+      else if (bank_number != 0x0F)
+        {
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Bank %u",
+                    bank_number);
+          return (1);
+        }
+    }
+
   return (0);
 }
 
@@ -1748,6 +1804,34 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
                 tmpbuflen,
                 "Device Slot %u\n",
                 system_event_record_data->event_data3 & 0x7F);
+      
+      return (1);
+    }
+
+  /* OEM Interpretation
+   *
+   * From Dell Provided Source Code
+   * - Handle for Dell Poweredge R610
+   *
+   * Specifically for Memory Sensors
+   *
+   * achu: XXX: event_data2 & 0x0F != 0x0F ??? Need info from Dell
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && ctx->ipmi_version_major == 1
+      && ctx->ipmi_version_minor == 5
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY)
+    {
+      char dimm_char;
+      
+      dimm_char = 'A' + system_event_record_data->event_data3;
+      
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "DIMM %c",
+                dimm_char);
       
       return (1);
     }
@@ -2678,6 +2762,132 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;
+        }
+      
+      return (1);
+    }
+
+  /* OEM Interpretation
+   *
+   * From Dell Provided Source Code
+   * - Handle for Dell Poweredge R610
+   *
+   * Specifically for Memory Sensors
+   *
+   * achu: XXX: need info from dell, this doesn't make a lot of sense.
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && ctx->product_id == 256
+      && ctx->ipmi_version_major == 2
+      && ctx->ipmi_version_minor == 0
+      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      uint8_t memory_board;
+      char memory_board_char;
+      uint8_t increment = 0;
+
+      memory_board = system_event_record_data->event_data2 >> 4;
+
+      /* Dell comments say "0x0F" means card not present */
+
+      if (memory_board != 0x0F)
+        memory_board_char = 'A' + memory_board;
+
+      if ((system_event_record_data->event_data2 & 0x0F) != 0x0F)
+        increment = (system_event_record_data->event_data2 & 0x0F) << 3;
+      
+      /* Dell comments say "NUMA Format" */
+      /* achu: XXX: what ??, why would you use the memory board for this?? */
+      if (memory_board > 0x07 && memory_board != 0x0F)
+        {
+          uint8_t dimmspernode;
+          char dimmstr[EVENT_BUFFER_LENGTH];
+          unsigned int offset = 0;
+          int i;
+
+          if (memory_board == 0x09)
+            dimmspernode = 6;
+          else if (memory_board == 0x0A)
+            dimmspernode = 8;
+          else if (memory_board == 0x0B)
+            dimmspernode = 9;
+          else
+            dimmspernode = 4;
+
+          memset (dimmstr, '\0', EVENT_BUFFER_LENGTH);
+
+          for (i = 0; i < 8; i++)
+            {
+              if (system_event_record_data->event_data3 & (0x1 << i))
+                {
+                  uint8_t node;
+                  uint8_t dimmnum;
+                  int len;
+                  
+                  node = (increment + i) / dimmspernode;
+                  
+                  dimmnum  = ((increment + i) % dimmspernode) + 1;
+
+                  len = snprintf (dimmstr,
+                                  EVENT_BUFFER_LENGTH - offset,
+                                  "%c%u",
+                                  'A' + node,
+                                  dimmnum);
+
+                  offset += len;
+                  
+                  if (offset >= EVENT_BUFFER_LENGTH)
+                    break;
+                }
+            }
+
+          if (_SNPRINTF (buf,
+                         buflen,
+                         wlen,
+                         "DIMM_%s",
+                         dimmstr))
+            (*oem_rv) = 1;
+          else
+            (*oem_rv) = 0;
+        }
+      else
+        {
+          char dimmstr[EVENT_BUFFER_LENGTH];
+          unsigned int offset = 0;
+          int i;
+
+          memset (dimmstr, '\0', EVENT_BUFFER_LENGTH);
+
+          for (i = 0; i < 8; i++)
+            {
+              if (system_event_record_data->event_data3 & (0x1 << i))
+                {
+                  int len;
+                  
+                  len = snprintf (dimmstr,
+                                  EVENT_BUFFER_LENGTH - offset,
+                                  "%u",
+                                  (increment + i + 1));
+                  
+                  offset += len;
+                  
+                  if (offset >= EVENT_BUFFER_LENGTH)
+                    break;
+                }
+            }
+
+          if (_SNPRINTF (buf,
+                         buflen,
+                         wlen,
+                         "DIMM %s",
+                         dimmstr))
+            (*oem_rv) = 1;
+          else
+            (*oem_rv) = 0;
+          
         }
       
       return (1);

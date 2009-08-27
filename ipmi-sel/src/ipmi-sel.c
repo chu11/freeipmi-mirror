@@ -1263,6 +1263,9 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * mezzanine, bus, device, function information for specific
        * offsets.
        *
+       * Unique condition 6, event data 2 and 3 together hold dimm
+       * location.
+       *
        * achu: XXX: data2 & 0x0F == 2 ???  Need to ask Dell.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
@@ -1292,6 +1295,11 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
               || (sensor_type == 0xC1 /* OEM */
                   && (event_data1_offset == 0x01
                       || event_data1_offset == 0x02)
+                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+              || (sensor_type == IPMI_SENSOR_TYPE_MEMORY
+                  && state_data->ipmi_version_major == 2
+                  && state_data->ipmi_version_minor == 0
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)))
         {
