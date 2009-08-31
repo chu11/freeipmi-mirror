@@ -1213,7 +1213,7 @@ ipmi_lan_open_session (ipmi_ctx_t ctx)
 
   /* IPMI Workaround (achu)
    *
-   * Discovered on Intel S5000PAL.
+   * Not discovered yet, assume will happen.
    *
    * Authentication capabilities flags are not listed properly in the
    * response.  The workaround is to skip these checks.

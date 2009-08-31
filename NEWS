@@ -5,7 +5,6 @@ o In bmc-config, fix SOL config corner case.  Assume LAN channel if
 o In bmc-config, configure Password before Enable_User by default for
   security.
 o Add SDR reading/loading workarounds for Fujitsu RX 100 motherboards.
-o Add authentication workarounds for Intel S5000PAL motherboards.
 o Add --assume-system-event-records to ipmi-sel to workaround HP DL
   380 G5 motherboards.
 o In bmc-config, add workarounds for Dell Poweredge servers.

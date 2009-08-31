@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.160.4.5 2009-08-21 20:58:13 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.160.4.6 2009-08-31 17:04:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -999,7 +999,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 
    /* IPMI Workaround (achu)
     *
-    * Discovered on Intel S5000PAL.
+    * Not discovered yet, assume will happen.
     *
     * Authentication capabilities flags are not listed properly in the
     * response.  The workaround is to skip these checks.

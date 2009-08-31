@@ -1,3 +1,7 @@
+2009-08-31  Albert Chu <chu11@llnl.gov>
+
+	* Remove Intel S5000 workaround, not a motherboard bug.
+	
 2009-08-26  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Fix seg-fault corner cases related to recent
