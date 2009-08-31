@@ -72,9 +72,9 @@ errors to occur.  They can be worked around by specifying the "sun20"
 workaround.  The workarounds include handling invalid lengthed hash
 keys, improperly hashed keys, and invalid cipher suite records.
 .LP
-Inventec 5441: The privilege level sent during the Open Session stage
-of an IPMI 2.0 connection is used for hashing keys instead of the
-privilege level sent during the RAKP1 connection stage.  This may
-cause "password invalid" or "bad rmcpplus status code" errors to
-occur.  It can be worked around by specifying the "opensesspriv"
+Inventec 5441, Supermicro X8DTH: The privilege level sent during the
+Open Session stage of an IPMI 2.0 connection is used for hashing keys
+instead of the privilege level sent during the RAKP1 connection stage.
+This may cause "password invalid" or "bad rmcpplus status code" errors
+to occur.  It can be worked around by specifying the "opensesspriv"
 workaround.

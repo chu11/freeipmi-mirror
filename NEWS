@@ -10,6 +10,7 @@ o Add --assume-system-event-records to ipmi-sel to workaround HP DL
 o In bmc-config, add workarounds for Dell Poweredge servers.
 o In ipmi-oem, support additional Dell Poweredge OEM commands.
 o In ipmi-oem, support additional Supermicro OEM commands.
+o Document workarounds necessary for newer Supermicro motherboards.
 o Fix several error output corner cases.
 
 0.7.11 - 07/28/09
