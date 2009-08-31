@@ -1,3 +1,8 @@
+2009-08-31  Albert Chu <chu11@llnl.gov>
+
+	* Document workarounds necessary for newer Supermicro
+	motherboards.  Various commenting cleanup.
+	
 2009-08-27  Albert Chu <chu11@llnl.gov>
 	
 	* libfreeipmi/src/sel-parse/: Add additional Dell OEM

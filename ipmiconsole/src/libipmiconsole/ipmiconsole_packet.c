@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.52 2009-08-17 23:20:22 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.53 2009-08-31 20:33:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -976,7 +976,13 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
 
       /* IPMI Workaround
        *
-       * IPMI 2.0 implementations don't support the highest level privilege.
+       * Discovered on SE7520AF2 with Intel Server Management Module
+       * (Professional Edition), Sun Fire 4100, Inventec 5441/Dell
+       * Xanadu2, Supermicro X8DTH
+       *
+       * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
+       * of an actual privilege, so have to pass the actual privilege
+       * we want to use.
        */
       if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION
           || c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION
@@ -1722,8 +1728,9 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
         }
       /* Workaround
        *
-       * Inventec 5441 returns IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE, so we'll assume
-       * that return code always means we need encryption.
+       * Inventec 5441/Dell Xanadu2 returns
+       * IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE, so we'll assume that
+       * return code always means we need encryption.
        */
       else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
                && (comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION
