@@ -41,6 +41,7 @@
 
 #include "freeipmi/sel-parse/ipmi-sel-parse.h"
 
+#include "freeipmi/cmds/ipmi-device-global-cmds.h"
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
@@ -1203,8 +1204,8 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && ctx->ipmi_version_major == 1
-      && ctx->ipmi_version_minor == 5
+      && ctx->ipmi_version_major == IPMI_1_5_MAJOR_VERSION
+      && ctx->ipmi_version_minor == IPMI_1_5_MINOR_VERSION
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY)
     {
@@ -1794,8 +1795,8 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && ctx->ipmi_version_major == 2
-      && ctx->ipmi_version_minor == 0
+      && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
+      && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
       && system_event_record_data->offset_from_event_reading_type_code == 0x06
@@ -1820,8 +1821,8 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && ctx->ipmi_version_major == 1
-      && ctx->ipmi_version_minor == 5
+      && ctx->ipmi_version_major == IPMI_1_5_MAJOR_VERSION
+      && ctx->ipmi_version_minor == IPMI_1_5_MINOR_VERSION
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY)
     {
@@ -2543,8 +2544,8 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && ctx->ipmi_version_major == 2
-      && ctx->ipmi_version_minor == 0
+      && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
+      && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
       && system_event_record_data->offset_from_event_reading_type_code == 0x03
@@ -2609,8 +2610,8 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && ctx->ipmi_version_major == 2
-      && ctx->ipmi_version_minor == 0
+      && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
+      && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
@@ -2779,8 +2780,8 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && ctx->ipmi_version_major == 2
-      && ctx->ipmi_version_minor == 0
+      && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
+      && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE

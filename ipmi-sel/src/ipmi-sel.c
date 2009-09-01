@@ -1281,14 +1281,14 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               || (sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-                  && state_data->ipmi_version_major == 2
-                  && state_data->ipmi_version_minor == 0
+                  && state_data->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
+                  && state_data->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
                   && event_data1_offset == 0x03
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               || (sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-                  && state_data->ipmi_version_major == 2
-                  && state_data->ipmi_version_minor == 0
+                  && state_data->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
+                  && state_data->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && (event_data2 & 0x0F) == 0x02)
@@ -1298,8 +1298,8 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               || (sensor_type == IPMI_SENSOR_TYPE_MEMORY
-                  && state_data->ipmi_version_major == 2
-                  && state_data->ipmi_version_minor == 0
+                  && state_data->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
+                  && state_data->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)))
         {
