@@ -1,3 +1,7 @@
+2009-09-01  Albert Chu <chu11@llnl.gov>
+
+	* Update IANA enterprise numbers array.
+	
 2009-08-31  Albert Chu <chu11@llnl.gov>
 
 	* Document workarounds necessary for newer Supermicro
