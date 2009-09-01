@@ -193,7 +193,7 @@ _event_reading_type_code_is_oem_interpretable (struct ipmi_sensors_state_data *s
    * Dell Poweredge R610
    */
   if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && state_data->product_id == 256
+      && state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && event_reading_type_code == 0x70)
     return (1);
 

@@ -1,6 +1,10 @@
 2009-09-01  Albert Chu <chu11@llnl.gov>
 
 	* Update IANA enterprise numbers array.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-vendor-spec.h: New file.
+
+	* Update code to use macros from vendor spec.
 	
 2009-08-31  Albert Chu <chu11@llnl.gov>
 

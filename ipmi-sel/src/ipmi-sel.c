@@ -1203,7 +1203,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * output, the only output is the combined output.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-          && state_data->product_id == 51
+          && state_data->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
           && ((generator_id == 0x01 /* "BIOS" */
                && sensor_type == 0xC1 /* OEM Reserved */
                && sensor_number == 0x81 /* "BIOS Start" */
@@ -1229,7 +1229,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * special case.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && state_data->product_id == 256
+          && state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
 #if 0
           /* it appears these don't need to match, 0x7E is the primary indicator */
           && generator_id == 0xB1
@@ -1269,7 +1269,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * achu: XXX: data2 & 0x0F == 2 ???  Need to ask Dell.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && state_data->product_id == 256
+          && state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           && ((sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
                && event_data1_offset == 0x06
                && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE

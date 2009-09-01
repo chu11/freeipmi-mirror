@@ -587,7 +587,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
            && state_data->prog_data->args->interpret_oem_data
            && state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-           && state_data->product_id == 256
+           && state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
            && event_reading_type_code == 0x70)
     {
       if (get_generic_event_message_list (state_data,

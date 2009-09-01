@@ -49,6 +49,7 @@
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
+#include "freeipmi/spec/ipmi-vendor-spec.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-sensor-units-util.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
@@ -597,7 +598,7 @@ _output_oem_sensor_name (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441/Dell Xanadu2
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && ctx->product_id == 51
+      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && ((system_event_record_data->generator_id == 0x01 /* BIOS */
            && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
            && system_event_record_data->sensor_number == 0x81
@@ -762,7 +763,7 @@ _output_oem_event_offset_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ct
    * Dell Poweredge R610
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && (system_event_record_data->sensor_type == 0xC0
           || system_event_record_data->sensor_type == 0xC1
           || system_event_record_data->sensor_type == 0xC2
@@ -821,7 +822,7 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
    * occurs, so that's what I'm going to say.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && ctx->product_id == 51
+      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && system_event_record_data->generator_id == 0x01 /* "BIOS" */
       && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
       && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
@@ -842,7 +843,7 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Dell Poweredge R610
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && system_event_record_data->event_type_code == 0x70)
     {
       int ret;
@@ -865,7 +866,7 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
    * achu: Unique special case
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
 #if 0
       /* it appears these don't need to match, 0x7E is the primary indicator */
       && system_event_record_data->generator_id == 0xB1
@@ -963,7 +964,7 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
        */
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
 	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-	  && ctx->product_id == 256
+	  && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
 	  && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
 	  && system_event_record_data.offset_from_event_reading_type_code == 0xF)
 	{
@@ -1108,7 +1109,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * achu: The doc says "Other" for 0xFF, I'm going to just assume that's "no output".
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && ctx->product_id == 51
+      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && system_event_record_data->generator_id == 0x21 /* "SMI" */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == 0x60 /* "Memory" */
@@ -1148,7 +1149,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * more info from Dell.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
       && system_event_record_data->offset_from_event_reading_type_code == 0x01
@@ -1169,7 +1170,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * Specifically for Intrusion sensors
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
     {
@@ -1201,7 +1202,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * achu: XXX: event_data2 & 0x0F != 0x0F ??? Need info from Dell
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && ctx->ipmi_version_major == 1
       && ctx->ipmi_version_minor == 5
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
@@ -1282,7 +1283,7 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441/Dell Xanadu2
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && ctx->product_id == 51
+      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && system_event_record_data->generator_id == 0x01 /* "BIOS" */
       && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
       && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
@@ -1304,7 +1305,7 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Dell Poweredge R610
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
 #if 0
       /* it appears these don't need to match, 0x7E is the primary indicator */
       && system_event_record_data->generator_id == 0xB1
@@ -1723,7 +1724,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * and output normal stuff.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && ctx->product_id == 51
+      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && system_event_record_data->generator_id == 0x21 /* "SMI" */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == 0x60 /* "Memory" */
@@ -1792,7 +1793,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * achu: XXX: event_data3 & 0x80 == 0x80 ??? need to ask dell
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && ctx->ipmi_version_major == 2
       && ctx->ipmi_version_minor == 0
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
@@ -1818,7 +1819,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * achu: XXX: event_data2 & 0x0F != 0x0F ??? Need info from Dell
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && ctx->ipmi_version_major == 1
       && ctx->ipmi_version_minor == 5
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
@@ -1871,7 +1872,7 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441/Dell Xanadu2
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && ctx->product_id == 51
+      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && system_event_record_data->generator_id == 0x01 /* "BIOS" */
       && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
       && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
@@ -1893,7 +1894,7 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Dell Poweredge R610
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
 #if 0
       /* it appears these don't need to match, 0x7E is the primary indicator */
       && system_event_record_data->generator_id == 0xB1
@@ -2247,7 +2248,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441/Dell Xanadu2
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && ctx->product_id == 51
+      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && system_event_record_data->generator_id == 0x01 /* "BIOS" */
       && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
       && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
@@ -2274,7 +2275,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * Inventec 5441/Dell Xanadu2
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && ctx->product_id == 51
+      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && system_event_record_data->generator_id == 0x31 /* POST error */
       && system_event_record_data->sensor_type == 0x0F /* System Firmware Progress */
       && system_event_record_data->sensor_number == 0x06
@@ -2449,7 +2450,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * "check for error type in byte 3".
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
       && system_event_record_data->offset_from_event_reading_type_code == 0x06
@@ -2486,7 +2487,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * Specifically for Critical Interrupt Sensors and several Dell OEM sensors.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           || system_event_record_data->sensor_type == 0xC2 /* OEM */
@@ -2541,7 +2542,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * achu: XXX: dataX & 0x1F != 1F ???  Need to ask Dell.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && ctx->ipmi_version_major == 2
       && ctx->ipmi_version_minor == 0
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
@@ -2607,7 +2608,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * achu: XXX: data2 & 0x0F == 2 ???  Need to ask Dell.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && ctx->ipmi_version_major == 2
       && ctx->ipmi_version_minor == 0
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
@@ -2648,7 +2649,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * Specifically for Dell OEM sensor 0xC1 w/ event offset 0x01 .
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->offset_from_event_reading_type_code == 0x01
@@ -2685,7 +2686,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * achu: XXX: data3 & 0x01 => 'B' or 'C' ???  Need to ask Dell
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */
       && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->offset_from_event_reading_type_code == 0x02
@@ -2777,7 +2778,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * achu: XXX: need info from dell, this doesn't make a lot of sense.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == 256
+      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && ctx->ipmi_version_major == 2
       && ctx->ipmi_version_minor == 0
       && system_event_record_data->event_type_code == 0x6F /* sensor specific */

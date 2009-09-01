@@ -479,7 +479,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
        */
       if (state_data->prog_data->args->interpret_oem_data
           && manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
-          && product_id == 256)
+          && product_id == IPMI_INTEL_PRODUCT_ID_SR870BN4)
         {
           if (display_intel_sr870bn4 (state_data, obj_cmd_rs) < 0)
             goto cleanup;
@@ -490,7 +490,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
        */
       else if (state_data->prog_data->args->interpret_oem_data
                && manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_DELL
-               && product_id == 256)
+               && product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610)
         {
           pstdout_printf (state_data->pstate,
                           "Build Number          : %u\n",
