@@ -2401,7 +2401,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       else if (error_code == 0x0123)
         error_code_str = "CPU4 Thermal Failure due to PROCHOT#";
       else if (error_code == 0x0150)
-        error_code_str = "Processor failed BIST (BSP)";
+        error_code_str = "Processor failed BIST (BSP)"; /* BSP = Baseboard Service Processor */
       else if (error_code == 0x0160)
         error_code_str = "CPU1 Processor missing microcode";
       else if (error_code == 0x0161)
