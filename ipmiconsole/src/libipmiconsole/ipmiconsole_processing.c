@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.101 2009-08-31 20:33:40 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.102 2009-09-01 15:47:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -2182,6 +2182,31 @@ _check_payload_sizes_legitimate (ipmiconsole_ctx_t c)
     }
   else
     {
+      uint16_t tmp;
+      /* First, lets assume the endian is wrong.  If the resulting
+       * value is fine, lets use it.
+       */
+
+      tmp = 0;
+      tmp = (max_inbound_payload_size >> 8);
+      tmp |= (max_inbound_payload_size & 0xFF) << 8;
+      max_inbound_payload_size = tmp;
+
+      tmp = 0;
+      tmp = (max_outbound_payload_size >> 8);
+      tmp |= (max_outbound_payload_size & 0xFF) << 8;
+      max_outbound_payload_size = tmp;
+
+      if (max_inbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
+          && max_inbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len
+          && max_outbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
+          && max_outbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len)
+        {
+          c->session.max_sol_character_send_size = max_outbound_payload_size - sol_hdr_len;
+          return (1);
+        }
+      /* else */
+
       /* Lets try 32, seems like a decent power of two number */
       c->session.max_sol_character_send_size = 32;
       return (1);
