@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.61 2009-09-01 21:29:43 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.62 2009-09-01 22:21:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1001,8 +1001,8 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
           return (-1);
         }
     }
-  else if (bitmask_type >= IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION
-           && bitmask_type <= IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_STATE)
+  else if (bitmask_type >= IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_STATE
+           && bitmask_type <= IPMI_MONITORING_SENSOR_BITMASK_TYPE_ACPI_POWER_STATE)
     {
       uint8_t event_reading_type_code;
 
@@ -1049,7 +1049,7 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_REDUNDANCY:
           event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY;
           break;
-        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_STATE:
+        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_ACPI_POWER_STATE:
           event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_ACPI_POWER_STATE;
           break;
         default:

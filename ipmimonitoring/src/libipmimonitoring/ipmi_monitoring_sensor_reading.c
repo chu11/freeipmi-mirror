@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.75 2009-09-01 21:29:43 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.76 2009-09-01 22:22:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -315,7 +315,7 @@ _get_digital_sensor_state (ipmi_monitoring_ctx_t c,
     config = ipmi_voltage_performance_config;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
            && sensor_type == IPMI_SENSOR_TYPE_FAN)
-    config = ipmi_fan_device_install_config;
+    config = ipmi_fan_device_present_config;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_AVAILABILITY
            && sensor_type == IPMI_SENSOR_TYPE_FAN)
     config = ipmi_fan_transition_availability_config;
@@ -333,7 +333,7 @@ _get_digital_sensor_state (ipmi_monitoring_ctx_t c,
     config = ipmi_power_supply_redundancy_config;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
            && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
-    config = ipmi_power_unit_device_install_config;
+    config = ipmi_power_unit_device_present_config;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
            && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
     config = ipmi_power_unit_redundancy_config;
@@ -342,7 +342,7 @@ _get_digital_sensor_state (ipmi_monitoring_ctx_t c,
     config = ipmi_module_board_state_config;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
            && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
-    config = ipmi_module_board_device_install_config;
+    config = ipmi_module_board_device_present_config;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
            && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     config = ipmi_drive_slot_state_config;
@@ -351,13 +351,13 @@ _get_digital_sensor_state (ipmi_monitoring_ctx_t c,
     config = ipmi_drive_slot_predictive_failure_config;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
            && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
-    config = ipmi_drive_slot_device_install_config;
+    config = ipmi_drive_slot_device_present_config;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
            && sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
     config = ipmi_button_switch_state_config;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
            && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
-    config = ipmi_entity_presence_device_install_config;
+    config = ipmi_entity_presence_device_present_config;
   else
     {
       IPMI_MONITORING_DEBUG (("event_reading_type_code '0x%X' and sensor_type '0x%X' not supported",
