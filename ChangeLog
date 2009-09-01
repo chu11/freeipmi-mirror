@@ -9,7 +9,13 @@
 	* Add and use macros for ipmi 1.5 and ipmi 2.0.
 
 	* Macroize system event record code.
-	
+
+	* Macroize event type codes.
+
+	* Adjust ipmimonitoring event type codes appropriately.
+
+	* Macroize sensor types throughout.
+
 2009-08-31  Albert Chu <chu11@llnl.gov>
 
 	* Document workarounds necessary for newer Supermicro

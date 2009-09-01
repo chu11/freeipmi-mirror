@@ -112,15 +112,15 @@ Defaults to Nominal.
 Defaults to Critical.
 .RE
 .TP
-.B IPMI_Fan_Device_Install
+.B IPMI_Fan_Device_Present
 The following states correspond to Fan sensors that report on
 device installation.
 .RS
 .TP
-\fBIPMI_Fan_Device_Install_Device_Removed_Device_Absent\fR
+\fBIPMI_Fan_Device_Present_Device_Removed_Device_Absent\fR
 Defaults to Critical.
 .TP
-\fBIPMI_Fan_Device_Install_Device_Inserted_Device_Present\fR
+\fBIPMI_Fan_Device_Present_Device_Inserted_Device_Present\fR
 Defaults to Nominal.
 .RE
 .TP
@@ -241,15 +241,15 @@ Defaults to Warning.
 Defaults to Warning.
 .RE
 .TP
-.B IPMI_Power_Unit_Device_Install
+.B IPMI_Power_Unit_Device_Present
 The following states correspond to Power Unit sensors that report on
 device installation.
 .RS
 .TP
-\fBIPMI_Power_Unit_Device_Install_Device_Removed_Device_Absent\fR
+\fBIPMI_Power_Unit_Device_Present_Device_Removed_Device_Absent\fR
 Defaults to Critical.
 .TP
-\fBIPMI_Power_Unit_Device_Install_Device_Inserted_Device_Present\fR
+\fBIPMI_Power_Unit_Device_Present_Device_Inserted_Device_Present\fR
 Defaults to Nominal.
 .RE
 .TP
@@ -295,15 +295,15 @@ Defaults to Nominal.
 Defaults to Critical.
 .RE
 .TP
-.B IPMI_Module_Board_Device_Install
+.B IPMI_Module_Board_Device_Present
 The following states correspond to Module/Board sensors that report on
 device installation.
 .RS
 .TP
-\fBIPMI_Module_Board_Device_Install_Device_Removed_Device_Absent\fR
+\fBIPMI_Module_Board_Device_Present_Device_Removed_Device_Absent\fR
 Defaults to Critical.
 .TP
-\fBIPMI_Module_Board_Device_Install_Device_Inserted_Device_Present\fR
+\fBIPMI_Module_Board_Device_Present_Device_Inserted_Device_Present\fR
 Defaults to Nominal.
 .RE
 .TP
@@ -331,15 +331,15 @@ Defaults to Nominal.
 Defaults to Critical.
 .RE
 .TP
-.B IPMI_Drive_Slot_Device_Install
+.B IPMI_Drive_Slot_Device_Present
 The following states correspond to Drive Slot sensors that report on
 device installation.
 .RS
 .TP
-\fBIPMI_Drive_Slot_Device_Install_Device_Removed_Device_Absent\fR
+\fBIPMI_Drive_Slot_Device_Present_Device_Removed_Device_Absent\fR
 Defaults to Critical.
 .TP
-\fBIPMI_Drive_Slot_Device_Install_Device_Inserted_Device_Present\fR
+\fBIPMI_Drive_Slot_Device_Present_Device_Inserted_Device_Present\fR
 Defaults to Nominal.
 .RE
 .TP
@@ -355,15 +355,15 @@ Defaults to Nominal.
 Defaults to Nominal.
 .RE
 .TP
-.B IPMI_Entity_Presence_Device_Install
+.B IPMI_Entity_Presence_Device_Present
 The following states correspond to Entity Presence sensors that report on
 device installation.
 .RS
 .TP
-\fBIPMI_Entity_Presence_Device_Install_Device_Removed_Device_Absent\fR
+\fBIPMI_Entity_Presence_Device_Present_Device_Removed_Device_Absent\fR
 Defaults to Nominal.
 .TP
-\fBIPMI_Entity_Presence_Device_Install_Device_Inserted_Device_Present\fR
+\fBIPMI_Entity_Presence_Device_Present_Device_Inserted_Device_Present\fR
 Defaults to Nominal.
 .RE
 .TP

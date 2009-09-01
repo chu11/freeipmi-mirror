@@ -1211,9 +1211,9 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               || (generator_id == 0x31 /* POST error */
-                  && sensor_type == 0x0F /* System Firmware Progress */
+                  && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
                   && sensor_number == 0x06 
-                  && event_type_code == 0x6F))) /* Sensor Specific */
+                  && event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)))
         {
           strcat (fmtbuf, "%c");
           goto output;
@@ -1230,12 +1230,14 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
           && state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
 #if 0
-          /* it appears these don't need to match, 0x7E is the primary indicator */
+          /* it appears these don't need to match, 0x7E event type code is
+           * the primary indicator
+           */
           && generator_id == 0xB1
           && sensor_type == 0xC1 /* OEM */
           && sensor_number == 0x1A
 #endif
-          && event_type_code == 0x7E)
+          && event_type_code == 0x7E) /* OEM */
         {
 	  strcat (fmtbuf, "%f ; %h");
 	  goto output;

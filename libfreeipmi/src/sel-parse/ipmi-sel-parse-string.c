@@ -605,13 +605,13 @@ _output_oem_sensor_name (ipmi_sel_parse_ctx_t ctx,
            && system_event_record_data->sensor_number == 0x81
            && system_event_record_data->event_type_code == 0x70) /* OEM */
           || (system_event_record_data->generator_id == 0x01 /* BIOS */
-              && system_event_record_data->sensor_type == 0x12 /* System Event */
+              && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
               && system_event_record_data->sensor_number == 0x85
-              && system_event_record_data->event_type_code == 0x6F)
+              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
           || (system_event_record_data->generator_id == 0x31 /* POST error */
-              && system_event_record_data->sensor_type == 0x0F /* System Firmware Progress */
+              && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
               && system_event_record_data->sensor_number == 0x06
-              && system_event_record_data->event_type_code == 0x6F)))
+              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)))
     {
       if (_SNPRINTF (buf,
                      buflen,
@@ -765,11 +765,11 @@ _output_oem_event_offset_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ct
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && (system_event_record_data->sensor_type == 0xC0
-          || system_event_record_data->sensor_type == 0xC1
-          || system_event_record_data->sensor_type == 0xC2
-          || system_event_record_data->sensor_type == 0xC3
-          || system_event_record_data->sensor_type == 0xC4))
+      && (system_event_record_data->sensor_type == 0xC0 /* OEM */
+          || system_event_record_data->sensor_type == 0xC1 /* OEM */
+          || system_event_record_data->sensor_type == 0xC2 /* OEM */
+          || system_event_record_data->sensor_type == 0xC3 /* OEM */
+          || system_event_record_data->sensor_type == 0xC4)) /* OEM */
     {
       int ret;
 
@@ -869,7 +869,9 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
 #if 0
-      /* it appears these don't need to match, 0x7E is the primary indicator */
+      /* it appears these don't need to match, 0x7E event type code is
+       * the primary indicator
+       */
       && system_event_record_data->generator_id == 0xB1
       && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->sensor_number == 0x1A
@@ -1114,7 +1116,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && system_event_record_data->generator_id == 0x21 /* "SMI" */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == 0x60 /* "Memory" */
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && (system_event_record_data->offset_from_event_reading_type_code == 0x0 /* correctable ECC */
           || system_event_record_data->offset_from_event_reading_type_code == 0x1 /* uncorrectable ECC */
           || system_event_record_data->offset_from_event_reading_type_code == 0x2 /* parity */
@@ -1151,7 +1153,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
       && system_event_record_data->offset_from_event_reading_type_code == 0x01
       && system_event_record_data->event_data2 == 0x01)
@@ -1172,7 +1174,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
     {
       if (system_event_record_data->event_data2 == 0x01)
@@ -1206,7 +1208,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && ctx->ipmi_version_major == IPMI_1_5_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_1_5_MINOR_VERSION
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY)
     {
       uint8_t memory_board;
@@ -1308,7 +1310,9 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
 #if 0
-      /* it appears these don't need to match, 0x7E is the primary indicator */
+      /* it appears these don't need to match, 0x7E event type code is
+       * the primary indicator
+       */
       && system_event_record_data->generator_id == 0xB1
       && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->sensor_number == 0x1A
@@ -1729,7 +1733,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && system_event_record_data->generator_id == 0x21 /* "SMI" */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == 0x60 /* "Memory" */
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && (system_event_record_data->offset_from_event_reading_type_code == 0x0 /* correctable ECC */
           || system_event_record_data->offset_from_event_reading_type_code == 0x1 /* uncorrectable ECC */
           || system_event_record_data->offset_from_event_reading_type_code == 0x2 /* parity */
@@ -1797,7 +1801,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
       && system_event_record_data->offset_from_event_reading_type_code == 0x06
       && (system_event_record_data->event_data3 & 0x80) == 0x80)
@@ -1823,7 +1827,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && ctx->ipmi_version_major == IPMI_1_5_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_1_5_MINOR_VERSION
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY)
     {
       char dimm_char;
@@ -1897,7 +1901,9 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
 #if 0
-      /* it appears these don't need to match, 0x7E is the primary indicator */
+      /* it appears these don't need to match, 0x7E event type code is
+       * the primary indicator
+       */
       && system_event_record_data->generator_id == 0xB1
       && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->sensor_number == 0x1A
@@ -2278,9 +2284,9 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && system_event_record_data->generator_id == 0x31 /* POST error */
-      && system_event_record_data->sensor_type == 0x0F /* System Firmware Progress */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
       && system_event_record_data->sensor_number == 0x06
-      && system_event_record_data->event_type_code == 0x6F)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
     {
       uint16_t error_code;
       char *error_code_str = NULL;
@@ -2452,7 +2458,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
       && system_event_record_data->offset_from_event_reading_type_code == 0x06
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
@@ -2489,7 +2495,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           || system_event_record_data->sensor_type == 0xC2 /* OEM */
           || system_event_record_data->sensor_type == 0xC3) /* OEM */
@@ -2546,7 +2552,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
       && system_event_record_data->offset_from_event_reading_type_code == 0x03
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
@@ -2612,7 +2618,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
@@ -2651,7 +2657,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->offset_from_event_reading_type_code == 0x01
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
@@ -2688,7 +2694,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->offset_from_event_reading_type_code == 0x02
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
@@ -2782,7 +2788,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
       && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
-      && system_event_record_data->event_type_code == 0x6F /* sensor specific */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)

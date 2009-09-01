@@ -2872,7 +2872,10 @@ ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
       return (-1);
     }
 
-  /* Dell Poweredge R610 */
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   */
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610)
     {
@@ -2900,7 +2903,10 @@ ipmi_get_oem_sensor_type_code_message (uint32_t manufacturer_id,
       return (-1);
     }
 
-  /* Dell Poweredge R610 */
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   */
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610)
     {

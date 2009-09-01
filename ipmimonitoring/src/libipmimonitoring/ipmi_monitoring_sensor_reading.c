@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.74 2009-05-21 22:56:01 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.75 2009-09-01 21:29:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -307,60 +307,55 @@ _get_digital_sensor_state (ipmi_monitoring_ctx_t c,
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code));
 
-  /* achu: there are no "names" associated with
-   * event_reading_type_codes in the spec (table 42-2), so there are
-   * no macros.  We just gotta hard code numbers.
-   */
-
-  if (event_reading_type_code == 0x03
+  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
       && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
     config = ipmi_voltage_state_config;
-  else if (event_reading_type_code == 0x06
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PERFORMANCE
            && sensor_type == IPMI_SENSOR_TYPE_VOLTAGE)
     config = ipmi_voltage_performance_config;
-  else if (event_reading_type_code == 0x08
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
            && sensor_type == IPMI_SENSOR_TYPE_FAN)
     config = ipmi_fan_device_install_config;
-  else if (event_reading_type_code == 0x0A
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_AVAILABILITY
            && sensor_type == IPMI_SENSOR_TYPE_FAN)
     config = ipmi_fan_transition_availability_config;
-  else if (event_reading_type_code == 0x0B
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
            && sensor_type == IPMI_SENSOR_TYPE_FAN)
     config = ipmi_fan_redundancy_config;
-  else if (event_reading_type_code == 0x03
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
            && sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
     config = ipmi_processor_state_config;
-  else if (event_reading_type_code == 0x03
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
            && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
     config = ipmi_power_supply_state_config;
-  else if (event_reading_type_code == 0x0B
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
            && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
     config = ipmi_power_supply_redundancy_config;
-  else if (event_reading_type_code == 0x08
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
            && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
     config = ipmi_power_unit_device_install_config;
-  else if (event_reading_type_code == 0x0B
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
            && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
     config = ipmi_power_unit_redundancy_config;
-  else if (event_reading_type_code == 0x03
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
            && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
     config = ipmi_module_board_state_config;
-  else if (event_reading_type_code == 0x08
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
            && sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
     config = ipmi_module_board_device_install_config;
-  else if (event_reading_type_code == 0x03
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
            && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     config = ipmi_drive_slot_state_config;
-  else if (event_reading_type_code == 0x04
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PREDICTIVE_FAILURE
            && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     config = ipmi_drive_slot_predictive_failure_config;
-  else if (event_reading_type_code == 0x08
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
            && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
     config = ipmi_drive_slot_device_install_config;
-  else if (event_reading_type_code == 0x03
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
            && sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
     config = ipmi_button_switch_state_config;
-  else if (event_reading_type_code == 0x08
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
            && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
     config = ipmi_entity_presence_device_install_config;
   else
@@ -674,35 +669,30 @@ _get_digital_sensor_bitmask_type (ipmi_monitoring_ctx_t c,
   assert (c->sensor_readings);
   assert (IPMI_EVENT_READING_TYPE_CODE_IS_GENERIC (event_reading_type_code));
 
-  /* achu: there are no "names" associated with
-   * event_reading_type_codes in the spec (table 42-2), so there are
-   * no macros.  We just gotta hard code numbers.
-   */
-
-  if (event_reading_type_code == 0x01)
+  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_THRESHOLD)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD;
-  if (event_reading_type_code == 0x02)
-    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION;
-  else if (event_reading_type_code == 0x03)
+  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_STATE)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_STATE;
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_STATE;
-  else if (event_reading_type_code == 0x04)
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PREDICTIVE_FAILURE)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PREDICTIVE_FAILURE;
-  else if (event_reading_type_code == 0x05)
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_LIMIT)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_LIMIT;
-  else if (event_reading_type_code == 0x06)
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_PERFORMANCE)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PERFORMANCE;
-  else if (event_reading_type_code == 0x07)
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_SEVERITY;
-  else if (event_reading_type_code == 0x08)
-    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_INSTALL;
-  else if (event_reading_type_code == 0x09)
-    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_STATE;
-  else if (event_reading_type_code == 0x0A)
-    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_DEVICE;
-  else if (event_reading_type_code == 0x0B)
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_PRESENT;
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_ENABLED;
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_AVAILABILITY)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_AVAILABILITY;
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_REDUNDANCY;
-  else if (event_reading_type_code == 0x0C)
-    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_STATE;
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_ACPI_POWER_STATE)
+    sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_ACPI_POWER_STATE;
   else
     {
       IPMI_MONITORING_DEBUG (("event_reading_type_code '0x%X' bitmask not supported",

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.46 2009-05-21 23:06:43 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.47 2009-09-01 21:29:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -129,17 +129,17 @@ enum ipmi_monitoring_sensor_reading_type
 enum ipmi_monitoring_sensor_bitmask_type
   {
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD                           = 0x00,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION                          = 0x01,
+    IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_STATE                    = 0x01,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_STATE                               = 0x02,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_PREDICTIVE_FAILURE                  = 0x03,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_LIMIT                               = 0x04,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_PERFORMANCE                         = 0x05,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_SEVERITY                 = 0x06,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_INSTALL                      = 0x07,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_STATE                        = 0x08,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_DEVICE                   = 0x09,
+    IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_PRESENT                      = 0x07,
+    IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_ENABLED                      = 0x08,
+    IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_AVAILABILITY             = 0x09,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_REDUNDANCY                          = 0x0A,
-    IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_STATE                         = 0x0B,
+    IPMI_MONITORING_SENSOR_BITMASK_TYPE_ACPI_POWER_STATE                    = 0x0B,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_PHYSICAL_SECURITY                   = 0x0C,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT = 0x0D,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_PROCESSOR                           = 0x0E,

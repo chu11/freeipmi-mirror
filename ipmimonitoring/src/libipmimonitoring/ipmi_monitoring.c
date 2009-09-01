@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.60 2009-05-21 23:06:43 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.61 2009-09-01 21:29:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1016,41 +1016,41 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
 #if 0
           /* handled above */
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD:
-          event_reading_type_code = 0x01;
+          event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_THRESHOLD;
           break;
 #endif
-        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION:
-          event_reading_type_code = 0x02;
+        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_STATE:
+          event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_TRANSITION_STATE;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_STATE:
-          event_reading_type_code = 0x03;
+          event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_STATE;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_PREDICTIVE_FAILURE:
-          event_reading_type_code = 0x04;
+          event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_PREDICTIVE_FAILURE;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_LIMIT:
-          event_reading_type_code = 0x05;
+          event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_LIMIT;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_PERFORMANCE:
-          event_reading_type_code = 0x06;
+          event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_PERFORMANCE;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_SEVERITY:
-          event_reading_type_code = 0x07;
+          event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY;
           break;
-        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_INSTALL:
-          event_reading_type_code = 0x08;
+        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_PRESENT:
+          event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT;
           break;
-        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_STATE:
-          event_reading_type_code = 0x09;
+        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_DEVICE_ENABLED:
+          event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED;
           break;
-        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_DEVICE:
-          event_reading_type_code = 0x0A;
+        case IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_AVAILABILITY:
+          event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_TRANSITION_AVAILABILITY;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_REDUNDANCY:
-          event_reading_type_code = 0x0B;
+          event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_STATE:
-          event_reading_type_code = 0x0C;
+          event_reading_type_code = IPMI_EVENT_READING_TYPE_CODE_ACPI_POWER_STATE;
           break;
         default:
           c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;

@@ -144,6 +144,8 @@ o ipmimonitoring
     consistency to libipmimonitoring library definition.
   - Sensor events are now output for all sensors.  Sensor readings are
     only output appropriately for non-discrete sensors.
+  - Rename a number of config fields for overall FreeIPMI consistency,
+    may break backwards compatability.
   - With default output, output same sensors as listed in
     ipmi-sensors, including some sensors that can't be interpreted.
   - Support --exclude-groups option.
@@ -372,6 +374,8 @@ o libipmimonitoring
     to IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS.
     Legacy macro still supported.
   - Add IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA flag.
+  - Rename a number of macros for overall FreeIPMI consistency, may
+    break backwards compatability.
   - Variety of API functions reworked or renamed for new functionality.  Will
     require recompile and rework in existing code.
 
