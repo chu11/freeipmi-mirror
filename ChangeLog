@@ -7,6 +7,8 @@
 	* Update code to use macros from vendor spec.
 
 	* Add and use macros for ipmi 1.5 and ipmi 2.0.
+
+	* Macroize system event record code.
 	
 2009-08-31  Albert Chu <chu11@llnl.gov>
 

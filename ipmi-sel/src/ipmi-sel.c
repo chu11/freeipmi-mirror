@@ -644,9 +644,8 @@ _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
    * is not a valid record type.
    */
   if (state_data->prog_data->args->assume_system_event_records
-      && (record_type == 0x00
-          || record_type == 0x01))
-    record_type = 0x02;
+      && (!IPMI_SEL_RECORD_TYPE_VALID (record_type)))
+    record_type = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
   if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
@@ -1571,9 +1570,8 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
    * is not a valid record type.
    */
   if (state_data->prog_data->args->assume_system_event_records
-      && (record_type == 0x00
-          || record_type == 0x01))
-    record_type = 0x02;
+      && (!IPMI_SEL_RECORD_TYPE_VALID (record_type)))
+    record_type = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
   if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)

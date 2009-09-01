@@ -28,8 +28,10 @@ extern "C" {
 #define IPMI_V1_0_EVENT_MESSAGE_FORMAT 0x03
 #define IPMI_V1_5_EVENT_MESSAGE_FORMAT 0x04
 
+#define IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD 0x02
+
 #define IPMI_SEL_RECORD_TYPE_IS_EVENT(__record_type) \
-  (((__record_type) == 0x02) ? 1 : 0)
+  (((__record_type) == IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD) ? 1 : 0)
 
 #define IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM(__record_type) \
   (((__record_type) >= 0xC0                                    \
@@ -39,6 +41,11 @@ extern "C" {
 #define IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM(__record_type) \
   (((__record_type) >= 0xE0                                        \
     && ((__record_type) <= 0xFE || (__record_type) == 0xFF)) ? 1 : 0)
+
+#define IPMI_SEL_RECORD_TYPE_VALID(__record_type)                  \
+  ((IPMI_SEL_RECORD_TYPE_IS_EVENT((__record_type))                 \
+    || IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM((__record_type))    \
+    || IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM((__record_type))) ? 1 : 0)
 
 #define IPMI_SEL_RECORD_ASSERTION_EVENT   0x0
 #define IPMI_SEL_RECORD_DEASSERTION_EVENT 0x1
