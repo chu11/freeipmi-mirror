@@ -82,6 +82,7 @@ sensors/monitoring
 specify sensors by name too
 - useful in libipmimonitoring, if heterogenous firmware versions, but
 same sensor names?
+OEM sensor interpretations ... ugh
 
 ipmi-chassis-config
 -------------------
