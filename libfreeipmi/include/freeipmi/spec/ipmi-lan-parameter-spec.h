@@ -50,15 +50,18 @@ extern "C" {
 #define IPMI_LAN_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS 24
 #define IPMI_LAN_PARAMETER_DESTINATION_ADDRESS_VLAN_TAGS                    25
 #define IPMI_LAN_PARAMETER_BAD_PASSWORD_THRESHOLD                           26
+#define IPMI_LAN_PARAMETER_OEM_MIN                                          192
+#define IPMI_LAN_PARAMETER_OEM_MAX                                          255
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_LAN_PARAMETER_SELECTOR_VALID(__parameter_selector)             \
-  (((__parameter_selector+1) > (IPMI_LAN_PARAMETER_SET_IN_PROGRESS+1)        \
+  ((((__parameter_selector) + 1) > (IPMI_LAN_PARAMETER_SET_IN_PROGRESS + 1) \
     && (__parameter_selector) <= IPMI_LAN_PARAMETER_BAD_PASSWORD_THRESHOLD) ? 1 : 0)
 
 /* To avoid gcc warnings, subtract -1 in comparison */
 #define IPMI_LAN_PARAMETER_SELECTOR_IS_OEM(__parameter_selector) \
-  (((__parameter_selector) >= 192 && (__parameter_selector - 1) <= (255 - 1)) ? 1 : 0)
+  (((__parameter_selector) >= IPMI_LAN_PARAMETER_OEM_MIN \
+    && ((__parameter_selector) - 1) <= (IPMI_LAN_PARAMETER_OEM_MAX - 1)) ? 1 : 0)
 
 #ifdef __cplusplus
 }

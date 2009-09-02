@@ -27,28 +27,27 @@ extern "C" {
    Refer to IPMIv1_5_rev1_1.pdf Table 5-1, Network Function Codes
    for complete description
  */
-#define IPMI_NET_FN_CHASSIS_RQ         0x00
-#define IPMI_NET_FN_CHASSIS_RS         0x01
-#define IPMI_NET_FN_BRIDGE_RQ          0x02
-#define IPMI_NET_FN_BRIDGE_RS          0x03
-#define IPMI_NET_FN_SENSOR_EVENT_RQ    0x04
-#define IPMI_NET_FN_SENSOR_EVENT_RS    0x05
-#define IPMI_NET_FN_APP_RQ             0x06
-#define IPMI_NET_FN_APP_RS             0x07
-#define IPMI_NET_FN_FIRMWARE_RQ        0x08
-#define IPMI_NET_FN_FIRMWARE_RS        0x09
-#define IPMI_NET_FN_STORAGE_RQ         0x0A
-#define IPMI_NET_FN_STORAGE_RS         0x0B
-#define IPMI_NET_FN_TRANSPORT_RQ       0x0C
-#define IPMI_NET_FN_TRANSPORT_RS       0x0D
-#define IPMI_NET_FN_GROUP_EXTENSION_RQ 0x2C
-#define IPMI_NET_FN_GROUP_EXTENSION_RS 0x2D
-#define IPMI_NET_FN_OEM_GROUP_RQ       0x2E
-#define IPMI_NET_FN_OEM_GROUP_RS       0x2F
-/*
-   0x0E to 0x2B RESERVED
-   0x30 to 0x3F IPMI_NET_FN_CNTRLR_OEM_GRP
- */
+#define IPMI_NET_FN_CHASSIS_RQ                        0x00
+#define IPMI_NET_FN_CHASSIS_RS                        0x01
+#define IPMI_NET_FN_BRIDGE_RQ                         0x02
+#define IPMI_NET_FN_BRIDGE_RS                         0x03
+#define IPMI_NET_FN_SENSOR_EVENT_RQ                   0x04
+#define IPMI_NET_FN_SENSOR_EVENT_RS                   0x05
+#define IPMI_NET_FN_APP_RQ                            0x06
+#define IPMI_NET_FN_APP_RS                            0x07
+#define IPMI_NET_FN_FIRMWARE_RQ                       0x08
+#define IPMI_NET_FN_FIRMWARE_RS                       0x09
+#define IPMI_NET_FN_STORAGE_RQ                        0x0A
+#define IPMI_NET_FN_STORAGE_RS                        0x0B
+#define IPMI_NET_FN_TRANSPORT_RQ                      0x0C
+#define IPMI_NET_FN_TRANSPORT_RS                      0x0D
+#define IPMI_NET_FN_GROUP_EXTENSION_RQ                0x2C
+#define IPMI_NET_FN_GROUP_EXTENSION_RS                0x2D
+#define IPMI_NET_FN_OEM_GROUP_RQ                      0x2E
+#define IPMI_NET_FN_OEM_GROUP_RS                      0x2F
+#define IPMI_NET_FN_CONTROLLER_SPECIFIC_OEM_GROUP_MIN 0x30
+#define IPMI_NET_FN_CONTROLLER_SPECIFIC_OEM_GROUP_MAX 0x3F
+#define IPMI_NET_FN_RQ_RS_MASK                         0x1
 
 #define IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_PICMG 0x00
 #define IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DMTF  0x01
@@ -58,31 +57,31 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 /* Include checks for possible oem network functions */
-#define IPMI_NET_FN_VALID(__net_fn)              \
-  ((((__net_fn+1) >= IPMI_NET_FN_CHASSIS_RS      \
-     && (__net_fn) <= IPMI_NET_FN_TRANSPORT_RS)  \
-    || ((__net_fn) >= 0x2C                       \
-        && (__net_fn) <= 0x3F)) ? 1 : 0)
+#define IPMI_NET_FN_VALID(__net_fn) \
+  ((((__net_fn+1) >= IPMI_NET_FN_CHASSIS_RS \
+     && (__net_fn) <= IPMI_NET_FN_TRANSPORT_RS) \
+    || ((__net_fn) >= IPMI_NET_FN_GROUP_EXTENSION_RQ \
+        && (__net_fn) <= IPMI_NET_FN_CONTROLLER_SPECIFIC_OEM_GROUP_MAX)) ? 1 : 0)
 
-#define IPMI_NET_FN_RQ_VALID(__net_fn)           \
-  ((IPMI_NET_FN_VALID (__net_fn)                 \
-    && (!((__net_fn) & 0x1))) ? 1 : 0)
+#define IPMI_NET_FN_RQ_VALID(__net_fn) \
+  ((IPMI_NET_FN_VALID (__net_fn) \
+    && (!((__net_fn) & IPMI_NET_FN_RQ_RS_MASK))) ? 1 : 0)
 
-#define IPMI_NET_FN_RS_VALID(__net_fn)           \
-  ((IPMI_NET_FN_VALID (__net_fn)                 \
-    && ((__net_fn) & 0x1)) ? 1 : 0)
+#define IPMI_NET_FN_RS_VALID(__net_fn) \
+  ((IPMI_NET_FN_VALID (__net_fn) \
+    && ((__net_fn) & IPMI_NET_FN_RQ_RS_MASK)) ? 1 : 0)
 
-#define IPMI_NET_FN_GROUP_EXTENSION(__net_fn)    \
-  (((__net_fn) >= 0x2C                           \
-    && (__net_fn) <= 0x2D) ? 1 : 0)
+#define IPMI_NET_FN_GROUP_EXTENSION(__net_fn) \
+  (((__net_fn) == IPMI_NET_FN_GROUP_EXTENSION_RQ \
+    && (__net_fn) == IPMI_NET_FN_GROUP_EXTENSION_RS) ? 1 : 0)
 
-#define IPMI_NET_FN_OEM_GROUP(__net_fn)          \
-  (((__net_fn) >= 0x2E                           \
-    && (__net_fn) <= 0x2F) ? 1 : 0)
+#define IPMI_NET_FN_OEM_GROUP(__net_fn) \
+  (((__net_fn) == IPMI_NET_FN_OEM_GROUP_RQ \
+    && (__net_fn) == IPMI_NET_FN_OEM_GROUP_RS) ? 1 : 0)
 
 #define IPMI_NET_FN_CONTROLLER_SPECIFIC_OEM_GROUP(__net_fn) \
-  (((__net_fn) >= 0x30                                      \
-    && (__net_fn) <= 0x3F) ? 1 : 0)
+  (((__net_fn) >= IPMI_NET_FN_CONTROLLER_SPECIFIC_OEM_GROUP_MIN \
+    && (__net_fn) <= IPMI_NET_FN_CONTROLLER_SPECIFIC_OEM_GROUP_MAX) ? 1 : 0)
 
 #ifdef __cplusplus
 }

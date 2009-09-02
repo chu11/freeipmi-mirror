@@ -23,20 +23,23 @@
 extern "C" {
 #endif
 
-#define IPMI_SYSTEM_INFO_PARAMETER_SET_IN_PROGRESS                  0x0
-#define IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION          0x1
-#define IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME                      0x2
-#define IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME    0x3
-#define IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME            0x4
+#define IPMI_SYSTEM_INFO_PARAMETER_SET_IN_PROGRESS                  0
+#define IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION          1
+#define IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME                      2
+#define IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME    3
+#define IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME            4
+#define IPMI_SYSTEM_INFO_PARAMETER_OEM_MIN                          192
+#define IPMI_SYSTEM_INFO_PARAMETER_OEM_MAX                          255
 
 /* Add +1 to avoid compiler warnings */
-#define IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_VALID(__parameter_selector)              \
-  ((((__parameter_selector+1)) > (IPMI_SYSTEM_INFO_PARAMETER_SET_IN_PROGRESS+1) && \
-    (__parameter_selector) <= IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) ? 1 : 0)
+#define IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_VALID(__parameter_selector) \
+  ((((__parameter_selector) + 1) > (IPMI_SYSTEM_INFO_PARAMETER_SET_IN_PROGRESS + 1) \
+    && (__parameter_selector) <= IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) ? 1 : 0)
 
 /* To avoid gcc warnings, subtract -1 in comparison */
 #define IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_IS_OEM(__parameter_selector) \
-  (((__parameter_selector) >= 192 && (__parameter_selector - 1) <= (255 - 1)) ? 1 : 0)
+  (((__parameter_selector) >= IPMI_SYSTEM_INFO_PARAMETER_OEM_MIN \
+    && ((__parameter_selector) - 1) <= (IPMI_SYSTEM_INFO_PARAMETER_OEM_MAX - 1)) ? 1 : 0)
 
 #define IPMI_SYSTEM_INFO_NO_SET_SELECTOR                                    0x0
 #define IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR                                  0x0

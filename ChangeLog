@@ -1,3 +1,7 @@
+2009-09-02  Albert Chu <chu11@llnl.gov>
+
+	* Code cleanup, "macroize" a lot of code.
+	
 2009-09-01  Albert Chu <chu11@llnl.gov>
 
 	* Update IANA enterprise numbers array.

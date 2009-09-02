@@ -205,14 +205,20 @@ extern "C" {
     || (__bios_mux_control) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_SET_MUX_TO_BMC                    \
     || (__bios_mux_control) == IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAGS_SET_MUX_TO_SYSTEM) ? 1 : 0)
 
+#define IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_MIN 0x00
+#define IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_MAX 0x31
+
+#define IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_RANGE_MIN 0x01
+#define IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_RANGE_MAX 0x15
+
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_VALID(__value) \
-  (((__value + 1) >= (0x00 + 1)                                           \
-    && (__value) <= 0x31) ? 1 : 0)
+  ((((__value) + 1) >= (IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_MIN + 1) \
+    && (__value) <= IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_MAX) ? 1 : 0)
 
 #define IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_RANGE_VALID(__value) \
-  (((__value) >= 0x01                                                           \
-    && (__value) <= 0x15) ? 1 : 0)
+  (((__value) >= IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_RANGE_MIN \
+    && (__value) <= IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_RANGE_MAX) ? 1 : 0)
 
 #define IPMI_CHASSIS_BOOT_OPTIONS_DEVICE_INSTANCE_SELECTOR_INTERNAL_BITMASK 0x10 
 

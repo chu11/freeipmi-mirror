@@ -82,6 +82,12 @@ extern "C" {
 #define IPMI_ENTITY_ID_AIR_INLET                                 0x40
 #define IPMI_ENTITY_ID_PROCESSOR_CPU                             0x41 /* considered same as 0x03, to match DCMI */
 #define IPMI_ENTITY_ID_BASEBOARD_MAIN_SYSTEM_BOARD               0x42 /* considered same as 0x07, to match DCMI */
+#define IPMI_ENTITY_ID_CHASSIS_SPECIFIC_MIN                      0x90
+#define IPMI_ENTITY_ID_CHASSIS_SPECIFIC_MAX                      0xAF
+#define IPMI_ENTITY_ID_BOARD_SET_SPECIFIC_MIN                    0xB0
+#define IPMI_ENTITY_ID_BOARD_SET_SPECIFIC_MAX                    0xCF
+#define IPMI_ENTITY_ID_OEM_SYSTEM_INTEGRATOR_DEFINED_MIN         0xD0
+#define IPMI_ENTITY_ID_OEM_SYSTEM_INTEGRATOR_DEFINED_MAX         0xFF
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_ENTITY_ID_VALID(__entity_id)                  \
@@ -91,17 +97,17 @@ extern "C" {
         && (__entity_id) <= IPMI_ENTITY_ID_BASEBOARD_MAIN_SYSTEM_BOARD)) ? 1 : 0)
 
 #define IPMI_ENTITY_ID_IS_CHASSIS_SPECIFIC(__entity_id) \
-  (((__entity_id) >= 0x90                    \
-    && ((__entity_id) <= 0xAF)) ? 1 : 0)
+  (((__entity_id) >= IPMI_ENTITY_ID_CHASSIS_SPECIFIC_MIN \
+    && ((__entity_id) <= IPMI_ENTITY_ID_CHASSIS_SPECIFIC_MAX)) ? 1 : 0)
 
 #define IPMI_ENTITY_ID_IS_BOARD_SET_SPECIFIC(__entity_id) \
-  (((__entity_id) >= 0xB0                    \
-    && ((__entity_id) <= 0xCF)) ? 1 : 0)
+  (((__entity_id) >= IPMI_ENTITY_ID_BOARD_SET_SPECIFIC_MIN \
+    && ((__entity_id) <= IPMI_ENTITY_ID_BOARD_SET_SPECIFIC_MAX)) ? 1 : 0)
 
 /* To avoid gcc warnings, subtract -1 in comparison */
 #define IPMI_ENTITY_ID_IS_OEM_SYSTEM_INTEGRATOR_DEFINED(__entity_id) \
-  (((__entity_id) >= 0xD0                    \
-    && ((__entity_id - 1) <= (0xFF - 1))) ? 1 : 0)
+  (((__entity_id) >= IPMI_ENTITY_ID_OEM_SYSTEM_INTEGRATOR_DEFINED_MIN \
+    && ((__entity_id - 1) <= (IPMI_ENTITY_ID_OEM_SYSTEM_INTEGRATOR_DEFINED_MAX - 1))) ? 1 : 0)
 
 extern const char *const ipmi_entity_ids[];
 

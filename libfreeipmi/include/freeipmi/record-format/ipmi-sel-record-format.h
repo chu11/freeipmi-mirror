@@ -30,17 +30,23 @@ extern "C" {
 
 #define IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD 0x02
 
+#define IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_MIN 0xC0
+#define IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_MAX 0xDF
+
+#define IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_MIN 0xE0
+#define IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_MAX 0xFF
+
 #define IPMI_SEL_RECORD_TYPE_IS_EVENT(__record_type) \
   (((__record_type) == IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD) ? 1 : 0)
 
 #define IPMI_SEL_RECORD_TYPE_IS_TIMESTAMPED_OEM(__record_type) \
-  (((__record_type) >= 0xC0                                    \
-    && (__record_type) <= 0xDF) ? 1 : 0)
+  (((__record_type) >= IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_MIN \
+    && (__record_type) <= IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_MAX) ? 1 : 0)
 
-/* "== 0xFF" to remove warnings */
+/* To avoid gcc warnings, subtract -1 in comparison */
 #define IPMI_SEL_RECORD_TYPE_IS_NON_TIMESTAMPED_OEM(__record_type) \
-  (((__record_type) >= 0xE0                                        \
-    && ((__record_type) <= 0xFE || (__record_type) == 0xFF)) ? 1 : 0)
+  (((__record_type) >= IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_MIN \
+    && (((__record_type) - 1) <= (IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_MAX - 1))) ? 1 : 0)
 
 #define IPMI_SEL_RECORD_TYPE_VALID(__record_type)                  \
   ((IPMI_SEL_RECORD_TYPE_IS_EVENT((__record_type))                 \

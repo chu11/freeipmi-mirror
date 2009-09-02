@@ -16,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 */
 
-/* $Id: ipmi-pef-parameter-spec.h,v 1.11 2009-06-30 00:11:07 chu11 Exp $ */
+/* $Id: ipmi-pef-parameter-spec.h,v 1.12 2009-09-02 17:31:40 chu11 Exp $ */
 
 #ifndef IPMI_PEF_PARAMETER_SPEC_H
 #define IPMI_PEF_PARAMETER_SPEC_H
@@ -41,14 +41,17 @@ extern "C" {
 #define IPMI_PEF_PARAMETER_ALERT_STRINGS                         13
 #define IPMI_PEF_PARAMETER_NUMBER_OF_GROUP_CONTROL_TABLE_ENTRIES 14
 #define IPMI_PEF_PARAMETER_GROUP_CONTROL_TABLE                   15
+#define IPMI_PEF_PARAMETER_OEM_MIN                               96
+#define IPMI_PEF_PARAMETER_OEM_MAX                               127
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_PEF_PARAMETER_SELECTOR_VALID(__parameter_selector)         \
-  (((__parameter_selector+1) > (IPMI_PEF_PARAMETER_SET_IN_PROGRESS+1)        \
+  ((((__parameter_selector) + 1) > (IPMI_PEF_PARAMETER_SET_IN_PROGRESS + 1) \
     && (__parameter_selector) <= IPMI_PEF_PARAMETER_GROUP_CONTROL_TABLE) ? 1 : 0)
 
 #define IPMI_PEF_PARAMETER_SELECTOR_IS_OEM(__parameter_selector) \
-  (((__parameter_selector) >= 96 && (__parameter_selector) <= 127) ? 1 : 0)
+  (((__parameter_selector) >= IPMI_PEF_PARAMETER_OEM_MIN \
+    && (__parameter_selector) <= IPMI_PEF_PARAMETER_OEM_MAX) ? 1 : 0)
 
 #ifdef __cplusplus
 }

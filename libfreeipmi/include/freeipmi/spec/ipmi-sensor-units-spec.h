@@ -119,7 +119,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_SENSOR_UNIT_VALID(__sensor_unit)            \
-  (((__sensor_unit+1) >= (IPMI_SENSOR_UNIT_UNSPECIFIED+1) \
+  (((__sensor_unit + 1) >= (IPMI_SENSOR_UNIT_UNSPECIFIED + 1) \
     && (__sensor_unit) <= IPMI_SENSOR_UNIT_GRAMS) ? 1 : 0)
 
 #define IPMI_SENSOR_RATE_UNIT_NONE               0
@@ -132,7 +132,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_SENSOR_RATE_UNIT_VALID(__sensor_rate_unit)     \
-  (((__sensor_rate_unit+1) >= (IPMI_SENSOR_RATE_UNIT_NONE+1) \
+  (((__sensor_rate_unit + 1) >= (IPMI_SENSOR_RATE_UNIT_NONE + 1) \
     && (__sensor_rate_unit) <= IPMI_SENSOR_RATE_UNIT_PER_DAY) ? 1 : 0)
 
 extern const char *const ipmi_sensor_units[];

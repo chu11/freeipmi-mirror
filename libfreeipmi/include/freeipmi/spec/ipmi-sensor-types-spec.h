@@ -68,16 +68,18 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_SESSION_AUDIT                       0x2A
 #define IPMI_SENSOR_TYPE_VERSION_CHANGE                      0x2B
 #define IPMI_SENSOR_TYPE_FRU_STATE                           0x2C
+#define IPMI_SENSOR_TYPE_OEM_MIN                             0xC0
+#define IPMI_SENSOR_TYPE_OEM_MAX                             0xFF
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_SENSOR_TYPE_VALID(__sensor_type)              \
-  (((__sensor_type + 1) >= (IPMI_SENSOR_TYPE_RESERVED + 1) \
+  ((((__sensor_type) + 1) >= (IPMI_SENSOR_TYPE_RESERVED + 1)    \
     && (__sensor_type) <= IPMI_SENSOR_TYPE_FRU_STATE) ? 1 : 0)
 
-/* "== 0xFF" to remove warnings */
+/* To avoid gcc warnings, subtract -1 in comparison */
 #define IPMI_SENSOR_TYPE_IS_OEM(__sensor_type) \
-  (((__sensor_type) >= 0xC0                    \
-    && ((__sensor_type) <= 0xFE || (__sensor_type) == 0xFF)) ? 1 : 0)
+  (((__sensor_type) >= IPMI_SENSOR_TYPE_OEM_MIN \
+    && (((__sensor_type) - 1) <= (IPMI_SENSOR_TYPE_OEM_MAX - 1))) ? 1 : 0)
 
 extern const char *const ipmi_sensor_types[];
 extern const char *const ipmi_oem_sensor_type;
