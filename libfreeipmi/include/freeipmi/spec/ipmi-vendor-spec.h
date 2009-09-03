@@ -28,7 +28,8 @@ extern "C" {
  */
 
 /* achu: I believe 256 to be the poweredge "family" of products, but
- * I'm not sure.  At minimum, it covers the 2900, 2950, and R610.
+ * I'm not sure.  At minimum, it covers the 2900, 2950, R610, and
+ * R710.
  */
 #define IPMI_DELL_PRODUCT_ID_POWEREDGE      256
 #define IPMI_DELL_PRODUCT_ID_POWEREDGE_2900 IPMI_DELL_PRODUCT_ID_POWEREDGE
@@ -60,6 +61,12 @@ extern "C" {
  */
 
 #define IPMI_DELL_PRODUCT_ID_XANADU2   IPMI_INVENTEC_PRODUCT_ID_5441
+
+/*
+ * Supermicro
+ */
+
+#define IPMI_SUPERMICRO_PRODUCT_ID_X8DTH            43707
 
 #ifdef __cplusplus
 }

@@ -208,6 +208,10 @@ Sun Fire 4100 with ILOM: The tag bits for some of the cipher records
 are wrong.  Resolved with a workaround to parse cipher records
 properly.
 
+Supermicro X8DTH: The manufacturer ID specified by the motherboard was
+invalid (i.e. not a valid IANA Enterprise number).  Resolved with
+special workaround to handle this case.
+
 Tool Issues
 -----------
 

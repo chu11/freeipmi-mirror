@@ -6,6 +6,8 @@
 
 	* libfreeipmi/, bmc-info/, ipmi-sensors/, ipmi-fru/: Use new
 	utility function appropriately.
+
+	* libfreeipmi/: Add supermicro iana support.
 	
 2009-09-02  Albert Chu <chu11@llnl.gov>
 

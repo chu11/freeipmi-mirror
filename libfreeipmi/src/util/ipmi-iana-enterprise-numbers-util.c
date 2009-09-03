@@ -32,9 +32,14 @@
 
 #include "freeipmi-portability.h"
 
+#define IPMI_SUPERMICRO_MANUFACTURER_ID_X8DTH_WORKAROUND 47488
+
 static int
 _is_special_case_manufacturer_id (uint32_t manufacturer_id)
 {
+  if (manufacturer_id == IPMI_SUPERMICRO_MANUFACTURER_ID_X8DTH_WORKAROUND)
+    return (1);
+
   return (0);
 }
 
@@ -70,8 +75,17 @@ ipmi_iana_enterprise_numbers_string (uint32_t manufacturer_id,
     }
   else
     {
-      /* it's a special case */
-      ;
+      /* it's a special case manufacturer id */
+      
+      if (manufacturer_id == IPMI_SUPERMICRO_MANUFACTURER_ID_X8DTH_WORKAROUND)
+        str = ipmi_iana_enterprise_numbers[IPMI_IANA_ENTERPRISE_ID_SUPERMICRO];
+
+      /* some entries are NULL, b/c manufacturers got deleted */
+      if (str)
+        rv = snprintf (buf,
+                       buflen,
+                       "%s",
+                       str);
     }
 
   return (rv);

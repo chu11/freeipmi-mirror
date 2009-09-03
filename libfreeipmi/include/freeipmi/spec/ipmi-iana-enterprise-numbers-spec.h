@@ -26,7 +26,8 @@ extern "C" {
 /* Convenience macros, will be added as needed in code */
 #define IPMI_IANA_ENTERPRISE_ID_INTEL      343
 #define IPMI_IANA_ENTERPRISE_ID_DELL       674
-#define IPMI_IANA_ENTERPRISE_ID_INVENTEC 20569
+#define IPMI_IANA_ENTERPRISE_ID_SUPERMICRO 10876
+#define IPMI_IANA_ENTERPRISE_ID_INVENTEC   20569
 
 /* As of this writing min = 0, max = 34214 */
 
