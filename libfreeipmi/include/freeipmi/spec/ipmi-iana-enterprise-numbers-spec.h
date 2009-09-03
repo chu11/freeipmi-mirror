@@ -36,6 +36,9 @@ extern "C" {
     && (__iana_enterprise_id) <= 34214) ? 1 : 0)
 
 /* Some fields can be NULL if they were not assigned/removed by IANA */
+/* consider using ipmi_iana_enerprise_numbers_string() function to
+ * handle some workaround situations this array will not have.
+ */
 extern const char *const ipmi_iana_enterprise_numbers[];
 
 #ifdef __cplusplus

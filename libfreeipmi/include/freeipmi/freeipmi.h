@@ -101,6 +101,7 @@ extern "C" {
 #include <freeipmi/util/ipmi-channel-util.h>
 #include <freeipmi/util/ipmi-cipher-suite-util.h>
 #include <freeipmi/util/ipmi-error-util.h>
+#include <freeipmi/util/ipmi-iana-enterprise-numbers-util.h>
 #include <freeipmi/util/ipmi-ipmb-util.h>
 #include <freeipmi/util/ipmi-lan-util.h>
 #include <freeipmi/util/ipmi-outofband-util.h>

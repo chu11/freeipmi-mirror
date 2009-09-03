@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.44 2009-09-01 20:17:38 chu11 Exp $
+## $Id: Makefile.am,v 1.45 2009-09-03 18:41:38 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -107,6 +107,7 @@ nobase_include_HEADERS = \
 	freeipmi/util/ipmi-channel-util.h \
 	freeipmi/util/ipmi-cipher-suite-util.h \
 	freeipmi/util/ipmi-error-util.h \
+	freeipmi/util/ipmi-iana-enterprise-numbers-util.h \
 	freeipmi/util/ipmi-ipmb-util.h \
 	freeipmi/util/ipmi-lan-util.h \
 	freeipmi/util/ipmi-outofband-util.h \

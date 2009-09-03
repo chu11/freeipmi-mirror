@@ -53,6 +53,8 @@ typedef struct channel_info
 
 #define BMC_INFO_SYSTEM_INFO_STRING_MAX 512
 
+#define BMC_INFO_IANA_STRING_MAX 1024
+
 typedef int (*Bmc_info_system_info_first_set)(ipmi_ctx_t ctx,
                                               uint8_t get_parameter,
                                               uint8_t set_selector,
@@ -189,9 +191,13 @@ display_get_device_id (bmc_info_state_data_t *state_data)
   uint32_t auxiliary_firmware_revision_information;
   int flag;
   uint64_t val = 0;
+  char iana_buf[BMC_INFO_IANA_STRING_MAX + 1];
+  int ret;
   int rv = -1;
 
   assert (state_data);
+
+  memset (iana_buf, '\0', BMC_INFO_IANA_STRING_MAX + 1);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
     {
@@ -433,11 +439,17 @@ display_get_device_id (bmc_info_state_data_t *state_data)
     }
   manufacturer_id = val;
 
-  if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
-      && ipmi_iana_enterprise_numbers[manufacturer_id])
+  /* if ret == 0 means no string, < 0 means bad manufacturer id
+   * either way, output just the number
+   */
+  ret = ipmi_iana_enterprise_numbers_string (manufacturer_id,
+                                             iana_buf,
+                                             BMC_INFO_IANA_STRING_MAX);
+
+  if (ret > 0)
     pstdout_printf (state_data->pstate,
                     "Manufacturer ID       : %s (%u)\n",
-                    ipmi_iana_enterprise_numbers[manufacturer_id],
+                    iana_buf,
                     manufacturer_id);
   else
     pstdout_printf (state_data->pstate,
@@ -1028,6 +1040,10 @@ display_channel_info (bmc_info_state_data_t *state_data)
       char *medium_type_str = NULL;
       char *protocol_type_str = NULL;
       char *session_support_str = NULL;
+      char iana_buf[BMC_INFO_IANA_STRING_MAX + 1];
+      int ret;
+      
+      memset (iana_buf, '\0', BMC_INFO_IANA_STRING_MAX + 1);
 
       if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED (channel_info_list[i].channel_medium_type))
         continue;
@@ -1118,11 +1134,17 @@ display_channel_info (bmc_info_state_data_t *state_data)
                       "Session Support      : %s\n",
                       session_support_str);
 
-      if (IPMI_IANA_ENTERPRISE_ID_VALID (channel_info_list[i].vendor_id)
-          && ipmi_iana_enterprise_numbers[channel_info_list[i].vendor_id])
+      /* if ret == 0 means no string, < 0 means bad manufacturer id
+       * either way, output just the number
+       */
+      ret = ipmi_iana_enterprise_numbers_string (channel_info_list[i].vendor_id,
+                                                 iana_buf,
+                                                 BMC_INFO_IANA_STRING_MAX);
+      
+      if (ret > 0)
         pstdout_printf (state_data->pstate,
                         "Vendor ID            : %s (%u)\n",
-                        ipmi_iana_enterprise_numbers[channel_info_list[i].vendor_id],
+                        iana_buf,
                         channel_info_list[i].vendor_id);
       else
         pstdout_printf (state_data->pstate,

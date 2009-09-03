@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-output.c,v 1.4 2009-05-15 18:02:39 chu11 Exp $
+ *  $Id: ipmi-fru-output.c,v 1.5 2009-09-03 18:41:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -865,6 +865,8 @@ ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
   unsigned int compatibility_code_start_value;
   uint8_t code_range_mask[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1];
   unsigned int code_range_mask_len = IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX;
+  char iana_buf[IPMI_FRU_STR_BUFLEN + 1];
+  int ret;
 
   assert (state_data);
   assert (areabuf);
@@ -897,11 +899,19 @@ ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
       return (-1);
     }
 
-  if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
-      && ipmi_iana_enterprise_numbers[manufacturer_id])
+  memset (iana_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
+  
+  /* if ret == 0 means no string, < 0 means bad manufacturer id
+   * either way, output just the number
+   */
+  ret = ipmi_iana_enterprise_numbers_string (manufacturer_id,
+                                             iana_buf,
+                                             IPMI_FRU_STR_BUFLEN);
+
+  if (ret > 0)
     pstdout_printf (state_data->pstate,
                     "  FRU Base Compatibility Manufacturer ID: %s (%Xh)\n",
-                    ipmi_iana_enterprise_numbers[manufacturer_id],
+                    iana_buf,
                     manufacturer_id);
   else
     pstdout_printf (state_data->pstate,
@@ -951,6 +961,8 @@ ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data
   unsigned int compatibility_code_start_value;
   uint8_t code_range_mask[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1];
   unsigned int code_range_mask_len = IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX;
+  char iana_buf[IPMI_FRU_STR_BUFLEN + 1];
+  int ret;
 
   assert (state_data);
   assert (areabuf);
@@ -983,11 +995,19 @@ ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data
       return (-1);
     }
 
-  if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
-      && ipmi_iana_enterprise_numbers[manufacturer_id])
+  memset (iana_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
+  
+  /* if ret == 0 means no string, < 0 means bad manufacturer id
+   * either way, output just the number
+   */
+  ret = ipmi_iana_enterprise_numbers_string (manufacturer_id,
+                                             iana_buf,
+                                             IPMI_FRU_STR_BUFLEN);
+
+  if (ret > 0)
     pstdout_printf (state_data->pstate,
                     "  FRU Extended Compatibility Manufacturer ID: %s (%Xh)\n",
-                    ipmi_iana_enterprise_numbers[manufacturer_id],
+                    iana_buf,
                     manufacturer_id);
   else
     pstdout_printf (state_data->pstate,
@@ -1034,6 +1054,8 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
   uint32_t manufacturer_id;
   uint8_t oem_data[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1];
   unsigned int oem_data_len = IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX;
+  char iana_buf[IPMI_FRU_STR_BUFLEN + 1];
+  int ret;
 
   assert (state_data);
   assert (areabuf);
@@ -1063,11 +1085,19 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
       return (-1);
     }
   
-  if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
-      && ipmi_iana_enterprise_numbers[manufacturer_id])
+  memset (iana_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
+  
+  /* if ret == 0 means no string, < 0 means bad manufacturer id
+   * either way, output just the number
+   */
+  ret = ipmi_iana_enterprise_numbers_string (manufacturer_id,
+                                             iana_buf,
+                                             IPMI_FRU_STR_BUFLEN);
+  
+  if (ret > 0)
     pstdout_printf (state_data->pstate,
                     "  FRU OEM Manufacturer ID: %s (%Xh)\n",
-                    ipmi_iana_enterprise_numbers[manufacturer_id],
+                    iana_buf,
                     manufacturer_id);
   else
     pstdout_printf (state_data->pstate,

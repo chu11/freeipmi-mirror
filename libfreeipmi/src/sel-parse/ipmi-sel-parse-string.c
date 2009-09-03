@@ -52,6 +52,7 @@
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/spec/ipmi-vendor-spec.h"
+#include "freeipmi/util/ipmi-iana-enterprise-numbers-util.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-sensor-units-util.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
@@ -73,6 +74,7 @@
 #define SEL_PARSE_BUFFER_LENGTH 256
 #define SDR_RECORD_LENGTH       256
 #define ID_STRING_LENGTH        256
+#define IANA_LENGTH             1024
 
 #define UNITS_BUFFER_LENGTH     1024
 
@@ -3407,14 +3409,24 @@ _output_manufacturer_id (ipmi_sel_parse_ctx_t ctx,
     }
   else
     {
-      if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
-          && ipmi_iana_enterprise_numbers[manufacturer_id])
+      char iana_buf[IANA_LENGTH + 1];
+      int ret;
+
+      memset (iana_buf, '\0', IANA_LENGTH + 1);
+      
+      /* if ret == 0 means no string, < 0 means bad manufacturer id
+       * either way, output just the number
+       */
+      ret = ipmi_iana_enterprise_numbers_string (manufacturer_id,
+                                                 iana_buf,
+                                                 IANA_LENGTH);
+      if (ret > 0)
         {
           if (_SNPRINTF (buf,
                          buflen,
                          wlen,
                          "Manufacturer ID = %s (%02Xh)",
-                         ipmi_iana_enterprise_numbers[manufacturer_id],
+                         iana_buf,
                          manufacturer_id))
             return (1);
 

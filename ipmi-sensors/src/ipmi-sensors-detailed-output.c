@@ -41,7 +41,8 @@
 #define ALL_EVENT_MESSAGES_DISABLED "All Event Messages Disabled"
 #define SENSOR_SCANNING_DISABLED    "Sensor Scanning Disabled"
 
-#define IPMI_SENSORS_OEM_DATA_LEN 1024
+#define IPMI_SENSORS_IANA_LEN            1024
+#define IPMI_SENSORS_OEM_DATA_LEN        1024
 
 static char *
 _get_record_type_string (ipmi_sensors_state_data_t *state_data,
@@ -2097,6 +2098,8 @@ _output_manufacturer_id (ipmi_sensors_state_data_t *state_data,
                          unsigned int sdr_record_len)
 {
   uint32_t manufacturer_id;
+  char iana_buf[IPMI_SENSORS_IANA_LEN + 1];
+  int ret;
 
   assert (state_data);
   assert (sdr_record);
@@ -2115,18 +2118,25 @@ _output_manufacturer_id (ipmi_sensors_state_data_t *state_data,
       return (-1);
     }
 
-  if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
-      && ipmi_iana_enterprise_numbers[manufacturer_id])
+  memset (iana_buf, '\0', IPMI_SENSORS_IANA_LEN + 1);
+
+  /* if ret == 0 means no string, < 0 means bad manufacturer id
+   * either way, output just the number
+   */
+  ret = ipmi_iana_enterprise_numbers_string (manufacturer_id,
+                                             iana_buf,
+                                             IPMI_SENSORS_IANA_LEN);
+  if (ret > 0)
     pstdout_printf (state_data->pstate,
                     "Manufacturer ID: %s (%Xh)\n",
-                    ipmi_iana_enterprise_numbers[manufacturer_id],
+                    iana_buf,
                     manufacturer_id);
 
   else
     pstdout_printf (state_data->pstate,
                     "Manufacturer ID: %Xh\n",
                     manufacturer_id);
-
+  
   return (0);
 }
 
