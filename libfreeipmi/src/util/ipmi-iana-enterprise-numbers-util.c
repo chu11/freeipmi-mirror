@@ -52,7 +52,7 @@ ipmi_iana_enterprise_numbers_string (uint32_t manufacturer_id,
   int rv = -1;
 
   if ((!IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id)
-       && _is_special_case_manufacturer_id (manufacturer_id))
+       && !_is_special_case_manufacturer_id (manufacturer_id))
       || !buf
       || !buflen)
     {
