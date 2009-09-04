@@ -60,7 +60,7 @@ ipmi_iana_enterprise_numbers_string (uint32_t manufacturer_id,
 
   if (IPMI_IANA_ENTERPRISE_ID_VALID (manufacturer_id))
     {
-      str = ipmi_iana_enterprise_numbers[manufacturer_id];
+      str = (char *)ipmi_iana_enterprise_numbers[manufacturer_id];
 
       /* some entries are NULL, b/c manufacturers got deleted */
       if (str)
@@ -76,7 +76,7 @@ ipmi_iana_enterprise_numbers_string (uint32_t manufacturer_id,
       /* it's a special case manufacturer id */
       
       if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
-        str = ipmi_iana_enterprise_numbers[IPMI_IANA_ENTERPRISE_ID_SUPERMICRO];
+        str = (char *)ipmi_iana_enterprise_numbers[IPMI_IANA_ENTERPRISE_ID_SUPERMICRO];
 
       /* some entries are NULL, b/c manufacturers got deleted */
       if (str)

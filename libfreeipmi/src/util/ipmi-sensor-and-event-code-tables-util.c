@@ -33,6 +33,7 @@
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
+#include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-vendor-spec.h"
 #include "freeipmi/fiid/fiid.h"
 
@@ -63,7 +64,7 @@ ipmi_event_reading_type_code_class (uint8_t event_reading_type_code)
  * Generic Event Reading Strings (FULL STRINGS) *
  ************************************************/
 
-static char * ipmi_generic_event_reading_type_code_01_desc[] =
+static char * ipmi_generic_event_reading_type_code_threshold_desc[] =
   {
     "Lower Non-critical - going low",
     "Lower Non-critical - going high",
@@ -79,49 +80,49 @@ static char * ipmi_generic_event_reading_type_code_01_desc[] =
     "Upper Non-recoverable - going high",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_01_desc_max = 0x0B;
+static int ipmi_generic_event_reading_type_code_threshold_desc_max = 0x0B;
 
-static char * ipmi_generic_event_reading_type_code_02_desc[] =
+static char * ipmi_generic_event_reading_type_code_transition_state_desc[] =
   {
     "Transition to Idle",
     "Transition to Active",
     "Transition to Busy",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_02_desc_max = 0x02;
+static int ipmi_generic_event_reading_type_code_transition_state_desc_max = 0x02;
 
-static char * ipmi_generic_event_reading_type_code_03_desc[] =  {
+static char * ipmi_generic_event_reading_type_code_state_desc[] =  {
   "State Deasserted",
   "State Asserted",
   NULL
 };
-static int ipmi_generic_event_reading_type_code_03_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_state_desc_max = 0x01;
 
-static char * ipmi_generic_event_reading_type_code_04_desc[] =
+static char * ipmi_generic_event_reading_type_code_predictive_failure_desc[] =
   {
     "Predictive Failure deasserted",
     "Predictive Failure asserted",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_04_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_predictive_failure_desc_max = 0x01;
 
-static char * ipmi_generic_event_reading_type_code_05_desc[] =
+static char * ipmi_generic_event_reading_type_code_limit_desc[] =
   {
     "Limit Not Exceeded",
     "Limit Exceeded",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_05_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_limit_desc_max = 0x01;
 
-static char * ipmi_generic_event_reading_type_code_06_desc[] =
+static char * ipmi_generic_event_reading_type_code_performance_desc[] =
   {
     "Performance Met",
     "Performance Lags",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_06_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_performance_desc_max = 0x01;
 
-static char * ipmi_generic_event_reading_type_code_07_desc[] =
+static char * ipmi_generic_event_reading_type_code_transition_severity_desc[] =
   {
     "transition to OK",
     "transition to Non-Critical from OK",
@@ -134,25 +135,25 @@ static char * ipmi_generic_event_reading_type_code_07_desc[] =
     "Informational",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_07_desc_max = 0x08;
+static int ipmi_generic_event_reading_type_code_transition_severity_desc_max = 0x08;
 
-static char * ipmi_generic_event_reading_type_code_08_desc[] =
+static char * ipmi_generic_event_reading_type_code_device_present_desc[] =
   {
     "Device Removed/Device Absent",
     "Device Inserted/Device Present",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_08_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_device_present_desc_max = 0x01;
 
-static char * ipmi_generic_event_reading_type_code_09_desc[] =
+static char * ipmi_generic_event_reading_type_code_device_enabled_desc[] =
   {
     "Device Disabled",
     "Device Enabled",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_09_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_device_enabled_desc_max = 0x01;
 
-static char * ipmi_generic_event_reading_type_code_0A_desc[] =
+static char * ipmi_generic_event_reading_type_code_transition_availability_desc[] =
   {
     "transition to Running",
     "transition to In Test",
@@ -165,9 +166,9 @@ static char * ipmi_generic_event_reading_type_code_0A_desc[] =
     "Install Error",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_0A_desc_max = 0x08;
+static int ipmi_generic_event_reading_type_code_transition_availability_desc_max = 0x08;
 
-static char * ipmi_generic_event_reading_type_code_0B_desc[] =
+static char * ipmi_generic_event_reading_type_code_redundancy_desc[] =
   {
     "Fully Redundant (formerly \"Redundancy Regained\")",
     "Redundancy Lost",
@@ -179,9 +180,9 @@ static char * ipmi_generic_event_reading_type_code_0B_desc[] =
     "Redundancy Degraded from Non-redundant",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_0B_desc_max = 0x07;
+static int ipmi_generic_event_reading_type_code_redundancy_desc_max = 0x07;
 
-static char * ipmi_generic_event_reading_type_code_0C_desc[] =
+static char * ipmi_generic_event_reading_type_code_acpi_power_state_desc[] =
   {
     "D0 Power State",
     "D1 Power State",
@@ -189,42 +190,14 @@ static char * ipmi_generic_event_reading_type_code_0C_desc[] =
     "D3 Power State",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_0C_desc_max = 0x03;
+static int ipmi_generic_event_reading_type_code_acpi_power_state_desc_max = 0x03;
 
 /**************************************
  * Sensor Type Strings (FULL STRINGS) *
  **************************************/
 
-static char * ipmi_sensor_type_code_01_desc[] =
-  {
-    "Temperature",
-    NULL
-  };
-static int ipmi_sensor_type_code_01_desc_max = 0x00;
-
-static char * ipmi_sensor_type_code_02_desc[] =
-  {
-    "Voltage",
-    NULL
-  };
-static int ipmi_sensor_type_code_02_desc_max = 0x00;
-
-static char * ipmi_sensor_type_code_03_desc[] =
-  {
-    "Current",
-    NULL
-  };
-static int ipmi_sensor_type_code_03_desc_max = 0x00;
-
-static char * ipmi_sensor_type_code_04_desc[] =
-  {
-    "Fan",
-    NULL
-  };
-static int ipmi_sensor_type_code_04_desc_max = 0x00;
-
 /* achu: 'undock' removed as noted in errata */
-static char * ipmi_sensor_type_code_05_desc[] =
+static char * ipmi_sensor_type_code_physical_security_desc[] =
   {
     "General Chassis Intrusion",
     "Drive Bay intrusion",
@@ -235,9 +208,9 @@ static char * ipmi_sensor_type_code_05_desc[] =
     "FAN area intrusion (supports detection of hot plug fan tampering)",
     NULL
   };
-static int ipmi_sensor_type_code_05_desc_max = 0x06;
+static int ipmi_sensor_type_code_physical_security_desc_max = 0x06;
 
-static char * ipmi_sensor_type_code_06_desc[] =
+static char * ipmi_sensor_type_code_platform_security_violation_attempt_desc[] =
   {
     "Secure Mode (Front Panel Lockout) Violation attempt",
     "Pre-boot Password Violation - user password",
@@ -247,9 +220,9 @@ static char * ipmi_sensor_type_code_06_desc[] =
     "Out-of-band Access Password Violation",
     NULL
   };
-static int ipmi_sensor_type_code_06_desc_max = 0x05;
+static int ipmi_sensor_type_code_platform_security_violation_attempt_desc_max = 0x05;
 
-static char * ipmi_sensor_type_code_07_desc[] =
+static char * ipmi_sensor_type_code_processor_desc[] =
   {
     "IERR",
     "Thermal Trip",
@@ -266,9 +239,9 @@ static char * ipmi_sensor_type_code_07_desc[] =
     "Correctable Machine Check Error",
     NULL
   };
-static int ipmi_sensor_type_code_07_desc_max = 0x0C;
+static int ipmi_sensor_type_code_processor_desc_max = 0x0C;
 
-static char * ipmi_sensor_type_code_08_desc[] =
+static char * ipmi_sensor_type_code_power_supply_desc[] =
   {
     "Presence detected",
     "Power Supply Failure detected",
@@ -279,9 +252,9 @@ static char * ipmi_sensor_type_code_08_desc[] =
     "Configuration error",
     NULL
   };
-static int ipmi_sensor_type_code_08_desc_max = 0x06;
+static int ipmi_sensor_type_code_power_supply_desc_max = 0x06;
 
-static char * ipmi_sensor_type_code_09_desc[] =
+static char * ipmi_sensor_type_code_power_unit_desc[] =
   {
     "Power Off/Power Down",
     "Power Cycle",
@@ -293,10 +266,10 @@ static char * ipmi_sensor_type_code_09_desc[] =
     "Predictive Failure",
     NULL
   };
-static int ipmi_sensor_type_code_09_desc_max = 0x07;
+static int ipmi_sensor_type_code_power_unit_desc_max = 0x07;
 
 /* achu: new additions as stated in errata */
-static char * ipmi_sensor_type_code_0C_desc[] =
+static char * ipmi_sensor_type_code_memory_desc[] =
   {
     "Correctable ECC/other correctable memory error",
     "Uncorrectable ECC/other uncorrectable memory error",
@@ -311,10 +284,10 @@ static char * ipmi_sensor_type_code_0C_desc[] =
     "Critical Overtemperature.  Memory device has entered a critical overtemperature state, exceeding specified operating conditions.  Memory devices in this state may produce errors or become inaccessible",
     NULL
   };
-static int ipmi_sensor_type_code_0C_desc_max = 0x0A;
+static int ipmi_sensor_type_code_memory_desc_max = 0x0A;
 
 /* achu: defined in errata */
-static char * ipmi_sensor_type_code_0D_desc[] =
+static char * ipmi_sensor_type_code_drive_slot_desc[] =
   {
     "Drive Presence",
     "Drive Fault",
@@ -327,18 +300,18 @@ static char * ipmi_sensor_type_code_0D_desc[] =
     "Rebuild/Remap Aborted (was not completed normally)",
     NULL
   };
-static int ipmi_sensor_type_code_0D_desc_max = 0x08;
+static int ipmi_sensor_type_code_drive_slot_desc_max = 0x08;
 
-static char * ipmi_sensor_type_code_0F_desc[] =
+static char * ipmi_sensor_type_code_system_firmware_progress_desc[] =
   {
     "System Firmware Error (POST Error)",
     "System Firmware Hang",
     "System Firmware Progress",
     NULL
   };
-static int ipmi_sensor_type_code_0F_desc_max = 0x02;
+static int ipmi_sensor_type_code_system_firmware_progress_desc_max = 0x02;
 
-static char * ipmi_sensor_type_code_10_desc[] =
+static char * ipmi_sensor_type_code_event_logging_disabled_desc[] =
   {
     "Correctable Memory Error Logging Disabled",
     "Event `Type' Logging Disabled",
@@ -349,9 +322,9 @@ static char * ipmi_sensor_type_code_10_desc[] =
     "Correctable Machine Check Error Logging Disabled",
     NULL
   };
-static int ipmi_sensor_type_code_10_desc_max = 0x06;
+static int ipmi_sensor_type_code_event_logging_disabled_desc_max = 0x06;
 
-static char * ipmi_sensor_type_code_11_desc[] =
+static char * ipmi_sensor_type_code_watchdog1_desc[] =
   {
     "BIOS Watchdog Reset",
     "OS Watchdog Reset",
@@ -363,9 +336,9 @@ static char * ipmi_sensor_type_code_11_desc[] =
     "OS Watchdog pre-timeout Interrupt, non-NMI",
     NULL
   };
-static int ipmi_sensor_type_code_11_desc_max = 0x07;
+static int ipmi_sensor_type_code_watchdog1_desc_max = 0x07;
 
-static char * ipmi_sensor_type_code_12_desc[] =
+static char * ipmi_sensor_type_code_system_event_desc[] =
   {
     "System Reconfigured",
     "OEM System Boot Event",
@@ -375,9 +348,9 @@ static char * ipmi_sensor_type_code_12_desc[] =
     "Timestamp Clock Synch",
     NULL
   };
-static int ipmi_sensor_type_code_12_desc_max = 0x05;
+static int ipmi_sensor_type_code_system_event_desc_max = 0x05;
 
-static char * ipmi_sensor_type_code_13_desc[] =
+static char * ipmi_sensor_type_code_critical_interrupt_desc[] =
   {
     "Front Panel NMI/Diagnostic Interrupt",
     "Bus Timeout",
@@ -393,9 +366,9 @@ static char * ipmi_sensor_type_code_13_desc[] =
     "Bus Degraded (bus operating in a degraded performance state)",
     NULL
   };
-static int ipmi_sensor_type_code_13_desc_max = 0x0B;
+static int ipmi_sensor_type_code_critical_interrupt_desc_max = 0x0B;
 
-static char * ipmi_sensor_type_code_14_desc[] =
+static char * ipmi_sensor_type_code_button_switch_desc[] =
   {
     "Power Button pressed",
     "Sleep Button pressed",
@@ -404,26 +377,26 @@ static char * ipmi_sensor_type_code_14_desc[] =
     "FRU service request button (pressed, service, e.g. removal/replacement, requested)",
     NULL
   };
-static int ipmi_sensor_type_code_14_desc_max = 0x04;
+static int ipmi_sensor_type_code_button_switch_desc_max = 0x04;
 
-static char * ipmi_sensor_type_code_19_desc[] =
+static char * ipmi_sensor_type_code_chip_set_desc[] =
   {
     "Soft Power Control Failure (chipset did not respond to BMC request to change system power state)",
     "Thermal Trip",
     NULL
   };
-static int ipmi_sensor_type_code_19_desc_max = 0x01;
+static int ipmi_sensor_type_code_chip_set_desc_max = 0x01;
 
-static char * ipmi_sensor_type_code_1B_desc[] =
+static char * ipmi_sensor_type_code_cable_interconnect_desc[] =
   {
     "Cable/Interconnect is connected",
     "Configuration Error - Incorrect cable connected / Incorrect interconnection",
     NULL
   };
-static int ipmi_sensor_type_code_1B_desc_max = 0x01;
+static int ipmi_sensor_type_code_cable_interconnect_desc_max = 0x01;
 
 /* achu: new additions as stated in errata */
-static char * ipmi_sensor_type_code_1D_desc[] =
+static char * ipmi_sensor_type_code_system_boot_initiated_desc[] =
   {
     "Initiated by power up",
     "Initiated by hard reset",
@@ -435,9 +408,9 @@ static char * ipmi_sensor_type_code_1D_desc[] =
     "System Restart",
     NULL
   };
-static int ipmi_sensor_type_code_1D_desc_max = 0x07;
+static int ipmi_sensor_type_code_system_boot_initiated_desc_max = 0x07;
 
-static char * ipmi_sensor_type_code_1E_desc[] =
+static char * ipmi_sensor_type_code_boot_error_desc[] =
   {
     "No bootable media",
     "Non-bootable diskette left in drive",
@@ -446,9 +419,9 @@ static char * ipmi_sensor_type_code_1E_desc[] =
     "Timeout waiting for user selection of boot source",
     NULL
   };
-static int ipmi_sensor_type_code_1E_desc_max = 0x04;
+static int ipmi_sensor_type_code_boot_error_desc_max = 0x04;
 
-static char * ipmi_sensor_type_code_1F_desc[] =
+static char * ipmi_sensor_type_code_os_boot_desc[] =
   {
     "A: boot completed",
     "C: boot completed",
@@ -459,10 +432,10 @@ static char * ipmi_sensor_type_code_1F_desc[] =
     "boot completed - boot device not specified",
     NULL
   };
-static int ipmi_sensor_type_code_1F_desc_max = 0x06;
+static int ipmi_sensor_type_code_os_boot_desc_max = 0x06;
 
 /* achu: modified per errata */
-static char * ipmi_sensor_type_code_20_desc[] =
+static char * ipmi_sensor_type_code_os_critical_stop_desc[] =
   {
     "Critical stop during OS load / initialization.  Unexpected error during system startup.  Stopped waiting for input or power cycle/reset.",
     "Run-time Critical Stop (a.k.a. 'core dump', 'blue screen')",
@@ -472,9 +445,9 @@ static char * ipmi_sensor_type_code_20_desc[] =
     "Agent Not Responding.  Graceful shutdown request to agent via BMC did not occur due to missing or malfunctioning local agent.",
     NULL
   };
-static int ipmi_sensor_type_code_20_desc_max = 0x05;
+static int ipmi_sensor_type_code_os_critical_stop_desc_max = 0x05;
 
-static char * ipmi_sensor_type_code_21_desc[] =
+static char * ipmi_sensor_type_code_slot_connector_desc[] =
   {
     "Fault Status asserted",
     "Identify Status asserted",
@@ -488,9 +461,9 @@ static char * ipmi_sensor_type_code_21_desc[] =
     "Slot holds spare device",
     NULL
   };
-static int ipmi_sensor_type_code_21_desc_max = 0x09;
+static int ipmi_sensor_type_code_slot_connector_desc_max = 0x09;
 
-static char * ipmi_sensor_type_code_22_desc[] =
+static char * ipmi_sensor_type_code_acpi_power_state_desc[] =
   {
     "S0/G0 \"working\"",
     "S1 \"sleeping with system h/w & processor context maintained\"",
@@ -509,9 +482,9 @@ static char * ipmi_sensor_type_code_22_desc[] =
     "Unknown",
     NULL
   };
-static int ipmi_sensor_type_code_22_desc_max = 0x0E;
+static int ipmi_sensor_type_code_acpi_power_state_desc_max = 0x0E;
 
-static char * ipmi_sensor_type_code_23_desc[] =
+static char * ipmi_sensor_type_code_watchdog2_desc[] =
   {
     "Timer expired, status only (no action, no interrupt)",
     "Hard Reset",
@@ -524,9 +497,9 @@ static char * ipmi_sensor_type_code_23_desc[] =
     "Timer interrupt",
     NULL
   };
-static int ipmi_sensor_type_code_23_desc_max = 0x08;
+static int ipmi_sensor_type_code_watchdog2_desc_max = 0x08;
 
-static char * ipmi_sensor_type_code_24_desc[] =
+static char * ipmi_sensor_type_code_platform_alert_desc[] =
   {
     "platform generated page",
     "platform generated LAN alert",
@@ -534,27 +507,27 @@ static char * ipmi_sensor_type_code_24_desc[] =
     "platform generated SNMP trap, OEM format",
     NULL
   };
-static int ipmi_sensor_type_code_24_desc_max = 0x03;
+static int ipmi_sensor_type_code_platform_alert_desc_max = 0x03;
 
-static char * ipmi_sensor_type_code_25_desc[] =
+static char * ipmi_sensor_type_code_entity_presence_desc[] =
   {
     "Entity Present",
     "Entity Absent",
     "Entity Disabled",
     NULL
   };
-static int ipmi_sensor_type_code_25_desc_max = 0x02;
+static int ipmi_sensor_type_code_entity_presence_desc_max = 0x02;
 
-static char * ipmi_sensor_type_code_27_desc[] =
+static char * ipmi_sensor_type_code_lan_desc[] =
   {
     "LAN Heartbeat Lost",
     "LAN Heartbeat",
     NULL
   };
-static int ipmi_sensor_type_code_27_desc_max = 0x01;
+static int ipmi_sensor_type_code_lan_desc_max = 0x01;
 
 /* achu: new additions as stated in errata */
-static char * ipmi_sensor_type_code_28_desc[] =
+static char * ipmi_sensor_type_code_management_subsystem_health_desc[] =
   {
     "sensor access degraded or unavailable",
     "controller access degraded or unavailable",
@@ -564,28 +537,28 @@ static char * ipmi_sensor_type_code_28_desc[] =
     "FRU failure",
     NULL
   };
-static int ipmi_sensor_type_code_28_desc_max = 0x05;
+static int ipmi_sensor_type_code_management_subsystem_health_desc_max = 0x05;
 
-static char * ipmi_sensor_type_code_29_desc[] =
+static char * ipmi_sensor_type_code_battery_desc[] =
   {
     "battery low (predictive failure)",
     "battery failed",
     "battery presence detected",
     NULL
   };
-static int ipmi_sensor_type_code_29_desc_max = 0x02;
+static int ipmi_sensor_type_code_battery_desc_max = 0x02;
 
 /* achu: new additions as stated in errata */
-static char * ipmi_sensor_type_code_2A_desc[] =
+static char * ipmi_sensor_type_code_session_audit_desc[] =
   {
     "Session Activated",
     "Session Deactivated",
     "Invalid Username of Password",
     NULL
   };
-static int ipmi_sensor_type_code_2A_desc_max = 0x02;
+static int ipmi_sensor_type_code_session_audit_desc_max = 0x02;
 
-static char * ipmi_sensor_type_code_2B_desc[] =
+static char * ipmi_sensor_type_code_version_change_desc[] =
   {
     "Hardware change detected with associated Entity",
     "Firmware or software change detected with associated Entity",
@@ -597,9 +570,9 @@ static char * ipmi_sensor_type_code_2B_desc[] =
     "Software or F/W Change detected with associated Entity was successful",
     NULL
   };
-static int ipmi_sensor_type_code_2B_desc_max = 0x07;
+static int ipmi_sensor_type_code_version_change_desc_max = 0x07;
 
-static char * ipmi_sensor_type_code_2C_desc[] =
+static char * ipmi_sensor_type_code_fru_state_desc[] =
   {
     "FRU Not Installed",
     "FRU Inactive (in standby or `hot spare' state)",
@@ -611,7 +584,7 @@ static char * ipmi_sensor_type_code_2C_desc[] =
     "FRU Communication Lost",
     NULL
   };
-static int ipmi_sensor_type_code_2C_desc_max = 0x07;
+static int ipmi_sensor_type_code_fru_state_desc_max = 0x07;
 
 /*************************************************
  * Generic Event Reading Strings (SHORT STRINGS) *
@@ -622,7 +595,7 @@ static int ipmi_sensor_type_code_2C_desc_max = 0x07;
  * slightly modified the strings statements too.
  */
 
-static char * ipmi_generic_event_reading_type_code_01_short_desc[] =
+static char * ipmi_generic_event_reading_type_code_threshold_short_desc[] =
   {
     "Lower Non-critical - going low",
     "Lower Non-critical - going high",
@@ -638,49 +611,49 @@ static char * ipmi_generic_event_reading_type_code_01_short_desc[] =
     "Upper Non-recoverable - going high",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_01_short_desc_max = 0x0B;
+static int ipmi_generic_event_reading_type_code_threshold_short_desc_max = 0x0B;
 
-static char * ipmi_generic_event_reading_type_code_02_short_desc[] =
+static char * ipmi_generic_event_reading_type_code_transition_state_short_desc[] =
   {
     "Transition to Idle",
     "Transition to Active",
     "Transition to Busy",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_02_short_desc_max = 0x02;
+static int ipmi_generic_event_reading_type_code_transition_state_short_desc_max = 0x02;
 
-static char * ipmi_generic_event_reading_type_code_03_short_desc[] =  {
+static char * ipmi_generic_event_reading_type_code_state_short_desc[] =  {
   "State Deasserted",
   "State Asserted",
   NULL
 };
-static int ipmi_generic_event_reading_type_code_03_short_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_state_short_desc_max = 0x01;
 
-static char * ipmi_generic_event_reading_type_code_04_short_desc[] =
+static char * ipmi_generic_event_reading_type_code_predictive_failure_short_desc[] =
   {
     "Predictive Failure deasserted",
     "Predictive Failure asserted",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_04_short_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_predictive_failure_short_desc_max = 0x01;
 
-static char * ipmi_generic_event_reading_type_code_05_short_desc[] =
+static char * ipmi_generic_event_reading_type_code_limit_short_desc[] =
   {
     "Limit Not Exceeded",
     "Limit Exceeded",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_05_short_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_limit_short_desc_max = 0x01;
 
-static char * ipmi_generic_event_reading_type_code_06_short_desc[] =
+static char * ipmi_generic_event_reading_type_code_performance_short_desc[] =
   {
     "Performance Met",
     "Performance Lags",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_06_short_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_performance_short_desc_max = 0x01;
 
-static char * ipmi_generic_event_reading_type_code_07_short_desc[] =
+static char * ipmi_generic_event_reading_type_code_transition_severity_short_desc[] =
   {
     "transition to OK",
     "transition to Non-Critical from OK",
@@ -693,25 +666,25 @@ static char * ipmi_generic_event_reading_type_code_07_short_desc[] =
     "Informational",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_07_short_desc_max = 0x08;
+static int ipmi_generic_event_reading_type_code_transition_severity_short_desc_max = 0x08;
 
-static char * ipmi_generic_event_reading_type_code_08_short_desc[] =
+static char * ipmi_generic_event_reading_type_code_device_present_short_desc[] =
   {
     "Device Removed/Device Absent",
     "Device Inserted/Device Present",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_08_short_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_device_present_short_desc_max = 0x01;
 
-static char * ipmi_generic_event_reading_type_code_09_short_desc[] =
+static char * ipmi_generic_event_reading_type_code_device_enabled_short_desc[] =
   {
     "Device Disabled",
     "Device Enabled",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_09_short_desc_max = 0x01;
+static int ipmi_generic_event_reading_type_code_device_enabled_short_desc_max = 0x01;
 
-static char * ipmi_generic_event_reading_type_code_0A_short_desc[] =
+static char * ipmi_generic_event_reading_type_code_transition_availability_short_desc[] =
   {
     "transition to Running",
     "transition to In Test",
@@ -724,9 +697,9 @@ static char * ipmi_generic_event_reading_type_code_0A_short_desc[] =
     "Install Error",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_0A_short_desc_max = 0x08;
+static int ipmi_generic_event_reading_type_code_transition_availability_short_desc_max = 0x08;
 
-static char * ipmi_generic_event_reading_type_code_0B_short_desc[] =
+static char * ipmi_generic_event_reading_type_code_redundancy_short_desc[] =
   {
     "Fully Redundant",
     "Redundancy Lost",
@@ -738,9 +711,9 @@ static char * ipmi_generic_event_reading_type_code_0B_short_desc[] =
     "Redundancy Degraded from Non-redundant",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_0B_short_desc_max = 0x07;
+static int ipmi_generic_event_reading_type_code_redundancy_short_desc_max = 0x07;
 
-static char * ipmi_generic_event_reading_type_code_0C_short_desc[] =
+static char * ipmi_generic_event_reading_type_code_acpi_power_state_short_desc[] =
   {
     "D0 Power State",
     "D1 Power State",
@@ -748,7 +721,7 @@ static char * ipmi_generic_event_reading_type_code_0C_short_desc[] =
     "D3 Power State",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_0C_short_desc_max = 0x03;
+static int ipmi_generic_event_reading_type_code_acpi_power_state_short_desc_max = 0x03;
 
 /***************************************
  * Sensor Type Strings (SHORT STRINGS) *
@@ -759,36 +732,8 @@ static int ipmi_generic_event_reading_type_code_0C_short_desc_max = 0x03;
  * slightly modified the strings statements too.
  */
 
-static char * ipmi_sensor_type_code_01_short_desc[] =
-  {
-    "Temperature",
-    NULL
-  };
-static int ipmi_sensor_type_code_01_short_desc_max = 0x00;
-
-static char * ipmi_sensor_type_code_02_short_desc[] =
-  {
-    "Voltage",
-    NULL
-  };
-static int ipmi_sensor_type_code_02_short_desc_max = 0x00;
-
-static char * ipmi_sensor_type_code_03_short_desc[] =
-  {
-    "Current",
-    NULL
-  };
-static int ipmi_sensor_type_code_03_short_desc_max = 0x00;
-
-static char * ipmi_sensor_type_code_04_short_desc[] =
-  {
-    "Fan",
-    NULL
-  };
-static int ipmi_sensor_type_code_04_short_desc_max = 0x00;
-
 /* achu: 'undock' removed as noted in errata */
-static char * ipmi_sensor_type_code_05_short_desc[] =
+static char * ipmi_sensor_type_code_physical_security_short_desc[] =
   {
     "General Chassis Intrusion",
     "Drive Bay intrusion",
@@ -799,9 +744,9 @@ static char * ipmi_sensor_type_code_05_short_desc[] =
     "FAN area intrusion",
     NULL
   };
-static int ipmi_sensor_type_code_05_short_desc_max = 0x06;
+static int ipmi_sensor_type_code_physical_security_short_desc_max = 0x06;
 
-static char * ipmi_sensor_type_code_06_short_desc[] =
+static char * ipmi_sensor_type_code_platform_security_violation_attempt_short_desc[] =
   {
     "Secure Mode Violation attempt",
     "Pre-boot Password Violation - user password",
@@ -811,9 +756,9 @@ static char * ipmi_sensor_type_code_06_short_desc[] =
     "Out-of-band Access Password Violation",
     NULL
   };
-static int ipmi_sensor_type_code_06_short_desc_max = 0x05;
+static int ipmi_sensor_type_code_platform_security_violation_attempt_short_desc_max = 0x05;
 
-static char * ipmi_sensor_type_code_07_short_desc[] =
+static char * ipmi_sensor_type_code_processor_short_desc[] =
   {
     "IERR",
     "Thermal Trip",
@@ -830,9 +775,9 @@ static char * ipmi_sensor_type_code_07_short_desc[] =
     "Correctable Machine Check Error",
     NULL
   };
-static int ipmi_sensor_type_code_07_short_desc_max = 0x0C;
+static int ipmi_sensor_type_code_processor_short_desc_max = 0x0C;
 
-static char * ipmi_sensor_type_code_08_short_desc[] =
+static char * ipmi_sensor_type_code_power_supply_short_desc[] =
   {
     "Presence detected",
     "Power Supply Failure detected",
@@ -843,9 +788,9 @@ static char * ipmi_sensor_type_code_08_short_desc[] =
     "Configuration error",
     NULL
   };
-static int ipmi_sensor_type_code_08_short_desc_max = 0x06;
+static int ipmi_sensor_type_code_power_supply_short_desc_max = 0x06;
 
-static char * ipmi_sensor_type_code_09_short_desc[] =
+static char * ipmi_sensor_type_code_power_unit_short_desc[] =
   {
     "Power Off/Power Down",
     "Power Cycle",
@@ -857,10 +802,10 @@ static char * ipmi_sensor_type_code_09_short_desc[] =
     "Predictive Failure",
     NULL
   };
-static int ipmi_sensor_type_code_09_short_desc_max = 0x07;
+static int ipmi_sensor_type_code_power_unit_short_desc_max = 0x07;
 
 /* achu: new additions as stated in errata */
-static char * ipmi_sensor_type_code_0C_short_desc[] =
+static char * ipmi_sensor_type_code_memory_short_desc[] =
   {
     "Correctable memory error",
     "Uncorrectable memory error",
@@ -875,10 +820,10 @@ static char * ipmi_sensor_type_code_0C_short_desc[] =
     "Critical Overtemperature",
     NULL
   };
-static int ipmi_sensor_type_code_0C_short_desc_max = 0x0A;
+static int ipmi_sensor_type_code_memory_short_desc_max = 0x0A;
 
 /* achu: defined in errata */
-static char * ipmi_sensor_type_code_0D_short_desc[] =
+static char * ipmi_sensor_type_code_drive_slot_short_desc[] =
   {
     "Drive Presence",
     "Drive Fault",
@@ -891,18 +836,18 @@ static char * ipmi_sensor_type_code_0D_short_desc[] =
     "Rebuild/Remap Aborted",
     NULL
   };
-static int ipmi_sensor_type_code_0D_short_desc_max = 0x08;
+static int ipmi_sensor_type_code_drive_slot_short_desc_max = 0x08;
 
-static char * ipmi_sensor_type_code_0F_short_desc[] =
+static char * ipmi_sensor_type_code_system_firmware_progress_short_desc[] =
   {
     "System Firmware Error",
     "System Firmware Hang",
     "System Firmware Progress",
     NULL
   };
-static int ipmi_sensor_type_code_0F_short_desc_max = 0x02;
+static int ipmi_sensor_type_code_system_firmware_progress_short_desc_max = 0x02;
 
-static char * ipmi_sensor_type_code_10_short_desc[] =
+static char * ipmi_sensor_type_code_event_logging_disabled_short_desc[] =
   {
     "Correctable Memory Error Logging Disabled",
     "Event Type Logging Disabled",
@@ -913,9 +858,9 @@ static char * ipmi_sensor_type_code_10_short_desc[] =
     "Correctable Machine Check Error Logging Disabled",
     NULL
   };
-static int ipmi_sensor_type_code_10_short_desc_max = 0x06;
+static int ipmi_sensor_type_code_event_logging_disabled_short_desc_max = 0x06;
 
-static char * ipmi_sensor_type_code_11_short_desc[] =
+static char * ipmi_sensor_type_code_watchdog1_short_desc[] =
   {
     "BIOS Watchdog Reset",
     "OS Watchdog Reset",
@@ -927,9 +872,9 @@ static char * ipmi_sensor_type_code_11_short_desc[] =
     "OS Watchdog pre-timeout Interrupt, non-NMI",
     NULL
   };
-static int ipmi_sensor_type_code_11_short_desc_max = 0x07;
+static int ipmi_sensor_type_code_watchdog1_short_desc_max = 0x07;
 
-static char * ipmi_sensor_type_code_12_short_desc[] =
+static char * ipmi_sensor_type_code_system_event_short_desc[] =
   {
     "System Reconfigured",
     "OEM System Boot Event",
@@ -939,9 +884,9 @@ static char * ipmi_sensor_type_code_12_short_desc[] =
     "Timestamp Clock Synch",
     NULL
   };
-static int ipmi_sensor_type_code_12_short_desc_max = 0x05;
+static int ipmi_sensor_type_code_system_event_short_desc_max = 0x05;
 
-static char * ipmi_sensor_type_code_13_short_desc[] =
+static char * ipmi_sensor_type_code_critical_interrupt_short_desc[] =
   {
     "Front Panel NMI/Diagnostic Interrupt",
     "Bus Timeout",
@@ -957,9 +902,9 @@ static char * ipmi_sensor_type_code_13_short_desc[] =
     "Bus Degraded",
     NULL
   };
-static int ipmi_sensor_type_code_13_short_desc_max = 0x0B;
+static int ipmi_sensor_type_code_critical_interrupt_short_desc_max = 0x0B;
 
-static char * ipmi_sensor_type_code_14_short_desc[] =
+static char * ipmi_sensor_type_code_button_switch_short_desc[] =
   {
     "Power Button pressed",
     "Sleep Button pressed",
@@ -968,26 +913,26 @@ static char * ipmi_sensor_type_code_14_short_desc[] =
     "FRU service request button",
     NULL
   };
-static int ipmi_sensor_type_code_14_short_desc_max = 0x04;
+static int ipmi_sensor_type_code_button_switch_short_desc_max = 0x04;
 
-static char * ipmi_sensor_type_code_19_short_desc[] =
+static char * ipmi_sensor_type_code_chip_set_short_desc[] =
   {
     "Soft Power Control Failure",
     "Thermal Trip",
     NULL
   };
-static int ipmi_sensor_type_code_19_short_desc_max = 0x00;
+static int ipmi_sensor_type_code_chip_set_short_desc_max = 0x00;
 
-static char * ipmi_sensor_type_code_1B_short_desc[] =
+static char * ipmi_sensor_type_code_cable_interconnect_short_desc[] =
   {
     "Cable/Interconnect is connected",
     "Configuration Error - Incorrect cable connected",
     NULL
   };
-static int ipmi_sensor_type_code_1B_short_desc_max = 0x01;
+static int ipmi_sensor_type_code_cable_interconnect_short_desc_max = 0x01;
 
 /* achu: new additions as stated in errata */
-static char * ipmi_sensor_type_code_1D_short_desc[] =
+static char * ipmi_sensor_type_code_system_boot_initiated_short_desc[] =
   {
     "Initiated by power up",
     "Initiated by hard reset",
@@ -999,9 +944,9 @@ static char * ipmi_sensor_type_code_1D_short_desc[] =
     "System Restart",
     NULL
   };
-static int ipmi_sensor_type_code_1D_short_desc_max = 0x07;
+static int ipmi_sensor_type_code_system_boot_initiated_short_desc_max = 0x07;
 
-static char * ipmi_sensor_type_code_1E_short_desc[] =
+static char * ipmi_sensor_type_code_boot_error_short_desc[] =
   {
     "No bootable media",
     "Non-bootable diskette left in drive",
@@ -1010,9 +955,9 @@ static char * ipmi_sensor_type_code_1E_short_desc[] =
     "Timeout waiting for user selection of boot source",
     NULL
   };
-static int ipmi_sensor_type_code_1E_short_desc_max = 0x04;
+static int ipmi_sensor_type_code_boot_error_short_desc_max = 0x04;
 
-static char * ipmi_sensor_type_code_1F_short_desc[] =
+static char * ipmi_sensor_type_code_os_boot_short_desc[] =
   {
     "A: boot completed",
     "C: boot completed",
@@ -1023,10 +968,10 @@ static char * ipmi_sensor_type_code_1F_short_desc[] =
     "boot completed - boot device not specified",
     NULL
   };
-static int ipmi_sensor_type_code_1F_short_desc_max = 0x06;
+static int ipmi_sensor_type_code_os_boot_short_desc_max = 0x06;
 
 /* achu: modified per errata */
-static char * ipmi_sensor_type_code_20_short_desc[] =
+static char * ipmi_sensor_type_code_os_critical_stop_short_desc[] =
   {
     "Critical stop during OS load",
     "Run-time Critical Stop",
@@ -1036,9 +981,9 @@ static char * ipmi_sensor_type_code_20_short_desc[] =
     "Agent Not Responding",
     NULL
   };
-static int ipmi_sensor_type_code_20_short_desc_max = 0x05;
+static int ipmi_sensor_type_code_os_critical_stop_short_desc_max = 0x05;
 
-static char * ipmi_sensor_type_code_21_short_desc[] =
+static char * ipmi_sensor_type_code_slot_connector_short_desc[] =
   {
     "Fault Status asserted",
     "Identify Status asserted",
@@ -1052,9 +997,9 @@ static char * ipmi_sensor_type_code_21_short_desc[] =
     "Slot holds spare device",
     NULL
   };
-static int ipmi_sensor_type_code_21_short_desc_max = 0x09;
+static int ipmi_sensor_type_code_slot_connector_short_desc_max = 0x09;
 
-static char * ipmi_sensor_type_code_22_short_desc[] =
+static char * ipmi_sensor_type_code_acpi_power_state_short_desc[] =
   {
     "S0/G0",
     "S1",
@@ -1073,9 +1018,9 @@ static char * ipmi_sensor_type_code_22_short_desc[] =
     "Unknown",
     NULL
   };
-static int ipmi_sensor_type_code_22_short_desc_max = 0x0E;
+static int ipmi_sensor_type_code_acpi_power_state_short_desc_max = 0x0E;
 
-static char * ipmi_sensor_type_code_23_short_desc[] =
+static char * ipmi_sensor_type_code_watchdog2_short_desc[] =
   {
     "Timer expired, status only",
     "Hard Reset",
@@ -1088,9 +1033,9 @@ static char * ipmi_sensor_type_code_23_short_desc[] =
     "Timer interrupt",
     NULL
   };
-static int ipmi_sensor_type_code_23_short_desc_max = 0x08;
+static int ipmi_sensor_type_code_watchdog2_short_desc_max = 0x08;
 
-static char * ipmi_sensor_type_code_24_short_desc[] =
+static char * ipmi_sensor_type_code_platform_alert_short_desc[] =
   {
     "platform generated page",
     "platform generated LAN alert",
@@ -1098,27 +1043,27 @@ static char * ipmi_sensor_type_code_24_short_desc[] =
     "platform generated SNMP trap, OEM format",
     NULL
   };
-static int ipmi_sensor_type_code_24_short_desc_max = 0x03;
+static int ipmi_sensor_type_code_platform_alert_short_desc_max = 0x03;
 
-static char * ipmi_sensor_type_code_25_short_desc[] =
+static char * ipmi_sensor_type_code_entity_presence_short_desc[] =
   {
     "Entity Present",
     "Entity Absent",
     "Entity Disabled",
     NULL
   };
-static int ipmi_sensor_type_code_25_short_desc_max = 0x02;
+static int ipmi_sensor_type_code_entity_presence_short_desc_max = 0x02;
 
-static char * ipmi_sensor_type_code_27_short_desc[] =
+static char * ipmi_sensor_type_code_lan_short_desc[] =
   {
     "LAN Heartbeat Lost",
     "LAN Heartbeat",
     NULL
   };
-static int ipmi_sensor_type_code_27_short_desc_max = 0x01;
+static int ipmi_sensor_type_code_lan_short_desc_max = 0x01;
 
 /* achu: new additions as stated in errata */
-static char * ipmi_sensor_type_code_28_short_desc[] =
+static char * ipmi_sensor_type_code_management_subsystem_health_short_desc[] =
   {
     "sensor access degraded or unavailable",
     "controller access degraded or unavailable",
@@ -1128,27 +1073,27 @@ static char * ipmi_sensor_type_code_28_short_desc[] =
     "FRU failure",
     NULL
   };
-static int ipmi_sensor_type_code_28_short_desc_max = 0x05;
+static int ipmi_sensor_type_code_management_subsystem_health_short_desc_max = 0x05;
 
-static char * ipmi_sensor_type_code_29_short_desc[] =
+static char * ipmi_sensor_type_code_battery_short_desc[] =
   {
     "battery low",
     "battery failed",
     "battery presence detected",
     NULL
   };
-static int ipmi_sensor_type_code_29_short_desc_max = 0x02;
+static int ipmi_sensor_type_code_battery_short_desc_max = 0x02;
 
-static char * ipmi_sensor_type_code_2A_short_desc[] =
+static char * ipmi_sensor_type_code_session_audit_short_desc[] =
   {
     "Session Activated",
     "Session Deactivated",
     "Invalid Username of Password",
     NULL
   };
-static int ipmi_sensor_type_code_2A_short_desc_max = 0x02;
+static int ipmi_sensor_type_code_session_audit_short_desc_max = 0x02;
 
-static char * ipmi_sensor_type_code_2B_short_desc[] =
+static char * ipmi_sensor_type_code_version_change_short_desc[] =
   {
     "Hardware change detected with associated Entity",
     "Firmware or software change detected with associated Entity",
@@ -1160,9 +1105,9 @@ static char * ipmi_sensor_type_code_2B_short_desc[] =
     "Software or F/W Change detected with associated Entity was successful",
     NULL
   };
-static int ipmi_sensor_type_code_2B_short_desc_max = 0x07;
+static int ipmi_sensor_type_code_version_change_short_desc_max = 0x07;
 
-static char * ipmi_sensor_type_code_2C_short_desc[] =
+static char * ipmi_sensor_type_code_fru_state_short_desc[] =
   {
     "FRU Not Installed",
     "FRU Inactive",
@@ -1174,13 +1119,13 @@ static char * ipmi_sensor_type_code_2C_short_desc[] =
     "FRU Communication Lost",
     NULL
   };
-static int ipmi_sensor_type_code_2C_short_desc_max = 0x07;
+static int ipmi_sensor_type_code_fru_state_short_desc_max = 0x07;
 
 /*******************************************************
  * Sensor Type Strings for Event Data 2 (FULL STRINGS) *
  *******************************************************/
 
-static char * ipmi_sensor_type_code_0F_event_data2_offset_00_desc[] =
+static char * ipmi_sensor_type_code_system_firmware_progress_event_data2_offset_00_desc[] =
   {
     "Unspecified",
     "No system memory is physically installed in the system",
@@ -1198,9 +1143,9 @@ static char * ipmi_sensor_type_code_0F_event_data2_offset_00_desc[] =
     "CPU speed matching failure",
     NULL
   };
-static int ipmi_sensor_type_code_0F_event_data2_offset_00_desc_max = 0x0D;
+static int ipmi_sensor_type_code_system_firmware_progress_event_data2_offset_00_desc_max = 0x0D;
 
-static char * ipmi_sensor_type_code_0F_event_data2_offset_01_desc[] =
+static char * ipmi_sensor_type_code_system_firmware_progress_event_data2_offset_01_desc[] =
   {
     "Unspecified",
     "Memory initialization",
@@ -1229,9 +1174,9 @@ static char * ipmi_sensor_type_code_0F_event_data2_offset_01_desc[] =
     "Primary processor initialization",
     NULL
   };
-static int ipmi_sensor_type_code_0F_event_data2_offset_01_desc_max = 0x18;
+static int ipmi_sensor_type_code_system_firmware_progress_event_data2_offset_01_desc_max = 0x18;
 
-static char * ipmi_sensor_type_code_0F_event_data2_offset_02_desc[] =
+static char * ipmi_sensor_type_code_system_firmware_progress_event_data2_offset_02_desc[] =
   {
     "Unspecified",
     "Memory initialization",
@@ -1260,9 +1205,9 @@ static char * ipmi_sensor_type_code_0F_event_data2_offset_02_desc[] =
     "Primary processor initialization",
     NULL
   };
-static int ipmi_sensor_type_code_0F_event_data2_offset_02_desc_max = 0x18;
+static int ipmi_sensor_type_code_system_firmware_progress_event_data2_offset_02_desc_max = 0x18;
 
-static char * ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc[] =
+static char * ipmi_sensor_type_code_system_event_event_data2_offset_03_log_entry_action_desc[] =
   {
     "Log entry action = entry added",
     "Log entry action = entry added because event did not be map to standard IPMI event",
@@ -1272,18 +1217,18 @@ static char * ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_de
     "Log entry action = log enabled",
     NULL
   };
-static int ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc_max = 0x05;
+static int ipmi_sensor_type_code_system_event_event_data2_offset_03_log_entry_action_desc_max = 0x05;
 
-static char * ipmi_sensor_type_code_12_event_data2_offset_03_log_type_desc[] =
+static char * ipmi_sensor_type_code_system_event_event_data2_offset_03_log_type_desc[] =
   {
     "Log Type = MCA log",
     "Log Type = OEM1",
     "Log Type = OEM2",
     NULL
   };
-static int ipmi_sensor_type_code_12_event_data2_offset_03_log_type_desc_max = 0x02;
+static int ipmi_sensor_type_code_system_event_event_data2_offset_03_log_type_desc_max = 0x02;
 
-static char * ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[] =
+static char * ipmi_sensor_type_code_system_event_event_data2_offset_04_pef_action_desc[] =
   {
     "Alert",
     "power off",
@@ -1295,26 +1240,26 @@ static char * ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[] =
   };
 #if 0
 /* Not used */
-static int ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc_max = 0x05;
+static int ipmi_sensor_type_code_system_event_event_data2_offset_04_pef_action_desc_max = 0x05;
 #endif
 
-static char * ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc[] =
+static char * ipmi_sensor_type_code_system_event_event_data2_offset_05_first_second_desc[] =
   {
     "event is first of pair",
     "event is second of pair",
     NULL,
   };
-static int ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc_max = 0x01;
+static int ipmi_sensor_type_code_system_event_event_data2_offset_05_first_second_desc_max = 0x01;
 
-static char * ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc[] =
+static char * ipmi_sensor_type_code_system_event_event_data2_offset_05_timestamp_clock_type_desc[] =
   {
     "SEL Timestamp Clock updated (Also used when both SEL and SDR Timestamp clocks are linked together)",
     "SDR Timestamp Clock updated",
     NULL,
   };
-static int ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc_max = 0x01;
+static int ipmi_sensor_type_code_system_event_event_data2_offset_05_timestamp_clock_type_desc_max = 0x01;
 
-static char * ipmi_sensor_type_code_19_event_data2_offset_00_desc[] =
+static char * ipmi_sensor_type_code_chip_set_event_data2_offset_00_desc[] =
   {
     "Requested power state = S0/G0 \"working\"",
     "Requested power state = S1 \"sleeping with system h/w & processor context maintained\"",
@@ -1331,9 +1276,9 @@ static char * ipmi_sensor_type_code_19_event_data2_offset_00_desc[] =
     "Requested power state = Legacy OFF state",
     NULL,
   };
-static int ipmi_sensor_type_code_19_event_data2_offset_00_desc_max = 0x0C;
+static int ipmi_sensor_type_code_chip_set_event_data2_offset_00_desc_max = 0x0C;
 
-static char * ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc[] =
+static char * ipmi_sensor_type_code_system_boot_initiated_event_data2_offset_07_restart_cause_desc[] =
   {
     "unknown",
     "Chassis Control command",
@@ -1349,9 +1294,9 @@ static char * ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc[
     "power-up via RTC (system real time clock) wakeup",
     NULL
   };
-static int ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc_max = 0x0B;
+static int ipmi_sensor_type_code_system_boot_initiated_event_data2_offset_07_restart_cause_desc_max = 0x0B;
 
-static char * ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc[] =
+static char * ipmi_sensor_type_code_slot_connector_event_data2_offset_09_slot_connector_type_desc[] =
   {
     "Slot/Connector Type = PCI",
     "Slot/Connector Type = Drive Array",
@@ -1368,9 +1313,9 @@ static char * ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type
     "Slot/Connector Type = USB",
     NULL
   };
-static int ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max = 0x0C;
+static int ipmi_sensor_type_code_slot_connector_event_data2_offset_09_slot_connector_type_desc_max = 0x0C;
 
-static char * ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc[] =
+static char * ipmi_sensor_type_code_watchdog2_event_data2_offset_08_interrupt_type_desc[] =
   {
     "Interrupt type = none",
     "Interrupt type = SMI",
@@ -1390,9 +1335,9 @@ static char * ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc
     "Interrupt type = unspecified",
     NULL,
   };
-static int ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc_max = 0x0F;
+static int ipmi_sensor_type_code_watchdog2_event_data2_offset_08_interrupt_type_desc_max = 0x0F;
 
-static char * ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc[] =
+static char * ipmi_sensor_type_code_watchdog2_event_data2_offset_08_timer_use_at_expiration_desc[] =
   {
     "reserved",
     "Timer use at expiration = BIOS FRB2",
@@ -1412,17 +1357,17 @@ static char * ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expira
     "Timer use at expiration = unspecified",
     NULL
   };
-static int ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc_max = 0x0F;
+static int ipmi_sensor_type_code_watchdog2_event_data2_offset_08_timer_use_at_expiration_desc_max = 0x0F;
 
-static char * ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc[] =
+static char * ipmi_sensor_type_code_management_subsystem_health_event_data2_offset_05_logical_fru_device_desc[] =
   {
     "device is not a logical FRU Device",
     "device is logical FRU Device (accessed via FRU commands to mgmt. controller",
     NULL
   };
-static int ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc_max = 0x01;
+static int ipmi_sensor_type_code_management_subsystem_health_event_data2_offset_05_logical_fru_device_desc_max = 0x01;
 
-static char * ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc[] =
+static char * ipmi_sensor_type_code_version_change_event_data2_offset_07_version_change_type_desc[] =
   {
     "Version change type = unspecified",
     "Version change type = management controller device ID (change in one or more fields from `Get Device ID')",
@@ -1450,9 +1395,9 @@ static char * ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type
     "Version change type = board/FRU hardware configuration change (e.g. strap, jumper, cable change, etc.)",
     NULL
   };
-static int ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc_max = 0x17;
+static int ipmi_sensor_type_code_version_change_event_data2_offset_07_version_change_type_desc_max = 0x17;
 
-static char * ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc[] =
+static char * ipmi_sensor_type_code_fru_state_event_data2_offset_07_cause_of_state_change_desc[] =
   {
     "Cause of state change = Normal State Change",
     "Cause of state change = Change Commanded by software external to FRU",
@@ -1472,13 +1417,13 @@ static char * ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_chan
     "Cause of state change = State Change, Cause Unknown",
     NULL
   };
-static int ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc_max = 0x0F;
+static int ipmi_sensor_type_code_fru_state_event_data2_offset_07_cause_of_state_change_desc_max = 0x0F;
 
 /*******************************************************
  * Sensor Type Strings for Event Data 3 (FULL STRINGS) *
  *******************************************************/
 
-static char * ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc[] =
+static char * ipmi_sensor_type_code_power_supply_event_data3_offset_06_error_type_desc[] =
   {
     "Vendor mismatch",
     "Revision mismatch",
@@ -1487,25 +1432,25 @@ static char * ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc[] =
     "Voltage rating mismatch",
     NULL
   };
-static int ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc_max = 0x04;
+static int ipmi_sensor_type_code_power_supply_event_data3_offset_06_error_type_desc_max = 0x04;
 
-static char * ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc[] =
+static char * ipmi_sensor_type_code_event_logging_disabled_event_data3_offset_01_assertion_event_desc[] =
   {
     "deassertion event",
     "assertion event",
     NULL
   };
-static int ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc_max = 0x01;
+static int ipmi_sensor_type_code_event_logging_disabled_event_data3_offset_01_assertion_event_desc_max = 0x01;
 
-static char * ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc[] =
+static char * ipmi_sensor_type_code_event_logging_disabled_event_data3_offset_01_logging_disabled_all_events_desc[] =
   {
     "",
     "logging has been disabled for all events of given type",
     NULL
   };
-static int ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc_max = 0x01;
+static int ipmi_sensor_type_code_event_logging_disabled_event_data3_offset_01_logging_disabled_all_events_desc_max = 0x01;
 
-static char * ipmi_sensor_type_code_19_event_data3_offset_00_desc[] =
+static char * ipmi_sensor_type_code_chip_set_event_data3_offset_00_desc[] =
   {
     "Power state at time of request = S0/G0 \"working\"",
     "Power state at time of request = S1 \"sleeping with system h/w & processor context maintained\"",
@@ -1523,9 +1468,9 @@ static char * ipmi_sensor_type_code_19_event_data3_offset_00_desc[] =
     "Power state at time of request = unknown",
     NULL
   };
-static int ipmi_sensor_type_code_19_event_data3_offset_00_desc_max = 0x0D;
+static int ipmi_sensor_type_code_chip_set_event_data3_offset_00_desc_max = 0x0D;
 
-static char * ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc[] =
+static char * ipmi_sensor_type_code_session_audit_event_data3_offset_01_deactivation_cause_desc[] =
   {
     "Session deactivatation cause unspecified. This value is also used for Session Activated events",
     "Session deactivated by Close Session command",
@@ -1533,7 +1478,7 @@ static char * ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_
     "Session deactivated by configuration change",
     NULL
   };
-static int ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc_max = 0x03;
+static int ipmi_sensor_type_code_session_audit_event_data3_offset_01_deactivation_cause_desc_max = 0x03;
 
 /***************************************
  * Generic Event Reading Strings (OEM) *
@@ -1615,8 +1560,8 @@ static int ipmi_sensor_type_code_dell_oem_C4_desc_max = 0x01;
  * FLAGS                     *
  *****************************/
 
-#define IPMI_SENSOR_TYPE_CODE_10_EVENT_DATA_OFFSET3_ENTITY_INSTANCE_NUMBER           0x0
-#define IPMI_SENSOR_TYPE_CODE_10_EVENT_DATA_OFFSET3_VENDOR_SPECIFIC_PROCESSOR_NUMBER 0x1
+#define IPMI_SENSOR_TYPE_CODE_EVENT_LOGGING_DISABLED_EVENT_DATA_OFFSET3_ENTITY_INSTANCE_NUMBER           0x0
+#define IPMI_SENSOR_TYPE_CODE_EVENT_LOGGING_DISABLED_EVENT_DATA_OFFSET3_VENDOR_SPECIFIC_PROCESSOR_NUMBER 0x1
 
 static int
 _snprintf (char *buf, unsigned int buflen, char *fmt, ...)
@@ -1634,7 +1579,7 @@ _snprintf (char *buf, unsigned int buflen, char *fmt, ...)
 }
 
 static int
-get_05_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_physical_security_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -1646,23 +1591,23 @@ get_05_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
 }
 
 static int
-get_0F_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_system_firmware_progress_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
-  if (offset == 0x00 && event_data2 <= ipmi_sensor_type_code_0F_event_data2_offset_00_desc_max)
-    return (_snprintf (buf, buflen, ipmi_sensor_type_code_0F_event_data2_offset_00_desc[event_data2]));
-  if (offset == 0x01 && event_data2 <= ipmi_sensor_type_code_0F_event_data2_offset_01_desc_max)
-    return (_snprintf (buf, buflen, ipmi_sensor_type_code_0F_event_data2_offset_01_desc[event_data2]));
-  if (offset == 0x02 && event_data2 <= ipmi_sensor_type_code_0F_event_data2_offset_02_desc_max)
-    return (_snprintf (buf, buflen, ipmi_sensor_type_code_0F_event_data2_offset_02_desc[event_data2]));
+  if (offset == 0x00 && event_data2 <= ipmi_sensor_type_code_system_firmware_progress_event_data2_offset_00_desc_max)
+    return (_snprintf (buf, buflen, ipmi_sensor_type_code_system_firmware_progress_event_data2_offset_00_desc[event_data2]));
+  if (offset == 0x01 && event_data2 <= ipmi_sensor_type_code_system_firmware_progress_event_data2_offset_01_desc_max)
+    return (_snprintf (buf, buflen, ipmi_sensor_type_code_system_firmware_progress_event_data2_offset_01_desc[event_data2]));
+  if (offset == 0x02 && event_data2 <= ipmi_sensor_type_code_system_firmware_progress_event_data2_offset_02_desc_max)
+    return (_snprintf (buf, buflen, ipmi_sensor_type_code_system_firmware_progress_event_data2_offset_02_desc[event_data2]));
 
   SET_ERRNO (EINVAL);
   return (-1);
 }
 
 static int
-get_10_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_event_logging_disabled_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -1678,7 +1623,7 @@ get_10_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
 }
 
 static int
-_get_12_event_data2_message_offset_03 (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+_get_system_event_event_data2_message_offset_03 (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   fiid_template_t tmpl_event_data2 =
     {
@@ -1720,11 +1665,11 @@ _get_12_event_data2_message_offset_03 (unsigned int offset, uint8_t event_data2,
     }
   log_entry_action = val;
 
-  if (log_type <= ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc_max)
-    str1 = ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc[log_type];
+  if (log_type <= ipmi_sensor_type_code_system_event_event_data2_offset_03_log_entry_action_desc_max)
+    str1 = ipmi_sensor_type_code_system_event_event_data2_offset_03_log_entry_action_desc[log_type];
 
-  if (log_entry_action <= ipmi_sensor_type_code_12_event_data2_offset_03_log_type_desc_max)
-    str2 = ipmi_sensor_type_code_12_event_data2_offset_03_log_type_desc[log_entry_action];
+  if (log_entry_action <= ipmi_sensor_type_code_system_event_event_data2_offset_03_log_type_desc_max)
+    str2 = ipmi_sensor_type_code_system_event_event_data2_offset_03_log_type_desc[log_entry_action];
 
   if (str1 || str2)
     rv = _snprintf (buf, buflen, "%s%s%s",
@@ -1742,7 +1687,7 @@ _strcat12 (char *buf, unsigned int buflen, uint8_t flag, int str_len, int index)
 {
   if (flag)
     {
-      str_len += strlen (ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[index]);
+      str_len += strlen (ipmi_sensor_type_code_system_event_event_data2_offset_04_pef_action_desc[index]);
       if (str_len < buflen)
         {
           SET_ERRNO (ENOSPC);
@@ -1750,7 +1695,7 @@ _strcat12 (char *buf, unsigned int buflen, uint8_t flag, int str_len, int index)
         }
 
       if (str_len)
-        strcat (buf, ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[index]);
+        strcat (buf, ipmi_sensor_type_code_system_event_event_data2_offset_04_pef_action_desc[index]);
       else
         {
           strcat (buf, "; ");
@@ -1761,7 +1706,7 @@ _strcat12 (char *buf, unsigned int buflen, uint8_t flag, int str_len, int index)
   return (str_len);
 }
 static int
-_get_12_event_data2_message_offset_04 (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+_get_system_event_event_data2_message_offset_04 (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   fiid_template_t tmpl_event_data2 =
     {
@@ -1879,7 +1824,7 @@ _get_12_event_data2_message_offset_04 (unsigned int offset, uint8_t event_data2,
 }
 
 static int
-_get_12_event_data2_message_offset_05 (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+_get_system_event_event_data2_message_offset_05 (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   fiid_template_t tmpl_event_data2 =
     {
@@ -1922,11 +1867,11 @@ _get_12_event_data2_message_offset_05 (unsigned int offset, uint8_t event_data2,
     }
   first_second = val;
 
-  if (timestamp_clock_type <= ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc_max)
-    str1 = ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc[timestamp_clock_type];
+  if (timestamp_clock_type <= ipmi_sensor_type_code_system_event_event_data2_offset_05_timestamp_clock_type_desc_max)
+    str1 = ipmi_sensor_type_code_system_event_event_data2_offset_05_timestamp_clock_type_desc[timestamp_clock_type];
 
-  if (first_second <= ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc_max)
-    str2 = ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc[first_second];
+  if (first_second <= ipmi_sensor_type_code_system_event_event_data2_offset_05_first_second_desc_max)
+    str2 = ipmi_sensor_type_code_system_event_event_data2_offset_05_first_second_desc[first_second];
 
   rv = _snprintf (buf, buflen, "%s; %s",
                   str1 ? str1 : "",
@@ -1938,35 +1883,35 @@ _get_12_event_data2_message_offset_05 (unsigned int offset, uint8_t event_data2,
 }
 
 static int
-get_12_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_system_event_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
   if (offset == 0x03)
-    return (_get_12_event_data2_message_offset_03 (offset, event_data2, buf, buflen));
+    return (_get_system_event_event_data2_message_offset_03 (offset, event_data2, buf, buflen));
   if (offset == 0x04)
-    return (_get_12_event_data2_message_offset_04 (offset, event_data2, buf, buflen));
+    return (_get_system_event_event_data2_message_offset_04 (offset, event_data2, buf, buflen));
   if (offset == 0x05)
-    return (_get_12_event_data2_message_offset_05 (offset, event_data2, buf, buflen));
+    return (_get_system_event_event_data2_message_offset_05 (offset, event_data2, buf, buflen));
 
   SET_ERRNO (EINVAL);
   return (-1);
 }
 
 static int
-get_19_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_chip_set_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
-  if (offset == 0x00 && event_data2 <= ipmi_sensor_type_code_19_event_data2_offset_00_desc_max)
-    return (_snprintf (buf, buflen, ipmi_sensor_type_code_19_event_data2_offset_00_desc[event_data2]));
+  if (offset == 0x00 && event_data2 <= ipmi_sensor_type_code_chip_set_event_data2_offset_00_desc_max)
+    return (_snprintf (buf, buflen, ipmi_sensor_type_code_chip_set_event_data2_offset_00_desc[event_data2]));
 
   SET_ERRNO (EINVAL);
   return (-1);
 }
 
 static int
-get_1D_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_system_boot_initiated_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2000,8 +1945,8 @@ get_1D_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
           goto cleanup;
         }
 
-      if (val <= ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc_max)
-        rv = _snprintf (buf, buflen, ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc[val]);
+      if (val <= ipmi_sensor_type_code_system_boot_initiated_event_data2_offset_07_restart_cause_desc_max)
+        rv = _snprintf (buf, buflen, ipmi_sensor_type_code_system_boot_initiated_event_data2_offset_07_restart_cause_desc[val]);
 
     cleanup:
       fiid_obj_destroy (obj);
@@ -2013,7 +1958,7 @@ get_1D_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
 }
 
 static int
-get_21_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_slot_connector_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   fiid_template_t tmpl_event_data2 =
     {
@@ -2045,8 +1990,8 @@ get_21_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
       goto cleanup;
     }
 
-  if (val <= ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max)
-    rv = _snprintf (buf, buflen, ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc[val]);
+  if (val <= ipmi_sensor_type_code_slot_connector_event_data2_offset_09_slot_connector_type_desc_max)
+    rv = _snprintf (buf, buflen, ipmi_sensor_type_code_slot_connector_event_data2_offset_09_slot_connector_type_desc[val]);
 
  cleanup:
   fiid_obj_destroy (obj);
@@ -2054,7 +1999,7 @@ get_21_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
 }
 
 static int
-get_23_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_watchdog2_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   fiid_template_t tmpl_event_data2 =
     {
@@ -2098,11 +2043,11 @@ get_23_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
     }
   interrupt_type = val;
 
-  if (timer_at_expiration <= ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc_max)
-    str1 = ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc[timer_at_expiration];
+  if (timer_at_expiration <= ipmi_sensor_type_code_watchdog2_event_data2_offset_08_timer_use_at_expiration_desc_max)
+    str1 = ipmi_sensor_type_code_watchdog2_event_data2_offset_08_timer_use_at_expiration_desc[timer_at_expiration];
 
-  if (interrupt_type <= ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc_max)
-    str2 = ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc[interrupt_type];
+  if (interrupt_type <= ipmi_sensor_type_code_watchdog2_event_data2_offset_08_interrupt_type_desc_max)
+    str2 = ipmi_sensor_type_code_watchdog2_event_data2_offset_08_interrupt_type_desc[interrupt_type];
 
   if (str1 || str2)
     rv = _snprintf (buf, buflen, "%s%s%s",
@@ -2116,7 +2061,7 @@ get_23_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
 }
 
 static int
-get_28_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_management_subsystem_health_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   int rv = -1;
 
@@ -2173,8 +2118,8 @@ get_28_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
         }
       fru_device = val;
 
-      if (fru_device <= ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc_max)
-        str = ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc[fru_device];
+      if (fru_device <= ipmi_sensor_type_code_management_subsystem_health_event_data2_offset_05_logical_fru_device_desc_max)
+        str = ipmi_sensor_type_code_management_subsystem_health_event_data2_offset_05_logical_fru_device_desc[fru_device];
 
 
       rv = _snprintf (buf, buflen, "%s; LUN for Master Write-Read command or FRU Command #%d; Private bus ID #%d",
@@ -2191,7 +2136,7 @@ get_28_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
 }
 
 static int
-get_2A_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_session_audit_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2242,19 +2187,19 @@ get_2A_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
 }
 
 static int
-get_2B_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_version_change_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
-  if (event_data2 <= ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc_max)
-    return (_snprintf (buf, buflen, ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc[event_data2]));
+  if (event_data2 <= ipmi_sensor_type_code_version_change_event_data2_offset_07_version_change_type_desc_max)
+    return (_snprintf (buf, buflen, ipmi_sensor_type_code_version_change_event_data2_offset_07_version_change_type_desc[event_data2]));
 
   SET_ERRNO (EINVAL);
   return (-1);
 }
 
 static int
-get_2C_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+get_fru_state_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
   fiid_template_t tmpl_event_data2 =
     {
@@ -2297,8 +2242,8 @@ get_2C_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
     }
   cause_of_state_change = val;
 
-  if (cause_of_state_change <= ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc_max)
-    str = ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc[cause_of_state_change];
+  if (cause_of_state_change <= ipmi_sensor_type_code_fru_state_event_data2_offset_07_cause_of_state_change_desc_max)
+    str = ipmi_sensor_type_code_fru_state_event_data2_offset_07_cause_of_state_change_desc[cause_of_state_change];
 
   rv = _snprintf (buf, buflen, "Previous state offset value = %d; %s", previous_state_offset, str ? str : "");
 
@@ -2308,7 +2253,7 @@ get_2C_event_data2_message (unsigned int offset, uint8_t event_data2, char *buf,
 }
 
 static int
-get_08_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_power_supply_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2342,8 +2287,8 @@ get_08_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
           goto cleanup;
         }
 
-      if (val <= ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc_max)
-        rv = _snprintf (buf, buflen, ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc[val]);
+      if (val <= ipmi_sensor_type_code_power_supply_event_data3_offset_06_error_type_desc_max)
+        rv = _snprintf (buf, buflen, ipmi_sensor_type_code_power_supply_event_data3_offset_06_error_type_desc[val]);
 
     cleanup:
       fiid_obj_destroy (obj);
@@ -2355,7 +2300,7 @@ get_08_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
 }
 
 static int
-get_0C_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_memory_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2367,7 +2312,7 @@ get_0C_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
 }
 
 static int
-get_10_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_event_logging_disabled_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2425,11 +2370,11 @@ get_10_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
           }
         logging_disabled_all_events = val;
 
-        if (assertion_deassertion_event <= ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc_max)
-          str1 = ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc[assertion_deassertion_event];
+        if (assertion_deassertion_event <= ipmi_sensor_type_code_event_logging_disabled_event_data3_offset_01_assertion_event_desc_max)
+          str1 = ipmi_sensor_type_code_event_logging_disabled_event_data3_offset_01_assertion_event_desc[assertion_deassertion_event];
 
-        if (logging_disabled_all_events <= ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc_max)
-          str2 = ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc[logging_disabled_all_events];
+        if (logging_disabled_all_events <= ipmi_sensor_type_code_event_logging_disabled_event_data3_offset_01_logging_disabled_all_events_desc_max)
+          str2 = ipmi_sensor_type_code_event_logging_disabled_event_data3_offset_01_logging_disabled_all_events_desc[logging_disabled_all_events];
 
         rv = _snprintf (buf, buflen, "Event Offset #%d; %s%s%s",
                         event_offset, (str1 ? str1 : ""), ((str1 && str2 && strlen (str2)) ? "; " : ""), (str2 ? str2 : ""));
@@ -2473,7 +2418,7 @@ get_10_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
           }
         number_type = val;
         
-        if (number_type == IPMI_SENSOR_TYPE_CODE_10_EVENT_DATA_OFFSET3_ENTITY_INSTANCE_NUMBER)
+        if (number_type == IPMI_SENSOR_TYPE_CODE_EVENT_LOGGING_DISABLED_EVENT_DATA_OFFSET3_ENTITY_INSTANCE_NUMBER)
           str = "Entity Instance Number";
         else 
           str = "Vendor-specific Processor Number";
@@ -2495,19 +2440,19 @@ get_10_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
 }
 
 static int
-get_19_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_chip_set_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
-  if (offset == 0x00 && event_data3 <= ipmi_sensor_type_code_19_event_data3_offset_00_desc_max)
-    return (_snprintf (buf, buflen, ipmi_sensor_type_code_19_event_data3_offset_00_desc[event_data3]));
+  if (offset == 0x00 && event_data3 <= ipmi_sensor_type_code_chip_set_event_data3_offset_00_desc_max)
+    return (_snprintf (buf, buflen, ipmi_sensor_type_code_chip_set_event_data3_offset_00_desc[event_data3]));
 
   SET_ERRNO (EINVAL);
   return (-1);
 }
 
 static int
-get_1D_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_system_boot_initiated_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2519,7 +2464,7 @@ get_1D_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
 }
 
 static int
-get_21_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_slot_connector_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2527,7 +2472,7 @@ get_21_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
 }
 
 static int
-get_28_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_management_subsystem_health_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2539,7 +2484,7 @@ get_28_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
 }
 
 static int
-get_2A_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
+get_session_audit_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
   assert (buf && buflen);
 
@@ -2588,8 +2533,8 @@ get_2A_event_data3_message (unsigned int offset, uint8_t event_data2, uint8_t ev
       /* output deactivation case only if deactivation offset occurred */
       if (offset == 0x02)
         {
-          if (deactivation_cause <= ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc_max)
-            str = ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc[deactivation_cause];
+          if (deactivation_cause <= ipmi_sensor_type_code_session_audit_event_data3_offset_01_deactivation_cause_desc_max)
+            str = ipmi_sensor_type_code_session_audit_event_data3_offset_01_deactivation_cause_desc[deactivation_cause];
         }
 
       rv = _snprintf (buf, buflen, "Channel number that session was activated/deactivated = %d%s%s",
@@ -2639,20 +2584,81 @@ ipmi_get_generic_event_message (uint8_t event_reading_type_code,
 
   switch (event_reading_type_code)
     {
-    case 0x01: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_01_desc_max, ipmi_generic_event_reading_type_code_01_desc));
-    case 0x02: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_02_desc_max, ipmi_generic_event_reading_type_code_02_desc));
-    case 0x03: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_03_desc_max, ipmi_generic_event_reading_type_code_03_desc));
-    case 0x04: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_04_desc_max, ipmi_generic_event_reading_type_code_04_desc));
-    case 0x05: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_05_desc_max, ipmi_generic_event_reading_type_code_05_desc));
-    case 0x06: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_06_desc_max, ipmi_generic_event_reading_type_code_06_desc));
-    case 0x07: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_07_desc_max, ipmi_generic_event_reading_type_code_07_desc));
-    case 0x08: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_08_desc_max, ipmi_generic_event_reading_type_code_08_desc));
-    case 0x09: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_09_desc_max, ipmi_generic_event_reading_type_code_09_desc));
-    case 0x0A: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0A_desc_max, ipmi_generic_event_reading_type_code_0A_desc));
-    case 0x0B: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0B_desc_max, ipmi_generic_event_reading_type_code_0B_desc));
-    case 0x0C: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0C_desc_max, ipmi_generic_event_reading_type_code_0C_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_THRESHOLD:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_threshold_desc_max,
+                                  ipmi_generic_event_reading_type_code_threshold_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_TRANSITION_STATE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_transition_state_desc_max,
+                                  ipmi_generic_event_reading_type_code_transition_state_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_STATE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_state_desc_max,
+                                  ipmi_generic_event_reading_type_code_state_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_PREDICTIVE_FAILURE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_predictive_failure_desc_max,
+                                  ipmi_generic_event_reading_type_code_predictive_failure_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_LIMIT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_limit_desc_max,
+                                  ipmi_generic_event_reading_type_code_limit_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_PERFORMANCE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_performance_desc_max,
+                                  ipmi_generic_event_reading_type_code_performance_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_transition_severity_desc_max,
+                                  ipmi_generic_event_reading_type_code_transition_severity_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_device_present_desc_max,
+                                  ipmi_generic_event_reading_type_code_device_present_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_device_enabled_desc_max,
+                                  ipmi_generic_event_reading_type_code_device_enabled_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_TRANSITION_AVAILABILITY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_transition_availability_desc_max,
+                                  ipmi_generic_event_reading_type_code_transition_availability_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_redundancy_desc_max,
+                                  ipmi_generic_event_reading_type_code_redundancy_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_ACPI_POWER_STATE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_acpi_power_state_desc_max,
+                                  ipmi_generic_event_reading_type_code_acpi_power_state_desc));
     }
 
+  SET_ERRNO (EINVAL);
   return (-1);
 }
 
@@ -2671,40 +2677,186 @@ ipmi_get_sensor_type_code_message (uint8_t sensor_type_code,
 
   switch (sensor_type_code)
     {
-    case 0x01: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_01_desc_max, ipmi_sensor_type_code_01_desc));
-    case 0x02: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_02_desc_max, ipmi_sensor_type_code_02_desc));
-    case 0x03: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_03_desc_max, ipmi_sensor_type_code_03_desc));
-    case 0x04: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_04_desc_max, ipmi_sensor_type_code_04_desc));
-    case 0x05: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_05_desc_max, ipmi_sensor_type_code_05_desc));
-    case 0x06: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_06_desc_max, ipmi_sensor_type_code_06_desc));
-    case 0x07: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_07_desc_max, ipmi_sensor_type_code_07_desc));
-    case 0x08: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_08_desc_max, ipmi_sensor_type_code_08_desc));
-    case 0x09: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_09_desc_max, ipmi_sensor_type_code_09_desc));
-    case 0x0C: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0C_desc_max, ipmi_sensor_type_code_0C_desc));
-    case 0x0D: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0D_desc_max, ipmi_sensor_type_code_0D_desc));
-    case 0x0F: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0F_desc_max, ipmi_sensor_type_code_0F_desc));
-    case 0x10: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_10_desc_max, ipmi_sensor_type_code_10_desc));
-    case 0x11: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_11_desc_max, ipmi_sensor_type_code_11_desc));
-    case 0x12: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_12_desc_max, ipmi_sensor_type_code_12_desc));
-    case 0x13: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_13_desc_max, ipmi_sensor_type_code_13_desc));
-    case 0x14: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_14_desc_max, ipmi_sensor_type_code_14_desc));
-    case 0x19: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_19_desc_max, ipmi_sensor_type_code_19_desc));
-    case 0x1B: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1B_desc_max, ipmi_sensor_type_code_1B_desc));
-    case 0x1D: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1D_desc_max, ipmi_sensor_type_code_1D_desc));
-    case 0x1E: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1E_desc_max, ipmi_sensor_type_code_1E_desc));
-    case 0x1F: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1F_desc_max, ipmi_sensor_type_code_1F_desc));
-    case 0x20: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_20_desc_max, ipmi_sensor_type_code_20_desc));
-    case 0x21: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_21_desc_max, ipmi_sensor_type_code_21_desc));
-    case 0x22: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_22_desc_max, ipmi_sensor_type_code_22_desc));
-    case 0x23: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_23_desc_max, ipmi_sensor_type_code_23_desc));
-    case 0x24: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_24_desc_max, ipmi_sensor_type_code_24_desc));
-    case 0x25: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_25_desc_max, ipmi_sensor_type_code_25_desc));
-    case 0x27: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_27_desc_max, ipmi_sensor_type_code_27_desc));
-    case 0x28: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_28_desc_max, ipmi_sensor_type_code_28_desc));
-    case 0x29: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_29_desc_max, ipmi_sensor_type_code_29_desc));
-    case 0x2A: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2A_desc_max, ipmi_sensor_type_code_2A_desc));
-    case 0x2B: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2B_desc_max, ipmi_sensor_type_code_2B_desc));
-    case 0x2C: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2C_desc_max, ipmi_sensor_type_code_2C_desc));
+    case IPMI_SENSOR_TYPE_PHYSICAL_SECURITY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_physical_security_desc_max,
+                                  ipmi_sensor_type_code_physical_security_desc));
+    case IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_platform_security_violation_attempt_desc_max,
+                                  ipmi_sensor_type_code_platform_security_violation_attempt_desc));
+    case IPMI_SENSOR_TYPE_PROCESSOR:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_processor_desc_max,
+                                  ipmi_sensor_type_code_processor_desc));
+    case IPMI_SENSOR_TYPE_POWER_SUPPLY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_power_supply_desc_max,
+                                  ipmi_sensor_type_code_power_supply_desc));
+    case IPMI_SENSOR_TYPE_POWER_UNIT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_power_unit_desc_max,
+                                  ipmi_sensor_type_code_power_unit_desc));
+    case IPMI_SENSOR_TYPE_MEMORY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_memory_desc_max,
+                                  ipmi_sensor_type_code_memory_desc));
+    case IPMI_SENSOR_TYPE_DRIVE_SLOT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_drive_slot_desc_max,
+                                  ipmi_sensor_type_code_drive_slot_desc));
+    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_system_firmware_progress_desc_max,
+                                  ipmi_sensor_type_code_system_firmware_progress_desc));
+    case IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_event_logging_disabled_desc_max,
+                                  ipmi_sensor_type_code_event_logging_disabled_desc));
+    case IPMI_SENSOR_TYPE_WATCHDOG1:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_watchdog1_desc_max,
+                                  ipmi_sensor_type_code_watchdog1_desc));
+    case IPMI_SENSOR_TYPE_SYSTEM_EVENT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_system_event_desc_max,
+                                  ipmi_sensor_type_code_system_event_desc));
+    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_critical_interrupt_desc_max,
+                                  ipmi_sensor_type_code_critical_interrupt_desc));
+    case IPMI_SENSOR_TYPE_BUTTON_SWITCH:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_button_switch_desc_max,
+                                  ipmi_sensor_type_code_button_switch_desc));
+    case IPMI_SENSOR_TYPE_CHIP_SET:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_chip_set_desc_max,
+                                  ipmi_sensor_type_code_chip_set_desc));
+    case IPMI_SENSOR_TYPE_CABLE_INTERCONNECT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_cable_interconnect_desc_max,
+                                  ipmi_sensor_type_code_cable_interconnect_desc));
+    case IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_system_boot_initiated_desc_max,
+                                  ipmi_sensor_type_code_system_boot_initiated_desc));
+    case IPMI_SENSOR_TYPE_BOOT_ERROR:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_boot_error_desc_max,
+                                  ipmi_sensor_type_code_boot_error_desc));
+    case IPMI_SENSOR_TYPE_OS_BOOT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_os_boot_desc_max,
+                                  ipmi_sensor_type_code_os_boot_desc));
+    case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_os_critical_stop_desc_max,
+                                  ipmi_sensor_type_code_os_critical_stop_desc));
+    case IPMI_SENSOR_TYPE_SLOT_CONNECTOR:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_slot_connector_desc_max,
+                                  ipmi_sensor_type_code_slot_connector_desc));
+    case IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_acpi_power_state_desc_max,
+                                  ipmi_sensor_type_code_acpi_power_state_desc));
+    case IPMI_SENSOR_TYPE_WATCHDOG2:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_watchdog2_desc_max,
+                                  ipmi_sensor_type_code_watchdog2_desc));
+    case IPMI_SENSOR_TYPE_PLATFORM_ALERT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_platform_alert_desc_max,
+                                  ipmi_sensor_type_code_platform_alert_desc));
+    case IPMI_SENSOR_TYPE_ENTITY_PRESENCE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_entity_presence_desc_max,
+                                  ipmi_sensor_type_code_entity_presence_desc));
+    case IPMI_SENSOR_TYPE_LAN:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_lan_desc_max,
+                                  ipmi_sensor_type_code_lan_desc));
+    case IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_management_subsystem_health_desc_max,
+                                  ipmi_sensor_type_code_management_subsystem_health_desc));
+    case IPMI_SENSOR_TYPE_BATTERY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_battery_desc_max,
+                                  ipmi_sensor_type_code_battery_desc));
+    case IPMI_SENSOR_TYPE_SESSION_AUDIT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_session_audit_desc_max,
+                                  ipmi_sensor_type_code_session_audit_desc));
+    case IPMI_SENSOR_TYPE_VERSION_CHANGE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_version_change_desc_max,
+                                  ipmi_sensor_type_code_version_change_desc));
+    case IPMI_SENSOR_TYPE_FRU_STATE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_fru_state_desc_max,
+                                  ipmi_sensor_type_code_fru_state_desc));
     }
 
   SET_ERRNO (EINVAL);
@@ -2725,18 +2877,78 @@ ipmi_get_generic_event_message_short (uint8_t event_reading_type_code,
 
   switch (event_reading_type_code)
     {
-    case 0x01: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_01_short_desc_max, ipmi_generic_event_reading_type_code_01_short_desc));
-    case 0x02: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_02_short_desc_max, ipmi_generic_event_reading_type_code_02_short_desc));
-    case 0x03: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_03_short_desc_max, ipmi_generic_event_reading_type_code_03_short_desc));
-    case 0x04: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_04_short_desc_max, ipmi_generic_event_reading_type_code_04_short_desc));
-    case 0x05: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_05_short_desc_max, ipmi_generic_event_reading_type_code_05_short_desc));
-    case 0x06: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_06_short_desc_max, ipmi_generic_event_reading_type_code_06_short_desc));
-    case 0x07: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_07_short_desc_max, ipmi_generic_event_reading_type_code_07_short_desc));
-    case 0x08: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_08_short_desc_max, ipmi_generic_event_reading_type_code_08_short_desc));
-    case 0x09: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_09_short_desc_max, ipmi_generic_event_reading_type_code_09_short_desc));
-    case 0x0A: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0A_short_desc_max, ipmi_generic_event_reading_type_code_0A_short_desc));
-    case 0x0B: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0B_short_desc_max, ipmi_generic_event_reading_type_code_0B_short_desc));
-    case 0x0C: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_0C_short_desc_max, ipmi_generic_event_reading_type_code_0C_short_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_THRESHOLD:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_threshold_short_desc_max,
+                                  ipmi_generic_event_reading_type_code_threshold_short_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_TRANSITION_STATE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_transition_state_short_desc_max,
+                                  ipmi_generic_event_reading_type_code_transition_state_short_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_STATE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_state_short_desc_max,
+                                  ipmi_generic_event_reading_type_code_state_short_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_PREDICTIVE_FAILURE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_predictive_failure_short_desc_max,
+                                  ipmi_generic_event_reading_type_code_predictive_failure_short_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_LIMIT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_limit_short_desc_max,
+                                  ipmi_generic_event_reading_type_code_limit_short_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_PERFORMANCE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_performance_short_desc_max,
+                                  ipmi_generic_event_reading_type_code_performance_short_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_transition_severity_short_desc_max,
+                                  ipmi_generic_event_reading_type_code_transition_severity_short_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_device_present_short_desc_max,
+                                  ipmi_generic_event_reading_type_code_device_present_short_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_device_enabled_short_desc_max,
+                                  ipmi_generic_event_reading_type_code_device_enabled_short_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_TRANSITION_AVAILABILITY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_transition_availability_short_desc_max,
+                                  ipmi_generic_event_reading_type_code_transition_availability_short_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_redundancy_short_desc_max,
+                                  ipmi_generic_event_reading_type_code_redundancy_short_desc));
+    case IPMI_EVENT_READING_TYPE_CODE_ACPI_POWER_STATE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_generic_event_reading_type_code_acpi_power_state_short_desc_max,
+                                  ipmi_generic_event_reading_type_code_acpi_power_state_short_desc));
     }
 
   return (-1);
@@ -2756,40 +2968,186 @@ ipmi_get_sensor_type_code_message_short (uint8_t sensor_type_code,
 
   switch (sensor_type_code)
     {
-    case 0x01: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_01_short_desc_max, ipmi_sensor_type_code_01_short_desc));
-    case 0x02: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_02_short_desc_max, ipmi_sensor_type_code_02_short_desc));
-    case 0x03: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_03_short_desc_max, ipmi_sensor_type_code_03_short_desc));
-    case 0x04: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_04_short_desc_max, ipmi_sensor_type_code_04_short_desc));
-    case 0x05: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_05_short_desc_max, ipmi_sensor_type_code_05_short_desc));
-    case 0x06: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_06_short_desc_max, ipmi_sensor_type_code_06_short_desc));
-    case 0x07: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_07_short_desc_max, ipmi_sensor_type_code_07_short_desc));
-    case 0x08: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_08_short_desc_max, ipmi_sensor_type_code_08_short_desc));
-    case 0x09: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_09_short_desc_max, ipmi_sensor_type_code_09_short_desc));
-    case 0x0C: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0C_short_desc_max, ipmi_sensor_type_code_0C_short_desc));
-    case 0x0D: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0D_short_desc_max, ipmi_sensor_type_code_0D_short_desc));
-    case 0x0F: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_0F_short_desc_max, ipmi_sensor_type_code_0F_short_desc));
-    case 0x10: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_10_short_desc_max, ipmi_sensor_type_code_10_short_desc));
-    case 0x11: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_11_short_desc_max, ipmi_sensor_type_code_11_short_desc));
-    case 0x12: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_12_short_desc_max, ipmi_sensor_type_code_12_short_desc));
-    case 0x13: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_13_short_desc_max, ipmi_sensor_type_code_13_short_desc));
-    case 0x14: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_14_short_desc_max, ipmi_sensor_type_code_14_short_desc));
-    case 0x19: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_19_short_desc_max, ipmi_sensor_type_code_19_short_desc));
-    case 0x1B: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1B_short_desc_max, ipmi_sensor_type_code_1B_short_desc));
-    case 0x1D: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1D_short_desc_max, ipmi_sensor_type_code_1D_short_desc));
-    case 0x1E: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1E_short_desc_max, ipmi_sensor_type_code_1E_short_desc));
-    case 0x1F: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_1F_short_desc_max, ipmi_sensor_type_code_1F_short_desc));
-    case 0x20: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_20_short_desc_max, ipmi_sensor_type_code_20_short_desc));
-    case 0x21: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_21_short_desc_max, ipmi_sensor_type_code_21_short_desc));
-    case 0x22: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_22_short_desc_max, ipmi_sensor_type_code_22_short_desc));
-    case 0x23: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_23_short_desc_max, ipmi_sensor_type_code_23_short_desc));
-    case 0x24: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_24_short_desc_max, ipmi_sensor_type_code_24_short_desc));
-    case 0x25: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_25_short_desc_max, ipmi_sensor_type_code_25_short_desc));
-    case 0x27: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_27_short_desc_max, ipmi_sensor_type_code_27_short_desc));
-    case 0x28: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_28_short_desc_max, ipmi_sensor_type_code_28_short_desc));
-    case 0x29: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_29_short_desc_max, ipmi_sensor_type_code_29_short_desc));
-    case 0x2A: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2A_short_desc_max, ipmi_sensor_type_code_2A_short_desc));
-    case 0x2B: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2B_short_desc_max, ipmi_sensor_type_code_2B_short_desc));
-    case 0x2C: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_2C_short_desc_max, ipmi_sensor_type_code_2C_short_desc));
+    case IPMI_SENSOR_TYPE_PHYSICAL_SECURITY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_physical_security_short_desc_max,
+                                  ipmi_sensor_type_code_physical_security_short_desc));
+    case IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_platform_security_violation_attempt_short_desc_max,
+                                  ipmi_sensor_type_code_platform_security_violation_attempt_short_desc));
+    case IPMI_SENSOR_TYPE_PROCESSOR:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_processor_short_desc_max,
+                                  ipmi_sensor_type_code_processor_short_desc));
+    case IPMI_SENSOR_TYPE_POWER_SUPPLY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_power_supply_short_desc_max,
+                                  ipmi_sensor_type_code_power_supply_short_desc));
+    case IPMI_SENSOR_TYPE_POWER_UNIT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_power_unit_short_desc_max,
+                                  ipmi_sensor_type_code_power_unit_short_desc));
+    case IPMI_SENSOR_TYPE_MEMORY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_memory_short_desc_max,
+                                  ipmi_sensor_type_code_memory_short_desc));
+    case IPMI_SENSOR_TYPE_DRIVE_SLOT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_drive_slot_short_desc_max,
+                                  ipmi_sensor_type_code_drive_slot_short_desc));
+    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_system_firmware_progress_short_desc_max,
+                                  ipmi_sensor_type_code_system_firmware_progress_short_desc));
+    case IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_event_logging_disabled_short_desc_max,
+                                  ipmi_sensor_type_code_event_logging_disabled_short_desc));
+    case IPMI_SENSOR_TYPE_WATCHDOG1:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_watchdog1_short_desc_max,
+                                  ipmi_sensor_type_code_watchdog1_short_desc));
+    case IPMI_SENSOR_TYPE_SYSTEM_EVENT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_system_event_short_desc_max,
+                                  ipmi_sensor_type_code_system_event_short_desc));
+    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_critical_interrupt_short_desc_max,
+                                  ipmi_sensor_type_code_critical_interrupt_short_desc));
+    case IPMI_SENSOR_TYPE_BUTTON_SWITCH:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_button_switch_short_desc_max,
+                                  ipmi_sensor_type_code_button_switch_short_desc));
+    case IPMI_SENSOR_TYPE_CHIP_SET:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_chip_set_short_desc_max,
+                                  ipmi_sensor_type_code_chip_set_short_desc));
+    case IPMI_SENSOR_TYPE_CABLE_INTERCONNECT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_cable_interconnect_short_desc_max,
+                                  ipmi_sensor_type_code_cable_interconnect_short_desc));
+    case IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_system_boot_initiated_short_desc_max,
+                                  ipmi_sensor_type_code_system_boot_initiated_short_desc));
+    case IPMI_SENSOR_TYPE_BOOT_ERROR:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_boot_error_short_desc_max,
+                                  ipmi_sensor_type_code_boot_error_short_desc));
+    case IPMI_SENSOR_TYPE_OS_BOOT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_os_boot_short_desc_max,
+                                  ipmi_sensor_type_code_os_boot_short_desc));
+    case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_os_critical_stop_short_desc_max,
+                                  ipmi_sensor_type_code_os_critical_stop_short_desc));
+    case IPMI_SENSOR_TYPE_SLOT_CONNECTOR:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_slot_connector_short_desc_max,
+                                  ipmi_sensor_type_code_slot_connector_short_desc));
+    case IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_acpi_power_state_short_desc_max,
+                                  ipmi_sensor_type_code_acpi_power_state_short_desc));
+    case IPMI_SENSOR_TYPE_WATCHDOG2:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_watchdog2_short_desc_max,
+                                  ipmi_sensor_type_code_watchdog2_short_desc));
+    case IPMI_SENSOR_TYPE_PLATFORM_ALERT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_platform_alert_short_desc_max,
+                                  ipmi_sensor_type_code_platform_alert_short_desc));
+    case IPMI_SENSOR_TYPE_ENTITY_PRESENCE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_entity_presence_short_desc_max,
+                                  ipmi_sensor_type_code_entity_presence_short_desc));
+    case IPMI_SENSOR_TYPE_LAN:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_lan_short_desc_max,
+                                  ipmi_sensor_type_code_lan_short_desc));
+    case IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_management_subsystem_health_short_desc_max,
+                                  ipmi_sensor_type_code_management_subsystem_health_short_desc));
+    case IPMI_SENSOR_TYPE_BATTERY:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_battery_short_desc_max,
+                                  ipmi_sensor_type_code_battery_short_desc));
+    case IPMI_SENSOR_TYPE_SESSION_AUDIT:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_session_audit_short_desc_max,
+                                  ipmi_sensor_type_code_session_audit_short_desc));
+    case IPMI_SENSOR_TYPE_VERSION_CHANGE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_version_change_short_desc_max,
+                                  ipmi_sensor_type_code_version_change_short_desc));
+    case IPMI_SENSOR_TYPE_FRU_STATE:
+      return (_get_event_message (offset,
+                                  buf,
+                                  buflen,
+                                  ipmi_sensor_type_code_fru_state_short_desc_max,
+                                  ipmi_sensor_type_code_fru_state_short_desc));
     }
 
   SET_ERRNO (EINVAL);
@@ -2811,19 +3169,32 @@ ipmi_get_event_data2_message (uint8_t sensor_type_code,
 
   switch (sensor_type_code)
     {
-    case 0x05: return (get_05_event_data2_message (offset, event_data2, buf, buflen));
-    case 0x0F: return (get_0F_event_data2_message (offset, event_data2, buf, buflen));
-    case 0x10: return (get_10_event_data2_message (offset, event_data2, buf, buflen));
-    case 0x12: return (get_12_event_data2_message (offset, event_data2, buf, buflen));
-    case 0x19: return (get_19_event_data2_message (offset, event_data2, buf, buflen));
-    case 0x1D: return (get_1D_event_data2_message (offset, event_data2, buf, buflen));
-    case 0x21: return (get_21_event_data2_message (offset, event_data2, buf, buflen));
-    case 0x23: return (get_23_event_data2_message (offset, event_data2, buf, buflen));
-    case 0x28: return (get_28_event_data2_message (offset, event_data2, buf, buflen));
-    case 0x2A: return (get_2A_event_data2_message (offset, event_data2, buf, buflen));
-    case 0x2B: return (get_2B_event_data2_message (offset, event_data2, buf, buflen));
-    case 0x2C: return (get_2C_event_data2_message (offset, event_data2, buf, buflen));
+    case IPMI_SENSOR_TYPE_PHYSICAL_SECURITY:
+      return (get_physical_security_event_data2_message (offset, event_data2, buf, buflen));
+    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS:
+      return (get_system_firmware_progress_event_data2_message (offset, event_data2, buf, buflen));
+    case IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED:
+      return (get_event_logging_disabled_event_data2_message (offset, event_data2, buf, buflen));
+    case IPMI_SENSOR_TYPE_SYSTEM_EVENT:
+      return (get_system_event_event_data2_message (offset, event_data2, buf, buflen));
+    case IPMI_SENSOR_TYPE_CHIP_SET:
+      return (get_chip_set_event_data2_message (offset, event_data2, buf, buflen));
+    case IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED:
+      return (get_system_boot_initiated_event_data2_message (offset, event_data2, buf, buflen));
+    case IPMI_SENSOR_TYPE_SLOT_CONNECTOR:
+      return (get_slot_connector_event_data2_message (offset, event_data2, buf, buflen));
+    case IPMI_SENSOR_TYPE_WATCHDOG2:
+      return (get_watchdog2_event_data2_message (offset, event_data2, buf, buflen));
+    case IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH:
+      return (get_management_subsystem_health_event_data2_message (offset, event_data2, buf, buflen));
+    case IPMI_SENSOR_TYPE_SESSION_AUDIT:
+      return (get_session_audit_event_data2_message (offset, event_data2, buf, buflen));
+    case IPMI_SENSOR_TYPE_VERSION_CHANGE:
+      return (get_version_change_event_data2_message (offset, event_data2, buf, buflen));
+    case IPMI_SENSOR_TYPE_FRU_STATE:
+      return (get_fru_state_event_data2_message (offset, event_data2, buf, buflen));
     }
+
   SET_ERRNO (EINVAL);
   return (-1);
 }
@@ -2844,14 +3215,22 @@ ipmi_get_event_data3_message (uint8_t sensor_type_code,
 
   switch (sensor_type_code)
     {
-    case 0x08: return (get_08_event_data3_message (offset, event_data2, event_data3, buf, buflen));
-    case 0x0C: return (get_0C_event_data3_message (offset, event_data2, event_data3, buf, buflen));
-    case 0x10: return (get_10_event_data3_message (offset, event_data2, event_data3, buf, buflen));
-    case 0x19: return (get_19_event_data3_message (offset, event_data2, event_data3, buf, buflen));
-    case 0x1D: return (get_1D_event_data3_message (offset, event_data2, event_data3, buf, buflen));
-    case 0x21: return (get_21_event_data3_message (offset, event_data2, event_data3, buf, buflen));
-    case 0x28: return (get_28_event_data3_message (offset, event_data2, event_data3, buf, buflen));
-    case 0x2A: return (get_2A_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case IPMI_SENSOR_TYPE_POWER_SUPPLY:
+      return (get_power_supply_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case IPMI_SENSOR_TYPE_MEMORY:
+      return (get_memory_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED:
+      return (get_event_logging_disabled_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case IPMI_SENSOR_TYPE_CHIP_SET:
+      return (get_chip_set_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED:
+      return (get_system_boot_initiated_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case IPMI_SENSOR_TYPE_SLOT_CONNECTOR:
+      return (get_slot_connector_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH:
+      return (get_management_subsystem_health_event_data3_message (offset, event_data2, event_data3, buf, buflen));
+    case IPMI_SENSOR_TYPE_SESSION_AUDIT:
+      return (get_session_audit_event_data3_message (offset, event_data2, event_data3, buf, buflen));
     }
 
   SET_ERRNO (EINVAL);
@@ -2881,7 +3260,12 @@ ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
     {
       switch (event_reading_type_code)
         {
-        case 0x70: return (_get_event_message (offset, buf, buflen, ipmi_generic_event_reading_type_code_dell_oem_70_desc_max, ipmi_generic_event_reading_type_code_dell_oem_70_desc));
+        case 0x70:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_generic_event_reading_type_code_dell_oem_70_desc_max,
+                                      ipmi_generic_event_reading_type_code_dell_oem_70_desc));
         }
     }
 
@@ -2912,11 +3296,36 @@ ipmi_get_oem_sensor_type_code_message (uint32_t manufacturer_id,
     {
       switch (sensor_type_code)
         {
-        case 0xC0: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_dell_oem_C0_desc_max, ipmi_sensor_type_code_dell_oem_C0_desc));
-        case 0xC1: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_dell_oem_C1_desc_max, ipmi_sensor_type_code_dell_oem_C1_desc));
-        case 0xC2: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_dell_oem_C2_desc_max, ipmi_sensor_type_code_dell_oem_C2_desc));
-        case 0xC3: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_dell_oem_C3_desc_max, ipmi_sensor_type_code_dell_oem_C3_desc));
-        case 0xC4: return (_get_event_message (offset, buf, buflen, ipmi_sensor_type_code_dell_oem_C4_desc_max, ipmi_sensor_type_code_dell_oem_C4_desc));
+        case 0xC0:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_code_dell_oem_C0_desc_max,
+                                      ipmi_sensor_type_code_dell_oem_C0_desc));
+        case 0xC1:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_code_dell_oem_C1_desc_max,
+                                      ipmi_sensor_type_code_dell_oem_C1_desc));
+        case 0xC2:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_code_dell_oem_C2_desc_max,
+                                      ipmi_sensor_type_code_dell_oem_C2_desc));
+        case 0xC3:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_code_dell_oem_C3_desc_max,
+                                      ipmi_sensor_type_code_dell_oem_C3_desc));
+        case 0xC4:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_code_dell_oem_C4_desc_max,
+                                      ipmi_sensor_type_code_dell_oem_C4_desc));
         }
     }
 

@@ -1,3 +1,7 @@
+2009-09-04  Albert Chu <chu11@llnl.gov>
+
+	* Various code cleanup.
+	
 2009-09-03  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/util/ipmi-iana-enterprise-numbers-util.h,
