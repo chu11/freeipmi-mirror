@@ -1,3 +1,7 @@
+oem
+---
+R710 and R610?  Update if necessary.
+
 inband
 ------
 --fail-if-ipmi-not-detected
@@ -7,6 +11,8 @@ inband flag - discover vs. not-discover on locate
 general
 -------
 forwarded command support (errata 35b)
+functions to support "is supported" checks for OEM stuff
+- i.e. you don't need to check manufactur ids in two places, just use the function.
 
 bmc-device
 --------

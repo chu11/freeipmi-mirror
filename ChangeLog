@@ -8,6 +8,8 @@
 	utility function appropriately.
 
 	* libfreeipmi/: Add supermicro iana support.
+
+	* libfreeipmi/, ipmi-sensors/: Support Supermicro oem sensors.
 	
 2009-09-02  Albert Chu <chu11@llnl.gov>
 

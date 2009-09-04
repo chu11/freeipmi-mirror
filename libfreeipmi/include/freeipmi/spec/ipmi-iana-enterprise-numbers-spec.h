@@ -24,10 +24,13 @@ extern "C" {
 #endif
 
 /* Convenience macros, will be added as needed in code */
-#define IPMI_IANA_ENTERPRISE_ID_INTEL      343
-#define IPMI_IANA_ENTERPRISE_ID_DELL       674
-#define IPMI_IANA_ENTERPRISE_ID_SUPERMICRO 10876
-#define IPMI_IANA_ENTERPRISE_ID_INVENTEC   20569
+#define IPMI_IANA_ENTERPRISE_ID_INTEL                   343
+#define IPMI_IANA_ENTERPRISE_ID_DELL                    674
+#define IPMI_IANA_ENTERPRISE_ID_SUPERMICRO            10876
+#define IPMI_IANA_ENTERPRISE_ID_INVENTEC              20569
+
+/* Workarounds for motherboards with invalid enterprise IDs */
+#define IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND 47488
 
 /* As of this writing min = 0, max = 34214 */
 

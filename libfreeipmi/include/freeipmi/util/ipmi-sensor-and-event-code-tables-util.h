@@ -90,6 +90,18 @@ int ipmi_get_oem_sensor_type_code_message (uint32_t manufacturer_id,
                                            char *buf,
                                            unsigned int buflen);
 
+/* return length of string written into buffer on success, -1 on error */
+/* some vendors return values instead of event bitmasks in the 
+ * sensor or SEL event, this is to handle this special case
+ */
+int ipmi_get_oem_sensor_event_bitmask_message (uint32_t manufacturer_id,
+					       uint16_t product_id,
+					       uint8_t event_reading_type_code,
+					       uint8_t sensor_type_code,
+					       uint16_t sensor_event_bitmask,
+					       char *buf,
+					       unsigned int buflen);
+  
 #ifdef __cplusplus
 }
 #endif

@@ -109,6 +109,7 @@ o ipmi-sensors
   - Support --entity-sensor-names option.
   - Support --interpret-oem-data option.
   - Support Dell Poweredge R610 OEM sensors.
+  - Support Supermicro X8DTH OEM sensors.
   - Output allocation information with --sdr-info if available.
   - Output Entity ID under verbose instead of very verbose mode.
   - Under very verbose output, "Sensor Status" is now "Sensor Event".

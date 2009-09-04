@@ -54,6 +54,8 @@
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
+#define IPMI_SENSORS_OEM_MESSAGE_LENGTH 1024
+
 static int
 _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
 {
@@ -584,11 +586,15 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                                                   IPMI_SENSORS_NO_EVENT_STRING) < 0)
         goto cleanup;
     }
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   */
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
            && state_data->prog_data->args->interpret_oem_data
            && state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
            && state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-           && event_reading_type_code == 0x70)
+           && event_reading_type_code == 0x70) /* OEM */
     {
       if (get_generic_event_message_list (state_data,
                                           &event_message_list,
@@ -598,22 +604,59 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                                           IPMI_SENSORS_NO_EVENT_STRING) < 0)
         goto cleanup;
     }
-  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM)
+  /* OEM Interpretation
+   *
+   * Supermicro X8DTH
+   */
+  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
+           && state_data->prog_data->args->interpret_oem_data
+           && (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
+	       || state_data->manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
+	   && state_data->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
+	   && event_reading_type_code == 0x70) /* OEM */
     {
+      char event_buf[IPMI_SENSORS_OEM_MESSAGE_LENGTH + 1];
       char *event_message = NULL;
       char **tmp_event_message_list = NULL;
+      uint8_t sensor_type;
+      int ret;
 
-      if (asprintf (&event_message,
-                    "OEM Event = %04Xh",
-                    sensor_event_bitmask) < 0)
+      if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      &sensor_type) < 0)
         {
-          pstdout_perror (state_data->pstate, "asprintf");
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_parse_sensor_type: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
           goto cleanup;
         }
+
+      memset (event_buf, '\0', IPMI_SENSORS_OEM_MESSAGE_LENGTH + 1);
+
+      if ((ret = ipmi_get_oem_sensor_event_bitmask_message (state_data->manufacturer_id,
+							    state_data->product_id,
+							    event_reading_type_code,
+							    sensor_type,
+							    sensor_event_bitmask,
+							    event_buf,
+							    IPMI_SENSORS_OEM_MESSAGE_LENGTH)) < 0)
+	goto oem_normal_output;
+      
+      if (!ret)
+	goto oem_normal_output;
+
+      if (!(event_message = strdup (event_buf)))
+	{
+	  pstdout_perror (state_data->pstate, "strdup");
+          goto cleanup;
+	}
 
       if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * 2)))
         {
           pstdout_perror (state_data->pstate, "malloc");
+          free (event_message);
           goto cleanup;
         }
 
@@ -622,6 +665,35 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
 
       event_message_list = tmp_event_message_list;
       event_message_list_len = 1;
+    }
+  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM)
+    {
+    oem_normal_output:
+      {
+	char *event_message = NULL;
+	char **tmp_event_message_list = NULL;
+	
+	if (asprintf (&event_message,
+		      "OEM Event = %04Xh",
+		      sensor_event_bitmask) < 0)
+	  {
+	    pstdout_perror (state_data->pstate, "asprintf");
+	    goto cleanup;
+	  }
+	
+	if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * 2)))
+	  {
+	    pstdout_perror (state_data->pstate, "malloc");
+	    free (event_message);
+	    goto cleanup;
+	  }
+	
+	tmp_event_message_list[0] = event_message;
+	tmp_event_message_list[1] = NULL;
+	
+	event_message_list = tmp_event_message_list;
+	event_message_list_len = 1;
+      }
     }
   /* else unknown event_reading_type_code, output "unknown" ultimately */
 

@@ -2923,3 +2923,68 @@ ipmi_get_oem_sensor_type_code_message (uint32_t manufacturer_id,
   SET_ERRNO (EINVAL);
   return (-1);
 }
+
+int
+ipmi_get_oem_sensor_event_bitmask_message (uint32_t manufacturer_id,
+					   uint16_t product_id,
+					   uint8_t event_reading_type_code,
+					   uint8_t sensor_type_code,
+					   uint16_t sensor_event_bitmask,
+					   char *buf,
+					   unsigned int buflen)
+{
+  if (!buf || !buflen)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  /* OEM Interpretation
+   *
+   * Supermicro X8DTH
+   *
+   * Event Reading Type Code = 0x70 (OEM)
+   * Sensor Type = 0xC0 (OEM)
+   * - 0 = Low
+   * - 1 = Medium
+   * - 2 = High
+   * - 4 = Overheat
+   * - 7 = Not Installed
+   */
+  if ((manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
+       || manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
+      && product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH)
+    {
+      switch (event_reading_type_code)
+	{
+	case 0x70:		/* OEM */
+	  {
+	    switch (sensor_type_code)
+	      {
+	      case 0xC0:	/* OEM */
+		{
+		  switch (sensor_event_bitmask)
+		    {
+		    case 0:
+		      return (snprintf (buf, buflen, "Low"));
+		    case 1:
+		      return (snprintf (buf, buflen, "Medium"));
+		    case 2:
+		      return (snprintf (buf, buflen, "High"));
+		    case 4:
+		      return (snprintf (buf, buflen, "Overheat"));
+		    case 7:
+		      return (snprintf (buf, buflen, "Not Installed"));
+		    }
+		}
+		break;
+	      }
+	  }
+	  break;
+	  /* end case 0x70: */
+	}
+    }
+
+  SET_ERRNO (EINVAL);
+  return (-1);
+}
