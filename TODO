@@ -57,6 +57,10 @@ ipmi-oem-config
 - inventec mac/shared nic stuff
   - no, oem specific and will reboot BMC
 
+oem
+---
+dell poweredge lcd support
+
 libfreeipmi
 -----------
 * how to support xRC4 (can we? should we? does any vendor support this?)
