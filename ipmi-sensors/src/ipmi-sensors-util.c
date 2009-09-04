@@ -191,9 +191,11 @@ _event_reading_type_code_is_oem_interpretable (struct ipmi_sensors_state_data *s
   /* OEM Interpretation
    *
    * Dell Poweredge R610
+   * Dell Poweredge R710
    */
   if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && event_reading_type_code == 0x70) /* OEM */
     return (1);
 
@@ -323,9 +325,11 @@ _sensor_type_is_oem_interpretable (struct ipmi_sensors_state_data *state_data,
   /* OEM Interpretation
    *
    * Dell Poweredge R610
+   * Dell Poweredge R710
    */
   if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && state_data->product_id == 256
+      && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && (sensor_type == 0xC0
           || sensor_type == 0xC1
           || sensor_type == 0xC2

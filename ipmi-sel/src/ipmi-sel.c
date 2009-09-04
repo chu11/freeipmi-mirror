@@ -1221,14 +1221,20 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
 
       /* OEM Interpretation
        * 
+       * Dell Poweredge 2900
+       * Dell Poweredge 2950
        * Dell Poweredge R610
+       * Dell Poweredge R710
        *
        * Unique condition, event_data2_flag and event_data3_flag are
        * listed as "unspecified", so we need to handle this as a
        * special case.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
+              || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
+              || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+              || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
 #if 0
           /* it appears these don't need to match, 0x7E event type code is
            * the primary indicator
@@ -1246,6 +1252,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
       /* OEM Interpretation
        * 
        * Dell Poweredge R610
+       * Dell Poweredge R710
        *
        * Unique condition 1, event_data 2 and 3 are a single watt
        * output.  So there is no individual event data 2/3 output, the
@@ -1270,7 +1277,8 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * achu: XXX: data2 & 0x0F == 2 ???  Need to ask Dell.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+              || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
           && ((sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
                && event_data1_offset == 0x06
                && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE

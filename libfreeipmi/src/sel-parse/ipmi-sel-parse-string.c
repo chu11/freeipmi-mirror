@@ -765,9 +765,11 @@ _output_oem_event_offset_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ct
   /* OEM Interpretation
    *
    * Dell Poweredge R610
+   * Dell Poweredge R710
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && (system_event_record_data->sensor_type == 0xC0 /* OEM */
           || system_event_record_data->sensor_type == 0xC1 /* OEM */
           || system_event_record_data->sensor_type == 0xC2 /* OEM */
@@ -845,9 +847,11 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
   /* OEM Interpretation
    *
    * Dell Poweredge R610
+   * Dell Poweredge R710
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == 0x70)
     {
       int ret;
@@ -865,12 +869,18 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
+   * Dell Poweredge 2900
+   * Dell Poweredge 2950
    * Dell Poweredge R610
+   * Dell Poweredge R710
    *
    * achu: Unique special case
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
 #if 0
       /* it appears these don't need to match, 0x7E event type code is
        * the primary indicator
@@ -964,13 +974,15 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
        *
        * From Dell Provided Source Code
        * - Handle for Dell Poweredge R610
+       * - Handle for Dell Poweredge R710
        *
        * Apparently System Firmware Progress sensors can have this
        * event occur even though its out of range.
        */
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
 	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-	  && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+              || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
 	  && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
 	  && system_event_record_data.offset_from_event_reading_type_code == 0xF)
 	{
@@ -1148,6 +1160,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
+   * - Handle for Dell Poweredge R710
    *
    * Specifically for Power Supply sensors with an event offset 0x01
    *
@@ -1155,7 +1168,8 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * more info from Dell.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
       && system_event_record_data->offset_from_event_reading_type_code == 0x01
@@ -1172,11 +1186,13 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
+   * - Handle for Dell Poweredge R710
    *
    * Specifically for Intrusion sensors
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
     {
@@ -1202,13 +1218,15 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
+   * - Handle for Dell Poweredge R710
    *
    * Specifically for Memory Sensors
    *
    * achu: XXX: event_data2 & 0x0F != 0x0F ??? Need info from Dell
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && ctx->ipmi_version_major == IPMI_1_5_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_1_5_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -1308,10 +1326,16 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
   
   /* OEM Interpretation
    *
+   * Dell Poweredge 2900
+   * Dell Poweredge 2950
    * Dell Poweredge R610
+   * Dell Poweredge R710
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
 #if 0
       /* it appears these don't need to match, 0x7E event type code is
        * the primary indicator
@@ -1795,13 +1819,15 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
+   * - Handle for Dell Poweredge R710
    *
    * Specifically for Version Change Sensors with an event offset 0x06
    *
    * achu: XXX: event_data3 & 0x80 == 0x80 ??? need to ask dell
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -1821,13 +1847,15 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
+   * - Handle for Dell Poweredge R710
    *
    * Specifically for Memory Sensors
    *
    * achu: XXX: event_data2 & 0x0F != 0x0F ??? Need info from Dell
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && ctx->ipmi_version_major == IPMI_1_5_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_1_5_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -1899,10 +1927,16 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
   
   /* OEM Interpretation
    *
+   * Dell Poweredge 2900
+   * Dell Poweredge 2950
    * Dell Poweredge R610
+   * Dell Poweredge R710
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
 #if 0
       /* it appears these don't need to match, 0x7E event type code is
        * the primary indicator
@@ -2452,6 +2486,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
+   * - Handle for Dell Poweredge R710
    *
    * Specifically for Power Supply sensors with an event offset 0x06
    *
@@ -2460,7 +2495,8 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * "check for error type in byte 3".
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
       && system_event_record_data->offset_from_event_reading_type_code == 0x06
@@ -2493,11 +2529,13 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
+   * - Handle for Dell Poweredge R710
    *
    * Specifically for Critical Interrupt Sensors and several Dell OEM sensors.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           || system_event_record_data->sensor_type == 0xC2 /* OEM */
@@ -2546,13 +2584,15 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
+   * - Handle for Dell Poweredge R710
    *
    * Specifically for Version Change Sensors with an event offset 0x03
    *
    * achu: XXX: dataX & 0x1F != 1F ???  Need to ask Dell.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -2612,13 +2652,15 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
+   * - Handle for Dell Poweredge R710
    *
    * Specifically for Version Change Sensors
    *
    * achu: XXX: data2 & 0x0F == 2 ???  Need to ask Dell.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -2655,11 +2697,13 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
+   * - Handle for Dell Poweredge R710
    *
    * Specifically for Dell OEM sensor 0xC1 w/ event offset 0x01 .
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->offset_from_event_reading_type_code == 0x01
@@ -2690,13 +2734,15 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
+   * - Handle for Dell Poweredge R710
    *
    * Specifically for Dell OEM sensor 0xC1 w/ event offset 0x01.
    *
    * achu: XXX: data3 & 0x01 => 'B' or 'C' ???  Need to ask Dell
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->offset_from_event_reading_type_code == 0x02
@@ -2782,13 +2828,15 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    *
    * From Dell Provided Source Code
    * - Handle for Dell Poweredge R610
+   * - Handle for Dell Poweredge R710
    *
    * Specifically for Memory Sensors
    *
    * achu: XXX: need info from dell, this doesn't make a lot of sense.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC

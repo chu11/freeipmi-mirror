@@ -122,6 +122,8 @@ Dell Poweredge 2900
 Dell Poweredge 2950
 .TP
 Dell Poweredge R610
+.TP
+Dell Poweredge R710
 .SH "EXAMPLES"
 .B # ipmi-sel 
 .PP

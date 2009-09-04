@@ -499,10 +499,12 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       /* OEM Interpretation
        *
        * Dell Poweredge R610
+       * Dell Poweredge R710
        */
       else if (state_data->prog_data->args->interpret_oem_data
                && manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_DELL
-               && product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610)
+               && (product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+                   || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
         {
           pstdout_printf (state_data->pstate,
                           "Build Number          : %u\n",

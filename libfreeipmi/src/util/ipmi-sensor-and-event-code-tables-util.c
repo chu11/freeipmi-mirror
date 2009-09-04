@@ -3254,9 +3254,11 @@ ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
   /* OEM Interpretation
    *
    * Dell Poweredge R610
+   * Dell Poweredge R710
    */
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610)
+      && (product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
     {
       switch (event_reading_type_code)
         {
@@ -3290,9 +3292,11 @@ ipmi_get_oem_sensor_type_code_message (uint32_t manufacturer_id,
   /* OEM Interpretation
    *
    * Dell Poweredge R610
+   * Dell Poweredge R710
    */
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610)
+      && (product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
     {
       switch (sensor_type_code)
         {

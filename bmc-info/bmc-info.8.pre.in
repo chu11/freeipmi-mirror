@@ -57,6 +57,8 @@ Display only channel information.
 Intel SR870BN4/Tiger4
 .TP
 Dell Poweredge R610
+.TP
+Dell Poweredge R710
 .SH "EXAMPLES"
 .B # bmc-info
 .PP

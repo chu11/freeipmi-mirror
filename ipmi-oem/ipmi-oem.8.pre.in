@@ -76,7 +76,7 @@ may be passed to any OEM ID to list commands supported by that OEM ID.
 .B get-system-info \fIasset\-tag|service\-tag|product\-name|mac\-addresses\fR
 This OEM command can retrieve the motherboard asset tag, service tag,
 product name, or mac addresses.  Command confirmed to work on Dell
-Poweredge 2900, 2950 and R610.  However, specific system information
+Poweredge 2900, 2950, R610, R710.  However, specific system information
 may not be readable/available on all Dell Poweredges systems.
 .TP
 .B get-nic-selection
@@ -87,8 +87,8 @@ card, shared indicates IPMI is available on NIC1, shared w/ failover
 to NIC2 indicates IPMI is available on NIC1 w/ failover to NIC2 on
 NIC1's failure, and shared w/ failover to all indicates IPMI is
 available on NIC1 w/ failover to all other NICs in the event of NIC
-failure.  Command confirmed to work on Dell Poweredge 2900, 2950, and
-R610.
+failure.  Command confirmed to work on Dell Poweredge 2900, 2950,
+R610, and R710.
 .TP
 .B set-nic-section \fIdedicated|shared|shared_failover_nic2|shared_failover_all\fR
 This OEM command will set the current NIC selection to dedicated,
@@ -96,11 +96,11 @@ shared, shared_failover_nic2, or shared_failover_all.  (See
 \fIget\-nic\-selection\fR above for description on inputs.)  On older
 Poweredge systems, \fIshared_failover_nic2\fR may have ben documented
 as just \fIfailover\fR.  Command confirmed to work on Dell Poweredge
-2900, 2950, and R610.
+2900, 2950, R610, and R710.
 .TP
 .B get-ssh-config
 This OEM command will get the current SSH configuration on the IPMI
-card.  Command confirmed to work on Dell Poweredge R610.
+card.  Command confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B set-ssh-config \fIKEY=VALUE ...\fR
 This OEM command will set the current SSH configuration on the IPMI
@@ -109,11 +109,11 @@ card.  The possible keys and values are
 \fIportnumber=num\fR.  Multiple key=value pairs may be
 specified.  If no key=value pairs are specifed, available pairs are
 output.  Some fields may be read-only on specific Poweredge systems.
-Command confirmed to work on Dell Poweredge R610.
+Command confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B get-telnet-config
 This OEM command will get the current telnet configuration on the IPMI
-card.  Command confirmed to work on Dell Poweredge R610.
+card.  Command confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B set-telnet-config \fIKEY=VALUE ...\fR
 This OEM command will set the current Telnet configuration on the IPMI
@@ -123,11 +123,11 @@ card.  The possible keys and values are
 Multiple key=value pairs may be specified.
 If no key=value pairs are specifed, available pairs are output.  Some
 fields may be read-only on specific Poweredge systems.  Command
-confirmed to work on Dell Poweredge R610.
+confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B get-web-server-config
 This OEM command will get the current web server configuration on the
-IPMI card.  Command confirmed to work on Dell Poweredge R610.
+IPMI card.  Command confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B set-web-server-config \fIKEY=VALUE ...\fR
 This OEM command will set the current Web Server configuration on the
@@ -137,11 +137,12 @@ IPMI card.  The possible keys and values are
 and \fIhttpsportnumber=num\fR.  Multiple key=value pairs may be
 specified.  If no key=value pairs are specifed, available pairs are
 output.  Some fields may be read-only on specific Poweredge systems.
-Command confirmed to work on Dell Poweredge R610.
+Command confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B get-active-directory-config
 This OEM command will get the current active directory configuration
-on the IPMI card.  Command confirmed to work on Dell Poweredge R610.
+on the IPMI card.  Command confirmed to work on Dell Poweredge R610
+and R710.
 .TP
 .B set-active-directory-config
 This OEM command will set the current Web Server configuration on the
@@ -170,60 +171,60 @@ and
 \fIcertificatevalidation=enable|disable\fR.
 If no key=value pairs are specifed, available pairs are output.  Some
 fields may be read-only on specific Poweredge systems.  Command
-confirmed to work on Dell Poweredge R610.
+confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B reset-to-defaults
 This OEM command will reset the BMC configuration back to default
 values.  The command will spin until the reset is confirmed to be
-complete.  Command confirmed to work on Dell Poweredge R610.
+complete.  Command confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B get-power-info
 This OEM command can retrieve power information.  Command confirmed to
-work on Dell Poweredge R610.
+work on Dell Poweredge R610 and R710.
 .TP
 .B reset-power-info \fIcumulative|peak\fI
 This OEM command can reset the cumulative or peak power information
 readings (viewed via \fBget\-power\-info\fR).  Command confirmed to
-work on Dell Poweredge R610.
+work on Dell Poweredge R610 and R710.
 .TP
 .B get-power-supply-info
 This OEM command can read and output power supply ratings and other
 information.  This OEM command requires access to the SDR.  Command
-confirmed to work on Dell Poweredge R610.
+confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B get-instantaneous-power-consumption-info
 This OEM command can read instantaneous power consumption information.
-Command confirmed to work on Dell Poweredge R610.
+Command confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B get-power-headroom-info
 This OEM command can read power headroom information.  Command
-confirmed to work on Dell Poweredge R610.
+confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B get-average-power-history
 This OEM command can read average power usage history.  Command
-confirmed to work on Dell Poweredge R610.
+confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B get-peak-power-history
 This OEM command can read peak power usage history.  Command confirmed
-to work on Dell Poweredge R610.
+to work on Dell Poweredge R610 and R710.
 .TP
 .B get-power-capacity
 This OEM command can read the current power capacity.  Command
-confirmed to work on Dell Poweredge R610.
+confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B set-power-capacity \fIpower-capacity\fR
 This OEM command can write the current power capacity (specified in
-Watts).  Command confirmed to work on Dell Poweredge R610.
+Watts).  Command confirmed to work on Dell Poweredge R610 and R710.
 .TP
 .B get-power-capacity-status
 This OEM command can determine if the current power capacity is
 enabled or disabled.  Command confirmed to work on Dell Poweredge
-R610.
+R610 and R710.
 .TP
 .B set-power-capacity-status \fIenable|disable\fR
 This OEM command can configure the current power capacity to be
 enabled or disabled.  Command confirmed to work on Dell Poweredge
-R610.
+R610 and R710.
 .TP
 .B get-fcb-version
 This OEM command can retrieve the fan control board (FCB) version
