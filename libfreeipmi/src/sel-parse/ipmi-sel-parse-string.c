@@ -852,7 +852,7 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && system_event_record_data->event_type_code == 0x70)
+      && system_event_record_data->event_type_code == 0x70) /* OEM */
     {
       int ret;
 
@@ -889,7 +889,7 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
       && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->sensor_number == 0x1A
 #endif
-      && system_event_record_data->event_type_code == 0x7E)
+      && system_event_record_data->event_type_code == 0x7E) /* OEM */
     {
       snprintf (tmpbuf,
                 tmpbuflen,
