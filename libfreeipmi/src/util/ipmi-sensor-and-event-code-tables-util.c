@@ -32,9 +32,11 @@
 
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
+#include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
 #include "freeipmi/fiid/fiid.h"
 
 #include "libcommon/ipmi-fiid-util.h"
@@ -1484,8 +1486,13 @@ static int ipmi_sensor_type_code_session_audit_event_data3_offset_01_deactivatio
  * Generic Event Reading Strings (OEM) *
  ***************************************/
 
-static char * ipmi_generic_event_reading_type_code_oem_dell_70_desc[] =
+/*
+ * Dell
+ */
+
+static char * ipmi_generic_event_reading_type_code_oem_dell_status_desc[] =
   {
+    "Absent",
     "Standby",
     "IPMI Function ready",
     "Fully ready",
@@ -1496,12 +1503,20 @@ static char * ipmi_generic_event_reading_type_code_oem_dell_70_desc[] =
     "Write protected",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_oem_dell_70_desc_max = 0x07;
+static int ipmi_generic_event_reading_type_code_oem_dell_status_desc_max = 0x08;
 
 /*****************************
  * Sensor Type Strings (OEM) *
  *****************************/
 
+/*
+ * Dell
+ */
+
+/*
+ * Dell Poweredge R610
+ * Dell Poweredge R710
+ */
 /* achu:
  *
  * I have a feeling "good" is the random string they choose in some
@@ -3262,12 +3277,12 @@ ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
     {
       switch (event_reading_type_code)
         {
-        case 0x70:
+        case IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS:
           return (_get_event_message (offset,
                                       buf,
                                       buflen,
-                                      ipmi_generic_event_reading_type_code_oem_dell_70_desc_max,
-                                      ipmi_generic_event_reading_type_code_oem_dell_70_desc));
+                                      ipmi_generic_event_reading_type_code_oem_dell_status_desc_max,
+                                      ipmi_generic_event_reading_type_code_oem_dell_status_desc));
         }
     }
 

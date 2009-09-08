@@ -196,16 +196,9 @@ _event_reading_type_code_is_oem_interpretable (struct ipmi_sensors_state_data *s
   if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-#if 0
-      /* it appears these don't need to match, 0x7E event type code is
-       * the primary indicator
-       */
-      && generator_id == 0xB1
-      && sensor_number == 0x1A
-#endif
-      && event_reading_type_code == 0x70) /* OEM */
+      && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS)
     return (1);
-
+  
   return (0);
 }
 

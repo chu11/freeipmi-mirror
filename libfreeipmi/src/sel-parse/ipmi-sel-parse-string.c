@@ -47,6 +47,7 @@
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/sdr-cache/ipmi-sdr-cache.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
@@ -853,7 +854,7 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && system_event_record_data->event_type_code == 0x70) /* OEM */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS)
     {
       int ret;
 
@@ -883,13 +884,14 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
 #if 0
-      /* it appears these don't need to match, 0x7E event type code is
-       * the primary indicator
+      /* it appears these don't need to match,
+       * IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA event
+       * type code is the primary indicator
        */
       && system_event_record_data->generator_id == 0xB1
       && system_event_record_data->sensor_number == 0x1A
 #endif
-      && system_event_record_data->event_type_code == 0x7E) /* OEM */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA)
     {
       snprintf (tmpbuf,
                 tmpbuflen,
@@ -1337,13 +1339,14 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
 #if 0
-      /* it appears these don't need to match, 0x7E event type code is
-       * the primary indicator
+      /* it appears these don't need to match,
+       * IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA event
+       * type code is the primary indicator
        */
       && system_event_record_data->generator_id == 0xB1
       && system_event_record_data->sensor_number == 0x1A
 #endif
-      && system_event_record_data->event_type_code == 0x7E) /* OEM */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA)
     {
       uint16_t register_offset;
       
@@ -1937,13 +1940,14 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
 #if 0
-      /* it appears these don't need to match, 0x7E event type code is
-       * the primary indicator
+      /* it appears these don't need to match,
+       * IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA event
+       * type code is the primary indicator
        */
       && system_event_record_data->generator_id == 0xB1
       && system_event_record_data->sensor_number == 0x1A
 #endif
-      && system_event_record_data->event_type_code == 0x7E) /* OEM */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA)
     {
       snprintf (tmpbuf,
                 tmpbuflen,
