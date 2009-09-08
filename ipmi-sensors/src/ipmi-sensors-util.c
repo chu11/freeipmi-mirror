@@ -196,6 +196,13 @@ _event_reading_type_code_is_oem_interpretable (struct ipmi_sensors_state_data *s
   if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+#if 0
+      /* it appears these don't need to match, 0x7E event type code is
+       * the primary indicator
+       */
+      && generator_id == 0xB1
+      && sensor_number == 0x1A
+#endif
       && event_reading_type_code == 0x70) /* OEM */
     return (1);
 
@@ -330,11 +337,11 @@ _sensor_type_is_oem_interpretable (struct ipmi_sensors_state_data *state_data,
   if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && (sensor_type == 0xC0
-          || sensor_type == 0xC1
-          || sensor_type == 0xC2
-          || sensor_type == 0xC3
-          || sensor_type == 0xC4))
+      && (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR
+          || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE))
     return (1);
   
   return (0);

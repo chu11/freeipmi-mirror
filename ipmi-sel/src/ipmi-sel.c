@@ -1204,7 +1204,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
           && state_data->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
           && ((generator_id == 0x01 /* "BIOS" */
-               && sensor_type == 0xC1 /* OEM Reserved */
+               && sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS /* OEM Reserved */
                && sensor_number == 0x81 /* "BIOS Start" */
                && event_type_code == 0x70 /* OEM */
                && !event_data1_offset
@@ -1240,7 +1240,6 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
            * the primary indicator
            */
           && generator_id == 0xB1
-          && sensor_type == 0xC1 /* OEM */
           && sensor_number == 0x1A
 #endif
           && event_type_code == 0x7E) /* OEM */
@@ -1285,8 +1284,8 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                && (event_data3 & 0x0F) == 0x03)
               || ((sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-                   || sensor_type == 0xC2 /* OEM */
-                   || sensor_type == 0xC3) /* OEM */
+                   || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
+                   || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR)
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               || (sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
@@ -1301,7 +1300,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && (event_data2 & 0x0F) == 0x02)
-              || (sensor_type == 0xC1 /* OEM */
+              || (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
                   && (event_data1_offset == 0x01
                       || event_data1_offset == 0x02)
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE

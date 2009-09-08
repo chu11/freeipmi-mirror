@@ -1,6 +1,11 @@
 2009-09-08  Albert Chu <chu11@llnl.gov>
 
 	* Rename ipmi-vendor-spec.h to ipmi-oem-spec.h.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-types-oem-spec.h:
+	New file.
+
+	* Various code cleanup using new macros.
 	
 2009-09-04  Albert Chu <chu11@llnl.gov>
 

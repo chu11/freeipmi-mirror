@@ -92,6 +92,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-privilege-level-spec.h>
 #include <freeipmi/spec/ipmi-rmcpplus-status-spec.h>
 #include <freeipmi/spec/ipmi-sensor-types-spec.h>
+#include <freeipmi/spec/ipmi-sensor-types-oem-spec.h>
 #include <freeipmi/spec/ipmi-sensor-units-spec.h>
 #include <freeipmi/spec/ipmi-serial-modem-parameter-spec.h>
 #include <freeipmi/spec/ipmi-slave-address-spec.h>

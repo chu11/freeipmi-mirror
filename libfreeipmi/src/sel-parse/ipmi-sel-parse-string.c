@@ -50,6 +50,7 @@
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
+#include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/util/ipmi-iana-enterprise-numbers-util.h"
@@ -604,7 +605,7 @@ _output_oem_sensor_name (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && ((system_event_record_data->generator_id == 0x01 /* BIOS */
-           && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
+           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
            && system_event_record_data->sensor_number == 0x81
            && system_event_record_data->event_type_code == 0x70) /* OEM */
           || (system_event_record_data->generator_id == 0x01 /* BIOS */
@@ -770,11 +771,11 @@ _output_oem_event_offset_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ct
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && (system_event_record_data->sensor_type == 0xC0 /* OEM */
-          || system_event_record_data->sensor_type == 0xC1 /* OEM */
-          || system_event_record_data->sensor_type == 0xC2 /* OEM */
-          || system_event_record_data->sensor_type == 0xC3 /* OEM */
-          || system_event_record_data->sensor_type == 0xC4)) /* OEM */
+      && (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE))
     {
       int ret;
 
@@ -830,7 +831,7 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && system_event_record_data->generator_id == 0x01 /* "BIOS" */
-      && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
       && system_event_record_data->event_type_code == 0x70 /* OEM */
       && !system_event_record_data->offset_from_event_reading_type_code /* no event */
@@ -886,7 +887,6 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
        * the primary indicator
        */
       && system_event_record_data->generator_id == 0xB1
-      && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->sensor_number == 0x1A
 #endif
       && system_event_record_data->event_type_code == 0x7E) /* OEM */
@@ -1309,7 +1309,7 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && system_event_record_data->generator_id == 0x01 /* "BIOS" */
-      && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
       && system_event_record_data->event_type_code == 0x70 /* OEM */
       && !system_event_record_data->offset_from_event_reading_type_code /* no event */
@@ -1341,7 +1341,6 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
        * the primary indicator
        */
       && system_event_record_data->generator_id == 0xB1
-      && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->sensor_number == 0x1A
 #endif
       && system_event_record_data->event_type_code == 0x7E) /* OEM */
@@ -1910,7 +1909,7 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && system_event_record_data->generator_id == 0x01 /* "BIOS" */
-      && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
       && system_event_record_data->event_type_code == 0x70 /* OEM */
       && !system_event_record_data->offset_from_event_reading_type_code /* no event */
@@ -1942,7 +1941,6 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
        * the primary indicator
        */
       && system_event_record_data->generator_id == 0xB1
-      && system_event_record_data->sensor_type == 0xC1 /* OEM */
       && system_event_record_data->sensor_number == 0x1A
 #endif
       && system_event_record_data->event_type_code == 0x7E) /* OEM */
@@ -2294,7 +2292,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && system_event_record_data->generator_id == 0x01 /* "BIOS" */
-      && system_event_record_data->sensor_type == 0xC1 /* OEM Reserved */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
       && system_event_record_data->event_type_code == 0x70 /* OEM */
       && !system_event_record_data->offset_from_event_reading_type_code /* no event */
@@ -2538,8 +2536,8 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-          || system_event_record_data->sensor_type == 0xC2 /* OEM */
-          || system_event_record_data->sensor_type == 0xC3) /* OEM */
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
+          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR)
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
@@ -2699,13 +2697,14 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * - Handle for Dell Poweredge R610
    * - Handle for Dell Poweredge R710
    *
-   * Specifically for Dell OEM sensor 0xC1 w/ event offset 0x01 .
+   * Specifically for Dell OEM sensor
+   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING w/ event offset 0x01 .
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && system_event_record_data->sensor_type == 0xC1 /* OEM */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
       && system_event_record_data->offset_from_event_reading_type_code == 0x01
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
@@ -2736,7 +2735,8 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * - Handle for Dell Poweredge R610
    * - Handle for Dell Poweredge R710
    *
-   * Specifically for Dell OEM sensor 0xC1 w/ event offset 0x01.
+   * Specifically for Dell OEM sensor
+   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING w/ event offset 0x01.
    *
    * achu: XXX: data3 & 0x01 => 'B' or 'C' ???  Need to ask Dell
    */
@@ -2744,7 +2744,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && system_event_record_data->sensor_type == 0xC1 /* OEM */
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
       && system_event_record_data->offset_from_event_reading_type_code == 0x02
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
