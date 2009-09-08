@@ -54,19 +54,19 @@ extern "C" {
  * Inventec
  */
 
-#define IPMI_INVENTEC_PRODUCT_ID_5441  51
+#define IPMI_INVENTEC_PRODUCT_ID_5441 51
 
 /* 
  * Inventec derived
  */
 
-#define IPMI_DELL_PRODUCT_ID_XANADU2   IPMI_INVENTEC_PRODUCT_ID_5441
+#define IPMI_DELL_PRODUCT_ID_XANADU2 IPMI_INVENTEC_PRODUCT_ID_5441
 
 /*
  * Supermicro
  */
 
-#define IPMI_SUPERMICRO_PRODUCT_ID_X8DTH            43707
+#define IPMI_SUPERMICRO_PRODUCT_ID_X8DTH 43707
 
 #ifdef __cplusplus
 }
