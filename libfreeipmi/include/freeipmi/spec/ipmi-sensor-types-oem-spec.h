@@ -27,6 +27,11 @@ extern "C" {
  * Dell
  */
 
+/*
+ * Dell Poweredge R610
+ * Dell Poweredge R710
+ */
+
 /* achu: names taken from code, are correct names? */
 #define IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS 0xC0
 #define IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING                           0xC1
@@ -38,6 +43,9 @@ extern "C" {
  * Inventec
  */
 
+/*
+ * Inventec 5441/Dell Xanadu2
+ */
 /* achu: not official names, named based on use context */
 #define IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS 0xC1
 
