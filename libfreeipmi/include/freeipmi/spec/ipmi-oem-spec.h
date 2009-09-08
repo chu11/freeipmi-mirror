@@ -16,8 +16,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
  */
 
-#ifndef _IPMI_VENDOR_SPEC_H
-#define _IPMI_VENDOR_SPEC_H
+#ifndef _IPMI_OEM_SPEC_H
+#define _IPMI_OEM_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {

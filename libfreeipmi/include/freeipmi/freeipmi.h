@@ -87,6 +87,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-ipmb-lun-spec.h>
 #include <freeipmi/spec/ipmi-lan-parameter-spec.h>
 #include <freeipmi/spec/ipmi-netfn-spec.h>
+#include <freeipmi/spec/ipmi-oem-spec.h>
 #include <freeipmi/spec/ipmi-pef-parameter-spec.h>
 #include <freeipmi/spec/ipmi-privilege-level-spec.h>
 #include <freeipmi/spec/ipmi-rmcpplus-status-spec.h>
@@ -97,7 +98,6 @@ extern "C" {
 #include <freeipmi/spec/ipmi-sol-parameter-spec.h>
 #include <freeipmi/spec/ipmi-system-info-parameters-spec.h>
 #include <freeipmi/spec/ipmi-system-software-id-spec.h>
-#include <freeipmi/spec/ipmi-vendor-spec.h>
 #include <freeipmi/util/ipmi-channel-util.h>
 #include <freeipmi/util/ipmi-cipher-suite-util.h>
 #include <freeipmi/util/ipmi-error-util.h>
