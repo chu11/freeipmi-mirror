@@ -1484,7 +1484,7 @@ static int ipmi_sensor_type_code_session_audit_event_data3_offset_01_deactivatio
  * Generic Event Reading Strings (OEM) *
  ***************************************/
 
-static char * ipmi_generic_event_reading_type_code_dell_oem_70_desc[] =
+static char * ipmi_generic_event_reading_type_code_oem_dell_70_desc[] =
   {
     "Standby",
     "IPMI Function ready",
@@ -1496,7 +1496,7 @@ static char * ipmi_generic_event_reading_type_code_dell_oem_70_desc[] =
     "Write protected",
     NULL
   };
-static int ipmi_generic_event_reading_type_code_dell_oem_70_desc_max = 0x07;
+static int ipmi_generic_event_reading_type_code_oem_dell_70_desc_max = 0x07;
 
 /*****************************
  * Sensor Type Strings (OEM) *
@@ -1509,7 +1509,7 @@ static int ipmi_generic_event_reading_type_code_dell_oem_70_desc_max = 0x07;
  *
  */
 
-static char * ipmi_sensor_type_code_dell_oem_C0_desc[] =
+static char * ipmi_sensor_type_code_oem_dell_system_performance_degradation_status_desc[] =
   {
     "Good",
     "Degraded, other",
@@ -1521,9 +1521,9 @@ static char * ipmi_sensor_type_code_dell_oem_C0_desc[] =
     "Degraded, system power exceeds capacity",
     NULL
   };
-static int ipmi_sensor_type_code_dell_oem_C0_desc_max = 0x07;
+static int ipmi_sensor_type_code_oem_dell_system_performance_degradation_status_desc_max = 0x07;
 
-static char * ipmi_sensor_type_code_dell_oem_C1_desc[] =
+static char * ipmi_sensor_type_code_oem_dell_link_tuning_desc[] =
   {
     "Good",
     "Failed to program virtual MAC address",
@@ -1531,30 +1531,30 @@ static char * ipmi_sensor_type_code_dell_oem_C1_desc[] =
     "Failed to get link tuning or flex address data",
     NULL
   };
-static int ipmi_sensor_type_code_dell_oem_C1_desc_max = 0x03;
+static int ipmi_sensor_type_code_oem_dell_link_tuning_desc_max = 0x03;
 
-static char * ipmi_sensor_type_code_dell_oem_C2_desc[] =
+static char * ipmi_sensor_type_code_oem_dell_non_fatal_error_desc[] =
   {
     "PCIe error",
     NULL
   };
-static int ipmi_sensor_type_code_dell_oem_C2_desc_max = 0x00;
+static int ipmi_sensor_type_code_oem_dell_non_fatal_error_desc_max = 0x00;
 
-static char * ipmi_sensor_type_code_dell_oem_C3_desc[] =
+static char * ipmi_sensor_type_code_oem_dell_fatal_io_error_desc[] =
   {
     "Successful",
     "Fatal IO error",
     NULL
   };
-static int ipmi_sensor_type_code_dell_oem_C3_desc_max = 0x01;
+static int ipmi_sensor_type_code_oem_dell_fatal_io_error_desc_max = 0x01;
 
-static char * ipmi_sensor_type_code_dell_oem_C4_desc[] =
+static char * ipmi_sensor_type_code_oem_dell_upgrade_desc[] =
   {
     "Successful",
     "Failed",
     NULL
   };
-static int ipmi_sensor_type_code_dell_oem_C4_desc_max = 0x01;
+static int ipmi_sensor_type_code_oem_dell_upgrade_desc_max = 0x01;
 
 /*****************************
  * FLAGS                     *
@@ -3266,8 +3266,8 @@ ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
           return (_get_event_message (offset,
                                       buf,
                                       buflen,
-                                      ipmi_generic_event_reading_type_code_dell_oem_70_desc_max,
-                                      ipmi_generic_event_reading_type_code_dell_oem_70_desc));
+                                      ipmi_generic_event_reading_type_code_oem_dell_70_desc_max,
+                                      ipmi_generic_event_reading_type_code_oem_dell_70_desc));
         }
     }
 
@@ -3300,36 +3300,36 @@ ipmi_get_oem_sensor_type_code_message (uint32_t manufacturer_id,
     {
       switch (sensor_type_code)
         {
-        case 0xC0:
+        case IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS:
           return (_get_event_message (offset,
                                       buf,
                                       buflen,
-                                      ipmi_sensor_type_code_dell_oem_C0_desc_max,
-                                      ipmi_sensor_type_code_dell_oem_C0_desc));
-        case 0xC1:
+                                      ipmi_sensor_type_code_oem_dell_system_performance_degradation_status_desc_max,
+                                      ipmi_sensor_type_code_oem_dell_system_performance_degradation_status_desc));
+        case IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING:
           return (_get_event_message (offset,
                                       buf,
                                       buflen,
-                                      ipmi_sensor_type_code_dell_oem_C1_desc_max,
-                                      ipmi_sensor_type_code_dell_oem_C1_desc));
-        case 0xC2:
+                                      ipmi_sensor_type_code_oem_dell_link_tuning_desc_max,
+                                      ipmi_sensor_type_code_oem_dell_link_tuning_desc));
+        case IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR:
           return (_get_event_message (offset,
                                       buf,
                                       buflen,
-                                      ipmi_sensor_type_code_dell_oem_C2_desc_max,
-                                      ipmi_sensor_type_code_dell_oem_C2_desc));
-        case 0xC3:
+                                      ipmi_sensor_type_code_oem_dell_non_fatal_error_desc_max,
+                                      ipmi_sensor_type_code_oem_dell_non_fatal_error_desc));
+        case IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR:
           return (_get_event_message (offset,
                                       buf,
                                       buflen,
-                                      ipmi_sensor_type_code_dell_oem_C3_desc_max,
-                                      ipmi_sensor_type_code_dell_oem_C3_desc));
-        case 0xC4:
+                                      ipmi_sensor_type_code_oem_dell_fatal_io_error_desc_max,
+                                      ipmi_sensor_type_code_oem_dell_fatal_io_error_desc));
+        case IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE:
           return (_get_event_message (offset,
                                       buf,
                                       buflen,
-                                      ipmi_sensor_type_code_dell_oem_C4_desc_max,
-                                      ipmi_sensor_type_code_dell_oem_C4_desc));
+                                      ipmi_sensor_type_code_oem_dell_upgrade_desc_max,
+                                      ipmi_sensor_type_code_oem_dell_upgrade_desc));
         }
     }
 
