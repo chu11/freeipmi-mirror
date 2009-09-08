@@ -60,6 +60,7 @@ ipmi-oem-config
 oem
 ---
 dell poweredge lcd support
+sun led support
 
 libfreeipmi
 -----------
