@@ -405,7 +405,7 @@ Defaults to Critical.
 \fBIPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_User_Password\fR
 Defaults to Critical.
 .TP
-\fBIPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_Setup_Password\fR
+\fBIPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_Attempt_Setup_Password\fR
 Defaults to Critical.
 .TP
 \fBIPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_Network_Boot_Password\fR
@@ -454,6 +454,12 @@ Defaults to Critical.
 Defaults to Critical.
 .TP
 \fBIPMI_Processor_Processor_Automatically_Throttled\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Processor_Machine_Check_Exception\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Processor_Correctable_Machine_Check_Error\fR
 Defaults to Warning.
 .RE
 .TP
@@ -519,10 +525,10 @@ The following states correspond to Memory sensors w/
 Memory specific output states.
 .RS
 .TP
-\fBIPMI_Memory_Correctable_ECC_Memory_Error\fR
+\fBIPMI_Memory_Correctable_Memory_Error\fR
 Defaults to Warning.
 .TP
-\fBIPMI_Memory_Uncorrectable_ECC_Memory_Error\fR
+\fBIPMI_Memory_Uncorrectable_Memory_Error\fR
 Defaults to Critical.
 .TP
 \fBIPMI_Memory_Parity\fR
@@ -534,7 +540,7 @@ Defaults to Critical.
 \fBIPMI_Memory_Memory_Device_Disabled\fR
 Defaults to Critical.
 .TP
-\fBIPMI_Memory_Correctable_ECC_Memory_Error_Logging_Limit_Reached\fR
+\fBIPMI_Memory_Correctable_Memory_Error_Logging_Limit_Reached\fR
 Defaults to Warning.
 .TP
 \fBIPMI_Memory_Presence_Detected\fR
@@ -548,6 +554,9 @@ Defaults to Nominal.
 .TP
 \fBIPMI_Memory_Memory_Automatically_Throttled\fR
 Defaults to Warning.
+.TP
+\fBIPMI_Memory_Critical_Overtemperature\fR
+Defaults to Critical.
 .RE
 .TP
 .B IPMI_Drive_Slot
@@ -602,7 +611,7 @@ Defaults to Nominal.
 The following states correspond to Event Logging Disabled sensors w/
 .RS
 .TP
-\fBIPMI_Event_Logging_Disabled_Correctable_Memory_Logging_Disabled\fR
+\fBIPMI_Event_Logging_Disabled_Correctable_Memory_Error_Logging_Disabled\fR
 Defaults to Critical.
 .TP
 \fBIPMI_Event_Logging_Disabled_Event_Type_Logging_Disabled\fR
@@ -619,6 +628,9 @@ Defaults to Critical.
 .TP
 \fBIPMI_Event_Logging_Disabled_SEL_Almost_Full\fR
 Defaults to Warning.
+.TP
+\fBIPMI_Event_Logging_Disabled_Correctable_Machine_Check_Error_Logging_Disabled\fR
+Defaults to Critical.
 .RE
 .TP
 .B IPMI_System_Event
@@ -656,7 +668,7 @@ Defaults to Critical.
 \fBIPMI_Critical_Interrupt_Bus_Timeout\fR
 Defaults to Critical.
 .TP
-\fBIPMI_Critical_Interrupt_I_O_Channel_Check_NMI\fR
+\fBIPMI_Critical_Interrupt_IO_Channel_Check_NMI\fR
 Defaults to Critical.
 .TP
 \fBIPMI_Critical_Interrupt_Software_NMI\fR
@@ -682,6 +694,8 @@ Defaults to Critical.
 .TP
 \fBIPMI_Critical_Interrupt_Bus_Fatal_Error\fR
 Defaults to Critical.
+\fBIPMI_Critical_Interrupt_Bus_Degraded\fR
+Defaults to Warning.
 .RE
 .TP
 .B IPMI_Slot_Connector
@@ -845,7 +859,7 @@ Cable/Interconnect specific output states.
 \fBIPMI_Cable_Interconnect_Is_Connected\fR
 Defaults to Nominal.
 .TP
-\fBIPMI_Cable_Interconnect_Incorrect_Cable_Connected_Incorrect_Interconnection\fR
+\fBIPMI_Cable_Interconnect_Configuration_Error\fR
 Defaults to Critical.
 .RE
 .TP

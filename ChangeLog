@@ -13,6 +13,8 @@
 
 	* Various code cleanup using new macros.
 
+	* ipmimonitoring/: Update for consistency.  Update w/ ipmi errata additions.
+
 2009-09-08  Albert Chu <chu11@llnl.gov>
 
 	* Rename ipmi-vendor-spec.h to ipmi-oem-spec.h.

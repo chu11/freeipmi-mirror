@@ -377,6 +377,7 @@ o libipmimonitoring
   - Add IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA flag.
   - Rename a number of macros for overall FreeIPMI consistency, may
     break backwards compatability.
+  - Update various macros, fields, config, etc. for IPMI errata updates.
   - Variety of API functions reworked or renamed for new functionality.  Will
     require recompile and rework in existing code.
 

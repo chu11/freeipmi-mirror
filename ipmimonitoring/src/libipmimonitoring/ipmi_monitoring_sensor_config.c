@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.37 2009-09-01 21:29:43 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.38 2009-09-09 20:27:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -221,7 +221,7 @@ struct ipmi_sensor_config ipmi_platform_security_violation_attempt_config[] =
   {
     { "IPMI_Platform_Security_Violation_Attempt_Secure_Mode_Violation_Attempt", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_User_Password", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_Setup_Password", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_Attempt_Setup_Password", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Platform_Security_Violation_Attempt_Pre_Boot_Password_Violation_Network_Boot_Password", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Platform_Security_Violation_Attempt_Other_Pre_Boot_Password_Violation", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Platform_Security_Violation_Attempt_Out_Of_Band_Access_Password_Violation", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
@@ -240,7 +240,9 @@ struct ipmi_sensor_config ipmi_processor_config[] =
     { "IPMI_Processor_Processor_Presence_Detected", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     { "IPMI_Processor_Processor_Disabled", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Processor_Terminator_Presence_Detected", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Processor_Processor_Automatically_Throttled", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
+    { "IPMI_Processor_Processor_Automatically_Throttled", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { "IPMI_Processor_Machine_Check_Exception", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Processor_Correctable_Machine_Check_Error", IPMI_MONITORING_SENSOR_STATE_WARNING},
     { NULL, -1},
   };
 
@@ -271,16 +273,17 @@ struct ipmi_sensor_config ipmi_power_unit_config[] =
 
 struct ipmi_sensor_config ipmi_memory_config[] =
   {
-    { "IPMI_Memory_Correctable_ECC_Memory_Error", IPMI_MONITORING_SENSOR_STATE_WARNING},
-    { "IPMI_Memory_Uncorrectable_ECC_Memory_Error", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Memory_Correctable_Memory_Error", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { "IPMI_Memory_Uncorrectable_Memory_Error", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Memory_Parity", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Memory_Memory_Scrub_Failed", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Memory_Memory_Device_Disabled", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Memory_Correctable_ECC_Memory_Error_Logging_Limit_Reached", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { "IPMI_Memory_Correctable_Memory_Error_Logging_Limit_Reached", IPMI_MONITORING_SENSOR_STATE_WARNING},
     { "IPMI_Memory_Presence_Detected", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     { "IPMI_Memory_Configuration_Error", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Memory_Spare", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     { "IPMI_Memory_Memory_Automatically_Throttled", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { "IPMI_Memory_Critical_Overtemperature", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { NULL, -1},
   };
 
@@ -308,12 +311,13 @@ struct ipmi_sensor_config ipmi_system_firmware_progress_config[] =
 
 struct ipmi_sensor_config ipmi_event_logging_disabled_config[] =
   {
-    { "IPMI_Event_Logging_Disabled_Correctable_Memory_Logging_Disabled", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Event_Logging_Disabled_Correctable_Memory_Error_Logging_Disabled", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Event_Logging_Disabled_Event_Type_Logging_Disabled", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Event_Logging_Disabled_Log_Area_Reset_Cleared", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
     { "IPMI_Event_Logging_Disabled_All_Event_Logging_Disabled", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Event_Logging_Disabled_SEL_Full", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Event_Logging_Disabled_SEL_Almost_Full", IPMI_MONITORING_SENSOR_STATE_WARNING},
+    { "IPMI_Event_Logging_Disabled_Correctable_Machine_Check_Error_Logging_Disabled", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { NULL, -1},
   };
 
@@ -332,7 +336,7 @@ struct ipmi_sensor_config ipmi_critical_interrupt_config[] =
   {
     { "IPMI_Critical_Interrupt_Front_Panel_NMI_Diagnostic_Interrupt", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Critical_Interrupt_Bus_Timeout", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
-    { "IPMI_Critical_Interrupt_I_O_Channel_Check_NMI", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Critical_Interrupt_IO_Channel_Check_NMI", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Critical_Interrupt_Software_NMI", IPMI_MONITORING_SENSOR_STATE_WARNING},
     { "IPMI_Critical_Interrupt_PCI_PERR", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Critical_Interrupt_PCI_SERR", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
@@ -341,6 +345,7 @@ struct ipmi_sensor_config ipmi_critical_interrupt_config[] =
     { "IPMI_Critical_Interrupt_Bus_Uncorrectable_Error", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Critical_Interrupt_Fatal_NMI", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { "IPMI_Critical_Interrupt_Bus_Fatal_Error", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Critical_Interrupt_Bus_Degraded", IPMI_MONITORING_SENSOR_STATE_WARNING},
     { NULL, -1},
   };
 
@@ -416,7 +421,7 @@ struct ipmi_sensor_config ipmi_fru_state_config[] =
 struct ipmi_sensor_config ipmi_cable_interconnect_config[] =
   {
     { "IPMI_Cable_Interconnect_Is_Connected", IPMI_MONITORING_SENSOR_STATE_NOMINAL},
-    { "IPMI_Cable_Interconnect_Incorrect_Cable_Connected_Incorrect_Interconnection", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
+    { "IPMI_Cable_Interconnect_Configuration_Error", IPMI_MONITORING_SENSOR_STATE_CRITICAL},
     { NULL, -1},
   };
 
@@ -562,25 +567,27 @@ ipmi_monitoring_sensor_config (int *errnum)
     platform_security_violation_attempt_flag4, platform_security_violation_attempt_flag5;
   int processor_flag0, processor_flag1, processor_flag2, processor_flag3,
     processor_flag4, processor_flag5, processor_flag6, processor_flag7,
-    processor_flag8, processor_flag9, processor_flag10;
+    processor_flag8, processor_flag9, processor_flag10, processor_flag11;
   int power_supply_flag0, power_supply_flag1, power_supply_flag2, power_supply_flag3,
     power_supply_flag4, power_supply_flag5, power_supply_flag6;
   int power_unit_flag0, power_unit_flag1, power_unit_flag2, power_unit_flag3,
     power_unit_flag4, power_unit_flag5, power_unit_flag6, power_unit_flag7;
   int memory_flag0, memory_flag1, memory_flag2, memory_flag3, memory_flag4,
-    memory_flag5, memory_flag6, memory_flag7, memory_flag8, memory_flag9;
+    memory_flag5, memory_flag6, memory_flag7, memory_flag8, memory_flag9,
+    memory_flag10;
   int drive_slot_flag0, drive_slot_flag1, drive_slot_flag2, drive_slot_flag3,
     drive_slot_flag4, drive_slot_flag5, drive_slot_flag6, drive_slot_flag7,
     drive_slot_flag8;
   int system_firmware_progress_flag0, system_firmware_progress_flag1, system_firmware_progress_flag2;
   int event_logging_disabled_flag0, event_logging_disabled_flag1, event_logging_disabled_flag2,
-    event_logging_disabled_flag3, event_logging_disabled_flag4, event_logging_disabled_flag5;
+    event_logging_disabled_flag3, event_logging_disabled_flag4, event_logging_disabled_flag5,
+    event_logging_disabled_flag6;
   int system_event_flag0, system_event_flag1, system_event_flag2,
     system_event_flag3, system_event_flag4, system_event_flag5;
   int critical_interrupt_flag0, critical_interrupt_flag1, critical_interrupt_flag2,
     critical_interrupt_flag3, critical_interrupt_flag4, critical_interrupt_flag5,
     critical_interrupt_flag6, critical_interrupt_flag7, critical_interrupt_flag8,
-    critical_interrupt_flag9, critical_interrupt_flag10;
+    critical_interrupt_flag9, critical_interrupt_flag10, critical_interrupt_flag11;
   int slot_connector_flag0, slot_connector_flag1, slot_connector_flag2,
     slot_connector_flag3, slot_connector_flag4, slot_connector_flag5,
     slot_connector_flag6, slot_connector_flag7, slot_connector_flag8,
@@ -1655,6 +1662,17 @@ ipmi_monitoring_sensor_config (int *errnum)
         ipmi_processor_config,
         0
       },
+      {
+        ipmi_processor_config[11].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &processor_flag11,
+        ipmi_processor_config,
+        0
+      },
       /*
        * IPMI_Power_Supply
        */
@@ -1939,6 +1957,17 @@ ipmi_monitoring_sensor_config (int *errnum)
         ipmi_memory_config,
         0
       },
+      {
+        ipmi_memory_config[10].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &memory_flag10,
+        ipmi_memory_config,
+        0
+      },
       /*
        * IPMI_Drive_Slot
        */
@@ -2146,6 +2175,17 @@ ipmi_monitoring_sensor_config (int *errnum)
         ipmi_event_logging_disabled_config,
         0
       },
+      {
+        ipmi_event_logging_disabled_config[6].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &event_logging_disabled_flag6,
+        ipmi_event_logging_disabled_config,
+        0
+      },
       /*
        * IPMI_System_Event
        */
@@ -2336,6 +2376,17 @@ ipmi_monitoring_sensor_config (int *errnum)
         1,
         0,
         &critical_interrupt_flag10,
+        ipmi_critical_interrupt_config,
+        0
+      },
+      {
+        ipmi_critical_interrupt_config[11].option_str,
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_sensor_state_parse,
+        1,
+        0,
+        &critical_interrupt_flag11,
         ipmi_critical_interrupt_config,
         0
       },

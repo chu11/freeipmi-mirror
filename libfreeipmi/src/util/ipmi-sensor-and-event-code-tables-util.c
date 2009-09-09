@@ -555,7 +555,7 @@ static char * ipmi_sensor_type_code_session_audit_desc[] =
   {
     "Session Activated",
     "Session Deactivated",
-    "Invalid Username of Password",
+    "Invalid Username or Password",
     NULL
   };
 static int ipmi_sensor_type_code_session_audit_desc_max = 0x02;
