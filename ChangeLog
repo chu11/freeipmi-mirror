@@ -1,3 +1,7 @@
+2009-09-09  Albert Chu <chu11@llnl.gov>
+
+	* ipmidetectd/ipmidetectd.conf.5.pre.in: Fix typo.
+	
 2009-09-08  Albert Chu <chu11@llnl.gov>
 
 	* Tagged Release-0_7_12.	
