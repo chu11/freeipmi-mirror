@@ -385,6 +385,33 @@ Contributions
 o Update Ganglia and Nagios plugins for changes in ipmi-sensors and
 ipmimonitoring.
 
+0.7.12 - 09/08/09
+-----------------
+o In bmc-config, fix SOL config corner case.  Assume LAN channel if
+  SOL channel cannot be read.
+o In bmc-config, configure Password before Enable_User by default for
+  security.
+o Add SDR reading/loading workarounds for Fujitsu RX 100 motherboards.
+o Add --assume-system-event-records to ipmi-sel to workaround HP DL
+  380 G5 motherboards.
+o In bmc-config, add workarounds for Dell Poweredge servers.
+o In ipmi-oem, support additional Dell Poweredge OEM commands.
+o In ipmi-oem, support additional Supermicro OEM commands.
+o Document workarounds necessary for newer Supermicro motherboards.
+o Fix several error output corner cases.
+
+0.7.11 - 07/28/09
+-----------------
+o In ipmi-fru, fix FRU output corner cases.
+o In ipmi-oem, support Dell poweredge, Dell Xanadu2, and new Inventec
+  OEM commands.
+o In ipmi-sensors and ipmimonitoring, continue reading sensors after a
+  "request parameter not supported" error.
+o In libfreeipmi, support Get System Information parameters command.
+o Support --without-encryption build option .
+o Do not require execute permissions on driver devices.
+o Fix portability for some embedded systems.
+
 0.7.10 - 06/16/09
 -----------------
 o In all tools, properly deal with workaround flags when specifying
