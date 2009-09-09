@@ -1601,7 +1601,7 @@ get_physical_security_event_data2_message (unsigned int offset, uint8_t event_da
 {
   assert (buf && buflen);
 
-  if (offset == 0x04)
+  if (offset == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_LAN_LEASH_LOST)
     return (_snprintf (buf, buflen, "Network controller #%d", event_data2));
 
   SET_ERRNO (EINVAL);

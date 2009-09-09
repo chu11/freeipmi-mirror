@@ -1122,7 +1122,6 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * Inventec 5441/Dell Xanadu2
    *
-   * achu: The doc says "Other" for 0xFF, I'm going to just assume that's "no output".
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
@@ -1135,18 +1134,19 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR_LOGGING_LIMIT_REACHED)
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-      && (system_event_record_data->event_data2 == 0x00
-          || system_event_record_data->event_data2 == 0x01
-          || system_event_record_data->event_data2 == 0xFF))
+      && (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INVENTEC_SBE_WARNING_THRESHOLD
+          || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INVENTEC_SBE_CRITICAL_THRESHOLD
+          || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INVENTEC_OTHER))
     {
-      if (system_event_record_data->event_data2 == 0xFF)
+      /* achu: I'm assuming no output for this one */
+      if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INVENTEC_OTHER)
         return (0);
 
-      if (system_event_record_data->event_data2 == 0x00)
+      if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INVENTEC_SBE_WARNING_THRESHOLD)
         snprintf (tmpbuf,
                   tmpbuflen,
                   "SBE warning threshold");
-      else /* system_event_record_data->event_data2 == 0x01 */
+      else /* system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INVENTEC_SBE_CRITICAL_THRESHOLD */
         snprintf (tmpbuf,
                   tmpbuflen,
                   "SBE critical threshold");
@@ -1160,7 +1160,8 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * - Handle for Dell Poweredge R610
    * - Handle for Dell Poweredge R710
    *
-   * Specifically for Power Supply sensors with an event offset 0x01
+   * Specifically for Power Supply sensors with an event offset
+   * IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED
    *
    * achu: XXX: why "event_data2 == 0x01", I don't know, need to get
    * more info from Dell.
@@ -1524,7 +1525,7 @@ _output_event_data2 (ipmi_sel_parse_ctx_t ctx,
               }
             if (offset_from_severity_event_reading_type_code != IPMI_SEL_RECORD_UNSPECIFIED_OFFSET)
               {
-                ret = ipmi_get_generic_event_message_short (0x07,  /* 0x07 == severity event reading type code */
+                ret = ipmi_get_generic_event_message_short (IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY,
                                                             offset_from_severity_event_reading_type_code,
                                                             tmpseveritybuf,
                                                             EVENT_BUFFER_LENGTH);
@@ -1755,49 +1756,49 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR_LOGGING_LIMIT_REACHED)
-      && (system_event_record_data->event_data3 == 0x01
-          || system_event_record_data->event_data3 == 0x02
-          || system_event_record_data->event_data3 == 0x03
-          || system_event_record_data->event_data3 == 0x04
-          || system_event_record_data->event_data3 == 0x05
-          || system_event_record_data->event_data3 == 0x06
-          || system_event_record_data->event_data3 == 0x11
-          || system_event_record_data->event_data3 == 0x12
-          || system_event_record_data->event_data3 == 0x13))
+      && (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM1
+          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM0
+          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM1
+          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM0
+          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM1
+          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM0
+          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH0_DIM0
+          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH1_DIM0
+          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH2_DIM0))
     {
-      if (system_event_record_data->event_data3 == 0x01)
+      if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM1)
         snprintf (tmpbuf,
                   tmpbuflen,
                   "Dimm Number - CPU0/Ch0/DIM1");
-      else if (system_event_record_data->event_data3 == 0x02)
+      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM0)
         snprintf (tmpbuf,
                   tmpbuflen,
                   "Dimm Number - CPU0/Ch0/DIM0");
-      else if (system_event_record_data->event_data3 == 0x03)
+      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM1)
         snprintf (tmpbuf,
                   tmpbuflen,
                   "Dimm Number - CPU0/Ch1/DIM1");
-      else if (system_event_record_data->event_data3 == 0x04)
+      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM0)
         snprintf (tmpbuf,
                   tmpbuflen,
                   "Dimm Number - CPU0/Ch1/DIM0");
-      else if (system_event_record_data->event_data3 == 0x05)
+      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM1)
         snprintf (tmpbuf,
                   tmpbuflen,
                   "Dimm Number - CPU0/Ch2/DIM1");
-      else if (system_event_record_data->event_data3 == 0x06)
+      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM0)
         snprintf (tmpbuf,
                   tmpbuflen,
                   "Dimm Number - CPU0/Ch2/DIM0");
-      else if (system_event_record_data->event_data3 == 0x11)
+      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH0_DIM0)
         snprintf (tmpbuf,
                   tmpbuflen,
                   "Dimm Number - CPU1/Ch0/DIM0");
-      else if (system_event_record_data->event_data3 == 0x12)
+      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH1_DIM0)
         snprintf (tmpbuf,
                   tmpbuflen,
                   "Dimm Number - CPU1/Ch1/DIM0");
-      else /* system_event_record_data->event_data3 == 0x13 */
+      else /* system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH2_DIM0 */
         snprintf (tmpbuf,
                   tmpbuflen,
                   "Dimm Number - CPU1/Ch2/DIM0");
@@ -1811,7 +1812,8 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    * - Handle for Dell Poweredge R610
    * - Handle for Dell Poweredge R710
    *
-   * Specifically for Version Change Sensors with an event offset 0x06
+   * Specifically for Version Change Sensors with an event offset
+   * IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL
    *
    * achu: XXX: event_data3 & 0x80 == 0x80 ??? need to ask dell
    */
@@ -2313,141 +2315,141 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       error_code = system_event_record_data->event_data2;
       error_code |= (system_event_record_data->event_data3 << 8);
 
-      if (error_code == 0x0000)
+      if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_TIMER_COUNT_READ_WRITE_ERROR)
         error_code_str = "Timer Count Read/Write Error";
-      else if (error_code == 0x0001)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_MASTER_PIC_ERROR)
         error_code_str = "Master PIC Error";
-      else if (error_code == 0x0002)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_SLAVE_PIC_ERROR)
         error_code_str = "Slave PIC Error";
-      else if (error_code == 0x0003)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_BATTERY_ERROR)
         error_code_str = "CMOS Battery Error";
-      else if (error_code == 0x0004)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_DIAGNOSTIC_STATUS_ERROR)
         error_code_str = "CMOS Diagnostic Status Error";
-      else if (error_code == 0x0005)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_CHECKSUM_ERROR)
         error_code_str = "CMOS Checksum Error";
-      else if (error_code == 0x0006)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_CONFIG_ERROR)
         error_code_str = "CMOS Config Error";
-      else if (error_code == 0x0008)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_KEYBOARD_LOCK_ERROR)
         error_code_str = "Keyboard Lock Error";
-      else if (error_code == 0x0009)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_NO_KEYBOARD_ERROR)
         error_code_str = "No Keyboard Error";
-      else if (error_code == 0x000A)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_KBC_BAT_TEST_ERROR)
         error_code_str = "KBC Bat Test Error";
-      else if (error_code == 0x000B)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_MEMORY_SIZE_ERROR)
         error_code_str = "CMOS Memory Size Error";
-      else if (error_code == 0x000C)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_RAM_READ_WRITE_TEST_ERROR)
         error_code_str = "RAM Read/Write Test Error";
-      else if (error_code == 0x000E)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_FDD_0_ERROR)
         error_code_str = "FDD 0 Error";
-      else if (error_code == 0x0010)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_FLOPPY_CONTROLLER_ERROR)
         error_code_str = "Floppy Controller Error";
-      else if (error_code == 0x0012)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CMOS_DATE_TIME_ERROR)
         error_code_str = "CMOS Date Time Error";
-      else if (error_code == 0x0014)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_NO_PS2_MOUSE_ERROR)
         error_code_str = "No PS2 Mouse Error";
-      else if (error_code == 0x0040)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_REFRESH_TIMER_ERROR)
         error_code_str = "Refresh Timer Error";
-      else if (error_code == 0x0041)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DISPLAY_MEMORY_ERROR)
         error_code_str = "Display Memory Error";
-      else if (error_code == 0x0043)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_POST_THE_INS_KEY_ERROR)
         error_code_str = "Post the <INS> key Error";
-      else if (error_code == 0x0044)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DMAC_PAGE_REGISTER_ERROR)
         error_code_str = "DMAC Page Register Error";
-      else if (error_code == 0x0045)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DMAC1_CHANNEL_REGISTER_ERROR)
         error_code_str = "DMAC1 Channel Register Error";
-      else if (error_code == 0x0046)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DMAC2_CHANNEL_REGISTER_ERROR)
         error_code_str = "DMAC2 Channel Register Error";
-      else if (error_code == 0x0047)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PMM_MEMORY_ALLOCATION_ERROR)
         error_code_str = "PMM Memory Allocation Error";
-      else if (error_code == 0x0048)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PASSWORD_CHECK_ERROR)
         error_code_str = "Password Check Error";
-      else if (error_code == 0x004A)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ADM_MODULE_ERROR)
         error_code_str = "ADM Module Error";
-      else if (error_code == 0x004B)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_LANGUAGE_MODULE_ERROR)
         error_code_str = "Language Module Error";
-      else if (error_code == 0x004C)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_KBC_INTERFACE_ERROR)
         error_code_str = "KBC Interface Error";
-      else if (error_code == 0x004D)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_0_ERROR)
         error_code_str = "HDD 0 Error";
-      else if (error_code == 0x004E)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_1_ERROR)
         error_code_str = "HDD 1 Error";
-      else if (error_code == 0x004F)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_2_ERROR)
         error_code_str = "HDD 2 Error";
-      else if (error_code == 0x0050)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_3_ERROR)
         error_code_str = "HDD 3 Error";
-      else if (error_code == 0x0051)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_4_ERROR)
         error_code_str = "HDD 4 Error";
-      else if (error_code == 0x0052)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_5_ERROR)
         error_code_str = "HDD 5 Error";
-      else if (error_code == 0x0053)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_6_ERROR)
         error_code_str = "HDD 6 Error";
-      else if (error_code == 0x0054)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_HDD_7_ERROR)
         error_code_str = "HDD 7 Error";
-      else if (error_code == 0x0055)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_0_ERROR)
         error_code_str = "ATAPI 0 Error";
-      else if (error_code == 0x0056)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_1_ERROR)
         error_code_str = "ATAPI 1 Error";
-      else if (error_code == 0x0057)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_2_ERROR)
         error_code_str = "ATAPI 2 Error";
-      else if (error_code == 0x0058)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_3_ERROR)
         error_code_str = "ATAPI 3 Error";
-      else if (error_code == 0x0059)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_4_ERROR)
         error_code_str = "ATAPI 4 Error";
-      else if (error_code == 0x005A)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_5_ERROR)
         error_code_str = "ATAPI 5 Error";
-      else if (error_code == 0x005B)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_6_ERROR)
         error_code_str = "ATAPI 6 Error";
-      else if (error_code == 0x005C)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATAPI_7_ERROR)
         error_code_str = "ATAPI 7 Error";
-      else if (error_code == 0x005D)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_ATA_SMART_FEATURE_ERROR)
         error_code_str = "ATA SMART Feature Error";
-      else if (error_code == 0x005E)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_NON_CRITICAL_PASSWORD_CHECK_ERROR)
         error_code_str = "Non-Critical Password Check Error";
-      else if (error_code == 0x00FF)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_DUMMY_BIOS_ERROR)
         error_code_str = "Dummy BIOS Error";
-      else if (error_code == 0x8101)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_HC_NOT_FOUND)
         error_code_str = "USB HC Not Found";
-      else if (error_code == 0x8102)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_DEVICE_INIT_ERROR)
         error_code_str = "USB Device Init Error";
-      else if (error_code == 0x8103)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_DEVICE_DISABLED)
         error_code_str = "USB Device Disabled";
-      else if (error_code == 0x8104)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_OHCI_EMUL_NOT_SUPPORTED)
         error_code_str = "USB OHCI EMUL Not Supported";
-      else if (error_code == 0x8105)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_USB_EHCI_64BIT_DATA_STRUCTURE_ERROR)
         error_code_str = "USB EHCI 64bit Data Structure Error";
-      else if (error_code == 0x8301)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_SMBIOS_NOT_ENOUGH_SPACE_IN_F000)
         error_code_str = "SMBIOS Not Enough Space In F000";
-      else if (error_code == 0x0110)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_AP_APPLICATION_PROCESSOR_FAILED_BIST)
         error_code_str = "AP (Application Processor) failed BIST";
-      else if (error_code == 0x0120)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU1_THERMAL_FAILURE_DUE_TO_PROCHOT)
         error_code_str = "CPU1 Thermal Failure due to PROCHOT#";
-      else if (error_code == 0x0121)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU2_THERMAL_FAILURE_DUE_TO_PROCHOT)
         error_code_str = "CPU2 Thermal Failure due to PROCHOT#";
-      else if (error_code == 0x0122)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU3_THERMAL_FAILURE_DUE_TO_PROCHOT)
         error_code_str = "CPU3 Thermal Failure due to PROCHOT#";
-      else if (error_code == 0x0123)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU4_THERMAL_FAILURE_DUE_TO_PROCHOT)
         error_code_str = "CPU4 Thermal Failure due to PROCHOT#";
-      else if (error_code == 0x0150)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PROCESSOR_FAILED_BIST_BSP)
         error_code_str = "Processor failed BIST (BSP)"; /* BSP = Baseboard Service Processor */
-      else if (error_code == 0x0160)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU1_PROCESSOR_MISSING_MICROCODE)
         error_code_str = "CPU1 Processor missing microcode";
-      else if (error_code == 0x0161)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU2_PROCESSOR_MISSING_MICROCODE)
         error_code_str = "CPU2 Processor missing microcode";
-      else if (error_code == 0x0162)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU3_PROCESSOR_MISSING_MICROCODE)
         error_code_str = "CPU3 Processor missing microcode";
-      else if (error_code == 0x0163)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPU4_PROCESSOR_MISSING_MICROCODE)
         error_code_str = "CPU4 Processor missing microcode";
-      else if (error_code == 0x0192)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_L2_CACHE_SIZE_MISMATCH)
         error_code_str = "L2 cache size mismatch";
-      else if (error_code == 0x0193)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPUID_PROCESSOR_STEPPING_ARE_DIFFERENT)
         error_code_str = "CPUID, Processor stepping are different";
-      else if (error_code == 0x0194)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPUID_PROCESSOR_FAMILY_ARE_DIFFERENT)
         error_code_str = "CPUID, Processor family are different";
-      else if (error_code == 0x0195)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_FRONT_SIDE_BUS_MISMATCH)
         error_code_str = "Front side bus mismatch";
-      else if (error_code == 0x0196)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_CPUID_PROCESSOR_MODEL_ARE_DIFFERENT)
         error_code_str = "CPUID, Processor Model are different";
-      else if (error_code == 0x0197)
+      else if (error_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_PROCESSOR_SPEEDS_MISMATCHED)
         error_code_str = "Processor speeds mismatched";
       else
         error_code_str = "Undefined BIOS Error";
@@ -2568,7 +2570,8 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * - Handle for Dell Poweredge R610
    * - Handle for Dell Poweredge R710
    *
-   * Specifically for Version Change Sensors with an event offset 0x03
+   * Specifically for Version Change Sensors with an event offset
+   * IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
    *
    * achu: XXX: dataX & 0x1F != 1F ???  Need to ask Dell.
    */
@@ -2682,7 +2685,8 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * - Handle for Dell Poweredge R710
    *
    * Specifically for Dell OEM sensor
-   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING w/ event offset 0x01 .
+   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING w/ event offset
+   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
@@ -2720,7 +2724,8 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * - Handle for Dell Poweredge R710
    *
    * Specifically for Dell OEM sensor
-   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING w/ event offset 0x02.
+   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING w/ event offset
+   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_DEVICE_OPTION_ROM_FAILED_TO_SUPPORT_LINK_TUNING_OR_FLEX_ADDRESS.
    *
    * achu: XXX: data3 & 0x01 => 'B' or 'C' ???  Need to ask Dell
    */
@@ -3243,7 +3248,7 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_parse_ctx_t ctx,
         }
       else
         {
-          ret = ipmi_get_generic_event_message_short (0x07, /* 0x07 == severity event reading type code */
+          ret = ipmi_get_generic_event_message_short (IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY,
                                                       offset_from_severity_event_reading_type_code,
                                                       tmpstatebuf,
                                                       EVENT_BUFFER_LENGTH);
