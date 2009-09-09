@@ -608,7 +608,7 @@ _output_oem_sensor_name (ipmi_sel_parse_ctx_t ctx,
       && ((system_event_record_data->generator_id == 0x01 /* BIOS */
            && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
            && system_event_record_data->sensor_number == 0x81
-           && system_event_record_data->event_type_code == 0x70) /* OEM */
+           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS)
           || (system_event_record_data->generator_id == 0x01 /* BIOS */
               && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
               && system_event_record_data->sensor_number == 0x85
@@ -834,7 +834,7 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
       && system_event_record_data->generator_id == 0x01 /* "BIOS" */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
-      && system_event_record_data->event_type_code == 0x70 /* OEM */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
       && !system_event_record_data->offset_from_event_reading_type_code /* no event */
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
@@ -1313,7 +1313,7 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
       && system_event_record_data->generator_id == 0x01 /* "BIOS" */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
-      && system_event_record_data->event_type_code == 0x70 /* OEM */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
       && !system_event_record_data->offset_from_event_reading_type_code /* no event */
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
@@ -1914,7 +1914,7 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
       && system_event_record_data->generator_id == 0x01 /* "BIOS" */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
-      && system_event_record_data->event_type_code == 0x70 /* OEM */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
       && !system_event_record_data->offset_from_event_reading_type_code /* no event */
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
@@ -2298,7 +2298,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       && system_event_record_data->generator_id == 0x01 /* "BIOS" */
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
       && system_event_record_data->sensor_number == 0x81 /* "BIOS Start" */
-      && system_event_record_data->event_type_code == 0x70 /* OEM */
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
       && !system_event_record_data->offset_from_event_reading_type_code /* no event */
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)

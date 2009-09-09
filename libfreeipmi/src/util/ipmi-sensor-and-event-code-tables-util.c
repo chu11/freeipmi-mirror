@@ -3371,8 +3371,8 @@ ipmi_get_oem_sensor_event_bitmask_message (uint32_t manufacturer_id,
    *
    * Supermicro X8DTH
    *
-   * Event Reading Type Code = 0x70 (OEM)
-   * Sensor Type = 0xC0 (OEM)
+   * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC
+   * Sensor Type = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP
    * - 0 = Low
    * - 1 = Medium
    * - 2 = High
@@ -3385,11 +3385,11 @@ ipmi_get_oem_sensor_event_bitmask_message (uint32_t manufacturer_id,
     {
       switch (event_reading_type_code)
 	{
-	case 0x70:		/* OEM */
+	case IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC:
 	  {
 	    switch (sensor_type_code)
 	      {
-	      case 0xC0:	/* OEM */
+	      case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP:
 		{
 		  switch (sensor_event_bitmask)
 		    {
@@ -3409,7 +3409,7 @@ ipmi_get_oem_sensor_event_bitmask_message (uint32_t manufacturer_id,
 	      }
 	  }
 	  break;
-	  /* end case 0x70: */
+	  /* end case IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC: */
 	}
     }
 

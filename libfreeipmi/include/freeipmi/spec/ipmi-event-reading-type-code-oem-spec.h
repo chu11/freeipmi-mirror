@@ -42,6 +42,27 @@ extern "C" {
 /* achu: names taken from code, are correct names? */
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA 0x7E
 
+/* 
+ * Inventec
+ */
+
+/*
+ * Inventec 5441/Dell Xanadu2
+ */
+/* achu: not official names, named based on use context */
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS 0x70
+
+/*
+ * Supermicro
+ */
+
+/*
+ * Supermicro X8DTH
+ */
+
+/* achu: not official names, named based on use context */
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC 0x70
+
 #ifdef __cplusplus
 }
 #endif

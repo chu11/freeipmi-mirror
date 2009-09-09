@@ -49,6 +49,15 @@ extern "C" {
 /* achu: not official names, named based on use context */
 #define IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS 0xC1
 
+/*
+ * Supermicro
+ */
+
+/*
+ * Supermicro X8DTH
+ */
+/* achu: not official names, named based on use context */
+#define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP 0xC0 
 
 #ifdef __cplusplus
 }

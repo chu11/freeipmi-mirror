@@ -2,6 +2,8 @@
 
         * ipmidetectd/ipmidetectd.conf.5.pre.in: Fix typo.
 	
+	* Various code cleanup using new macros.
+
 2009-09-08  Albert Chu <chu11@llnl.gov>
 
 	* Rename ipmi-vendor-spec.h to ipmi-oem-spec.h.
