@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.29.2.3 2009-04-08 21:12:39 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.29.2.4 2009-09-09 18:26:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -486,7 +486,7 @@ enum ipmi_monitoring_sensor_bitmask_entity_presence
   {
     IPMI_MONITORING_BITMASK_ENTITY_PRESENCE_ENTITY_PRESENT = 0x0001,
     IPMI_MONITORING_BITMASK_ENTITY_PRESENCE_ENTITY_ABSENT = 0x0002,
-    IPMI_MONITORING_BITMASK_ENTITY_PRESENCE_ENTITY_DISABLED = 0x0003,
+    IPMI_MONITORING_BITMASK_ENTITY_PRESENCE_ENTITY_DISABLED = 0x0004,
   };
 
 enum ipmi_monitoring_sensor_bitmask_management_subsystem_health
