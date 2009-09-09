@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.47 2009-09-01 21:29:43 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.48 2009-09-09 17:37:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -287,19 +287,19 @@ enum ipmi_monitoring_sensor_bitmask_transition_severity
     IPMI_MONITORING_BITMASK_TRANSITION_INFORMATIONAL = 0x0100,
   };
 
-enum ipmi_monitoring_sensor_bitmask_device_install
+enum ipmi_monitoring_sensor_bitmask_device_present
   {
     IPMI_MONITORING_BITMASK_DEVICE_REMOVED_DEVICE_ABSENT = 0x0001,
     IPMI_MONITORING_BITMASK_DEVICE_INSERTED_DEVICE_PRESENT = 0x0002,
   };
 
-enum ipmi_monitoring_sensor_bitmask_device_state
+enum ipmi_monitoring_sensor_bitmask_device_enabled
   {
     IPMI_MONITORING_BITMASK_DEVICE_DISABLED = 0x0001,
     IPMI_MONITORING_BITMASK_DEVICE_ENABLED = 0x0002,
   };
 
-enum ipmi_monitoring_sensor_bitmask_transition_device
+enum ipmi_monitoring_sensor_bitmask_transition_availability
   {
     IPMI_MONITORING_BITMASK_TRANSITION_TO_RUNNING = 0x0001,
     IPMI_MONITORING_BITMASK_TRANSITION_TO_IN_TEST = 0x0002,
@@ -324,7 +324,7 @@ enum ipmi_monitoring_sensor_bitmask_redundancy
     IPMI_MONITORING_BITMASK_REDUNDANCY_DEGRADED_FROM_NON_REDUNDANT = 0x0080,
   };
 
-enum ipmi_monitoring_sensor_bitmask_power_state
+enum ipmi_monitoring_sensor_bitmask_acpi_power_state
   {
     IPMI_MONITORING_BITMASK_D0_POWER_STATE = 0x0001,
     IPMI_MONITORING_BITMASK_D1_POWER_STATE = 0x0002,

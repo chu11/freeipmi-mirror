@@ -16,8 +16,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
  */
 
-#ifndef _IPMI_SENSOR_AND_EVENT_CODE_TABLES_H
-#define _IPMI_SENSOR_AND_EVENT_CODE_TABLES_H
+#ifndef _IPMI_SENSOR_AND_EVENT_CODE_TABLES_UTIL_H
+#define _IPMI_SENSOR_AND_EVENT_CODE_TABLES_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {

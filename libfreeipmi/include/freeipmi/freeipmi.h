@@ -92,6 +92,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-pef-parameter-spec.h>
 #include <freeipmi/spec/ipmi-privilege-level-spec.h>
 #include <freeipmi/spec/ipmi-rmcpplus-status-spec.h>
+#include <freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h>
 #include <freeipmi/spec/ipmi-sensor-numbers-oem-spec.h>
 #include <freeipmi/spec/ipmi-sensor-types-spec.h>
 #include <freeipmi/spec/ipmi-sensor-types-oem-spec.h>
