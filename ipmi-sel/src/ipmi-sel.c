@@ -1272,7 +1272,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
           && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
               || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
           && ((sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
-               && event_data1_offset == IPMI_SENSOR_TYPE_CODE_POWER_SUPPLY_CONFIGURATION_ERROR
+               && event_data1_offset == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR
                && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                && (event_data3 & 0x0F) == 0x03)
@@ -1284,7 +1284,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
               || (sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
                   && state_data->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
                   && state_data->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
-                  && event_data1_offset == IPMI_SENSOR_TYPE_CODE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
+                  && event_data1_offset == IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               || (sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
@@ -1294,8 +1294,8 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && (event_data2 & 0x0F) == 0x02)
               || (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
-                  && (event_data1_offset == 0x01
-                      || event_data1_offset == 0x02)
+                  && (event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS
+                      || event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_DEVICE_OPTION_ROM_FAILED_TO_SUPPORT_LINK_TUNING_OR_FLEX_ADDRESS)
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               || (sensor_type == IPMI_SENSOR_TYPE_MEMORY
@@ -1318,7 +1318,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
    */
   else if (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
            && sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
-           && event_data1_offset == IPMI_SENSOR_TYPE_CODE_EVENT_LOGGING_DISABLED_CORRECTABLE_MACHINE_CHECK_ERROR_LOGGING_DISABLED
+           && event_data1_offset == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_CORRECTABLE_MACHINE_CHECK_ERROR_LOGGING_DISABLED
            && event_data2_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
            && event_data3_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE)
     strcat (fmtbuf, "%c");

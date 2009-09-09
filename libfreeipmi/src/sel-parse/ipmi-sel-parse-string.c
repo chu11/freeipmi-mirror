@@ -51,6 +51,7 @@
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h"
+#include "freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-numbers-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
@@ -2688,7 +2689,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
-      && system_event_record_data->offset_from_event_reading_type_code == 0x01
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
@@ -2719,7 +2720,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
    * - Handle for Dell Poweredge R710
    *
    * Specifically for Dell OEM sensor
-   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING w/ event offset 0x01.
+   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING w/ event offset 0x02.
    *
    * achu: XXX: data3 & 0x01 => 'B' or 'C' ???  Need to ask Dell
    */
@@ -2728,7 +2729,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
-      && system_event_record_data->offset_from_event_reading_type_code == 0x02
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_DEVICE_OPTION_ROM_FAILED_TO_SUPPORT_LINK_TUNING_OR_FLEX_ADDRESS
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {

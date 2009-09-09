@@ -18,6 +18,10 @@
 	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c:
 	Update for errata changes.
 
+	*
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h:
+	New file.
+
 2009-09-08  Albert Chu <chu11@llnl.gov>
 
 	* Rename ipmi-vendor-spec.h to ipmi-oem-spec.h.
