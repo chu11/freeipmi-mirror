@@ -15,6 +15,9 @@
 
 	* ipmimonitoring/: Update for consistency.  Update w/ ipmi errata additions.
 
+	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c:
+	Update for errata changes.
+
 2009-09-08  Albert Chu <chu11@llnl.gov>
 
 	* Rename ipmi-vendor-spec.h to ipmi-oem-spec.h.
