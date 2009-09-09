@@ -97,6 +97,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-sensor-units-spec.h>
 #include <freeipmi/spec/ipmi-serial-modem-parameter-spec.h>
 #include <freeipmi/spec/ipmi-slave-address-spec.h>
+#include <freeipmi/spec/ipmi-slave-address-oem-spec.h>
 #include <freeipmi/spec/ipmi-sol-parameter-spec.h>
 #include <freeipmi/spec/ipmi-system-info-parameters-spec.h>
 #include <freeipmi/spec/ipmi-system-software-id-spec.h>

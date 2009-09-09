@@ -1203,14 +1203,14 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
           && state_data->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-          && ((generator_id == 0x01 /* "BIOS" */
+          && ((generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
                && sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
                && sensor_number == 0x81 /* "BIOS Start" */
                && event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
                && !event_data1_offset
                && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-              || (generator_id == 0x31 /* POST error */
+              || (generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_POST_ERROR
                   && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
                   && sensor_number == 0x06 
                   && event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)))
@@ -1235,14 +1235,6 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
               || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
               || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
               || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-#if 0
-          /* it appears these don't need to match,
-           * IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA
-           * event type code is the primary indicator
-           */
-          && generator_id == 0xB1
-          && sensor_number == 0x1A
-#endif
           && event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA)
         {
 	  strcat (fmtbuf, "%f ; %h");
