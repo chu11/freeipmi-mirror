@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.49 2009-09-09 17:03:16 chu11 Exp $
+## $Id: Makefile.am,v 1.50 2009-09-09 17:14:01 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -73,6 +73,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-pef-parameter-spec.h \
 	freeipmi/spec/ipmi-privilege-level-spec.h \
 	freeipmi/spec/ipmi-rmcpplus-status-spec.h \
+	freeipmi/spec/ipmi-sensor-numbers-oem-spec.h \
 	freeipmi/spec/ipmi-sensor-types-spec.h \
 	freeipmi/spec/ipmi-sensor-types-oem-spec.h \
 	freeipmi/spec/ipmi-sensor-units-spec.h \

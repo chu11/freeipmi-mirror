@@ -16,8 +16,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
  */
 
-#ifndef _IPMI_SLAVE_ADDRESS_OEM_SPEC_H
-#define _IPMI_SLAVE_ADDRESS_OEM_SPEC_H
+#ifndef _IPMI_SENSOR_NUMBERS_OEM_SPEC_H
+#define _IPMI_SENSOR_NUMBERS_OEM_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,12 +31,13 @@ extern "C" {
  * Inventec 5441/Dell Xanadu2
  */
 /* achu: not official names, named based on use context */
-#define IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS            0x01
-#define IPMI_GENERATOR_ID_OEM_INVENTEC_SMI             0x21
-#define IPMI_GENERATOR_ID_OEM_INVENTEC_POST_ERROR_CODE 0x31
+#define IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START      0x81
+#define IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_OK         0x85
+#define IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_ERROR_CODE 0x06
+#define IPMI_SENSOR_NUMBER_OEM_INVENTEC_MEMORY          0x60
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ipmi-slave-address-spec.h */
+#endif

@@ -1205,14 +1205,14 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
           && state_data->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
           && ((generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
                && sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
-               && sensor_number == 0x81 /* "BIOS Start" */
+               && sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START
                && event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
                && !event_data1_offset
                && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-              || (generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_POST_ERROR
+              || (generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_POST_ERROR_CODE
                   && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
-                  && sensor_number == 0x06 
+                  && sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_ERROR_CODE
                   && event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)))
         {
           strcat (fmtbuf, "%c");

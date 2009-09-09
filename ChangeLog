@@ -5,6 +5,10 @@
 	* libfreeipmi/include/freeipmi/spec/ipmi-slave-address-oem-spec.h:
 	New file.
 
+	*
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-numbers-oem-spec.h:
+	New file.
+
 	* Various code cleanup using new macros.
 
 2009-09-08  Albert Chu <chu11@llnl.gov>
