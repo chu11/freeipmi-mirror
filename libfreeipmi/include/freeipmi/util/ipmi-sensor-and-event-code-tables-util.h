@@ -40,10 +40,10 @@ int ipmi_get_generic_event_message (uint8_t event_reading_type_code,
                                     unsigned int buflen);
 
 /* return length of string written into buffer on success, -1 on error */
-int ipmi_get_sensor_type_code_message (uint8_t sensor_type_code,
-                                       unsigned int offset,
-                                       char *buf,
-                                       unsigned int buflen);
+int ipmi_get_sensor_type_message (uint8_t sensor_type,
+                                  unsigned int offset,
+                                  char *buf,
+                                  unsigned int buflen);
 
 /* return length of string written into buffer on success, -1 on error */
 /* identical to above but returns "short" strings when appropriate */
@@ -54,20 +54,20 @@ int ipmi_get_generic_event_message_short (uint8_t event_reading_type_code,
 
 /* return length of string written into buffer on success, -1 on error */
 /* identical to above but returns "short" strings when appropriate */
-int ipmi_get_sensor_type_code_message_short (uint8_t sensor_type_code,
-                                             unsigned int offset,
-                                             char *buf,
-                                             unsigned int buflen);
+int ipmi_get_sensor_type_message_short (uint8_t sensor_type,
+                                        unsigned int offset,
+                                        char *buf,
+                                        unsigned int buflen);
 
 /* return length of string written into buffer on success, -1 on error */
-int ipmi_get_event_data2_message (uint8_t sensor_type_code,
+int ipmi_get_event_data2_message (uint8_t sensor_type,
                                   unsigned int offset,
                                   uint8_t event_data2,
                                   char *buf,
                                   unsigned int buflen);
 
 /* return length of string written into buffer on success, -1 on error */
-int ipmi_get_event_data3_message (uint8_t sensor_type_code,
+int ipmi_get_event_data3_message (uint8_t sensor_type,
                                   unsigned int offset,
                                   uint8_t event_data2,
                                   uint8_t event_data3,
@@ -83,12 +83,12 @@ int ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
                                         unsigned int buflen);
 
 /* return length of string written into buffer on success, -1 on error */
-int ipmi_get_oem_sensor_type_code_message (uint32_t manufacturer_id,
-                                           uint16_t product_id,
-                                           uint8_t sensor_type_code,
-                                           unsigned int offset,
-                                           char *buf,
-                                           unsigned int buflen);
+int ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
+                                      uint16_t product_id,
+                                      uint8_t sensor_type,
+                                      unsigned int offset,
+                                      char *buf,
+                                      unsigned int buflen);
 
 /* return length of string written into buffer on success, -1 on error */
 /* some vendors return values instead of event bitmasks in the 
@@ -97,7 +97,7 @@ int ipmi_get_oem_sensor_type_code_message (uint32_t manufacturer_id,
 int ipmi_get_oem_sensor_event_bitmask_message (uint32_t manufacturer_id,
 					       uint16_t product_id,
 					       uint8_t event_reading_type_code,
-					       uint8_t sensor_type_code,
+					       uint8_t sensor_type,
 					       uint16_t sensor_event_bitmask,
 					       char *buf,
 					       unsigned int buflen);

@@ -783,12 +783,12 @@ _output_oem_event_offset_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ct
     {
       int ret;
 
-      ret = ipmi_get_oem_sensor_type_code_message (ctx->manufacturer_id,
-                                                   ctx->product_id,
-                                                   system_event_record_data->sensor_type,
-                                                   system_event_record_data->offset_from_event_reading_type_code,
-                                                   tmpbuf,
-                                                   tmpbuflen);
+      ret = ipmi_get_oem_sensor_type_message (ctx->manufacturer_id,
+                                              ctx->product_id,
+                                              system_event_record_data->sensor_type,
+                                              system_event_record_data->offset_from_event_reading_type_code,
+                                              tmpbuf,
+                                              tmpbuflen);
       
       if (ret > 0)
         return (1);
@@ -991,10 +991,10 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
 	  break;
 	}
 
-      ret = ipmi_get_sensor_type_code_message_short (system_event_record_data.sensor_type,
-                                                     system_event_record_data.offset_from_event_reading_type_code,
-                                                     tmpbuf,
-                                                     EVENT_BUFFER_LENGTH);
+      ret = ipmi_get_sensor_type_message_short (system_event_record_data.sensor_type,
+                                                system_event_record_data.offset_from_event_reading_type_code,
+                                                tmpbuf,
+                                                EVENT_BUFFER_LENGTH);
       if (ret > 0)
         output_flag++;
       break;
@@ -1129,10 +1129,10 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_MEMORY
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_MEMORY_CORRECTABLE_MEMORY_ERROR
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_MEMORY_PARITY
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_MEMORY_CORRECTABLE_MEMORY_ERROR_LOGGING_LIMIT_REACHED)
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR_LOGGING_LIMIT_REACHED)
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && (system_event_record_data->event_data2 == 0x00
           || system_event_record_data->event_data2 == 0x01
@@ -1169,7 +1169,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED
       && system_event_record_data->event_data2 == 0x01)
     {
       snprintf (tmpbuf,
@@ -1750,10 +1750,10 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_MEMORY
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_MEMORY_CORRECTABLE_MEMORY_ERROR
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_MEMORY_PARITY
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_MEMORY_CORRECTABLE_MEMORY_ERROR_LOGGING_LIMIT_REACHED)
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR_LOGGING_LIMIT_REACHED)
       && (system_event_record_data->event_data3 == 0x01
           || system_event_record_data->event_data3 == 0x02
           || system_event_record_data->event_data3 == 0x03
@@ -1821,7 +1821,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL
       && (system_event_record_data->event_data3 & 0x80) == 0x80)
     {
       snprintf (tmpbuf,
@@ -2480,7 +2480,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_POWER_SUPPLY_CONFIGURATION_ERROR
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && (system_event_record_data->event_data3 & 0x0F) == 0x03)
@@ -2578,7 +2578,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
@@ -3048,7 +3048,7 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
   if (ipmi_event_reading_type_code_class (system_event_record_data.event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
       && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
-      && system_event_record_data.offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CODE_EVENT_LOGGING_DISABLED_CORRECTABLE_MACHINE_CHECK_ERROR_LOGGING_DISABLED
+      && system_event_record_data.offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_CORRECTABLE_MACHINE_CHECK_ERROR_LOGGING_DISABLED
       && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
       && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE)
     {

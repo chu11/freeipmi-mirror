@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.62 2009-09-01 22:21:08 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.63 2009-09-09 21:33:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1085,75 +1085,75 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
     }
   else
     {
-      uint8_t sensor_type_code;
+      uint8_t sensor_type;
 
       switch (bitmask_type)
         {
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_PHYSICAL_SECURITY:
-          sensor_type_code = IPMI_SENSOR_TYPE_PHYSICAL_SECURITY;
+          sensor_type = IPMI_SENSOR_TYPE_PHYSICAL_SECURITY;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT:
-          sensor_type_code = IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
+          sensor_type = IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_PROCESSOR:
-          sensor_type_code = IPMI_SENSOR_TYPE_PROCESSOR;
+          sensor_type = IPMI_SENSOR_TYPE_PROCESSOR;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_SUPPLY:
-          sensor_type_code = IPMI_SENSOR_TYPE_POWER_SUPPLY;
+          sensor_type = IPMI_SENSOR_TYPE_POWER_SUPPLY;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_UNIT:
-          sensor_type_code = IPMI_SENSOR_TYPE_POWER_UNIT;
+          sensor_type = IPMI_SENSOR_TYPE_POWER_UNIT;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_MEMORY:
-          sensor_type_code = IPMI_SENSOR_TYPE_MEMORY;
+          sensor_type = IPMI_SENSOR_TYPE_MEMORY;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_DRIVE_SLOT:
-          sensor_type_code = IPMI_SENSOR_TYPE_DRIVE_SLOT;
+          sensor_type = IPMI_SENSOR_TYPE_DRIVE_SLOT;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_FIRMWARE_PROGRESS:
-          sensor_type_code = IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS;
+          sensor_type = IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_EVENT_LOGGING_DISABLED:
-          sensor_type_code = IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED;
+          sensor_type = IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_EVENT:
-          sensor_type_code = IPMI_SENSOR_TYPE_SYSTEM_EVENT;
+          sensor_type = IPMI_SENSOR_TYPE_SYSTEM_EVENT;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_CRITICAL_INTERRUPT:
-          sensor_type_code = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT;
+          sensor_type = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_MODULE_BOARD:
-          sensor_type_code = IPMI_SENSOR_TYPE_MODULE_BOARD;
+          sensor_type = IPMI_SENSOR_TYPE_MODULE_BOARD;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_SLOT_CONNECTOR:
-          sensor_type_code = IPMI_SENSOR_TYPE_SLOT_CONNECTOR;
+          sensor_type = IPMI_SENSOR_TYPE_SLOT_CONNECTOR;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_WATCHDOG2:
-          sensor_type_code = IPMI_SENSOR_TYPE_WATCHDOG2;
+          sensor_type = IPMI_SENSOR_TYPE_WATCHDOG2;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_ENTITY_PRESENCE:
-          sensor_type_code = IPMI_SENSOR_TYPE_ENTITY_PRESENCE;
+          sensor_type = IPMI_SENSOR_TYPE_ENTITY_PRESENCE;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH:
-          sensor_type_code = IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH;
+          sensor_type = IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_BATTERY:
-          sensor_type_code = IPMI_SENSOR_TYPE_BATTERY;
+          sensor_type = IPMI_SENSOR_TYPE_BATTERY;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_FRU_STATE:
-          sensor_type_code = IPMI_SENSOR_TYPE_FRU_STATE;
+          sensor_type = IPMI_SENSOR_TYPE_FRU_STATE;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_CABLE_INTERCONNECT:
-          sensor_type_code = IPMI_SENSOR_TYPE_CABLE_INTERCONNECT;
+          sensor_type = IPMI_SENSOR_TYPE_CABLE_INTERCONNECT;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_BOOT_ERROR:
-          sensor_type_code = IPMI_SENSOR_TYPE_BOOT_ERROR;
+          sensor_type = IPMI_SENSOR_TYPE_BOOT_ERROR;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_BUTTON_SWITCH:
-          sensor_type_code = IPMI_SENSOR_TYPE_BUTTON_SWITCH;
+          sensor_type = IPMI_SENSOR_TYPE_BUTTON_SWITCH;
           break;
         case IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_ACPI_POWER_STATE:
-          sensor_type_code = IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE;
+          sensor_type = IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE;
           break;
         default:
           c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
@@ -1174,10 +1174,10 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
             }
         }
 
-      if (ipmi_get_sensor_type_code_message_short (sensor_type_code,
-                                                   offset,
-                                                   buffer,
-                                                   buflen) < 0)
+      if (ipmi_get_sensor_type_message_short (sensor_type,
+                                              offset,
+                                              buffer,
+                                              buflen) < 0)
         {
           if (errno == EINVAL)
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;

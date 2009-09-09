@@ -373,25 +373,25 @@ get_sensor_specific_event_message_list (struct ipmi_sensors_state_data *state_da
               && state_data->prog_data->args->interpret_oem_data
               && _sensor_type_is_oem_interpretable (state_data, sensor_type))
             {
-              ret = ipmi_get_oem_sensor_type_code_message (state_data->manufacturer_id,
-                                                           state_data->product_id,
-                                                           sensor_type,
-                                                           i,
-                                                           buf,
-                                                           IPMI_SENSORS_BUFLEN);
+              ret = ipmi_get_oem_sensor_type_message (state_data->manufacturer_id,
+                                                      state_data->product_id,
+                                                      sensor_type,
+                                                      i,
+                                                      buf,
+                                                      IPMI_SENSORS_BUFLEN);
             }
           else
             {
               if (!state_data->prog_data->args->verbose_count)
-                ret = ipmi_get_sensor_type_code_message_short (sensor_type,
-                                                               i,
-                                                               buf,
-                                                               IPMI_SENSORS_BUFLEN);
+                ret = ipmi_get_sensor_type_message_short (sensor_type,
+                                                          i,
+                                                          buf,
+                                                          IPMI_SENSORS_BUFLEN);
               else
-                ret = ipmi_get_sensor_type_code_message (sensor_type,
-                                                         i,
-                                                         buf,
-                                                         IPMI_SENSORS_BUFLEN);
+                ret = ipmi_get_sensor_type_message (sensor_type,
+                                                    i,
+                                                    buf,
+                                                    IPMI_SENSORS_BUFLEN);
             }
 
           if (ret < 0)
