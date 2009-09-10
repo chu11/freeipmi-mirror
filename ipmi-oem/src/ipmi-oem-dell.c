@@ -930,7 +930,7 @@ ipmi_oem_dell_get_nic_selection (ipmi_oem_state_data_t *state_data)
    *      - 0x03 = shared w/ failover to all
    */
 
-  bytes_rq[0] = 0x25;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_NIC_SELECTION;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -951,7 +951,7 @@ ipmi_oem_dell_get_nic_selection (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    3,
-                                                   0x02,
+                                                   IPMI_CMD_OEM_DELL_GET_NIC_SELECTION,
                                                    0x30) < 0)
     goto cleanup;
 
@@ -1022,7 +1022,7 @@ ipmi_oem_dell_set_nic_selection (ipmi_oem_state_data_t *state_data)
    * 0x?? - Completion Code
    */
 
-  bytes_rq[0] = 0x24;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_SET_NIC_SELECTION;
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "shared"))
     bytes_rq[1] = 0x00;
@@ -1052,7 +1052,7 @@ ipmi_oem_dell_set_nic_selection (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2, /* don't care about the 3rd byte, don't know what it is used for */
-                                                   0x03,
+                                                   IPMI_CMD_OEM_DELL_SET_NIC_SELECTION,
                                                    0x30) < 0)
     goto cleanup;
 
@@ -1093,7 +1093,7 @@ _dell_reserve_extended_configuration (ipmi_oem_state_data_t *state_data,
   assert (state_data);
   assert (reservation_id);
 
-  bytes_rq[0] = 0x01;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_RESERVED_EXTENDED_CONFIGURATION;
   bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x0000FF);
   bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x00FF00) >> 8;
   bytes_rq[3] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0xFF0000) >> 16;
@@ -1117,7 +1117,7 @@ _dell_reserve_extended_configuration (ipmi_oem_state_data_t *state_data,
                                                    bytes_rs,
                                                    rs_len,
                                                    6,
-                                                   0x01,
+                                                   IPMI_CMD_OEM_DELL_RESERVED_EXTENDED_CONFIGURATION,
                                                    IPMI_NET_FN_OEM_GROUP_RQ) < 0)
     goto cleanup;
   
@@ -1189,7 +1189,7 @@ _dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
 						&reservation_id) < 0)
 	goto cleanup;
 
-      bytes_rq[0] = 0x02;
+      bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_EXTENDED_CONFIGURATION;
       bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x0000FF);
       bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x00FF00) >> 8;
       bytes_rq[3] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0xFF0000) >> 16;
@@ -1220,7 +1220,7 @@ _dell_get_extended_configuration (ipmi_oem_state_data_t *state_data,
 						       bytes_rs,
 						       rs_len,
 						       8 + IPMI_OEM_DELL_TOKEN_DATA_COMMON_HEADER_LEN,
-						       0x02,
+						       IPMI_CMD_OEM_DELL_GET_EXTENDED_CONFIGURATION,
 						       IPMI_NET_FN_OEM_GROUP_RQ) < 0)
 	goto cleanup;
       
@@ -1371,7 +1371,7 @@ _dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
        * guestimate of what is good.
        */
 
-      bytes_rq[0] = 0x03;
+      bytes_rq[0] = IPMI_CMD_OEM_DELL_SET_EXTENDED_CONFIGURATION;
       bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x0000FF);
       bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0x00FF00) >> 8;
       bytes_rq[3] = (IPMI_IANA_ENTERPRISE_ID_DELL & 0xFF0000) >> 16;
@@ -1437,7 +1437,7 @@ _dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
 						       bytes_rs,
 						       rs_len,
 						       6,
-						       0x03,
+						       IPMI_CMD_OEM_DELL_SET_EXTENDED_CONFIGURATION,
 						       IPMI_NET_FN_OEM_GROUP_RQ) < 0)
 	goto cleanup;
       
@@ -3093,7 +3093,7 @@ ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
    *             - 0x01 = reset to defaults complete 
    */
 
-  bytes_rq[0] = 0x21;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_RESET_TO_DEFAULTS;
   bytes_rq[1] = 0xaa;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
@@ -3115,7 +3115,7 @@ ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    3,
-                                                   0x21,
+                                                   IPMI_CMD_OEM_DELL_RESET_TO_DEFAULTS,
                                                    0x30) < 0)
     goto cleanup;
 
@@ -3123,7 +3123,7 @@ ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
   /* don't quit until it is done */
   while (1)
     {
-      bytes_rq[0] = 0x21;
+      bytes_rq[0] = IPMI_CMD_OEM_DELL_RESET_TO_DEFAULTS;
       bytes_rq[1] = 0x00;
       
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
@@ -3145,7 +3145,7 @@ ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
 						       bytes_rs,
 						       rs_len,
 						       3,
-						       0x21,
+						       IPMI_CMD_OEM_DELL_RESET_TO_DEFAULTS,
 						       0x30) < 0)
 	goto cleanup;
 
@@ -3207,7 +3207,7 @@ ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
    * bytes 26-29 - peak watt reading
    */
 
-  bytes_rq[0] = 0x9c;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_POWER_INFO;
   bytes_rq[1] = 0x07;
   bytes_rq[2] = 0x01;
 
@@ -3230,7 +3230,7 @@ ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    26,
-                                                   0x9c,
+                                                   IPMI_CMD_OEM_DELL_GET_POWER_INFO,
                                                    0x30) < 0)
     goto cleanup;
 
@@ -3354,7 +3354,7 @@ ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data)
    * 0x?? - Completion Code
    */
 
-  bytes_rq[0] = 0x9d;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_RESET_POWER_INFO;
   bytes_rq[1] = 0x07;
   bytes_rq[2] = 0x01;
 
@@ -3382,14 +3382,13 @@ ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-                                                   0x9d,
+                                                   IPMI_CMD_OEM_DELL_RESET_POWER_INFO,
                                                    0x30) < 0)
     goto cleanup;
   
   rv = 0;
  cleanup:
   return (rv);
- 
 }
 
 int
@@ -3545,7 +3544,7 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 						 MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
 		goto cleanup;
 	      
-	      bytes_rq[0] = 0xB0;
+	      bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_POWER_SUPPLY_INFO;
 	      bytes_rq[1] = entity_id;
 	      bytes_rq[2] = entity_instance;
 	      
@@ -3568,7 +3567,7 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 							       bytes_rs,
 							       rs_len,
 							       25,
-							       0xB0,
+							       IPMI_CMD_OEM_DELL_GET_POWER_SUPPLY_INFO,
 							       0x30) < 0)
 		goto cleanup;
 	      
@@ -3673,7 +3672,7 @@ ipmi_oem_dell_get_instantaneous_power_consumption_info (ipmi_oem_state_data_t *s
    * bytes 6-8 - reserved
    */
 
-  bytes_rq[0] = 0xB3;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_INSTANTANEOUS_POWER_CONSUMPTION_INFO;
   bytes_rq[1] = 0x0A;
   bytes_rq[2] = 0x00;
 
@@ -3696,7 +3695,7 @@ ipmi_oem_dell_get_instantaneous_power_consumption_info (ipmi_oem_state_data_t *s
                                                    bytes_rs,
                                                    rs_len,
                                                    9,
-                                                   0xB3,
+                                                   IPMI_CMD_OEM_DELL_GET_INSTANTANEOUS_POWER_CONSUMPTION_INFO,
                                                    0x30) < 0)
     goto cleanup;
 
@@ -3745,13 +3744,13 @@ ipmi_oem_dell_get_power_headroom_info (ipmi_oem_state_data_t *state_data)
    * 
    * Response
    *
-   * 0xB3 - OEM cmd
+   * 0xBB - OEM cmd
    * 0x?? - Completion Code
    * bytes 2-3 - instantaneous power headroom
    * bytes 4-5 - peak power headroom
    */
 
-  bytes_rq[0] = 0xBB;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_POWER_HEADROOM_INFO;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -3772,7 +3771,7 @@ ipmi_oem_dell_get_power_headroom_info (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    6,
-                                                   0xBB,
+                                                   IPMI_CMD_OEM_DELL_GET_POWER_HEADROOM_INFO,
                                                    0x30) < 0)
     goto cleanup;
 
@@ -4195,7 +4194,7 @@ _get_power_capacity_status (ipmi_oem_state_data_t *state_data,
    *      - 0x02 bitmask = 0b = not-settable, 1b = settable
    */
 
-  bytes_rq[0] = 0xBA;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_POWER_CAPACITY_STATUS;
   bytes_rq[1] = 0x01;
   bytes_rq[2] = 0xFF;
 
@@ -4218,7 +4217,7 @@ _get_power_capacity_status (ipmi_oem_state_data_t *state_data,
                                                    bytes_rs,
                                                    rs_len,
                                                    3,
-                                                   0xBA,
+                                                   IPMI_CMD_OEM_DELL_POWER_CAPACITY_STATUS,
                                                    0x30) < 0)
     goto cleanup;
 
@@ -4498,7 +4497,7 @@ ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  bytes_rq[0] = 0xBA;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_POWER_CAPACITY_STATUS;
   bytes_rq[1] = 0x00;
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
     bytes_rq[2] = 0x01;
@@ -4524,7 +4523,7 @@ ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-                                                   0xBA,
+                                                   IPMI_CMD_OEM_DELL_POWER_CAPACITY_STATUS,
                                                    0x30) < 0)
     goto cleanup;
 
@@ -4559,7 +4558,7 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
    * 0x?? - minor version (in hex)
    */
 
-  bytes_rq[0] = 0x16;
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_FCB_VERSION;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -4580,7 +4579,7 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    4,
-                                                   0x16,
+                                                   IPMI_CMD_OEM_DELL_GET_FCB_VERSION,
                                                    0x34) < 0)
     goto cleanup;
 
@@ -4609,7 +4608,7 @@ ipmi_oem_dell_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Dell Poweredge OEM
+  /* Dell Xanadu2 OEM
    *
    * Uses Get/Set Lan Configuration
    *
@@ -4717,7 +4716,7 @@ ipmi_oem_dell_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Dell Poweredge OEM
+  /* Dell Xanadu2 OEM
    *
    * Uses Get/Set SOL Configuration
    *

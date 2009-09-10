@@ -80,7 +80,7 @@ ipmi_oem_supermicro_extra_firmware_info (ipmi_oem_state_data_t *state_data)
    * ? bytes - firmware tag, null terminated string
    */
 
-  bytes_rq[0] = 0x20;
+  bytes_rq[0] = IPMI_CMD_OEM_SUPERMICRO_EXTRA_FIRMWARE_INFO;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -101,7 +101,7 @@ ipmi_oem_supermicro_extra_firmware_info (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    19,
-                                                   0x20,
+                                                   IPMI_CMD_OEM_SUPERMICRO_EXTRA_FIRMWARE_INFO,
                                                    0x3C) < 0)
     goto cleanup;
 
@@ -172,7 +172,7 @@ ipmi_oem_supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
    * 0x03 - OEM cmd
    */
 
-  bytes_rq[0] = 0x03;
+  bytes_rq[0] = IPMI_CMD_OEM_SUPERMICRO_RESET_INTRUSION;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -193,7 +193,7 @@ ipmi_oem_supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-                                                   0x03,
+                                                   IPMI_CMD_OEM_SUPERMICRO_RESET_INTRUSION,
                                                    0x30) < 0)
     goto cleanup;
 

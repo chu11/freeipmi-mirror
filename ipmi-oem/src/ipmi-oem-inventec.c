@@ -67,7 +67,7 @@ _inventec_get_reservation (ipmi_oem_state_data_t *state_data,
   assert (state_data);
   assert (reservation_id);
 
-  bytes_rq[0] = 0x01;
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_RESERVED_EXTENDED_CONFIGUATION;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -88,7 +88,7 @@ _inventec_get_reservation (ipmi_oem_state_data_t *state_data,
                                                    bytes_rs,
                                                    rs_len,
                                                    3,
-                                                   0x01,
+                                                   IPMI_CMD_OEM_INVENTEC_RESERVED_EXTENDED_CONFIGUATION,
                                                    0x30) < 0)
     goto cleanup;
   
@@ -140,7 +140,7 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
                                  &reservation_id) < 0)
     goto cleanup;
 
-  bytes_rq[0] = 0x02;
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION;
   bytes_rq[1] = reservation_id;
   bytes_rq[2] = 0x02;
   bytes_rq[3] = 0x01;
@@ -168,7 +168,7 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    7,
-                                                   0x02,
+                                                   IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION,
                                                    0x30) < 0)
     goto cleanup;
 
@@ -240,7 +240,7 @@ ipmi_oem_inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
                                  &reservation_id) < 0)
     goto cleanup;
 
-  bytes_rq[0] = 0x03;
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION;
   bytes_rq[1] = reservation_id;
   bytes_rq[2] = 0x02;
   bytes_rq[3] = 0x01;
@@ -273,7 +273,7 @@ ipmi_oem_inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2, /* don't care about the 3rd byte, don't know what it is used for */
-                                                   0x03,
+                                                   IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION,
                                                    0x30) < 0)
     goto cleanup;
 
@@ -425,9 +425,9 @@ ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
    */
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "dedicated"))
-    cmd = 0x21;
+    cmd = IPMI_CMD_OEM_INVENTEC_SET_DEDICATED_MAC_ADDRESS;
   else
-    cmd = 0x23;
+    cmd = IPMI_CMD_OEM_INVENTEC_SET_SHARED_MAC_ADDRESS;
   
   bytes_rq[0] = cmd;
   memcpy (&bytes_rq[1],
@@ -510,7 +510,7 @@ _inventec_get_bmc_services (ipmi_oem_state_data_t *state_data,
                                  &reservation_id) < 0)
     goto cleanup;
 
-  bytes_rq[0] = 0x02;
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION;
   bytes_rq[1] = reservation_id;
   bytes_rq[2] = 0x04;
   bytes_rq[3] = 0x01;
@@ -538,7 +538,7 @@ _inventec_get_bmc_services (ipmi_oem_state_data_t *state_data,
                                                    bytes_rs,
                                                    rs_len,
                                                    7,
-                                                   0x02,
+                                                   IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION,
                                                    0x30) < 0)
     goto cleanup;
 
@@ -710,7 +710,7 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
                                  &reservation_id) < 0)
     goto cleanup;
 
-  bytes_rq[0] = 0x03;
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION;
   bytes_rq[1] = reservation_id;
   bytes_rq[2] = 0x04;
   bytes_rq[3] = 0x01;
@@ -738,7 +738,7 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-                                                   0x02,
+                                                   IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION,
                                                    0x30) < 0)
     goto cleanup;
   

@@ -1,3 +1,9 @@
+2009-09-10  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h: New file.
+	
+	* Various code cleanup using new macros.
+
 2009-09-09  Albert Chu <chu11@llnl.gov>
 
         * ipmidetectd/ipmidetectd.conf.5.pre.in: Fix typo.
