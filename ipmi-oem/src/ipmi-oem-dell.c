@@ -55,16 +55,6 @@
 /* 256 b/c length is 8 bit field */
 #define IPMI_OEM_DELL_MAX_BYTES 256
 
-#define IPMI_OEM_DELL_SYSTEM_INFO_ASSET_TAG              0xC4
-#define IPMI_OEM_DELL_SYSTEM_INFO_SERVICE_TAG            0xC5
-#define IPMI_OEM_DELL_SYSTEM_INFO_PRODUCT_NAME           0xD1
-#define IPMI_OEM_DELL_SYSTEM_INFO_10G_MAC_ADDRESSES      0xCB
-#define IPMI_OEM_DELL_SYSTEM_INFO_11G_MAC_ADDRESSES      0xDA
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_VALIDATOR        0xDD
-#define IPMI_OEM_DELL_SYSTEM_INFO_POWER_CAPACITY         0xEA
-#define IPMI_OEM_DELL_SYSTEM_INFO_AVERAGE_POWER_HISTORY  0xEB
-#define IPMI_OEM_DELL_SYSTEM_INFO_PEAK_POWER_HISTORY     0xEC
-
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_10G            0x08
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_11G_MONOLITHIC 0x0A
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_TYPE_11G_MODULAR    0x0B
@@ -420,7 +410,7 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
 
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                           IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_VALIDATOR,
+                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_VALIDATOR,
                                            0x02,
                                            IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
@@ -492,7 +482,7 @@ _get_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
 
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                           IPMI_OEM_DELL_SYSTEM_INFO_10G_MAC_ADDRESSES,
+                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_10G_MAC_ADDRESSES,
                                            0,
                                            IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
@@ -572,7 +562,7 @@ _get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
 
   bytes_rq[0] = IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS;
   bytes_rq[1] = 0x00;		/* get parameter */
-  bytes_rq[2] = IPMI_OEM_DELL_SYSTEM_INFO_11G_MAC_ADDRESSES; /* parameter selector */
+  bytes_rq[2] = IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_11G_MAC_ADDRESSES; /* parameter selector */
   bytes_rq[3] = 0x00;		/* set selector */
   bytes_rq[4] = 0x00;		/* block selector */
   bytes_rq[5] = 0x00;		/* offset */
@@ -627,7 +617,7 @@ _get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
       
       bytes_rq[0] = IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS;
       bytes_rq[1] = 0x00;		/* get parameter */
-      bytes_rq[2] = IPMI_OEM_DELL_SYSTEM_INFO_11G_MAC_ADDRESSES; /* parameter selector */
+      bytes_rq[2] = IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_11G_MAC_ADDRESSES; /* parameter selector */
       bytes_rq[3] = 0x00;		/* set selector */
       bytes_rq[4] = 0x00;		/* block selector */
       bytes_rq[5] = i * IPMI_OEM_DELL_11G_MAC_ADDRESS_LENGTH; /* offset */
@@ -815,7 +805,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       || !strcasecmp (state_data->prog_data->args->oem_options[0], "assettag"))
     {
       if (_get_dell_system_info_short_string (state_data,
-                                              IPMI_OEM_DELL_SYSTEM_INFO_ASSET_TAG,
+                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_ASSET_TAG,
                                               string,
                                               IPMI_OEM_DELL_MAX_BYTES) < 0)
         goto cleanup;
@@ -829,7 +819,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
            || !strcasecmp (state_data->prog_data->args->oem_options[0], "servicetag"))
     {
       if (_get_dell_system_info_short_string (state_data,
-                                              IPMI_OEM_DELL_SYSTEM_INFO_SERVICE_TAG,
+                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SERVICE_TAG,
                                               string,
                                               IPMI_OEM_DELL_MAX_BYTES) < 0)
         goto cleanup;
@@ -843,7 +833,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
            || !strcasecmp (state_data->prog_data->args->oem_options[0], "productname"))
     {
       if (_get_dell_system_info_long_string (state_data,
-                                             IPMI_OEM_DELL_SYSTEM_INFO_PRODUCT_NAME,
+                                             IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_PRODUCT_NAME,
                                              string,
                                              IPMI_OEM_DELL_MAX_BYTES) < 0)
         goto cleanup;
@@ -3835,7 +3825,7 @@ ipmi_oem_dell_get_average_power_history (ipmi_oem_state_data_t *state_data)
 
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                           IPMI_OEM_DELL_SYSTEM_INFO_AVERAGE_POWER_HISTORY,
+                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_AVERAGE_POWER_HISTORY,
                                            0,
                                            IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
@@ -3954,7 +3944,7 @@ ipmi_oem_dell_get_peak_power_history (ipmi_oem_state_data_t *state_data)
 
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                           IPMI_OEM_DELL_SYSTEM_INFO_PEAK_POWER_HISTORY,
+                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_PEAK_POWER_HISTORY,
                                            0,
                                            IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
@@ -4124,7 +4114,7 @@ _get_power_capacity (ipmi_oem_state_data_t *state_data,
 
   if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                            IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                           IPMI_OEM_DELL_SYSTEM_INFO_POWER_CAPACITY,
+                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_POWER_CAPACITY,
                                            0,
                                            IPMI_SYSTEM_INFO_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
@@ -4404,7 +4394,7 @@ ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
     }
   
   if (ipmi_cmd_set_system_info_parameters (state_data->ipmi_ctx,
-                                           IPMI_OEM_DELL_SYSTEM_INFO_POWER_CAPACITY,
+                                           IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_POWER_CAPACITY,
 					   configuration_parameter_data,
 					   12,
 					   obj_cmd_rs) < 0)
@@ -4645,7 +4635,7 @@ ipmi_oem_dell_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
   if (ipmi_cmd_get_lan_configuration_parameters (state_data->ipmi_ctx,
                                                  lan_channel_number,
                                                  IPMI_GET_LAN_PARAMETER,
-                                                 192,
+                                                 IPMI_LAN_PARAMETER_OEM_DELL_DHCP_RETRY,
                                                  0,
                                                  0,
                                                  obj_cmd_rs) < 0)
@@ -4752,7 +4742,7 @@ ipmi_oem_dell_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
   if (ipmi_cmd_get_sol_configuration_parameters (state_data->ipmi_ctx,
                                                  lan_channel_number,
                                                  IPMI_GET_SOL_PARAMETER,
-                                                 192,
+                                                 IPMI_SOL_PARAMETER_OEM_DELL_SOL_TIMEOUT,
                                                  0,
                                                  0,
                                                  obj_cmd_rs) < 0)
@@ -4871,7 +4861,7 @@ ipmi_oem_dell_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
 
   if (ipmi_cmd_set_sol_configuration_parameters (state_data->ipmi_ctx,
                                                  lan_channel_number,
-                                                 192,
+                                                 IPMI_SOL_PARAMETER_OEM_DELL_SOL_TIMEOUT,
                                                  configuration_parameter_data,
                                                  2,
                                                  obj_cmd_rs) < 0)

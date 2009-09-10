@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.53 2009-09-10 18:29:11 chu11 Exp $
+## $Id: Makefile.am,v 1.54 2009-09-10 18:52:09 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -58,6 +58,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-authentication-type-spec.h \
 	freeipmi/spec/ipmi-channel-spec.h \
 	freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h \
+	freeipmi/spec/ipmi-chassis-boot-options-parameter-oem-spec.h \
 	freeipmi/spec/ipmi-cmd-spec.h \
 	freeipmi/spec/ipmi-cmd-oem-spec.h \
 	freeipmi/spec/ipmi-comp-code-spec.h \
@@ -69,9 +70,11 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h \
 	freeipmi/spec/ipmi-ipmb-lun-spec.h \
 	freeipmi/spec/ipmi-lan-parameter-spec.h \
+	freeipmi/spec/ipmi-lan-parameter-oem-spec.h \
 	freeipmi/spec/ipmi-netfn-spec.h \
 	freeipmi/spec/ipmi-oem-spec.h \
 	freeipmi/spec/ipmi-pef-parameter-spec.h \
+	freeipmi/spec/ipmi-pef-parameter-oem-spec.h \
 	freeipmi/spec/ipmi-privilege-level-spec.h \
 	freeipmi/spec/ipmi-rmcpplus-status-spec.h \
 	freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h \
@@ -81,10 +84,13 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-sensor-types-oem-spec.h \
 	freeipmi/spec/ipmi-sensor-units-spec.h \
 	freeipmi/spec/ipmi-serial-modem-parameter-spec.h \
+	freeipmi/spec/ipmi-serial-modem-parameter-oem-spec.h \
 	freeipmi/spec/ipmi-slave-address-spec.h \
 	freeipmi/spec/ipmi-slave-address-oem-spec.h \
 	freeipmi/spec/ipmi-sol-parameter-spec.h \
-	freeipmi/spec/ipmi-system-info-parameters-spec.h \
+	freeipmi/spec/ipmi-sol-parameter-oem-spec.h \
+	freeipmi/spec/ipmi-system-info-parameter-spec.h \
+	freeipmi/spec/ipmi-system-info-parameter-oem-spec.h \
 	freeipmi/spec/ipmi-system-software-id-spec.h \
 	freeipmi/templates/ipmi-bmc-watchdog-timer-cmds-templates.h \
 	freeipmi/templates/ipmi-chassis-cmds-templates.h \

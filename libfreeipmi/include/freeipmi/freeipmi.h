@@ -77,6 +77,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-authentication-type-spec.h>
 #include <freeipmi/spec/ipmi-channel-spec.h>
 #include <freeipmi/spec/ipmi-chassis-boot-options-parameter-spec.h>
+#include <freeipmi/spec/ipmi-chassis-boot-options-parameter-oem-spec.h>
 #include <freeipmi/spec/ipmi-cmd-spec.h>
 #include <freeipmi/spec/ipmi-cmd-oem-spec.h>
 #include <freeipmi/spec/ipmi-comp-code-spec.h>
@@ -88,9 +89,11 @@ extern "C" {
 #include <freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h>
 #include <freeipmi/spec/ipmi-ipmb-lun-spec.h>
 #include <freeipmi/spec/ipmi-lan-parameter-spec.h>
+#include <freeipmi/spec/ipmi-lan-parameter-oem-spec.h>
 #include <freeipmi/spec/ipmi-netfn-spec.h>
 #include <freeipmi/spec/ipmi-oem-spec.h>
 #include <freeipmi/spec/ipmi-pef-parameter-spec.h>
+#include <freeipmi/spec/ipmi-pef-parameter-oem-spec.h>
 #include <freeipmi/spec/ipmi-privilege-level-spec.h>
 #include <freeipmi/spec/ipmi-rmcpplus-status-spec.h>
 #include <freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h>
@@ -100,10 +103,13 @@ extern "C" {
 #include <freeipmi/spec/ipmi-sensor-types-oem-spec.h>
 #include <freeipmi/spec/ipmi-sensor-units-spec.h>
 #include <freeipmi/spec/ipmi-serial-modem-parameter-spec.h>
+#include <freeipmi/spec/ipmi-serial-modem-parameter-oem-spec.h>
 #include <freeipmi/spec/ipmi-slave-address-spec.h>
 #include <freeipmi/spec/ipmi-slave-address-oem-spec.h>
 #include <freeipmi/spec/ipmi-sol-parameter-spec.h>
-#include <freeipmi/spec/ipmi-system-info-parameters-spec.h>
+#include <freeipmi/spec/ipmi-sol-parameter-oem-spec.h>
+#include <freeipmi/spec/ipmi-system-info-parameter-spec.h>
+#include <freeipmi/spec/ipmi-system-info-parameter-oem-spec.h>
 #include <freeipmi/spec/ipmi-system-software-id-spec.h>
 #include <freeipmi/util/ipmi-channel-util.h>
 #include <freeipmi/util/ipmi-cipher-suite-util.h>

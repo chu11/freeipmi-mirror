@@ -1,6 +1,22 @@
 2009-09-10  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h: New file.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-chassis-boot-options-parameter-oem-spec.h: New file.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-lan-parameter-oem-spec.h: New file.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-pef-parameter-oem-spec.h: New file.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-serial-modem-parameter-oem-spec.h: New file.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sol-parameter-oem-spec.h: New file.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameter-oem-spec.h: New file.
+
+	*
+	libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameter-spec.h:
+	Rename from ipmi-system-info-parameter-spec.h (plural parameters).
 	
 	* Various code cleanup using new macros.
 
