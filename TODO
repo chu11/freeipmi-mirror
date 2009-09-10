@@ -48,6 +48,12 @@ ipmi-sel
 --------
 - head/tail on record counts
 
+bmc-config
+----------
+supermicro
+- if username not set and receive 0xCC from set user access, it's b/c
+username not set yet.  workaround?
+
 freeipmi tools
 --------------
 config via environment variables too - like config file
