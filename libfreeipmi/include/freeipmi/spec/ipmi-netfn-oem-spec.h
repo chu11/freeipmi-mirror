@@ -31,13 +31,16 @@ extern "C" {
  * Dell Poweredge R610
  * Dell Poweredge R710
  */
+/* achu: not official names, named based on use context */
+#define IPMI_NET_FN_OEM_DELL_GENERIC_RQ 0x30
+#define IPMI_NET_FN_OEM_DELL_GENERIC_RS 0x31
 
-/* achu: names taken from code, are correct names? */
-#define IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS 0xC0
-#define IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING                           0xC1
-#define IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR                       0xC2
-#define IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR                        0xC3
-#define IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE                               0xC4
+/*
+ * Dell Xanadu2
+ */
+/* achu: not official names, named based on use context */
+#define IPMI_NET_FN_OEM_DELL_XANADU2_RQ 0x34
+#define IPMI_NET_FN_OEM_DELL_XANADU2_RS 0x35
 
 /* 
  * Inventec

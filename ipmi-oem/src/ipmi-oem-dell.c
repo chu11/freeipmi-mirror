@@ -924,7 +924,7 @@ ipmi_oem_dell_get_nic_selection (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x30, /* network function */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
                               1, /* num bytes */
                               bytes_rs,
@@ -942,7 +942,7 @@ ipmi_oem_dell_get_nic_selection (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    3,
                                                    IPMI_CMD_OEM_DELL_GET_NIC_SELECTION,
-                                                   0x30) < 0)
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_RS) < 0)
     goto cleanup;
 
   switch (bytes_rs[2])
@@ -1025,7 +1025,7 @@ ipmi_oem_dell_set_nic_selection (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x30, /* network function */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
                               2, /* num bytes */
                               bytes_rs,
@@ -1043,7 +1043,7 @@ ipmi_oem_dell_set_nic_selection (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2, /* don't care about the 3rd byte, don't know what it is used for */
                                                    IPMI_CMD_OEM_DELL_SET_NIC_SELECTION,
-                                                   0x30) < 0)
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_RS) < 0)
     goto cleanup;
 
   rv = 0;
@@ -3088,7 +3088,7 @@ ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x30, /* network function */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
                               2, /* num bytes */
                               bytes_rs,
@@ -3106,7 +3106,7 @@ ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    3,
                                                    IPMI_CMD_OEM_DELL_RESET_TO_DEFAULTS,
-                                                   0x30) < 0)
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_RS) < 0)
     goto cleanup;
 
 
@@ -3118,7 +3118,7 @@ ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
       
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
 				  0, /* lun */
-				  0x30, /* network function */
+				  IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
 				  bytes_rq, /* data */
 				  2, /* num bytes */
 				  bytes_rs,
@@ -3136,7 +3136,7 @@ ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
 						       rs_len,
 						       3,
 						       IPMI_CMD_OEM_DELL_RESET_TO_DEFAULTS,
-						       0x30) < 0)
+						       IPMI_NET_FN_OEM_DELL_GENERIC_RS) < 0)
 	goto cleanup;
 
       if (bytes_rs[2] == 0x01)
@@ -3203,7 +3203,7 @@ ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x30, /* network function */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
                               3, /* num bytes */
                               bytes_rs,
@@ -3221,7 +3221,7 @@ ipmi_oem_dell_get_power_info (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    26,
                                                    IPMI_CMD_OEM_DELL_GET_POWER_INFO,
-                                                   0x30) < 0)
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_RS) < 0)
     goto cleanup;
 
   cumulative_start_time = bytes_rs[2];
@@ -3355,7 +3355,7 @@ ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data)
   
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x30, /* network function */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
                               4, /* num bytes */
                               bytes_rs,
@@ -3373,7 +3373,7 @@ ipmi_oem_dell_reset_power_info (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    IPMI_CMD_OEM_DELL_RESET_POWER_INFO,
-                                                   0x30) < 0)
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_RS) < 0)
     goto cleanup;
   
   rv = 0;
@@ -3540,7 +3540,7 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 	      
 	      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
 					  0, /* lun */
-					  0x30, /* network function */
+					  IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
 					  bytes_rq, /* data */
 					  3, /* num bytes */
 					  bytes_rs,
@@ -3558,7 +3558,7 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 							       rs_len,
 							       25,
 							       IPMI_CMD_OEM_DELL_GET_POWER_SUPPLY_INFO,
-							       0x30) < 0)
+							       IPMI_NET_FN_OEM_DELL_GENERIC_RS) < 0)
 		goto cleanup;
 	      
 	      ratedwatts = bytes_rs[2];
@@ -3668,7 +3668,7 @@ ipmi_oem_dell_get_instantaneous_power_consumption_info (ipmi_oem_state_data_t *s
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x30, /* network function */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
                               3, /* num bytes */
                               bytes_rs,
@@ -3686,7 +3686,7 @@ ipmi_oem_dell_get_instantaneous_power_consumption_info (ipmi_oem_state_data_t *s
                                                    rs_len,
                                                    9,
                                                    IPMI_CMD_OEM_DELL_GET_INSTANTANEOUS_POWER_CONSUMPTION_INFO,
-                                                   0x30) < 0)
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_RS) < 0)
     goto cleanup;
 
   instantaneous_power_consumption = bytes_rs[2];
@@ -3744,7 +3744,7 @@ ipmi_oem_dell_get_power_headroom_info (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x30, /* network function */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
                               1, /* num bytes */
                               bytes_rs,
@@ -3762,7 +3762,7 @@ ipmi_oem_dell_get_power_headroom_info (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    6,
                                                    IPMI_CMD_OEM_DELL_GET_POWER_HEADROOM_INFO,
-                                                   0x30) < 0)
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_RS) < 0)
     goto cleanup;
 
   instantaneous_power_headroom = bytes_rs[2];
@@ -4190,7 +4190,7 @@ _get_power_capacity_status (ipmi_oem_state_data_t *state_data,
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x30, /* network function */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
                               3, /* num bytes */
                               bytes_rs,
@@ -4208,7 +4208,7 @@ _get_power_capacity_status (ipmi_oem_state_data_t *state_data,
                                                    rs_len,
                                                    3,
                                                    IPMI_CMD_OEM_DELL_POWER_CAPACITY_STATUS,
-                                                   0x30) < 0)
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_RS) < 0)
     goto cleanup;
 
   if (power_capacity_status)
@@ -4496,7 +4496,7 @@ ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x30, /* network function */
+                              IPMI_NET_FN_OEM_DELL_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
                               3, /* num bytes */
                               bytes_rs,
@@ -4514,7 +4514,7 @@ ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    IPMI_CMD_OEM_DELL_POWER_CAPACITY_STATUS,
-                                                   0x30) < 0)
+                                                   IPMI_NET_FN_OEM_DELL_GENERIC_RS) < 0)
     goto cleanup;
 
   rv = 0;
@@ -4552,7 +4552,7 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x34, /* network function */
+                              IPMI_NET_FN_OEM_DELL_XANADU2_RQ, /* network function */
                               bytes_rq, /* data */
                               1, /* num bytes */
                               bytes_rs,
@@ -4570,7 +4570,7 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    4,
                                                    IPMI_CMD_OEM_DELL_GET_FCB_VERSION,
-                                                   0x34) < 0)
+                                                   IPMI_NET_FN_OEM_DELL_XANADU2_RS) < 0)
     goto cleanup;
 
   pstdout_printf (state_data->pstate,
