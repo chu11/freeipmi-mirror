@@ -37,9 +37,150 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
-#define IPMI_OEM_MAX_MACADDRLEN 24
+/* achu: all named from doc except 'lan' configuration id, which I assumed names */
+
+#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_LAN                      0x02
+#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_SOL                      0x03
+#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY                 0x04
+#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION 0x0C
+#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_LOG             0x0E
+#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION     0x0F
+#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE          0x10
+#define IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT         0x11
+
+/* nic status - is implemented, see below
+ */
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_LAN_NIC_STATUS 0x01
+
+/* sol idle timeout - 2 bytes, ls byte first, 0h = no timeout, default = 01h
+ *
+ * telnet/ssh redirect enable - 1 byte, 0 = disable, 1 = enabled 
+ */
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT           0x01
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_SSH_REDIRECT_ENABLE 0x02
+
+/* service disabled - is implemented, see below
+ *
+ * max authentication failures - 1 byte, 0 = disable
+ *
+ * lockout window - 2 bytes, in seconds, 0 = disable, default = 180
+ *
+ * lockout time - 2 bytes, in seconds, 0 = disable, default = 3600
+ */
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED            0x01
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_MAX_AUTHENTICATION_FAILURES 0x02
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW              0x03
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME                0x04
+
+/* web server enabled - 1 byte, 0 = false, 1 = true (default)
+ *
+ * max web sessions - 1 byte, read only
+ *
+ * active web sessions - 1 byte, read only
+ *
+ * web server timeout - 4 bytes, in seconds, 0 = disable, range 60-1920, default 300
+ *
+ * http port num - 2 bytes, default 80
+ *
+ * https port num - 2 bytes, default 443
+ */
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED  0x01
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS    0x02
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS 0x03
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT  0x04
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM       0x05
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM      0x06
+
+/* entity - 1 byte (read only)
+ *
+ * firmware version - 1-16 bytes (read only)
+ *
+ * branch - 1-16 bytes (read only)
+ *
+ * build information - 1-16 bytes (read only)
+ *
+ * update date / time - 3 bytes, from 0:00 1/1/08, lsbyte first
+ */
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_ENTITY            0x01
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_FIRMWARE_VERSION  0x02
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_BRANCH            0x03
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_BUILD_INFORMATION 0x04
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_LOG_UPDATE_DATE_TIME  0x05
+
+/* name - 1-16 bytes (read only)
+ *
+ * description - 1-256 bytes (read only)
+ *
+ * entity - 1 byte (read only)
+ *
+ * product info - 1-64 bytes (read only)
+ *
+ * firmware version - 1-16 bytes (read only)
+ *
+ * branch - 1-16 bytes (read only)
+ *
+ * build information - 1-16 bytes (read only) 
+ *
+ */
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME              0x01
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION       0x02
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_ENTITY            0x03
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO      0x04
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION  0x05
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH            0x06
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION 0x07
+
+/* remote update enable - 1 byte, ??
+ *
+ * protocol - 1 byte, bitmask, 7:3 reserved, 2 : http, 1: ftp, 0: tftp (read only)
+ *
+ * url - 1-256 bytes
+ *
+ * connection retry - 1 byte, 0 = no retries
+ *
+ * retry interval - 1 byte, in 5 second increments
+ *
+ * delay time - 1 byte, in seconds, 0h = immediate, ffh = random between 5 and 10
+ */
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_REMOTE_UPDATE_ENABLE 0x01
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_PROTOCOL             0x02
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URL                  0x03
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_CONNECTION_RETRY     0x04
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL       0x05
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_DELAY_TIME           0x06
+
+/* power management enable - 1 byte, bit 7: 0 = disable, 1 = enable, reset reserved
+ *
+ * power staggery ac recovery - 1 byte, 0x00 = immediate power on
+ * (default), 0x01 = auto, random between min and max below, 0x02 =
+ * user defined, must be between min and max below
+ *
+ * power on delay - 2 bytes
+ *
+ * minimum power on delay - 2 bytes (read only)
+ *
+ * maximum power on delay - 2 bytes
+ */
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_MANAGEMENT_ENABLE      0x01
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY 0x02
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY               0x03
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MINIMUM_POWER_ON_DELAY       0x04
+#define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY       0x05
+
 #define IPMI_OEM_SET_SELECTOR   0x0
 #define IPMI_OEM_BLOCK_SELECTOR 0x0
+
+#define IPMI_OEM_MAX_MACADDRLEN 24
+
+#define IPMI_OEM_EXTENDED_CONFIG_READ_ALL_BYTES           0xFF
+
+#define IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_SHARED    0x00
+#define IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_DEDICATED 0x01
+
+#define IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL  0x01
+#define IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM  0x02
+#define IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP 0x04
+#define IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH  0x08
 
 static int
 _inventec_get_reservation (ipmi_oem_state_data_t *state_data,
@@ -142,12 +283,12 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
 
   bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION;
   bytes_rq[1] = reservation_id;
-  bytes_rq[2] = 0x02;
-  bytes_rq[3] = 0x01;
+  bytes_rq[2] = IPMI_OEM_EXTENDED_CONFIGURATION_ID_LAN;
+  bytes_rq[3] = IPMI_OEM_EXTENDED_ATTRIBUTE_ID_LAN_NIC_STATUS;
   bytes_rq[4] = 0x00;
   bytes_rq[5] = 0x00;
   bytes_rq[6] = 0x00;
-  bytes_rq[7] = 0xFF;
+  bytes_rq[7] = IPMI_OEM_EXTENDED_CONFIG_READ_ALL_BYTES;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -174,10 +315,10 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
 
   switch (bytes_rs[6])
     {
-    case 0:
+    case IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_SHARED:
       pstdout_printf (state_data->pstate, "shared\n");
       break;
-    case 1:
+    case IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_DEDICATED:
       pstdout_printf (state_data->pstate, "dedicated\n");
       break;
     default:
@@ -242,17 +383,17 @@ ipmi_oem_inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
 
   bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION;
   bytes_rq[1] = reservation_id;
-  bytes_rq[2] = 0x02;
-  bytes_rq[3] = 0x01;
+  bytes_rq[2] = IPMI_OEM_EXTENDED_CONFIGURATION_ID_LAN;
+  bytes_rq[3] = IPMI_OEM_EXTENDED_ATTRIBUTE_ID_LAN_NIC_STATUS;
   bytes_rq[4] = 0x00;
   bytes_rq[5] = 0x00;
   bytes_rq[6] = 0x00;
   bytes_rq[7] = 0x01;
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "shared"))
-    bytes_rq[8] = 0x00;
+    bytes_rq[8] = IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_SHARED;
   else
-    bytes_rq[8] = 0x01;
+    bytes_rq[8] = IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_DEDICATED;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -512,12 +653,12 @@ _inventec_get_bmc_services (ipmi_oem_state_data_t *state_data,
 
   bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION;
   bytes_rq[1] = reservation_id;
-  bytes_rq[2] = 0x04;
-  bytes_rq[3] = 0x01;
+  bytes_rq[2] = IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY;
+  bytes_rq[3] = IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED;
   bytes_rq[4] = 0x00;
   bytes_rq[5] = 0x00;
   bytes_rq[6] = 0x00;
-  bytes_rq[7] = 0xFF;
+  bytes_rq[7] = IPMI_OEM_EXTENDED_CONFIG_READ_ALL_BYTES;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -566,16 +707,16 @@ ipmi_oem_inventec_get_bmc_services (ipmi_oem_state_data_t *state_data)
        * set.  I'm assuming if the "all" bit is set, there is no need
        * to output anything else.
        */
-      if (services & 0x1)
+      if (services & IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL)
         {
           pstdout_printf (state_data->pstate, "All services except IPMI disabled\n");
           goto out;
         }
-      if (services & 0x2)
+      if (services & IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM)
         pstdout_printf (state_data->pstate, "KVM/Virtual Storage disabled\n");
-      if (services & 0x4)
+      if (services & IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP)
         pstdout_printf (state_data->pstate, "HTTP/HTTPS disabled\n");
-      if (services & 0x8)
+      if (services & IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH)
         pstdout_printf (state_data->pstate, "SSH/Telnet disabled\n");
     }
   else
@@ -662,10 +803,11 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
   /* if all, it's an easy special case */
   if (!strcasecmp (state_data->prog_data->args->oem_options[1], "all"))
     {
+
       if (enable)
         bytes_rq[8] = 0x00;
       else
-        bytes_rq[8] = 0x01;
+        bytes_rq[8] = IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL;
     }
   else
     {
@@ -674,33 +816,35 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
       if (_inventec_get_bmc_services (state_data, &services) < 0)
         goto cleanup;
 
-      if (enable && (services & 0x1))
+      if (enable && (services & IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL))
         {
           /* clear out "all" bit, and replace with remaining bits */
-          services &= 0xFE;
-          services |= 0x0E;
+          services &= (~IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL);
+          services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM;
+          services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP;
+          services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH;
         }
 
       if (!strcasecmp (state_data->prog_data->args->oem_options[1], "kvm"))
         {
           if (enable)
-            services &= 0xFD;
+            services &= (~IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM);
           else
-            services |= 0x2;
+            services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM;
         }
       else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "http"))
         {
           if (enable)
-            services &= 0xFB;
+            services &= (~IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP);
           else
-            services |= 0x4;
+            services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP;
         }
       else /* !strcasecmp (state_data->prog_data->args->oem_options[1], "ssh") */
         {
           if (enable)
-            services &= 0xF7;
+            services &= (~IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH);
           else
-            services |= 0x8;
+            services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH;
         }
 
       bytes_rq[8] = services;
@@ -712,8 +856,8 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
 
   bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION;
   bytes_rq[1] = reservation_id;
-  bytes_rq[2] = 0x04;
-  bytes_rq[3] = 0x01;
+  bytes_rq[2] = IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY;
+  bytes_rq[3] = IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED;
   bytes_rq[4] = 0x00;
   bytes_rq[5] = 0x00;
   bytes_rq[6] = 0x00;
