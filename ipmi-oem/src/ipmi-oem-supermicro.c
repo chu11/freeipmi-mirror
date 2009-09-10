@@ -84,7 +84,7 @@ ipmi_oem_supermicro_extra_firmware_info (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x3C, /* network function */
+                              IPMI_NET_FN_OEM_SUPERMICRO_PEPPERCON_RQ, /* network function */
                               bytes_rq, /* data */
                               1, /* num bytes */
                               bytes_rs,
@@ -102,7 +102,7 @@ ipmi_oem_supermicro_extra_firmware_info (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    19,
                                                    IPMI_CMD_OEM_SUPERMICRO_EXTRA_FIRMWARE_INFO,
-                                                   0x3C) < 0)
+                                                   IPMI_NET_FN_OEM_SUPERMICRO_PEPPERCON_RS) < 0)
     goto cleanup;
 
   firmware_major_version = bytes_rs[2];
@@ -176,7 +176,7 @@ ipmi_oem_supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-                              0x30, /* network function */
+                              IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
                               1, /* num bytes */
                               bytes_rs,
@@ -194,7 +194,7 @@ ipmi_oem_supermicro_reset_intrusion (ipmi_oem_state_data_t *state_data)
                                                    rs_len,
                                                    2,
                                                    IPMI_CMD_OEM_SUPERMICRO_RESET_INTRUSION,
-                                                   0x30) < 0)
+                                                   IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RS) < 0)
     goto cleanup;
 
   rv = 0;

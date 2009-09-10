@@ -1,0 +1,71 @@
+/*
+   Copyright (C) 2003-2009 FreeIPMI Core Team
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+*/
+
+#ifndef _IPMI_NETFN_OEM_SPEC_H
+#define _IPMI_NETFN_OEM_SPEC_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* 
+ * Dell
+ */
+
+/*
+ * Dell Poweredge R610
+ * Dell Poweredge R710
+ */
+
+/* achu: names taken from code, are correct names? */
+#define IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS 0xC0
+#define IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING                           0xC1
+#define IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR                       0xC2
+#define IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR                        0xC3
+#define IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE                               0xC4
+
+/* 
+ * Inventec
+ */
+
+/*
+ * Inventec 5441/Dell Xanadu2
+ */
+/* achu: not official names, named based on use context */
+#define IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ 0x30
+#define IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS 0x31
+
+/*
+ * Supermicro
+ */
+
+/*
+ * Supermicro H8QME
+ */
+/* achu: not official names, named based on use context */
+#define IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RQ 0x30
+#define IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RS 0x31
+
+#define IPMI_NET_FN_OEM_SUPERMICRO_PEPPERCON_RQ 0x3C
+#define IPMI_NET_FN_OEM_SUPERMICRO_PEPPERCON_RS 0x3D
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* ipmi-netfn-oem-spec.h */

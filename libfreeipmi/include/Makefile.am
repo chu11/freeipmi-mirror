@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.54 2009-09-10 18:52:09 chu11 Exp $
+## $Id: Makefile.am,v 1.55 2009-09-10 20:52:59 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -62,6 +62,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-cmd-spec.h \
 	freeipmi/spec/ipmi-cmd-oem-spec.h \
 	freeipmi/spec/ipmi-comp-code-spec.h \
+	freeipmi/spec/ipmi-comp-code-oem-spec.h \
 	freeipmi/spec/ipmi-entity-ids-spec.h \
 	freeipmi/spec/ipmi-event-reading-type-code-spec.h \
 	freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h \
@@ -72,10 +73,11 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-lan-parameter-spec.h \
 	freeipmi/spec/ipmi-lan-parameter-oem-spec.h \
 	freeipmi/spec/ipmi-netfn-spec.h \
-	freeipmi/spec/ipmi-oem-spec.h \
+	freeipmi/spec/ipmi-netfn-oem-spec.h \
 	freeipmi/spec/ipmi-pef-parameter-spec.h \
 	freeipmi/spec/ipmi-pef-parameter-oem-spec.h \
 	freeipmi/spec/ipmi-privilege-level-spec.h \
+	freeipmi/spec/ipmi-product-id-spec.h \
 	freeipmi/spec/ipmi-rmcpplus-status-spec.h \
 	freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h \
 	freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h \

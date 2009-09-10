@@ -81,6 +81,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-cmd-spec.h>
 #include <freeipmi/spec/ipmi-cmd-oem-spec.h>
 #include <freeipmi/spec/ipmi-comp-code-spec.h>
+#include <freeipmi/spec/ipmi-comp-code-oem-spec.h>
 #include <freeipmi/spec/ipmi-entity-ids-spec.h>
 #include <freeipmi/spec/ipmi-event-reading-type-code-spec.h>
 #include <freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h>
@@ -91,10 +92,11 @@ extern "C" {
 #include <freeipmi/spec/ipmi-lan-parameter-spec.h>
 #include <freeipmi/spec/ipmi-lan-parameter-oem-spec.h>
 #include <freeipmi/spec/ipmi-netfn-spec.h>
-#include <freeipmi/spec/ipmi-oem-spec.h>
+#include <freeipmi/spec/ipmi-netfn-oem-spec.h>
 #include <freeipmi/spec/ipmi-pef-parameter-spec.h>
 #include <freeipmi/spec/ipmi-pef-parameter-oem-spec.h>
 #include <freeipmi/spec/ipmi-privilege-level-spec.h>
+#include <freeipmi/spec/ipmi-product-id-spec.h>
 #include <freeipmi/spec/ipmi-rmcpplus-status-spec.h>
 #include <freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h>
 #include <freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h>

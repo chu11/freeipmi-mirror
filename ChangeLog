@@ -14,9 +14,16 @@
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameter-oem-spec.h: New file.
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-netfn-oem-spec.h: New file.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-oem-spec.h: New file.
+
 	*
 	libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameter-spec.h:
 	Rename from ipmi-system-info-parameter-spec.h (plural parameters).
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: New
+	file, rename from ipmi-oem-spec.h.
 	
 	* Various code cleanup using new macros.
 
