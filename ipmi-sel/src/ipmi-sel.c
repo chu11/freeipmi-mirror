@@ -1278,8 +1278,9 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                && (event_data3 & 0x0F) == 0x03)
               || (((sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-                    && (event_data1_offset == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
-                       || event_data1_offset == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
+                    && ((event_data1_offset == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
+                         && sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_PCI_PARITY_ERROR)
+                        || event_data1_offset == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
                         || event_data1_offset == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
                    || (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
                        && event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR_PCIE_ERROR)
