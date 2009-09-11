@@ -771,6 +771,8 @@ _output_oem_event_offset_class_sensor_specific_discrete (ipmi_sel_parse_ctx_t ct
 
   /* OEM Interpretation
    *
+   * From Dell Code
+   *
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
@@ -853,6 +855,8 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
+   * From Dell Code
+   *
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
@@ -875,6 +879,8 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
     }
 
   /* OEM Interpretation
+   *
+   * From Dell Spec and Dell Code
    *
    * Dell Poweredge 2900
    * Dell Poweredge 2950
@@ -971,6 +977,8 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
         }
       
       /* OEM Interpretation
+       *
+       * From Dell Spec and Dell Code
        *
        * Dell Poweredge R610
        * Dell Poweredge R710
@@ -1269,6 +1277,8 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
+   * From Dell Spec
+   *
    * Dell Poweredge R610
    * Dell Poweredge R710
    *
@@ -1312,6 +1322,8 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
+   * From Dell Spec
+   *
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
@@ -1350,26 +1362,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * Dell Poweredge R610
-   * Dell Poweredge R710
-   *
-   */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL)
-    {
-      snprintf (tmpbuf,
-                tmpbuflen,
-                "Management Controller Firmware Revision = %Xh",
-                system_event_record_data->event_data2);
-      
-      return (1);
-    }
-
-  /* OEM Interpretation
+   * From Dell Spec and Dell Code
    *
    * Dell Poweredge R610
    * Dell Poweredge R710
@@ -1404,6 +1397,8 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
+   * From Dell Spec
+   *
    * Dell Poweredge R610
    * Dell Poweredge R710
    *
@@ -1425,6 +1420,8 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
     }
 
   /* OEM Interpretation
+   *
+   * From Dell Spec
    *
    * Dell Poweredge R610
    * Dell Poweredge R710
@@ -1507,6 +1504,8 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
     }
   
   /* OEM Interpretation
+   *
+   * From Dell Spec
    *
    * Dell Poweredge 2900
    * Dell Poweredge 2950
@@ -1995,35 +1994,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * Dell Poweredge R610
-   * Dell Poweredge R710
-   *
-   */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL)
-    {
-      if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_VERSION_CHANGE_OEM_DELL_OTHER)
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Hardware Type = Other");
-      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_VERSION_CHANGE_OEM_DELL_CPU)
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Hardware Type = CPU");
-      else
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Hardware Type = %Xh",
-                  system_event_record_data->event_data3);
-      
-      return (1);
-    }
-
-  /* OEM Interpretation
+   * From Dell Spec and Dell Code
    *
    * Dell Poweredge R610
    * Dell Poweredge R710
@@ -2045,22 +2016,22 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       option_rom = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_BITMASK);
       option_rom >>= IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SHIFT;
 
-      if (option_rom == IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_EMBEDDED)
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Device Embedded");
-      else
+      if (option_rom == IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SLOT)
         {
           uint8_t slot;
-
+          
           slot = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SLOT_BITMASK);
           slot >>= IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SLOT_SHIFT;
-
+          
           snprintf (tmpbuf,
                     tmpbuflen,
                     "Device Slot %u",
                     slot);
         }
+      else
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Device Embedded");
 
       return (1);
     }
@@ -2097,6 +2068,8 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
+   * From Dell Spec
+   *
    * Dell Poweredge R610
    * Dell Poweredge R710
    *
@@ -2122,6 +2095,8 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
     }
 
   /* OEM Interpretation
+   *
+   * From Dell Spec and Dell Code
    *
    * Dell Poweredge R610
    * Dell Poweredge R710
@@ -2198,6 +2173,8 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
     }
   
   /* OEM Interpretation
+   *
+   * From Dell Spec
    *
    * Dell Poweredge 2900
    * Dell Poweredge 2950
@@ -2792,6 +2769,8 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
+   * From Dell Spec and Dell Code
+   *
    * Dell Poweredge R610
    * Dell Poweredge R710
    *
@@ -2943,60 +2922,75 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * From Dell Provided Source Code
-   * - Handle for Dell Poweredge R610
-   * - Handle for Dell Poweredge R710
+   * From Dell Spec
    *
-   * Specifically for Version Change Sensors
-   *
-   * achu: XXX: data2 & 0x0F == 2 ???  Need to ask Dell.
+   * Dell Poweredge R610
+   * Dell Poweredge R710
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
-      && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-      && (system_event_record_data->event_data2 & 0x0F) == 0x02)
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
-      char *data3_str = NULL;
-      
-      switch (system_event_record_data->event_data3 & 0x0F)
+      if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_VERSION_CHANGE_MANAGEMENT_CONTROLLER_FIRMWARE_REVISION)
         {
-        case 0:
-          data3_str = "other hardware";
-        case 1:
-          data3_str = "CPU";
-        default:
-          data3_str = "unknown hardware";
+          if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_VERSION_CHANGE_OEM_DELL_OTHER)
+            {
+              if (_SNPRINTF (buf,
+                             buflen,
+                             wlen,
+                             "Hardware Type = Other"))
+                (*oem_rv) = 1;
+              else
+                (*oem_rv) = 0;
+            }
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_VERSION_CHANGE_OEM_DELL_CPU)
+            {
+              if (_SNPRINTF (buf,
+                             buflen,
+                             wlen,
+                             "Hardware Type = CPU"))
+                (*oem_rv) = 1;
+              else
+                (*oem_rv) = 0;
+            }
+          else
+            {
+              if (_SNPRINTF (buf,
+                             buflen,
+                             wlen,
+                             "Hardware Type = %Xh",
+                             system_event_record_data->event_data3))
+                (*oem_rv) = 1;
+              else
+                (*oem_rv) = 0;
+            }
+
+          return (1);
         }
-      
-      if (_SNPRINTF (buf,
-                     buflen,
-                     wlen,
-                     "BMC Firmware and %s mismatch",
-                     data3_str))
-        (*oem_rv) = 1;
-      else
-        (*oem_rv) = 0;
-      
-      return (1);
     }
 
   /* OEM Interpretation
    *
-   * From Dell Provided Source Code
-   * - Handle for Dell Poweredge R610
-   * - Handle for Dell Poweredge R710
+   * From Dell Spec and Dell Code
+   * 
+   * Dell Poweredge R610
+   * Dell Poweredge R710
    *
-   * Specifically for Dell OEM sensor
-   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING w/ event offset
-   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_DEVICE_OPTION_ROM_FAILED_TO_SUPPORT_LINK_TUNING_OR_FLEX_ADDRESS.
+   * Data2
+   * [7:6] - blade format
+   *         0 - single height (i.e. Mezz B, Mezz C)
+   *         1 - double height (i.e. Mezz B1, Mezz B2, Mezz C1, Mezz C2)
+   *         2 - double height, double width (i.e. Mezz B1, Mezz B2, Mezz C1, Mezz C2)
+   * [5:0] - reserved
    *
-   * achu: XXX: data3 & 0x01 => 'B' or 'C' ???  Need to ask Dell
+   * Data3
+   * [7] - 0 = device with option ROM is embedded, 1 = device with option ROM is in a slot
+   * [6:0] - slot number where option ROM is located
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
@@ -3007,50 +3001,56 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
-      if (system_event_record_data->event_data3 & 0x80)
-        {
-          uint8_t data2_slotspernode;
-          uint8_t slotspernode;
+      uint8_t option_rom;
+      
+      option_rom = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_BITMASK);
+      option_rom >>= IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SHIFT;
 
-          data2_slotspernode = system_event_record_data->event_data2 >> 6;
+      if (option_rom == IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SLOT)
+        {
+          uint8_t blade_format;
+          uint8_t slots_per_node;
+          uint8_t slot_number;
+          char mezzanine;
+
+          blade_format = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_EVENT_DATA2_BLADE_FORMAT_BITMASK);
+          blade_format >>= IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_EVENT_DATA2_BLADE_FORMAT_SHIFT;
           
-          /* Comments in Dell code referred to this as:
-           *
-           * "Single Height Blade Format" (1)
-           * vs.
-           * "Double Heigh Blade Format" (2)
-           * vs.
-           " "Double Height Double Width Blade Format" (4)
-           */
-          if (data2_slotspernode == 1)
-            slotspernode = 2;
-          else if (data2_slotspernode == 2)
-            slotspernode = 4;
+          if (blade_format == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_EVENT_DATA2_BLADE_FORMAT_SINGLE_HEIGHT)
+            slots_per_node = 1;
+          else if (blade_format == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_EVENT_DATA2_BLADE_FORMAT_DOUBLE_HEIGHT)
+            slots_per_node = 2;
+          else if (blade_format == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_EVENT_DATA2_BLADE_FORMAT_DOUBLE_HEIGHT_DOUBLE_WEIGHT)
+            slots_per_node = 4;
           else
-            slotspernode = 1;   /* default to 1 */
+            return (0);
           
+          slot_number = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_BITMASK);
+          slot_number >>= IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_SHIFT;
+
           /* Comments in Dell code refer to 
            *
            * "Odd number is B"
-           *
-           * "Event number is C"
-           *
-           * I will assume this is some labeling of Dell hardware.
+           * "Even number is C"
            */
-          if (slotspernode >= 2)
+          if (slot_number % 2)
+            mezzanine = 'B';
+          else
+            mezzanine = 'C';
+          
+          if (slots_per_node >= 2)
             {
-              uint8_t slot;
               uint8_t slot_position;
-
-              /* need slot zero based */
-              slot = (system_event_record_data->event_data3 & 0x7F) - 1;
-              slot_position = (slot/slotspernode) + 1;
+              
+              /* need slot number zero based for determining position */
+             
+              slot_position = ((slot_number - 1)/ slots_per_node) + 1;
 
               if (_SNPRINTF (buf,
                              buflen,
                              wlen,
                              "Mezzanine %c%c",
-                             (system_event_record_data->event_data3 & 0x01) ? 'B' : 'C',
+                             mezzanine,
                              '0' + slot_position))
                 (*oem_rv) = 1;
               else
@@ -3062,7 +3062,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                              buflen,
                              wlen,
                              "Mezzanine %c",
-                             (system_event_record_data->event_data3 & 0x01) ? 'B' : 'C'))
+                             mezzanine))
                 (*oem_rv) = 1;
               else
                 (*oem_rv) = 0;
