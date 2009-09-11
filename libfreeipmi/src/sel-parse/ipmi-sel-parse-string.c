@@ -1124,7 +1124,6 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
   /* OEM Interpretation
    *
    * Inventec 5441/Dell Xanadu2
-   *
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
