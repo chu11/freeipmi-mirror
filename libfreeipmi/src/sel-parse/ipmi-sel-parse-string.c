@@ -1358,6 +1358,27 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL)
+    {
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "Management Controller Firmware Revision = %Xh",
+                system_event_record_data->event_data2);
+      
+      return (1);
+    }
+
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   * Dell Poweredge R710
+   *
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && ((system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
            && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS)
           || (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
@@ -1418,11 +1439,11 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
     {
       char *str = NULL;
 
-      if (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_MEMORY_SPARE_MODE_BITMASK)
+      if (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_SPARE_MODE_BITMASK)
         str = "Memory is in Spare mode";
-      else if (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_MEMORY_RAID_MODE_BITMASK)
+      else if (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_RAID_MODE_BITMASK)
         str = "Memory is in RAID mode";
-      else /* system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_MEMORY_MIRROR_MODE_BITMASK */
+      else /* system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MIRROR_MODE_BITMASK */
         str = "Memory is in Mirror mode";
 
       snprintf (tmpbuf,
@@ -1974,30 +1995,73 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * From Dell Provided Source Code
-   * - Handle for Dell Poweredge R610
-   * - Handle for Dell Poweredge R710
+   * Dell Poweredge R610
+   * Dell Poweredge R710
    *
-   * Specifically for Version Change Sensors with an event offset
-   * IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL
-   *
-   * achu: XXX: event_data3 & 0x80 == 0x80 ??? need to ask dell
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
-      && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL
-      && (system_event_record_data->event_data3 & 0x80) == 0x80)
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL)
     {
-      snprintf (tmpbuf,
-                tmpbuflen,
-                "Device Slot %u",
-                system_event_record_data->event_data3 & 0x7F);
+      if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_VERSION_CHANGE_OEM_DELL_OTHER)
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Hardware Type = Other");
+      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_VERSION_CHANGE_OEM_DELL_CPU)
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Hardware Type = CPU");
+      else
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Hardware Type = %Xh",
+                  system_event_record_data->event_data3);
       
+      return (1);
+    }
+
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   * Dell Poweredge R710
+   *
+   * [7] - 0 = device with option ROM is embedded, 1 = device with option ROM is in a slot
+   * [6:0] - slot number where option ROM is located
+   *
+   * Note: deassertion means unsuccessful
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL)
+    {
+      uint8_t option_rom;
+      
+      option_rom = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_VERSION_CHANGE_DEVICE_OPTION_ROM_BITMASK);
+      option_rom >>= IPMI_SENSOR_TYPE_VERSION_CHANGE_DEVICE_OPTION_ROM_SHIFT;
+
+      if (option_rom == IPMI_SENSOR_TYPE_VERSION_CHANGE_DEVICE_OPTION_ROM_EMBEDDED)
+        snprintf (tmpbuf,
+                  tmpbuflen,
+                  "Device Embedded");
+      else
+        {
+          uint8_t slot;
+
+          slot = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_VERSION_CHANGE_DEVICE_OPTION_ROM_SLOT_BITMASK);
+          slot >>= IPMI_SENSOR_TYPE_VERSION_CHANGE_DEVICE_OPTION_ROM_SLOT_SHIFT;
+
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Device Slot %u",
+                    slot);
+        }
+
       return (1);
     }
 
@@ -2756,8 +2820,8 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
-      int slot_flag;
-      int bus_slot_number;
+      uint8_t slot_flag;
+      uint8_t bus_slot_number;
 
       /* Dell documentation says to watch out for this specific case */
       if (system_event_record_data->event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT
