@@ -1249,39 +1249,51 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * Dell Poweredge R610
        * Dell Poweredge R710
        *
-       * Unique condition 1, event_data 2 and 3 are a single watt
+       * Unique condition 1, event data 2 and 3 together hold dimm
+       * location.
+       *
+       * Unique condition 2, event_data 2 and 3 together hold slot,
+       * bus, device, function information.
+       *
+       * Unique condition 3, event_data 2 holds firmware version to
+       * determine if data 3 is valid..
+       *
+       * Unique condition 4, event data 2 and 3 together hold slot,
+       * mezzanine, bus, device, function information for specific
+       * offsets
+       *
+       * Unique condition 5, event_data 2 and 3 are a single watt
        * output.  So there is no individual event data 2/3 output, the
        * only output is the combined output.
        *
        * achu: XXX: why "(event_data3 & 0x0F) == 0x03"??, I don't
        * know, need to get more info from Dell.
        *
-       * Unique condition 2, event_data 2 and 3 together hold slot,
-       * bus, device, function information.
-       *
-       * Unique condition 3, event data 2 and 3 hold version mismatch
+       * Unique condition 6, event data 2 and 3 hold version mismatch
        * information.
-       *
-       * Unique condition 4, event_data 2 holds firmware version to
-       * determine if data 3 is valid..
-       *
-       * Unique condition 5, event data 2 and 3 together hold slot,
-       * mezzanine, bus, device, function information for specific
-       * offsets
-       *
-       * Unique condition 6, event data 2 and 3 together hold dimm
-       * location.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
           && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
               || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
           /* Unique Condition 1 */
-          && ((event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
-               && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
-               && event_data1_offset == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR
+          && ((((event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+                 && ((sensor_type == IPMI_SENSOR_TYPE_MEMORY
+                      && (event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+                          || event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
+                          || event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_CRITICAL_OVERTEMPERATURE))
+                     || (sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
+                         && event_data1_offset == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_CORRECTABLE_MEMORY_ERROR_LOGGING_DISABLED)))
+                || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+                    && sensor_type == IPMI_SENSOR_TYPE_MEMORY
+                    && event_data1_offset == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_LOST)
+                || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+                    && sensor_type == IPMI_SENSOR_TYPE_MEMORY
+                    && (event_data1_offset == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_CRITICAL_FROM_OK
+                        || event_data1_offset == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_CRITICAL_FROM_LESS_SEVERE)))
+               && state_data->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
+               && state_data->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
                && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-               && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-               && (event_data3 & 0x0F) == 0x03)
+               && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               /* Unique Condition 2 */
               || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
                   && ((sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
@@ -1298,38 +1310,26 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
               /* Unique Condition 3 */
               || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
                   && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-                  && event_data1_offset == IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
-                  && state_data->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
-                  && state_data->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
-                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-              /* Unique Condition 4 */
-              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
-                  && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
                   && event_data1_offset == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-              /* Unique Condition 5 */
+              /* Unique Condition 4 */
               || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
                   && sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
                   && event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_DEVICE_OPTION_ROM_FAILED_TO_SUPPORT_LINK_TUNING_OR_FLEX_ADDRESS
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+              /* Unique Condition 5 */
+              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+                  && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
+                  && event_data1_offset == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR
+                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+                  && (event_data3 & 0x0F) == 0x03)
               /* Unique Condition 6 */
-              || (((event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-                    && ((sensor_type == IPMI_SENSOR_TYPE_MEMORY
-                         && (event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
-                             || event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
-                             || event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_CRITICAL_OVERTEMPERATURE))
-                        || (sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
-                            && event_data1_offset == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_CORRECTABLE_MEMORY_ERROR_LOGGING_DISABLED)))
-                   || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
-                       && sensor_type == IPMI_SENSOR_TYPE_MEMORY
-                       && event_data1_offset == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_LOST)
-                   || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
-                       && sensor_type == IPMI_SENSOR_TYPE_MEMORY
-                       && (event_data1_offset == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_CRITICAL_FROM_OK
-                           || event_data1_offset == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_CRITICAL_FROM_LESS_SEVERE)))
+              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+                  && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
+                  && event_data1_offset == IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
                   && state_data->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
                   && state_data->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
