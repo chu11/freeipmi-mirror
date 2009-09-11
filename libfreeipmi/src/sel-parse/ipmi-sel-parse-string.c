@@ -1219,6 +1219,8 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
         }
     }
 
+  /* achu: I don't know what motherboards this applies to */
+#if 0
   /* OEM Interpretation
    *
    * From Dell Provided Source Code
@@ -1274,6 +1276,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
           return (1);
         }
     }
+#endif
 
   /* OEM Interpretation
    *
@@ -2036,6 +2039,8 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       return (1);
     }
 
+  /* achu: I don't know what motherboards this applies to */
+#if 0
   /* OEM Interpretation
    *
    * From Dell Provided Source Code
@@ -2065,6 +2070,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       
       return (1);
     }
+#endif
 
   /* OEM Interpretation
    *
@@ -3084,57 +3090,88 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * From Dell Provided Source Code
-   * - Handle for Dell Poweredge R610
-   * - Handle for Dell Poweredge R710
+   * From Dell Spec and Dell Code
    *
-   * Specifically for Memory Sensors
+   * Dell Poweredge R610
+   * Dell Poweredge R710
    *
-   * achu: XXX: need info from dell, this doesn't make a lot of sense.
+   * Data2
+   * [7:4] - 00h - 07h - Memory Card Number
+   *       - 08h = 4 Dimms per Node
+   *       - 09h = 6 Dimms per Node
+   *       - 0Ah = 8 Dimms per Node
+   *       - 0Bh = 9 Dimms per Node
+   *       - 0Ch - 0Eh = reserved
+   *       - 0Fh = No Card
+   * [3:0] - 0h - 0Fh = Bitmask Increment in Data3
+   *
+   * Data3
+   * [7:0] - 00h - FFh = DIMM bitmap
+   *
+   * i.e. Increment = 0
+   *      DIMM bitmap = 00000001b = DIMM 1
+   * i.e. Increment = 1
+   *      DIMM bitmap = 00000001b = DIMM 9
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
-      && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+      && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
+      && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
-      uint8_t memory_board;
-      char memory_board_char;
-      uint8_t increment = 0;
+      char dimmstr[EVENT_BUFFER_LENGTH + 1];
+      uint8_t memory_card;
+      uint8_t dimm_counter = 0;
 
-      memory_board = system_event_record_data->event_data2 >> 4;
+      memset (dimmstr, '\0', EVENT_BUFFER_LENGTH + 1);
+          
+      memory_card = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_BITMASK);
+      memory_card >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_SHIFT;
 
-      /* Dell comments say "0x0F" means card not present */
-
-      if (memory_board != 0x0F)
-        memory_board_char = 'A' + memory_board;
-
-      if ((system_event_record_data->event_data2 & 0x0F) != 0x0F)
-        increment = (system_event_record_data->event_data2 & 0x0F) << 3;
-      
-      /* Dell comments say "NUMA Format" */
-      /* achu: XXX: what ??, why would you use the memory board for this?? */
-      if (memory_board > 0x07 && memory_board != 0x0F)
+      if (memory_card != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_NO_CARD)
         {
-          uint8_t dimmspernode;
-          char dimmstr[EVENT_BUFFER_LENGTH];
-          unsigned int offset = 0;
+          dimm_counter = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_BITMASK);
+          dimm_counter >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_SHIFT;
+          dimm_counter *= 8;
+        }
+      
+      if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_4_DIMMS_PER_NODE
+          || memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_6_DIMMS_PER_NODE
+          || memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_8_DIMMS_PER_NODE
+          || memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_9_DIMMS_PER_NODE)
+        {
+          uint8_t dimms_per_node;
+          int found = 0;
           int i;
 
-          if (memory_board == 0x09)
-            dimmspernode = 6;
-          else if (memory_board == 0x0A)
-            dimmspernode = 8;
-          else if (memory_board == 0x0B)
-            dimmspernode = 9;
-          else
-            dimmspernode = 4;
+          if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_4_DIMMS_PER_NODE)
+            dimms_per_node = 4;
+          else if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_6_DIMMS_PER_NODE)
+            dimms_per_node = 6;
+          else if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_8_DIMMS_PER_NODE)
+            dimms_per_node = 8;
+          else /* memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_9_DIMMS_PER_NODE */
+            dimms_per_node = 9;
 
-          memset (dimmstr, '\0', EVENT_BUFFER_LENGTH);
+          /* achu:
+           * 
+           * DIMM locations can be thought of in this mapping, lets
+           * say dimms per node is 4.
+           *
+           * 1 = A1
+           * 2 = A2
+           * 3 = A3
+           * 4 = A4
+           * 5 = B1
+           * 6 = B2
+           * ...
+           * 
+           */
 
           for (i = 0; i < 8; i++)
             {
@@ -3142,72 +3179,70 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                 {
                   uint8_t node;
                   uint8_t dimmnum;
-                  int len;
                   
-                  node = (increment + i) / dimmspernode;
+                  node = (dimm_counter + i) / dimms_per_node;
                   
-                  dimmnum  = ((increment + i) % dimmspernode) + 1;
-
-                  len = snprintf (dimmstr,
-                                  EVENT_BUFFER_LENGTH - offset,
-                                  "%c%u",
-                                  'A' + node,
-                                  dimmnum);
-
-                  offset += len;
+                  dimmnum  = ((dimm_counter + i) % dimms_per_node) + 1;
                   
-                  if (offset >= EVENT_BUFFER_LENGTH)
-                    break;
+                  snprintf (dimmstr,
+                            EVENT_BUFFER_LENGTH,
+                            "%c%u",
+                            'A' + node,
+                            dimmnum);
+                  
+                  found++;
+                  break;
                 }
             }
+          
+          if (found)
+            {
+              if (_SNPRINTF (buf,
+                             buflen,
+                             wlen,
+                             "DIMM %s",
+                             dimmstr))
+                (*oem_rv) = 1;
+              else
+                (*oem_rv) = 0;
 
-          if (_SNPRINTF (buf,
-                         buflen,
-                         wlen,
-                         "DIMM_%s",
-                         dimmstr))
-            (*oem_rv) = 1;
-          else
-            (*oem_rv) = 0;
+              return (1);
+            }
         }
       else
         {
-          char dimmstr[EVENT_BUFFER_LENGTH];
-          unsigned int offset = 0;
+          int found = 0;
           int i;
-
-          memset (dimmstr, '\0', EVENT_BUFFER_LENGTH);
 
           for (i = 0; i < 8; i++)
             {
               if (system_event_record_data->event_data3 & (0x1 << i))
                 {
-                  int len;
+                  snprintf (dimmstr,
+                            EVENT_BUFFER_LENGTH,
+                            "%u",
+                            (dimm_counter + i + 1));
                   
-                  len = snprintf (dimmstr,
-                                  EVENT_BUFFER_LENGTH - offset,
-                                  "%u",
-                                  (increment + i + 1));
-                  
-                  offset += len;
-                  
-                  if (offset >= EVENT_BUFFER_LENGTH)
-                    break;
+                  found++;
+                  break;
                 }
             }
-
-          if (_SNPRINTF (buf,
-                         buflen,
-                         wlen,
-                         "DIMM %s",
-                         dimmstr))
-            (*oem_rv) = 1;
-          else
-            (*oem_rv) = 0;
+          
+          if (found)
+            {
+              if (_SNPRINTF (buf,
+                             buflen,
+                             wlen,
+                             "DIMM %s",
+                             dimmstr))
+                (*oem_rv) = 1;
+              else
+                (*oem_rv) = 0;
+              
+              return (1);
+            }
           
         }
-      
-      return (1);
     }
 
   return (0);
