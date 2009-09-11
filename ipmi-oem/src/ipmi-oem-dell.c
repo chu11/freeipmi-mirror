@@ -777,7 +777,8 @@ _get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
 						       IPMI_NET_FN_APP_RQ) < 0)
 	goto cleanup;
       
-      mac_type = (bytes_rs[3] & IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_BITMASK) >> IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_SHIFT;
+      mac_type = (bytes_rs[3] & IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_BITMASK);
+      mac_type >>= IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_SHIFT;
       
       if (mac_type == IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_ETHERNET)
 	{
@@ -785,8 +786,11 @@ _get_dell_system_info_11g_mac_addresses (ipmi_oem_state_data_t *state_data)
 	  uint8_t nic_status;
 	  char *nic_status_str = NULL;
 
-	  nic_status = (bytes_rs[3] & IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_STATUS_BITMASK) >> IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_STATUS_SHIFT;
-	  nic_number = (bytes_rs[4] & IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_NUMBER_BITMASK) >> IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_NUMBER_SHIFT;
+	  nic_status = (bytes_rs[3] & IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_STATUS_BITMASK);
+          nic_status >>= IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_STATUS_SHIFT;
+
+	  nic_number = (bytes_rs[4] & IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_NUMBER_BITMASK);
+          nic_number >>= IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_NUMBER_SHIFT;
 
 	  if (nic_status == IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_ENABLED)
 	    nic_status_str = "Enabled";
@@ -4346,10 +4350,16 @@ _get_power_capacity_status (ipmi_oem_state_data_t *state_data,
     goto cleanup;
 
   if (power_capacity_status)
-    (*power_capacity_status) = (bytes_rs[2] & IPMI_OEM_DELL_GET_POWER_CAPACITY_STATUS_BITMASK) >> IPMI_OEM_DELL_GET_POWER_CAPACITY_STATUS_SHIFT;
+    {
+      (*power_capacity_status) = (bytes_rs[2] & IPMI_OEM_DELL_GET_POWER_CAPACITY_STATUS_BITMASK);
+      (*power_capacity_status) >>= IPMI_OEM_DELL_GET_POWER_CAPACITY_STATUS_SHIFT;
+    }
 
   if (power_capacity_is_settable)
-    (*power_capacity_is_settable) = ((bytes_rs[2] & IPMI_OEM_DELL_GET_POWER_CAPACITY_IS_SETTABLE_BITMASK) >> IPMI_OEM_DELL_GET_POWER_CAPACITY_IS_SETTABLE_SHIFT); 
+    {
+      (*power_capacity_is_settable) = (bytes_rs[2] & IPMI_OEM_DELL_GET_POWER_CAPACITY_IS_SETTABLE_BITMASK);
+      (*power_capacity_is_settable) >>= IPMI_OEM_DELL_GET_POWER_CAPACITY_IS_SETTABLE_SHIFT;
+    }
 
   rv = 0;
  cleanup:
