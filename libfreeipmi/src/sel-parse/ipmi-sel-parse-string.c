@@ -886,8 +886,6 @@ _output_oem_event_offset_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Dell Poweredge 2950
    * Dell Poweredge R610
    * Dell Poweredge R710
-   *
-   * achu: Unique special case
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
@@ -982,7 +980,6 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
        *
        * Dell Poweredge R610
        * Dell Poweredge R710
-       *
        */
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
 	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
@@ -1369,7 +1366,6 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * Dell Poweredge R610
    * Dell Poweredge R710
-   *
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
@@ -1404,7 +1400,6 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * Dell Poweredge R610
    * Dell Poweredge R710
-   *
    */
   if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
       && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
@@ -1428,7 +1423,6 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * Dell Poweredge R610
    * Dell Poweredge R710
-   *
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
@@ -2106,7 +2100,6 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
    *
    * Dell Poweredge R610
    * Dell Poweredge R710
-   *
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
