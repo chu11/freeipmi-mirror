@@ -1316,9 +1316,20 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               /* Unique Condition 6 */
-              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
-                  && sensor_type == IPMI_SENSOR_TYPE_MEMORY
-                  && event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+              || (((event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+                    && ((sensor_type == IPMI_SENSOR_TYPE_MEMORY
+                         && (event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+                             || event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
+                             || event_data1_offset == IPMI_SENSOR_TYPE_MEMORY_CRITICAL_OVERTEMPERATURE))
+                        || (sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
+                            && event_data1_offset == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_CORRECTABLE_MEMORY_ERROR_LOGGING_DISABLED)))
+                   || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+                       && sensor_type == IPMI_SENSOR_TYPE_MEMORY
+                       && event_data1_offset == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_LOST)
+                   || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+                       && sensor_type == IPMI_SENSOR_TYPE_MEMORY
+                       && (event_data1_offset == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_CRITICAL_FROM_OK
+                           || event_data1_offset == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_CRITICAL_FROM_LESS_SEVERE)))
                   && state_data->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
                   && state_data->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
