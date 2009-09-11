@@ -1359,11 +1359,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 #if 0
   /* OEM Interpretation
    *
-   * From Dell Provided Source Code
-   *
-   * Specifically for Memory Sensors
-   *
-   * achu: XXX: event_data2 & 0x0F != 0x0F ??? Need info from Dell
+   * From Dell Spec and Dell Code
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
@@ -1371,39 +1367,42 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && ctx->ipmi_version_major == IPMI_1_5_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_1_5_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY)
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PRESENCE_DETECTED
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CONFIGURATION_ERROR))
     {
-      uint8_t memory_board;
+      uint8_t memory_card;
       uint8_t bank_number;
-      char memory_board_char;
-      
-      memory_board = system_event_record_data->event_data2 >> 4;
+      char memory_card_char;
+          
+      memory_card = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_BITMASK);
+      memory_card >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_SHIFT;
 
-      /* Dell comments say "0x0F" means card not present */
+      bank_number = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_BANK_NUMBER_BITMASK);
+      bank_number >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_BANK_NUMBER_SHIFT;
 
-      if (memory_board != 0x0F)
-        memory_board_char = 'A' + memory_board;
+      if (memory_card != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_NO_CARD)
+        memory_card_char = 'A' + memory_card;
 
-      bank_number = system_event_record_data->event_data2 & 0x0F;
-      
-      if (bank_number != 0x0F && memory_board != 0x0F)
+      if (IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_VALID (memory_card)
+          && IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_BANK_NUMBER_VALID (bank_number))
         {
           snprintf (tmpbuf,
                     tmpbuflen,
-                    "Memory Board %c, Bank %u",
-                    memory_board_char,
+                    "Memory Card %c, Bank %u",
+                    memory_card_char,
                     bank_number);
           return (1);
         }
-      else if (memory_board != 0x0F)
+      else if (IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_VALID (memory_card))
         {
           snprintf (tmpbuf,
                     tmpbuflen,
-                    "Memory Board %c",
-                    memory_board_char);
+                    "Memory Card %c",
+                    memory_card_char);
           return (1);
         }
-      else if (bank_number != 0x0F)
+      else if (IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_BANK_NUMBER_VALID (bank_number))
         {
           snprintf (tmpbuf,
                     tmpbuflen,
@@ -2041,13 +2040,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
 #if 0
   /* OEM Interpretation
    *
-   * From Dell Provided Source Code
-   * - Handle for Dell Poweredge R610
-   * - Handle for Dell Poweredge R710
-   *
-   * Specifically for Memory Sensors
-   *
-   * achu: XXX: event_data2 & 0x0F != 0x0F ??? Need info from Dell
+   * From Dell Spec and Dell Code
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
@@ -2055,18 +2048,19 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && ctx->ipmi_version_major == IPMI_1_5_MAJOR_VERSION
       && ctx->ipmi_version_minor == IPMI_1_5_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY)
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PRESENCE_DETECTED
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CONFIGURATION_ERROR))
     {
-      char dimm_char;
-      
-      dimm_char = 'A' + system_event_record_data->event_data3;
-      
-      snprintf (tmpbuf,
-                tmpbuflen,
-                "DIMM %c",
-                dimm_char);
-      
-      return (1);
+      if (IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_NUMBER_VALID (system_event_record_data->event_data3))
+        {
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "DIMM %c",
+                    'A' + system_event_record_data->event_data3);
+          
+          return (1);
+        }
     }
 #endif
 
@@ -2824,15 +2818,29 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
               
               if (found)
                 {
-                  if (_SNPRINTF (buf,
-                                 buflen,
-                                 wlen,
-                                 "DIMM %s",
-                                 dimmstr))
-                    (*oem_rv) = 1;
+                  if (memory_card != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_NO_CARD)
+                    {
+                      if (_SNPRINTF (buf,
+                                     buflen,
+                                     wlen,
+                                     "Memory Card %u, DIMM %s",
+                                     memory_card,
+                                     dimmstr))
+                        (*oem_rv) = 1;
+                      else
+                        (*oem_rv) = 0;
+                    }
                   else
-                    (*oem_rv) = 0;
-                  
+                    {
+                      if (_SNPRINTF (buf,
+                                     buflen,
+                                     wlen,
+                                     "DIMM %s",
+                                     dimmstr))
+                        (*oem_rv) = 1;
+                      else
+                        (*oem_rv) = 0;
+                    }
                   return (1);
                 }
               
