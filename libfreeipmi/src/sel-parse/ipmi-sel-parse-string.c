@@ -970,26 +970,22 @@ _output_event_offset (ipmi_sel_parse_ctx_t ctx,
             }
         }
       
-      /* IPMI Workaround (achu)
+      /* OEM Interpretation
        *
-       * From Dell Provided Source Code
-       * - Handle for Dell Poweredge R610
-       * - Handle for Dell Poweredge R710
+       * Dell Poweredge R610
+       * Dell Poweredge R710
        *
-       * Apparently System Firmware Progress sensors can have this
-       * event occur even though its out of range.
        */
       if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
 	  && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
           && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
               || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
 	  && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
-	  && system_event_record_data.offset_from_event_reading_type_code == 0x0F)
+	  && system_event_record_data.offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_DELL_POST_FATAL_ERROR)
 	{
 	  snprintf (tmpbuf,
 		    EVENT_BUFFER_LENGTH,
 		    "POST Fatal Error");
-
 	  output_flag++;
 	  break;
 	}
@@ -1307,7 +1303,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
         {
           snprintf (tmpbuf,
                     tmpbuflen,
-                    "Front Side Bus %u\n",
+                    "Front Side Bus %u",
                     num);
           
           return (1);
@@ -1345,7 +1341,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
         {
           snprintf (tmpbuf,
                     tmpbuflen,
-                    "CPU %u\n",
+                    "CPU %u",
                     num);
           
           return (1);
@@ -1381,6 +1377,58 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
                 "Device %u, Function %u",
                 device,
                 function);
+
+      return (1);
+    }
+
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   * Dell Poweredge R710
+   *
+   */
+  if (flags & IPMI_SEL_PARSE_STRING_FLAGS_INTERPRET_OEM_DATA
+      && ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_DELL_POST_FATAL_ERROR)
+    {
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "BIOS Fatal Error code: %Xh",
+                system_event_record_data->event_data2);
+      
+      return (1);
+    }
+
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   * Dell Poweredge R710
+   *
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT)
+    {
+      char *str = NULL;
+
+      if (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_MEMORY_SPARE_MODE_BITMASK)
+        str = "Memory is in Spare mode";
+      else if (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_MEMORY_RAID_MODE_BITMASK)
+        str = "Memory is in RAID mode";
+      else /* system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_MEMORY_MIRROR_MODE_BITMASK */
+        str = "Memory is in Mirror mode";
+
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "%s",
+                str);
 
       return (1);
     }
@@ -1947,7 +1995,7 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
     {
       snprintf (tmpbuf,
                 tmpbuflen,
-                "Device Slot %u\n",
+                "Device Slot %u",
                 system_event_record_data->event_data3 & 0x7F);
       
       return (1);

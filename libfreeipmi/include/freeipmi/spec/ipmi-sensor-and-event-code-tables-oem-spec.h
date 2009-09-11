@@ -34,6 +34,10 @@ extern "C" {
  * Dell Poweredge R710
  */
 
+/************************************************
+ * Generic Event Reading Type Code Offsets      *
+ ************************************************/
+
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_DELL_STATUS_ABSENT              0x00
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_DELL_STATUS_STANDBY             0x01
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_DELL_STATUS_IPMI_FUNCTION_READY 0x02
@@ -43,6 +47,10 @@ extern "C" {
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_DELL_STATUS_ACTIVE              0x06
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_DELL_STATUS_BOOTING             0x07
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_DELL_STATUS_WRITE_PROTECTED     0x08
+
+/************************************************
+ * Sensor Type Code Offsets OEM Specific        *
+ ************************************************/
 
 #define IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_GOOD                                   0x00
 #define IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS_DEGRADED_OTHER                         0x01
@@ -66,6 +74,12 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE_SUCCESSFUL 0x00
 #define IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE_FAILED     0x01
 
+/************************************************
+ * Sensor Type Code Offsets OEM Extra           *
+ ************************************************/
+
+#define IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_DELL_POST_FATAL_ERROR 0x0F
+
 /* device number, function number, bus/slot number apply to many
  * sensors
  */
@@ -81,6 +95,10 @@ extern "C" {
 
 #define IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_BITMASK        0x7F
 #define IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_SHIFT          0
+
+#define IPMI_OEM_DELL_EVENT_DATA2_MEMORY_SPARE_MODE_BITMASK  0x1    
+#define IPMI_OEM_DELL_EVENT_DATA2_MEMORY_RAID_MODE_BITMASK   0x2   
+#define IPMI_OEM_DELL_EVENT_DATA2_MEMORY_MIRROR_MODE_BITMASK 0x4
 
 /*
  * Inventec
