@@ -76,7 +76,7 @@
 #define ASSERTION_EVENT   "Assertion Event"
 #define DEASSERTION_EVENT "Deassertion Event"
 
-#define EVENT_BUFFER_LENGTH     2048
+#define EVENT_BUFFER_LENGTH     4096
 #define SEL_PARSE_BUFFER_LENGTH 256
 #define SDR_RECORD_LENGTH       256
 #define ID_STRING_LENGTH        256
@@ -2715,7 +2715,9 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
           char dimmstr[EVENT_BUFFER_LENGTH + 1];
           uint8_t memory_card;
           uint8_t dimm_counter = 0;
-          
+          unsigned int offset = 0;
+          int len;
+
           memset (dimmstr, '\0', EVENT_BUFFER_LENGTH + 1);
           
           memory_card = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_BITMASK);
@@ -2772,13 +2774,25 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                       
                       dimmnum  = ((dimm_counter + i) % dimms_per_node) + 1;
                       
-                      snprintf (dimmstr,
-                                EVENT_BUFFER_LENGTH,
-                                "%c%u",
-                                'A' + node,
-                                dimmnum);
+                      if (!found)
+                        len = snprintf (dimmstr + offset,
+                                        EVENT_BUFFER_LENGTH - offset,
+                                        "DIMM %c%u",
+                                        'A' + node,
+                                        dimmnum);
+                      else
+                        len = snprintf (dimmstr + offset,
+                                        EVENT_BUFFER_LENGTH - offset,
+                                        ", DIMM %c%u",
+                                        'A' + node,
+                                        dimmnum);
                       
+                      offset += len;
                       found++;
+
+                      if (offset >= EVENT_BUFFER_LENGTH)
+                        break;
+
                       break;
                     }
                 }
@@ -2788,7 +2802,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                   if (_SNPRINTF (buf,
                                  buflen,
                                  wlen,
-                                 "DIMM %s",
+                                 "%s",
                                  dimmstr))
                     (*oem_rv) = 1;
                   else
@@ -2806,12 +2820,24 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                 {
                   if (system_event_record_data->event_data3 & (0x1 << i))
                     {
-                      snprintf (dimmstr,
-                                EVENT_BUFFER_LENGTH,
-                                "%u",
-                                (dimm_counter + i + 1));
+                      if (!found)
+                        len = snprintf (dimmstr + offset,
+                                        EVENT_BUFFER_LENGTH - offset,
+                                        "DIMM %u",
+                                        (dimm_counter + i + 1));
+                      else
+                        len = snprintf (dimmstr + offset,
+                                        EVENT_BUFFER_LENGTH - offset,
+                                        ", DIMM %u",
+                                        (dimm_counter + i + 1));
                       
+                      offset += len;
+
                       found++;
+
+                      if (offset >= EVENT_BUFFER_LENGTH)
+                        break;
+
                       break;
                     }
                 }
@@ -2823,7 +2849,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                       if (_SNPRINTF (buf,
                                      buflen,
                                      wlen,
-                                     "Memory Card %u, DIMM %s",
+                                     "Memory Card %u, %s",
                                      memory_card,
                                      dimmstr))
                         (*oem_rv) = 1;

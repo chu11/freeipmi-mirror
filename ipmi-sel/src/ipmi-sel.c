@@ -51,11 +51,11 @@
 #include "tool-sensor-common.h"
 
 #define IPMI_SEL_RECORD_SIZE   16
-#define IPMI_SEL_OUTPUT_BUFLEN 1024
+#define IPMI_SEL_OUTPUT_BUFLEN 4096
 
 #define IPMI_SEL_NA_STRING     "N/A"
 
-#define IPMI_SEL_FMT_BUFLEN    1024
+#define IPMI_SEL_FMT_BUFLEN    4096
 
 #define IPMI_SEL_EVENT_SEPARATOR " ; "
 
