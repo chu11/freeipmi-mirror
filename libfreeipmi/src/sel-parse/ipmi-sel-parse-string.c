@@ -2042,10 +2042,10 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
     {
       uint8_t option_rom;
       
-      option_rom = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_VERSION_CHANGE_DEVICE_OPTION_ROM_BITMASK);
-      option_rom >>= IPMI_SENSOR_TYPE_VERSION_CHANGE_DEVICE_OPTION_ROM_SHIFT;
+      option_rom = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_BITMASK);
+      option_rom >>= IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SHIFT;
 
-      if (option_rom == IPMI_SENSOR_TYPE_VERSION_CHANGE_DEVICE_OPTION_ROM_EMBEDDED)
+      if (option_rom == IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_EMBEDDED)
         snprintf (tmpbuf,
                   tmpbuflen,
                   "Device Embedded");
@@ -2053,8 +2053,8 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
         {
           uint8_t slot;
 
-          slot = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_VERSION_CHANGE_DEVICE_OPTION_ROM_SLOT_BITMASK);
-          slot >>= IPMI_SENSOR_TYPE_VERSION_CHANGE_DEVICE_OPTION_ROM_SLOT_SHIFT;
+          slot = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SLOT_BITMASK);
+          slot >>= IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SLOT_SHIFT;
 
           snprintf (tmpbuf,
                     tmpbuflen,
@@ -3073,7 +3073,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
           if (_SNPRINTF (buf,
                          buflen,
                          wlen,
-                         "Device embedded"))
+                         "Device Embedded"))
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;
