@@ -1329,12 +1329,16 @@ _output_oem_event_data2_class_oem (ipmi_sel_parse_ctx_t ctx,
    * Dell Poweredge 2950
    * Dell Poweredge R610
    * Dell Poweredge R710
+   *
+   * offset_from_event_reading_type_code = register offset 11:8
+   * data2 = register offset 0:7
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA)
     {
       uint16_t register_offset;
@@ -1929,6 +1933,7 @@ _output_oem_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA)
     {
       snprintf (tmpbuf,
@@ -2511,30 +2516,54 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * From Dell Provided Source Code
-   * - Handle for Dell Poweredge R610
-   * - Handle for Dell Poweredge R710
+   * Dell Poweredge R610
+   * Dell Poweredge R710
    *
-   * Specifically for Critical Interrupt Sensors and several Dell OEM sensors.
+   * Data2
+   * [7:3] = Device Number
+   * [2:0] = Function Number
+   *
+   * Data3
+   * [7] = 0 = [6:0] contain a bus number
+   *       1 = [6:0] contain a slot number
+   * [6:0] = bus or slot number
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
-          || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR)
+      && ((system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+           && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
+               || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
+               || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
+          || (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
+              && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR_PCIE_ERROR)
+          || (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR
+              && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR_FATAL_IO_ERROR))
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
-      /* achu: XXX: what about event_data2?? Need info from Dell */
-      if (system_event_record_data->event_data3 & 0x80)
+      int slot_flag;
+      int bus_slot_number;
+
+      /* Dell documentation says to watch out for this specific case */
+      if (system_event_record_data->event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT
+          && system_event_record_data->event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
+        return (0);
+
+      slot_flag = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_FLAG_BITMASK);
+      slot_flag >>= IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_FLAG_SHIFT;
+
+      bus_slot_number = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_BITMASK);
+      bus_slot_number >>= IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_SHIFT;
+
+      if (slot_flag)
         {
           if (_SNPRINTF (buf,
                          buflen,
                          wlen,
                          "Slot %u",
-                         (system_event_record_data->event_data3 & 0x7F)))
+                         bus_slot_number))
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;
@@ -2543,17 +2572,19 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
         }
       else
         {
-          uint8_t bus, device, function;
+          uint8_t device, function;
 
-          bus = system_event_record_data->event_data3 & 0x7F;
-          device = (system_event_record_data->event_data2 & 0xF8) >> 3;
-          function = system_event_record_data->event_data2 & 0x7;
+          device = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_DEVICE_NUMBER_BITMASK);
+          device >>= IPMI_OEM_DELL_EVENT_DATA2_DEVICE_NUMBER_SHIFT;
+          
+          function = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_BITMASK);
+          function >>= IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_SHIFT;
 
           if (_SNPRINTF (buf,
                          buflen,
                          wlen,
                          "Bus %u, Device %u, Function %u",
-                         bus,
+                         bus_slot_number,
                          device,
                          function))
             (*oem_rv) = 1;
@@ -2680,13 +2711,9 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
   /* OEM Interpretation
    *
-   * From Dell Provided Source Code
-   * - Handle for Dell Poweredge R610
-   * - Handle for Dell Poweredge R710
+   * Dell Poweredge R610
+   * Dell Poweredge R710
    *
-   * Specifically for Dell OEM sensor
-   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING w/ event offset
-   * IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
@@ -2699,9 +2726,13 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
     {
       uint8_t bus, device, function;
       
-      bus = system_event_record_data->event_data3 & 0x7F;
-      device = (system_event_record_data->event_data2 & 0xF8) >> 3;
-      function = system_event_record_data->event_data2 & 0x7;
+      bus = system_event_record_data->event_data3;
+
+      device = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_DEVICE_NUMBER_BITMASK);
+      device >>= IPMI_OEM_DELL_EVENT_DATA2_DEVICE_NUMBER_SHIFT;
+
+      function = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_BITMASK);
+      function >>= IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_SHIFT;
 
       if (_SNPRINTF (buf,
                      buflen,

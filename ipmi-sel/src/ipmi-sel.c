@@ -1235,6 +1235,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
               || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
               || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
               || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+          && sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
           && event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA)
         {
 	  strcat (fmtbuf, "%f ; %h");
@@ -1263,7 +1264,9 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * mezzanine, bus, device, function information for specific
        * offsets.
        *
-       * Unique condition 6, event data 2 and 3 together hold dimm
+       * Unique condition 6, ....
+       *
+       * Unique condition 7, event data 2 and 3 together hold dimm
        * location.
        *
        * achu: XXX: data2 & 0x0F == 2 ???  Need to ask Dell.
@@ -1276,9 +1279,14 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                && (event_data3 & 0x0F) == 0x03)
-              || ((sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-                   || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
-                   || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR)
+              || (((sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+                    && (event_data1_offset == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
+                       || event_data1_offset == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
+                        || event_data1_offset == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
+                   || (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
+                       && event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR_PCIE_ERROR)
+                   || (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR
+                       && event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR_FATAL_IO_ERROR))
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               || (sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
@@ -1294,8 +1302,11 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && (event_data2 & 0x0F) == 0x02)
               || (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
-                  && (event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS
-                      || event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_DEVICE_OPTION_ROM_FAILED_TO_SUPPORT_LINK_TUNING_OR_FLEX_ADDRESS)
+                  && event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS
+                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+              || (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
+                  && event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_DEVICE_OPTION_ROM_FAILED_TO_SUPPORT_LINK_TUNING_OR_FLEX_ADDRESS
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               || (sensor_type == IPMI_SENSOR_TYPE_MEMORY
