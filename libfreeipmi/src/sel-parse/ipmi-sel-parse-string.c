@@ -1271,6 +1271,36 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
         }
     }
 
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   * Dell Poweredge R710
+   *
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS)
+    {
+      uint8_t device, function;
+      
+      device = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_DEVICE_NUMBER_BITMASK);
+      device >>= IPMI_OEM_DELL_EVENT_DATA2_DEVICE_NUMBER_SHIFT;
+
+      function = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_BITMASK);
+      function >>= IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_SHIFT;
+
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "Device %u, Function %u",
+                device,
+                function);
+
+      return (1);
+    }
+
   return (0);
 }
 
@@ -1865,6 +1895,27 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
                 tmpbuflen,
                 "DIMM %c",
                 dimm_char);
+      
+      return (1);
+    }
+
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R610
+   * Dell Poweredge R710
+   *
+   */
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS)
+    {
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "Bus %u",
+                system_event_record_data->event_data3);
       
       return (1);
     }
@@ -2702,45 +2753,6 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                      wlen,
                      "BMC Firmware and %s mismatch",
                      data3_str))
-        (*oem_rv) = 1;
-      else
-        (*oem_rv) = 0;
-      
-      return (1);
-    }
-
-  /* OEM Interpretation
-   *
-   * Dell Poweredge R610
-   * Dell Poweredge R710
-   *
-   */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS
-      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-    {
-      uint8_t bus, device, function;
-      
-      bus = system_event_record_data->event_data3;
-
-      device = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_DEVICE_NUMBER_BITMASK);
-      device >>= IPMI_OEM_DELL_EVENT_DATA2_DEVICE_NUMBER_SHIFT;
-
-      function = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_BITMASK);
-      function >>= IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_SHIFT;
-
-      if (_SNPRINTF (buf,
-                     buflen,
-                     wlen,
-                     "Bus %u, Device %u, Function %u",
-                     bus,
-                     device,
-                     function))
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;

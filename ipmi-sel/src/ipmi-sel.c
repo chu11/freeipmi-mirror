@@ -1264,8 +1264,6 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * mezzanine, bus, device, function information for specific
        * offsets.
        *
-       * Unique condition 6, ....
-       *
        * Unique condition 7, event data 2 and 3 together hold dimm
        * location.
        *
@@ -1301,10 +1299,6 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && (event_data2 & 0x0F) == 0x02)
-              || (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
-                  && event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS
-                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               || (sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
                   && event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_DEVICE_OPTION_ROM_FAILED_TO_SUPPORT_LINK_TUNING_OR_FLEX_ADDRESS
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
