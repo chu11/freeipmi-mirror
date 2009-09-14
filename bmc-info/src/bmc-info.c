@@ -1074,7 +1074,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
         medium_type_str = "USB 1.x";
       else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_2X)
         medium_type_str = "USB 2.x";
-      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SYS_IFACE)
+      else if (channel_info_list[i].channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SYSTEM_INTERFACE)
         medium_type_str = "System Interface (KCS, SMIC, or BT)";
       else if (IPMI_CHANNEL_MEDIUM_TYPE_IS_OEM (channel_info_list[i].channel_medium_type))
         medium_type_str = "OEM";
