@@ -107,7 +107,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         unsigned int i;
         long value;
         
-        if (strlen (arg) > 2)
+        if (strlen (arg) >= 2)
           {
             if (strncmp (arg, "0x", 2) == 0)
               arg+=2;
