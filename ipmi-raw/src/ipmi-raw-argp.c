@@ -107,7 +107,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         unsigned int i;
         long value;
         
-        if (strlen (arg) >= 2)
+        if (strlen (arg) > 2)
           {
             if (strncmp (arg, "0x", 2) == 0)
               arg+=2;
@@ -119,7 +119,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             exit (1);
           }
         
-        for (i = 0; arg[i] != (char) NULL; i++)
+        for (i = 0; arg[i] != '\0'; i++)
           {
             if (i >= 2)
               {
@@ -127,7 +127,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                 exit (1);
               }
             
-            if (isxdigit (arg[i]) == 0)
+            if (!isxdigit (arg[i]))
               {
                 fprintf (stderr, "invalid hex byte argument\n");
                 exit (1);
