@@ -62,7 +62,7 @@ ipmi_cmd_set_event_receiver (ipmi_ctx_t ctx,
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
-			    IPMI_NET_FN_APP_RQ, 
+			    IPMI_NET_FN_SENSOR_EVENT_RQ, 
 			    obj_cmd_rq, 
 			    obj_cmd_rs);
 
@@ -125,7 +125,7 @@ ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
 
   API_ERR_IPMI_CMD_CLEANUP (ctx, 
 			    IPMI_BMC_IPMB_LUN_BMC, 
-			    IPMI_NET_FN_APP_RQ, 
+			    IPMI_NET_FN_SENSOR_EVENT_RQ, 
 			    obj_cmd_rq, 
 			    obj_cmd_rs);
 
