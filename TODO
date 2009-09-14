@@ -69,6 +69,7 @@ oem
 dell poweredge lcd support
 sun led support
 inventec restore to defaults
+dell clear eeprom
 
 libfreeipmi
 -----------
