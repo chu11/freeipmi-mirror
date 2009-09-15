@@ -1135,7 +1135,7 @@ platform_event (bmc_device_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "fiid_obj_get: 'channel_medium_type': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
+                       fiid_obj_errormsg (obj_cmd_get_channel_info_rs));
       goto cleanup;
     }
   channel_medium_type = val;
