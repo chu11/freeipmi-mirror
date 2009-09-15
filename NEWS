@@ -315,6 +315,7 @@ o libfreeipmi
     consistency to the rest of libfreeipmi.
   - Re-architect all 'unassemble' functions to return 1 if packet
     fully and correctly parsed, 0 if not, and -1 on error.
+  - Support SDR sensor sharing in sdr-cache library.
   - Collapse all BAD_COMPLETION_CODE variant errors into single
     BAD_COMPLETION_CODE error.
   - New 'ipmi_ctx_find_inband' call to find an inband device.

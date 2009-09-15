@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.29 2009-05-26 23:29:26 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.30 2009-09-15 17:40:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -494,6 +494,33 @@ ipmi_sdr_cache_search_sensor (ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_number, u
               found++;
               ctx->current_offset = offset;
               break;
+            }
+
+          /* Compact sensor records can do record sharing, so check
+           * for this case if the sensor_owner_id matches up.
+           */
+          if (sensor_owner_id_current == sensor_owner_id
+              && record_type_current == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+            {
+              uint8_t share_count;
+              
+              share_count = ptr[IPMI_SDR_CACHE_SDR_RECORD_COMPACT_SHARE_COUNT];
+              share_count >>= IPMI_SDR_CACHE_SDR_RECORD_COMPACT_SHARE_COUNT_SHIFT;
+              
+              /* IPMI spec gives the following example:
+               *
+               * "If the starting sensor number was 10, and the share
+               * count was 3, then sensors 10, 11, and 12 would share
+               * the record"
+               */
+              if (share_count > 1
+                  && (sensor_number > sensor_number_current
+                      && sensor_number <= (sensor_number_current + (share_count - 1))))
+                {
+                  found++;
+                  ctx->current_offset = offset;
+                  break;
+                }
             }
         }
 
