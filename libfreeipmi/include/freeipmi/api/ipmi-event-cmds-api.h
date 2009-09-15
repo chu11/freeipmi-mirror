@@ -39,6 +39,19 @@ int8_t ipmi_cmd_set_event_receiver_ipmb (ipmi_ctx_t ctx,
 
 int8_t ipmi_cmd_get_event_receiver (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs);
 
+/* generator_id is optional */
+int8_t ipmi_cmd_platform_event (ipmi_ctx_t ctx,
+                                uint8_t *generator_id,
+                                uint8_t event_message_format_version,
+                                uint8_t sensor_type,
+                                uint8_t sensor_number,
+                                uint8_t event_type_code,
+                                uint8_t event_dir,
+                                uint8_t event_data1,
+                                uint8_t event_data2,
+                                uint8_t event_data3,
+                                fiid_obj_t obj_cmd_rs);
+
 #ifdef __cplusplus
 }
 #endif

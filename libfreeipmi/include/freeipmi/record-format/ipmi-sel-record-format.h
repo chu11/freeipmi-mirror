@@ -39,6 +39,10 @@ extern "C" {
 #define IPMI_SEL_RECORD_ASSERTION_EVENT   0x0
 #define IPMI_SEL_RECORD_DEASSERTION_EVENT 0x1
 
+#define IPMI_SEL_RECORD_EVENT_DIRECTION_VALID(__event_direction)        \
+  (((__event_direction) == IPMI_SEL_RECORD_ASSERTION_EVENT              \
+    || (__event_direction) == IPMI_SEL_RECORD_DEASSERTION_EVENT) ? 1 : 0)
+
 #define IPMI_SEL_RECORD_TYPE_IS_EVENT(__record_type) \
   (((__record_type) == 0x02) ? 1 : 0)
 
