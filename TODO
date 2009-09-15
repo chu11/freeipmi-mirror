@@ -24,18 +24,6 @@ entity ids
 0x41, 0x42, are "identical" to other entries
 - should map them together for entity-id-names output in sensors?
 
-sdr
----
-compact - deal w/ share count
-- output in ipmi-sensors too
-- deal w/ direction?
-
-entity id
----------
-deal w/ sdr sharing
-sdr searching
-- can search compact sdrs w/ sensor sharing
-
 hostrange
 ---------
 exclude hosts option
@@ -98,9 +86,10 @@ sensors/monitoring
 specify sensors by name too
 - useful in libipmimonitoring, if heterogenous firmware versions, but
 same sensor names?
-OEM sensor interpretations ... ugh
 group -> type??
-deal with sensor sharing - read more sensor readings
+sensor sharing
+- should ipmi-sensors/ipmimonitor iterate through sensor numbers
+  used in sensor sharing?
 
 ipmi-chassis-config
 -------------------
