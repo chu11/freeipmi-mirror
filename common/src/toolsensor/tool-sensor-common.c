@@ -37,13 +37,17 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
-#define RECORD_ID_BUFLEN    64
+#define RECORD_ID_BUFLEN       64
 
-#define SENSOR_GROUP_BUFLEN 1024
+#define SENSOR_GROUP_BUFLEN    1024
 
-#define SENSOR_UNITS_BUFLEN 1024
+#define SENSOR_UNITS_BUFLEN    1024
 
-#define SENSOR_FMT_BUFLEN   1024
+#define SENSOR_FMT_BUFLEN      1024
+
+#define SENSOR_MODIFIER_BUFLEN 1024
+
+#define SENSOR_CHARS_IN_ALPHA  26
 
 static void
 _str_replace_char (char *str, char chr, char with)
@@ -85,12 +89,15 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
                                const void *sdr_record,
                                unsigned int sdr_record_len,
                                struct sensor_entity_id_counts *entity_id_counts,
+                               uint8_t *sensor_number,
                                char *sensor_name_buf,
                                unsigned int sensor_name_buf_len)
 {
   char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
   uint8_t entity_id, entity_instance, entity_instance_type;
   char *entity_id_str;
+  uint16_t record_id;
+  uint8_t record_type;
 
   assert (sdr_parse_ctx);
   assert (sdr_record);
@@ -101,6 +108,19 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
 
   memset (sensor_name_buf, '\0', sensor_name_buf_len);
 
+  if (ipmi_sdr_parse_record_id_and_type (sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &record_id,
+                                         &record_type) < 0)
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "ipmi_sdr_parse_record_id_and_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+      return (-1);
+    }
+  
   memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
   if (ipmi_sdr_parse_id_string (sdr_parse_ctx,
                                 sdr_record,
@@ -156,12 +176,124 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
   else
     {
       if (entity_id_counts->count[entity_id] > 1)
-        snprintf (sensor_name_buf,
-                  sensor_name_buf_len,
-                  "%s %u %s",
-                  entity_id_str,
-                  entity_instance,
-                  id_string);
+        {
+          /* special case if sensor sharing is involved */
+          if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+              && sensor_number)
+            {
+              uint8_t share_count;
+              uint8_t id_string_instance_modifier_type;
+              uint8_t id_string_instance_modifier_offset;
+              uint8_t entity_instance_sharing;
+
+              if (ipmi_sdr_parse_sensor_record_sharing (sdr_parse_ctx,
+                                                        sdr_record,
+                                                        sdr_record_len,
+                                                        &share_count,
+                                                        &id_string_instance_modifier_type,
+                                                        &id_string_instance_modifier_offset,
+                                                        &entity_instance_sharing) < 0)
+                {
+                  PSTDOUT_FPRINTF (pstate,
+                                   stderr,
+                                   "ipmi_sdr_parse_sensor_record_sharing: %s\n",
+                                   ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                  return (-1);
+                }
+
+              if (share_count > 1
+                  && entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
+                {
+                  uint8_t sensor_number_base;
+                  uint8_t sensor_number_offset;
+
+                  if (ipmi_sdr_parse_sensor_number (sdr_parse_ctx,
+                                                    sdr_record,
+                                                    sdr_record_len,
+                                                    &sensor_number_base) < 0)
+                    {
+                      PSTDOUT_FPRINTF (pstate,
+                                       stderr,
+                                       "ipmi_sdr_parse_sensor_number: %s\n",
+                                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                      return (-1);
+                    }
+
+                  /* I guess it's a bug if the sensor number passed in is bad */
+                  if ((*sensor_number) >= sensor_number_base)
+                    sensor_number_offset = (*sensor_number) - sensor_number_base;
+                  else
+                    goto fallthrough;
+
+                  if (id_string_instance_modifier_type == IPMI_SDR_ID_STRING_INSTANCE_MODIFIER_TYPE_ALPHA)
+                    {
+                      char modifierbuf[SENSOR_MODIFIER_BUFLEN];
+
+                      memset (modifierbuf, '\0', SENSOR_MODIFIER_BUFLEN);
+                      
+                      /* IPMI spec example is:
+                       *
+                       * "If the modifier = alpha, offset=0
+                       * corresponds to 'A', offset=25 corresponses to
+                       * 'Z', and offset = 26 corresponds to 'AA', for
+                       * offset=26 the sensors could be identified as:
+                       * Temp AA, Temp AB, Temp AC."
+                       *
+                       * achu note: id_string_instance_modifier_type
+                       * is a 7 bit field, so we cannot reach a
+                       * situation of 'AAA' or 'AAB'.  The max is
+                       * 'EX':
+                       *
+                       * 'A' + (127/26) = 4 => 'E'
+                       * 'A' + (127 % 26) = 23 => 'X'
+                       */
+
+                      if ((id_string_instance_modifier_type + sensor_number_offset) < SENSOR_CHARS_IN_ALPHA)
+                        snprintf (sensor_name_buf,
+                                  sensor_name_buf_len,
+                                  "%s %s %c",
+                                  entity_id_str,
+                                  id_string,
+                                  'A' + ((id_string_instance_modifier_type + sensor_number_offset)/SENSOR_CHARS_IN_ALPHA));
+                      else
+                        snprintf (sensor_name_buf,
+                                  sensor_name_buf_len,
+                                  "%s %s %c%c",
+                                  entity_id_str,
+                                  id_string,
+                                  'A' + ((id_string_instance_modifier_type + sensor_number_offset)/SENSOR_CHARS_IN_ALPHA),
+                                  'A' + (id_string_instance_modifier_type % SENSOR_CHARS_IN_ALPHA));
+                    }
+                  else
+                    {
+                      /* IPMI spec example is:
+                       *
+                       * "Suppose snsor ID is 'Temp' for 'Temperature
+                       * Sensor', share count = 3, ID string instance
+                       * modifier = numeric, instance modifier offset
+                       * = 5 - then the sensors oculd be identified
+                       * as: Temp 5, Temp 6, Temp 7"
+                       */
+                      snprintf (sensor_name_buf,
+                                sensor_name_buf_len,
+                                "%s %s %u",
+                                entity_id_str,
+                                id_string,
+                                id_string_instance_modifier_offset + sensor_number_offset);
+                    }
+
+                  goto out;
+                }
+            }
+
+        fallthrough:
+          snprintf (sensor_name_buf,
+                    sensor_name_buf_len,
+                    "%s %u %s",
+                    entity_id_str,
+                    entity_instance,
+                    id_string);
+        }
       else
         snprintf (sensor_name_buf,
                   sensor_name_buf_len,
@@ -170,6 +302,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
                   id_string);
     }
 
+ out:
   return (0);
 }
 
@@ -179,6 +312,7 @@ get_entity_sensor_name_string_by_record_id (pstdout_state_t pstate,
                                             ipmi_sdr_cache_ctx_t sdr_cache_ctx,
                                             uint16_t record_id,
                                             struct sensor_entity_id_counts *entity_id_counts,
+                                            uint8_t *sensor_number,
                                             char *sensor_name_buf,
                                             unsigned int sensor_name_buf_len)
 {
@@ -216,6 +350,7 @@ get_entity_sensor_name_string_by_record_id (pstdout_state_t pstate,
                                         sdr_record,
                                         sdr_record_len,
                                         entity_id_counts,
+                                        sensor_number,
                                         sensor_name_buf,
                                         sensor_name_buf_len);
 }
@@ -565,6 +700,42 @@ _store_entity_id_count (pstdout_state_t pstate,
 
   if (entity_instance > entity_id_counts->count[entity_id])
     entity_id_counts->count[entity_id] = entity_instance;
+
+  /* special case if sensor sharing is involved */
+  if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+    {
+      uint8_t share_count;
+      uint8_t entity_instance_sharing;
+
+      if (ipmi_sdr_parse_sensor_record_sharing (sdr_parse_ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                &share_count,
+                                                NULL,
+                                                NULL,
+                                                &entity_instance_sharing) < 0)
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr,
+                           "ipmi_sdr_parse_sensor_record_sharing: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+          return (-1);
+        }
+      
+      if (share_count > 1
+          && entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
+        {
+          int i;
+
+          for (i = 0; i < (share_count - 1); i++)
+            {
+              entity_instance += (i + 1);
+              
+              if (entity_instance > entity_id_counts->count[entity_id])
+                entity_id_counts->count[entity_id] = entity_instance;
+            }
+        }
+    }
  
   return (0);
 }
@@ -709,6 +880,7 @@ _store_column_widths (pstdout_state_t pstate,
                                          sdr_record,
                                          sdr_record_len,
                                          entity_id_counts,
+                                         NULL,
                                          sensor_name,
                                          MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
         return (-1);

@@ -348,6 +348,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
                                          sdr_record,
                                          sdr_record_len,
                                          &(state_data->entity_id_counts),
+                                         NULL,
                                          sensor_name_buf,
                                          MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
         return (-1);

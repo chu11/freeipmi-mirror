@@ -1625,9 +1625,9 @@ _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
                       "Share Count: %u\n",
                       share_count);
 
-      if (id_string_instance_modifier_type == IPMI_SDR_ID_STRING_MODIFIER_TYPE_ANALOG)
+      if (id_string_instance_modifier_type == IPMI_SDR_ID_STRING_INSTANCE_MODIFIER_TYPE_ALPHA)
         pstdout_printf (state_data->pstate,
-                        "ID String Instance Modifier Type: Analog\n");
+                        "ID String Instance Modifier Type: Alpha\n");
       else
         pstdout_printf (state_data->pstate,
                         "ID String Instance Modifier Type: Numeric\n");

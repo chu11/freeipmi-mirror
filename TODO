@@ -100,6 +100,7 @@ specify sensors by name too
 same sensor names?
 OEM sensor interpretations ... ugh
 group -> type??
+deal with sensor sharing - read more sensor readings
 
 ipmi-chassis-config
 -------------------

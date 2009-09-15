@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.127 2009-06-24 16:33:56 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.128 2009-09-15 22:15:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -749,6 +749,7 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                                                       state_data->sdr_cache_ctx,
                                                       (uint16_t)record_id,
                                                       &(state_data->entity_id_counts),
+                                                      NULL,
                                                       sensor_name_buf,
                                                       MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
         return (-1);

@@ -3668,6 +3668,7 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 						 sdr_record,
 						 sdr_record_len,
 						 &entity_id_counts,
+                                                 NULL,
 						 sensor_name_buf,
 						 MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
 		goto cleanup;

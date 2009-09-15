@@ -931,6 +931,7 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
                                          sdr_record,
                                          sdr_record_len,
                                          &(state_data->entity_id_counts),
+                                         NULL,
                                          outbuf,
                                          IPMI_SEL_OUTPUT_BUFLEN) < 0)
         return (-1);

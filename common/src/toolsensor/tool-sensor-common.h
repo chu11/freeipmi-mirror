@@ -71,6 +71,7 @@ int get_entity_sensor_name_string (pstdout_state_t pstate,
                                    const void *sdr_record,
                                    unsigned int sdr_record_len,
                                    struct sensor_entity_id_counts *entity_id_counts,
+                                   uint8_t *sensor_number,
                                    char *sensor_name_buf,
                                    unsigned int sensor_name_buf_len);
 
@@ -79,6 +80,7 @@ int get_entity_sensor_name_string_by_record_id (pstdout_state_t pstate,
                                                 ipmi_sdr_cache_ctx_t sdr_cache_ctx,
                                                 uint16_t record_id,
                                                 struct sensor_entity_id_counts *entity_id_counts,
+                                                uint8_t *sensor_number,
                                                 char *sensor_name_buf,
                                                 unsigned int sensor_name_buf_len);
 
