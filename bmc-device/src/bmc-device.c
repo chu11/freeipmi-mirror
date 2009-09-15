@@ -778,6 +778,7 @@ static int
 platform_event (bmc_device_state_data_t *state_data)
 {
   struct bmc_device_arguments *args;
+  fiid_obj_t obj_cmd_get_channel_info_rs = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
   char *platform_event_arg_cpy;
   char *str_args[BMC_DEVICE_MAX_EVENT_ARGS];
@@ -785,6 +786,7 @@ platform_event (bmc_device_state_data_t *state_data)
   char *str_ptr;
   char *lasts;
   unsigned int str_args_index = 0;
+  uint8_t channel_medium_type;
   uint8_t generator_id;
   uint8_t *generator_id_ptr = NULL;
   uint8_t event_message_format_version;
@@ -795,6 +797,7 @@ platform_event (bmc_device_state_data_t *state_data)
   uint8_t event_data1;
   uint8_t event_data2;
   uint8_t event_data3;
+  uint64_t val;
   int rv = -1;
 
   assert (state_data);
@@ -825,6 +828,33 @@ platform_event (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
+  _FIID_OBJ_CREATE(obj_cmd_get_channel_info_rs, tmpl_cmd_get_channel_info_rs);
+
+  if (ipmi_cmd_get_channel_info (state_data->ipmi_ctx,
+                                 IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
+                                 obj_cmd_get_channel_info_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_channel_info: %s",
+                       ipmi_ctx_strerror(ipmi_ctx_errnum(state_data->ipmi_ctx)));
+      goto cleanup;
+    }
+
+  _FIID_OBJ_GET (obj_cmd_get_channel_info_rs,
+                 "channel_medium_type",
+                 &val);
+  channel_medium_type = val;
+  
+  if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SYS_IFACE
+      && num_str_args != BMC_DEVICE_MAX_EVENT_ARGS)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Generator ID required for given system interface\n");
+      goto cleanup;
+    }
+  
   /* see if generator_id specified */
   if (num_str_args == BMC_DEVICE_MAX_EVENT_ARGS)
     {
@@ -908,14 +938,7 @@ platform_event (bmc_device_state_data_t *state_data)
     goto cleanup;
   str_args_index++;
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_platform_event_rs)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
+  _FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_platform_event_rs);
 
   if (ipmi_cmd_platform_event (state_data->ipmi_ctx,
                                generator_id_ptr,
@@ -940,7 +963,8 @@ platform_event (bmc_device_state_data_t *state_data)
  cleanup:
   if (platform_event_arg_cpy)
     free (platform_event_arg_cpy);
-  fiid_obj_destroy (obj_cmd_rs);
+  _FIID_OBJ_DESTROY (obj_cmd_get_channel_info_rs);
+  _FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 } 
 
