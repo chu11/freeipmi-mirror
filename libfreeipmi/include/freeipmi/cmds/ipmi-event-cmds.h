@@ -41,11 +41,26 @@ extern fiid_template_t tmpl_cmd_set_event_receiver_rs;
 extern fiid_template_t tmpl_cmd_get_event_receiver_rq;
 extern fiid_template_t tmpl_cmd_get_event_receiver_rs;
 
+extern fiid_template_t tmpl_cmd_platform_event_rq;
+extern fiid_template_t tmpl_cmd_platform_event_rs;
+
 int fill_cmd_set_event_receiver (uint8_t event_receiver_slave_address,
                                  uint8_t event_receiver_lun,
                                  fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_get_event_receiver (fiid_obj_t obj_cmd_rq);
+
+/* generator_id is optional */
+int fill_cmd_platform_event (uint8_t *generator_id,
+                             uint8_t event_message_format_version,
+                             uint8_t sensor_type,
+                             uint8_t sensor_number,
+                             uint8_t event_type_code,
+                             uint8_t event_dir,
+                             uint8_t event_data1,
+                             uint8_t event_data2,
+                             uint8_t event_data3,
+                             fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

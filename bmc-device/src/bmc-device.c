@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
+#include <ctype.h>
 #endif /* STDC_HEADERS */
 #if TIME_WITH_SYS_TIME
 #include <sys/time.h>
@@ -62,6 +63,8 @@ typedef int (*Bmc_device_system_info)(ipmi_ctx_t ctx,
 				      const void *string_block,
 				      unsigned int string_block_length,
 				      fiid_obj_t obj_cmd_rs);
+
+#define BMC_DEVICE_MAX_EVENT_ARGS 9
 
 static int
 cold_reset (bmc_device_state_data_t *state_data)
@@ -998,6 +1001,230 @@ set_sel_time (bmc_device_state_data_t *state_data)
 }
 
 static int
+parse_hex_byte (bmc_device_state_data_t *state_data,
+                char *from,
+                uint8_t *to,
+                char *str)
+{
+  int i;
+
+  assert (state_data);
+  assert (from);
+  assert (to);
+  assert (str);
+
+  if (strlen (from) >= 2)
+    {
+      if (strncmp (from, "0x", 2) == 0)
+        from += 2;
+    }
+
+  if (*from == '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "invalid hex byte argument for %s\n",
+                       str);
+      return (-1);
+    }
+  
+  for (i = 0; from[i] != '\0'; i++)
+    {
+      if (i >= 2)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "invalid hex byte argument for %s\n",
+                           str);
+          return (-1);
+        }
+      
+      if (!isxdigit (from[i]))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "invalid hex byte argument for %s\n",
+                           str);
+          return (-1);
+        }
+    }
+
+  (*to) = strtol (from, (char **) NULL, 16);
+
+  return (0);
+}
+
+static int
+platform_event (bmc_device_state_data_t *state_data)
+{
+  struct bmc_device_arguments *args;
+  fiid_obj_t obj_cmd_rs = NULL;
+  char *platform_event_arg_cpy;
+  char *str_args[BMC_DEVICE_MAX_EVENT_ARGS];
+  unsigned int num_str_args = 0;
+  char *str_ptr;
+  char *lasts;
+  unsigned int str_args_index = 0;
+  uint8_t generator_id;
+  uint8_t *generator_id_ptr = NULL;
+  uint8_t event_message_format_version;
+  uint8_t sensor_type;
+  uint8_t sensor_number;
+  uint8_t event_type;
+  uint8_t event_direction;
+  uint8_t event_data1;
+  uint8_t event_data2;
+  uint8_t event_data3;
+  int rv = -1;
+
+  assert (state_data);
+
+  args = state_data->prog_data->args;
+
+  if (!(platform_event_arg_cpy = strdup(args->platform_event_arg)))
+    {
+      pstdout_perror (state_data->pstate, "strdup");
+      goto cleanup;
+    }
+
+  str_ptr = strtok_r (platform_event_arg_cpy, " \t\0", &lasts);
+  while (str_ptr && num_str_args < BMC_DEVICE_MAX_EVENT_ARGS)
+    {
+      str_args[num_str_args] = str_ptr;
+      num_str_args++;
+
+      str_ptr = strtok_r (NULL, " \t\0", &lasts);
+    }
+
+  if (num_str_args != BMC_DEVICE_MAX_EVENT_ARGS
+      && num_str_args != (BMC_DEVICE_MAX_EVENT_ARGS - 1))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Invalid number of arguments specified\n");
+      goto cleanup;
+    }
+
+  /* see if generator_id specified */
+  if (num_str_args == BMC_DEVICE_MAX_EVENT_ARGS)
+    {
+      if (parse_hex_byte (state_data,
+                          str_args[str_args_index],
+                          &generator_id,
+                          "generator id") < 0)
+        goto cleanup;
+      generator_id_ptr = &generator_id;
+      str_args_index++;
+    }
+  
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_message_format_version,
+                      "event message format version") < 0)
+    goto cleanup;
+  str_args_index++;
+  
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &sensor_type,
+                      "sensor type") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &sensor_number,
+                      "sensor number") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_type,
+                      "event type") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (!strcasecmp (str_args[str_args_index], "assertion"))
+    event_direction = IPMI_SEL_RECORD_ASSERTION_EVENT;
+  else if (!strcasecmp (str_args[str_args_index], "deassertion"))
+    event_direction = IPMI_SEL_RECORD_DEASSERTION_EVENT;
+  else
+    {
+      if (parse_hex_byte (state_data,
+                          str_args[str_args_index],
+                          &event_direction,
+                          "event direction") < 0)
+        goto cleanup;
+
+      if (!IPMI_SEL_RECORD_EVENT_DIRECTION_VALID (event_direction))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "invalid hex byte argument for event direction\n");
+          goto cleanup;
+        }
+    }
+  str_args_index++;
+    
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_data1,
+                      "event data1") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_data2,
+                      "event data2") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (parse_hex_byte (state_data,
+                      str_args[str_args_index],
+                      &event_data3,
+                      "event data3") < 0)
+    goto cleanup;
+  str_args_index++;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_platform_event_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_platform_event (state_data->ipmi_ctx,
+                               generator_id_ptr,
+                               event_message_format_version,
+                               sensor_type,
+                               sensor_number,
+                               event_type,
+                               event_direction,
+                               event_data1,
+                               event_data2,
+                               event_data3,
+                               obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_platform_event: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  if (platform_event_arg_cpy)
+    free (platform_event_arg_cpy);
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
 get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1724,6 +1951,9 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->set_sel_time)
     return (set_sel_time (state_data));
+
+  if (args->platform_event)
+    return (platform_event (state_data));
 
   if (args->get_mca_auxiliary_log_status)
     return (get_mca_auxiliary_log_status (state_data));

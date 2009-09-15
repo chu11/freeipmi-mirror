@@ -90,26 +90,28 @@ static struct argp_option cmdline_options[] =
       "Get SEL time.", 41},
     { "set-sel-time", SET_SEL_TIME_KEY,  "TIME", 0,
       "Set SEL time.  Input format = \"MM/DD/YYYY - HH:MM:SS\" or \"now\".", 42},
+    { "platform-event", PLATFORM_EVENT_KEY, "[generator_id] <event_message_format_version> <sensor_type> <sensor_number> <event_type> <event_direction> <event_data1> <event_data2> <event_data3>", 0,
+      "Instruct the BMC to process the specified event data.", 43},
     { "get-mca-auxiliary-log-status", GET_MCA_AUXILIARY_LOG_STATUS_KEY, NULL, 0,
-      "Get machine check architecture (MCA) auxiliary log status information.", 43},
+      "Get machine check architecture (MCA) auxiliary log status information.", 44},
     { "get-ssif-interface-capabilities", GET_SSIF_INTERFACE_CAPABILITIES_KEY, NULL, 0,
-      "Get SSIF interface capabilities.", 44},
+      "Get SSIF interface capabilities.", 45},
     { "get-kcs-interface-capabilities", GET_KCS_INTERFACE_CAPABILITIES_KEY, NULL, 0,
-      "Get KCS interface capabilities.", 45},
+      "Get KCS interface capabilities.", 46},
     { "get-bt-interface-capabilities", GET_BT_INTERFACE_CAPABILITIES_KEY, NULL, 0,
-      "Get BT interface capabilities.", 46},
+      "Get BT interface capabilities.", 47},
     { "get-bmc-global-enables", GET_BMC_GLOBAL_ENABLES_KEY, NULL, 0,
-      "Get BMC Global Enables.", 47},
+      "Get BMC Global Enables.", 48},
     { "set-system-firmware-version", SET_SYSTEM_FIRMWARE_VERSION_KEY, "STR", 0,
-      "Set System Firmware Version.", 48},
+      "Set System Firmware Version.", 49},
     { "set-system-name", SET_SYSTEM_NAME_KEY, "STR", 0,
-      "Set System Name.", 49},
+      "Set System Name.", 50},
     { "set-primary-operating-system-name", SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY, "STR", 0,
-      "Set Primary Operating System Name.", 50},
+      "Set Primary Operating System Name.", 51},
     { "set-operating-system-name", SET_OPERATING_SYSTEM_NAME_KEY, "STR", 0,
-      "Set Operating System Name.", 51},
+      "Set Operating System Name.", 52},
     { "verbose", VERBOSE_KEY, 0, 0,
-      "Increase verbosity in output.", 52},
+      "Increase verbosity in output.", 53},
     { 0 }
   };
 
@@ -226,6 +228,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->set_sel_time = 1;
       cmd_args->set_sel_time_arg = arg;
       break;
+    case PLATFORM_EVENT_KEY:
+      cmd_args->platform_event = 1;
+      cmd_args->platform_event_arg = arg;
+      break;
     case GET_MCA_AUXILIARY_LOG_STATUS_KEY:
       cmd_args->get_mca_auxiliary_log_status = 1;
       break;
@@ -307,6 +313,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && !cmd_args->set_sdr_repository_time
       && !cmd_args->get_sel_time
       && !cmd_args->set_sel_time
+      && !cmd_args->platform_event
       && !cmd_args->get_mca_auxiliary_log_status
       && !cmd_args->get_ssif_interface_capabilities
       && !cmd_args->get_kcs_interface_capabilities
@@ -333,6 +340,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
        + cmd_args->set_sdr_repository_time
        + cmd_args->get_sel_time
        + cmd_args->set_sel_time
+       + cmd_args->platform_event
        + cmd_args->get_mca_auxiliary_log_status
        + cmd_args->get_ssif_interface_capabilities
        + cmd_args->get_kcs_interface_capabilities
@@ -412,6 +420,8 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->get_sel_time = 0;
   cmd_args->set_sel_time = 0;
   cmd_args->set_sel_time_arg = NULL;
+  cmd_args->platform_event = 0;
+  cmd_args->platform_event_arg = NULL;
   cmd_args->get_mca_auxiliary_log_status = 0;
   cmd_args->get_ssif_interface_capabilities = 0;
   cmd_args->get_kcs_interface_capabilities = 0;

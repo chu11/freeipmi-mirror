@@ -56,6 +56,10 @@ extern "C" {
 #define IPMI_SEL_RECORD_ASSERTION_EVENT   0x0
 #define IPMI_SEL_RECORD_DEASSERTION_EVENT 0x1
 
+#define IPMI_SEL_RECORD_EVENT_DIRECTION_VALID(__event_direction) \
+  (((__event_direction) == IPMI_SEL_RECORD_ASSERTION_EVENT \
+    || (__event_direction) == IPMI_SEL_RECORD_DEASSERTION_EVENT) ? 1 : 0)
+
 /* Refer to Table 29-6 */
 #define IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE                        0x0
 #define IPMI_SEL_EVENT_DATA_TRIGGER_READING                         0x1

@@ -87,6 +87,19 @@ Set SEL time.  Input format = "MM/DD/YYYY - HH:MM:SS".  Note that
 hours are input in 24 hour form.  Alternatively, the local
 system time can be specified with "now".
 .TP
+\fB\-\-platform\-event\fR=\fI"[generator_id] <event_message_format_version> <sensor_type> <sensor_number> <event_type> <event_direction> <event_data1> <event_data2> <event_data3>"\fR
+Instruct the BMC to process the specified event data.  Typically, this
+data will be logged to the System Event Log (SEL), but depending on
+implementation it may be processed by other subsystems such as
+Platform Event Filtering (PEF).  The keywords \fIassertion\fR or
+\fIdeassertion\fR may be used for \fIevent_direction\fR, or the
+numerical values may be used instead.  The
+\fIevent_message_format_version\fR is 0x03 for IPMI 1.0 and 0x04 for
+IPMI 1.5.  The \fIgenerator_id\fR above is optional, however it is
+required if generating the event via a system interface (i.e. inband).
+If generating the event via a system interface, the system management
+software generator id range is 0x41 to 6Fh.
+.TP
 \fB\-\-get\-mca\-auxiliary\-log\-status\fR
 Get machine check architecture (MCA) auxiliary log status information.
 .TP
