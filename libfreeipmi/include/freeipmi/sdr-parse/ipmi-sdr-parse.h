@@ -314,6 +314,15 @@ int ipmi_sdr_parse_hysteresis (ipmi_sdr_parse_ctx_t ctx,
                                uint8_t *positive_going_threshold_hysteresis,
                                uint8_t *negative_going_threshold_hysteresis);
 
+/* For Compact SDR records */
+int ipmi_sdr_parse_sensor_record_sharing (ipmi_sdr_parse_ctx_t ctx,
+                                          const void *sdr_record,
+                                          unsigned int sdr_record_len,
+                                          uint8_t *share_count,
+                                          uint8_t *id_string_instance_modifier_type,
+                                          uint8_t *id_string_instance_modifier_offset,
+                                          uint8_t *entity_instance_sharing);
+
 /* For Entity Association, Device Relative Entity Association SDR
    records */
 int ipmi_sdr_parse_container_entity (ipmi_sdr_parse_ctx_t ctx,

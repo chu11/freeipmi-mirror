@@ -1584,6 +1584,11 @@ _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
 
   if (state_data->prog_data->args->verbose_count >= 2)
     {
+      uint8_t share_count;
+      uint8_t id_string_instance_modifier_type;
+      uint8_t id_string_instance_modifier_offset;
+      uint8_t entity_instance_sharing;
+
       if (_detailed_output_sensor_direction (state_data,
                                              sdr_record,
                                              sdr_record_len) < 0)
@@ -1600,6 +1605,43 @@ _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
                                          sdr_record_len,
                                          record_type) < 0)
         return (-1);
+
+      if (ipmi_sdr_parse_sensor_record_sharing (state_data->sdr_parse_ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                &share_count,
+                                                &id_string_instance_modifier_type,
+                                                &id_string_instance_modifier_offset,
+                                                &entity_instance_sharing) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_parse_sensor_record_sharing: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+          return (-1);
+        }
+
+      pstdout_printf (state_data->pstate,
+                      "Share Count: %u\n",
+                      share_count);
+
+      if (id_string_instance_modifier_type == IPMI_SDR_ID_STRING_MODIFIER_TYPE_ANALOG)
+        pstdout_printf (state_data->pstate,
+                        "ID String Instance Modifier Type: Analog\n");
+      else
+        pstdout_printf (state_data->pstate,
+                        "ID String Instance Modifier Type: Numeric\n");
+      
+      pstdout_printf (state_data->pstate,
+                      "ID String Instance Modifier Offset: %u\n",
+                      id_string_instance_modifier_offset);
+
+      if (entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
+        pstdout_printf (state_data->pstate,
+                        "Entity Instance Sharing: Increments for reach shared record\n");
+      else
+        pstdout_printf (state_data->pstate,
+                        "Entity Instance Sharing: Same for all records\n");
     }
 
   if (_detailed_output_event_message_list (state_data,

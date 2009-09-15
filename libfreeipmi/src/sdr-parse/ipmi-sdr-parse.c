@@ -3553,6 +3553,95 @@ ipmi_sdr_parse_hysteresis (ipmi_sdr_parse_ctx_t ctx,
 }
 
 int
+ipmi_sdr_parse_sensor_record_sharing (ipmi_sdr_parse_ctx_t ctx,
+                                      const void *sdr_record,
+                                      unsigned int sdr_record_len,
+                                      uint8_t *share_count,
+                                      uint8_t *id_string_instance_modifier_type,
+                                      uint8_t *id_string_instance_modifier_offset,
+                                      uint8_t *entity_instance_sharing)
+{
+  fiid_obj_t obj_sdr_record = NULL;
+  uint32_t acceptable_record_types;
+  uint64_t val;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_SDR_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_sdr_parse_ctx_errormsg (ctx), ipmi_sdr_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!sdr_record || !sdr_record_len)
+    {
+      SDR_PARSE_SET_ERRNUM (ctx, IPMI_SDR_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
+
+  if (!(obj_sdr_record = _sdr_record_get_common (ctx,
+                                                 sdr_record,
+                                                 sdr_record_len,
+                                                 acceptable_record_types)))
+    goto cleanup;
+
+  if (share_count)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "share_count",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *share_count = val;
+    }
+
+  if (id_string_instance_modifier_type)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "id_string_instance_modifier_type",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *id_string_instance_modifier_type = val;
+    }
+
+  if (id_string_instance_modifier_offset)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "id_string_instance_modifier_offset",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *id_string_instance_modifier_offset = val;
+    }
+
+  if (entity_instance_sharing)
+    {
+      if (FIID_OBJ_GET (obj_sdr_record,
+                        "entity_instance_sharing",
+                        &val) < 0)
+        {
+          SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
+          goto cleanup;
+        }
+      *entity_instance_sharing = val;
+    }
+
+  rv = 0;
+  ctx->errnum = IPMI_SDR_PARSE_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_sdr_record);
+  return (rv);
+}
+
+int
 ipmi_sdr_parse_container_entity (ipmi_sdr_parse_ctx_t ctx,
                                  const void *sdr_record,
                                  unsigned int sdr_record_len,
