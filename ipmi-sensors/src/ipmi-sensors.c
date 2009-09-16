@@ -396,7 +396,7 @@ _flush_cache (ipmi_sensors_state_data_t *state_data)
 }
 
 static int
-_display_group (ipmi_sensors_state_data_t *state_data)
+_display_sensor_type (ipmi_sensors_state_data_t *state_data)
 {
   unsigned int i = 0;
 
@@ -404,7 +404,7 @@ _display_group (ipmi_sensors_state_data_t *state_data)
 
   for (i = IPMI_SENSOR_TYPE_TEMPERATURE; i <= IPMI_SENSOR_TYPE_FRU_STATE; i++)
     {
-      if (display_sensor_group_cmdline (state_data->pstate, i) < 0)
+      if (display_sensor_type_cmdline (state_data->pstate, i) < 0)
         return (-1);
     }
   
@@ -803,10 +803,10 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
   if (calculate_record_ids (state_data->pstate,
                             state_data->sdr_cache_ctx,
                             state_data->sdr_parse_ctx,
-                            args->groups,
-                            args->groups_length,
-                            args->exclude_groups,
-                            args->exclude_groups_length,
+                            args->sensor_types,
+                            args->sensor_types_length,
+                            args->exclude_sensor_types,
+                            args->exclude_sensor_types_length,
                             args->record_ids,
                             args->record_ids_length,
                             args->exclude_record_ids,
@@ -870,8 +870,8 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
   if (args->sdr.flush_cache)
     return (_flush_cache (state_data));
 
-  if (args->list_groups)
-    return (_display_group (state_data));
+  if (args->list_sensor_types)
+    return (_display_sensor_type (state_data));
 
   if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
                                  state_data->pstate,
@@ -906,9 +906,9 @@ _ipmi_sensors (pstdout_state_t pstate,
   state_data.hostname = (char *)hostname;
 
   /* Special case, just flush, don't do an IPMI connection */
-  /* Special case, just list groups, don't do an IPMI connection */
+  /* Special case, just list sensor_types, don't do an IPMI connection */
   if (!prog_data->args->sdr.flush_cache
-      && !prog_data->args->list_groups)
+      && !prog_data->args->list_sensor_types)
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                              hostname,
@@ -961,7 +961,7 @@ _ipmi_sensors (pstdout_state_t pstate,
     }
 
   if (!prog_data->args->sdr.flush_cache
-      && !prog_data->args->list_groups)
+      && !prog_data->args->list_sensor_types)
     {
       if (!(state_data.sensor_read_ctx = ipmi_sensor_read_ctx_create (state_data.ipmi_ctx)))
         {

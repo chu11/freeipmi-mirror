@@ -8,7 +8,7 @@ ipmi-sensors \- display IPMI sensor information
 .B Ipmi-sensors
 displays current readings of sensors and sensor data repository (SDR)
 information.  The default display outputs each sensor's record id,
-sensor name, sensor group name, sensor reading (if appropriate), and
+sensor name, sensor type name, sensor reading (if appropriate), and
 the current sensor event.  More verbose information can be found using
 the verbose options specified below.
 
@@ -111,13 +111,13 @@ Show all sensors and readings on the local machine.
 .PP
 Show verbose sensors and readings on the local machine.
 .PP
-.B # ipmi-sensors --sensors="82 11 7 102"
+.B # ipmi-sensors --record-ids="7,11,102"
 .PP
-Show sensors #82, #11, #7 and #102 on the local machine.
+Show sensor record ids 7, 11, and 102 on the local machine.
 .PP
-.B # ipmi-sensors --group=Fan
+.B # ipmi-sensors --types=fan
 .PP
-Show all sensors in Fan group on the local machine.
+Show all sensors of type fan on the local machine.
 .PP
 .B # ipmi-sensors -h ahost -u myusername -p mypassword
 .PP

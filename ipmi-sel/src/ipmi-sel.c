@@ -667,7 +667,7 @@ _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto out;
 
-      strcpy (fmtbuf, "%i:%d %t:%g %s:%e");
+      strcpy (fmtbuf, "%i:%d %t:%T %s:%e");
 
       /* achu: special case, legacy output didn't support
          previous/severity output and would not output 0xFF for
@@ -851,7 +851,7 @@ _normal_output_date_and_time (ipmi_sel_state_data_t *state_data, unsigned int fl
  * return (-1) on error
  */
 static int
-_normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigned int flags)
+_normal_output_sensor_name_and_type (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
   char fmt[IPMI_SEL_FMT_BUFLEN + 1];
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
@@ -978,7 +978,7 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
 
   memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
-                                                       "%g",
+                                                       "%T",
                                                        outbuf,
                                                        IPMI_SEL_OUTPUT_BUFLEN,
                                                        flags)) < 0)
@@ -988,8 +988,8 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
       return (0);
     }
 
-  if (outbuf_len > state_data->column_width.sensor_group)
-    state_data->column_width.sensor_group = outbuf_len;
+  if (outbuf_len > state_data->column_width.sensor_type)
+    state_data->column_width.sensor_type = outbuf_len;
 
   memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
   if (state_data->prog_data->args->comma_separated_output)
@@ -1000,7 +1000,7 @@ _normal_output_sensor_name_and_group (ipmi_sel_state_data_t *state_data, unsigne
     snprintf (fmt,
               IPMI_SEL_FMT_BUFLEN,
               " | %%-%ds",
-              state_data->column_width.sensor_group);
+              state_data->column_width.sensor_type);
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, fmt, outbuf);
@@ -1545,7 +1545,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
                           "%s,Date,Time,%s,%s",
                           SENSORS_HEADER_RECORD_ID_STR,
                           SENSORS_HEADER_NAME_STR,
-                          SENSORS_HEADER_GROUP_STR);
+                          SENSORS_HEADER_TYPE_STR);
 
           if (state_data->prog_data->args->verbose_count >= 2)
             pstdout_printf (state_data->pstate, ",Event Direction");
@@ -1564,13 +1564,13 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
                     IPMI_SEL_FMT_BUFLEN,
                     "%%s | Date        | Time     | %%-%ds | %%-%ds",
                     state_data->column_width.sensor_name,
-                    state_data->column_width.sensor_group);
+                    state_data->column_width.sensor_type);
           
           pstdout_printf (state_data->pstate,
                           fmt,
                           SENSORS_HEADER_RECORD_ID_STR,
                           SENSORS_HEADER_NAME_STR,
-                          SENSORS_HEADER_GROUP_STR);
+                          SENSORS_HEADER_TYPE_STR);
           
           if (state_data->prog_data->args->verbose_count >= 2)
             pstdout_printf (state_data->pstate, " | Event Direction  ");
@@ -1622,7 +1622,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto newline_out;
 
-      if ((ret = _normal_output_sensor_name_and_group (state_data, flags)) < 0)
+      if ((ret = _normal_output_sensor_name_and_type (state_data, flags)) < 0)
         goto cleanup;
 
       if (!ret)

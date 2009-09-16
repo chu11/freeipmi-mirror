@@ -89,6 +89,7 @@ o ipmi-sensors
   - Sensors that can't be read or don't exist (i.e. "N/A", "Unknown") are
     now *not* surrounded by single quotes (') or square brackets ([]).
   - Software sensors output "N/A" instead of "Unknown" now.
+  - Globally rename "Group" to "Type" for correctness to IPMI spec.
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
   - Support --exclude-groups option.
@@ -148,6 +149,7 @@ o ipmimonitoring
     only output appropriately for non-discrete sensors.
   - Rename a number of config fields for overall FreeIPMI consistency,
     may break backwards compatability.
+  - Globally rename "Group" to "Type" for correctness to IPMI spec.
   - With default output, output same sensors as listed in
     ipmi-sensors, including some sensors that can't be interpreted.
   - Support --exclude-groups option.
@@ -379,6 +381,7 @@ o libipmimonitoring
   - Add IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA flag.
   - Rename a number of macros for overall FreeIPMI consistency, may
     break backwards compatability.
+  - Globally rename "Group" to "Type" for correctness to IPMI spec.
   - Update various macros, fields, config, etc. for IPMI errata updates.
   - Variety of API functions reworked or renamed for new functionality.  Will
     require recompile and rework in existing code.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.29 2009-05-22 21:12:15 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.30 2009-09-16 00:54:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -44,9 +44,9 @@
 #endif /* MAXPATHLEN */
 
 /* +1 to avoid gcc warnings */
-#define IPMI_MONITORING_SENSOR_GROUP_VALID(__val)                      \
-  ((((__val) + 1) >= (IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE + 1)    \
-    && (__val) <= IPMI_MONITORING_SENSOR_GROUP_UNKNOWN) ? 1 : 0)
+#define IPMI_MONITORING_SENSOR_TYPE_VALID(__val)                      \
+  ((((__val) + 1) >= (IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE + 1)    \
+    && (__val) <= IPMI_MONITORING_SENSOR_TYPE_UNKNOWN) ? 1 : 0)
 
 #define IPMI_MONITORING_SENSOR_STATE_VALID(__val)                  \
   (((__val) == IPMI_MONITORING_SENSOR_STATE_NOMINAL                \
@@ -127,7 +127,7 @@ struct ipmi_sensor_config {
 
 struct ipmi_monitoring_sensor_reading {
   int record_id;
-  int sensor_group;
+  int sensor_type;
   char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
   int sensor_state;
   int sensor_units;

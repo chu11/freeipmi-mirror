@@ -960,13 +960,6 @@ Specify default verbose count to use for
 Specify if sensor reading values and thresholds should not be
 output by default.
 .TP
-\fBipmi\-sensors\-groups\fR \fIGROUP-LIST\fR
-Specify default groups to show sensor outputs for.  Multiple groups
-can be specified separated by whitespace.  Please run
-.B ipmi-sensors(8)'s
-\fI\-\-list\-groups\fR
-option to see possible groups.
-.TP
 \fBipmi\-sensors\-record\-ids\fR \fRECORD-IDS-LIST\fR
 Specify default record ids to show sensor outputs for.  Multiple record ids
 can be specified separated by whitespace.
@@ -974,6 +967,17 @@ can be specified separated by whitespace.
 \fBipmi\-sensors\-exclude\-record\-ids\fR \fRECORD-IDS-LIST\fR
 Specify default record ids to not show sensor outputs for.  Multiple
 record ids can be specified separated by whitespace.
+.TP
+\fBipmi\-sensors\-types\fR \fITYPE-LIST\fR
+Specify default types to show sensor outputs for.  Multiple types
+can be specified separated by whitespace.  Please run
+.B ipmi-sensors(8)'s
+\fI\-\-list\-types\fR
+option to see possible types.
+.TP
+\fBipmi\-sensors\-exclude\-types\fR \fSENSOR-TYPES-LIST\fR
+Specify default sensor types to not show sensor outputs for.  Multiple
+sensor types can be specified separated by whitespace.
 .TP
 \fBipmi\-sensors\-bridge\-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.
@@ -1202,13 +1206,6 @@ Specify default verbose count to use for
 Specify if sensor reading values and thresholds should not be
 output by default.
 .TP
-\fBipmimonitoring\-groups\fR \fIGROUP-LIST\fR
-Specify default groups to show sensor outputs for.  Multiple groups
-can be specified separated by whitespace.  Please run
-.B ipmimonitoring(8)'s
-\fI\-\-list\-groups\fR
-option to see possible groups.
-.TP
 \fBipmimonitoring\-record\-ids\fR \fRECORD-IDS-LIST\fR
 Specify default record ids to show sensor outputs for.  Multiple record ids
 can be specified separated by whitespace.
@@ -1216,6 +1213,17 @@ can be specified separated by whitespace.
 \fBipmimonitoring\-exclude\-record\-ids\fR \fRECORD-IDS-LIST\fR
 Specify default record ids to not show sensor outputs for.  Multiple
 record ids can be specified separated by whitespace.
+.TP
+\fBipmimonitoring\-types\fR \fITYPE-LIST\fR
+Specify default types to show sensor outputs for.  Multiple types
+can be specified separated by whitespace.  Please run
+.B ipmi-sensors(8)'s
+\fI\-\-list\-types\fR
+option to see possible types.
+.TP
+\fBipmimonitoring\-exclude\-types\fR \fSENSOR-TYPES-LIST\fR
+Specify default sensor types to not show sensor outputs for.  Multiple
+sensor types can be specified separated by whitespace.
 .TP
 \fBipmimonitoring\-bridge\-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.

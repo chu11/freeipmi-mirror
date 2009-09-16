@@ -35,16 +35,20 @@ enum ipmi_sensors_argp_option_keys
     RECORD_IDS_KEY = 'r',
     EXCLUDE_RECORD_IDS_KEY = 'R',
     GROUP_KEY = 160,              /* legacy */
-    GROUPS_KEY = 'g',
-    EXCLUDE_GROUPS_KEY = 'G',
-    LIST_GROUPS_KEY = 'L',
+    GROUPS_KEY = 'g',             /* legacy */
+    EXCLUDE_GROUPS_KEY = 161,   /* legacy */
+    LIST_GROUPS_KEY = 162,      /* legacy */
+    SENSOR_TYPE_KEY = 163,
+    SENSOR_TYPES_KEY = 't',
+    EXCLUDE_SENSOR_TYPES_KEY = 'T',
+    LIST_SENSOR_TYPES_KEY = 'L',
     BRIDGE_SENSORS_KEY = 'b',
-    INTERPRET_OEM_DATA_KEY = 161,
-    IGNORE_NOT_AVAILABLE_SENSORS_KEY = 162,
-    ENTITY_SENSOR_NAMES_KEY = 163,
-    COMMA_SEPARATED_OUTPUT_KEY = 164,
-    NON_ABBREVIATED_UNITS_KEY = 165,
-    LEGACY_OUTPUT_KEY = 166,
+    INTERPRET_OEM_DATA_KEY = 164,
+    IGNORE_NOT_AVAILABLE_SENSORS_KEY = 165,
+    ENTITY_SENSOR_NAMES_KEY = 166,
+    COMMA_SEPARATED_OUTPUT_KEY = 167,
+    NON_ABBREVIATED_UNITS_KEY = 168,
+    LEGACY_OUTPUT_KEY = 169,
   };
 
 struct ipmi_sensors_arguments
@@ -59,11 +63,11 @@ struct ipmi_sensors_arguments
   unsigned int record_ids_length;
   unsigned int exclude_record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int exclude_record_ids_length;
-  char groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
-  unsigned int groups_length;
-  char exclude_groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
-  unsigned int exclude_groups_length;
-  int list_groups;
+  char sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int sensor_types_length;
+  char exclude_sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int exclude_sensor_types_length;
+  int list_sensor_types;
   int bridge_sensors;
   int interpret_oem_data;
   int ignore_not_available_sensors;

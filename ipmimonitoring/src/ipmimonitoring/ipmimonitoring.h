@@ -34,18 +34,21 @@ enum ipmimonitoring_argp_option_keys
     SENSORS_KEY = 's',          /* legacy */
     RECORD_IDS_KEY = 'r',
     EXCLUDE_RECORD_IDS_KEY = 'R',
-    GROUPS_KEY = 'g',
-    EXCLUDE_GROUPS_KEY = 'G',
-    LIST_GROUPS_KEY = 'L',
-    CACHE_DIR_KEY = 160,              /* legacy */
+    GROUPS_KEY = 'g',           /* legacy */
+    EXCLUDE_GROUPS_KEY = 160,   /* legacy */
+    LIST_GROUPS_KEY = 161,      /* legacy */
+    SENSOR_TYPES_KEY = 't',
+    EXCLUDE_SENSOR_TYPES_KEY = 'T',
+    LIST_SENSOR_TYPES_KEY = 'L',
+    CACHE_DIR_KEY = 162,              /* legacy */
     BRIDGE_SENSORS_KEY = 'b',
-    INTERPRET_OEM_DATA_KEY = 161,
-    IGNORE_NON_INTERPRETABLE_SENSORS_KEY = 162,
-    ENTITY_SENSOR_NAMES_KEY = 163,
-    COMMA_SEPARATED_OUTPUT_KEY = 164,
-    NON_ABBREVIATED_UNITS_KEY = 165,
-    LEGACY_OUTPUT_KEY = 166,
-    SENSOR_CONFIG_FILE_KEY = 167,
+    INTERPRET_OEM_DATA_KEY = 163,
+    IGNORE_NON_INTERPRETABLE_SENSORS_KEY = 164,
+    ENTITY_SENSOR_NAMES_KEY = 165,
+    COMMA_SEPARATED_OUTPUT_KEY = 166,
+    NON_ABBREVIATED_UNITS_KEY = 167,
+    LEGACY_OUTPUT_KEY = 168,
+    SENSOR_CONFIG_FILE_KEY = 169,
   };
 
 struct ipmimonitoring_arguments
@@ -60,11 +63,11 @@ struct ipmimonitoring_arguments
   unsigned int record_ids_length;
   unsigned int exclude_record_ids[MAX_SENSOR_RECORD_IDS];
   unsigned int exclude_record_ids_length;
-  char groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
-  unsigned int groups_length;
-  char exclude_groups[MAX_SENSOR_GROUPS][MAX_SENSOR_GROUPS_STRING_LENGTH+1];
-  unsigned int exclude_groups_length;
-  int list_groups;
+  char sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int sensor_types_length;
+  char exclude_sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int exclude_sensor_types_length;
+  int list_sensor_types;
   int bridge_sensors;
   int interpret_oem_data;
   int ignore_non_interpretable_sensors;
@@ -76,8 +79,8 @@ struct ipmimonitoring_arguments
 
   struct ipmi_monitoring_ipmi_config conf;
   int ipmimonitoring_flags;
-  unsigned int ipmimonitoring_groups[MAX_SENSOR_GROUPS];
-  unsigned int ipmimonitoring_groups_length;
+  unsigned int ipmimonitoring_sensor_types[MAX_SENSOR_TYPES];
+  unsigned int ipmimonitoring_sensor_types_length;
 };
 
 typedef struct ipmimonitoring_prog_data

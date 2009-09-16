@@ -537,7 +537,7 @@ _output_date (ipmi_sel_parse_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 static int
-_output_sensor_group (ipmi_sel_parse_ctx_t ctx,
+_output_sensor_type (ipmi_sel_parse_ctx_t ctx,
                       struct ipmi_sel_parse_entry *sel_parse_entry,
                       uint8_t sel_record_type,
                       char *buf,
@@ -555,21 +555,21 @@ _output_sensor_group (ipmi_sel_parse_ctx_t ctx,
   assert (buflen);
   assert (!(flags & ~IPMI_SEL_PARSE_STRING_MASK));
   assert (wlen);
-
+  
   if (ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     return (_invalid_sel_entry_common (ctx, buf, buflen, flags, wlen));
-
+  
   if (sel_parse_get_system_event_record (ctx, sel_parse_entry, &system_event_record_data) < 0)
     return (-1);
-
+  
   sensor_type_str = ipmi_get_sensor_type_string (system_event_record_data.sensor_type);
-
+  
   if (sensor_type_str)
     {
       if (_SNPRINTF (buf, buflen, wlen, "%s", sensor_type_str))
         return (1);
     }
-
+  
   return (0);
 }
 
@@ -3881,15 +3881,15 @@ sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
             goto out;
           percent_flag = 0;
         }
-      else if (percent_flag && *fmt == 'g') /* sensor group name */
+      else if (percent_flag && *fmt == 'T') /* sensor type */
         {
-          if ((ret = _output_sensor_group (ctx,
-                                           &sel_parse_entry,
-                                           sel_record_type,
-                                           buf,
-                                           buflen,
-                                           flags,
-                                           &wlen)) < 0)
+          if ((ret = _output_sensor_type (ctx,
+                                          &sel_parse_entry,
+                                          sel_record_type,
+                                          buf,
+                                          buflen,
+                                          flags,
+                                          &wlen)) < 0)
             goto cleanup;
           if (ret)
             goto out;

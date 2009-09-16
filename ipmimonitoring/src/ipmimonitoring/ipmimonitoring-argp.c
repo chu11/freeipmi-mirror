@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.55 2009-06-24 17:31:31 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.56 2009-09-16 00:54:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -93,28 +93,37 @@ static struct argp_option cmdline_options[] =
       "Show specific sensors by record id.  Accepts space or comma separated lists", 34},
     { "exclude-record-ids", EXCLUDE_RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
       "Do not show specific sensors by record id.  Accepts space or comma separated lists", 35},
+    /* maintain "group" options for backwards compatability */
     { "groups",         GROUPS_KEY,       "GROUP-LIST", 0,
       "Show sensors belonging to a specific group.", 36},
+    /* maintain "group" options for backwards compatability */
     { "exclude-groups", EXCLUDE_GROUPS_KEY, "GROUP-LIST", 0,
       "Do not show sensors belonging to a specific group.", 37},
+    /* maintain "group" options for backwards compatability */
     { "list-groups",    LIST_GROUPS_KEY,    0, 0,
       "List sensor groups.", 38},
+    { "sensor-types",   SENSOR_TYPES_KEY,  "SENSOR-TYPE-LIST", 0,
+      "Show sensors of a specific type.", 39},
+    { "exclude-sensor-types", EXCLUDE_SENSOR_TYPES_KEY, "SENSOR-TYPE-LIST", 0,
+      "Do not show sensors of a specific type.", 40},
+    { "list-sensor-types",    LIST_SENSOR_TYPES_KEY, 0, 0,
+      "List sensor types.", 41},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
-      "Bridge addresses to read non-BMC owned sensors.", 39},
+      "Bridge addresses to read non-BMC owned sensors.", 42},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 40},
+      "Attempt to interpret OEM data.", 43},
     { "ignore-non-interpretable-sensors", IGNORE_NON_INTERPRETABLE_SENSORS_KEY, NULL, 0,
-      "Ignore non-interpretable sensors in output.", 41},
+      "Ignore non-interpretable sensors in output.", 43},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 42},
+      "Output sensor names with entity ids and instances.", 44},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 43},
+      "Output fields in comma separated format.", 45},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 44},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 46},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 45},
+      "Output in legacy format.", 47},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate sensor configuration file.", 46},
+      "Specify an alternate sensor configuration file.", 48},
     { 0 }
   };
 
@@ -218,40 +227,43 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           tok = strtok (NULL, " ,");
         }
       break;
-    case GROUPS_KEY:
+    case GROUPS_KEY:            /* legacy */
+    case SENSOR_TYPES_KEY:
       tok = strtok (arg, " ,");
-      while (tok && cmd_args->groups_length < MAX_SENSOR_GROUPS)
+      while (tok && cmd_args->sensor_types_length < MAX_SENSOR_TYPES)
         {
           if (!strcasecmp (tok, SENSOR_PARSE_ALL_STRING))
             {
-              cmd_args->groups_length = 0;
+              cmd_args->sensor_types_length = 0;
               break;
             }
-          strncpy (cmd_args->groups[cmd_args->groups_length],
+          strncpy (cmd_args->sensor_types[cmd_args->sensor_types_length],
                    tok,
-                   MAX_SENSOR_GROUPS_STRING_LENGTH);
-          cmd_args->groups_length++;
+                   MAX_SENSOR_TYPES_STRING_LENGTH);
+          cmd_args->sensor_types_length++;
           tok = strtok (NULL, " ,");
         }
       break;
-    case EXCLUDE_GROUPS_KEY:
+    case EXCLUDE_GROUPS_KEY:    /* legacy */
+    case EXCLUDE_SENSOR_TYPES_KEY:
       tok = strtok (arg, " ,");
-      while (tok && cmd_args->exclude_groups_length < MAX_SENSOR_GROUPS)
+      while (tok && cmd_args->exclude_sensor_types_length < MAX_SENSOR_TYPES)
         {
           if (!strcasecmp (tok, SENSOR_PARSE_NONE_STRING))
             {
-              cmd_args->exclude_groups_length = 0;
+              cmd_args->exclude_sensor_types_length = 0;
               break;
             }
-          strncpy (cmd_args->exclude_groups[cmd_args->exclude_groups_length],
+          strncpy (cmd_args->exclude_sensor_types[cmd_args->exclude_sensor_types_length],
                    tok,
-                   MAX_SENSOR_GROUPS_STRING_LENGTH);
-          cmd_args->exclude_groups_length++;
+                   MAX_SENSOR_TYPES_STRING_LENGTH);
+          cmd_args->exclude_sensor_types_length++;
           tok = strtok (NULL, " ,");
         }
       break;
-    case LIST_GROUPS_KEY:
-      cmd_args->list_groups = 1;
+    case LIST_GROUPS_KEY:       /* legacy */
+    case LIST_SENSOR_TYPES_KEY:
+      cmd_args->list_sensor_types = 1;
       break;
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
@@ -347,31 +359,31 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
         cmd_args->exclude_record_ids[i] = config_file_data.exclude_record_ids[i];
       cmd_args->exclude_record_ids_length = config_file_data.exclude_record_ids_length;
     }
-  if (config_file_data.groups_count && config_file_data.groups_length)
+  if (config_file_data.sensor_types_count && config_file_data.sensor_types_length)
     {
       unsigned int i;
 
-      assert(MAX_SENSOR_GROUPS == CONFIG_FILE_MAX_SENSOR_GROUPS);
-      assert(MAX_SENSOR_GROUPS_STRING_LENGTH == CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH);
+      assert(MAX_SENSOR_TYPES == CONFIG_FILE_MAX_SENSOR_TYPES);
+      assert(MAX_SENSOR_TYPES_STRING_LENGTH == CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH);
 
-      for (i = 0; i < config_file_data.groups_length; i++)
-        strncpy (cmd_args->groups[i],
-                 config_file_data.groups[i],
-                 MAX_SENSOR_GROUPS_STRING_LENGTH);
-      cmd_args->groups_length = config_file_data.groups_length;
+      for (i = 0; i < config_file_data.sensor_types_length; i++)
+        strncpy (cmd_args->sensor_types[i],
+                 config_file_data.sensor_types[i],
+                 MAX_SENSOR_TYPES_STRING_LENGTH);
+      cmd_args->sensor_types_length = config_file_data.sensor_types_length;
     }
-  if (config_file_data.exclude_groups_count && config_file_data.exclude_groups_length)
+  if (config_file_data.exclude_sensor_types_count && config_file_data.exclude_sensor_types_length)
     {
       unsigned int i;
 
-      assert(MAX_SENSOR_GROUPS == CONFIG_FILE_MAX_SENSOR_GROUPS);
-      assert(MAX_SENSOR_GROUPS_STRING_LENGTH == CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH);
+      assert(MAX_SENSOR_TYPES == CONFIG_FILE_MAX_SENSOR_TYPES);
+      assert(MAX_SENSOR_TYPES_STRING_LENGTH == CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH);
 
-      for (i = 0; i < config_file_data.exclude_groups_length; i++)
-        strncpy (cmd_args->exclude_groups[i],
-                 config_file_data.exclude_groups[i],
-                 MAX_SENSOR_GROUPS_STRING_LENGTH);
-      cmd_args->exclude_groups_length = config_file_data.exclude_groups_length;
+      for (i = 0; i < config_file_data.exclude_sensor_types_length; i++)
+        strncpy (cmd_args->exclude_sensor_types[i],
+                 config_file_data.exclude_sensor_types[i],
+                 MAX_SENSOR_TYPES_STRING_LENGTH);
+      cmd_args->exclude_sensor_types_length = config_file_data.exclude_sensor_types_length;
     }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
@@ -412,19 +424,19 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
           sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
   cmd_args->exclude_record_ids_length = 0;
 
-  for (i = 0; i < MAX_SENSOR_GROUPS; i++)
-    memset (cmd_args->groups[i],
+  for (i = 0; i < MAX_SENSOR_TYPES; i++)
+    memset (cmd_args->sensor_types[i],
             '\0',
-            MAX_SENSOR_GROUPS_STRING_LENGTH+1);
-  cmd_args->groups_length = 0;
+            MAX_SENSOR_TYPES_STRING_LENGTH+1);
+  cmd_args->sensor_types_length = 0;
 
-  for (i = 0; i < MAX_SENSOR_GROUPS; i++)
-    memset (cmd_args->exclude_groups[i],
+  for (i = 0; i < MAX_SENSOR_TYPES; i++)
+    memset (cmd_args->exclude_sensor_types[i],
             '\0',
-            MAX_SENSOR_GROUPS_STRING_LENGTH+1);
-  cmd_args->exclude_groups_length = 0;
+            MAX_SENSOR_TYPES_STRING_LENGTH+1);
+  cmd_args->exclude_sensor_types_length = 0;
 
-  cmd_args->list_groups = 0;
+  cmd_args->list_sensor_types = 0;
 
   cmd_args->bridge_sensors = 0;
   cmd_args->interpret_oem_data = 0;
@@ -438,10 +450,10 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   memset (&(cmd_args->conf), '\0', sizeof (struct ipmi_monitoring_ipmi_config));
   cmd_args->ipmimonitoring_flags = 0;
 
-  memset (cmd_args->ipmimonitoring_groups,
+  memset (cmd_args->ipmimonitoring_sensor_types,
           '\0',
-          sizeof (unsigned int) * MAX_SENSOR_GROUPS);
-  cmd_args->ipmimonitoring_groups_length = 0;
+          sizeof (unsigned int) * MAX_SENSOR_TYPES);
+  cmd_args->ipmimonitoring_sensor_types_length = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,

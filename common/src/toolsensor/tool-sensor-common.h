@@ -26,11 +26,11 @@
 
 #include "pstdout.h"
 
-#define UNRECOGNIZED_SENSOR_GROUP           "Unrecognized"
+#define UNRECOGNIZED_SENSOR_TYPE            "Unrecognized"
 
 #define SENSORS_HEADER_RECORD_ID_STR        "ID"
 #define SENSORS_HEADER_NAME_STR             "Name"
-#define SENSORS_HEADER_GROUP_STR            "Group"
+#define SENSORS_HEADER_TYPE_STR             "Type"
 #define SENSORS_HEADER_STATE_STR            "State"
 #define SENSORS_HEADER_READING_STR          "Reading"
 #define SENSORS_HEADER_UNITS_STR            "Units"
@@ -38,8 +38,8 @@
 
 /* record id is 16 bits - 65536 */
 #define MAX_SENSOR_RECORD_IDS               65536
-#define MAX_SENSOR_GROUPS                   256
-#define MAX_SENSOR_GROUPS_STRING_LENGTH     256
+#define MAX_SENSOR_TYPES                    256
+#define MAX_SENSOR_TYPES_STRING_LENGTH      256
 
 #define SENSOR_PARSE_ALL_STRING             "all"
 #define SENSOR_PARSE_NONE_STRING            "none"
@@ -53,7 +53,7 @@ struct sensor_column_width
 {
   int record_id;
   int sensor_name;
-  int sensor_group;
+  int sensor_type;
   int sensor_units;
 };
 
@@ -62,9 +62,9 @@ struct sensor_entity_id_counts
   unsigned int count[MAX_ENTITY_IDS];
 };
 
-const char * get_sensor_group_output_string (unsigned int sensor_type);
+const char * get_sensor_type_output_string (unsigned int sensor_type);
 
-void get_sensor_group_cmdline_string (char *sensor_group);
+void get_sensor_type_cmdline_string (char *sensor_type);
 
 int get_entity_sensor_name_string (pstdout_state_t pstate,
                                    ipmi_sdr_parse_ctx_t sdr_parse_ctx,
@@ -84,15 +84,15 @@ int get_entity_sensor_name_string_by_record_id (pstdout_state_t pstate,
                                                 char *sensor_name_buf,
                                                 unsigned int sensor_name_buf_len);
 
-int display_sensor_group_cmdline (pstdout_state_t pstate, 
-                                  unsigned int sensor_type);
+int display_sensor_type_cmdline (pstdout_state_t pstate, 
+                                 unsigned int sensor_type);
 
 int display_string_cmdline (pstdout_state_t pstate, 
                             const char *str);
 
-int sensor_group_strcmp (pstdout_state_t pstate,
-                         const char *sensor_group_str_input,
-                         unsigned int sensor_type);
+int sensor_type_strcmp (pstdout_state_t pstate,
+                        const char *sensor_type_str_input,
+                        unsigned int sensor_type);
 
 int get_sensor_units_output_string (pstdout_state_t pstate,
                                     ipmi_sdr_parse_ctx_t sdr_parse_ctx,
@@ -117,8 +117,8 @@ int calculate_entity_id_counts (pstdout_state_t pstate,
 int calculate_column_widths (pstdout_state_t pstate,
                              ipmi_sdr_cache_ctx_t sdr_cache_ctx,
                              ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                             char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                             unsigned int groups_length,
+                             char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                             unsigned int sensor_types_length,
                              unsigned int record_ids[],
                              unsigned int record_ids_length,
                              unsigned int abbreviated_units,
@@ -128,10 +128,10 @@ int calculate_column_widths (pstdout_state_t pstate,
 int calculate_record_ids (pstdout_state_t pstate,
                           ipmi_sdr_cache_ctx_t sdr_cache_ctx,
                           ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                          char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                          unsigned int groups_length,
-                          char exclude_groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                          unsigned int exclude_groups_length,
+                          char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                          unsigned int sensor_types_length,
+                          char exclude_sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                          unsigned int exclude_sensor_types_length,
                           unsigned int record_ids[],
                           unsigned int record_ids_length,
                           unsigned int exclude_record_ids[],

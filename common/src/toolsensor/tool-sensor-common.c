@@ -39,7 +39,7 @@
 
 #define RECORD_ID_BUFLEN       64
 
-#define SENSOR_GROUP_BUFLEN    1024
+#define SENSOR_TYPE_BUFLEN     1024
 
 #define SENSOR_UNITS_BUFLEN    1024
 
@@ -64,23 +64,23 @@ _str_replace_char (char *str, char chr, char with)
 }
 
 const char *
-get_sensor_group_output_string (unsigned int sensor_type)
+get_sensor_type_output_string (unsigned int sensor_type)
 {
-  const char *sensor_group;
+  const char *sensor_type_str;
 
-  if ((sensor_group = ipmi_get_sensor_type_string (sensor_type)))
-    return (sensor_group);
+  if ((sensor_type_str = ipmi_get_sensor_type_string (sensor_type)))
+    return (sensor_type_str);
 
-  return (UNRECOGNIZED_SENSOR_GROUP);
+  return (UNRECOGNIZED_SENSOR_TYPE);
 }
 
 void
-get_sensor_group_cmdline_string (char *sensor_group)
+get_sensor_type_cmdline_string (char *sensor_type)
 {
-  assert (sensor_group);
+  assert (sensor_type);
 
-  _str_replace_char (sensor_group, ' ', '_');
-  _str_replace_char (sensor_group, '/', '_');
+  _str_replace_char (sensor_type, ' ', '_');
+  _str_replace_char (sensor_type, '/', '_');
 }
 
 int
@@ -356,15 +356,15 @@ get_entity_sensor_name_string_by_record_id (pstdout_state_t pstate,
 }
 
 int
-display_sensor_group_cmdline (pstdout_state_t pstate, 
-                              unsigned int sensor_type)
+display_sensor_type_cmdline (pstdout_state_t pstate, 
+                             unsigned int sensor_type)
 {
-  const char *sensor_group;
+  const char *sensor_type_str;
   char *tmpstr = NULL;
 
-  sensor_group = get_sensor_group_output_string (sensor_type);
+  sensor_type_str = get_sensor_type_output_string (sensor_type);
 
-  if (!(tmpstr = strdupa (sensor_group)))
+  if (!(tmpstr = strdupa (sensor_type_str)))
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
@@ -373,7 +373,7 @@ display_sensor_group_cmdline (pstdout_state_t pstate,
       return (-1);
     }
 
-  get_sensor_group_cmdline_string (tmpstr);
+  get_sensor_type_cmdline_string (tmpstr);
 
   PSTDOUT_PRINTF (pstate, "%s\n", tmpstr);
   return (0);
@@ -456,29 +456,29 @@ display_string_cmdline (pstdout_state_t pstate,
       return (-1);
     } 
 
-  get_sensor_group_cmdline_string (tmpstr);
+  get_sensor_type_cmdline_string (tmpstr);
 
   PSTDOUT_PRINTF (pstate, "%s\n", tmpstr);
   return (0);
 }
 
 int
-sensor_group_strcmp (pstdout_state_t pstate,
-                     const char *sensor_group_str_input,
-                     unsigned int sensor_type)
+sensor_type_strcmp (pstdout_state_t pstate,
+                    const char *sensor_type_str_input,
+                    unsigned int sensor_type)
 {
-  const char *sensor_group_str;
+  const char *sensor_type_str;
   char *tmpstr;
 
-  assert (sensor_group_str_input);
+  assert (sensor_type_str_input);
 
-  /* Don't use get_sensor_group_output_string() - want NULL if invalid */
-  sensor_group_str = ipmi_get_sensor_type_string (sensor_type);
+  /* Don't use get_sensor_type_output_string() - want NULL if invalid */
+  sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
 
-  if (!sensor_group_str)
+  if (!sensor_type_str)
     return (0);
 
-  if (!(tmpstr = strdupa (sensor_group_str)))
+  if (!(tmpstr = strdupa (sensor_type_str)))
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
@@ -487,10 +487,10 @@ sensor_group_strcmp (pstdout_state_t pstate,
       return (-1);
     }
 
-  get_sensor_group_cmdline_string (tmpstr);
+  get_sensor_type_cmdline_string (tmpstr);
 
-  if (!strcasecmp (sensor_group_str_input, sensor_group_str)
-      || !strcasecmp (sensor_group_str_input, tmpstr))
+  if (!strcasecmp (sensor_type_str_input, sensor_type_str)
+      || !strcasecmp (sensor_type_str_input, tmpstr))
     return (1);
   
   return (0);
@@ -518,13 +518,13 @@ output_sensor_headers (pstdout_state_t pstate,
               "%%-%ds | %%-%ds | %%-%ds",
               column_width->record_id,
               column_width->sensor_name,
-              column_width->sensor_group);
+              column_width->sensor_type);
 
   PSTDOUT_PRINTF (pstate,
                   fmt,
                   SENSORS_HEADER_RECORD_ID_STR,
                   SENSORS_HEADER_NAME_STR,
-                  SENSORS_HEADER_GROUP_STR);
+                  SENSORS_HEADER_TYPE_STR);
 
   if (output_sensor_state)
     {
@@ -576,12 +576,12 @@ output_sensor_headers (pstdout_state_t pstate,
 }
 
 static int
-_is_sdr_sensor_group_listed (pstdout_state_t pstate,
-                             ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                             const void *sdr_record,
-                             unsigned int sdr_record_len,
-                             char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                             unsigned int groups_length)
+_is_sdr_sensor_type_listed (pstdout_state_t pstate,
+                            ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                            const void *sdr_record,
+                            unsigned int sdr_record_len,
+                            char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                            unsigned int sensor_types_length)
 {
   uint16_t record_id;
   uint8_t record_type;
@@ -591,8 +591,8 @@ _is_sdr_sensor_group_listed (pstdout_state_t pstate,
   assert (sdr_parse_ctx);
   assert (sdr_record);
   assert (sdr_record_len);
-  assert (groups);
-  assert (groups_length);
+  assert (sensor_types);
+  assert (sensor_types_length);
 
   if (ipmi_sdr_parse_record_id_and_type (sdr_parse_ctx,
                                          sdr_record,
@@ -624,13 +624,13 @@ _is_sdr_sensor_group_listed (pstdout_state_t pstate,
       return (-1);
     }
 
-  for (i = 0; i < groups_length; i++)
+  for (i = 0; i < sensor_types_length; i++)
     {
       int ret;
 
-      if ((ret = sensor_group_strcmp (pstate,
-                                      groups[i],
-                                      sensor_type)) < 0)
+      if ((ret = sensor_type_strcmp (pstate,
+                                     sensor_types[i],
+                                     sensor_type)) < 0)
         return (-1);
 
       if (ret)
@@ -805,7 +805,7 @@ _sensor_column_width_init (struct sensor_column_width *column_width)
 
   column_width->record_id = 0;
   column_width->sensor_name = 0;
-  column_width->sensor_group = 0;
+  column_width->sensor_type = 0;
   column_width->sensor_units = 0;
 }
 
@@ -818,8 +818,8 @@ _sensor_column_width_finish (struct sensor_column_width *column_width)
     column_width->record_id = strlen(SENSORS_HEADER_RECORD_ID_STR);
   if (column_width->sensor_name < strlen(SENSORS_HEADER_NAME_STR))
     column_width->sensor_name = strlen(SENSORS_HEADER_NAME_STR);
-  if (column_width->sensor_group < strlen(SENSORS_HEADER_GROUP_STR))
-    column_width->sensor_group = strlen(SENSORS_HEADER_GROUP_STR);
+  if (column_width->sensor_type < strlen(SENSORS_HEADER_TYPE_STR))
+    column_width->sensor_type = strlen(SENSORS_HEADER_TYPE_STR);
   if (column_width->sensor_units < strlen(SENSORS_HEADER_UNITS_STR))
     column_width->sensor_units = strlen(SENSORS_HEADER_UNITS_STR);
 }
@@ -924,9 +924,9 @@ _store_column_widths (pstdout_state_t pstate,
       return (-1);
     }
 
-  len = strlen (get_sensor_group_output_string (sensor_type));
-  if (len > column_width->sensor_group)
-    column_width->sensor_group = len;
+  len = strlen (get_sensor_type_output_string (sensor_type));
+  if (len > column_width->sensor_type)
+    column_width->sensor_type = len;
 
 
   if (ipmi_sdr_parse_event_reading_type_code (sdr_parse_ctx,
@@ -967,8 +967,8 @@ int
 calculate_column_widths (pstdout_state_t pstate,
                          ipmi_sdr_cache_ctx_t sdr_cache_ctx,
                          ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                         char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                         unsigned int groups_length,
+                         char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                         unsigned int sensor_types_length,
                          unsigned int record_ids[],
                          unsigned int record_ids_length,
                          unsigned int abbreviated_units,
@@ -1061,14 +1061,14 @@ calculate_column_widths (pstdout_state_t pstate,
           if (!sdr_record_len)
             continue;
 
-          if (groups && groups_length)
+          if (sensor_types && sensor_types_length)
             {
-              if ((ret = _is_sdr_sensor_group_listed (pstate,
-                                                      sdr_parse_ctx,
-                                                      sdr_record,
-                                                      sdr_record_len,
-                                                      groups,
-                                                      groups_length)) < 0)
+              if ((ret = _is_sdr_sensor_type_listed (pstate,
+                                                     sdr_parse_ctx,
+                                                     sdr_record,
+                                                     sdr_record_len,
+                                                     sensor_types,
+                                                     sensor_types_length)) < 0)
                 goto cleanup;
             }
           else
@@ -1099,10 +1099,10 @@ int
 calculate_record_ids (pstdout_state_t pstate,
                       ipmi_sdr_cache_ctx_t sdr_cache_ctx,
                       ipmi_sdr_parse_ctx_t sdr_parse_ctx,
-                      char groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                      unsigned int groups_length,
-                      char exclude_groups[][MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                      unsigned int exclude_groups_length,
+                      char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                      unsigned int sensor_types_length,
+                      char exclude_sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                      unsigned int exclude_sensor_types_length,
                       unsigned int record_ids[],
                       unsigned int record_ids_length,
                       unsigned int exclude_record_ids[],
@@ -1120,8 +1120,8 @@ calculate_record_ids (pstdout_state_t pstate,
 
   assert (sdr_cache_ctx);
   assert (sdr_parse_ctx);
-  assert (groups);
-  assert (exclude_groups);
+  assert (sensor_types);
+  assert (exclude_sensor_types);
   assert (record_ids);
   assert (exclude_record_ids);
   assert (output_record_ids);
@@ -1144,12 +1144,12 @@ calculate_record_ids (pstdout_state_t pstate,
    * achu: This code could be done far more concisely, but it got
    * confusing and hard to understand.  We will divide this up into
    * simple chunks, if the user specified neither record_ids and
-   * groups, record_ids, or groups.  record_ids take precedence over
-   * groups, and exclude_record_ids takes precedence over
-   * exclude_groups.
+   * types, record_ids, or types.  record_ids take precedence over
+   * types, and exclude_record_ids takes precedence over
+   * exclude_types.
    */
 
-  if (!record_ids_length && !groups_length)
+  if (!record_ids_length && !sensor_types_length)
     {
       for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (sdr_cache_ctx))
         {
@@ -1198,16 +1198,16 @@ calculate_record_ids (pstdout_state_t pstate,
                 continue;
             }
 
-          if (exclude_groups_length)
+          if (exclude_sensor_types_length)
             {
               int flag;
 
-              if ((flag = _is_sdr_sensor_group_listed (pstate,
-                                                       sdr_parse_ctx,
-                                                       sdr_record,
-                                                       sdr_record_len,
-                                                       exclude_groups,
-                                                       exclude_groups_length)) < 0)
+              if ((flag = _is_sdr_sensor_type_listed (pstate,
+                                                      sdr_parse_ctx,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      exclude_sensor_types,
+                                                      exclude_sensor_types_length)) < 0)
                 return (-1);
 
               if (flag)
@@ -1273,16 +1273,16 @@ calculate_record_ids (pstdout_state_t pstate,
           if (!sdr_record_len)
             continue;
 
-          if (exclude_groups_length)
+          if (exclude_sensor_types_length)
             {
               int flag;
           
-              if ((flag = _is_sdr_sensor_group_listed (pstate,
-                                                       sdr_parse_ctx,
-                                                       sdr_record,
-                                                       sdr_record_len,
-                                                       exclude_groups,
-                                                       exclude_groups_length)) < 0)
+              if ((flag = _is_sdr_sensor_type_listed (pstate,
+                                                      sdr_parse_ctx,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      exclude_sensor_types,
+                                                      exclude_sensor_types_length)) < 0)
                 return (-1);
 
               if (flag)
@@ -1293,7 +1293,7 @@ calculate_record_ids (pstdout_state_t pstate,
           (*output_record_ids_length)++;
         }
     }
-  else /* groups_length */
+  else /* sensor_types_length */
     {
       for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (sdr_cache_ctx))
         {
@@ -1327,12 +1327,12 @@ calculate_record_ids (pstdout_state_t pstate,
               return (-1);
             }
 
-          if ((flag = _is_sdr_sensor_group_listed (pstate,
-                                                   sdr_parse_ctx,
-                                                   sdr_record,
-                                                   sdr_record_len,
-                                                   groups,
-                                                   groups_length)) < 0)
+          if ((flag = _is_sdr_sensor_type_listed (pstate,
+                                                  sdr_parse_ctx,
+                                                  sdr_record,
+                                                  sdr_record_len,
+                                                  sensor_types,
+                                                  sensor_types_length)) < 0)
             return (-1);
 
           if (!flag)
@@ -1355,15 +1355,15 @@ calculate_record_ids (pstdout_state_t pstate,
                 continue;
             }
 
-          if (exclude_groups_length)
+          if (exclude_sensor_types_length)
             {
-              if ((flag = _is_sdr_sensor_group_listed (pstate,
-                                                       sdr_parse_ctx,
-                                                       sdr_record,
-                                                       sdr_record_len,
-                                                       exclude_groups,
-                                                       exclude_groups_length)) < 0)
-                    return (-1);
+              if ((flag = _is_sdr_sensor_type_listed (pstate,
+                                                      sdr_parse_ctx,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      exclude_sensor_types,
+                                                      exclude_sensor_types_length)) < 0)
+                return (-1);
 
               if (flag)
                 continue;

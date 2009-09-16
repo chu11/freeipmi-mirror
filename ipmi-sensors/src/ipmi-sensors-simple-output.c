@@ -65,8 +65,8 @@ ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data)
       if (calculate_column_widths (state_data->pstate,
                                    state_data->sdr_cache_ctx,
                                    state_data->sdr_parse_ctx,
-                                   state_data->prog_data->args->groups,
-                                   state_data->prog_data->args->groups_length,
+                                   state_data->prog_data->args->sensor_types,
+                                   state_data->prog_data->args->sensor_types_length,
                                    state_data->prog_data->args->record_ids,
                                    state_data->prog_data->args->record_ids_length,
                                    !state_data->prog_data->args->non_abbreviated_units,
@@ -143,7 +143,7 @@ _legacy_simple_output_header (ipmi_sensors_state_data_t *state_data,
                       "%u: %s (%s): ",
                       record_id,
                       id_string,
-                      get_sensor_group_output_string (sensor_type));
+                      get_sensor_type_output_string (sensor_type));
     }
 
   return (0);
@@ -398,13 +398,13 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
               "%%-%du | %%-%ds | %%-%ds",
               state_data->column_width.record_id,
               state_data->column_width.sensor_name,
-              state_data->column_width.sensor_group);
+              state_data->column_width.sensor_type);
             
   pstdout_printf (state_data->pstate,
                   fmt,
                   record_id,
                   sensor_name,
-                  get_sensor_group_output_string (sensor_type));
+                  get_sensor_type_output_string (sensor_type));
 
   return (0);
 }

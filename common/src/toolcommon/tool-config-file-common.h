@@ -53,8 +53,8 @@
 
 /* record id is 16 bits - 65536 */
 #define CONFIG_FILE_MAX_SENSOR_RECORD_IDS           65536
-#define CONFIG_FILE_MAX_SENSOR_GROUPS               256
-#define CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH 256
+#define CONFIG_FILE_MAX_SENSOR_TYPES                256
+#define CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH  256
 
 struct config_file_data_bmc_config
 {
@@ -138,12 +138,12 @@ struct config_file_data_ipmi_sensors
   unsigned int exclude_record_ids[CONFIG_FILE_MAX_SENSOR_RECORD_IDS];
   unsigned int exclude_record_ids_length;
   int exclude_record_ids_count;
-  char groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
-  unsigned int groups_length;
-  int groups_count;
-  char exclude_groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
-  unsigned int exclude_groups_length;
-  int exclude_groups_count;
+  char sensor_types[CONFIG_FILE_MAX_SENSOR_TYPES][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int sensor_types_length;
+  int sensor_types_count;
+  char exclude_sensor_types[CONFIG_FILE_MAX_SENSOR_TYPES][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int exclude_sensor_types_length;
+  int exclude_sensor_types_count;
   int bridge_sensors;
   int bridge_sensors_count;
   int interpret_oem_data;
@@ -188,12 +188,12 @@ struct config_file_data_ipmimonitoring
   unsigned int exclude_record_ids[CONFIG_FILE_MAX_SENSOR_RECORD_IDS];
   unsigned int exclude_record_ids_length;
   int exclude_record_ids_count;
-  char groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
-  unsigned int groups_length;
-  int groups_count;
-  char exclude_groups[CONFIG_FILE_MAX_SENSOR_GROUPS][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1];
-  unsigned int exclude_groups_length;
-  int exclude_groups_count;
+  char sensor_types[CONFIG_FILE_MAX_SENSOR_TYPES][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int sensor_types_length;
+  int sensor_types_count;
+  char exclude_sensor_types[CONFIG_FILE_MAX_SENSOR_TYPES][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1];
+  unsigned int exclude_sensor_types_length;
+  int exclude_sensor_types_count;
   int bridge_sensors;
   int bridge_sensors_count;
   int interpret_oem_data;

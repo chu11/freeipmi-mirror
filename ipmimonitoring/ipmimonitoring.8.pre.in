@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.63 2009-07-25 00:59:32 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.64 2009-09-16 00:54:32 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -32,7 +32,7 @@ ipmimonitoring \- IPMI monitoring utility
 .SH "DESCRIPTION"
 .B ipmimonitoring
 is an IPMI sensor monitoring tool that reports a sensor's record id,
-sensor name, sensor group name, sensor state, sensor reading (if
+sensor name, sensor type name, sensor state, sensor reading (if
 appropriate), and the current sensor event.
 
 Unlike
@@ -146,9 +146,9 @@ Show all sensors on the local machine.
 .PP
 Show sensors #82, #11, #7 and #102 on the local machine.
 .PP
-.B # ipmimonitoring --groups=TEMPERATURE
+.B # ipmimonitoring --types=TEMPERATURE
 .PP
-Show all sensors in TEMPERATURE group on the local machine.
+Show all sensors in TEMPERATURE type on the local machine.
 .PP
 .B # ipmimonitoring -h ahost -u myusername -p mypassword
 .PP

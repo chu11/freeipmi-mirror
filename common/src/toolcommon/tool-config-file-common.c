@@ -784,19 +784,19 @@ config_file_ipmi_sensors_exclude_record_ids (conffile_t cf,
 }
 
 static int
-_config_file_sensor_groups (struct conffile_data *data,
+_config_file_sensor_types (struct conffile_data *data,
                             char *optionname,
-                            char groups[][CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH+1],
-                            unsigned int *groups_length)
+                            char sensor_types[][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1],
+                            unsigned int *sensor_types_length)
 {
   unsigned int i;
 
   assert (data);
   assert (optionname);
-  assert (groups);
-  assert (groups_length);
+  assert (sensor_types);
+  assert (sensor_types_length);
 
-  if (data->stringlist_len > CONFIG_FILE_MAX_SENSOR_GROUPS)
+  if (data->stringlist_len > CONFIG_FILE_MAX_SENSOR_TYPES)
     {
       fprintf (stderr, "Config File Error: invalid number of arguments for %s\n", optionname);
       exit (1);
@@ -804,7 +804,7 @@ _config_file_sensor_groups (struct conffile_data *data,
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      if (strlen (data->stringlist[i]) > CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH)
+      if (strlen (data->stringlist[i]) > CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH)
         {
           fprintf (stderr, "Config File Error: invalid value '%s' for %s\n",
                    data->stringlist[i],
@@ -812,18 +812,18 @@ _config_file_sensor_groups (struct conffile_data *data,
           exit (1);
         }
 
-      strncpy (groups[i],
+      strncpy (sensor_types[i],
                data->stringlist[i],
-               CONFIG_FILE_MAX_SENSOR_GROUPS_STRING_LENGTH);
+               CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH);
 
-      (*groups_length)++;
+      (*sensor_types_length)++;
     }
 
   return (0);
 }
 
 int
-config_file_ipmi_sensors_groups (conffile_t cf,
+config_file_ipmi_sensors_sensor_types (conffile_t cf,
                                  struct conffile_data *data,
                                  char *optionname,
                                  int option_type,
@@ -838,14 +838,14 @@ config_file_ipmi_sensors_groups (conffile_t cf,
 
   config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
 
-  return (_config_file_sensor_groups (data,
+  return (_config_file_sensor_types (data,
                                       optionname,
-                                      config_file_data->groups,
-                                      &(config_file_data->groups_length)));
+                                      config_file_data->sensor_types,
+                                      &(config_file_data->sensor_types_length)));
 }
 
 int
-config_file_ipmi_sensors_exclude_groups (conffile_t cf,
+config_file_ipmi_sensors_exclude_sensor_types (conffile_t cf,
                                          struct conffile_data *data,
                                          char *optionname,
                                          int option_type,
@@ -860,10 +860,10 @@ config_file_ipmi_sensors_exclude_groups (conffile_t cf,
 
   config_file_data = (struct config_file_data_ipmi_sensors *)option_ptr;
 
-  return (_config_file_sensor_groups (data,
+  return (_config_file_sensor_types (data,
                                       optionname,
-                                      config_file_data->exclude_groups,
-                                      &(config_file_data->exclude_groups_length)));
+                                      config_file_data->exclude_sensor_types,
+                                      &(config_file_data->exclude_sensor_types_length)));
 }
 
 static int
@@ -931,7 +931,7 @@ config_file_ipmimonitoring_exclude_record_ids (conffile_t cf,
 }
 
 int
-config_file_ipmimonitoring_groups (conffile_t cf,
+config_file_ipmimonitoring_sensor_types (conffile_t cf,
                                    struct conffile_data *data,
                                    char *optionname,
                                    int option_type,
@@ -946,14 +946,14 @@ config_file_ipmimonitoring_groups (conffile_t cf,
 
   config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
 
-  return (_config_file_sensor_groups (data,
+  return (_config_file_sensor_types (data,
                                       optionname,
-                                      config_file_data->groups,
-                                      &(config_file_data->groups_length)));
+                                      config_file_data->sensor_types,
+                                      &(config_file_data->sensor_types_length)));
 }
 
 int
-config_file_ipmimonitoring_exclude_groups (conffile_t cf,
+config_file_ipmimonitoring_exclude_sensor_types (conffile_t cf,
                                            struct conffile_data *data,
                                            char *optionname,
                                            int option_type,
@@ -968,10 +968,10 @@ config_file_ipmimonitoring_exclude_groups (conffile_t cf,
 
   config_file_data = (struct config_file_data_ipmimonitoring *)option_ptr;
 
-  return (_config_file_sensor_groups (data,
+  return (_config_file_sensor_types (data,
                                       optionname,
-                                      config_file_data->exclude_groups,
-                                      &(config_file_data->exclude_groups_length)));
+                                      config_file_data->exclude_sensor_types,
+                                      &(config_file_data->exclude_sensor_types_length)));
 }
 
 int
@@ -2873,25 +2873,49 @@ config_file_parse (const char *filename,
         &(ipmi_sensors_data),
         0,
       },
+      /* maintained for backwards compatability */
       {
         "ipmi-sensors-groups",
         CONFFILE_OPTION_LIST_STRING,
         -1,
-        config_file_ipmi_sensors_groups,
+        config_file_ipmi_sensors_sensor_types,
         1,
         0,
-        &(ipmi_sensors_data.groups_count),
+        &(ipmi_sensors_data.sensor_types_count),
         &(ipmi_sensors_data),
         0,
       },
+      /* maintained for backwards compatability */
       {
         "ipmi-sensors-exclude-groups",
         CONFFILE_OPTION_LIST_STRING,
         -1,
-        config_file_ipmi_sensors_exclude_groups,
+        config_file_ipmi_sensors_exclude_sensor_types,
         1,
         0,
-        &(ipmi_sensors_data.exclude_groups_count),
+        &(ipmi_sensors_data.exclude_sensor_types_count),
+        &(ipmi_sensors_data),
+        0,
+      },
+      {
+        "ipmi-sensors-sensor-types",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmi_sensors_sensor_types,
+        1,
+        0,
+        &(ipmi_sensors_data.sensor_types_count),
+        &(ipmi_sensors_data),
+        0,
+      },
+      {
+        "ipmi-sensors-exclude-sensor-types",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmi_sensors_exclude_sensor_types,
+        1,
+        0,
+        &(ipmi_sensors_data.exclude_sensor_types_count),
         &(ipmi_sensors_data),
         0,
       },
@@ -3344,25 +3368,49 @@ config_file_parse (const char *filename,
         &(ipmimonitoring_data),
         0,
       },
+      /* maintained for backwards compatability */
       {
         "ipmimonitoring-groups",
         CONFFILE_OPTION_LIST_STRING,
         -1,
-        config_file_ipmimonitoring_groups,
+        config_file_ipmimonitoring_sensor_types,
         1,
         0,
-        &(ipmimonitoring_data.groups_count),
+        &(ipmimonitoring_data.sensor_types_count),
         &(ipmimonitoring_data),
         0,
       },
+      /* maintained for backwards compatability */
       {
         "ipmimonitoring-exclude-groups",
         CONFFILE_OPTION_LIST_STRING,
         -1,
-        config_file_ipmimonitoring_exclude_groups,
+        config_file_ipmimonitoring_exclude_sensor_types,
         1,
         0,
-        &(ipmimonitoring_data.exclude_groups_count),
+        &(ipmimonitoring_data.exclude_sensor_types_count),
+        &(ipmimonitoring_data),
+        0,
+      },
+      {
+        "ipmimonitoring-sensor-types",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmimonitoring_sensor_types,
+        1,
+        0,
+        &(ipmimonitoring_data.sensor_types_count),
+        &(ipmimonitoring_data),
+        0,
+      },
+      {
+        "ipmimonitoring-exclude-sensor-types",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        config_file_ipmimonitoring_exclude_sensor_types,
+        1,
+        0,
+        &(ipmimonitoring_data.exclude_sensor_types_count),
         &(ipmimonitoring_data),
         0,
       },

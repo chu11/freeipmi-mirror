@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.63 2009-09-09 21:33:42 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.64 2009-09-16 00:54:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -593,12 +593,12 @@ ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
 }
 
 static int
-_ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
-                                                  const char *hostname,
-                                                  struct ipmi_monitoring_ipmi_config *config,
-                                                  unsigned int sensor_reading_flags,
-                                                  unsigned int *sensor_groups,
-                                                  unsigned int sensor_groups_len)
+_ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
+                                                 const char *hostname,
+                                                 struct ipmi_monitoring_ipmi_config *config,
+                                                 unsigned int sensor_reading_flags,
+                                                 unsigned int *sensor_types,
+                                                 unsigned int sensor_types_len)
 {
   uint16_t record_count;
   unsigned int i;
@@ -608,7 +608,7 @@ _ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (_ipmi_monitoring_initialized);
   assert (!(sensor_reading_flags & ~IPMI_MONITORING_SENSOR_READING_FLAGS_MASK));
-  assert (!(sensor_groups && !sensor_groups_len));
+  assert (!(sensor_types && !sensor_types_len));
 
   ipmi_monitoring_iterator_destroy (c);
 
@@ -653,8 +653,8 @@ _ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
                                               sensor_reading_flags,
                                               sdr_record,
                                               sdr_record_len,
-                                              sensor_groups,
-                                              sensor_groups_len) < 0)
+                                              sensor_types,
+                                              sensor_types_len) < 0)
         goto cleanup;
     }
 
@@ -684,14 +684,14 @@ _ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
 }
 
 int
-ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
-                                                 const char *hostname,
-                                                 struct ipmi_monitoring_ipmi_config *config,
-                                                 unsigned int sensor_reading_flags,
-                                                 unsigned int *sensor_groups,
-                                                 unsigned int sensor_groups_len,
-                                                 Ipmi_Monitoring_Sensor_Readings_Callback callback,
-                                                 void *callback_data)
+ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
+                                                const char *hostname,
+                                                struct ipmi_monitoring_ipmi_config *config,
+                                                unsigned int sensor_reading_flags,
+                                                unsigned int *sensor_types,
+                                                unsigned int sensor_types_len,
+                                                Ipmi_Monitoring_Sensor_Readings_Callback callback,
+                                                void *callback_data)
 {
   int rv;
 
@@ -705,19 +705,19 @@ ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
     }
 
   if ((sensor_reading_flags & ~IPMI_MONITORING_SENSOR_READING_FLAGS_MASK)
-      || (sensor_groups && !sensor_groups_len))
+      || (sensor_types && !sensor_types_len))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
     }
 
-  if (sensor_groups && sensor_groups_len)
+  if (sensor_types && sensor_types_len)
     {
       unsigned int i;
 
-      for (i = 0; i < sensor_groups_len; i++)
+      for (i = 0; i < sensor_types_len; i++)
         {
-          if (sensor_groups[i] >= IPMI_MONITORING_SENSOR_GROUP_UNKNOWN)
+          if (sensor_types[i] >= IPMI_MONITORING_SENSOR_TYPE_UNKNOWN)
             {
               c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
               return (-1);
@@ -729,12 +729,12 @@ ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
   c->callback_data = callback_data;
   c->callback_sensor_reading = NULL;
 
-  rv = _ipmi_monitoring_sensor_readings_by_sensor_group (c,
-                                                         hostname,
-                                                         config,
-                                                         sensor_reading_flags,
-                                                         sensor_groups,
-                                                         sensor_groups_len);
+  rv = _ipmi_monitoring_sensor_readings_by_sensor_type (c,
+                                                        hostname,
+                                                        config,
+                                                        sensor_reading_flags,
+                                                        sensor_types,
+                                                        sensor_types_len);
 
   c->callback_sensor_reading = NULL;
 
@@ -843,7 +843,7 @@ ipmi_monitoring_read_record_id (ipmi_monitoring_ctx_t c)
 }
 
 int
-ipmi_monitoring_read_sensor_group (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_read_sensor_type (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
 
@@ -851,7 +851,7 @@ ipmi_monitoring_read_sensor_group (ipmi_monitoring_ctx_t c)
     return (-1);
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
-  return (sensor_reading->sensor_group);
+  return (sensor_reading->sensor_type);
 }
 
 char *

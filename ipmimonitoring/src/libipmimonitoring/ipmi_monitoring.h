@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.49 2009-09-09 20:27:25 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.50 2009-09-16 00:54:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -67,36 +67,36 @@ enum ipmi_monitoring_error_codes
     IPMI_MONITORING_ERR_ERRNUMRANGE                         = 31,
   };
 
-enum ipmi_monitoring_sensor_group
+enum ipmi_monitoring_sensor_type
   {
-    IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE                         = 0x00,
-    IPMI_MONITORING_SENSOR_GROUP_VOLTAGE                             = 0x01,
-    IPMI_MONITORING_SENSOR_GROUP_CURRENT                             = 0x02,
-    IPMI_MONITORING_SENSOR_GROUP_FAN                                 = 0x03,
-    IPMI_MONITORING_SENSOR_GROUP_PHYSICAL_SECURITY                   = 0x04,
-    IPMI_MONITORING_SENSOR_GROUP_PLATFORM_SECURITY_VIOLATION_ATTEMPT = 0x05,
-    IPMI_MONITORING_SENSOR_GROUP_PROCESSOR                           = 0x06,
-    IPMI_MONITORING_SENSOR_GROUP_POWER_SUPPLY                        = 0x07,
-    IPMI_MONITORING_SENSOR_GROUP_POWER_UNIT                          = 0x08,
-    IPMI_MONITORING_SENSOR_GROUP_MEMORY                              = 0x09,
-    IPMI_MONITORING_SENSOR_GROUP_DRIVE_SLOT                          = 0x0A,
-    IPMI_MONITORING_SENSOR_GROUP_SYSTEM_FIRMWARE_PROGRESS            = 0x0B,
-    IPMI_MONITORING_SENSOR_GROUP_EVENT_LOGGING_DISABLED              = 0x0C,
-    IPMI_MONITORING_SENSOR_GROUP_SYSTEM_EVENT                        = 0x0D,
-    IPMI_MONITORING_SENSOR_GROUP_CRITICAL_INTERRUPT                  = 0x0E,
-    IPMI_MONITORING_SENSOR_GROUP_MODULE_BOARD                        = 0x0F,
-    IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR                      = 0x10,
-    IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2                           = 0x11,
-    IPMI_MONITORING_SENSOR_GROUP_ENTITY_PRESENCE                     = 0x12,
-    IPMI_MONITORING_SENSOR_GROUP_MANAGEMENT_SUBSYSTEM_HEALTH         = 0x13,
-    IPMI_MONITORING_SENSOR_GROUP_BATTERY                             = 0x14,
-    IPMI_MONITORING_SENSOR_GROUP_FRU_STATE                           = 0x15,
-    IPMI_MONITORING_SENSOR_GROUP_CABLE_INTERCONNECT                  = 0x16,
-    IPMI_MONITORING_SENSOR_GROUP_BOOT_ERROR                          = 0x17,
-    IPMI_MONITORING_SENSOR_GROUP_BUTTON_SWITCH                       = 0x18,
-    IPMI_MONITORING_SENSOR_GROUP_SYSTEM_ACPI_POWER_STATE             = 0x19,
-    IPMI_MONITORING_SENSOR_GROUP_UNKNOWN                             = 0x1B,
-  } ipmi_monitoring_sensor_group_t;
+    IPMI_MONITORING_SENSOR_TYPE_TEMPERATURE                         = 0x00,
+    IPMI_MONITORING_SENSOR_TYPE_VOLTAGE                             = 0x01,
+    IPMI_MONITORING_SENSOR_TYPE_CURRENT                             = 0x02,
+    IPMI_MONITORING_SENSOR_TYPE_FAN                                 = 0x03,
+    IPMI_MONITORING_SENSOR_TYPE_PHYSICAL_SECURITY                   = 0x04,
+    IPMI_MONITORING_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT = 0x05,
+    IPMI_MONITORING_SENSOR_TYPE_PROCESSOR                           = 0x06,
+    IPMI_MONITORING_SENSOR_TYPE_POWER_SUPPLY                        = 0x07,
+    IPMI_MONITORING_SENSOR_TYPE_POWER_UNIT                          = 0x08,
+    IPMI_MONITORING_SENSOR_TYPE_MEMORY                              = 0x09,
+    IPMI_MONITORING_SENSOR_TYPE_DRIVE_SLOT                          = 0x0A,
+    IPMI_MONITORING_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS            = 0x0B,
+    IPMI_MONITORING_SENSOR_TYPE_EVENT_LOGGING_DISABLED              = 0x0C,
+    IPMI_MONITORING_SENSOR_TYPE_SYSTEM_EVENT                        = 0x0D,
+    IPMI_MONITORING_SENSOR_TYPE_CRITICAL_INTERRUPT                  = 0x0E,
+    IPMI_MONITORING_SENSOR_TYPE_MODULE_BOARD                        = 0x0F,
+    IPMI_MONITORING_SENSOR_TYPE_SLOT_CONNECTOR                      = 0x10,
+    IPMI_MONITORING_SENSOR_TYPE_WATCHDOG2                           = 0x11,
+    IPMI_MONITORING_SENSOR_TYPE_ENTITY_PRESENCE                     = 0x12,
+    IPMI_MONITORING_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH         = 0x13,
+    IPMI_MONITORING_SENSOR_TYPE_BATTERY                             = 0x14,
+    IPMI_MONITORING_SENSOR_TYPE_FRU_STATE                           = 0x15,
+    IPMI_MONITORING_SENSOR_TYPE_CABLE_INTERCONNECT                  = 0x16,
+    IPMI_MONITORING_SENSOR_TYPE_BOOT_ERROR                          = 0x17,
+    IPMI_MONITORING_SENSOR_TYPE_BUTTON_SWITCH                       = 0x18,
+    IPMI_MONITORING_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE             = 0x19,
+    IPMI_MONITORING_SENSOR_TYPE_UNKNOWN                             = 0x1B,
+  } ipmi_monitoring_sensor_type_t;
 
 enum ipmi_monitoring_sensor_state
   {
@@ -849,23 +849,23 @@ int ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
                                                   void *callback_data);
 
 /*
- * ipmi_monitoring_sensor_readings_by_sensor_group
+ * ipmi_monitoring_sensor_readings_by_sensor_type
  *
- * Retrieve sensor readings by sensor group and store them in the monitoring context.
+ * Retrieve sensor readings by sensor type and store them in the monitoring context.
  *
  * If 'hostname' is NULL, sensors for the current node will be retrieved in-band.
- * If 'sensor_groups' is NULL, default sensors will be retrieved.
+ * If 'sensor_types' is NULL, default sensors will be retrieved.
  * (default == all sensors unless configured otherwise).
  * Callback function will be called after each sensor is read and parsed.
  *
  * Returns number of sensors values retrieved on success, -1 on error
  */
-int ipmi_monitoring_sensor_readings_by_sensor_group (ipmi_monitoring_ctx_t c,
+int ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
                                                      const char *hostname,
                                                      struct ipmi_monitoring_ipmi_config *config,
                                                      unsigned int sensor_reading_flags,
-                                                     unsigned int *sensor_groups,
-                                                     unsigned int sensor_groups_len,
+                                                     unsigned int *sensor_types,
+                                                     unsigned int sensor_types_len,
                                                      Ipmi_Monitoring_Sensor_Readings_Callback callback,
                                                      void *callback_data);
 
@@ -903,12 +903,12 @@ void ipmi_monitoring_iterator_destroy (ipmi_monitoring_ctx_t c);
 int ipmi_monitoring_read_record_id (ipmi_monitoring_ctx_t c);
 
 /*
- * ipmi_monitoring_read_sensor_group
+ * ipmi_monitoring_read_sensor_type
  *
- * Returns the sensor group of the current sensor reading in a
+ * Returns the sensor type of the current sensor reading in a
  * callback or the iterator.
  */
-int ipmi_monitoring_read_sensor_group (ipmi_monitoring_ctx_t c);
+int ipmi_monitoring_read_sensor_type (ipmi_monitoring_ctx_t c);
 
 /*
  * ipmi_monitoring_read_sensor_name

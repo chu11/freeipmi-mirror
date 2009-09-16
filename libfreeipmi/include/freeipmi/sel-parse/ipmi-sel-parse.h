@@ -212,7 +212,7 @@ int ipmi_sel_parse_read_record (ipmi_sel_parse_ctx_t ctx,
  *
  * Available in SEL event records
  *
- * %g - sensor group name
+ * %T - sensor type
  * %s - sensor name
  * %e - offset from event/reading code type string
  * %f - event data 2 string [1]

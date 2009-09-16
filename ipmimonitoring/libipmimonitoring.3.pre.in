@@ -1,5 +1,5 @@
 .\"############################################################################
-.\"  $Id: libipmimonitoring.3.pre.in,v 1.15 2009-01-13 01:02:21 chu11 Exp $
+.\"  $Id: libipmimonitoring.3.pre.in,v 1.16 2009-09-16 00:54:32 chu11 Exp $
 .\"############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -43,9 +43,9 @@ libipmimonitoring \- a library for IPMI sensor monitoring
 .sp
 .BI "char *ipmi_monitoring_ctx_strerror(int errnum);"
 .sp
-.BI "int ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c, char *hostname, struct ipmi_monitoring_ipmi_config *config, unsigned int sensor_reading_flags, unsigned int *record_ids, unsigned int record_ids_len);"
+.BI "int ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c, char *hostname, struct ipmi_monitoring_ipmi_config *config, unsigned int sensor_reading_flags, unsigned int *record_ids, unsigned int record_ids_len, Ipmi_Monitoring_Sensor_Readings_Callback callback, void *callback_data);"
 .sp
-.BI "int ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c, char *hostname, struct ipmi_monitoring_ipmi_config *config, unsigned int sensor_reading_flags, unsigned int *sensor_groups, unsigned int sensor_groups_len);"
+.BI "int ipmi_monitoring_sensor_readings_by_sensor_type(ipmi_monitoring_ctx_t c, char *hostname, struct ipmi_monitoring_ipmi_config *config, unsigned int sensor_reading_flags, unsigned int *sensor_types, unsigned int sensor_types_len, Ipmi_Monitoring_Sensor_Readings_Callback callback, void *callback_data);"
 .sp
 .BI "int ipmi_monitoring_iterator_first(ipmi_monitoring_ctx_t c);"
 .sp
@@ -53,7 +53,7 @@ libipmimonitoring \- a library for IPMI sensor monitoring
 .sp
 .BI "int ipmi_monitoring_iterator_record_id(ipmi_monitoring_ctx_t c);"
 .sp
-.BI "int ipmi_monitoring_iterator_sensor_group(ipmi_monitoring_ctx_t c);"
+.BI "int ipmi_monitoring_iterator_sensor_type(ipmi_monitoring_ctx_t c);"
 .sp
 .BI "char *ipmi_monitoring_iterator_sensor_name(ipmi_monitoring_ctx_t c);"
 .sp
@@ -77,7 +77,7 @@ details away from the user and map IPMI sensor readings into NOMINAL,
 WARNING, or CRITICAL states.  By mapping sensor readings into NOMINAL,
 WARNING, or CRITICAL states, it makes monitoring sensors easier across
 large numbers of nodes.  An iterator interface is also provided that
-allows the user to iterate through sensor values, groups, units, and
+allows the user to iterate through sensor values, types, units, and
 states.
 
 .LP
