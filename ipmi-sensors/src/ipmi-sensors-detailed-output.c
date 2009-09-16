@@ -125,11 +125,11 @@ static int
 _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                          const void *sdr_record,
                          unsigned int sdr_record_len,
+			 uint8_t sensor_number,
                          uint8_t record_type,
                          uint16_t record_id)
 {
   char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
-  uint8_t sensor_number;
   uint8_t sensor_type;
   uint8_t event_reading_type_code;
   uint8_t sensor_owner_id_type, sensor_owner_id;
@@ -140,18 +140,6 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
   assert (sdr_record);
   assert (sdr_record_len);
   assert (state_data->prog_data->args->verbose_count >= 1);
-
-  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
-                                    sdr_record,
-                                    sdr_record_len,
-                                    &sensor_number) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-      return (-1);
-    }
 
   if (ipmi_sdr_parse_sensor_type (state_data->sdr_parse_ctx,
                                   sdr_record,
@@ -746,12 +734,12 @@ static int
 _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
                              const void *sdr_record,
                              unsigned int sdr_record_len,
+			     uint8_t sensor_number,
                              uint8_t record_type)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t positive_going_threshold_hysteresis_raw = 0;
   uint8_t negative_going_threshold_hysteresis_raw = 0;
-  uint8_t sensor_number;
   char sensor_units_buf[IPMI_SENSORS_UNITS_BUFLEN+1];
   uint8_t hysteresis_support;
   uint64_t val;
@@ -795,18 +783,6 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
    * We will try to read it via IPMI like we do with thresholds, since
    * a change to the hysteresis may not be written to the SDR.
    */
-
-  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
-                                    sdr_record,
-                                    sdr_record_len,
-                                    &sensor_number) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-      goto cleanup;
-    }
 
   memset (sensor_units_buf, '\0', IPMI_SENSORS_UNITS_BUFLEN+1);
   if (get_sensor_units_output_string (state_data->pstate,
@@ -1014,10 +990,10 @@ static int
 _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                const void *sdr_record,
                                unsigned int sdr_record_len,
+			       uint8_t sensor_number,
                                uint8_t record_type)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t sensor_number;
   int event_reading_type_code_class;
   uint64_t val;
   uint8_t event_reading_type_code;
@@ -1046,18 +1022,6 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
    * We will try to read it via IPMI like we do with thresholds, since
    * a change to the event enables may not be written to the SDR.
    */
-
-  if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
-                                    sdr_record,
-                                    sdr_record_len,
-                                    &sensor_number) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_sdr_parse_sensor_number: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
-      goto cleanup;
-    }
 
   if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_parse_ctx,
                                               sdr_record,
@@ -1381,6 +1345,7 @@ static int
 _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                               const void *sdr_record,
                               unsigned int sdr_record_len,
+			      uint8_t sensor_number,
                               uint8_t record_type,
                               uint16_t record_id,
                               double *reading,
@@ -1399,6 +1364,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
   if (_detailed_output_header (state_data,
                                sdr_record,
                                sdr_record_len,
+			       sensor_number,
                                record_type,
                                record_id) < 0)
     return (-1);
@@ -1514,12 +1480,14 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
       if (_detailed_output_hysteresis (state_data,
                                        sdr_record,
                                        sdr_record_len,
+				       sensor_number,
                                        record_type) < 0)
         return (-1);
 
       if (_detailed_output_event_enable (state_data,
                                          sdr_record,
                                          sdr_record_len,
+					 sensor_number,
                                          record_type) < 0)
         return (-1);
     }
@@ -1565,6 +1533,7 @@ static int
 _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
                                  const void *sdr_record,
                                  unsigned int sdr_record_len,
+				 uint8_t sensor_number,
                                  uint8_t record_type,
                                  uint16_t record_id,
                                  char **event_message_list,
@@ -1578,6 +1547,7 @@ _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
   if (_detailed_output_header (state_data,
                                sdr_record,
                                sdr_record_len,
+			       sensor_number,
                                record_type,
                                record_id) < 0)
     return (-1);
@@ -1597,12 +1567,14 @@ _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
       if (_detailed_output_hysteresis (state_data,
                                        sdr_record,
                                        sdr_record_len,
+				       sensor_number,
                                        record_type) < 0)
         return (-1);
 
       if (_detailed_output_event_enable (state_data,
                                          sdr_record,
                                          sdr_record_len,
+					 sensor_number,
                                          record_type) < 0)
         return (-1);
 
@@ -1658,6 +1630,7 @@ static int
 _detailed_output_event_only_record (ipmi_sensors_state_data_t *state_data,
                                     const void *sdr_record,
                                     unsigned int sdr_record_len,
+				    uint8_t sensor_number,
                                     uint8_t record_type,
                                     uint16_t record_id)
 {
@@ -1669,6 +1642,7 @@ _detailed_output_event_only_record (ipmi_sensors_state_data_t *state_data,
   if (_detailed_output_header (state_data,
                                sdr_record,
                                sdr_record_len,
+			       sensor_number,
                                record_type,
                                record_id) < 0)
     return (-1);
@@ -2307,6 +2281,7 @@ int
 ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                               const void *sdr_record,
                               unsigned int sdr_record_len,
+			      uint8_t sensor_number,
                               double *reading,
                               char **event_message_list,
                               unsigned int event_message_list_len)
@@ -2340,6 +2315,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
           return (_detailed_output_full_record (state_data,
                                                 sdr_record,
                                                 sdr_record_len,
+						sensor_number,
                                                 record_type,
                                                 record_id,
                                                 reading,
@@ -2349,6 +2325,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
           return (_detailed_output_compact_record (state_data,
                                                    sdr_record,
                                                    sdr_record_len,
+						   sensor_number,
                                                    record_type,
                                                    record_id,
                                                    event_message_list,
@@ -2357,6 +2334,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
           return (_detailed_output_event_only_record (state_data,
                                                       sdr_record,
                                                       sdr_record_len,
+						      sensor_number,
                                                       record_type,
                                                       record_id));
         case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
@@ -2426,6 +2404,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
           return (_detailed_output_full_record (state_data,
                                                 sdr_record,
                                                 sdr_record_len,
+						sensor_number,
                                                 record_type,
                                                 record_id,
                                                 reading,
@@ -2435,6 +2414,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
           return (_detailed_output_compact_record (state_data,
                                                    sdr_record,
                                                    sdr_record_len,
+						   sensor_number,
                                                    record_type,
                                                    record_id,
                                                    event_message_list,
@@ -2447,6 +2427,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
             return (_detailed_output_event_only_record (state_data,
                                                         sdr_record,
                                                         sdr_record_len,
+							sensor_number,
                                                         record_type,
                                                         record_id));
         default:

@@ -24,6 +24,7 @@
 int ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                                   const void *sdr_record,
                                   unsigned int sdr_record_len,
+				  uint8_t sensor_number,
                                   double *reading,
                                   char **event_message_list,
                                   unsigned int event_message_list_len);

@@ -727,7 +727,7 @@ _store_entity_id_count (pstdout_state_t pstate,
         {
           int i;
 
-          for (i = 0; i < (share_count - 1); i++)
+          for (i = 0; i < share_count; i++)
             {
               entity_instance += (i + 1);
               
@@ -1058,7 +1058,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
    * count was 3, then sensors 10, 11, and 12 would share
    * the record"
    */
-  for (i = 0; i < (share_count - 1); i++)
+  for (i = 0; i < share_count; i++)
     {
       uint8_t sensor_number;
       
