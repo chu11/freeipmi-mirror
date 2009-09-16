@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.130 2009-09-16 18:28:45 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.131 2009-09-16 23:12:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -743,14 +743,27 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
   /* get adjusted sensor name if necessary */
   if (state_data->prog_data->args->entity_sensor_names)
     {
+      int sensor_number;
+      uint8_t sensor_number_tmp;
+
       memset (sensor_name_buf, '\0', MAX_ENTITY_ID_SENSOR_NAME_STRING + 1);
+
+      if ((sensor_number = ipmi_monitoring_read_sensor_number (state_data->ctx)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_monitoring_read_sensor_number: %s\n",
+                           ipmi_monitoring_ctx_errormsg (state_data->ctx));
+          goto cleanup;
+        }
       
+      sensor_number_tmp = sensor_number;
       if (get_entity_sensor_name_string_by_record_id (state_data->pstate,
                                                       state_data->sdr_parse_ctx,
                                                       state_data->sdr_cache_ctx,
                                                       (uint16_t)record_id,
                                                       &(state_data->entity_id_counts),
-                                                      NULL,
+                                                      &sensor_number_tmp,
                                                       sensor_name_buf,
                                                       MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
         return (-1);
@@ -1068,6 +1081,9 @@ run_cmd_args (ipmimonitoring_state_data_t *state_data)
   
   if (args->bridge_sensors)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS;
+
+  if (args->shared_sensors)
+    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS;
 
   if (args->interpret_oem_data)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA;

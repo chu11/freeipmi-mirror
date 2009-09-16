@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.30 2009-09-16 00:54:33 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.31 2009-09-16 23:12:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -102,11 +102,12 @@
    | IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION              \
    | IPMI_MONITORING_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
 
-#define IPMI_MONITORING_SENSOR_READING_FLAGS_MASK                   \
-  (IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE            \
-   | IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS \
-   | IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS            \
-   | IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA)
+#define IPMI_MONITORING_SENSOR_READING_FLAGS_MASK                          \
+  (IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE                   \
+   | IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS \
+   | IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS                   \
+   | IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA               \
+   | IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS)
 
 #define IPMI_MONITORING_AUTHENTICATION_TYPE_DEFAULT           IPMI_AUTHENTICATION_TYPE_MD5
 #define IPMI_MONITORING_PRIVILEGE_LEVEL_DEFAULT               IPMI_PRIVILEGE_LEVEL_USER
@@ -127,6 +128,7 @@ struct ipmi_sensor_config {
 
 struct ipmi_monitoring_sensor_reading {
   int record_id;
+  int sensor_number;
   int sensor_type;
   char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
   int sensor_state;

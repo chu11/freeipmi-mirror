@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.64 2009-09-16 00:54:32 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.65 2009-09-16 23:12:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -403,6 +403,79 @@ _ipmi_monitoring_sensor_readings_flags_common (ipmi_monitoring_ctx_t c,
   return (rv);
 }
 
+/* returns 1 on success, 0 on fallback and do reading, -1 on error */
+static int
+_ipmi_monitoring_get_sensor_reading_shared (ipmi_monitoring_ctx_t c,
+                                            unsigned int sensor_reading_flags,
+                                            uint8_t *sdr_record,
+                                            unsigned int sdr_record_len,
+                                            unsigned int *sensor_types,
+                                            unsigned int sensor_types_len)
+{
+  uint8_t record_type;
+  uint8_t share_count;
+  int i;
+
+  assert (c);
+  assert (c->magic == IPMI_MONITORING_MAGIC);
+  assert (_ipmi_monitoring_initialized);
+  assert (!(sensor_reading_flags & ~IPMI_MONITORING_SENSOR_READING_FLAGS_MASK));
+  assert (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS);
+  
+  if (ipmi_sdr_parse_record_id_and_type (c->sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         NULL,
+                                         &record_type) < 0)
+    {
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_record_id_and_type: %s",
+                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+      return (-1);
+    }
+  
+  if (record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+    return (0);
+
+  if (ipmi_sdr_parse_sensor_record_sharing (c->sdr_parse_ctx,
+                                            sdr_record,
+                                            sdr_record_len,
+                                            &share_count,
+                                            NULL,
+                                            NULL,
+                                            NULL) < 0)
+    {
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_record_sharing: %s",
+                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+      return (-1);
+    }
+
+  if (share_count <= 1)
+    return (0);
+
+  
+  /* IPMI spec gives the following example:
+   *
+   * "If the starting sensor number was 10, and the share
+   * count was 3, then sensors 10, 11, and 12 would share
+   * the record"
+   */
+  for (i = 0; i < share_count; i++)
+    {
+      if (ipmi_monitoring_get_sensor_reading (c,
+                                              sensor_reading_flags,
+                                              sdr_record,
+                                              sdr_record_len,
+                                              i,
+                                              sensor_types,
+                                              sensor_types_len) < 0)
+        return (-1);
+    }
+
+  return (1);
+}
+
 static int
 _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
                                                const char *hostname,
@@ -450,6 +523,7 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
         {
           uint8_t sdr_record[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
           int sdr_record_len;
+          int shared_ret = 0;
 
           memset (sdr_record, '\0', IPMI_MONITORING_MAX_SDR_RECORD_LENGTH);
           if ((sdr_record_len = ipmi_sdr_cache_record_read (c->sdr_cache_ctx,
@@ -461,13 +535,28 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
               goto cleanup;
             }
 
-          if (ipmi_monitoring_get_sensor_reading (c,
-                                                  sensor_reading_flags,
-                                                  sdr_record,
-                                                  sdr_record_len,
-                                                  NULL,
-                                                  0) < 0)
-            goto cleanup;
+          if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS)
+            {
+              if ((shared_ret = _ipmi_monitoring_get_sensor_reading_shared (c,
+                                                                            sensor_reading_flags,
+                                                                            sdr_record,
+                                                                            sdr_record_len,
+                                                                            NULL,
+                                                                            0)) < 0)
+                goto cleanup;
+            }
+          
+          if (!shared_ret)
+            {
+              if (ipmi_monitoring_get_sensor_reading (c,
+                                                      sensor_reading_flags,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      0,
+                                                      NULL,
+                                                      0) < 0)
+                goto cleanup;
+            }
         }
     }
   else
@@ -476,6 +565,7 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
         {
           uint8_t sdr_record[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
           int sdr_record_len;
+          int shared_ret = 0;
 
           if (ipmi_sdr_cache_search_record_id (c->sdr_cache_ctx, record_ids[i]) < 0)
             {
@@ -499,13 +589,28 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
               goto cleanup;
             }
 
-          if (ipmi_monitoring_get_sensor_reading (c,
-                                                  sensor_reading_flags,
-                                                  sdr_record,
-                                                  sdr_record_len,
-                                                  NULL,
-                                                  0) < 0)
-            goto cleanup;
+          if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS)
+            {
+              if ((shared_ret = _ipmi_monitoring_get_sensor_reading_shared (c,
+                                                                            sensor_reading_flags,
+                                                                            sdr_record,
+                                                                            sdr_record_len,
+                                                                            NULL,
+                                                                            0)) < 0)
+                goto cleanup;
+            }
+
+          if (!shared_ret)
+            {
+              if (ipmi_monitoring_get_sensor_reading (c,
+                                                      sensor_reading_flags,
+                                                      sdr_record,
+                                                      sdr_record_len,
+                                                      0,
+                                                      NULL,
+                                                      0) < 0)
+                goto cleanup;
+            }
         }
     }
 
@@ -638,6 +743,7 @@ _ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
     {
       uint8_t sdr_record[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
       int sdr_record_len;
+      int shared_ret = 0;
 
       memset (sdr_record, '\0', IPMI_MONITORING_MAX_SDR_RECORD_LENGTH);
       if ((sdr_record_len = ipmi_sdr_cache_record_read (c->sdr_cache_ctx,
@@ -649,13 +755,28 @@ _ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
           goto cleanup;
         }
 
-      if (ipmi_monitoring_get_sensor_reading (c,
-                                              sensor_reading_flags,
-                                              sdr_record,
-                                              sdr_record_len,
-                                              sensor_types,
-                                              sensor_types_len) < 0)
-        goto cleanup;
+      if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS)
+        {
+          if ((shared_ret = _ipmi_monitoring_get_sensor_reading_shared (c,
+                                                                        sensor_reading_flags,
+                                                                        sdr_record,
+                                                                        sdr_record_len,
+                                                                        sensor_types,
+                                                                        sensor_types_len)) < 0)
+            goto cleanup;
+        }
+
+      if (!shared_ret)
+        {
+          if (ipmi_monitoring_get_sensor_reading (c,
+                                                  sensor_reading_flags,
+                                                  sdr_record,
+                                                  sdr_record_len,
+                                                  0,
+                                                  sensor_types,
+                                                  sensor_types_len) < 0)
+            goto cleanup;
+        }
     }
 
   if ((rv = list_count (c->sensor_readings)) > 0)
@@ -840,6 +961,18 @@ ipmi_monitoring_read_record_id (ipmi_monitoring_ctx_t c)
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return (sensor_reading->record_id);
+}
+
+int
+ipmi_monitoring_read_sensor_number (ipmi_monitoring_ctx_t c)
+{
+  struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
+
+  if (_ipmi_monitoring_read_common (c, &sensor_reading) < 0)
+    return (-1);
+
+  c->errnum = IPMI_MONITORING_ERR_SUCCESS;
+  return (sensor_reading->sensor_number);
 }
 
 int

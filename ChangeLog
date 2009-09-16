@@ -2,7 +2,7 @@
 
 	* common/man/manpage-common-legacy-output.man: Update text.
 
-	* ipmi-sensors/: Support --shared-sensors option.
+	* ipmi-sensors/, ipmimonitoring/: Support --shared-sensors option.
 	
 2009-09-16  Albert Chu <chu11@llnl.gov>
 

@@ -180,6 +180,7 @@ o ipmimonitoring
   - Support --comma-separated-output option.
   - Support --entity-sensor-names option.
   - Support --interpret-oem-data option.
+  - Support --shared-sensors option.
   - Utilize libipmimonitoring callback routines to make sensors output
     as they are read, rather than just at the end.  This removes the
     impression that the tool "hangs" on start.
@@ -389,6 +390,7 @@ o libipmimonitoring
     to IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS.
     Legacy macro still supported.
   - Add IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA flag.
+  - Add IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS flag.
   - Rename a number of macros for overall FreeIPMI consistency, may
     break backwards compatability.
   - Globally rename "Group" to "Sensor Type" for correctness to IPMI spec.

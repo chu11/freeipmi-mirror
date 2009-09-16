@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.78 2009-09-16 18:28:45 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.79 2009-09-16 23:12:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -125,6 +125,7 @@ static int
 _store_sensor_reading (ipmi_monitoring_ctx_t c,
                        unsigned int sensor_reading_flags,
                        int record_id,
+                       int sensor_number,
                        int sensor_type,
                        char *sensor_name,
                        int sensor_state,
@@ -154,6 +155,7 @@ _store_sensor_reading (ipmi_monitoring_ctx_t c,
     goto cleanup;
 
   s->record_id = record_id;
+  s->sensor_number = sensor_number;
   s->sensor_type = sensor_type;
   strncpy (s->sensor_name, sensor_name, IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH);
   s->sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH - 1] = '\0';
@@ -201,6 +203,7 @@ static int
 _store_unreadable_sensor_reading (ipmi_monitoring_ctx_t c,
                                   unsigned int sensor_reading_flags,
                                   int record_id,
+                                  int sensor_number,
                                   int sensor_type,
                                   char *sensor_name,
                                   int sensor_units)
@@ -220,6 +223,7 @@ _store_unreadable_sensor_reading (ipmi_monitoring_ctx_t c,
     goto cleanup;
 
   s->record_id = record_id;
+  s->sensor_number = sensor_number;
   s->sensor_type = sensor_type;
   if (sensor_name)
     {
@@ -462,6 +466,7 @@ _get_sensor_reading (ipmi_monitoring_ctx_t c,
                      unsigned int sensor_reading_flags,
                      uint8_t *sdr_record,
                      unsigned int sdr_record_len,
+                     unsigned int shared_sensor_number_offset,
                      double *sensor_reading,
                      uint16_t *sensor_event_bitmask)
 {
@@ -479,7 +484,7 @@ _get_sensor_reading (ipmi_monitoring_ctx_t c,
   if (ipmi_sensor_read (c->sensor_read_ctx,
                         sdr_record,
                         sdr_record_len,
-                        0,
+                        shared_sensor_number_offset,
                         &l_sensor_reading,
                         sensor_event_bitmask) <= 0)
     {
@@ -572,6 +577,8 @@ static int
 _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
                            unsigned int sensor_reading_flags,
                            uint16_t record_id,
+                           int sensor_number_base,
+                           unsigned int shared_sensor_number_offset,
                            int sensor_type,
                            char *sensor_name,
                            uint8_t *sdr_record,
@@ -623,6 +630,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
                                   sensor_reading_flags,
                                   sdr_record,
                                   sdr_record_len,
+                                  shared_sensor_number_offset,
                                   &sensor_reading,
                                   &sensor_event_bitmask)) < 0)
     return (-1);
@@ -633,6 +641,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
       if (_store_unreadable_sensor_reading (c,
                                             sensor_reading_flags,
                                             record_id,
+                                            sensor_number_base + shared_sensor_number_offset,
                                             sensor_type,
                                             sensor_name,
                                             sensor_units) < 0)
@@ -646,6 +655,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
   if (_store_sensor_reading (c,
                              sensor_reading_flags,
                              record_id,
+                             sensor_number_base + shared_sensor_number_offset,
                              sensor_type,
                              sensor_name,
                              sensor_state,
@@ -708,6 +718,8 @@ static int
 _digital_sensor_reading (ipmi_monitoring_ctx_t c,
                          unsigned int sensor_reading_flags,
                          uint16_t record_id,
+                         uint8_t sensor_number_base,
+                         unsigned int shared_sensor_number_offset,
                          uint8_t event_reading_type_code,
                          uint8_t sdr_sensor_type,
                          int sensor_type,
@@ -734,6 +746,7 @@ _digital_sensor_reading (ipmi_monitoring_ctx_t c,
                                   sensor_reading_flags,
                                   sdr_record,
                                   sdr_record_len,
+                                  shared_sensor_number_offset,
                                   &sensor_reading,
                                   &sensor_event_bitmask)) < 0)
     return (-1);
@@ -744,6 +757,7 @@ _digital_sensor_reading (ipmi_monitoring_ctx_t c,
       if (_store_unreadable_sensor_reading (c,
                                             sensor_reading_flags,
                                             record_id,
+                                            sensor_number_base + shared_sensor_number_offset,
                                             sensor_type,
                                             sensor_name,
                                             IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) < 0)
@@ -765,6 +779,7 @@ _digital_sensor_reading (ipmi_monitoring_ctx_t c,
   if (_store_sensor_reading (c,
                              sensor_reading_flags,
                              record_id,
+                             sensor_number_base + shared_sensor_number_offset,
                              sensor_type,
                              sensor_name,
                              sensor_state,
@@ -844,6 +859,8 @@ static int
 _specific_sensor_reading (ipmi_monitoring_ctx_t c,
                           unsigned int sensor_reading_flags,
                           uint16_t record_id,
+                          uint8_t sensor_number_base,
+                          unsigned int shared_sensor_number_offset,
                           uint8_t sdr_sensor_type,
                           int sensor_type,
                           char *sensor_name,
@@ -867,6 +884,7 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
                                   sensor_reading_flags,
                                   sdr_record,
                                   sdr_record_len,
+                                  shared_sensor_number_offset,
                                   &sensor_reading,
                                   &sensor_event_bitmask)) < 0)
     return (-1);
@@ -877,6 +895,7 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
       if (_store_unreadable_sensor_reading (c,
                                             sensor_reading_flags,
                                             record_id,
+                                            sensor_number_base + shared_sensor_number_offset,
                                             sensor_type,
                                             sensor_name,
                                             IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) < 0)
@@ -897,6 +916,7 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
   if (_store_sensor_reading (c,
                              sensor_reading_flags,
                              record_id,
+                             sensor_number_base + shared_sensor_number_offset,
                              sensor_type,
                              sensor_name,
                              sensor_state,
@@ -979,12 +999,14 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
                                     unsigned int sensor_reading_flags,
                                     uint8_t *sdr_record,
                                     unsigned int sdr_record_len,
+                                    unsigned int shared_sensor_number_offset,
                                     unsigned int *sensor_types,
                                     unsigned int sensor_types_len)
 {
   char sensor_name[IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH];
   uint16_t record_id;
   uint8_t record_type;
+  uint8_t sensor_number_base;
   uint8_t event_reading_type_code;
   uint8_t sdr_sensor_type;
   int sensor_type;
@@ -1018,11 +1040,23 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
       if (_store_unreadable_sensor_reading (c,
                                             sensor_reading_flags,
                                             record_id,
+                                            0,
                                             IPMI_MONITORING_SENSOR_TYPE_UNKNOWN,
                                             NULL,
                                             IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) < 0)
         return (-1);
       return (0);
+    }
+
+  if (ipmi_sdr_parse_sensor_type (c->sdr_parse_ctx,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  &sensor_number_base) < 0)
+    {
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_type: %s",
+                              ipmi_sdr_parse_ctx_errormsg (c->sdr_parse_ctx)));
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+      return (-1);
     }
 
   if (ipmi_sdr_parse_sensor_type (c->sdr_parse_ctx,
@@ -1094,6 +1128,8 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
       if (_threshold_sensor_reading (c,
                                      sensor_reading_flags,
                                      record_id,
+                                     sensor_number_base,
+                                     shared_sensor_number_offset,
                                      sensor_type,
                                      sensor_name,
                                      sdr_record,
@@ -1105,6 +1141,8 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
       if (_digital_sensor_reading (c,
                                    sensor_reading_flags,
                                    record_id,
+                                   sensor_number_base,
+                                   shared_sensor_number_offset,
                                    event_reading_type_code,
                                    sdr_sensor_type,
                                    sensor_type,
@@ -1118,6 +1156,8 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
       if (_specific_sensor_reading (c,
                                     sensor_reading_flags,
                                     record_id,
+                                    sensor_number_base,
+                                    shared_sensor_number_offset,
                                     sdr_sensor_type,
                                     sensor_type,
                                     sensor_name,
@@ -1143,6 +1183,7 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
       if (_store_unreadable_sensor_reading (c,
                                             sensor_reading_flags,
                                             record_id,
+                                            sensor_number_base + shared_sensor_number_offset, 
                                             sensor_type,
                                             sensor_name,
                                             IPMI_MONITORING_SENSOR_UNITS_UNKNOWN) < 0)

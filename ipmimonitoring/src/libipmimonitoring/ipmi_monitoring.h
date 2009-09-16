@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.50 2009-09-16 00:54:33 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.51 2009-09-16 23:12:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -224,6 +224,7 @@ enum ipmi_monitoring_sensor_reading_flags
     IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS = 0x00000002,
     IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS                   = 0x00000004,
     IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA               = 0x00000008,
+    IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS                   = 0x00000010,
     IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS        = 0x00000002, /* legacy macro */
   };
 
@@ -901,6 +902,15 @@ void ipmi_monitoring_iterator_destroy (ipmi_monitoring_ctx_t c);
  * or the iterator.
  */
 int ipmi_monitoring_read_record_id (ipmi_monitoring_ctx_t c);
+
+/*
+ * ipmi_monitoring_read_sensor_number
+ *
+ * Returns the sensor number of the current sensor reading in a
+ * callback or the iterator.  May be useful if
+ * IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS has been set.
+ */
+int ipmi_monitoring_read_sensor_number (ipmi_monitoring_ctx_t c);
 
 /*
  * ipmi_monitoring_read_sensor_type
