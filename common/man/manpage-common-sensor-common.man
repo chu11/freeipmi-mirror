@@ -42,7 +42,9 @@ not work on some interfaces/driver types.
 .TP
 \fB\-\-shared\-sensors\fR
 Some sensors share the same sensor data record (SDR).  This is
-typically utilized for system event log (SEL) entries, however, there
-may be interest in seeing the permutation of entries listed in a
-single sensor record.  By setting this option, each sensor number
-shared by a record will be iterated over and output.
+typically utilized for system event log (SEL) entries and not for
+sensor readings.  However, there may be some motherboards in which
+this format is utilized for multiple active sensors, or the user
+simply has interest in seeing the permutation of entries shared by a
+SDR entry.  By setting this option, each sensor number shared by a
+record will be iterated over and output.
