@@ -42,13 +42,14 @@ enum ipmimonitoring_argp_option_keys
     LIST_SENSOR_TYPES_KEY = 'L',
     CACHE_DIR_KEY = 162,              /* legacy */
     BRIDGE_SENSORS_KEY = 'b',
-    INTERPRET_OEM_DATA_KEY = 163,
-    IGNORE_NON_INTERPRETABLE_SENSORS_KEY = 164,
-    ENTITY_SENSOR_NAMES_KEY = 165,
-    COMMA_SEPARATED_OUTPUT_KEY = 166,
-    NON_ABBREVIATED_UNITS_KEY = 167,
-    LEGACY_OUTPUT_KEY = 168,
-    SENSOR_CONFIG_FILE_KEY = 169,
+    SHARED_SENSORS_KEY = 163,
+    INTERPRET_OEM_DATA_KEY = 164,
+    IGNORE_NON_INTERPRETABLE_SENSORS_KEY = 165,
+    ENTITY_SENSOR_NAMES_KEY = 166,
+    COMMA_SEPARATED_OUTPUT_KEY = 167,
+    NON_ABBREVIATED_UNITS_KEY = 168,
+    LEGACY_OUTPUT_KEY = 169,
+    SENSOR_CONFIG_FILE_KEY = 170,
   };
 
 struct ipmimonitoring_arguments
@@ -69,6 +70,7 @@ struct ipmimonitoring_arguments
   unsigned int exclude_sensor_types_length;
   int list_sensor_types;
   int bridge_sensors;
+  int shared_sensors;
   int interpret_oem_data;
   int ignore_non_interpretable_sensors;
   int entity_sensor_names;

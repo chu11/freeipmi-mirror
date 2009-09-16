@@ -1,5 +1,11 @@
 2009-09-16  Albert Chu <chu11@llnl.gov>
 
+	* common/man/manpage-common-legacy-output.man: Update text.
+
+	* ipmi-sensors/: Support --shared-sensors option.
+	
+2009-09-16  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/, ipmimonitoring/, ipmi-sel/, libfreeipmi/: Rename
 	sensor "group" to sensor "type" globally for consistency to IPMi
 	spec.

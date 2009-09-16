@@ -108,18 +108,20 @@ static struct argp_option cmdline_options[] =
       "List sensor types.", 43},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
       "Bridge addresses to read non-BMC owned sensors.", 44},
+    { "shared-sensors", SHARED_SENSORS_KEY, NULL, 0,
+      "Iterate over shared sensors in a single record.", 45},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 45},
+      "Attempt to interpret OEM data.", 46},
     { "ignore-not-available-sensors", IGNORE_NOT_AVAILABLE_SENSORS_KEY, NULL, 0,
-      "Ignore not-available (i.e. N/A) sensors.", 46},
+      "Ignore not-available (i.e. N/A) sensors.", 47},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 47},
+      "Output sensor names with entity ids and instances.", 48},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 48},
+      "Output fields in comma separated format.", 49},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' insetead of 'A').", 49},
+      "Output non-abbreviated units (i.e. 'Amps' insetead of 'A').", 50},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 50},
+      "Output in legacy format.", 51},
     { 0 }
   };
 
@@ -267,6 +269,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
       break;
+    case SHARED_SENSORS_KEY:
+      cmd_args->shared_sensors = 1;
+      break;
     case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
       break;
@@ -377,6 +382,8 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
+  if (config_file_data.shared_sensors_count)
+    cmd_args->shared_sensors = config_file_data.shared_sensors;
   if (config_file_data.interpret_oem_data_count)
     cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
   if (config_file_data.ignore_not_available_sensors_count)
@@ -489,6 +496,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->list_sensor_types = 0;
 
   cmd_args->bridge_sensors = 0;
+  cmd_args->shared_sensors = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->ignore_not_available_sensors = 0;
   cmd_args->entity_sensor_names = 0;

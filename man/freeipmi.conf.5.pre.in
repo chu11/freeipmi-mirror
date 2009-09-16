@@ -982,6 +982,9 @@ sensor types can be specified separated by whitespace.
 \fBipmi\-sensors\-bridge\-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.
 .TP
+\fBipmi\-sensors\-shared\-sensors\fR \fIENABLE|DISABLE\fR
+Specify if shared sensors should be output by default or not.
+.TP
 \fBipmi\-sensors\-interpret\-oem\-data\fR \fIENABLE|DISABLE\fR
 Specify if
 .B ipmi-sensors
@@ -1227,6 +1230,9 @@ sensor types can be specified separated by whitespace.
 .TP
 \fBipmimonitoring\-bridge\-sensors\fR \fIENABLE|DISABLE\fR
 Specify if non-BMC sensors should be bridged by default or not.
+.TP
+\fBipmimonitoring\-shared\-sensors\fR \fIENABLE|DISABLE\fR
+Specify if shared sensors should be output by default or not.
 .TP
 \fBipmimonitoring\-interpret\-oem\-data\fR \fIENABLE|DISABLE\fR
 Specify if

@@ -314,6 +314,7 @@ int
 ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
                   const void *sdr_record,
                   unsigned int sdr_record_len,
+                  uint8_t shared_sensor_number_offset,
                   double **sensor_reading,
                   uint16_t *sensor_event_bitmask)
 {
@@ -400,6 +401,43 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
     {
       SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR);
       goto cleanup;
+    }
+
+  if (shared_sensor_number_offset)
+    {
+      uint8_t share_count;
+
+      if (record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+        {
+          SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_INVALID_SDR_RECORD_TYPE);
+          goto cleanup;
+        }
+
+      if (ipmi_sdr_parse_sensor_record_sharing (ctx->sdr_parse_ctx,
+                                                sdr_record,
+                                                sdr_record_len,
+                                                &share_count,
+                                                NULL,
+                                                NULL,
+                                                NULL) < 0)
+        {
+          SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR);
+          goto cleanup;
+        }
+
+      if (share_count <= 1)
+        {
+          SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_INVALID_SDR_RECORD_TYPE);
+          goto cleanup;
+        }
+
+      if ((sensor_number + share_count) < (sensor_number + shared_sensor_number_offset))
+        {
+          SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_PARAMETERS);
+          goto cleanup;
+        }
+
+      sensor_number += shared_sensor_number_offset;
     }
 
   if (ipmi_sdr_parse_event_reading_type_code (ctx->sdr_parse_ctx,

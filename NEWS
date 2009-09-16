@@ -101,6 +101,7 @@ o ipmi-sensors
   - Support "all" and "none" inputs for sensor-types and record-ids
     options.
   - Support --comma-separated-output option.
+  - Support --shared-sensors option.
   - Rename --sensors option to --record-ids.  Maintain old options for
     backwards compatability.
   - Do not output Sensor Reading for discrete sensors under verbose

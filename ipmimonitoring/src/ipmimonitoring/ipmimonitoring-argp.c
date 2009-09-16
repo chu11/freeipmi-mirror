@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.56 2009-09-16 00:54:32 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.57 2009-09-16 18:28:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -110,20 +110,22 @@ static struct argp_option cmdline_options[] =
       "List sensor types.", 41},
     { "bridge-sensors", BRIDGE_SENSORS_KEY, NULL, 0,
       "Bridge addresses to read non-BMC owned sensors.", 42},
+    { "shared-sensors", SHARED_SENSORS_KEY, NULL, 0,
+      "Iterate over shared sensors in a single record.", 43},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 43},
+      "Attempt to interpret OEM data.", 44},
     { "ignore-non-interpretable-sensors", IGNORE_NON_INTERPRETABLE_SENSORS_KEY, NULL, 0,
-      "Ignore non-interpretable sensors in output.", 43},
+      "Ignore non-interpretable sensors in output.", 45},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 44},
+      "Output sensor names with entity ids and instances.", 46},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 45},
+      "Output fields in comma separated format.", 47},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 46},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 48},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 47},
+      "Output in legacy format.", 49},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate sensor configuration file.", 48},
+      "Specify an alternate sensor configuration file.", 50},
     { 0 }
   };
 
@@ -268,6 +270,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case BRIDGE_SENSORS_KEY:
       cmd_args->bridge_sensors = 1;
       break;
+    case SHARED_SENSORS_KEY:
+      cmd_args->shared_sensors = 1;
+      break;
     case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
       break;
@@ -387,6 +392,8 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     }
   if (config_file_data.bridge_sensors_count)
     cmd_args->bridge_sensors = config_file_data.bridge_sensors;
+  if (config_file_data.shared_sensors_count)
+    cmd_args->shared_sensors = config_file_data.shared_sensors;
   if (config_file_data.interpret_oem_data_count)
     cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
   if (config_file_data.ignore_non_interpretable_sensors_count)
@@ -439,6 +446,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   cmd_args->list_sensor_types = 0;
 
   cmd_args->bridge_sensors = 0;
+  cmd_args->shared_sensors = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->ignore_non_interpretable_sensors = 0;
   cmd_args->entity_sensor_names = 0;

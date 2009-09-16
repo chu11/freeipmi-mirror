@@ -829,6 +829,7 @@ _store_column_widths (pstdout_state_t pstate,
                       ipmi_sdr_parse_ctx_t sdr_parse_ctx,
                       const void *sdr_record,
                       unsigned int sdr_record_len,
+                      uint8_t *sensor_number,
                       unsigned int abbreviated_units,
                       struct sensor_entity_id_counts *entity_id_counts,
                       struct sensor_column_width *column_width)
@@ -880,7 +881,7 @@ _store_column_widths (pstdout_state_t pstate,
                                          sdr_record,
                                          sdr_record_len,
                                          entity_id_counts,
-                                         NULL,
+                                         sensor_number,
                                          sensor_name,
                                          MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
         return (-1);
@@ -963,6 +964,120 @@ _store_column_widths (pstdout_state_t pstate,
   return (0);
 }
 
+static int
+_store_column_widths_shared (pstdout_state_t pstate,
+                             ipmi_sdr_parse_ctx_t sdr_parse_ctx,
+                             const void *sdr_record,
+                             unsigned int sdr_record_len,
+                             unsigned int abbreviated_units,
+                             struct sensor_entity_id_counts *entity_id_counts,
+                             struct sensor_column_width *column_width)
+{
+  uint8_t record_type;
+  uint8_t share_count;
+  uint8_t sensor_number_base;
+  int i;
+
+  assert (sdr_parse_ctx);
+  assert (sdr_record);
+  assert (sdr_record_len);
+  assert (column_width);
+
+  if (ipmi_sdr_parse_record_id_and_type (sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         NULL,
+                                         &record_type) < 0)
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "ipmi_sdr_parse_record_id_and_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+      return (-1);
+    }
+
+  if (record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+    {
+      if (_store_column_widths (pstate,
+                                sdr_parse_ctx,
+                                sdr_record,
+                                sdr_record_len,
+                                NULL,
+                                abbreviated_units,
+                                entity_id_counts,
+                                column_width) < 0)
+        return (-1);
+      return (0);
+    }
+  
+  if (ipmi_sdr_parse_sensor_record_sharing (sdr_parse_ctx,
+                                            sdr_record,
+                                            sdr_record_len,
+                                            &share_count,
+                                            NULL,
+                                            NULL,
+                                            NULL) < 0)
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_record_sharing: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+      return (-1);
+    }
+  
+  if (share_count <= 1)
+    {
+      if (_store_column_widths (pstate,
+                                sdr_parse_ctx,
+                                sdr_record,
+                                sdr_record_len,
+                                NULL,
+                                abbreviated_units,
+                                entity_id_counts,
+                                column_width) < 0)
+        return (-1);
+      return (0);
+    }
+
+  if (ipmi_sdr_parse_sensor_number (sdr_parse_ctx,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &sensor_number_base) < 0)
+    {
+      PSTDOUT_FPRINTF (pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_number: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+      return (-1);
+    }
+
+  
+  /* IPMI spec gives the following example:
+   *
+   * "If the starting sensor number was 10, and the share
+   * count was 3, then sensors 10, 11, and 12 would share
+   * the record"
+   */
+  for (i = 0; i < (share_count - 1); i++)
+    {
+      uint8_t sensor_number;
+      
+      sensor_number = sensor_number_base + i;
+      
+      if (_store_column_widths (pstate,
+                                sdr_parse_ctx,
+                                sdr_record,
+                                sdr_record_len,
+                                &sensor_number,
+                                abbreviated_units,
+                                entity_id_counts,
+                                column_width) < 0)
+        return (-1);
+    }
+
+  return (0);
+}
+
 int
 calculate_column_widths (pstdout_state_t pstate,
                          ipmi_sdr_cache_ctx_t sdr_cache_ctx,
@@ -972,6 +1087,7 @@ calculate_column_widths (pstdout_state_t pstate,
                          unsigned int record_ids[],
                          unsigned int record_ids_length,
                          unsigned int abbreviated_units,
+                         unsigned int shared_sensors,
                          struct sensor_entity_id_counts *entity_id_counts,
                          struct sensor_column_width *column_width)
 {
@@ -1019,14 +1135,29 @@ calculate_column_widths (pstdout_state_t pstate,
           if (!sdr_record_len)
             continue;
 
-          if (_store_column_widths (pstate,
-                                    sdr_parse_ctx,
-                                    sdr_record,
-                                    sdr_record_len,
-                                    abbreviated_units,
-                                    entity_id_counts,
-                                    column_width) < 0)
-            goto cleanup;
+          if (shared_sensors)
+            {
+              if (_store_column_widths_shared (pstate,
+                                               sdr_parse_ctx,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               abbreviated_units,
+                                               entity_id_counts,
+                                               column_width) < 0)
+                goto cleanup;
+            }
+          else
+            {
+              if (_store_column_widths (pstate,
+                                        sdr_parse_ctx,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        NULL,
+                                        abbreviated_units,
+                                        entity_id_counts,
+                                        column_width) < 0)
+                goto cleanup;
+            }
         }
     }
   else
@@ -1076,14 +1207,30 @@ calculate_column_widths (pstdout_state_t pstate,
 
           if (ret)
             {
-              if (_store_column_widths (pstate,
-                                        sdr_parse_ctx,
-                                        sdr_record,
-                                        sdr_record_len,
-                                        abbreviated_units,
-                                        entity_id_counts,
-                                        column_width) < 0)
-                goto cleanup;
+              if (shared_sensors)
+                {
+                  if (_store_column_widths_shared (pstate,
+                                                   sdr_parse_ctx,
+                                                   sdr_record,
+                                                   sdr_record_len,
+                                                   abbreviated_units,
+                                                   entity_id_counts,
+                                                   column_width) < 0)
+                    goto cleanup;
+                }
+              else
+                {
+                fallthroughB:
+                  if (_store_column_widths (pstate,
+                                            sdr_parse_ctx,
+                                            sdr_record,
+                                            sdr_record_len,
+                                            NULL,
+                                            abbreviated_units,
+                                            entity_id_counts,
+                                            column_width) < 0)
+                    goto cleanup;
+                }
             }
         }
     }

@@ -438,7 +438,9 @@ _output_setup (ipmi_sensors_state_data_t *state_data)
 static int
 _output_sensor (ipmi_sensors_state_data_t *state_data,
                 const void *sdr_record,
-                unsigned int sdr_record_len)
+                unsigned int sdr_record_len,
+                uint8_t sensor_number_base,
+                uint8_t shared_sensor_number_offset)
 {
   double *sensor_reading = NULL;
   uint16_t sensor_event_bitmask = 0;
@@ -455,6 +457,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
   if (ipmi_sensor_read (state_data->sensor_read_ctx,
                         sdr_record,
                         sdr_record_len,
+                        shared_sensor_number_offset,
                         &sensor_reading,
                         &sensor_event_bitmask) <= 0)
     {
@@ -706,6 +709,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
       rv = ipmi_sensors_simple_output (state_data,
                                        sdr_record,
                                        sdr_record_len,
+                                       sensor_number_base + shared_sensor_number_offset,
                                        sensor_reading,
                                        event_message_list,
                                        event_message_list_len);
@@ -817,6 +821,8 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
 
   for (i = 0; i < output_record_ids_length; i++)
     {
+      uint8_t sensor_number_base;
+
       if (ipmi_sdr_cache_search_record_id (state_data->sdr_cache_ctx,
                                            output_record_ids[i]) < 0)
         {
@@ -843,12 +849,102 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
       if (!sdr_record_len)
         continue;
       
-      if (_output_sensor (state_data,
-                          sdr_record,
-                          sdr_record_len) < 0)
-        goto cleanup;
+      if (ipmi_sdr_parse_sensor_number (state_data->sdr_parse_ctx,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        &sensor_number_base) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_parse_sensor_number: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+          goto cleanup;
+        }
+
+      if (state_data->prog_data->args->shared_sensors)
+        {
+          uint8_t record_type;
+          uint8_t share_count;
+          int i;
+
+          if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+                                                 sdr_record,
+                                                 sdr_record_len,
+                                                 NULL,
+                                                 &record_type) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sdr_parse_record_id_and_type: %s\n",
+                               ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+              goto cleanup;
+            }
+
+          if (record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+            {
+              if (_output_sensor (state_data,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  sensor_number_base,
+                                  0) < 0)
+                goto cleanup;
+              goto out;
+            }
+
+          if (ipmi_sdr_parse_sensor_record_sharing (state_data->sdr_parse_ctx,
+                                                    sdr_record,
+                                                    sdr_record_len,
+                                                    &share_count,
+                                                    NULL,
+                                                    NULL,
+                                                    NULL) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sdr_parse_sensor_record_sharing: %s\n",
+                               ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+              goto cleanup;
+            }
+          
+          if (share_count <= 1)
+            {
+              if (_output_sensor (state_data,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  sensor_number_base,
+                                  0) < 0)
+                goto cleanup;
+              goto out;
+            }
+
+          /* IPMI spec gives the following example:
+           *
+           * "If the starting sensor number was 10, and the share
+           * count was 3, then sensors 10, 11, and 12 would share
+           * the record"
+           */
+          for (i = 0; i < (share_count - 1); i++)
+            {
+              if (_output_sensor (state_data,
+                                  sdr_record,
+                                  sdr_record_len,
+                                  sensor_number_base,
+                                  i) < 0)
+                goto cleanup;
+            }
+        }
+      else
+        {
+          if (_output_sensor (state_data,
+                              sdr_record,
+                              sdr_record_len,
+                              sensor_number_base,
+                              0) < 0)
+            goto cleanup;
+        }
     }
 
+ out:
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);

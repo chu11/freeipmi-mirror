@@ -87,10 +87,16 @@ int ipmi_sensor_read_ctx_set_flags (ipmi_sensor_read_ctx_t ctx, unsigned int fla
  * be returned.
  *
  * if reading returned, must be free'd by caller
+ *
+ * Notes:
+ *
+ * shared_sensor_number_offset used for sensor record sharing in compact
+ * records.  If not used or not available, must be set to 0.
  */
 int ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
                       const void *sdr_record,
                       unsigned int sdr_record_len,
+                      uint8_t shared_sensor_number_offset,
                       double **sensor_reading,
                       uint16_t *sensor_event_bitmask);
 

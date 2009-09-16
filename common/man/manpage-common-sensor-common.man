@@ -39,3 +39,10 @@ By default, sensors readings are not attempted for sensors on non-BMC
 owners.  By setting this option, sensor requests can be bridged to
 non-BMC owners to obtain sensor readings (experimental).  Bridging may
 not work on some interfaces/driver types.
+.TP
+\fB\-\-shared\-sensors\fR
+Some sensors share the same sensor data record (SDR).  This is
+typically utilized for system event log (SEL) entries, however, there
+may be interest in seeing the permutation of entries listed in a
+single sensor record.  By setting this option, each sensor number
+shared by a record will be iterated over and output.

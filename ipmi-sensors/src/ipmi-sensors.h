@@ -43,12 +43,13 @@ enum ipmi_sensors_argp_option_keys
     EXCLUDE_SENSOR_TYPES_KEY = 'T',
     LIST_SENSOR_TYPES_KEY = 'L',
     BRIDGE_SENSORS_KEY = 'b',
-    INTERPRET_OEM_DATA_KEY = 164,
-    IGNORE_NOT_AVAILABLE_SENSORS_KEY = 165,
-    ENTITY_SENSOR_NAMES_KEY = 166,
-    COMMA_SEPARATED_OUTPUT_KEY = 167,
-    NON_ABBREVIATED_UNITS_KEY = 168,
-    LEGACY_OUTPUT_KEY = 169,
+    SHARED_SENSORS_KEY = 164,
+    INTERPRET_OEM_DATA_KEY = 165,
+    IGNORE_NOT_AVAILABLE_SENSORS_KEY = 166,
+    ENTITY_SENSOR_NAMES_KEY = 167,
+    COMMA_SEPARATED_OUTPUT_KEY = 168,
+    NON_ABBREVIATED_UNITS_KEY = 169,
+    LEGACY_OUTPUT_KEY = 170,
   };
 
 struct ipmi_sensors_arguments
@@ -69,6 +70,7 @@ struct ipmi_sensors_arguments
   unsigned int exclude_sensor_types_length;
   int list_sensor_types;
   int bridge_sensors;
+  int shared_sensors;
   int interpret_oem_data;
   int ignore_not_available_sensors;
   int entity_sensor_names;

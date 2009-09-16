@@ -70,6 +70,7 @@ ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data)
                                    state_data->prog_data->args->record_ids,
                                    state_data->prog_data->args->record_ids_length,
                                    !state_data->prog_data->args->non_abbreviated_units,
+				   state_data->prog_data->args->shared_sensors,
                                    entity_ptr,
                                    &(state_data->column_width)) < 0)
         return (-1);
@@ -327,7 +328,8 @@ static int
 _simple_output_header (ipmi_sensors_state_data_t *state_data,
                        const void *sdr_record,
                        unsigned int sdr_record_len,
-                       uint16_t record_id)
+                       uint16_t record_id,
+                       uint8_t sensor_number)
 {
   char fmt[IPMI_SENSORS_FMT_BUFLEN + 1];
   char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
@@ -348,7 +350,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
                                          sdr_record,
                                          sdr_record_len,
                                          &(state_data->entity_id_counts),
-                                         NULL,
+                                         &sensor_number,
                                          sensor_name_buf,
                                          MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
         return (-1);
@@ -414,6 +416,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
                             const void *sdr_record,
                             unsigned int sdr_record_len,
                             uint16_t record_id,
+                            uint8_t sensor_number,
                             double *reading,
                             char **event_message_list,
                             unsigned int event_message_list_len)
@@ -429,7 +432,8 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
   if (_simple_output_header (state_data,
                              sdr_record,
                              sdr_record_len,
-                             record_id) < 0)
+                             record_id,
+                             sensor_number) < 0)
     goto cleanup;
 
   if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_parse_ctx,
@@ -563,6 +567,7 @@ _simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
                                const void *sdr_record,
                                unsigned int sdr_record_len,
                                uint16_t record_id,
+                               uint8_t sensor_number,
                                char **event_message_list,
                                unsigned int event_message_list_len)
 {
@@ -573,7 +578,8 @@ _simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
   if (_simple_output_header (state_data,
                              sdr_record,
                              sdr_record_len,
-                             record_id) < 0)
+                             record_id,
+                             sensor_number) < 0)
     return (-1);
 
   if (!state_data->prog_data->args->quiet_readings)
@@ -619,6 +625,7 @@ int
 ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                             const void *sdr_record,
                             unsigned int sdr_record_len,
+                            uint8_t sensor_number,
                             double *reading,
                             char **event_message_list,
                             unsigned int event_message_list_len)
@@ -671,6 +678,7 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                                             sdr_record,
                                             sdr_record_len,
                                             record_id,
+                                            sensor_number,
                                             reading,
                                             event_message_list,
                                             event_message_list_len));
@@ -687,6 +695,7 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                                                sdr_record,
                                                sdr_record_len,
                                                record_id,
+                                               sensor_number,
                                                event_message_list,
                                                event_message_list_len));
     default:

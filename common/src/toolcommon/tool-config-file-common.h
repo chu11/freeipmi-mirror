@@ -146,6 +146,8 @@ struct config_file_data_ipmi_sensors
   int exclude_sensor_types_count;
   int bridge_sensors;
   int bridge_sensors_count;
+  int shared_sensors;
+  int shared_sensors_count;
   int interpret_oem_data;
   int interpret_oem_data_count;
   int ignore_not_available_sensors;
@@ -196,6 +198,8 @@ struct config_file_data_ipmimonitoring
   int exclude_sensor_types_count;
   int bridge_sensors;
   int bridge_sensors_count;
+  int shared_sensors;
+  int shared_sensors_count;
   int interpret_oem_data;
   int interpret_oem_data_count;
   int ignore_non_interpretable_sensors;
