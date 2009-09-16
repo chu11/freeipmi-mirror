@@ -3663,6 +3663,12 @@ ipmi_oem_dell_get_power_supply_info (ipmi_oem_state_data_t *state_data)
 	      
 	      memset (firmwareversion, '\0', IPMI_OEM_MAX_BYTES);
 
+	      /* achu note:
+	       *
+	       * Dell code does not check for potential sdr record
+	       * sharing, so I won't either.
+	       */
+
 	      if (get_entity_sensor_name_string (state_data->pstate,
 						 state_data->sdr_parse_ctx,
 						 sdr_record,
