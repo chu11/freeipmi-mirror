@@ -86,9 +86,6 @@ sensors/monitoring
 specify sensors by name too
 - useful in libipmimonitoring, if heterogenous firmware versions, but
 same sensor names?
-sensor sharing
-- should ipmi-sensors/ipmimonitor iterate through sensor numbers
-  used in sensor sharing?
 
 ipmi-chassis-config
 -------------------
