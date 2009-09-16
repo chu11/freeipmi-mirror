@@ -14,8 +14,9 @@ o Make output of ipmi-chassis, bmc-info, bmc-device, and info output
 o When querying active/inactive, allowed/unallowed, true/false,
   etc. status fields in ipmi-chassis, bmc-info, and bmc-device, output
   all fields instead of only the active/allowed/true/etc. fields.
-o Support exclusion equivalent options (such as --exclude-groups) in
-  various tools such as ipmi-sel, ipmi-sensors, and ipmimonitoring.
+o Support exclusion equivalent options (such as
+  --exclude-sensor-types) in various tools such as ipmi-sel,
+  ipmi-sensors, and ipmimonitoring.
 o Support sensor unit percentages, rates, and modifiers (i.e. "%
   hit", "gigabyte per minute", "pounds / cu in") in most tools.
 o Support non-abbreviated units (i.e. "Amps" instead of "A") in most
@@ -89,12 +90,16 @@ o ipmi-sensors
   - Sensors that can't be read or don't exist (i.e. "N/A", "Unknown") are
     now *not* surrounded by single quotes (') or square brackets ([]).
   - Software sensors output "N/A" instead of "Unknown" now.
-  - Globally rename "Group" to "Type" for correctness to IPMI spec.
+  - Globally rename "Group" to "Sensor Type" for correctness to IPMI
+    spec.  Leads to rename of --groups option to --sensor-types and
+    --list-groups to --list-sensor-types.  Backwards compatability
+    maintained.
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
-  - Support --exclude-groups option.
   - Support --exclude-record-ids option.
-  - Support "all" and "none" inputs for groups and record-ids options.
+  - Support --exclude-sensor-types option.
+  - Support "all" and "none" inputs for sensor-types and record-ids
+    options.
   - Support --comma-separated-output option.
   - Rename --sensors option to --record-ids.  Maintain old options for
     backwards compatability.
@@ -136,7 +141,7 @@ o ipmi-sensors
   - Output analog data format in hex in verbose outputs.  - Output analog data format name in verbose outputs.
   - Output manufacturer name with "Manufacturer ID" if name available.
   - Output Entity ID string with "Entity ID" if string available.
-  - Output hex code of group name in addition to group name in
+  - Output hex code of sensor type in addition to type name in
     very-verbose output.
   - Re-work to use new libfreeipmi sensor-read sub library.
   - Support additional options in FreeIPMI config file.
@@ -149,12 +154,16 @@ o ipmimonitoring
     only output appropriately for non-discrete sensors.
   - Rename a number of config fields for overall FreeIPMI consistency,
     may break backwards compatability.
-  - Globally rename "Group" to "Type" for correctness to IPMI spec.
+  - Globally rename "Group" to "Sensor Type" for correctness to IPMI
+    spec.  Leads to rename of --groups option to --sensor-types and
+    --list-groups to --list-sensor-types.  Backwards compatability
+    maintained.
   - With default output, output same sensors as listed in
     ipmi-sensors, including some sensors that can't be interpreted.
-  - Support --exclude-groups option.
   - Support --exclude-record-ids option.
-  - Support "all" and "none" inputs for groups and record-ids options.
+  - Support --exclude-sensor-types option.
+  - Support "all" and "none" inputs for sensor-types and record-ids
+    options.
   - Support --ignore-non-interpretable-sensors option.
   - Rename --sensors option to --record-ids.  Maintain old options for
     backwards compatability.
@@ -381,7 +390,7 @@ o libipmimonitoring
   - Add IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA flag.
   - Rename a number of macros for overall FreeIPMI consistency, may
     break backwards compatability.
-  - Globally rename "Group" to "Type" for correctness to IPMI spec.
+  - Globally rename "Group" to "Sensor Type" for correctness to IPMI spec.
   - Update various macros, fields, config, etc. for IPMI errata updates.
   - Variety of API functions reworked or renamed for new functionality.  Will
     require recompile and rework in existing code.
