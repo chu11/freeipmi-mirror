@@ -314,6 +314,16 @@ struct ipmi_oem_command oem_inventec[] =
       0,
       ipmi_oem_inventec_set_bmc_services
     },
+#if 0
+    /* cannot verify */
+    {
+      "restore-to-defaults",
+      "<all|user|lan|sol|serial|pef>",
+      1,
+      0,
+      ipmi_oem_inventec_restore_to_defaults
+    },
+#endif
     {
       NULL,
       NULL,

@@ -1,3 +1,7 @@
+2009-09-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Add inventec restore-to-defaults.
+	
 2009-09-16  Albert Chu <chu11@llnl.gov>
 
 	* common/man/manpage-common-legacy-output.man: Update text.
@@ -45,8 +49,7 @@
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-oem-spec.h: New file.
 
-	*
-	libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameter-spec.h:
+	* libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameter-spec.h:
 	Rename from ipmi-system-info-parameter-spec.h (plural parameters).
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: New
