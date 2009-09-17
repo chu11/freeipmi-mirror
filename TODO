@@ -56,7 +56,6 @@ oem
 ---
 dell poweredge lcd support
 sun led support
-dell clear eeprom
 
 libfreeipmi
 -----------
