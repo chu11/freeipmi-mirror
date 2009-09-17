@@ -41,6 +41,12 @@
 #define IPMI_OEM_SET_SELECTOR   0x0
 #define IPMI_OEM_BLOCK_SELECTOR 0x0
 
+#define IPMI_OEM_EEPROM_AT24C256N_SLAVE_ADDRESS 0x53
+#define IPMI_OEM_EEPROM_AT24C256N_BUS_ID        2
+#define IPMI_OEM_EEPROM_AT24C256N_ADDRESS_MIN   0x0000
+#define IPMI_OEM_EEPROM_AT24C256N_ADDRESS_MAX   0x7FFF
+#define IPMI_OEM_EEPROM_AT24C256N_CLEAR_BYTE    0xFF
+
 static int
 _inventec_get_reservation (ipmi_oem_state_data_t *state_data,
                            uint8_t *reservation_id)
@@ -744,4 +750,241 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
   rv = 0;
  cleanup:
   return (rv);
+}
+
+static int
+_ipmi_oem_inventec_read_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t data_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t data_rs[IPMI_OEM_MAX_BYTES];
+  unsigned int read_count = 0;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  /* Uses Master-Read Write Command
+   *
+   * Most addresses provided directly from Dell.
+   *
+   * byte 1 = 5 (channel = 0, bus id = 2, bus-type = 1 = private)
+   * byte 2 = 0xA6 (slave address 7 bit = 0x53, lowest bit for r/w, 0b = read, 1b = write)
+   * byte 3 = read count, we'll use 1
+   * byte 4/5 - address to read, msb first
+   * 
+   * response
+   *
+   * byte 1 = comp-code
+   * byte N = read data
+   *
+   * address ranges from 0x0000 - 0x7fff
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_master_write_read_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+  
+  if (fiid_obj_clear (obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_clear: %s\n",
+                       fiid_strerror (fiid_obj_errnum (obj_cmd_rs)));
+      goto cleanup;
+    }
+  
+  while (read_count <= IPMI_OEM_EEPROM_AT24C256N_ADDRESS_MAX)
+    {
+      data_rq[0] = (read_count & 0xFF00) >> 8;
+      data_rq[1] = (read_count & 0x00FF);
+      
+      if (ipmi_cmd_master_write_read (state_data->ipmi_ctx,
+                                      IPMI_BUS_TYPE_PRIVATE,
+                                      IPMI_OEM_EEPROM_AT24C256N_BUS_ID,
+                                      0,
+                                      IPMI_OEM_EEPROM_AT24C256N_SLAVE_ADDRESS,
+                                      1,
+                                      data_rq,
+                                      2,
+                                      obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_master_write_read: %s\n",
+                           ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+          goto cleanup;
+        }
+
+      if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                    "data",
+                                    data_rs,
+                                    IPMI_OEM_MAX_BYTES)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: %s\n",
+                           fiid_strerror (fiid_obj_errnum (obj_cmd_rs)));
+          goto cleanup;
+        }
+      
+      if (len)
+        {
+          int i;
+          
+          for (i = read_count; i < (read_count + len); i++)
+            {
+              if (i && (i % 8) == 0)
+                pstdout_printf (state_data->pstate, "\n");
+              
+              pstdout_printf (state_data->pstate, "0x%02X ", data_rs[i - read_count]);
+            }
+          
+          read_count += len;
+        }
+    }
+
+  pstdout_printf (state_data->pstate, "\n");
+  
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_read_eeprom (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "at24c256n"))
+    return _ipmi_oem_inventec_read_eeprom_at24c256n (state_data);
+  
+  pstdout_fprintf (state_data->pstate,
+                   stderr,
+                   "%s:%s invalid OEM option argument '%s'\n",
+                   state_data->prog_data->args->oem_id,
+                   state_data->prog_data->args->oem_command,
+                   state_data->prog_data->args->oem_options[0]);
+  return (-1);
+}
+
+static int
+_ipmi_oem_inventec_clear_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t data_rq[IPMI_OEM_MAX_BYTES];
+  unsigned int count = 0;
+  unsigned int percent = 0;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  /* Uses Master-Read Write Command
+   *
+   * Most addresses provided directly from Dell.
+   *
+   * byte 1 = 5 (channel = 0, bus id = 2, bus-type = 1 = private)
+   * byte 2 = 0xA6 (slave address 7 bit = 0x53, lowest bit for r/w, 0b = read, 1b = write)
+   * byte 3 = read count, 0 to write
+   * byte 4/5 - address to read, msb first
+   * byte 6 - data to write
+   * 
+   * response
+   *
+   * byte 1 = comp-code
+   * byte N = read data
+   *
+   * address ranges from 0x0000 - 0x7fff
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_master_write_read_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (fiid_obj_clear (obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_clear: %s\n",
+                       fiid_strerror (fiid_obj_errnum (obj_cmd_rs)));
+      goto cleanup;
+    }
+
+  if (state_data->prog_data->args->verbose_count)
+    fprintf (stderr, "%u%%\r", percent);
+
+  while (count <= IPMI_OEM_EEPROM_AT24C256N_ADDRESS_MAX)
+    {
+      data_rq[0] = (count & 0xFF00) >> 8;
+      data_rq[1] = (count & 0x00FF);
+      data_rq[2] = IPMI_OEM_EEPROM_AT24C256N_CLEAR_BYTE;
+
+      if (ipmi_cmd_master_write_read (state_data->ipmi_ctx,
+                                      IPMI_BUS_TYPE_PRIVATE,
+                                      IPMI_OEM_EEPROM_AT24C256N_BUS_ID,
+                                      0,
+                                      IPMI_OEM_EEPROM_AT24C256N_SLAVE_ADDRESS,
+                                      0,
+                                      data_rq,
+                                      3,
+                                      obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_master_write_read: %s\n",
+                           ipmi_ctx_strerror (ipmi_ctx_errnum (state_data->ipmi_ctx)));
+          goto cleanup;
+        }
+
+      if (state_data->prog_data->args->verbose_count)
+        {
+          if ((unsigned int)(((double)count/IPMI_OEM_EEPROM_AT24C256N_ADDRESS_MAX) * 100) > percent)
+            {
+              fprintf (stderr, "%u%%\r", percent);
+              percent++;
+            }
+        }
+
+      count++;
+    }
+
+  if (state_data->prog_data->args->verbose_count)
+    fprintf (stderr, "100%%\r\n");
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_clear_eeprom (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "at24c256n"))
+    return _ipmi_oem_inventec_clear_eeprom_at24c256n (state_data);
+  
+  pstdout_fprintf (state_data->pstate,
+                   stderr,
+                   "%s:%s invalid OEM option argument '%s'\n",
+                   state_data->prog_data->args->oem_id,
+                   state_data->prog_data->args->oem_command,
+                   state_data->prog_data->args->oem_options[0]);
+  return (-1);
 }

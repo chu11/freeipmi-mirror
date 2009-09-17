@@ -96,6 +96,13 @@ extern "C" {
 
 #define IPMI_KCS_SYSTEM_INTERFACE_VERSION_1             0x0
 
+#define IPMI_BUS_TYPE_PUBLIC  0x0
+#define IPMI_BUS_TYPE_PRIVATE 0x1
+
+#define IPMI_BUS_TYPE_VALID(__bus_type) \
+  (((__bus_type) == IPMI_BUS_TYPE_PUBLIC \
+    || (__bus_type) == IPMI_BUS_TYPE_PRIVATE) ? 1 : 0)
+
 #define IPMI_GET_IPMI_V20_EXTENDED_DATA     0x01
 #define IPMI_GET_IPMI_V15_DATA              0x00
 
@@ -266,6 +273,8 @@ extern fiid_template_t tmpl_cmd_get_system_interface_capabilities_ssif_rs;
 extern fiid_template_t tmpl_cmd_get_system_interface_capabilities_kcs_rs;
 extern fiid_template_t tmpl_cmd_get_bt_interface_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_bt_interface_capabilities_rs;
+extern fiid_template_t tmpl_cmd_master_write_read_rq;
+extern fiid_template_t tmpl_cmd_master_write_read_rs;
 
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;
@@ -343,6 +352,15 @@ int8_t fill_cmd_get_system_interface_capabilities (uint8_t system_interface,
                                                    fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_bt_interface_capabilities (fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_master_write_read (uint8_t bus_type,
+                                   uint8_t bus_id,
+                                   uint8_t channel_number,
+                                   uint8_t slave_address,
+                                   uint8_t read_count,
+                                   const void *data,
+                                   unsigned int data_len,
+                                   fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                          uint8_t maximum_privilege_level, 

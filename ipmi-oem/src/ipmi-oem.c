@@ -248,6 +248,20 @@ struct ipmi_oem_command oem_inventec[] =
       ipmi_oem_inventec_set_bmc_services
     },
     {
+      "read-eeprom",
+      "<at24c256n>",
+      1,
+      0,
+      ipmi_oem_inventec_read_eeprom
+    },
+    {
+      "clear-eeprom",
+      "<at24c256n>",
+      1,
+      0,
+      ipmi_oem_inventec_clear_eeprom
+    },
+    {
       NULL,
       NULL,
       0,

@@ -1,6 +1,7 @@
 0.7.13 - 09/08/09
 -----------------
 o Support --platform-event in bmc-device.
+o Support read/clear eeprom in ipmi-oem.
 o Fix documentation typos.
 
 0.7.12 - 09/08/09

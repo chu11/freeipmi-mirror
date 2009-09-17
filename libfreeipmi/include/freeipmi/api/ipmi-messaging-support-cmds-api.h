@@ -72,6 +72,16 @@ int8_t ipmi_cmd_get_system_interface_capabilities_kcs (ipmi_ctx_t ctx,
 int8_t ipmi_cmd_get_bt_interface_capabilities (ipmi_ctx_t ctx,
                                                fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_master_write_read (ipmi_ctx_t ctx,
+                                   uint8_t bus_type,
+                                   uint8_t bus_id,
+                                   uint8_t channel_number,
+                                   uint8_t slave_address,
+                                   uint8_t read_count,
+                                   const void *data,
+                                   unsigned int data_len,
+                                   fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_channel_authentication_capabilities (ipmi_ctx_t ctx, 
                                                          uint8_t channel_number,
                                                          uint8_t maximum_privilege_level,

@@ -247,6 +247,16 @@ IPMI.  \fIall\fR can be specified to enable/disable all services,
 \fIkvm\fR specifies KVM and Virtual Storage, \fIhttp\fR specifies HTTP
 and HTTPS, and \fIssh\fR specifies both SSH and Telnet.  Command
 confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
+.TP
+.B read-eeprom \fIat24c256n\fR
+This OEM command will read the specified eeprom. Command confirmed to
+work on Inventec 5441 (and subsequently Dell Xanadu2).
+.TP
+.B clear-eeprom \fIat24c256n\fR
+This OEM command will clear the specified eeprom.  If the verbose
+option is set, progress percent will be output as the clearing is
+being done.  Command confirmed to work on Inventec 5441 (and
+subsequently Dell Xanadu2).
 .RE
 .TP
 .B supermicro
