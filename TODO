@@ -35,7 +35,6 @@ if user inputs hostname of localhost, do inband not outofband?
 ipmi-sel
 --------
 - head/tail on record counts
-- write events
 
 bmc-config
 ----------
