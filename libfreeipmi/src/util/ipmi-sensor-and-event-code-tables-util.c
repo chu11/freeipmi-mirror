@@ -1191,13 +1191,14 @@ static char * ipmi_sensor_type_code_0F_event_data2_offset_01_desc[] =
     "Calling operating system wake-up vector",
     "Starting operating system boot process, e.g. calling Int 19h",
     "Baseboard or motherboard initialization",
+    "reserved",
     "Floppy initialization",
     "Keyboard test",
     "Pointing device test",
     "Primary processor initialization",
     NULL
   };
-static int ipmi_sensor_type_code_0F_event_data2_offset_01_desc_max = 0x18;
+static int ipmi_sensor_type_code_0F_event_data2_offset_01_desc_max = 0x19;
 
 static char * ipmi_sensor_type_code_0F_event_data2_offset_02_desc[] =
   {
@@ -1222,13 +1223,14 @@ static char * ipmi_sensor_type_code_0F_event_data2_offset_02_desc[] =
     "Calling operating system wake-up vector",
     "Starting operating system boot process, e.g. calling Int 19h",
     "Baseboard or motherboard initialization",
+    "reserved",
     "Floppy initialization",
     "Keyboard test",
     "Pointing device test",
     "Primary processor initialization",
     NULL
   };
-static int ipmi_sensor_type_code_0F_event_data2_offset_02_desc_max = 0x18;
+static int ipmi_sensor_type_code_0F_event_data2_offset_02_desc_max = 0x19;
 
 static char * ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc[] =
   {

@@ -1,3 +1,8 @@
+2009-09-18  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/utils/ipmi-sensor-and-event-code-tables-util.c:
+	Fix corner case in system firmware progress error data2 output.
+	
 2009-09-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Add inventec read/clear eeprom support.

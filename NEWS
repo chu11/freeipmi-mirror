@@ -2,6 +2,7 @@
 -----------------
 o Support --platform-event in bmc-device.
 o Support read/clear eeprom in ipmi-oem.
+o Fix corner case in system firmware progress error data2 output.
 o Fix documentation typos.
 
 0.7.12 - 09/08/09
