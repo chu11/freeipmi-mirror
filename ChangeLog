@@ -8,6 +8,8 @@
 	Add event data2 and data3 macros.
 
 	* libfreeipmi/src/sel-parse/: Fix Dell OEM interpretations.
+
+	* Various code cleanup.
 	
 2009-09-17  Albert Chu <chu11@llnl.gov>
 
