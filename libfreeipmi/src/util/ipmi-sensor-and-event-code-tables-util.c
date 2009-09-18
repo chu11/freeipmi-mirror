@@ -36,6 +36,7 @@
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-product-id-spec.h"
 #include "freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h"
+#include "freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
 #include "freeipmi/fiid/fiid.h"
