@@ -23,7 +23,10 @@ o Support non-abbreviated units (i.e. "Amps" instead of "A") in most
   tools.
 o Output IANA Manufacturer Name when appropriate in most tools.
 o Output additional information in many tools.
-o Support OEM output through --interpret-oem-data in many tools.
+o Support Entity ID based sensor naming through the
+  --entity-sensor-names option in many tools.
+o Support OEM output through the --interpret-oem-data option in many
+  tools.
 o "Library-ize" much of the functionality originally only inside the
   tools.  
 o Re-work libipmimonitoring to return sensor events for all sensors,
@@ -58,8 +61,8 @@ o ipmi-sel
     units (i.e. "Amps" instead of "A").
   - Support --entity-sensor-names option.
   - Support --interpret-oem-data option.
-  - Support Inventec 5441 OEM SEL records.
-  - Support Dell Poweredge R610 OEM SEL records.
+  - Support Inventec 5441/Dell Xanadu2 OEM SEL records.
+  - Support Dell Poweredge R610/R710 OEM SEL records.
   - Support --comma-separated-output option.
   - Rename --delete-all to --clear for consistency to IPMI spec.
     Backwards compatability maintained.
@@ -115,7 +118,7 @@ o ipmi-sensors
     each other.
   - Support --entity-sensor-names option.
   - Support --interpret-oem-data option.
-  - Support Dell Poweredge R610 OEM sensors.
+  - Support Dell Poweredge R610/R710 OEM sensors.
   - Support Supermicro X8DTH OEM sensors.
   - Output allocation information with --sdr-info if available.
   - Output Entity ID under verbose instead of very verbose mode.
@@ -139,7 +142,8 @@ o ipmi-sensors
   - Under very verbose output, default to abbreviated units.
   - Output linearization in hex in verbose outputs.
   - Output linearization name in verbose outputs.
-  - Output analog data format in hex in verbose outputs.  - Output analog data format name in verbose outputs.
+  - Output analog data format in hex in verbose outputs.
+  - Output analog data format name in verbose outputs.
   - Output manufacturer name with "Manufacturer ID" if name available.
   - Output Entity ID string with "Entity ID" if string available.
   - Output hex code of sensor type in addition to type name in
