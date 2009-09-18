@@ -1343,12 +1343,12 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
           && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
           && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
         {
-          uint8_t event_data3_flag;
+          uint8_t event_data3_error_type;
           
-          event_data3_flag = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_BITMASK);
-          event_data3_flag >>= IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_SHIFT;
+          event_data3_error_type = (event_data3 & IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_BITMASK);
+          event_data3_error_type >>= IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_SHIFT;
           
-          if (event_data3_flag == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_POWER_SUPPLY_RATING_MISMATCH)
+          if (event_data3_error_type == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_POWER_SUPPLY_RATING_MISMATCH)
             {
               strcat (fmtbuf, "%c");
               goto output;

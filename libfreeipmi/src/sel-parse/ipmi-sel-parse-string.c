@@ -2698,12 +2698,12 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
           && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
           && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
         {
-          uint8_t event_data3_flag;
+          uint8_t event_data3_error_type;
 
-          event_data3_flag = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_BITMASK);
-          event_data3_flag >>= IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_SHIFT;
+          event_data3_error_type = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_BITMASK);
+          event_data3_error_type >>= IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_SHIFT;
           
-          if (event_data3_flag == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_POWER_SUPPLY_RATING_MISMATCH)
+          if (event_data3_error_type == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_POWER_SUPPLY_RATING_MISMATCH)
             {
               unsigned int watts2;
               unsigned int watts3;
