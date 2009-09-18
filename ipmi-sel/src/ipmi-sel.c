@@ -1289,7 +1289,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               /* Unique Condition 2 */
-              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
                   && ((sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
                        && ((event_data1_offset == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
                             && sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_PCI_PARITY_ERROR)
@@ -1302,19 +1302,19 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               /* Unique Condition 3 */
-              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
                   && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
                   && event_data1_offset == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               /* Unique Condition 4 */
-              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
                   && sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
                   && event_data1_offset == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_DEVICE_OPTION_ROM_FAILED_TO_SUPPORT_LINK_TUNING_OR_FLEX_ADDRESS
                   && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               /* Unique Condition 5 */
-              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
                   && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
                   && event_data1_offset == IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
                   && state_data->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
@@ -1337,7 +1337,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
           && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
               || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-          && event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+          && event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
           && event_data1_offset == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR
           && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
