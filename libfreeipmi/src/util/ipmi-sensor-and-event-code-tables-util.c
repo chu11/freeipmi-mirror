@@ -3402,15 +3402,15 @@ ipmi_get_oem_sensor_event_bitmask_message (uint32_t manufacturer_id,
 		{
 		  switch (sensor_event_bitmask)
 		    {
-		    case 0:
+		    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_LOW:
 		      return (snprintf (buf, buflen, "Low"));
-		    case 1:
+		    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_MEDIUM:
 		      return (snprintf (buf, buflen, "Medium"));
-		    case 2:
+		    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_HIGH:
 		      return (snprintf (buf, buflen, "High"));
-		    case 4:
+		    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_OVERHEAT:
 		      return (snprintf (buf, buflen, "Overheat"));
-		    case 7:
+		    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_NOT_INSTALLED:
 		      return (snprintf (buf, buflen, "Not Installed"));
 		    }
 		}
