@@ -1173,13 +1173,14 @@ static char * ipmi_sensor_type_system_firmware_progress_event_data2_offset_syste
     "Calling operating system wake-up vector",
     "Starting operating system boot process, e.g. calling Int 19h",
     "Baseboard or motherboard initialization",
+    "reserved",
     "Floppy initialization",
     "Keyboard test",
     "Pointing device test",
     "Primary processor initialization",
     NULL
   };
-static int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_hang_desc_max = 0x18;
+static int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_hang_desc_max = 0x19;
 
 static char * ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_progress_desc[] =
   {
@@ -1204,13 +1205,14 @@ static char * ipmi_sensor_type_system_firmware_progress_event_data2_offset_syste
     "Calling operating system wake-up vector",
     "Starting operating system boot process, e.g. calling Int 19h",
     "Baseboard or motherboard initialization",
+    "reserved",
     "Floppy initialization",
     "Keyboard test",
     "Pointing device test",
     "Primary processor initialization",
     NULL
   };
-static int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_progress_desc_max = 0x18;
+static int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_progress_desc_max = 0x19;
 
 static char * ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_entry_action_desc[] =
   {
@@ -1320,7 +1322,7 @@ static char * ipmi_sensor_type_slot_connector_event_data2_offset_slot_holds_spar
   };
 static int ipmi_sensor_type_slot_connector_event_data2_offset_slot_holds_spare_device_slot_connector_type_desc_max = 0x0C;
 
-static char * ipmi_sensor_type_watchdog2_event_data2_offset_timer_interrupt_interrupt_type_desc[] =
+static char * ipmi_sensor_type_watchdog2_event_data2_interrupt_type_desc[] =
   {
     "Interrupt type = none",
     "Interrupt type = SMI",
@@ -1340,9 +1342,9 @@ static char * ipmi_sensor_type_watchdog2_event_data2_offset_timer_interrupt_inte
     "Interrupt type = unspecified",
     NULL,
   };
-static int ipmi_sensor_type_watchdog2_event_data2_offset_timer_interrupt_interrupt_type_desc_max = 0x0F;
+static int ipmi_sensor_type_watchdog2_event_data2_interrupt_type_desc_max = 0x0F;
 
-static char * ipmi_sensor_type_watchdog2_event_data2_offset_timer_interrupt_timer_use_at_expiration_desc[] =
+static char * ipmi_sensor_type_watchdog2_event_data2_timer_use_at_expiration_desc[] =
   {
     "reserved",
     "Timer use at expiration = BIOS FRB2",
@@ -1362,7 +1364,7 @@ static char * ipmi_sensor_type_watchdog2_event_data2_offset_timer_interrupt_time
     "Timer use at expiration = unspecified",
     NULL
   };
-static int ipmi_sensor_type_watchdog2_event_data2_offset_timer_interrupt_timer_use_at_expiration_desc_max = 0x0F;
+static int ipmi_sensor_type_watchdog2_event_data2_timer_use_at_expiration_desc_max = 0x0F;
 
 static char * ipmi_sensor_type_management_subsystem_health_event_data2_offset_fru_failure_logical_fru_device_desc[] =
   {
@@ -2070,11 +2072,11 @@ get_watchdog2_event_data2_message (unsigned int offset, uint8_t event_data2, cha
     }
   interrupt_type = val;
 
-  if (timer_at_expiration <= ipmi_sensor_type_watchdog2_event_data2_offset_timer_interrupt_timer_use_at_expiration_desc_max)
-    str1 = ipmi_sensor_type_watchdog2_event_data2_offset_timer_interrupt_timer_use_at_expiration_desc[timer_at_expiration];
+  if (timer_at_expiration <= ipmi_sensor_type_watchdog2_event_data2_timer_use_at_expiration_desc_max)
+    str1 = ipmi_sensor_type_watchdog2_event_data2_timer_use_at_expiration_desc[timer_at_expiration];
 
-  if (interrupt_type <= ipmi_sensor_type_watchdog2_event_data2_offset_timer_interrupt_interrupt_type_desc_max)
-    str2 = ipmi_sensor_type_watchdog2_event_data2_offset_timer_interrupt_interrupt_type_desc[interrupt_type];
+  if (interrupt_type <= ipmi_sensor_type_watchdog2_event_data2_interrupt_type_desc_max)
+    str2 = ipmi_sensor_type_watchdog2_event_data2_interrupt_type_desc[interrupt_type];
 
   if (str1 || str2)
     rv = _snprintf (buf, buflen, "%s%s%s",

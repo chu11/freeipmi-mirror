@@ -1263,14 +1263,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
        * mezzanine, bus, device, function information for specific
        * offsets
        *
-       * Unique condition 5, event_data 2 and 3 are a single watt
-       * output.  So there is no individual event data 2/3 output, the
-       * only output is the combined output.
-       *
-       * achu: XXX: why "(event_data3 & 0x0F) == 0x03"??, I don't
-       * know, need to get more info from Dell.
-       *
-       * Unique condition 6, event data 2 and 3 hold version mismatch
+       * Unique condition 5, event data 2 and 3 hold version mismatch
        * information.
        */
       if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
@@ -1322,13 +1315,6 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
                   && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
               /* Unique Condition 5 */
               || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
-                  && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
-                  && event_data1_offset == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR
-                  && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-                  && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-                  && (event_data3 & 0x0F) == 0x03)
-              /* Unique Condition 6 */
-              || (event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
                   && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
                   && event_data1_offset == IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
                   && state_data->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
@@ -1338,6 +1324,35 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
         {
           strcat (fmtbuf, "%c");
           goto output;
+        }
+
+      /* OEM Interpretation
+       * 
+       * Dell Poweredge R610
+       * Dell Poweredge R710
+       *
+       * Unique condition, event_data 2 and 3 contain watt output, but
+       * only for a specific event_data3 flag conditions.
+       */
+      if (state_data->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+          && (state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+              || state_data->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+          && event_type_code == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+          && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
+          && event_data1_offset == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR
+          && event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+          && event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+        {
+          uint8_t event_data3_flag;
+          
+          event_data3_flag = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_BITMASK);
+          event_data3_flag >>= IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_SHIFT;
+          
+          if (event_data3_flag == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_POWER_SUPPLY_RATING_MISMATCH)
+            {
+              strcat (fmtbuf, "%c");
+              goto output;
+            }
         }
     }
 

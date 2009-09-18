@@ -1,3 +1,14 @@
+2009-09-18  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/utils/ipmi-sensor-and-event-code-tables-util.c:
+        Fix corner case in system firmware progress error data2
+        output.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h:
+	Add event data2 and data3 macros.
+
+	* libfreeipmi/src/sel-parse/: Fix Dell OEM interpretations.
+	
 2009-09-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Add inventec restore-to-defaults.

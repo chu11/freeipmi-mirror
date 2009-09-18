@@ -1166,6 +1166,31 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
     {
+      /* From Dell Engineer and Dell code */
+      if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+          && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+              || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
+        {
+          if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_INTRUSION_WHILE_SYSTEM_ON)
+            {
+              snprintf (tmpbuf,
+                        tmpbuflen,
+                        "Intrusion while system On");
+              
+              return (1);
+            }
+          else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_INTRUSION_WHILE_SYSTEM_OFF)
+            {
+              snprintf (tmpbuf,
+                        tmpbuflen,
+                        "Intrusion while system Off");
+              
+              return (1);
+            }
+        }
+
       /* From Dell Spec */
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
@@ -1195,28 +1220,6 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
               
               return (1);
             }
-        }
-
-      /* From Dell Spec */
-      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
-          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
-          && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT)
-        {
-          char *str = NULL;
-          
-          if (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_SPARE_MODE_BITMASK)
-            str = "Memory is in Spare mode";
-          else if (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_RAID_MODE_BITMASK)
-            str = "Memory is in RAID mode";
-          else /* system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MIRROR_MODE_BITMASK */
-            str = "Memory is in Mirror mode";
-          
-          snprintf (tmpbuf,
-                    tmpbuflen,
-                    "%s",
-                    str);
-          
-          return (1);
         }
 
       /* From Dell Spec
@@ -1256,7 +1259,77 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
             }
         }
 
+      /* From Dell Engineer and Dell Code */
+      if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+          && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+              || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED
+          && (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_PSU_COMMUNICATION_ERROR
+              || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_TEMPERATURE_WARNING
+              || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_TEMPERATURE_FAULT
+              || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_UNDER_VOLTAGE_FAULT
+              || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_VOLTAGE_FAULT
+              || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_CURRENT_FAULT
+              || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_FAN_FAULT))
+        {
+          if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_PSU_COMMUNICATION_ERROR)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "PSU Communication Error");
+          else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_TEMPERATURE_WARNING)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Over Temperature Warning");
+          else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_TEMPERATURE_FAULT)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Over Temperature Fault");
+          else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_UNDER_VOLTAGE_FAULT)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Under Voltage Fault");
+          else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_VOLTAGE_FAULT)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Over Voltage Fault");
+          else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_CURRENT_FAULT)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Over Current Fault");
+          else /* system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_FAN_FAULT */
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Fan Fault");
+          
+          return (1);
+        }
+
       /* From Dell Spec */
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT)
+        {
+          char *str = NULL;
+          
+          if (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_SPARE_MODE_BITMASK)
+            str = "Memory is in Spare mode";
+          else if (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_RAID_MODE_BITMASK)
+            str = "Memory is in RAID mode";
+          else /* system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MIRROR_MODE_BITMASK */
+            str = "Memory is in Mirror mode";
+          
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "%s",
+                    str);
+          
+          return (1);
+        }
+
+      /* From Dell Spec */
+      /* XXX: no oem data3 byte, should be together in one byte */
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_DELL_POST_FATAL_ERROR)
@@ -1294,65 +1367,6 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
           return (1);
         }
 
-    }
-
-  /* OEM Interpretation
-   *
-   * From Dell Provided Source Code
-   * - Handle for Dell Poweredge R610
-   * - Handle for Dell Poweredge R710
-   *
-   * Specifically for Power Supply sensors with an event offset
-   * IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED
-   *
-   * achu: XXX: why "event_data2 == 0x01", I don't know, need to get
-   * more info from Dell.
-   */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED
-      && system_event_record_data->event_data2 == 0x01)
-    {
-      snprintf (tmpbuf,
-                tmpbuflen,
-                "PMBus Communication Error");
-      
-      return (1);
-    }
-
-  /* OEM Interpretation
-   *
-   * From Dell Provided Source Code
-   * - Handle for Dell Poweredge R610
-   * - Handle for Dell Poweredge R710
-   *
-   * Specifically for Intrusion sensors
-   */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
-    {
-      if (system_event_record_data->event_data2 == 0x01)
-        {
-          snprintf (tmpbuf,
-                    tmpbuflen,
-                    "Intrusion while system On");
-          
-          return (1);
-        }
-      else if (system_event_record_data->event_data2 == 0x02)
-        {
-          snprintf (tmpbuf,
-                    tmpbuflen,
-                    "Intrusion while system Off");
-          
-          return (1);
-        }
     }
 
   /* achu: I don't know what motherboards this applies to */
@@ -2673,6 +2687,51 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
     {
+      /* From Dell Engineer and Dell Code */
+      /* Note that the normal event_data3 event still occurs here, so need to output that too */
+      if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
+          && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+              || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR
+          && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+        {
+          uint8_t event_data3_flag;
+
+          event_data3_flag = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_BITMASK);
+          event_data3_flag >>= IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_SHIFT;
+          
+          if (event_data3_flag == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_POWER_SUPPLY_RATING_MISMATCH)
+            {
+              unsigned int watts2;
+              unsigned int watts3;
+              unsigned int watts;
+              
+              /* achu: that's not a typo, it's '+=' not a '|=', I'm just
+               * copying Dell source at this point in time, don't know why
+               * this is 
+               */
+              watts2 = system_event_record_data->event_data2 << IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OFFSET_CONFIGURATION_ERROR_WATTS_SHIFT;
+              watts3 = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_WATTS_BITMASK);
+              watts3 >>= IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_WATTS_SHIFT;
+              
+              watts = watts2 + watts3;
+
+              if (_SNPRINTF (buf,
+                             buflen,
+                             wlen,
+                             "Power Supply rating mismatch ; Power Supply %u Watts",
+                             watts))
+                (*oem_rv) = 1;
+              else
+                (*oem_rv) = 0;
+              
+              return (1);
+            }
+        }
+
       /* From Dell Spec and Dell Code
        *
        * Data2
@@ -3096,54 +3155,11 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
 
     }
 
+  /* achu: I don't know what motherboards this applies to */
+#if 0
   /* OEM Interpretation
    *
    * From Dell Provided Source Code
-   * - Handle for Dell Poweredge R610
-   * - Handle for Dell Poweredge R710
-   *
-   * Specifically for Power Supply sensors with an event offset 0x06
-   *
-   * achu: XXX: why "(event_data3 & 0x0F) == 0x03"??, I don't know,
-   * need to get more info from Dell.  The comments in their code said
-   * "check for error type in byte 3".
-   */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-      && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR
-      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-      && (system_event_record_data->event_data3 & 0x0F) == 0x03)
-    {
-      unsigned int watts;
-
-      /* achu: that's not a typo, it's '+=' not a '|=', I'm just
-       * copying Dell source at this point in time, don't know why
-       * this is 
-       */
-      watts = system_event_record_data->event_data2 << 4;
-      watts += system_event_record_data->event_data3 >> 4;
-      
-      if (_SNPRINTF (buf,
-                     buflen,
-                     wlen,
-                     "Power Supply Mismatch (%u Watts)",
-                     watts))
-        (*oem_rv) = 1;
-      else
-        (*oem_rv) = 0;
-      
-      return (1);
-    }
-
-  /* OEM Interpretation
-   *
-   * From Dell Provided Source Code
-   * - Handle for Dell Poweredge R610
-   * - Handle for Dell Poweredge R710
    *
    * Specifically for Version Change Sensors with an event offset
    * IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
@@ -3207,6 +3223,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
       
       return (1);     
     }
+#endif
 
   return (0);
 }
