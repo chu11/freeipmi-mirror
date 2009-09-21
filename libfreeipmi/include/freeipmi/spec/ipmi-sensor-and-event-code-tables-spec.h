@@ -1,20 +1,20 @@
 /*
-   Copyright (C) 2003-2009 FreeIPMI Core Team
+  Copyright (C) 2003-2009 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
- */
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+*/
 
 #ifndef _IPMI_SENSOR_AND_EVENT_CODE_TABLES_SPEC_H
 #define _IPMI_SENSOR_AND_EVENT_CODE_TABLES_SPEC_H
@@ -98,6 +98,69 @@ extern "C" {
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_ACPI_POWER_STATE_D2_POWER_STATE 0x02
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_ACPI_POWER_STATE_D3_POWER_STATE 0x03
   
+extern const char * const ipmi_generic_event_reading_type_code_oem_dell_status_strings[];
+extern int ipmi_generic_event_reading_type_code_oem_dell_status_strings_max_index;
+extern const char * const ipmi_sensor_type_oem_dell_system_performance_degradation_status_strings[];
+extern int ipmi_sensor_type_oem_dell_system_performance_degradation_status_strings_max_index;
+extern const char * const ipmi_sensor_type_oem_dell_link_tuning_strings[];
+extern int ipmi_sensor_type_oem_dell_link_tuning_strings_max_index;
+extern const char * const ipmi_sensor_type_oem_dell_non_fatal_error_strings[];
+extern int ipmi_sensor_type_oem_dell_non_fatal_error_strings_max_index;
+extern const char * const ipmi_sensor_type_oem_dell_fatal_io_error_strings[];
+extern int ipmi_sensor_type_oem_dell_fatal_io_error_strings_max_index;
+extern const char * const ipmi_sensor_type_oem_dell_upgrade_strings[];
+extern int ipmi_sensor_type_oem_dell_upgrade_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_threshold_strings[];
+extern int ipmi_generic_event_reading_type_code_threshold_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_transition_state_strings[];
+extern int ipmi_generic_event_reading_type_code_transition_state_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_state_strings[];
+extern int ipmi_generic_event_reading_type_code_state_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_predictive_failure_strings[];
+extern int ipmi_generic_event_reading_type_code_predictive_failure_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_limit_strings[];
+extern int ipmi_generic_event_reading_type_code_limit_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_performance_strings[];
+extern int ipmi_generic_event_reading_type_code_performance_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_transition_severity_strings[];
+extern int ipmi_generic_event_reading_type_code_transition_severity_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_device_present_strings[];
+extern int ipmi_generic_event_reading_type_code_device_present_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_device_enabled_strings[];
+extern int ipmi_generic_event_reading_type_code_device_enabled_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_transition_availability_strings[];
+extern int ipmi_generic_event_reading_type_code_transition_availability_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_redundancy_strings[];
+extern int ipmi_generic_event_reading_type_code_redundancy_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_acpi_power_state_strings[];
+extern int ipmi_generic_event_reading_type_code_acpi_power_state_strings_max_index;
+
+/* "short" arrays are same strings, but shortened to more reasonble lengths for output */
+extern const char * const ipmi_generic_event_reading_type_code_threshold_short_strings[];
+extern int ipmi_generic_event_reading_type_code_threshold_short_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_transition_state_short_strings[];
+extern int ipmi_generic_event_reading_type_code_transition_state_short_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_state_short_strings[];
+extern int ipmi_generic_event_reading_type_code_state_short_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_predictive_failure_short_strings[];
+extern int ipmi_generic_event_reading_type_code_predictive_failure_short_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_limit_short_strings[];
+extern int ipmi_generic_event_reading_type_code_limit_short_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_performance_short_strings[];
+extern int ipmi_generic_event_reading_type_code_performance_short_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_transition_severity_short_strings[];
+extern int ipmi_generic_event_reading_type_code_transition_severity_short_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_device_present_short_strings[];
+extern int ipmi_generic_event_reading_type_code_device_present_short_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_device_enabled_short_strings[];
+extern int ipmi_generic_event_reading_type_code_device_enabled_short_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_transition_availability_short_strings[];
+extern int ipmi_generic_event_reading_type_code_transition_availability_short_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_redundancy_short_strings[];
+extern int ipmi_generic_event_reading_type_code_redundancy_short_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_acpi_power_state_short_strings[];
+extern int ipmi_generic_event_reading_type_code_acpi_power_state_short_strings_max_index;
+
 /************************************************
  * Sensor Type Code Offsets                     *
  ************************************************/
@@ -261,6 +324,9 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_EVENT_DATA3_OFFSET_EVENT_TYPE_LOGGING_DISABLED_ASSERTION_EVENT   0x1
 
 #define IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_EVENT_DATA3_OFFSET_EVENT_TYPE_LOGGING_DISABLED_LOGGING_HAS_BEEN_DISABLED_FOR_ALL_EVENTS_OF_A_GIVEN_TYPE 0x1
+
+#define IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_EVENT_DATA3_OFFSET_CORRECTABLE_MACHINE_CHECK_ERROR_LOGGING_DISABLED_ENTITY_INSTANCE_NUMBER           0x0
+#define IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_EVENT_DATA3_OFFSET_CORRECTABLE_MACHINE_CHECK_ERROR_LOGGING_DISABLED_VENDOR_SPECIFIC_PROCESSOR_NUMBER 0x1
 
 #define IPMI_SENSOR_TYPE_WATCHDOG1_BIOS_WATCHDOG_RESET                       0x00
 #define IPMI_SENSOR_TYPE_WATCHDOG1_OS_WATCHDOG_RESET                         0x01
@@ -557,6 +623,173 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_FRU_STATE_EVENT_DATA2_OFFSET_COMMUNICATION_LOST_CAUSE_OF_STATE_CHANGE_UNABLE_TO_COMPUTE_IPMB_ADDRESS                                0x9
 #define IPMI_SENSOR_TYPE_FRU_STATE_EVENT_DATA2_OFFSET_COMMUNICATION_LOST_CAUSE_OF_STATE_CHANGE_UNEXPECTED_DEACTIVATION                                       0xA
 #define IPMI_SENSOR_TYPE_FRU_STATE_EVENT_DATA2_OFFSET_COMMUNICATION_LOST_CAUSE_OF_STATE_CHANGE_STATE_CHANGE_CAUSE_UNKNOWN                                    0xF
+
+extern const char * const ipmi_sensor_type_physical_security_strings[];
+extern int ipmi_sensor_type_physical_security_strings_max_index;
+extern const char * const ipmi_sensor_type_platform_security_violation_attempt_strings[];
+extern int ipmi_sensor_type_platform_security_violation_attempt_strings_max_index;
+extern const char * const ipmi_sensor_type_processor_strings[];
+extern int ipmi_sensor_type_processor_strings_max_index;
+extern const char * const ipmi_sensor_type_power_supply_strings[];
+extern int ipmi_sensor_type_power_supply_strings_max_index;
+extern const char * const ipmi_sensor_type_power_unit_strings[];
+extern int ipmi_sensor_type_power_unit_strings_max_index;
+extern const char * const ipmi_sensor_type_memory_strings[];
+extern int ipmi_sensor_type_memory_strings_max_index;
+extern const char * const ipmi_sensor_type_drive_slot_strings[];
+extern int ipmi_sensor_type_drive_slot_strings_max_index;
+extern const char * const ipmi_sensor_type_system_firmware_progress_strings[];
+extern int ipmi_sensor_type_system_firmware_progress_strings_max_index;
+extern const char * const ipmi_sensor_type_event_logging_disabled_strings[];
+extern int ipmi_sensor_type_event_logging_disabled_strings_max_index;
+extern const char * const ipmi_sensor_type_watchdog1_strings[];
+extern int ipmi_sensor_type_watchdog1_strings_max_index;
+extern const char * const ipmi_sensor_type_system_event_strings[];
+extern int ipmi_sensor_type_system_event_strings_max_index;
+extern const char * const ipmi_sensor_type_critical_interrupt_strings[];
+extern int ipmi_sensor_type_critical_interrupt_strings_max_index;
+extern const char * const ipmi_sensor_type_button_switch_strings[];
+extern int ipmi_sensor_type_button_switch_strings_max_index;
+extern const char * const ipmi_sensor_type_chip_set_strings[];
+extern int ipmi_sensor_type_chip_set_strings_max_index;
+extern const char * const ipmi_sensor_type_cable_interconnect_strings[];
+extern int ipmi_sensor_type_cable_interconnect_strings_max_index;
+extern const char * const ipmi_sensor_type_system_boot_initiated_strings[];
+extern int ipmi_sensor_type_system_boot_initiated_strings_max_index;
+extern const char * const ipmi_sensor_type_boot_error_strings[];
+extern int ipmi_sensor_type_boot_error_strings_max_index;
+extern const char * const ipmi_sensor_type_os_boot_strings[];
+extern int ipmi_sensor_type_os_boot_strings_max_index;
+extern const char * const ipmi_sensor_type_os_critical_stop_strings[];
+extern int ipmi_sensor_type_os_critical_stop_strings_max_index;
+extern const char * const ipmi_sensor_type_slot_connector_strings[];
+extern int ipmi_sensor_type_slot_connector_strings_max_index;
+extern const char * const ipmi_sensor_type_acpi_power_state_strings[];
+extern int ipmi_sensor_type_acpi_power_state_strings_max_index;
+extern const char * const ipmi_sensor_type_watchdog2_strings[];
+extern int ipmi_sensor_type_watchdog2_strings_max_index;
+extern const char * const ipmi_sensor_type_platform_alert_strings[];
+extern int ipmi_sensor_type_platform_alert_strings_max_index;
+extern const char * const ipmi_sensor_type_entity_presence_strings[];
+extern int ipmi_sensor_type_entity_presence_strings_max_index;
+extern const char * const ipmi_sensor_type_lan_strings[];
+extern int ipmi_sensor_type_lan_strings_max_index;
+extern const char * const ipmi_sensor_type_management_subsystem_health_strings[];
+extern int ipmi_sensor_type_management_subsystem_health_strings_max_index;
+extern const char * const ipmi_sensor_type_battery_strings[];
+extern int ipmi_sensor_type_battery_strings_max_index;
+extern const char * const ipmi_sensor_type_session_audit_strings[];
+extern int ipmi_sensor_type_session_audit_strings_max_index;
+extern const char * const ipmi_sensor_type_version_change_strings[];
+extern int ipmi_sensor_type_version_change_strings_max_index;
+extern const char * const ipmi_sensor_type_fru_state_strings[];
+extern int ipmi_sensor_type_fru_state_strings_max_index;
+
+  /* "short" arrays are same strings, but shortened to more reasonble lengths for output */
+extern const char * const ipmi_sensor_type_physical_security_short_strings[];
+extern int ipmi_sensor_type_physical_security_short_strings_max_index;
+extern const char * const ipmi_sensor_type_platform_security_violation_attempt_short_strings[];
+extern int ipmi_sensor_type_platform_security_violation_attempt_short_strings_max_index;
+extern const char * const ipmi_sensor_type_processor_short_strings[];
+extern int ipmi_sensor_type_processor_short_strings_max_index;
+extern const char * const ipmi_sensor_type_power_supply_short_strings[];
+extern int ipmi_sensor_type_power_supply_short_strings_max_index;
+extern const char * const ipmi_sensor_type_power_unit_short_strings[];
+extern int ipmi_sensor_type_power_unit_short_strings_max_index;
+extern const char * const ipmi_sensor_type_memory_short_strings[];
+extern int ipmi_sensor_type_memory_short_strings_max_index;
+extern const char * const ipmi_sensor_type_drive_slot_short_strings[];
+extern int ipmi_sensor_type_drive_slot_short_strings_max_index;
+extern const char * const ipmi_sensor_type_system_firmware_progress_short_strings[];
+extern int ipmi_sensor_type_system_firmware_progress_short_strings_max_index;
+extern const char * const ipmi_sensor_type_event_logging_disabled_short_strings[];
+extern int ipmi_sensor_type_event_logging_disabled_short_strings_max_index;
+extern const char * const ipmi_sensor_type_watchdog1_short_strings[];
+extern int ipmi_sensor_type_watchdog1_short_strings_max_index;
+extern const char * const ipmi_sensor_type_system_event_short_strings[];
+extern int ipmi_sensor_type_system_event_short_strings_max_index;
+extern const char * const ipmi_sensor_type_critical_interrupt_short_strings[];
+extern int ipmi_sensor_type_critical_interrupt_short_strings_max_index;
+extern const char * const ipmi_sensor_type_button_switch_short_strings[];
+extern int ipmi_sensor_type_button_switch_short_strings_max_index;
+extern const char * const ipmi_sensor_type_chip_set_short_strings[];
+extern int ipmi_sensor_type_chip_set_short_strings_max_index;
+extern const char * const ipmi_sensor_type_cable_interconnect_short_strings[];
+extern int ipmi_sensor_type_cable_interconnect_short_strings_max_index;
+extern const char * const ipmi_sensor_type_system_boot_initiated_short_strings[];
+extern int ipmi_sensor_type_system_boot_initiated_short_strings_max_index;
+extern const char * const ipmi_sensor_type_boot_error_short_strings[];
+extern int ipmi_sensor_type_boot_error_short_strings_max_index;
+extern const char * const ipmi_sensor_type_os_boot_short_strings[];
+extern int ipmi_sensor_type_os_boot_short_strings_max_index;
+extern const char * const ipmi_sensor_type_os_critical_stop_short_strings[];
+extern int ipmi_sensor_type_os_critical_stop_short_strings_max_index;
+extern const char * const ipmi_sensor_type_slot_connector_short_strings[];
+extern int ipmi_sensor_type_slot_connector_short_strings_max_index;
+extern const char * const ipmi_sensor_type_acpi_power_state_short_strings[];
+extern int ipmi_sensor_type_acpi_power_state_short_strings_max_index;
+extern const char * const ipmi_sensor_type_watchdog2_short_strings[];
+extern int ipmi_sensor_type_watchdog2_short_strings_max_index;
+extern const char * const ipmi_sensor_type_platform_alert_short_strings[];
+extern int ipmi_sensor_type_platform_alert_short_strings_max_index;
+extern const char * const ipmi_sensor_type_entity_presence_short_strings[];
+extern int ipmi_sensor_type_entity_presence_short_strings_max_index;
+extern const char * const ipmi_sensor_type_lan_short_strings[];
+extern int ipmi_sensor_type_lan_short_strings_max_index;
+extern const char * const ipmi_sensor_type_management_subsystem_health_short_strings[];
+extern int ipmi_sensor_type_management_subsystem_health_short_strings_max_index;
+extern const char * const ipmi_sensor_type_battery_short_strings[];
+extern int ipmi_sensor_type_battery_short_strings_max_index;
+extern const char * const ipmi_sensor_type_session_audit_short_strings[];
+extern int ipmi_sensor_type_session_audit_short_strings_max_index;
+extern const char * const ipmi_sensor_type_version_change_short_strings[];
+extern int ipmi_sensor_type_version_change_short_strings_max_index;
+extern const char * const ipmi_sensor_type_fru_state_short_strings[];
+extern int ipmi_sensor_type_fru_state_short_strings_max_index;
+
+extern const char * const ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_error_strings[];
+extern int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_error_strings_max_index;
+extern const char * const ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_hang_strings[];
+extern int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_hang_strings_max_index;
+extern const char * const ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_progress_strings[];
+extern int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_progress_strings_max_index;
+extern const char * const ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_entry_action_strings[];
+extern int ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_entry_action_strings_max_index;
+extern const char * const ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_type_strings[];
+extern int ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_type_strings_max_index;
+extern const char * const ipmi_sensor_type_system_event_event_data2_offset_pef_action_strings[];
+extern int ipmi_sensor_type_system_event_event_data2_offset_pef_action_strings_max_index;
+extern const char * const ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_first_second_strings[];
+extern int ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_first_second_strings_max_index;
+extern const char * const ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_timestamp_clock_type_strings[];
+extern int ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_timestamp_clock_type_strings_max_index;
+extern const char * const ipmi_sensor_type_chip_set_event_data2_offset_soft_power_control_failure_strings[];
+extern int ipmi_sensor_type_chip_set_event_data2_offset_soft_power_control_failure_strings_max_index;
+extern const char * const ipmi_sensor_type_system_boot_initiated_event_data2_offset_system_restart_restart_cause_strings[];
+extern int ipmi_sensor_type_system_boot_initiated_event_data2_offset_system_restart_restart_cause_strings_max_index;
+extern const char * const ipmi_sensor_type_slot_connector_event_data2_offset_slot_holds_spare_device_slot_connector_type_strings[];
+extern int ipmi_sensor_type_slot_connector_event_data2_offset_slot_holds_spare_device_slot_connector_type_strings_max_index;
+extern const char * const ipmi_sensor_type_watchdog2_event_data2_interrupt_type_strings[];
+extern int ipmi_sensor_type_watchdog2_event_data2_interrupt_type_strings_max_index;
+extern const char * const ipmi_sensor_type_watchdog2_event_data2_timer_use_at_expiration_strings[];
+extern int ipmi_sensor_type_watchdog2_event_data2_timer_use_at_expiration_strings_max_index;
+extern const char * const ipmi_sensor_type_management_subsystem_health_event_data2_offset_fru_failure_logical_fru_device_strings[];
+extern int ipmi_sensor_type_management_subsystem_health_event_data2_offset_fru_failure_logical_fru_device_strings_max_index;
+extern const char * const ipmi_sensor_type_version_change_event_data2_offset_software_or_fw_change_detected_with_associated_entity_was_successful_version_change_type_strings[];
+extern int ipmi_sensor_type_version_change_event_data2_offset_software_or_fw_change_detected_with_associated_entity_was_successful_version_change_type_strings_max_index;
+extern const char * const ipmi_sensor_type_fru_state_event_data2_offset_communication_lost_cause_of_state_change_strings[];
+extern int ipmi_sensor_type_fru_state_event_data2_offset_communication_lost_cause_of_state_change_strings_max_index;
+
+extern const char * const ipmi_sensor_type_power_supply_event_data3_offset_configuration_error_error_type_strings[];
+extern int ipmi_sensor_type_power_supply_event_data3_offset_configuration_error_error_type_strings_max_index;
+extern const char * const ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_assertion_event_strings[];
+extern int ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_assertion_event_strings_max_index;
+extern const char * const ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_logging_disabled_all_events_strings[];
+extern int ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_logging_disabled_all_events_strings_max_index;
+extern const char * const ipmi_sensor_type_chip_set_event_data3_offset_soft_power_control_failure_strings[];
+extern int ipmi_sensor_type_chip_set_event_data3_offset_soft_power_control_failure_strings_max_index;
+extern const char * const ipmi_sensor_type_session_audit_event_data3_offset_session_deactivated_deactivation_cause_strings[];
+extern int ipmi_sensor_type_session_audit_event_data3_offset_session_deactivated_deactivation_cause_strings_max_index;
 
 #ifdef __cplusplus
 }

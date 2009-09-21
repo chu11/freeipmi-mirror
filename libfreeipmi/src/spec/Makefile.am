@@ -12,5 +12,7 @@ libspec_la_SOURCES = \
 	ipmi-fru-chassis-types-spec.c \
 	ipmi-fru-language-codes-spec.c \
 	ipmi-iana-enterprise-numbers-spec.c \
+	ipmi-sensor-and-event-code-tables-spec.c \
+	ipmi-sensor-and-event-code-tables-oem-spec.c \
 	ipmi-sensor-types-spec.c \
 	ipmi-sensor-units-spec.c

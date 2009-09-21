@@ -3,6 +3,14 @@
 	* libfreeipmi/include/freeipmi/spec/ipmi-device-types-spec.h,
 	libfreeipmi/include/freeipmi/spec/ipmi-device-types-oem-spec.h:
 	New files.
+
+	* libfreeipmi/src/spec/ipmi-sensor-and-event-code-tables-spec.c,
+	libfreeipmi/src/spc/ipmi-sensor-and-event-code-tables-oem-spec.c:
+	New files.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h:
+	Make string arrays of offsets public.
 	
 2009-09-18  Albert Chu <chu11@llnl.gov>
 
