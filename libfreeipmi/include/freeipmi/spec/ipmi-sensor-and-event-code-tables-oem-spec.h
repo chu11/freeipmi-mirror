@@ -49,7 +49,7 @@ extern "C" {
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_DELL_STATUS_WRITE_PROTECTED     0x08
 
 extern const char * const ipmi_generic_event_reading_type_code_oem_dell_status_strings[];
-extern int ipmi_generic_event_reading_type_code_oem_dell_status_strings_max_index;
+extern unsigned int ipmi_generic_event_reading_type_code_oem_dell_status_strings_max_index;
 
 /************************************************
  * Sensor Type Code Offsets OEM Specific        *
@@ -77,20 +77,24 @@ extern int ipmi_generic_event_reading_type_code_oem_dell_status_strings_max_inde
 #define IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE_SUCCESSFUL 0x00
 #define IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE_FAILED     0x01
 
+/*
+ * String arrays for above
+ */
+
 extern const char * const ipmi_sensor_type_oem_dell_system_performance_degradation_status_strings[];
-extern int ipmi_sensor_type_oem_dell_system_performance_degradation_status_strings_max_index;
+extern unsigned int ipmi_sensor_type_oem_dell_system_performance_degradation_status_strings_max_index;
 
 extern const char * const ipmi_sensor_type_oem_dell_link_tuning_strings[];
-extern int ipmi_sensor_type_oem_dell_link_tuning_strings_max_index;
+extern unsigned int ipmi_sensor_type_oem_dell_link_tuning_strings_max_index;
 
 extern const char * const ipmi_sensor_type_oem_dell_non_fatal_error_strings[];
-extern int ipmi_sensor_type_oem_dell_non_fatal_error_strings_max_index;
+extern unsigned int ipmi_sensor_type_oem_dell_non_fatal_error_strings_max_index;
 
 extern const char * const ipmi_sensor_type_oem_dell_fatal_io_error_strings[];
-extern int ipmi_sensor_type_oem_dell_fatal_io_error_strings_max_index;
+extern unsigned int ipmi_sensor_type_oem_dell_fatal_io_error_strings_max_index;
 
 extern const char * const ipmi_sensor_type_oem_dell_upgrade_strings[];
-extern int ipmi_sensor_type_oem_dell_upgrade_strings_max_index;
+extern unsigned int ipmi_sensor_type_oem_dell_upgrade_strings_max_index;
 
 /************************************************
  * Sensor Type Code Offsets OEM Extra           *
