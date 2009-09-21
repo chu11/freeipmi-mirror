@@ -183,97 +183,97 @@ extern "C" {
 
 extern const char *const ipmi_device_types[];
 
-extern const char * const ipmi_device_type_modifier_ds1624_temperature_sensor_eeprom_or_equivalent;
+extern const char * const ipmi_device_type_modifier_ds1624_temperature_sensor_eeprom_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_ds1624_temperature_sensor_eeprom_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_ds1621_temperature_sensor_eeprom_or_equivalent;
+extern const char * const ipmi_device_type_modifier_ds1621_temperature_sensor_eeprom_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_ds1621_temperature_sensor_eeprom_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_lm75_temperature_sensor_eeprom_or_equivalent;
+extern const char * const ipmi_device_type_modifier_lm75_temperature_sensor_eeprom_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_lm75_temperature_sensor_eeprom_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_heceta_asic_or_similar;
+extern const char * const ipmi_device_type_modifier_heceta_asic_or_similar[];
 extern unsigned int ipmi_device_type_modifier_heceta_asic_or_similar_max_index;
 
-extern const char * const ipmi_device_type_modifier_eeprom_24c01_or_equivalent;
+extern const char * const ipmi_device_type_modifier_eeprom_24c01_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_eeprom_24c01_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_eeprom_24c02_or_equivalent;
+extern const char * const ipmi_device_type_modifier_eeprom_24c02_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_eeprom_24c02_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_eeprom_24c04_or_equivalent;
+extern const char * const ipmi_device_type_modifier_eeprom_24c04_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_eeprom_24c04_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_eeprom_24c08_or_equivalent;
+extern const char * const ipmi_device_type_modifier_eeprom_24c08_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_eeprom_24c08_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_eeprom_24c16_or_equivalent;
+extern const char * const ipmi_device_type_modifier_eeprom_24c16_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_eeprom_24c16_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_eeprom_24c17_or_equivalent;
+extern const char * const ipmi_device_type_modifier_eeprom_24c17_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_eeprom_24c17_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_eeprom_24c32_or_equivalent;
+extern const char * const ipmi_device_type_modifier_eeprom_24c32_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_eeprom_24c32_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_eeprom_24c64_or_equivalent;
+extern const char * const ipmi_device_type_modifier_eeprom_24c64_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_eeprom_24c64_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_fru_inventory_device_behind_management_controller;
+extern const char * const ipmi_device_type_modifier_fru_inventory_device_behind_management_controller[];
 extern unsigned int ipmi_device_type_modifier_fru_inventory_device_behind_management_controller_max_index;
 
-extern const char * const ipmi_device_type_modifier_pcf_8570_256_byte_ram_or_equivalent;
+extern const char * const ipmi_device_type_modifier_pcf_8570_256_byte_ram_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_pcf_8570_256_byte_ram_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_pcf_8573_clock_calendar_or_equivalent;
+extern const char * const ipmi_device_type_modifier_pcf_8573_clock_calendar_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_pcf_8573_clock_calendar_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_pcf_8574a_io_port_or_equivalent;
+extern const char * const ipmi_device_type_modifier_pcf_8574a_io_port_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_pcf_8574a_io_port_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_pcf_8583_clock_calendar_or_equivalent;
+extern const char * const ipmi_device_type_modifier_pcf_8583_clock_calendar_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_pcf_8583_clock_calendar_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_pcf_8593_clock_calendar_or_equivalent;
+extern const char * const ipmi_device_type_modifier_pcf_8593_clock_calendar_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_pcf_8593_clock_calendar_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_clock_calendar_type_not_specified;
+extern const char * const ipmi_device_type_modifier_clock_calendar_type_not_specified[];
 extern unsigned int ipmi_device_type_modifier_clock_calendar_type_not_specified_max_index;
 
-extern const char * const ipmi_device_type_modifier_pcf_8591_ad_da_converter_or_equivalent;
+extern const char * const ipmi_device_type_modifier_pcf_8591_ad_da_converter_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_pcf_8591_ad_da_converter_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_io_port_specific_device_not_specified;
+extern const char * const ipmi_device_type_modifier_io_port_specific_device_not_specified[];
 extern unsigned int ipmi_device_type_modifier_io_port_specific_device_not_specified_max_index;
 
-extern const char * const ipmi_device_type_modifier_ad_converter_specific_device_not_specified;
+extern const char * const ipmi_device_type_modifier_ad_converter_specific_device_not_specified[];
 extern unsigned int ipmi_device_type_modifier_ad_converter_specific_device_not_specified_max_index;
 
-extern const char * const ipmi_device_type_modifier_da_converter_specific_device_not_specified;
+extern const char * const ipmi_device_type_modifier_da_converter_specific_device_not_specified[];
 extern unsigned int ipmi_device_type_modifier_da_converter_specific_device_not_specified_max_index;
 
-extern const char * const ipmi_device_type_modifier_ad_da_converter_specific_device_not_specified;
+extern const char * const ipmi_device_type_modifier_ad_da_converter_specific_device_not_specified[];
 extern unsigned int ipmi_device_type_modifier_ad_da_converter_specific_device_not_specified_max_index;
 
-extern const char * const ipmi_device_type_modifier_lcd_controller_driver_specific_device_not_specified;
+extern const char * const ipmi_device_type_modifier_lcd_controller_driver_specific_device_not_specified[];
 extern unsigned int ipmi_device_type_modifier_lcd_controller_driver_specific_device_not_specified_max_index;
 
-extern const char * const ipmi_device_type_modifier_core_logic_device_specific_device_not_specified;
+extern const char * const ipmi_device_type_modifier_core_logic_device_specific_device_not_specified[];
 extern unsigned int ipmi_device_type_modifier_core_logic_device_specific_device_not_specified_max_index;
 
-extern const char * const ipmi_device_type_modifier_lmc6874_intelligent_battery_controller_or_equivalent;
+extern const char * const ipmi_device_type_modifier_lmc6874_intelligent_battery_controller_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_lmc6874_intelligent_battery_controller_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_intelligent_battery_controller_specific_device_not_specified;
+extern const char * const ipmi_device_type_modifier_intelligent_battery_controller_specific_device_not_specified[];
 extern unsigned int ipmi_device_type_modifier_intelligent_battery_controller_specific_device_not_specified_max_index;
 
-extern const char * const ipmi_device_type_modifier_combo_management_asic_specific_device_not_specified;
+extern const char * const ipmi_device_type_modifier_combo_management_asic_specific_device_not_specified[];
 extern unsigned int ipmi_device_type_modifier_combo_management_asic_specific_device_not_specified_max_index;
 
-extern const char * const ipmi_device_type_modifier_maxim_1617_temperature_sensor;
+extern const char * const ipmi_device_type_modifier_maxim_1617_temperature_sensor[];
 extern unsigned int ipmi_device_type_modifier_maxim_1617_temperature_sensor_max_index;
 
-extern const char * const ipmi_device_type_modifier_other_unspecified_device;
+extern const char * const ipmi_device_type_modifier_other_unspecified_device[];
 extern unsigned int ipmi_device_type_modifier_other_unspecified_device_max_index;
 
 #ifdef __cplusplus
