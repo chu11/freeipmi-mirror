@@ -48,6 +48,10 @@ extern "C" {
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_DELL_STATUS_BOOTING             0x07
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_DELL_STATUS_WRITE_PROTECTED     0x08
 
+/*
+ * String arrays for above
+ */
+
 extern const char * const ipmi_generic_event_reading_type_code_oem_dell_status_strings[];
 extern unsigned int ipmi_generic_event_reading_type_code_oem_dell_status_strings_max_index;
 
