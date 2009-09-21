@@ -52,8 +52,8 @@ extern "C" {
  * String arrays for above
  */
 
-extern const char * const ipmi_generic_event_reading_type_code_oem_dell_status_strings[];
-extern unsigned int ipmi_generic_event_reading_type_code_oem_dell_status_strings_max_index;
+extern const char * const ipmi_generic_event_reading_type_code_oem_dell_status[];
+extern unsigned int ipmi_generic_event_reading_type_code_oem_dell_status_max_index;
 
 /************************************************
  * Sensor Type Code Offsets OEM Specific        *
@@ -85,20 +85,20 @@ extern unsigned int ipmi_generic_event_reading_type_code_oem_dell_status_strings
  * String arrays for above
  */
 
-extern const char * const ipmi_sensor_type_oem_dell_system_performance_degradation_status_strings[];
-extern unsigned int ipmi_sensor_type_oem_dell_system_performance_degradation_status_strings_max_index;
+extern const char * const ipmi_sensor_type_oem_dell_system_performance_degradation_status[];
+extern unsigned int ipmi_sensor_type_oem_dell_system_performance_degradation_status_max_index;
 
-extern const char * const ipmi_sensor_type_oem_dell_link_tuning_strings[];
-extern unsigned int ipmi_sensor_type_oem_dell_link_tuning_strings_max_index;
+extern const char * const ipmi_sensor_type_oem_dell_link_tuning[];
+extern unsigned int ipmi_sensor_type_oem_dell_link_tuning_max_index;
 
-extern const char * const ipmi_sensor_type_oem_dell_non_fatal_error_strings[];
-extern unsigned int ipmi_sensor_type_oem_dell_non_fatal_error_strings_max_index;
+extern const char * const ipmi_sensor_type_oem_dell_non_fatal_error[];
+extern unsigned int ipmi_sensor_type_oem_dell_non_fatal_error_max_index;
 
-extern const char * const ipmi_sensor_type_oem_dell_fatal_io_error_strings[];
-extern unsigned int ipmi_sensor_type_oem_dell_fatal_io_error_strings_max_index;
+extern const char * const ipmi_sensor_type_oem_dell_fatal_io_error[];
+extern unsigned int ipmi_sensor_type_oem_dell_fatal_io_error_max_index;
 
-extern const char * const ipmi_sensor_type_oem_dell_upgrade_strings[];
-extern unsigned int ipmi_sensor_type_oem_dell_upgrade_strings_max_index;
+extern const char * const ipmi_sensor_type_oem_dell_upgrade[];
+extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 
 /************************************************
  * Sensor Type Code Offsets OEM Extra           *

@@ -41,7 +41,7 @@
  * Generic Event Reading Strings (FULL STRINGS) *
  ************************************************/
 
-const char * const ipmi_generic_event_reading_type_code_threshold_strings[] =
+const char * const ipmi_generic_event_reading_type_code_threshold[] =
   {
     "Lower Non-critical - going low",
     "Lower Non-critical - going high",
@@ -57,49 +57,49 @@ const char * const ipmi_generic_event_reading_type_code_threshold_strings[] =
     "Upper Non-recoverable - going high",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_threshold_strings_max_index = 0x0B;
+unsigned int ipmi_generic_event_reading_type_code_threshold_max_index = 0x0B;
 
-const char * const ipmi_generic_event_reading_type_code_transition_state_strings[] =
+const char * const ipmi_generic_event_reading_type_code_transition_state[] =
   {
     "Transition to Idle",
     "Transition to Active",
     "Transition to Busy",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_transition_state_strings_max_index = 0x02;
+unsigned int ipmi_generic_event_reading_type_code_transition_state_max_index = 0x02;
 
-const char * const ipmi_generic_event_reading_type_code_state_strings[] =  {
+const char * const ipmi_generic_event_reading_type_code_state[] =  {
   "State Deasserted",
   "State Asserted",
   NULL
 };
-unsigned int ipmi_generic_event_reading_type_code_state_strings_max_index = 0x01;
+unsigned int ipmi_generic_event_reading_type_code_state_max_index = 0x01;
 
-const char * const ipmi_generic_event_reading_type_code_predictive_failure_strings[] =
+const char * const ipmi_generic_event_reading_type_code_predictive_failure[] =
   {
     "Predictive Failure deasserted",
     "Predictive Failure asserted",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_predictive_failure_strings_max_index = 0x01;
+unsigned int ipmi_generic_event_reading_type_code_predictive_failure_max_index = 0x01;
 
-const char * const ipmi_generic_event_reading_type_code_limit_strings[] =
+const char * const ipmi_generic_event_reading_type_code_limit[] =
   {
     "Limit Not Exceeded",
     "Limit Exceeded",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_limit_strings_max_index = 0x01;
+unsigned int ipmi_generic_event_reading_type_code_limit_max_index = 0x01;
 
-const char * const ipmi_generic_event_reading_type_code_performance_strings[] =
+const char * const ipmi_generic_event_reading_type_code_performance[] =
   {
     "Performance Met",
     "Performance Lags",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_performance_strings_max_index = 0x01;
+unsigned int ipmi_generic_event_reading_type_code_performance_max_index = 0x01;
 
-const char * const ipmi_generic_event_reading_type_code_transition_severity_strings[] =
+const char * const ipmi_generic_event_reading_type_code_transition_severity[] =
   {
     "transition to OK",
     "transition to Non-Critical from OK",
@@ -112,25 +112,25 @@ const char * const ipmi_generic_event_reading_type_code_transition_severity_stri
     "Informational",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_transition_severity_strings_max_index = 0x08;
+unsigned int ipmi_generic_event_reading_type_code_transition_severity_max_index = 0x08;
 
-const char * const ipmi_generic_event_reading_type_code_device_present_strings[] =
+const char * const ipmi_generic_event_reading_type_code_device_present[] =
   {
     "Device Removed/Device Absent",
     "Device Inserted/Device Present",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_device_present_strings_max_index = 0x01;
+unsigned int ipmi_generic_event_reading_type_code_device_present_max_index = 0x01;
 
-const char * const ipmi_generic_event_reading_type_code_device_enabled_strings[] =
+const char * const ipmi_generic_event_reading_type_code_device_enabled[] =
   {
     "Device Disabled",
     "Device Enabled",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_device_enabled_strings_max_index = 0x01;
+unsigned int ipmi_generic_event_reading_type_code_device_enabled_max_index = 0x01;
 
-const char * const ipmi_generic_event_reading_type_code_transition_availability_strings[] =
+const char * const ipmi_generic_event_reading_type_code_transition_availability[] =
   {
     "transition to Running",
     "transition to In Test",
@@ -143,9 +143,9 @@ const char * const ipmi_generic_event_reading_type_code_transition_availability_
     "Install Error",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_transition_availability_strings_max_index = 0x08;
+unsigned int ipmi_generic_event_reading_type_code_transition_availability_max_index = 0x08;
 
-const char * const ipmi_generic_event_reading_type_code_redundancy_strings[] =
+const char * const ipmi_generic_event_reading_type_code_redundancy[] =
   {
     "Fully Redundant (formerly \"Redundancy Regained\")",
     "Redundancy Lost",
@@ -157,9 +157,9 @@ const char * const ipmi_generic_event_reading_type_code_redundancy_strings[] =
     "Redundancy Degraded from Non-redundant",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_redundancy_strings_max_index = 0x07;
+unsigned int ipmi_generic_event_reading_type_code_redundancy_max_index = 0x07;
 
-const char * const ipmi_generic_event_reading_type_code_acpi_power_state_strings[] =
+const char * const ipmi_generic_event_reading_type_code_acpi_power_state[] =
   {
     "D0 Power State",
     "D1 Power State",
@@ -167,7 +167,7 @@ const char * const ipmi_generic_event_reading_type_code_acpi_power_state_strings
     "D3 Power State",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_acpi_power_state_strings_max_index = 0x03;
+unsigned int ipmi_generic_event_reading_type_code_acpi_power_state_max_index = 0x03;
 
 /*************************************************
  * Generic Event Reading Strings (SHORT STRINGS) *
@@ -178,7 +178,7 @@ unsigned int ipmi_generic_event_reading_type_code_acpi_power_state_strings_max_i
  * slightly modified the strings statements too.
  */
 
-const char * const ipmi_generic_event_reading_type_code_threshold_short_strings[] =
+const char * const ipmi_generic_event_reading_type_code_threshold_short[] =
   {
     "Lower Non-critical - going low",
     "Lower Non-critical - going high",
@@ -194,49 +194,49 @@ const char * const ipmi_generic_event_reading_type_code_threshold_short_strings[
     "Upper Non-recoverable - going high",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_threshold_short_strings_max_index = 0x0B;
+unsigned int ipmi_generic_event_reading_type_code_threshold_short_max_index = 0x0B;
 
-const char * const ipmi_generic_event_reading_type_code_transition_state_short_strings[] =
+const char * const ipmi_generic_event_reading_type_code_transition_state_short[] =
   {
     "Transition to Idle",
     "Transition to Active",
     "Transition to Busy",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_transition_state_short_strings_max_index = 0x02;
+unsigned int ipmi_generic_event_reading_type_code_transition_state_short_max_index = 0x02;
 
-const char * const ipmi_generic_event_reading_type_code_state_short_strings[] =  {
+const char * const ipmi_generic_event_reading_type_code_state_short[] =  {
   "State Deasserted",
   "State Asserted",
   NULL
 };
-unsigned int ipmi_generic_event_reading_type_code_state_short_strings_max_index = 0x01;
+unsigned int ipmi_generic_event_reading_type_code_state_short_max_index = 0x01;
 
-const char * const ipmi_generic_event_reading_type_code_predictive_failure_short_strings[] =
+const char * const ipmi_generic_event_reading_type_code_predictive_failure_short[] =
   {
     "Predictive Failure deasserted",
     "Predictive Failure asserted",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_predictive_failure_short_strings_max_index = 0x01;
+unsigned int ipmi_generic_event_reading_type_code_predictive_failure_short_max_index = 0x01;
 
-const char * const ipmi_generic_event_reading_type_code_limit_short_strings[] =
+const char * const ipmi_generic_event_reading_type_code_limit_short[] =
   {
     "Limit Not Exceeded",
     "Limit Exceeded",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_limit_short_strings_max_index = 0x01;
+unsigned int ipmi_generic_event_reading_type_code_limit_short_max_index = 0x01;
 
-const char * const ipmi_generic_event_reading_type_code_performance_short_strings[] =
+const char * const ipmi_generic_event_reading_type_code_performance_short[] =
   {
     "Performance Met",
     "Performance Lags",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_performance_short_strings_max_index = 0x01;
+unsigned int ipmi_generic_event_reading_type_code_performance_short_max_index = 0x01;
 
-const char * const ipmi_generic_event_reading_type_code_transition_severity_short_strings[] =
+const char * const ipmi_generic_event_reading_type_code_transition_severity_short[] =
   {
     "transition to OK",
     "transition to Non-Critical from OK",
@@ -249,25 +249,25 @@ const char * const ipmi_generic_event_reading_type_code_transition_severity_shor
     "Informational",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_transition_severity_short_strings_max_index = 0x08;
+unsigned int ipmi_generic_event_reading_type_code_transition_severity_short_max_index = 0x08;
 
-const char * const ipmi_generic_event_reading_type_code_device_present_short_strings[] =
+const char * const ipmi_generic_event_reading_type_code_device_present_short[] =
   {
     "Device Removed/Device Absent",
     "Device Inserted/Device Present",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_device_present_short_strings_max_index = 0x01;
+unsigned int ipmi_generic_event_reading_type_code_device_present_short_max_index = 0x01;
 
-const char * const ipmi_generic_event_reading_type_code_device_enabled_short_strings[] =
+const char * const ipmi_generic_event_reading_type_code_device_enabled_short[] =
   {
     "Device Disabled",
     "Device Enabled",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_device_enabled_short_strings_max_index = 0x01;
+unsigned int ipmi_generic_event_reading_type_code_device_enabled_short_max_index = 0x01;
 
-const char * const ipmi_generic_event_reading_type_code_transition_availability_short_strings[] =
+const char * const ipmi_generic_event_reading_type_code_transition_availability_short[] =
   {
     "transition to Running",
     "transition to In Test",
@@ -280,9 +280,9 @@ const char * const ipmi_generic_event_reading_type_code_transition_availability_
     "Install Error",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_transition_availability_short_strings_max_index = 0x08;
+unsigned int ipmi_generic_event_reading_type_code_transition_availability_short_max_index = 0x08;
 
-const char * const ipmi_generic_event_reading_type_code_redundancy_short_strings[] =
+const char * const ipmi_generic_event_reading_type_code_redundancy_short[] =
   {
     "Fully Redundant",
     "Redundancy Lost",
@@ -294,9 +294,9 @@ const char * const ipmi_generic_event_reading_type_code_redundancy_short_strings
     "Redundancy Degraded from Non-redundant",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_redundancy_short_strings_max_index = 0x07;
+unsigned int ipmi_generic_event_reading_type_code_redundancy_short_max_index = 0x07;
 
-const char * const ipmi_generic_event_reading_type_code_acpi_power_state_short_strings[] =
+const char * const ipmi_generic_event_reading_type_code_acpi_power_state_short[] =
   {
     "D0 Power State",
     "D1 Power State",
@@ -304,14 +304,14 @@ const char * const ipmi_generic_event_reading_type_code_acpi_power_state_short_s
     "D3 Power State",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_acpi_power_state_short_strings_max_index = 0x03;
+unsigned int ipmi_generic_event_reading_type_code_acpi_power_state_short_max_index = 0x03;
 
 /**************************************
  * Sensor Type Strings (FULL STRINGS) *
  **************************************/
 
 /* achu: 'undock' removed as noted in errata */
-const char * const ipmi_sensor_type_physical_security_strings[] =
+const char * const ipmi_sensor_type_physical_security[] =
   {
     "General Chassis Intrusion",
     "Drive Bay intrusion",
@@ -322,9 +322,9 @@ const char * const ipmi_sensor_type_physical_security_strings[] =
     "FAN area intrusion (supports detection of hot plug fan tampering)",
     NULL
   };
-unsigned int ipmi_sensor_type_physical_security_strings_max_index = 0x06;
+unsigned int ipmi_sensor_type_physical_security_max_index = 0x06;
 
-const char * const ipmi_sensor_type_platform_security_violation_attempt_strings[] =
+const char * const ipmi_sensor_type_platform_security_violation_attempt[] =
   {
     "Secure Mode (Front Panel Lockout) Violation attempt",
     "Pre-boot Password Violation - user password",
@@ -334,9 +334,9 @@ const char * const ipmi_sensor_type_platform_security_violation_attempt_strings[
     "Out-of-band Access Password Violation",
     NULL
   };
-unsigned int ipmi_sensor_type_platform_security_violation_attempt_strings_max_index = 0x05;
+unsigned int ipmi_sensor_type_platform_security_violation_attempt_max_index = 0x05;
 
-const char * const ipmi_sensor_type_processor_strings[] =
+const char * const ipmi_sensor_type_processor[] =
   {
     "IERR",
     "Thermal Trip",
@@ -353,9 +353,9 @@ const char * const ipmi_sensor_type_processor_strings[] =
     "Correctable Machine Check Error",
     NULL
   };
-unsigned int ipmi_sensor_type_processor_strings_max_index = 0x0C;
+unsigned int ipmi_sensor_type_processor_max_index = 0x0C;
 
-const char * const ipmi_sensor_type_power_supply_strings[] =
+const char * const ipmi_sensor_type_power_supply[] =
   {
     "Presence detected",
     "Power Supply Failure detected",
@@ -366,9 +366,9 @@ const char * const ipmi_sensor_type_power_supply_strings[] =
     "Configuration error",
     NULL
   };
-unsigned int ipmi_sensor_type_power_supply_strings_max_index = 0x06;
+unsigned int ipmi_sensor_type_power_supply_max_index = 0x06;
 
-const char * const ipmi_sensor_type_power_unit_strings[] =
+const char * const ipmi_sensor_type_power_unit[] =
   {
     "Power Off/Power Down",
     "Power Cycle",
@@ -380,10 +380,10 @@ const char * const ipmi_sensor_type_power_unit_strings[] =
     "Predictive Failure",
     NULL
   };
-unsigned int ipmi_sensor_type_power_unit_strings_max_index = 0x07;
+unsigned int ipmi_sensor_type_power_unit_max_index = 0x07;
 
 /* achu: new additions as stated in errata */
-const char * const ipmi_sensor_type_memory_strings[] =
+const char * const ipmi_sensor_type_memory[] =
   {
     "Correctable ECC/other correctable memory error",
     "Uncorrectable ECC/other uncorrectable memory error",
@@ -398,10 +398,10 @@ const char * const ipmi_sensor_type_memory_strings[] =
     "Critical Overtemperature.  Memory device has entered a critical overtemperature state, exceeding specified operating conditions.  Memory devices in this state may produce errors or become inaccessible",
     NULL
   };
-unsigned int ipmi_sensor_type_memory_strings_max_index = 0x0A;
+unsigned int ipmi_sensor_type_memory_max_index = 0x0A;
 
 /* achu: defined in errata */
-const char * const ipmi_sensor_type_drive_slot_strings[] =
+const char * const ipmi_sensor_type_drive_slot[] =
   {
     "Drive Presence",
     "Drive Fault",
@@ -414,18 +414,18 @@ const char * const ipmi_sensor_type_drive_slot_strings[] =
     "Rebuild/Remap Aborted (was not completed normally)",
     NULL
   };
-unsigned int ipmi_sensor_type_drive_slot_strings_max_index = 0x08;
+unsigned int ipmi_sensor_type_drive_slot_max_index = 0x08;
 
-const char * const ipmi_sensor_type_system_firmware_progress_strings[] =
+const char * const ipmi_sensor_type_system_firmware_progress[] =
   {
     "System Firmware Error (POST Error)",
     "System Firmware Hang",
     "System Firmware Progress",
     NULL
   };
-unsigned int ipmi_sensor_type_system_firmware_progress_strings_max_index = 0x02;
+unsigned int ipmi_sensor_type_system_firmware_progress_max_index = 0x02;
 
-const char * const ipmi_sensor_type_event_logging_disabled_strings[] =
+const char * const ipmi_sensor_type_event_logging_disabled[] =
   {
     "Correctable Memory Error Logging Disabled",
     "Event `Type' Logging Disabled",
@@ -436,9 +436,9 @@ const char * const ipmi_sensor_type_event_logging_disabled_strings[] =
     "Correctable Machine Check Error Logging Disabled",
     NULL
   };
-unsigned int ipmi_sensor_type_event_logging_disabled_strings_max_index = 0x06;
+unsigned int ipmi_sensor_type_event_logging_disabled_max_index = 0x06;
 
-const char * const ipmi_sensor_type_watchdog1_strings[] =
+const char * const ipmi_sensor_type_watchdog1[] =
   {
     "BIOS Watchdog Reset",
     "OS Watchdog Reset",
@@ -450,9 +450,9 @@ const char * const ipmi_sensor_type_watchdog1_strings[] =
     "OS Watchdog pre-timeout Interrupt, non-NMI",
     NULL
   };
-unsigned int ipmi_sensor_type_watchdog1_strings_max_index = 0x07;
+unsigned int ipmi_sensor_type_watchdog1_max_index = 0x07;
 
-const char * const ipmi_sensor_type_system_event_strings[] =
+const char * const ipmi_sensor_type_system_event[] =
   {
     "System Reconfigured",
     "OEM System Boot Event",
@@ -462,9 +462,9 @@ const char * const ipmi_sensor_type_system_event_strings[] =
     "Timestamp Clock Synch",
     NULL
   };
-unsigned int ipmi_sensor_type_system_event_strings_max_index = 0x05;
+unsigned int ipmi_sensor_type_system_event_max_index = 0x05;
 
-const char * const ipmi_sensor_type_critical_interrupt_strings[] =
+const char * const ipmi_sensor_type_critical_interrupt[] =
   {
     "Front Panel NMI/Diagnostic Interrupt",
     "Bus Timeout",
@@ -480,9 +480,9 @@ const char * const ipmi_sensor_type_critical_interrupt_strings[] =
     "Bus Degraded (bus operating in a degraded performance state)",
     NULL
   };
-unsigned int ipmi_sensor_type_critical_interrupt_strings_max_index = 0x0B;
+unsigned int ipmi_sensor_type_critical_interrupt_max_index = 0x0B;
 
-const char * const ipmi_sensor_type_button_switch_strings[] =
+const char * const ipmi_sensor_type_button_switch[] =
   {
     "Power Button pressed",
     "Sleep Button pressed",
@@ -491,26 +491,26 @@ const char * const ipmi_sensor_type_button_switch_strings[] =
     "FRU service request button (pressed, service, e.g. removal/replacement, requested)",
     NULL
   };
-unsigned int ipmi_sensor_type_button_switch_strings_max_index = 0x04;
+unsigned int ipmi_sensor_type_button_switch_max_index = 0x04;
 
-const char * const ipmi_sensor_type_chip_set_strings[] =
+const char * const ipmi_sensor_type_chip_set[] =
   {
     "Soft Power Control Failure (chipset did not respond to BMC request to change system power state)",
     "Thermal Trip",
     NULL
   };
-unsigned int ipmi_sensor_type_chip_set_strings_max_index = 0x01;
+unsigned int ipmi_sensor_type_chip_set_max_index = 0x01;
 
-const char * const ipmi_sensor_type_cable_interconnect_strings[] =
+const char * const ipmi_sensor_type_cable_interconnect[] =
   {
     "Cable/Interconnect is connected",
     "Configuration Error - Incorrect cable connected / Incorrect interconnection",
     NULL
   };
-unsigned int ipmi_sensor_type_cable_interconnect_strings_max_index = 0x01;
+unsigned int ipmi_sensor_type_cable_interconnect_max_index = 0x01;
 
 /* achu: new additions as stated in errata */
-const char * const ipmi_sensor_type_system_boot_initiated_strings[] =
+const char * const ipmi_sensor_type_system_boot_initiated[] =
   {
     "Initiated by power up",
     "Initiated by hard reset",
@@ -522,9 +522,9 @@ const char * const ipmi_sensor_type_system_boot_initiated_strings[] =
     "System Restart",
     NULL
   };
-unsigned int ipmi_sensor_type_system_boot_initiated_strings_max_index = 0x07;
+unsigned int ipmi_sensor_type_system_boot_initiated_max_index = 0x07;
 
-const char * const ipmi_sensor_type_boot_error_strings[] =
+const char * const ipmi_sensor_type_boot_error[] =
   {
     "No bootable media",
     "Non-bootable diskette left in drive",
@@ -533,9 +533,9 @@ const char * const ipmi_sensor_type_boot_error_strings[] =
     "Timeout waiting for user selection of boot source",
     NULL
   };
-unsigned int ipmi_sensor_type_boot_error_strings_max_index = 0x04;
+unsigned int ipmi_sensor_type_boot_error_max_index = 0x04;
 
-const char * const ipmi_sensor_type_os_boot_strings[] =
+const char * const ipmi_sensor_type_os_boot[] =
   {
     "A: boot completed",
     "C: boot completed",
@@ -546,10 +546,10 @@ const char * const ipmi_sensor_type_os_boot_strings[] =
     "boot completed - boot device not specified",
     NULL
   };
-unsigned int ipmi_sensor_type_os_boot_strings_max_index = 0x06;
+unsigned int ipmi_sensor_type_os_boot_max_index = 0x06;
 
 /* achu: modified per errata */
-const char * const ipmi_sensor_type_os_critical_stop_strings[] =
+const char * const ipmi_sensor_type_os_critical_stop[] =
   {
     "Critical stop during OS load / initialization.  Unexpected error during system startup.  Stopped waiting for input or power cycle/reset.",
     "Run-time Critical Stop (a.k.a. 'core dump', 'blue screen')",
@@ -559,9 +559,9 @@ const char * const ipmi_sensor_type_os_critical_stop_strings[] =
     "Agent Not Responding.  Graceful shutdown request to agent via BMC did not occur due to missing or malfunctioning local agent.",
     NULL
   };
-unsigned int ipmi_sensor_type_os_critical_stop_strings_max_index = 0x05;
+unsigned int ipmi_sensor_type_os_critical_stop_max_index = 0x05;
 
-const char * const ipmi_sensor_type_slot_connector_strings[] =
+const char * const ipmi_sensor_type_slot_connector[] =
   {
     "Fault Status asserted",
     "Identify Status asserted",
@@ -575,9 +575,9 @@ const char * const ipmi_sensor_type_slot_connector_strings[] =
     "Slot holds spare device",
     NULL
   };
-unsigned int ipmi_sensor_type_slot_connector_strings_max_index = 0x09;
+unsigned int ipmi_sensor_type_slot_connector_max_index = 0x09;
 
-const char * const ipmi_sensor_type_acpi_power_state_strings[] =
+const char * const ipmi_sensor_type_acpi_power_state[] =
   {
     "S0/G0 \"working\"",
     "S1 \"sleeping with system h/w & processor context maintained\"",
@@ -596,9 +596,9 @@ const char * const ipmi_sensor_type_acpi_power_state_strings[] =
     "Unknown",
     NULL
   };
-unsigned int ipmi_sensor_type_acpi_power_state_strings_max_index = 0x0E;
+unsigned int ipmi_sensor_type_acpi_power_state_max_index = 0x0E;
 
-const char * const ipmi_sensor_type_watchdog2_strings[] =
+const char * const ipmi_sensor_type_watchdog2[] =
   {
     "Timer expired, status only (no action, no interrupt)",
     "Hard Reset",
@@ -611,9 +611,9 @@ const char * const ipmi_sensor_type_watchdog2_strings[] =
     "Timer interrupt",
     NULL
   };
-unsigned int ipmi_sensor_type_watchdog2_strings_max_index = 0x08;
+unsigned int ipmi_sensor_type_watchdog2_max_index = 0x08;
 
-const char * const ipmi_sensor_type_platform_alert_strings[] =
+const char * const ipmi_sensor_type_platform_alert[] =
   {
     "platform generated page",
     "platform generated LAN alert",
@@ -621,27 +621,27 @@ const char * const ipmi_sensor_type_platform_alert_strings[] =
     "platform generated SNMP trap, OEM format",
     NULL
   };
-unsigned int ipmi_sensor_type_platform_alert_strings_max_index = 0x03;
+unsigned int ipmi_sensor_type_platform_alert_max_index = 0x03;
 
-const char * const ipmi_sensor_type_entity_presence_strings[] =
+const char * const ipmi_sensor_type_entity_presence[] =
   {
     "Entity Present",
     "Entity Absent",
     "Entity Disabled",
     NULL
   };
-unsigned int ipmi_sensor_type_entity_presence_strings_max_index = 0x02;
+unsigned int ipmi_sensor_type_entity_presence_max_index = 0x02;
 
-const char * const ipmi_sensor_type_lan_strings[] =
+const char * const ipmi_sensor_type_lan[] =
   {
     "LAN Heartbeat Lost",
     "LAN Heartbeat",
     NULL
   };
-unsigned int ipmi_sensor_type_lan_strings_max_index = 0x01;
+unsigned int ipmi_sensor_type_lan_max_index = 0x01;
 
 /* achu: new additions as stated in errata */
-const char * const ipmi_sensor_type_management_subsystem_health_strings[] =
+const char * const ipmi_sensor_type_management_subsystem_health[] =
   {
     "sensor access degraded or unavailable",
     "controller access degraded or unavailable",
@@ -651,19 +651,19 @@ const char * const ipmi_sensor_type_management_subsystem_health_strings[] =
     "FRU failure",
     NULL
   };
-unsigned int ipmi_sensor_type_management_subsystem_health_strings_max_index = 0x05;
+unsigned int ipmi_sensor_type_management_subsystem_health_max_index = 0x05;
 
-const char * const ipmi_sensor_type_battery_strings[] =
+const char * const ipmi_sensor_type_battery[] =
   {
     "battery low (predictive failure)",
     "battery failed",
     "battery presence detected",
     NULL
   };
-unsigned int ipmi_sensor_type_battery_strings_max_index = 0x02;
+unsigned int ipmi_sensor_type_battery_max_index = 0x02;
 
 /* achu: new additions as stated in errata */
-const char * const ipmi_sensor_type_session_audit_strings[] =
+const char * const ipmi_sensor_type_session_audit[] =
   {
     "Session Activated",
     "Session Deactivated",
@@ -671,9 +671,9 @@ const char * const ipmi_sensor_type_session_audit_strings[] =
     "Invalid Password Disable",
     NULL
   };
-unsigned int ipmi_sensor_type_session_audit_strings_max_index = 0x03;
+unsigned int ipmi_sensor_type_session_audit_max_index = 0x03;
 
-const char * const ipmi_sensor_type_version_change_strings[] =
+const char * const ipmi_sensor_type_version_change[] =
   {
     "Hardware change detected with associated Entity",
     "Firmware or software change detected with associated Entity",
@@ -685,9 +685,9 @@ const char * const ipmi_sensor_type_version_change_strings[] =
     "Software or F/W Change detected with associated Entity was successful",
     NULL
   };
-unsigned int ipmi_sensor_type_version_change_strings_max_index = 0x07;
+unsigned int ipmi_sensor_type_version_change_max_index = 0x07;
 
-const char * const ipmi_sensor_type_fru_state_strings[] =
+const char * const ipmi_sensor_type_fru_state[] =
   {
     "FRU Not Installed",
     "FRU Inactive (in standby or `hot spare' state)",
@@ -699,7 +699,7 @@ const char * const ipmi_sensor_type_fru_state_strings[] =
     "FRU Communication Lost",
     NULL
   };
-unsigned int ipmi_sensor_type_fru_state_strings_max_index = 0x07;
+unsigned int ipmi_sensor_type_fru_state_max_index = 0x07;
 
 /***************************************
  * Sensor Type Strings (SHORT STRINGS) *
@@ -711,7 +711,7 @@ unsigned int ipmi_sensor_type_fru_state_strings_max_index = 0x07;
  */
 
 /* achu: 'undock' removed as noted in errata */
-const char * const ipmi_sensor_type_physical_security_short_strings[] =
+const char * const ipmi_sensor_type_physical_security_short[] =
   {
     "General Chassis Intrusion",
     "Drive Bay intrusion",
@@ -722,9 +722,9 @@ const char * const ipmi_sensor_type_physical_security_short_strings[] =
     "FAN area intrusion",
     NULL
   };
-unsigned int ipmi_sensor_type_physical_security_short_strings_max_index = 0x06;
+unsigned int ipmi_sensor_type_physical_security_short_max_index = 0x06;
 
-const char * const ipmi_sensor_type_platform_security_violation_attempt_short_strings[] =
+const char * const ipmi_sensor_type_platform_security_violation_attempt_short[] =
   {
     "Secure Mode Violation attempt",
     "Pre-boot Password Violation - user password",
@@ -734,9 +734,9 @@ const char * const ipmi_sensor_type_platform_security_violation_attempt_short_st
     "Out-of-band Access Password Violation",
     NULL
   };
-unsigned int ipmi_sensor_type_platform_security_violation_attempt_short_strings_max_index = 0x05;
+unsigned int ipmi_sensor_type_platform_security_violation_attempt_short_max_index = 0x05;
 
-const char * const ipmi_sensor_type_processor_short_strings[] =
+const char * const ipmi_sensor_type_processor_short[] =
   {
     "IERR",
     "Thermal Trip",
@@ -753,9 +753,9 @@ const char * const ipmi_sensor_type_processor_short_strings[] =
     "Correctable Machine Check Error",
     NULL
   };
-unsigned int ipmi_sensor_type_processor_short_strings_max_index = 0x0C;
+unsigned int ipmi_sensor_type_processor_short_max_index = 0x0C;
 
-const char * const ipmi_sensor_type_power_supply_short_strings[] =
+const char * const ipmi_sensor_type_power_supply_short[] =
   {
     "Presence detected",
     "Power Supply Failure detected",
@@ -766,9 +766,9 @@ const char * const ipmi_sensor_type_power_supply_short_strings[] =
     "Configuration error",
     NULL
   };
-unsigned int ipmi_sensor_type_power_supply_short_strings_max_index = 0x06;
+unsigned int ipmi_sensor_type_power_supply_short_max_index = 0x06;
 
-const char * const ipmi_sensor_type_power_unit_short_strings[] =
+const char * const ipmi_sensor_type_power_unit_short[] =
   {
     "Power Off/Power Down",
     "Power Cycle",
@@ -780,10 +780,10 @@ const char * const ipmi_sensor_type_power_unit_short_strings[] =
     "Predictive Failure",
     NULL
   };
-unsigned int ipmi_sensor_type_power_unit_short_strings_max_index = 0x07;
+unsigned int ipmi_sensor_type_power_unit_short_max_index = 0x07;
 
 /* achu: new additions as stated in errata */
-const char * const ipmi_sensor_type_memory_short_strings[] =
+const char * const ipmi_sensor_type_memory_short[] =
   {
     "Correctable memory error",
     "Uncorrectable memory error",
@@ -798,10 +798,10 @@ const char * const ipmi_sensor_type_memory_short_strings[] =
     "Critical Overtemperature",
     NULL
   };
-unsigned int ipmi_sensor_type_memory_short_strings_max_index = 0x0A;
+unsigned int ipmi_sensor_type_memory_short_max_index = 0x0A;
 
 /* achu: defined in errata */
-const char * const ipmi_sensor_type_drive_slot_short_strings[] =
+const char * const ipmi_sensor_type_drive_slot_short[] =
   {
     "Drive Presence",
     "Drive Fault",
@@ -814,18 +814,18 @@ const char * const ipmi_sensor_type_drive_slot_short_strings[] =
     "Rebuild/Remap Aborted",
     NULL
   };
-unsigned int ipmi_sensor_type_drive_slot_short_strings_max_index = 0x08;
+unsigned int ipmi_sensor_type_drive_slot_short_max_index = 0x08;
 
-const char * const ipmi_sensor_type_system_firmware_progress_short_strings[] =
+const char * const ipmi_sensor_type_system_firmware_progress_short[] =
   {
     "System Firmware Error",
     "System Firmware Hang",
     "System Firmware Progress",
     NULL
   };
-unsigned int ipmi_sensor_type_system_firmware_progress_short_strings_max_index = 0x02;
+unsigned int ipmi_sensor_type_system_firmware_progress_short_max_index = 0x02;
 
-const char * const ipmi_sensor_type_event_logging_disabled_short_strings[] =
+const char * const ipmi_sensor_type_event_logging_disabled_short[] =
   {
     "Correctable Memory Error Logging Disabled",
     "Event Type Logging Disabled",
@@ -836,9 +836,9 @@ const char * const ipmi_sensor_type_event_logging_disabled_short_strings[] =
     "Correctable Machine Check Error Logging Disabled",
     NULL
   };
-unsigned int ipmi_sensor_type_event_logging_disabled_short_strings_max_index = 0x06;
+unsigned int ipmi_sensor_type_event_logging_disabled_short_max_index = 0x06;
 
-const char * const ipmi_sensor_type_watchdog1_short_strings[] =
+const char * const ipmi_sensor_type_watchdog1_short[] =
   {
     "BIOS Watchdog Reset",
     "OS Watchdog Reset",
@@ -850,9 +850,9 @@ const char * const ipmi_sensor_type_watchdog1_short_strings[] =
     "OS Watchdog pre-timeout Interrupt, non-NMI",
     NULL
   };
-unsigned int ipmi_sensor_type_watchdog1_short_strings_max_index = 0x07;
+unsigned int ipmi_sensor_type_watchdog1_short_max_index = 0x07;
 
-const char * const ipmi_sensor_type_system_event_short_strings[] =
+const char * const ipmi_sensor_type_system_event_short[] =
   {
     "System Reconfigured",
     "OEM System Boot Event",
@@ -862,9 +862,9 @@ const char * const ipmi_sensor_type_system_event_short_strings[] =
     "Timestamp Clock Synch",
     NULL
   };
-unsigned int ipmi_sensor_type_system_event_short_strings_max_index = 0x05;
+unsigned int ipmi_sensor_type_system_event_short_max_index = 0x05;
 
-const char * const ipmi_sensor_type_critical_interrupt_short_strings[] =
+const char * const ipmi_sensor_type_critical_interrupt_short[] =
   {
     "Front Panel NMI/Diagnostic Interrupt",
     "Bus Timeout",
@@ -880,9 +880,9 @@ const char * const ipmi_sensor_type_critical_interrupt_short_strings[] =
     "Bus Degraded",
     NULL
   };
-unsigned int ipmi_sensor_type_critical_interrupt_short_strings_max_index = 0x0B;
+unsigned int ipmi_sensor_type_critical_interrupt_short_max_index = 0x0B;
 
-const char * const ipmi_sensor_type_button_switch_short_strings[] =
+const char * const ipmi_sensor_type_button_switch_short[] =
   {
     "Power Button pressed",
     "Sleep Button pressed",
@@ -891,26 +891,26 @@ const char * const ipmi_sensor_type_button_switch_short_strings[] =
     "FRU service request button",
     NULL
   };
-unsigned int ipmi_sensor_type_button_switch_short_strings_max_index = 0x04;
+unsigned int ipmi_sensor_type_button_switch_short_max_index = 0x04;
 
-const char * const ipmi_sensor_type_chip_set_short_strings[] =
+const char * const ipmi_sensor_type_chip_set_short[] =
   {
     "Soft Power Control Failure",
     "Thermal Trip",
     NULL
   };
-unsigned int ipmi_sensor_type_chip_set_short_strings_max_index = 0x00;
+unsigned int ipmi_sensor_type_chip_set_short_max_index = 0x00;
 
-const char * const ipmi_sensor_type_cable_interconnect_short_strings[] =
+const char * const ipmi_sensor_type_cable_interconnect_short[] =
   {
     "Cable/Interconnect is connected",
     "Configuration Error - Incorrect cable connected",
     NULL
   };
-unsigned int ipmi_sensor_type_cable_interconnect_short_strings_max_index = 0x01;
+unsigned int ipmi_sensor_type_cable_interconnect_short_max_index = 0x01;
 
 /* achu: new additions as stated in errata */
-const char * const ipmi_sensor_type_system_boot_initiated_short_strings[] =
+const char * const ipmi_sensor_type_system_boot_initiated_short[] =
   {
     "Initiated by power up",
     "Initiated by hard reset",
@@ -922,9 +922,9 @@ const char * const ipmi_sensor_type_system_boot_initiated_short_strings[] =
     "System Restart",
     NULL
   };
-unsigned int ipmi_sensor_type_system_boot_initiated_short_strings_max_index = 0x07;
+unsigned int ipmi_sensor_type_system_boot_initiated_short_max_index = 0x07;
 
-const char * const ipmi_sensor_type_boot_error_short_strings[] =
+const char * const ipmi_sensor_type_boot_error_short[] =
   {
     "No bootable media",
     "Non-bootable diskette left in drive",
@@ -933,9 +933,9 @@ const char * const ipmi_sensor_type_boot_error_short_strings[] =
     "Timeout waiting for user selection of boot source",
     NULL
   };
-unsigned int ipmi_sensor_type_boot_error_short_strings_max_index = 0x04;
+unsigned int ipmi_sensor_type_boot_error_short_max_index = 0x04;
 
-const char * const ipmi_sensor_type_os_boot_short_strings[] =
+const char * const ipmi_sensor_type_os_boot_short[] =
   {
     "A: boot completed",
     "C: boot completed",
@@ -946,10 +946,10 @@ const char * const ipmi_sensor_type_os_boot_short_strings[] =
     "boot completed - boot device not specified",
     NULL
   };
-unsigned int ipmi_sensor_type_os_boot_short_strings_max_index = 0x06;
+unsigned int ipmi_sensor_type_os_boot_short_max_index = 0x06;
 
 /* achu: modified per errata */
-const char * const ipmi_sensor_type_os_critical_stop_short_strings[] =
+const char * const ipmi_sensor_type_os_critical_stop_short[] =
   {
     "Critical stop during OS load",
     "Run-time Critical Stop",
@@ -959,9 +959,9 @@ const char * const ipmi_sensor_type_os_critical_stop_short_strings[] =
     "Agent Not Responding",
     NULL
   };
-unsigned int ipmi_sensor_type_os_critical_stop_short_strings_max_index = 0x05;
+unsigned int ipmi_sensor_type_os_critical_stop_short_max_index = 0x05;
 
-const char * const ipmi_sensor_type_slot_connector_short_strings[] =
+const char * const ipmi_sensor_type_slot_connector_short[] =
   {
     "Fault Status asserted",
     "Identify Status asserted",
@@ -975,9 +975,9 @@ const char * const ipmi_sensor_type_slot_connector_short_strings[] =
     "Slot holds spare device",
     NULL
   };
-unsigned int ipmi_sensor_type_slot_connector_short_strings_max_index = 0x09;
+unsigned int ipmi_sensor_type_slot_connector_short_max_index = 0x09;
 
-const char * const ipmi_sensor_type_acpi_power_state_short_strings[] =
+const char * const ipmi_sensor_type_acpi_power_state_short[] =
   {
     "S0/G0",
     "S1",
@@ -996,9 +996,9 @@ const char * const ipmi_sensor_type_acpi_power_state_short_strings[] =
     "Unknown",
     NULL
   };
-unsigned int ipmi_sensor_type_acpi_power_state_short_strings_max_index = 0x0E;
+unsigned int ipmi_sensor_type_acpi_power_state_short_max_index = 0x0E;
 
-const char * const ipmi_sensor_type_watchdog2_short_strings[] =
+const char * const ipmi_sensor_type_watchdog2_short[] =
   {
     "Timer expired, status only",
     "Hard Reset",
@@ -1011,9 +1011,9 @@ const char * const ipmi_sensor_type_watchdog2_short_strings[] =
     "Timer interrupt",
     NULL
   };
-unsigned int ipmi_sensor_type_watchdog2_short_strings_max_index = 0x08;
+unsigned int ipmi_sensor_type_watchdog2_short_max_index = 0x08;
 
-const char * const ipmi_sensor_type_platform_alert_short_strings[] =
+const char * const ipmi_sensor_type_platform_alert_short[] =
   {
     "platform generated page",
     "platform generated LAN alert",
@@ -1021,27 +1021,27 @@ const char * const ipmi_sensor_type_platform_alert_short_strings[] =
     "platform generated SNMP trap, OEM format",
     NULL
   };
-unsigned int ipmi_sensor_type_platform_alert_short_strings_max_index = 0x03;
+unsigned int ipmi_sensor_type_platform_alert_short_max_index = 0x03;
 
-const char * const ipmi_sensor_type_entity_presence_short_strings[] =
+const char * const ipmi_sensor_type_entity_presence_short[] =
   {
     "Entity Present",
     "Entity Absent",
     "Entity Disabled",
     NULL
   };
-unsigned int ipmi_sensor_type_entity_presence_short_strings_max_index = 0x02;
+unsigned int ipmi_sensor_type_entity_presence_short_max_index = 0x02;
 
-const char * const ipmi_sensor_type_lan_short_strings[] =
+const char * const ipmi_sensor_type_lan_short[] =
   {
     "LAN Heartbeat Lost",
     "LAN Heartbeat",
     NULL
   };
-unsigned int ipmi_sensor_type_lan_short_strings_max_index = 0x01;
+unsigned int ipmi_sensor_type_lan_short_max_index = 0x01;
 
 /* achu: new additions as stated in errata */
-const char * const ipmi_sensor_type_management_subsystem_health_short_strings[] =
+const char * const ipmi_sensor_type_management_subsystem_health_short[] =
   {
     "sensor access degraded or unavailable",
     "controller access degraded or unavailable",
@@ -1051,18 +1051,18 @@ const char * const ipmi_sensor_type_management_subsystem_health_short_strings[] 
     "FRU failure",
     NULL
   };
-unsigned int ipmi_sensor_type_management_subsystem_health_short_strings_max_index = 0x05;
+unsigned int ipmi_sensor_type_management_subsystem_health_short_max_index = 0x05;
 
-const char * const ipmi_sensor_type_battery_short_strings[] =
+const char * const ipmi_sensor_type_battery_short[] =
   {
     "battery low",
     "battery failed",
     "battery presence detected",
     NULL
   };
-unsigned int ipmi_sensor_type_battery_short_strings_max_index = 0x02;
+unsigned int ipmi_sensor_type_battery_short_max_index = 0x02;
 
-const char * const ipmi_sensor_type_session_audit_short_strings[] =
+const char * const ipmi_sensor_type_session_audit_short[] =
   {
     "Session Activated",
     "Session Deactivated",
@@ -1070,9 +1070,9 @@ const char * const ipmi_sensor_type_session_audit_short_strings[] =
     "Invalid Password Disable",
     NULL
   };
-unsigned int ipmi_sensor_type_session_audit_short_strings_max_index = 0x03;
+unsigned int ipmi_sensor_type_session_audit_short_max_index = 0x03;
 
-const char * const ipmi_sensor_type_version_change_short_strings[] =
+const char * const ipmi_sensor_type_version_change_short[] =
   {
     "Hardware change detected with associated Entity",
     "Firmware or software change detected with associated Entity",
@@ -1084,9 +1084,9 @@ const char * const ipmi_sensor_type_version_change_short_strings[] =
     "Software or F/W Change detected with associated Entity was successful",
     NULL
   };
-unsigned int ipmi_sensor_type_version_change_short_strings_max_index = 0x07;
+unsigned int ipmi_sensor_type_version_change_short_max_index = 0x07;
 
-const char * const ipmi_sensor_type_fru_state_short_strings[] =
+const char * const ipmi_sensor_type_fru_state_short[] =
   {
     "FRU Not Installed",
     "FRU Inactive",
@@ -1098,13 +1098,13 @@ const char * const ipmi_sensor_type_fru_state_short_strings[] =
     "FRU Communication Lost",
     NULL
   };
-unsigned int ipmi_sensor_type_fru_state_short_strings_max_index = 0x07;
+unsigned int ipmi_sensor_type_fru_state_short_max_index = 0x07;
 
 /*******************************************************
  * Sensor Type Strings for Event Data 2 (FULL STRINGS) *
  *******************************************************/
 
-const char * const ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_error_strings[] =
+const char * const ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_error[] =
   {
     "Unspecified",
     "No system memory is physically installed in the system",
@@ -1122,9 +1122,9 @@ const char * const ipmi_sensor_type_system_firmware_progress_event_data2_offset_
     "CPU speed matching failure",
     NULL
   };
-unsigned int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_error_strings_max_index = 0x0D;
+unsigned int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_error_max_index = 0x0D;
 
-const char * const ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_hang_strings[] =
+const char * const ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_hang[] =
   {
     "Unspecified",
     "Memory initialization",
@@ -1154,9 +1154,9 @@ const char * const ipmi_sensor_type_system_firmware_progress_event_data2_offset_
     "Primary processor initialization",
     NULL
   };
-unsigned int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_hang_strings_max_index = 0x19;
+unsigned int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_hang_max_index = 0x19;
 
-const char * const ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_progress_strings[] =
+const char * const ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_progress[] =
   {
     "Unspecified",
     "Memory initialization",
@@ -1186,9 +1186,9 @@ const char * const ipmi_sensor_type_system_firmware_progress_event_data2_offset_
     "Primary processor initialization",
     NULL
   };
-unsigned int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_progress_strings_max_index = 0x19;
+unsigned int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_progress_max_index = 0x19;
 
-const char * const ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_entry_action_strings[] =
+const char * const ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_entry_action[] =
   {
     "Log entry action = entry added",
     "Log entry action = entry added because event did not be map to standard IPMI event",
@@ -1198,18 +1198,18 @@ const char * const ipmi_sensor_type_system_event_event_data2_offset_entry_added_
     "Log entry action = log enabled",
     NULL
   };
-unsigned int ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_entry_action_strings_max_index = 0x05;
+unsigned int ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_entry_action_max_index = 0x05;
 
-const char * const ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_type_strings[] =
+const char * const ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_type[] =
   {
     "Log Type = MCA log",
     "Log Type = OEM1",
     "Log Type = OEM2",
     NULL
   };
-unsigned int ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_type_strings_max_index = 0x02;
+unsigned int ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_type_max_index = 0x02;
 
-const char * const ipmi_sensor_type_system_event_event_data2_offset_pef_action_strings[] =
+const char * const ipmi_sensor_type_system_event_event_data2_offset_pef_action[] =
   {
     "Alert",
     "power off",
@@ -1221,26 +1221,26 @@ const char * const ipmi_sensor_type_system_event_event_data2_offset_pef_action_s
   };
 #if 0
 /* Not used */
-unsigned int ipmi_sensor_type_system_event_event_data2_offset_pef_action_strings_max_index = 0x05;
+unsigned int ipmi_sensor_type_system_event_event_data2_offset_pef_action_max_index = 0x05;
 #endif
 
-const char * const ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_first_second_strings[] =
+const char * const ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_first_second[] =
   {
     "event is first of pair",
     "event is second of pair",
     NULL,
   };
-unsigned int ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_first_second_strings_max_index = 0x01;
+unsigned int ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_first_second_max_index = 0x01;
 
-const char * const ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_timestamp_clock_type_strings[] =
+const char * const ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_timestamp_clock_type[] =
   {
     "SEL Timestamp Clock updated (Also used when both SEL and SDR Timestamp clocks are linked together)",
     "SDR Timestamp Clock updated",
     NULL,
   };
-unsigned int ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_timestamp_clock_type_strings_max_index = 0x01;
+unsigned int ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_timestamp_clock_type_max_index = 0x01;
 
-const char * const ipmi_sensor_type_chip_set_event_data2_offset_soft_power_control_failure_strings[] =
+const char * const ipmi_sensor_type_chip_set_event_data2_offset_soft_power_control_failure[] =
   {
     "Requested power state = S0/G0 \"working\"",
     "Requested power state = S1 \"sleeping with system h/w & processor context maintained\"",
@@ -1257,9 +1257,9 @@ const char * const ipmi_sensor_type_chip_set_event_data2_offset_soft_power_contr
     "Requested power state = Legacy OFF state",
     NULL,
   };
-unsigned int ipmi_sensor_type_chip_set_event_data2_offset_soft_power_control_failure_strings_max_index = 0x0C;
+unsigned int ipmi_sensor_type_chip_set_event_data2_offset_soft_power_control_failure_max_index = 0x0C;
 
-const char * const ipmi_sensor_type_system_boot_initiated_event_data2_offset_system_restart_restart_cause_strings[] =
+const char * const ipmi_sensor_type_system_boot_initiated_event_data2_offset_system_restart_restart_cause[] =
   {
     "unknown",
     "Chassis Control command",
@@ -1275,9 +1275,9 @@ const char * const ipmi_sensor_type_system_boot_initiated_event_data2_offset_sys
     "power-up via RTC (system real time clock) wakeup",
     NULL
   };
-unsigned int ipmi_sensor_type_system_boot_initiated_event_data2_offset_system_restart_restart_cause_strings_max_index = 0x0B;
+unsigned int ipmi_sensor_type_system_boot_initiated_event_data2_offset_system_restart_restart_cause_max_index = 0x0B;
 
-const char * const ipmi_sensor_type_slot_connector_event_data2_offset_slot_holds_spare_device_slot_connector_type_strings[] =
+const char * const ipmi_sensor_type_slot_connector_event_data2_offset_slot_holds_spare_device_slot_connector_type[] =
   {
     "Slot/Connector Type = PCI",
     "Slot/Connector Type = Drive Array",
@@ -1294,9 +1294,9 @@ const char * const ipmi_sensor_type_slot_connector_event_data2_offset_slot_holds
     "Slot/Connector Type = USB",
     NULL
   };
-unsigned int ipmi_sensor_type_slot_connector_event_data2_offset_slot_holds_spare_device_slot_connector_type_strings_max_index = 0x0C;
+unsigned int ipmi_sensor_type_slot_connector_event_data2_offset_slot_holds_spare_device_slot_connector_type_max_index = 0x0C;
 
-const char * const ipmi_sensor_type_watchdog2_event_data2_interrupt_type_strings[] =
+const char * const ipmi_sensor_type_watchdog2_event_data2_interrupt_type[] =
   {
     "Interrupt type = none",
     "Interrupt type = SMI",
@@ -1316,9 +1316,9 @@ const char * const ipmi_sensor_type_watchdog2_event_data2_interrupt_type_strings
     "Interrupt type = unspecified",
     NULL,
   };
-unsigned int ipmi_sensor_type_watchdog2_event_data2_interrupt_type_strings_max_index = 0x0F;
+unsigned int ipmi_sensor_type_watchdog2_event_data2_interrupt_type_max_index = 0x0F;
 
-const char * const ipmi_sensor_type_watchdog2_event_data2_timer_use_at_expiration_strings[] =
+const char * const ipmi_sensor_type_watchdog2_event_data2_timer_use_at_expiration[] =
   {
     "reserved",
     "Timer use at expiration = BIOS FRB2",
@@ -1338,17 +1338,17 @@ const char * const ipmi_sensor_type_watchdog2_event_data2_timer_use_at_expiratio
     "Timer use at expiration = unspecified",
     NULL
   };
-unsigned int ipmi_sensor_type_watchdog2_event_data2_timer_use_at_expiration_strings_max_index = 0x0F;
+unsigned int ipmi_sensor_type_watchdog2_event_data2_timer_use_at_expiration_max_index = 0x0F;
 
-const char * const ipmi_sensor_type_management_subsystem_health_event_data2_offset_fru_failure_logical_fru_device_strings[] =
+const char * const ipmi_sensor_type_management_subsystem_health_event_data2_offset_fru_failure_logical_fru_device[] =
   {
     "device is not a logical FRU Device",
     "device is logical FRU Device (accessed via FRU commands to mgmt. controller",
     NULL
   };
-unsigned int ipmi_sensor_type_management_subsystem_health_event_data2_offset_fru_failure_logical_fru_device_strings_max_index = 0x01;
+unsigned int ipmi_sensor_type_management_subsystem_health_event_data2_offset_fru_failure_logical_fru_device_max_index = 0x01;
 
-const char * const ipmi_sensor_type_version_change_event_data2_offset_software_or_fw_change_detected_with_associated_entity_was_successful_version_change_type_strings[] =
+const char * const ipmi_sensor_type_version_change_event_data2_offset_software_or_fw_change_detected_with_associated_entity_was_successful_version_change_type[] =
   {
     "Version change type = unspecified",
     "Version change type = management controller device ID (change in one or more fields from `Get Device ID')",
@@ -1376,9 +1376,9 @@ const char * const ipmi_sensor_type_version_change_event_data2_offset_software_o
     "Version change type = board/FRU hardware configuration change (e.g. strap, jumper, cable change, etc.)",
     NULL
   };
-unsigned int ipmi_sensor_type_version_change_event_data2_offset_software_or_fw_change_detected_with_associated_entity_was_successful_version_change_type_strings_max_index = 0x17;
+unsigned int ipmi_sensor_type_version_change_event_data2_offset_software_or_fw_change_detected_with_associated_entity_was_successful_version_change_type_max_index = 0x17;
 
-const char * const ipmi_sensor_type_fru_state_event_data2_offset_communication_lost_cause_of_state_change_strings[] =
+const char * const ipmi_sensor_type_fru_state_event_data2_offset_communication_lost_cause_of_state_change[] =
   {
     "Cause of state change = Normal State Change",
     "Cause of state change = Change Commanded by software external to FRU",
@@ -1398,13 +1398,13 @@ const char * const ipmi_sensor_type_fru_state_event_data2_offset_communication_l
     "Cause of state change = State Change, Cause Unknown",
     NULL
   };
-unsigned int ipmi_sensor_type_fru_state_event_data2_offset_communication_lost_cause_of_state_change_strings_max_index = 0x0F;
+unsigned int ipmi_sensor_type_fru_state_event_data2_offset_communication_lost_cause_of_state_change_max_index = 0x0F;
 
 /*******************************************************
  * Sensor Type Strings for Event Data 3 (FULL STRINGS) *
  *******************************************************/
 
-const char * const ipmi_sensor_type_power_supply_event_data3_offset_configuration_error_error_type_strings[] =
+const char * const ipmi_sensor_type_power_supply_event_data3_offset_configuration_error_error_type[] =
   {
     "Vendor mismatch",
     "Revision mismatch",
@@ -1413,25 +1413,25 @@ const char * const ipmi_sensor_type_power_supply_event_data3_offset_configuratio
     "Voltage rating mismatch",
     NULL
   };
-unsigned int ipmi_sensor_type_power_supply_event_data3_offset_configuration_error_error_type_strings_max_index = 0x04;
+unsigned int ipmi_sensor_type_power_supply_event_data3_offset_configuration_error_error_type_max_index = 0x04;
 
-const char * const ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_assertion_event_strings[] =
+const char * const ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_assertion_event[] =
   {
     "deassertion event",
     "assertion event",
     NULL
   };
-unsigned int ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_assertion_event_strings_max_index = 0x01;
+unsigned int ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_assertion_event_max_index = 0x01;
 
-const char * const ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_logging_disabled_all_events_strings[] =
+const char * const ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_logging_disabled_all_events[] =
   {
     "",
     "logging has been disabled for all events of given type",
     NULL
   };
-unsigned int ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_logging_disabled_all_events_strings_max_index = 0x01;
+unsigned int ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_logging_disabled_all_events_max_index = 0x01;
 
-const char * const ipmi_sensor_type_chip_set_event_data3_offset_soft_power_control_failure_strings[] =
+const char * const ipmi_sensor_type_chip_set_event_data3_offset_soft_power_control_failure[] =
   {
     "Power state at time of request = S0/G0 \"working\"",
     "Power state at time of request = S1 \"sleeping with system h/w & processor context maintained\"",
@@ -1449,9 +1449,9 @@ const char * const ipmi_sensor_type_chip_set_event_data3_offset_soft_power_contr
     "Power state at time of request = unknown",
     NULL
   };
-unsigned int ipmi_sensor_type_chip_set_event_data3_offset_soft_power_control_failure_strings_max_index = 0x0D;
+unsigned int ipmi_sensor_type_chip_set_event_data3_offset_soft_power_control_failure_max_index = 0x0D;
 
-const char * const ipmi_sensor_type_session_audit_event_data3_offset_session_deactivated_deactivation_cause_strings[] =
+const char * const ipmi_sensor_type_session_audit_event_data3_offset_session_deactivated_deactivation_cause[] =
   {
     "Session deactivatation cause unspecified. This value is also used for Session Activated events",
     "Session deactivated by Close Session command",
@@ -1459,4 +1459,4 @@ const char * const ipmi_sensor_type_session_audit_event_data3_offset_session_dea
     "Session deactivated by configuration change",
     NULL
   };
-unsigned int ipmi_sensor_type_session_audit_event_data3_offset_session_deactivated_deactivation_cause_strings_max_index = 0x03;
+unsigned int ipmi_sensor_type_session_audit_event_data3_offset_session_deactivated_deactivation_cause_max_index = 0x03;

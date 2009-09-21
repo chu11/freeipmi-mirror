@@ -45,7 +45,7 @@
  * Dell
  */
 
-const char * const ipmi_generic_event_reading_type_code_oem_dell_status_strings[] =
+const char * const ipmi_generic_event_reading_type_code_oem_dell_status[] =
   {
     "Absent",
     "Standby",
@@ -58,7 +58,7 @@ const char * const ipmi_generic_event_reading_type_code_oem_dell_status_strings[
     "Write protected",
     NULL
   };
-unsigned int ipmi_generic_event_reading_type_code_oem_dell_status_strings_max_index = 0x08;
+unsigned int ipmi_generic_event_reading_type_code_oem_dell_status_max_index = 0x08;
 
 /*****************************
  * Sensor Type Strings (OEM) *
@@ -79,7 +79,7 @@ unsigned int ipmi_generic_event_reading_type_code_oem_dell_status_strings_max_in
  *
  */
 
-const char * const ipmi_sensor_type_oem_dell_system_performance_degradation_status_strings[] =
+const char * const ipmi_sensor_type_oem_dell_system_performance_degradation_status[] =
   {
     "Good",
     "Degraded, other",
@@ -91,9 +91,9 @@ const char * const ipmi_sensor_type_oem_dell_system_performance_degradation_stat
     "Degraded, system power exceeds capacity",
     NULL
   };
-unsigned int ipmi_sensor_type_oem_dell_system_performance_degradation_status_strings_max_index = 0x07;
+unsigned int ipmi_sensor_type_oem_dell_system_performance_degradation_status_max_index = 0x07;
 
-const char * const ipmi_sensor_type_oem_dell_link_tuning_strings[] =
+const char * const ipmi_sensor_type_oem_dell_link_tuning[] =
   {
     "Good",
     "Failed to program virtual MAC address",
@@ -101,27 +101,27 @@ const char * const ipmi_sensor_type_oem_dell_link_tuning_strings[] =
     "Failed to get link tuning or flex address data",
     NULL
   };
-unsigned int ipmi_sensor_type_oem_dell_link_tuning_strings_max_index = 0x03;
+unsigned int ipmi_sensor_type_oem_dell_link_tuning_max_index = 0x03;
 
-const char * const ipmi_sensor_type_oem_dell_non_fatal_error_strings[] =
+const char * const ipmi_sensor_type_oem_dell_non_fatal_error[] =
   {
     "PCIe error",
     NULL
   };
-unsigned int ipmi_sensor_type_oem_dell_non_fatal_error_strings_max_index = 0x00;
+unsigned int ipmi_sensor_type_oem_dell_non_fatal_error_max_index = 0x00;
 
-const char * const ipmi_sensor_type_oem_dell_fatal_io_error_strings[] =
+const char * const ipmi_sensor_type_oem_dell_fatal_io_error[] =
   {
     "Successful",
     "Fatal IO error",
     NULL
   };
-unsigned int ipmi_sensor_type_oem_dell_fatal_io_error_strings_max_index = 0x01;
+unsigned int ipmi_sensor_type_oem_dell_fatal_io_error_max_index = 0x01;
 
-const char * const ipmi_sensor_type_oem_dell_upgrade_strings[] =
+const char * const ipmi_sensor_type_oem_dell_upgrade[] =
   {
     "Successful",
     "Failed",
     NULL
   };
-unsigned int ipmi_sensor_type_oem_dell_upgrade_strings_max_index = 0x01;
+unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index = 0x01;

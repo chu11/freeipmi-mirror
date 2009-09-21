@@ -24,6 +24,10 @@
 #include <stdlib.h>
 
 #include "freeipmi/spec/ipmi-device-types-spec.h"
+#include "freeipmi/fiid/fiid.h"
+
+#include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
 
