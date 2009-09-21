@@ -82,6 +82,8 @@ extern "C" {
 #include <freeipmi/spec/ipmi-cmd-oem-spec.h>
 #include <freeipmi/spec/ipmi-comp-code-spec.h>
 #include <freeipmi/spec/ipmi-comp-code-oem-spec.h>
+#include <freeipmi/spec/ipmi-device-types-spec.h>
+#include <freeipmi/spec/ipmi-device-types-oem-spec.h>
 #include <freeipmi/spec/ipmi-entity-ids-spec.h>
 #include <freeipmi/spec/ipmi-event-reading-type-code-spec.h>
 #include <freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h>
