@@ -13,6 +13,12 @@
 	Make string arrays of offsets public.
 
 	* libfreeipmi/src/spec/ipmi-device-types-spec.c: New files.
+
+	* libfreeipmi/include/freeipmi/util/ipmi-device-types-util.h,
+	libfreeipmi/src/util/ipmi-device-types-util.c: New files
+
+	* ipmi-sensors/src/: Support device type and device modifier
+	string outputs.
 	
 2009-09-18  Albert Chu <chu11@llnl.gov>
 

@@ -47,7 +47,7 @@ extern "C" {
 #define IPMI_DEVICE_TYPE_PCF_8591_AD_DA_CONVERTER_OR_EQUIVALENT                       0x1A
 #define IPMI_DEVICE_TYPE_IO_PORT_SPECIFIC_DEVICE_NOT_SPECIFIED                        0x1B
 #define IPMI_DEVICE_TYPE_AD_CONVERTER_SPECIFIC_DEVICE_NOT_SPECIFIED                   0x1C
-#define IPMI_DEVICE_TYPE_DA_CONVERTER_SPECIFIC_DEVICE_NOT_SPECIFIED_                  0x1D
+#define IPMI_DEVICE_TYPE_DA_CONVERTER_SPECIFIC_DEVICE_NOT_SPECIFIED                   0x1D
 #define IPMI_DEVICE_TYPE_AD_DA_CONVERTER_SPECIFIC_DEVICE_NOT_SPECIFIED                0x1E
 #define IPMI_DEVICE_TYPE_LCD_CONTROLLER_DRIVER_SPECIFIC_DEVICE_NOT_SPECIFIED          0x1F
 #define IPMI_DEVICE_TYPE_CORE_LOGIC_DEVICE_SPECIFIC_DEVICE_NOT_SPECIFIED              0x20
@@ -182,6 +182,7 @@ extern "C" {
  */
 
 extern const char *const ipmi_device_types[];
+extern const char *const ipmi_oem_device_type;
 
 extern const char * const ipmi_device_type_modifier_ds1624_temperature_sensor_eeprom_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_ds1624_temperature_sensor_eeprom_or_equivalent_max_index;

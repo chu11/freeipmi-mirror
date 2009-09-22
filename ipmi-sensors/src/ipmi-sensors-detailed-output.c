@@ -41,6 +41,8 @@
 #define ALL_EVENT_MESSAGES_DISABLED "All Event Messages Disabled"
 #define SENSOR_SCANNING_DISABLED    "Sensor Scanning Disabled"
 
+#define IPMI_SENSORS_DEVICE_TYPE_BUFLEN  1024
+
 #define IPMI_SENSORS_IANA_LEN            1024
 #define IPMI_SENSORS_OEM_DATA_LEN        1024
 
@@ -1790,6 +1792,8 @@ _output_device_type_and_modifier (ipmi_sensors_state_data_t *state_data,
 {
   uint8_t device_type;
   uint8_t device_type_modifier;
+  char device_type_modifier_buf[IPMI_SENSORS_DEVICE_TYPE_BUFLEN + 1];
+  int len;
 
   assert (state_data);
   assert (sdr_record);
@@ -1810,13 +1814,45 @@ _output_device_type_and_modifier (ipmi_sensors_state_data_t *state_data,
       return (-1);
     }
 
-  pstdout_printf (state_data->pstate,
-                  "Device Type: %Xh\n",
-                  device_type);
+  if (IPMI_DEVICE_TYPE_VALID (device_type))
+    pstdout_printf (state_data->pstate,
+                    "Device Type: %s (%Xh)\n",
+                    ipmi_device_types[device_type],
+                    device_type);
+  else if (IPMI_DEVICE_TYPE_IS_OEM (device_type))
+    pstdout_printf (state_data->pstate,
+                    "Device Type: %s (%Xh)\n",
+                    ipmi_oem_device_type,
+                    device_type);
+  else
+    pstdout_printf (state_data->pstate,
+                    "Device Type: %Xh\n",
+                    device_type);
 
-  pstdout_printf (state_data->pstate,
-                  "Device Type Modifier: %Xh\n",
-                  device_type_modifier);
+  memset (device_type_modifier_buf, '\0', IPMI_SENSORS_DEVICE_TYPE_BUFLEN + 1);
+  
+  if ((len = ipmi_device_type_modifer_message (device_type,
+                                               device_type_modifier,
+                                               device_type_modifier_buf,
+                                               IPMI_SENSORS_DEVICE_TYPE_BUFLEN)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_device_type_modifer_message: %s\n",
+                       strerror (errno));
+
+      return (-1);
+    }
+
+  if (len)
+    pstdout_printf (state_data->pstate,
+                    "Device Type Modifier: %s (%Xh)\n",
+                    device_type_modifier_buf,
+                    device_type_modifier);
+  else
+    pstdout_printf (state_data->pstate,
+                    "Device Type Modifier: %Xh\n",
+                    device_type_modifier);
 
   return (0);
 }

@@ -247,6 +247,8 @@ const char *const ipmi_device_types[] =
     NULL
   };
 
+const char *const ipmi_oem_device_type = "OEM specified device";
+
 const char * const ipmi_device_type_modifier_ds1624_temperature_sensor_eeprom_or_equivalent[] =
   {
     "unspecified",
