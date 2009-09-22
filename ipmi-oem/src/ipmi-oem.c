@@ -345,6 +345,20 @@ struct ipmi_oem_command oem_inventec[] =
       0,
       ipmi_oem_inventec_set_bmc_services
     },
+    {
+      "get-web-server-config",
+      NULL,
+      0,
+      0,
+      ipmi_oem_inventec_get_web_server_config
+    },
+    {
+      "set-web-server-config",
+      "KEY=VALUE ...",
+      1,
+      1,
+      ipmi_oem_inventec_set_web_server_config
+    },
 #if 0
     /* cannot verify */
     {

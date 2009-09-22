@@ -30,6 +30,9 @@ int ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_get_bmc_services (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data);
+
 #if 0
 /* cannot verify */
 int ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data);

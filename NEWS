@@ -319,6 +319,7 @@ o ipmi-pef-config/pef-config
 o ipmi-oem
   - Support common 'list' command to all OEM IDs.
   - Add additional Dell OEM commands.
+  - Add additional Inventec OEM commands.
 o bmc-watchdog
   - Removed the following short options.
     - 'h' (legacy -?)

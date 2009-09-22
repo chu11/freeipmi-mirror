@@ -162,44 +162,6 @@
  *
  * https port num - 2 bytes, default 443
  */
-/* Dell Xanadu2 OEM
- *
- * achu: Dell appears to have also implemented an additional OEM
- * command that duplicates this configuration.  Currently, we do not
- * implement the Dell equivalent in ipmi-oem.
- *
- * achu: The document states "web port" and "http port".  That
- * probably means "http" vs. "https" port.  The below documents this
- * typo.
- *
- * Set Web Port Num Request
- *
- * 0x34 - OEM network function
- * 0x02 - OEM cmd
- * 0x?? - web port num (LSB)
- * 0x?? - web port num (MSB)
- * 0x?? - http num (LSB)
- * 0x?? - http num (MSB)
- *
- * Set Web Port Num Response
- *
- * 0x02 - OEM cmd
- * 0x?? - Completion Code
- *
- * Get Web Port Num Request
- *
- * 0x34 - OEM network function
- * 0x03 - OEM cmd
- *
- * Get Web Port Num Response
- *
- * 0x03 - OEM cmd
- * 0x?? - Completion Code
- * 0x?? - web port num (LSB)
- * 0x?? - web port num (MSB)
- * 0x?? - http num (LSB)
- * 0x?? - http num (MSB)
- */
 #define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED  0x01
 #define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS    0x02
 #define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS 0x03
@@ -397,7 +359,7 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
    * 0x30 - OEM network function
    * 0x02 - OEM cmd
    * 0x?? - Reservation ID
-   * 0x02 - Configuration ID (0x02 = ??)
+   * 0x02 - Configuration ID (0x02 = LAN Configuration)
    * 0x01 - Attribute ID (0x01 = ??)
    * 0x00 - Index (unused here??)
    * 0x00 - Data Offset - LSB (unused here??)
@@ -408,7 +370,7 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
    *
    * 0x02 - OEM cmd
    * 0x?? - Completion Code
-   * 0x02 - Configuration ID (0x02 = ??)
+   * 0x02 - Configuration ID (0x02 = LAN Configuration)
    * 0x01 - Attribute ID (0x01 = ??)
    * 0x00 - Index (unused here??)
    * 0x01 - number of bytes returned
@@ -519,7 +481,7 @@ ipmi_oem_inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
    * 0x30 - OEM network function
    * 0x03 - OEM cmd
    * 0x?? - Reservation ID
-   * 0x02 - Configuration ID (0x02 = ??)
+   * 0x02 - Configuration ID (0x02 = LAN Configuration)
    * 0x01 - Attribute ID (0x01 = ??)
    * 0x00 - Index (unused here??)
    * 0x00 - Data Offset - LSB (unused here??)
@@ -1063,6 +1025,433 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
                                                    IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
     goto cleanup;
   
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data,
+                                          uint8_t attribute_id,
+                                          unsigned int value_return_length,
+                                          uint32_t *value)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  uint8_t reservation_id;
+  int rv = -1;
+
+  assert (state_data);
+  assert (value_return_length == 1
+          || value_return_length == 2
+          || value_return_length == 4);
+  assert (value);
+
+  /* Inventec OEM
+   *
+   * Get Web Server Configuration Request
+   *
+   * 0x30 - OEM network function
+   * 0x02 - OEM cmd
+   * 0x?? - Reservation ID
+   * 0x0C - Configuration ID (0x0C = Web Server Configuration)
+   * 0x?? - Attribute ID (various)
+   * 0x00 - Index (unused here??)
+   * 0x00 - Data Offset - LSB (unused here??)
+   * 0x00 = Data Offset - MSB (unused here??)
+   * 0xFF - Bytes to read (0xFF = all)
+   * 
+   * Get Web Server Configuration Response
+   *
+   * 0x02 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x0C - Configuration ID (0x0C = Web Server Configuration)
+   * 0x?? - Attribute ID (various)
+   * 0x00 - Index (unused here??)
+   * 0x?? - number of bytes returned
+   * bytes ...
+   */
+
+  /* Dell Xanadu2 OEM
+   *
+   * achu: Dell appears to have also implemented an additional OEM
+   * command that duplicates this configuration.  Currently, we do not
+   * implement the Dell equivalent in ipmi-oem.
+   *
+   * achu: The document states "web port" and "http port".  That
+   * probably means "http" vs. "https" port.  The below documents this
+   * typo.
+   *
+   * Get Web Port Num Request
+   *
+   * 0x34 - OEM network function
+   * 0x03 - OEM cmd
+   *
+   * Get Web Port Num Response
+   *
+   * 0x03 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - web port num (LSB)
+   * 0x?? - web port num (MSB)
+   * 0x?? - http num (LSB)
+   * 0x?? - http num (MSB)
+   */
+
+  if (_inventec_get_reservation (state_data,
+                                 &reservation_id) < 0)
+    goto cleanup;
+
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION;
+  bytes_rq[1] = reservation_id;
+  bytes_rq[2] = IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION;
+  bytes_rq[3] = attribute_id;
+  bytes_rq[4] = 0x00;
+  bytes_rq[5] = 0x00;
+  bytes_rq[6] = 0x00;
+  bytes_rq[7] = IPMI_OEM_EXTENDED_CONFIG_READ_ALL_BYTES;
+  
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              8, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   6 + value_return_length,
+                                                   IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION,
+                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+    goto cleanup;
+
+  (*value) = 0;
+  if (value_return_length == 1)
+    (*value) = bytes_rs[6];
+  else if (value_return_length == 2)
+    {
+      (*value) = bytes_rs[6];
+      (*value) |= (bytes_rs[7] << 8);
+    }
+  else
+    {
+      (*value) = bytes_rs[6];
+      (*value) |= (bytes_rs[7] << 8);
+      (*value) |= (bytes_rs[8] << 16);
+      (*value) |= (bytes_rs[9] << 24);
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data)
+{
+  uint32_t value;
+  uint8_t webserverenabled;
+  uint8_t maxwebsessions;
+  uint8_t activewebsessions;
+  uint32_t webservertimeout;
+  uint16_t httpportnum;
+  uint16_t httpsportnum;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+   if (_ipmi_oem_inventec_get_web_server_config (state_data,
+                                                 IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
+                                                 1,
+                                                 &value) < 0)
+    goto cleanup;
+   webserverenabled = value;
+
+   if (_ipmi_oem_inventec_get_web_server_config (state_data,
+                                                 IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS,
+                                                 1,
+                                                 &value) < 0)
+    goto cleanup;
+   maxwebsessions = value;
+
+   if (_ipmi_oem_inventec_get_web_server_config (state_data,
+                                                 IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS,
+                                                 1,
+                                                 &value) < 0)
+    goto cleanup;
+   activewebsessions = value;
+
+   if (_ipmi_oem_inventec_get_web_server_config (state_data,
+                                                 IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
+                                                 4,
+                                                 &value) < 0)
+    goto cleanup;
+   webservertimeout = value;
+
+   if (_ipmi_oem_inventec_get_web_server_config (state_data,
+                                                 IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
+                                                 2,
+                                                 &value) < 0)
+    goto cleanup;
+   httpportnum = value;
+
+   if (_ipmi_oem_inventec_get_web_server_config (state_data,
+                                                 IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
+                                                 2,
+                                                 &value) < 0)
+    goto cleanup;
+   httpsportnum = value;
+
+  pstdout_printf (state_data->pstate,
+		  "Web Server          : %s\n",
+		  (webserverenabled) ? "Enabled" : "Disabled");
+
+  pstdout_printf (state_data->pstate,
+		  "Max Web Sessions    : %u\n",
+		  maxwebsessions);
+
+  pstdout_printf (state_data->pstate,
+		  "Active Web Sessions : %u\n",
+		  activewebsessions);
+
+  pstdout_printf (state_data->pstate,
+		  "Web Server Timeout  : %u seconds\n",
+		  webservertimeout);
+
+  pstdout_printf (state_data->pstate,
+		  "http Port Number    : %u\n",
+		  httpportnum);
+
+  pstdout_printf (state_data->pstate,
+		  "https Port Number   : %u\n",
+		  httpsportnum);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data,
+                                          uint8_t attribute_id,
+                                          unsigned int value_length,
+                                          uint32_t value)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  uint8_t reservation_id;
+  int rv = -1;
+
+  assert (state_data);
+  assert (value_length == 1
+          || value_length == 2
+          || value_length == 4);
+
+  /* Inventec OEM
+   *
+   * Set Web Server Configuration Request
+   *
+   * 0x30 - OEM network function
+   * 0x03 - OEM cmd
+   * 0x?? - Reservation ID
+   * 0x0C - Configuration ID (0x0C = Web Server Configuration)
+   * 0x?? - Attribute ID (various)
+   * 0x00 - Index (unused here??)
+   * 0x00 - Data Offset - LSB (unused here??)
+   * 0x00 = Data Offset - MSB (unused here??)
+   * 0x01 - In progress bit (0x00 in progress, 0x01 - last config in this request)
+   * bytes ... 
+   * 
+   * Set Web Server Configuration Response
+   *
+   * 0x03 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - bytes written
+   */
+
+  /* Dell Xanadu2 OEM
+   *
+   * achu: Dell appears to have also implemented an additional OEM
+   * command that duplicates this configuration.  Currently, we do not
+   * implement the Dell equivalent in ipmi-oem.
+   *
+   * achu: The document states "web port" and "http port".  That
+   * probably means "http" vs. "https" port.  The below documents this
+   * typo.
+   *
+   * Set Web Port Num Request
+   *
+   * 0x34 - OEM network function
+   * 0x02 - OEM cmd
+   * 0x?? - web port num (LSB)
+   * 0x?? - web port num (MSB)
+   * 0x?? - http num (LSB)
+   * 0x?? - http num (MSB)
+   *
+   * Set Web Port Num Response
+   *
+   * 0x02 - OEM cmd
+   * 0x?? - Completion Code
+   */
+  if (_inventec_get_reservation (state_data,
+                                 &reservation_id) < 0)
+    goto cleanup;
+
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION;
+  bytes_rq[1] = reservation_id;
+  bytes_rq[2] = IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION;
+  bytes_rq[3] = attribute_id;
+  bytes_rq[4] = 0x00;
+  bytes_rq[5] = 0x00;
+  bytes_rq[6] = 0x00;
+  bytes_rq[7] = 0x01;
+
+  if (value_length == 1)
+    bytes_rq[8] = (value & 0x000000FF);
+  else if (value_length == 2)
+    {
+      bytes_rq[8] = (value & 0x000000FF);
+      bytes_rq[9] = (value & 0x0000FF00) >> 8;
+    }
+  else
+    {
+      bytes_rq[8] = (value & 0x000000FF);
+      bytes_rq[9] = (value & 0x0000FF00) >> 8;
+      bytes_rq[10] = (value & 0x00FF0000) >> 16;
+      bytes_rq[11] = (value & 0xFF000000) >> 24;
+    }
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              8 + value_length, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2, /* don't care about the 3rd byte, don't know what it is used for */
+                                                   IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION,
+                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t webserverenabled = 0;
+  uint32_t webservertimeout = 0;
+  uint16_t httpportnumber = 0;
+  uint16_t httpsportnumber = 0;
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: webserver=enable|disable\n"
+		      "Option: webservertimeout=seconds\n"
+		      "Option: httpportnumber=num\n"
+		      "Option: httpsportnumber=num\n");
+      return (0); 
+    }
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
+        goto cleanup;
+
+      if (!strcasecmp (key, "webserver"))
+        {
+          if (ipmi_oem_parse_enable (state_data, i, value, &webserverenabled) < 0)
+            goto cleanup;
+
+          if (_ipmi_oem_inventec_set_web_server_config (state_data,
+                                                        IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
+                                                        1,
+                                                        (uint32_t)webserverenabled) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "webservertimeout"))
+        {
+          if (ipmi_oem_parse_timeout (state_data, i, value, &webservertimeout) < 0)
+            goto cleanup;
+          
+          if (_ipmi_oem_inventec_set_web_server_config (state_data,
+                                                        IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
+                                                        4,
+                                                        webservertimeout) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "httpportnumber"))
+        {
+          if (ipmi_oem_parse_port (state_data, i, value, &httpportnumber) < 0)
+            goto cleanup;
+          
+          if (_ipmi_oem_inventec_set_web_server_config (state_data,
+                                                        IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
+                                                        2,
+                                                        httpportnumber) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "httpsportnumber"))
+        {
+          if (ipmi_oem_parse_port (state_data, i, value, &httpsportnumber) < 0)
+            goto cleanup;
+          
+          if (_ipmi_oem_inventec_set_web_server_config (state_data,
+                                                        IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
+                                                        2,
+                                                        httpsportnumber) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
+
+      free (key);
+      free (value);
+    }
+
   rv = 0;
  cleanup:
   return (rv);
