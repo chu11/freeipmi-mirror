@@ -1075,6 +1075,8 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
 }
 #endif
 
+#if 0
+/* cannot verify */
 int
 ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
 {
@@ -1176,6 +1178,7 @@ ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+#endif
 
 static int
 _ipmi_oem_inventec_read_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)

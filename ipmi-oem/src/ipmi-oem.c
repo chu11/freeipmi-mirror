@@ -324,6 +324,8 @@ struct ipmi_oem_command oem_inventec[] =
       ipmi_oem_inventec_restore_to_defaults
     },
 #endif
+#if 0
+    /* cannot verify */
     {
       "set-system-guid",
       "<system_guid>",
@@ -331,6 +333,7 @@ struct ipmi_oem_command oem_inventec[] =
       0,
       ipmi_oem_inventec_set_system_guid
     },
+#endif
     {
       "read-eeprom",
       "<at24c256n>",

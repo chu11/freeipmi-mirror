@@ -35,7 +35,10 @@ int ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data);
 #endif
 
+#if 0
+/* cannot verify */
 int ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data);
+#endif
 
 int ipmi_oem_inventec_read_eeprom (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_inventec_clear_eeprom (ipmi_oem_state_data_t *state_data);

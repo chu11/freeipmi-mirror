@@ -312,10 +312,12 @@ to default values.  The command will spin until the reset is confirmed
 to be complete.  Command confirmed to work on Inventec 5441 (and
 subsequently Dell Xanadu2).
 \}
+.if 0 \{
 .TP
 .B set-system-guid \fIsystemguid\fR
 This OEM command will set the system guid.  Command confirmed to work
 on Inventec 5441 (and subsequently Dell Xanadu2).
+\}
 .TP
 .B read-eeprom \fIat24c256n\fR
 This OEM command will read the specified eeprom. Command confirmed to
