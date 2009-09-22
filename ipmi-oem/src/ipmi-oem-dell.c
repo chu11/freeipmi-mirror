@@ -221,6 +221,8 @@
 #define IPMI_OEM_DELL_SET_POWER_CAPACITY_STATUS_ENABLE  0x01
 #define IPMI_OEM_DELL_SET_POWER_CAPACITY_STATUS_DISABLE 0x00
 
+#define IPMI_OEM_DELL_ASSET_TAG_MAX 10
+
 /* Will call ipmi_cmd_get_system_info_parameters only once, b/c field
  * requested is defined by OEM to be < 16 bytes in length
  */
@@ -4962,6 +4964,84 @@ ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data)
                                                    IPMI_NET_FN_OEM_DELL_XANADU2_RS) < 0)
     goto cleanup;
 
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_set_asset_tag (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  unsigned int asset_tag_len;
+  unsigned int rq_len = 0;
+  int rs_len;
+  int rv = -1;
+  int i;
+  
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  asset_tag_len = strlen (state_data->prog_data->args->oem_options[0]);
+  if (asset_tag_len > IPMI_OEM_DELL_ASSET_TAG_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s OEM option argument '%s' invalid length, max %u long\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0],
+                       IPMI_OEM_DELL_ASSET_TAG_MAX);
+      goto cleanup;
+    }
+  
+  /* Dell OEM
+   *
+   * Set Asset Tag Request
+   *
+   * 0x34 - OEM network function
+   * 0x12 - OEM cmd
+   * bytes 1-10: Asset Tag
+   *
+   * Set Asset Tag Response
+   *
+   * 0x12 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - count written
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_SET_ASSET_TAG;
+  rq_len++;
+  for (i = 0; i < asset_tag_len; i++)
+    {
+      bytes_rq[1 + i] = state_data->prog_data->args->oem_options[0][i];
+      rq_len++;
+    }
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_DELL_XANADU2_RQ, /* network function */
+                              bytes_rq, /* data */
+                              rq_len, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_DELL_SET_ASSET_TAG,
+                                                   IPMI_NET_FN_OEM_DELL_XANADU2_RS) < 0)
+    goto cleanup;
+  
   rv = 0;
  cleanup:
   return (rv);

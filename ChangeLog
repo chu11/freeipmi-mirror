@@ -7,7 +7,8 @@
 	* libfreeipmi/src/sel-parse/: Add inventec port80 code event
 	interpretation.
 
-	* ipmi-oem/: Add set-system-guid for inventec.
+	* ipmi-oem/: Add set-system-guid for inventec.  Add set-asset-tag
+	for dell.
 
 	* ipmi-oem/: Add set-fcb-version for dell.  Add get/set board id.
 	

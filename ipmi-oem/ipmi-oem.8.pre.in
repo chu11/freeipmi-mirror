@@ -242,6 +242,11 @@ number.  Command confirmed to work on Dell Xanadu2.
 This OEM command can set the fan control board (FCB) version number.
 The \fImajorversion\fR and \fIminorversion\fR must be specified in
 hex.  Command confirmed to work on Dell Xanadu2.
+.TP
+.B set-asset-tag \fIasset-tag\fR
+This OEM command cat set the asset-tag of the motherboard.  The
+maximum length of the asset tag is 10 bytes.  Command confirmed to
+work on Dell Xanadu2.
 .if 0 \{
 .TP
 .B get-dhcp-retry
