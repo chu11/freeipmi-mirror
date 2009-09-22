@@ -251,6 +251,8 @@ struct ipmi_oem_command oem_dell[] =
       0,
       ipmi_oem_dell_set_fcb_version
     },
+#if 0
+    /* cannot verify */
     {
       "set-asset-tag",
       "<asset-tag>",
@@ -258,6 +260,7 @@ struct ipmi_oem_command oem_dell[] =
       0,
       ipmi_oem_dell_set_asset_tag
     },
+#endif
 #if 0
     /* cannot verify */
     {

@@ -4969,6 +4969,8 @@ ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
+#if 0
+/* cannot verify */
 int
 ipmi_oem_dell_set_asset_tag (ipmi_oem_state_data_t *state_data)
 {
@@ -5046,6 +5048,7 @@ ipmi_oem_dell_set_asset_tag (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+#endif
 
 #if 0
 /* cannot verify */
