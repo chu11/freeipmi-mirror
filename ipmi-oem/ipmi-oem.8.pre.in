@@ -226,9 +226,22 @@ This OEM command can configure the current power capacity to be
 enabled or disabled.  Command confirmed to work on Dell Poweredge
 R610 and R710.
 .TP
+.B get-board-id
+This OEM command can get the board ID.  Command confirmed to work on
+Dell Xanadu2.
+.TP
+.B set-board-id \fIID\fR
+This OEM command can set the board ID.  Command confirmed to work on
+Dell Xanadu2.
+.TP
 .B get-fcb-version
-This OEM command can retrieve the fan control board (FCB) version
+This OEM command can get the fan control board (FCB) version
 number.  Command confirmed to work on Dell Xanadu2.
+.TP
+.B set-fcb-version \fImajorversion\fR \fIminorversion\fR
+This OEM command can set the fan control board (FCB) version number.
+The \fImajorversion\fR and \fIminorversion\fR must be specified in
+hex.  Command confirmed to work on Dell Xanadu2.
 .if 0 \{
 .TP
 .B get-dhcp-retry

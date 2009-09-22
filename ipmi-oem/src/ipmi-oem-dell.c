@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
+#include <ctype.h>
 #endif /* STDC_HEADERS */
 #if TIME_WITH_SYS_TIME
 #include <sys/time.h>
@@ -38,6 +39,7 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <limits.h>
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
@@ -4674,6 +4676,141 @@ ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_dell_get_board_id (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int32_t rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Dell Xanadu2 OEM
+   *
+   * Get Board ID Request
+   *
+   * 0x34 - OEM network function
+   * 0x10 - OEM cmd
+   *
+   * Get Board ID Response
+   *
+   * 0x10 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - board id
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_BOARD_ID;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_DELL_XANADU2_RQ, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   3,
+                                                   IPMI_CMD_OEM_DELL_GET_BOARD_ID,
+                                                   IPMI_NET_FN_OEM_DELL_XANADU2_RS) < 0)
+    goto cleanup;
+
+  pstdout_printf (state_data->pstate,
+                  "%Xh\n",
+                  bytes_rs[2]);
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_set_board_id (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint8_t boardid;
+  long tmp;
+  char *ptr;
+  int32_t rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  tmp = strtol (state_data->prog_data->args->oem_options[0],
+                &ptr,
+                IPMI_OEM_HEX_BASE);
+  if (tmp < 0
+      || tmp > UCHAR_MAX
+      || (*ptr) != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  boardid = tmp;
+
+  /* Dell Xanadu2 OEM
+   *
+   * Set Board ID Request
+   *
+   * 0x34 - OEM network function
+   * 0x11 - OEM cmd
+   * 0x?? - board id
+   *
+   * Set Board ID Response
+   *
+   * 0x11 - OEM cmd
+   * 0x?? - Completion Code
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_SET_BOARD_ID;
+  bytes_rq[1] = boardid;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_DELL_XANADU2_RQ, /* network function */
+                              bytes_rq, /* data */
+                              2, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_DELL_SET_BOARD_ID,
+                                                   IPMI_NET_FN_OEM_DELL_XANADU2_RS) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
@@ -4728,6 +4865,102 @@ ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data)
                   "%X.%02X\n",
                   bytes_rs[2],
                   bytes_rs[3]);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint8_t majorversion;
+  uint8_t minorversion;
+  long tmp;
+  char *ptr;
+  int32_t rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 2);
+
+  tmp = strtol (state_data->prog_data->args->oem_options[0],
+                &ptr,
+                IPMI_OEM_HEX_BASE);
+  if (tmp < 0
+      || tmp > UCHAR_MAX
+      || (*ptr) != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  majorversion = tmp;
+
+  tmp = strtol (state_data->prog_data->args->oem_options[1],
+                &ptr,
+                IPMI_OEM_HEX_BASE);
+  if (tmp < 0
+      || tmp > UCHAR_MAX
+      || (*ptr) != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+  minorversion = tmp;
+
+  /* Dell Xanadu2 OEM
+   *
+   * Set FCB Version Request
+   *
+   * 0x34 - OEM network function
+   * 0x15 - OEM cmd
+   * 0x?? - major version (in hex)
+   * 0x?? - minor version (in hex)
+   *
+   * Set FCB Version Response
+   *
+   * 0x15 - OEM cmd
+   * 0x?? - Completion Code
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_DELL_SET_FCB_VERSION;
+  bytes_rq[1] = majorversion;
+  bytes_rq[2] = minorversion;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_DELL_XANADU2_RQ, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_DELL_SET_FCB_VERSION,
+                                                   IPMI_NET_FN_OEM_DELL_XANADU2_RS) < 0)
+    goto cleanup;
 
   rv = 0;
  cleanup:

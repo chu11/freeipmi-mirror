@@ -1142,12 +1142,12 @@ ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
 
       memset (strbuf, '\0', IPMI_OEM_BUFLEN);
       strbuf[0] = state_data->prog_data->args->oem_options[0][i];
-      val = strtol (strbuf, NULL, 16);
+      val = strtol (strbuf, NULL, IPMI_OEM_HEX_BASE);
       bytes_rq[1 + i] |= (val & 0x0F);
 
       memset (strbuf, '\0', IPMI_OEM_BUFLEN);
       strbuf[0] = state_data->prog_data->args->oem_options[0][i + 1];
-      val = strtol (strbuf, NULL, 16);
+      val = strtol (strbuf, NULL, IPMI_OEM_HEX_BASE);
       bytes_rq[1 + i] |= ((val << 4) & 0xF0);
     }
 

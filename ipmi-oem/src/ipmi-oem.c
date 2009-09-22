@@ -224,11 +224,32 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_set_power_capacity_status
     },
     {
+      "get-board-id",
+      NULL,
+      0,
+      0,
+      ipmi_oem_dell_get_board_id
+    },
+    {
+      "set-board-id",
+      "<boardid>",
+      1,
+      0,
+      ipmi_oem_dell_set_board_id
+    },
+    {
       "get-fcb-version",
       NULL,
       0,
       0,
       ipmi_oem_dell_get_fcb_version
+    },
+    {
+      "set-fcb-version",
+      "<majorversion> <minorversion>",
+      2,
+      0,
+      ipmi_oem_dell_set_fcb_version
     },
 #if 0
     /* cannot verify */

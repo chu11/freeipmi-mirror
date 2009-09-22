@@ -51,7 +51,11 @@ extern "C" {
  * Dell Xanadu2
  */
 /* achu: names taken from code, are correct names? */
+#define IPMI_CMD_OEM_DELL_SET_BOARD_ID    0x10
+#define IPMI_CMD_OEM_DELL_GET_BOARD_ID    0x11
+#define IPMI_CMD_OEM_DELL_SET_FCB_VERSION 0x15
 #define IPMI_CMD_OEM_DELL_GET_FCB_VERSION 0x16
+
 
 /* 
  * Inventec
