@@ -1,3 +1,7 @@
+2009-09-22  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-dcmi/: Fix output corner case.
+	
 2009-09-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-device-types-spec.h,

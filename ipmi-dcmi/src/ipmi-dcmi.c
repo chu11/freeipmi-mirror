@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.1 2009-05-26 23:35:57 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.2 2009-09-22 17:26:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -63,6 +63,7 @@
 
 #define IPMI_DCMI_MAX_RECORD_IDS_BUFLEN 1024
 
+/* return 1 on output success, 0 on no output, -1 on error */
 static int
 _dcmi_specification_conformance (ipmi_dcmi_state_data_t *state_data, uint8_t *parameter_revision)
 {
@@ -141,12 +142,13 @@ _dcmi_specification_conformance (ipmi_dcmi_state_data_t *state_data, uint8_t *pa
     }
   (*parameter_revision) = val;
 
-  rv = 0;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
+/* return 1 on output success, 0 on no output, -1 on error */
 static int
 _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
 {
@@ -363,12 +365,13 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
                       val ? "Available" : "Not present");
     }
 
-  rv = 0;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
+/* return 1 on output success, 0 on no output, -1 on error */
 static int
 _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
 {
@@ -548,12 +551,13 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
                       val ? "At least 1 present" : "Not present");
     }
 
-  rv = 0;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
+/* return 1 on output success, 0 on no output, -1 on error */
 static int
 _optional_platform_attributes (ipmi_dcmi_state_data_t *state_data)
 {
@@ -578,6 +582,15 @@ _optional_platform_attributes (ipmi_dcmi_state_data_t *state_data)
   if (ipmi_dcmi_cmd_get_dcmi_capability_info_optional_platform_attributes (state_data->ipmi_ctx,
                                                                            obj_cmd_rs) < 0)
     {
+      /* this optional parameter is not supported */
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          && ipmi_check_completion_code (obj_cmd_rs,
+                                         IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_dcmi_cmd_get_dcmi_capability_info_optional_platform_attributes: %s\n",
@@ -634,12 +647,13 @@ _optional_platform_attributes (ipmi_dcmi_state_data_t *state_data)
                   "Power Management Controller Channel Number         : %u\n",
                   channel_number);
 
-  rv = 0;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
+/* return 1 on output success, 0 on no output, -1 on error */
 static int
 _manageability_access_attributes (ipmi_dcmi_state_data_t *state_data)
 {
@@ -729,12 +743,13 @@ _manageability_access_attributes (ipmi_dcmi_state_data_t *state_data)
                     "Serial Out-of-band TMODE Capability Channel Number : %u\n",
                     channel_number);
 
-  rv = 0;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
+/* return 1 on output success, 0 on no output, -1 on error */
 static int
 _get_ehanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_data,
                                                  uint8_t *number_of_supported_rolling_average_time_periods,
@@ -823,7 +838,7 @@ _get_ehanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_d
       goto cleanup;
     }
 
-  rv = 0;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
@@ -903,6 +918,7 @@ _get_time_duration_info (ipmi_dcmi_state_data_t *state_data,
   return (rv);
 }
 
+/* return 1 on output success, 0 on no output, -1 on error */
 static int
 _enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_data)
 {
@@ -935,44 +951,50 @@ _enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_data
                       time_duration_units_str);
     }
 
-  return (0);
+  return (1);
 }
 
 static int
 get_dcmi_capability_info (ipmi_dcmi_state_data_t *state_data)
 {
   uint8_t parameter_revision;
+  int ret;
 
   assert (state_data);
 
-  if (_dcmi_specification_conformance (state_data, &parameter_revision) < 0)
+  if ((ret = _dcmi_specification_conformance (state_data, &parameter_revision)) < 0)
     return (-1);
   
-  pstdout_printf (state_data->pstate, "\n");
+  if (ret)
+    pstdout_printf (state_data->pstate, "\n");
 
-  if (_supported_dcmi_capabilities (state_data) < 0)
+  if ((ret = _supported_dcmi_capabilities (state_data)) < 0)
     return (-1);
 
-  pstdout_printf (state_data->pstate, "\n");
+  if (ret)
+    pstdout_printf (state_data->pstate, "\n");
 
-  if (_mandatory_platform_attributes (state_data) < 0)
+  if ((ret = _mandatory_platform_attributes (state_data)) < 0)
     return (-1);
 
-  pstdout_printf (state_data->pstate, "\n");
+  if (ret)
+    pstdout_printf (state_data->pstate, "\n");
 
-  if (_optional_platform_attributes (state_data) < 0)
+  if ((ret = _optional_platform_attributes (state_data)) < 0)
     return (-1);
 
-  pstdout_printf (state_data->pstate, "\n");
+  if (ret)
+    pstdout_printf (state_data->pstate, "\n");
 
-  if (_manageability_access_attributes (state_data) < 0)
+  if ((ret = _manageability_access_attributes (state_data)) < 0)
     return (-1);
 
   if (parameter_revision >= 0x02)
     {
-      pstdout_printf (state_data->pstate, "\n");
+      if (ret)
+        pstdout_printf (state_data->pstate, "\n");
       
-      if (_enhanced_system_power_statistics_attributes (state_data) < 0)
+      if ((ret = _enhanced_system_power_statistics_attributes (state_data)) < 0)
         return (-1);
     }
 
