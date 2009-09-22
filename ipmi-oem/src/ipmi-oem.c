@@ -325,6 +325,13 @@ struct ipmi_oem_command oem_inventec[] =
     },
 #endif
     {
+      "set-system-guid",
+      "<system_guid>",
+      1,
+      0,
+      ipmi_oem_inventec_set_system_guid
+    },
+    {
       "read-eeprom",
       "<at24c256n>",
       1,

@@ -6,6 +6,8 @@
 
 	* libfreeipmi/src/sel-parse/: Add inventec port80 code event
 	interpretation.
+
+	* ipmi-oem/: Add set-system-guid for inventec.
 	
 2009-09-21  Albert Chu <chu11@llnl.gov>
 

@@ -103,6 +103,8 @@ extern "C" {
   (((__set_device_power_state) == IPMI_ACPI_SET_DEVICE_POWER_STATE_SET_DEVICE_POWER_STATE \
     || (__set_device_power_state) == IPMI_ACPI_SET_DEVICE_POWER_STATE_DONT_SET_DEVICE_POWER_STATE) ? 1 : 0)
 
+#define IPMI_SYSTEM_GUID_LENGTH 16
+
 /* 
  * fill* functions return 0 on success, -1 on error.
  *

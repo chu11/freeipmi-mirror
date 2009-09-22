@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
+#include <ctype.h>
 #endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -204,6 +205,8 @@
 #define IPMI_OEM_EEPROM_AT24C256N_ADDRESS_MIN   0x0000
 #define IPMI_OEM_EEPROM_AT24C256N_ADDRESS_MAX   0x7FFF
 #define IPMI_OEM_EEPROM_AT24C256N_CLEAR_BYTE    0xFF
+
+#define IPMI_OEM_BUFLEN 1024
 
 static int
 _inventec_get_reservation (ipmi_oem_state_data_t *state_data,
@@ -792,7 +795,7 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
 
   /* Inventec OEM
    *
-   * Disable/Enable Non-IPMI BMC Ports Request
+   * Disable/Enable BMC Services Request
    *
    * 0x30 - OEM network function
    * 0x03 - OEM cmd
@@ -809,7 +812,7 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
    *        0x04 - disable HTTP/HTTPS
    *        0x08 - disable SSH/Telent
    *
-   * Disable Non-IPMI BMC Ports Response
+   * Disable BMC Services Response
    *
    * 0x03 - OEM cmd
    * 0x?? - Completion Code
@@ -1071,6 +1074,108 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 #endif
+
+int
+ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (strlen (state_data->prog_data->args->oem_options[0]) != (IPMI_SYSTEM_GUID_LENGTH * 2))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s OEM option argument '%s' invalid length, must be %u long\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0],
+                       (IPMI_SYSTEM_GUID_LENGTH * 2));
+      goto cleanup;
+    }
+  
+  for (i = 0; i < (IPMI_SYSTEM_GUID_LENGTH * 2); i++)
+    {
+      if (!isxdigit (state_data->prog_data->args->oem_options[0][i]))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s OEM option argument '%s' contains invalid hex code\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[0]);
+          goto cleanup;
+        }
+    }
+
+  /* Inventec OEM
+   *
+   * Set System GUID Request
+   *
+   * 0x30 - OEM network function
+   * 0xB3 - OEM cmd
+   * bytes 1-16: System GUID
+   *
+   * Set System GUID Response
+   *
+   * 0xB3 - OEM cmd
+   * 0x?? - Completion Code
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_SYSTEM_GUID;
+  for (i = 0; i < IPMI_SYSTEM_GUID_LENGTH; i++)
+    {
+      char strbuf[IPMI_OEM_BUFLEN];
+      long val;
+      
+      /* achu: there *must* be something faster than this, I just
+       * can't find the magic lib call to do 1-char to 1-hex.  All the
+       * strxxx() functions take NUL terminated strings.
+       */
+
+      memset (strbuf, '\0', IPMI_OEM_BUFLEN);
+      strbuf[0] = state_data->prog_data->args->oem_options[0][i];
+      val = strtol (strbuf, NULL, 16);
+      bytes_rq[1 + i] |= (val & 0x0F);
+
+      memset (strbuf, '\0', IPMI_OEM_BUFLEN);
+      strbuf[0] = state_data->prog_data->args->oem_options[0][i + 1];
+      val = strtol (strbuf, NULL, 16);
+      bytes_rq[1 + i] |= ((val << 4) & 0xF0);
+    }
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              17, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_INVENTEC_SET_SYSTEM_GUID,
+                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
 
 static int
 _ipmi_oem_inventec_read_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)

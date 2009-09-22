@@ -65,6 +65,7 @@ extern "C" {
 #define IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION     0x03
 #define IPMI_CMD_OEM_INVENTEC_RESTORE_TO_DEFAULTS            0x04
 #define IPMI_CMD_OEM_INVENTEC_GET_RESTORE_STATUS             0x05
+#define IPMI_CMD_OEM_INVENTEC_SET_SYSTEM_GUID                0xB3
 
 /* achu: not official names, named based on use context */
 #define IPMI_CMD_OEM_INVENTEC_SET_DEDICATED_MAC_ADDRESS    0x21
