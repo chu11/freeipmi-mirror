@@ -126,7 +126,7 @@
 #define IPMI_OEM_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE          0x10
 #define IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT         0x11
 
-/* nic status - is implemented, see below
+/* nic status - 1 byte, 0 = shared, 1 = dedicated
  */
 #define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_LAN_NIC_STATUS 0x01
 
@@ -137,7 +137,12 @@
 #define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT           0x01
 #define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_SSH_REDIRECT_ENABLE 0x02
 
-/* service disabled - is implemented, see below
+/* service disabled - 1 byte, bitmask
+ *                  - 0x01 = all service except IPMI are disabled
+ *                           (takes precedence over other bits)
+ *                  - 0x02 = KVM/Virtual Storage
+ *                  - 0x04 = HTTP/HTTPS
+ *                  - 0x08 = SSH/Telnet
  *
  * max authentication failures - 1 byte, 0 = disable
  *
@@ -340,8 +345,12 @@ _inventec_get_reservation (ipmi_oem_state_data_t *state_data,
   return (rv);
 }
 
-int
-ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
+static int
+_ipmi_oem_inventec_get_config (ipmi_oem_state_data_t *state_data,
+                               uint8_t configuration_id,
+                               uint8_t attribute_id,
+                               unsigned int value_return_length,
+                               uint32_t *value)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
@@ -350,32 +359,197 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
   int rv = -1;
 
   assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
+  assert (value_return_length == 1
+          || value_return_length == 2
+          || value_return_length == 4);
+  assert (value);
 
   /* Inventec OEM
    *
-   * Get NIC Status Request
+   * Get Web Server Configuration Request
    *
    * 0x30 - OEM network function
    * 0x02 - OEM cmd
    * 0x?? - Reservation ID
-   * 0x02 - Configuration ID (0x02 = LAN Configuration)
-   * 0x01 - Attribute ID (0x01 = ??)
+   * 0x?? - Configuration ID
+   * 0x?? - Attribute ID
    * 0x00 - Index (unused here??)
    * 0x00 - Data Offset - LSB (unused here??)
    * 0x00 = Data Offset - MSB (unused here??)
    * 0xFF - Bytes to read (0xFF = all)
    * 
-   * Get NIC Status Response
+   * Get Web Server Configuration Response
    *
    * 0x02 - OEM cmd
    * 0x?? - Completion Code
-   * 0x02 - Configuration ID (0x02 = LAN Configuration)
-   * 0x01 - Attribute ID (0x01 = ??)
+   * 0x?? - Configuration ID
+   * 0x?? - Attribute ID
    * 0x00 - Index (unused here??)
-   * 0x01 - number of bytes returned
-   * 0x00 | 0x01 - 0x00 = shared, 0x01 = dedicated
+   * 0x?? - number of bytes returned
+   * bytes ...
    */
+
+  if (_inventec_get_reservation (state_data,
+                                 &reservation_id) < 0)
+    goto cleanup;
+
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION;
+  bytes_rq[1] = reservation_id;
+  bytes_rq[2] = configuration_id;
+  bytes_rq[3] = attribute_id;
+  bytes_rq[4] = 0x00;
+  bytes_rq[5] = 0x00;
+  bytes_rq[6] = 0x00;
+  bytes_rq[7] = IPMI_OEM_EXTENDED_CONFIG_READ_ALL_BYTES;
+  
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              8, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   6 + value_return_length,
+                                                   IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION,
+                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+    goto cleanup;
+
+  (*value) = 0;
+  if (value_return_length == 1)
+    (*value) = bytes_rs[6];
+  else if (value_return_length == 2)
+    {
+      (*value) = bytes_rs[6];
+      (*value) |= (bytes_rs[7] << 8);
+    }
+  else
+    {
+      (*value) = bytes_rs[6];
+      (*value) |= (bytes_rs[7] << 8);
+      (*value) |= (bytes_rs[8] << 16);
+      (*value) |= (bytes_rs[9] << 24);
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_ipmi_oem_inventec_set_config (ipmi_oem_state_data_t *state_data,
+                               uint8_t configuration_id,
+                               uint8_t attribute_id,
+                               unsigned int value_length,
+                               uint32_t value)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  uint8_t reservation_id;
+  int rv = -1;
+
+  assert (state_data);
+  assert (value_length == 1
+          || value_length == 2
+          || value_length == 4);
+
+  /* Inventec OEM
+   *
+   * Set Web Server Configuration Request
+   *
+   * 0x30 - OEM network function
+   * 0x03 - OEM cmd
+   * 0x?? - Reservation ID
+   * 0x?? - Configuration ID
+   * 0x?? - Attribute ID
+   * 0x00 - Index (unused here??)
+   * 0x00 - Data Offset - LSB (unused here??)
+   * 0x00 = Data Offset - MSB (unused here??)
+   * 0x01 - In progress bit (0x00 in progress, 0x01 - last config in this request)
+   * bytes ... 
+   * 
+   * Set Web Server Configuration Response
+   *
+   * 0x03 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - bytes written
+   */
+
+  if (_inventec_get_reservation (state_data,
+                                 &reservation_id) < 0)
+    goto cleanup;
+
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION;
+  bytes_rq[1] = reservation_id;
+  bytes_rq[2] = configuration_id;
+  bytes_rq[3] = attribute_id;
+  bytes_rq[4] = 0x00;
+  bytes_rq[5] = 0x00;
+  bytes_rq[6] = 0x00;
+  bytes_rq[7] = 0x01;
+
+  if (value_length == 1)
+    bytes_rq[8] = (value & 0x000000FF);
+  else if (value_length == 2)
+    {
+      bytes_rq[8] = (value & 0x000000FF);
+      bytes_rq[9] = (value & 0x0000FF00) >> 8;
+    }
+  else
+    {
+      bytes_rq[8] = (value & 0x000000FF);
+      bytes_rq[9] = (value & 0x0000FF00) >> 8;
+      bytes_rq[10] = (value & 0x00FF0000) >> 16;
+      bytes_rq[11] = (value & 0xFF000000) >> 24;
+    }
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              8 + value_length, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION,
+                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
+{
+  uint32_t value;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
 
   /* Dell Xanadu2 OEM
    *
@@ -396,43 +570,14 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
    *      - 00h = shared, 01h = dedicated
    */
 
-  if (_inventec_get_reservation (state_data,
-                                 &reservation_id) < 0)
+  if (_ipmi_oem_inventec_get_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_LAN,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_LAN_NIC_STATUS,
+                                     1,
+                                     &value) < 0)
     goto cleanup;
 
-  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION;
-  bytes_rq[1] = reservation_id;
-  bytes_rq[2] = IPMI_OEM_EXTENDED_CONFIGURATION_ID_LAN;
-  bytes_rq[3] = IPMI_OEM_EXTENDED_ATTRIBUTE_ID_LAN_NIC_STATUS;
-  bytes_rq[4] = 0x00;
-  bytes_rq[5] = 0x00;
-  bytes_rq[6] = 0x00;
-  bytes_rq[7] = IPMI_OEM_EXTENDED_CONFIG_READ_ALL_BYTES;
-
-  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                              0, /* lun */
-                              IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
-                              bytes_rq, /* data */
-                              8, /* num bytes */
-                              bytes_rs,
-                              IPMI_OEM_MAX_BYTES)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_raw: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
-    }
-
-  if (ipmi_oem_check_response_and_completion_code (state_data,
-                                                   bytes_rs,
-                                                   rs_len,
-                                                   7,
-                                                   IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
-    goto cleanup;
-
-  switch (bytes_rs[6])
+  switch (value)
     {
     case IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_SHARED:
       pstdout_printf (state_data->pstate, "shared\n");
@@ -441,7 +586,7 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
       pstdout_printf (state_data->pstate, "dedicated\n");
       break;
     default:
-      pstdout_printf (state_data->pstate, "unknown NIC status: %Xh\n", bytes_rs[7]);
+      pstdout_printf (state_data->pstate, "unknown NIC status: %Xh\n", value);
       break;
     }
 
@@ -453,10 +598,7 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
 int
 ipmi_oem_inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
 {
-  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
-  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  int rs_len;
-  uint8_t reservation_id;
+  uint8_t status;
   int rv = -1;
 
   assert (state_data);
@@ -473,28 +615,6 @@ ipmi_oem_inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[0]);
       goto cleanup;
     }
-
-  /* Inventec OEM
-   *
-   * Set NIC Status Request
-   *
-   * 0x30 - OEM network function
-   * 0x03 - OEM cmd
-   * 0x?? - Reservation ID
-   * 0x02 - Configuration ID (0x02 = LAN Configuration)
-   * 0x01 - Attribute ID (0x01 = ??)
-   * 0x00 - Index (unused here??)
-   * 0x00 - Data Offset - LSB (unused here??)
-   * 0x00 = Data Offset - MSB (unused here??)
-   * 0x01 - In progress bit (0x00 in progress, 0x01 - last config in this request)
-   * 0x00 | 0x01 - 0x00 = shared, 0x01 = dedicated
-   * 
-   * Set NIC Status Response
-   *
-   * 0x03 - OEM cmd
-   * 0x?? - Completion Code
-   * 0x?? - bytes written
-   */
 
   /* Dell Xanadu2 OEM
    *
@@ -516,45 +636,16 @@ ipmi_oem_inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
    * 0x?? - LAN Source Setting
    */
 
-  if (_inventec_get_reservation (state_data,
-                                 &reservation_id) < 0)
-    goto cleanup;
-
-  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION;
-  bytes_rq[1] = reservation_id;
-  bytes_rq[2] = IPMI_OEM_EXTENDED_CONFIGURATION_ID_LAN;
-  bytes_rq[3] = IPMI_OEM_EXTENDED_ATTRIBUTE_ID_LAN_NIC_STATUS;
-  bytes_rq[4] = 0x00;
-  bytes_rq[5] = 0x00;
-  bytes_rq[6] = 0x00;
-  bytes_rq[7] = 0x01;
-
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "shared"))
-    bytes_rq[8] = IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_SHARED;
+    status = IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_SHARED;
   else
-    bytes_rq[8] = IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_DEDICATED;
+    status = IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_DEDICATED;
 
-  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                              0, /* lun */
-                              IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
-                              bytes_rq, /* data */
-                              9, /* num bytes */
-                              bytes_rs,
-                              IPMI_OEM_MAX_BYTES)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_raw: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
-    }
-
-  if (ipmi_oem_check_response_and_completion_code (state_data,
-                                                   bytes_rs,
-                                                   rs_len,
-                                                   2, /* don't care about the 3rd byte, don't know what it is used for */
-                                                   IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+  if (_ipmi_oem_inventec_set_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_LAN,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_LAN_NIC_STATUS,
+                                     1,
+                                     (uint32_t)status) < 0)
     goto cleanup;
 
   rv = 0;
@@ -747,82 +838,21 @@ static int
 _inventec_get_bmc_services (ipmi_oem_state_data_t *state_data,
                             uint8_t *services)
 {
-  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
-  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  int rs_len;
-  uint8_t reservation_id;
+  uint32_t value;
   int rv = -1;
 
   assert (state_data);
   assert (services);
 
-  /* Inventec OEM
-   *
-   * Get BMC Services Request
-   *
-   * 0x30 - OEM network function
-   * 0x02 - OEM cmd
-   * 0x?? - Reservation ID
-   * 0x04 - Configuration ID (0x04 = Security)
-   * 0x01 - Attribute ID (0x01 = Service Disabled)
-   * 0x00 - Index (unused here)
-   * 0x00 - Data Offset - LSB (unused here)
-   * 0x00 = Data Offset - MSB (unused here)
-   * 0xFF - Bytes to read (0xFF = all)
-   * 
-   * Get BMC Services Response
-   *
-   * 0x03 - OEM cmd
-   * 0x?? - Completion Code
-   * 0x04 - Configuration ID (0x04 = Security)
-   * 0x01 - Attribute ID (0x01 = Service Disabled)
-   * 0x00 - Index (unused here)
-   * 0x01 - number of bytes returned
-   * 0xXX - services
-   *
-   * services bit 0 : All services except IPMI disabled
-   * services bit 1 : KVM/Virtual Storage disabled
-   * services bit 2 : HTTP/HTTPS disabled
-   * services bit 3 : SSH/Telnet disabled
-   */
-
-  if (_inventec_get_reservation (state_data,
-                                 &reservation_id) < 0)
+  if (_ipmi_oem_inventec_get_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED,
+                                     1,
+                                     &value) < 0)
     goto cleanup;
 
-  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION;
-  bytes_rq[1] = reservation_id;
-  bytes_rq[2] = IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY;
-  bytes_rq[3] = IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED;
-  bytes_rq[4] = 0x00;
-  bytes_rq[5] = 0x00;
-  bytes_rq[6] = 0x00;
-  bytes_rq[7] = IPMI_OEM_EXTENDED_CONFIG_READ_ALL_BYTES;
+  (*services) = value;
 
-  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                              0, /* lun */
-                              IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
-                              bytes_rq, /* data */
-                              8, /* num bytes */
-                              bytes_rs,
-                              IPMI_OEM_MAX_BYTES)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_raw: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
-    }
-
-  if (ipmi_oem_check_response_and_completion_code (state_data,
-                                                   bytes_rs,
-                                                   rs_len,
-                                                   7,
-                                                   IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
-    goto cleanup;
-
-  (*services) = bytes_rs[6];
   rv = 0;
  cleanup:
   return (rv);
@@ -870,11 +900,8 @@ ipmi_oem_inventec_get_bmc_services (ipmi_oem_state_data_t *state_data)
 int
 ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
 {
-  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
-  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   int enable = 0;
-  int rs_len;
-  uint8_t reservation_id;
+  uint8_t services = 0;
   int rv = -1;
 
   assert (state_data);
@@ -906,52 +933,19 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  /* Inventec OEM
-   *
-   * Disable/Enable BMC Services Request
-   *
-   * 0x30 - OEM network function
-   * 0x03 - OEM cmd
-   * 0x?? - Reservation ID
-   * 0x04 - Configuration ID (0x04 = Security)
-   * 0x01 - Attribute ID (0x01 = Service Disabled)
-   * 0x00 - Index (unused here)
-   * 0x00 - Data Offset - LSB (unused here)
-   * 0x00 = Data Offset - MSB (unused here)
-   * 0x01 - Bytes to read
-   * 0xXX - 0x00 - enable all
-   *        0x01 - disable all except IPMI
-   *        0x02 - disable KVM/Virtual Storage
-   *        0x04 - disable HTTP/HTTPS
-   *        0x08 - disable SSH/Telent
-   *
-   * Disable BMC Services Response
-   *
-   * 0x03 - OEM cmd
-   * 0x?? - Completion Code
-   */
-
-  /* achu: do bytes_rq[8] first, b/c we may call
-   * _inventec_get_bmc_services, which does a get reservation id call
-   * too.
-   */
-
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
     enable = 1;
         
   /* if all, it's an easy special case */
   if (!strcasecmp (state_data->prog_data->args->oem_options[1], "all"))
     {
-
       if (enable)
-        bytes_rq[8] = IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_ENABLE_ALL;
+        services = IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_ENABLE_ALL;
       else
-        bytes_rq[8] = IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL;
+        services = IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL;
     }
   else
     {
-      uint8_t services = 0;
-
       if (_inventec_get_bmc_services (state_data, &services) < 0)
         goto cleanup;
 
@@ -985,93 +979,35 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
           else
             services |= IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH;
         }
-
-      bytes_rq[8] = services;
     }
 
-  if (_inventec_get_reservation (state_data,
-                                 &reservation_id) < 0)
+
+  if (_ipmi_oem_inventec_set_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED,
+                                     1,
+                                     (uint32_t)services) < 0)
     goto cleanup;
 
-  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION;
-  bytes_rq[1] = reservation_id;
-  bytes_rq[2] = IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY;
-  bytes_rq[3] = IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED;
-  bytes_rq[4] = 0x00;
-  bytes_rq[5] = 0x00;
-  bytes_rq[6] = 0x00;
-  bytes_rq[7] = 0x01;
-
-  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                              0, /* lun */
-                              IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
-                              bytes_rq, /* data */
-                              9, /* num bytes */
-                              bytes_rs,
-                              IPMI_OEM_MAX_BYTES)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_raw: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
-    }
-
-  if (ipmi_oem_check_response_and_completion_code (state_data,
-                                                   bytes_rs,
-                                                   rs_len,
-                                                   2,
-                                                   IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
-    goto cleanup;
-  
   rv = 0;
  cleanup:
   return (rv);
 }
 
-static int
-_ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data,
-                                          uint8_t attribute_id,
-                                          unsigned int value_return_length,
-                                          uint32_t *value)
+int
+ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data)
 {
-  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
-  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  int rs_len;
-  uint8_t reservation_id;
+  uint32_t value;
+  uint8_t webserverenabled;
+  uint8_t maxwebsessions;
+  uint8_t activewebsessions;
+  uint32_t webservertimeout;
+  uint16_t httpportnum;
+  uint16_t httpsportnum;
   int rv = -1;
 
   assert (state_data);
-  assert (value_return_length == 1
-          || value_return_length == 2
-          || value_return_length == 4);
-  assert (value);
-
-  /* Inventec OEM
-   *
-   * Get Web Server Configuration Request
-   *
-   * 0x30 - OEM network function
-   * 0x02 - OEM cmd
-   * 0x?? - Reservation ID
-   * 0x0C - Configuration ID (0x0C = Web Server Configuration)
-   * 0x?? - Attribute ID (various)
-   * 0x00 - Index (unused here??)
-   * 0x00 - Data Offset - LSB (unused here??)
-   * 0x00 = Data Offset - MSB (unused here??)
-   * 0xFF - Bytes to read (0xFF = all)
-   * 
-   * Get Web Server Configuration Response
-   *
-   * 0x02 - OEM cmd
-   * 0x?? - Completion Code
-   * 0x0C - Configuration ID (0x0C = Web Server Configuration)
-   * 0x?? - Attribute ID (various)
-   * 0x00 - Index (unused here??)
-   * 0x?? - number of bytes returned
-   * bytes ...
-   */
+  assert (!state_data->prog_data->args->oem_options_count);
 
   /* Dell Xanadu2 OEM
    *
@@ -1098,124 +1034,58 @@ _ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data,
    * 0x?? - http num (MSB)
    */
 
-  if (_inventec_get_reservation (state_data,
-                                 &reservation_id) < 0)
+  if (_ipmi_oem_inventec_get_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
+                                     1,
+                                     &value) < 0)
     goto cleanup;
-
-  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION;
-  bytes_rq[1] = reservation_id;
-  bytes_rq[2] = IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION;
-  bytes_rq[3] = attribute_id;
-  bytes_rq[4] = 0x00;
-  bytes_rq[5] = 0x00;
-  bytes_rq[6] = 0x00;
-  bytes_rq[7] = IPMI_OEM_EXTENDED_CONFIG_READ_ALL_BYTES;
+  webserverenabled = value;
   
-  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                              0, /* lun */
-                              IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
-                              bytes_rq, /* data */
-                              8, /* num bytes */
-                              bytes_rs,
-                              IPMI_OEM_MAX_BYTES)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_raw: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
-    }
-
-  if (ipmi_oem_check_response_and_completion_code (state_data,
-                                                   bytes_rs,
-                                                   rs_len,
-                                                   6 + value_return_length,
-                                                   IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
+  if (_ipmi_oem_inventec_get_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS,
+                                     1,
+                                     &value) < 0)
     goto cleanup;
-
-  (*value) = 0;
-  if (value_return_length == 1)
-    (*value) = bytes_rs[6];
-  else if (value_return_length == 2)
-    {
-      (*value) = bytes_rs[6];
-      (*value) |= (bytes_rs[7] << 8);
-    }
-  else
-    {
-      (*value) = bytes_rs[6];
-      (*value) |= (bytes_rs[7] << 8);
-      (*value) |= (bytes_rs[8] << 16);
-      (*value) |= (bytes_rs[9] << 24);
-    }
-
-  rv = 0;
- cleanup:
-  return (rv);
-}
-
-int
-ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data)
-{
-  uint32_t value;
-  uint8_t webserverenabled;
-  uint8_t maxwebsessions;
-  uint8_t activewebsessions;
-  uint32_t webservertimeout;
-  uint16_t httpportnum;
-  uint16_t httpsportnum;
-  int rv = -1;
-
-  assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
-
-   if (_ipmi_oem_inventec_get_web_server_config (state_data,
-                                                 IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
-                                                 1,
-                                                 &value) < 0)
+  maxwebsessions = value;
+  
+  if (_ipmi_oem_inventec_get_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS,
+                                     1,
+                                     &value) < 0)
     goto cleanup;
-   webserverenabled = value;
-
-   if (_ipmi_oem_inventec_get_web_server_config (state_data,
-                                                 IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS,
-                                                 1,
-                                                 &value) < 0)
+  activewebsessions = value;
+  
+  if (_ipmi_oem_inventec_get_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
+                                     4,
+                                     &value) < 0)
     goto cleanup;
-   maxwebsessions = value;
-
-   if (_ipmi_oem_inventec_get_web_server_config (state_data,
-                                                 IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS,
-                                                 1,
-                                                 &value) < 0)
+  webservertimeout = value;
+  
+  if (_ipmi_oem_inventec_get_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
+                                     2,
+                                     &value) < 0)
     goto cleanup;
-   activewebsessions = value;
-
-   if (_ipmi_oem_inventec_get_web_server_config (state_data,
-                                                 IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
-                                                 4,
-                                                 &value) < 0)
+  httpportnum = value;
+  
+  if (_ipmi_oem_inventec_get_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
+                                     2,
+                                     &value) < 0)
     goto cleanup;
-   webservertimeout = value;
-
-   if (_ipmi_oem_inventec_get_web_server_config (state_data,
-                                                 IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
-                                                 2,
-                                                 &value) < 0)
-    goto cleanup;
-   httpportnum = value;
-
-   if (_ipmi_oem_inventec_get_web_server_config (state_data,
-                                                 IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
-                                                 2,
-                                                 &value) < 0)
-    goto cleanup;
-   httpsportnum = value;
-
+  httpsportnum = value;
+  
   pstdout_printf (state_data->pstate,
 		  "Web Server          : %s\n",
 		  (webserverenabled) ? "Enabled" : "Disabled");
-
+  
   pstdout_printf (state_data->pstate,
 		  "Max Web Sessions    : %u\n",
 		  maxwebsessions);
@@ -1241,44 +1111,17 @@ ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
-static int
-_ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data,
-                                          uint8_t attribute_id,
-                                          unsigned int value_length,
-                                          uint32_t value)
+int
+ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
 {
-  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
-  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  int rs_len;
-  uint8_t reservation_id;
+  uint8_t webserverenabled = 0;
+  uint32_t webservertimeout = 0;
+  uint16_t httpportnumber = 0;
+  uint16_t httpsportnumber = 0;
   int rv = -1;
+  int i;
 
   assert (state_data);
-  assert (value_length == 1
-          || value_length == 2
-          || value_length == 4);
-
-  /* Inventec OEM
-   *
-   * Set Web Server Configuration Request
-   *
-   * 0x30 - OEM network function
-   * 0x03 - OEM cmd
-   * 0x?? - Reservation ID
-   * 0x0C - Configuration ID (0x0C = Web Server Configuration)
-   * 0x?? - Attribute ID (various)
-   * 0x00 - Index (unused here??)
-   * 0x00 - Data Offset - LSB (unused here??)
-   * 0x00 = Data Offset - MSB (unused here??)
-   * 0x01 - In progress bit (0x00 in progress, 0x01 - last config in this request)
-   * bytes ... 
-   * 
-   * Set Web Server Configuration Response
-   *
-   * 0x03 - OEM cmd
-   * 0x?? - Completion Code
-   * 0x?? - bytes written
-   */
 
   /* Dell Xanadu2 OEM
    *
@@ -1304,73 +1147,6 @@ _ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data,
    * 0x02 - OEM cmd
    * 0x?? - Completion Code
    */
-  if (_inventec_get_reservation (state_data,
-                                 &reservation_id) < 0)
-    goto cleanup;
-
-  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION;
-  bytes_rq[1] = reservation_id;
-  bytes_rq[2] = IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION;
-  bytes_rq[3] = attribute_id;
-  bytes_rq[4] = 0x00;
-  bytes_rq[5] = 0x00;
-  bytes_rq[6] = 0x00;
-  bytes_rq[7] = 0x01;
-
-  if (value_length == 1)
-    bytes_rq[8] = (value & 0x000000FF);
-  else if (value_length == 2)
-    {
-      bytes_rq[8] = (value & 0x000000FF);
-      bytes_rq[9] = (value & 0x0000FF00) >> 8;
-    }
-  else
-    {
-      bytes_rq[8] = (value & 0x000000FF);
-      bytes_rq[9] = (value & 0x0000FF00) >> 8;
-      bytes_rq[10] = (value & 0x00FF0000) >> 16;
-      bytes_rq[11] = (value & 0xFF000000) >> 24;
-    }
-
-  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                              0, /* lun */
-                              IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
-                              bytes_rq, /* data */
-                              8 + value_length, /* num bytes */
-                              bytes_rs,
-                              IPMI_OEM_MAX_BYTES)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_raw: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
-    }
-
-  if (ipmi_oem_check_response_and_completion_code (state_data,
-                                                   bytes_rs,
-                                                   rs_len,
-                                                   2, /* don't care about the 3rd byte, don't know what it is used for */
-                                                   IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION,
-                                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS) < 0)
-    goto cleanup;
-
-  rv = 0;
- cleanup:
-  return (rv);
-}
-
-int
-ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
-{
-  uint8_t webserverenabled = 0;
-  uint32_t webservertimeout = 0;
-  uint16_t httpportnumber = 0;
-  uint16_t httpsportnumber = 0;
-  int rv = -1;
-  int i;
-
-  assert (state_data);
 
   if (!state_data->prog_data->args->oem_options_count)
     {
@@ -1398,10 +1174,11 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
           if (ipmi_oem_parse_enable (state_data, i, value, &webserverenabled) < 0)
             goto cleanup;
 
-          if (_ipmi_oem_inventec_set_web_server_config (state_data,
-                                                        IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
-                                                        1,
-                                                        (uint32_t)webserverenabled) < 0)
+          if (_ipmi_oem_inventec_set_config (state_data,
+                                             IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                             IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
+                                             1,
+                                             (uint32_t)webserverenabled) < 0)
             goto cleanup;
         }
       else if (!strcasecmp (key, "webservertimeout"))
@@ -1409,10 +1186,11 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
           if (ipmi_oem_parse_timeout (state_data, i, value, &webservertimeout) < 0)
             goto cleanup;
           
-          if (_ipmi_oem_inventec_set_web_server_config (state_data,
-                                                        IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
-                                                        4,
-                                                        webservertimeout) < 0)
+          if (_ipmi_oem_inventec_set_config (state_data,
+                                             IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                             IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
+                                             4,
+                                             webservertimeout) < 0)
             goto cleanup;
         }
       else if (!strcasecmp (key, "httpportnumber"))
@@ -1420,10 +1198,11 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
           if (ipmi_oem_parse_port (state_data, i, value, &httpportnumber) < 0)
             goto cleanup;
           
-          if (_ipmi_oem_inventec_set_web_server_config (state_data,
-                                                        IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
-                                                        2,
-                                                        httpportnumber) < 0)
+          if (_ipmi_oem_inventec_set_config (state_data,
+                                             IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                             IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
+                                             2,
+                                             httpportnumber) < 0)
             goto cleanup;
         }
       else if (!strcasecmp (key, "httpsportnumber"))
@@ -1431,10 +1210,11 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
           if (ipmi_oem_parse_port (state_data, i, value, &httpsportnumber) < 0)
             goto cleanup;
           
-          if (_ipmi_oem_inventec_set_web_server_config (state_data,
-                                                        IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
-                                                        2,
-                                                        httpsportnumber) < 0)
+          if (_ipmi_oem_inventec_set_config (state_data,
+                                             IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+                                             IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
+                                             2,
+                                             httpsportnumber) < 0)
             goto cleanup;
         }
       else
