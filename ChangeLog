@@ -3,6 +3,9 @@
 	* ipmi-dcmi/: Fix output corner case.
 
 	* libfreeipmi/src/dcmi/: Fix get sensor info corner case.
+
+	* libfreeipmi/src/sel-parse/: Add inventec port80 code event
+	interpretation.
 	
 2009-09-21  Albert Chu <chu11@llnl.gov>
 

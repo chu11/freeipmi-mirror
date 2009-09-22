@@ -610,17 +610,21 @@ _output_oem_sensor_name (ipmi_sel_parse_ctx_t ctx,
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
       && ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS 
+           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
            && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
-           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START
-           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS)
+           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START)
           || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS 
+              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
               && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
-              && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_OK
-              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
+              && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_OK)
           || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_POST_ERROR_CODE
+              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
               && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
-              && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_ERROR_CODE
-              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)))
+              && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_ERROR_COD)E
+          || (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+              && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
+              && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_PORT80_CODE_EVENT)))
     {
       if (_SNPRINTF (buf,
                      buflen,
@@ -1336,7 +1340,7 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
         {
           snprintf (tmpbuf,
                     tmpbuflen,
-                    "BIOS Fatal Error code: %Xh",
+                    "BIOS Fatal Error code: %02Xh",
                     system_event_record_data->event_data2);
           
           return (1);
@@ -1901,71 +1905,101 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
   /* OEM Interpretation
    *
    * Inventec 5441/Dell Xanadu2
-   *
-   * achu: Note that the Dimm locations are not in a pattern,
-   * this is what the doc says.
-   *
-   * If an invalid dimm location is indicated, fall through
-   * and output normal stuff.
    */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
-      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
-      && system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_SMI
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
-      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_MEMORY
-      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR_LOGGING_LIMIT_REACHED)
-      && (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM1
-          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM0
-          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM1
-          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM0
-          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM1
-          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM0
-          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH0_DIM0
-          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH1_DIM0
-          || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH2_DIM0))
-    {
-      if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM1)
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Dimm Number - CPU0/Ch0/DIM1");
-      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM0)
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Dimm Number - CPU0/Ch0/DIM0");
-      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM1)
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Dimm Number - CPU0/Ch1/DIM1");
-      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM0)
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Dimm Number - CPU0/Ch1/DIM0");
-      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM1)
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Dimm Number - CPU0/Ch2/DIM1");
-      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM0)
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Dimm Number - CPU0/Ch2/DIM0");
-      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH0_DIM0)
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Dimm Number - CPU1/Ch0/DIM0");
-      else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH1_DIM0)
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Dimm Number - CPU1/Ch1/DIM0");
-      else /* system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH2_DIM0 */
-        snprintf (tmpbuf,
-                  tmpbuflen,
-                  "Dimm Number - CPU1/Ch2/DIM0");
 
-      return (1);
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
+      && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441)
+    {
+      /* achu: Note that the Dimm locations are not in a pattern,
+       * this is what the doc says.
+       *
+       * If an invalid dimm location is indicated, fall through
+       * and output normal stuff.
+       */
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_SMI
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_MEMORY
+          && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+              || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
+              || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY
+              || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR_LOGGING_LIMIT_REACHED)
+          && (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM1
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM1
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM1
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH0_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH1_DIM0
+              || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH2_DIM0))
+        {
+          if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM1)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU0/Ch0/DIM1");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH0_DIM0)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU0/Ch0/DIM0");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM1)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU0/Ch1/DIM1");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH1_DIM0)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU0/Ch1/DIM0");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM1)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU0/Ch2/DIM1");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU0_CH2_DIM0)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU0/Ch2/DIM0");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH0_DIM0)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU1/Ch0/DIM0");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH1_DIM0)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU1/Ch1/DIM0");
+          else /* system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_DIMM_CPU1_CH2_DIM0 */
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "Dimm Number - CPU1/Ch2/DIM0");
+
+          return (1);
+        }
+
+      if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_PORT80_CODE_EVENT)
+        {
+          
+          if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA3_OEM_INVENTEC_PORT80_CODE_EXTENDED_MEMORY_TEST)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "PORT80 Code Event = Extended Memory Test");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA3_OEM_INVENTEC_PORT80_CODE_SETUP_MENU)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "PORT80 Code Event = Setup Menu");
+          else if (system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA3_OEM_INVENTEC_PORT80_CODE_OPTION_ROM_SCAN)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "PORT80 Code Event = Option ROM Scan");
+          else
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "PORT80 Code Event = %02Xh",
+                      system_event_record_data->event_data3);
+          
+          return (1);
+        }
     }
 
   /* OEM Interpretation
@@ -3042,7 +3076,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                   if (_SNPRINTF (buf,
                                  buflen,
                                  wlen,
-                                 "Hardware Type = %Xh",
+                                 "Hardware Type = %02Xh",
                                  system_event_record_data->event_data3))
                     (*oem_rv) = 1;
                   else
