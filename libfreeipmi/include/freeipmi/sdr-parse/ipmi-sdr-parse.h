@@ -363,7 +363,8 @@ int ipmi_sdr_parse_general_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
                                                       uint8_t *device_slave_address,
                                                       uint8_t *private_bus_id,
                                                       uint8_t *lun_for_master_write_read_command,
-                                                      uint8_t *address_span);
+                                                      uint8_t *address_span,
+                                                      uint8_t *oem);
 
 /* For FRU Device Locator SDR records */
 int ipmi_sdr_parse_fru_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,

@@ -18,7 +18,7 @@
 	libfreeipmi/src/util/ipmi-device-types-util.c: New files
 
 	* ipmi-sensors/src/: Support device type and device modifier
-	string outputs.
+	string outputs.  Support oem outputs in generic device locators.
 	
 2009-09-18  Albert Chu <chu11@llnl.gov>
 

@@ -1925,6 +1925,7 @@ _detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state
   uint8_t private_bus_id;
   uint8_t lun_for_master_write_read_command;
   uint8_t address_span;
+  uint8_t oem;
 
   assert (state_data);
   assert (sdr_record);
@@ -1946,7 +1947,8 @@ _detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state
                                                         &device_slave_address,
                                                         &private_bus_id,
                                                         &lun_for_master_write_read_command,
-                                                        &address_span) < 0)
+                                                        &address_span,
+                                                        &oem) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1973,6 +1975,9 @@ _detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state
   pstdout_printf (state_data->pstate,
                   "Address Span: %u\n",
                   address_span);
+  pstdout_printf (state_data->pstate,
+                  "OEM: %Xh\n",
+                  oem);
 
   if (_output_device_type_and_modifier (state_data,
                                         sdr_record,
