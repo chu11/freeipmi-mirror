@@ -91,3 +91,201 @@ ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
 
   return (0);
 }
+
+int 
+ipmi_oem_parse_key_value (ipmi_oem_state_data_t *state_data,
+                          unsigned int option_num,
+                          char **key,
+                          char **value)
+{  
+  char *tempstr = NULL;
+  char *tempptr = NULL;
+  char *tempkey = NULL;
+  char *tempvalue = NULL;
+  int rv = -1;
+   
+  assert (state_data);
+  assert (key);
+  assert (value);
+   
+  if (!(tempstr = strdup (state_data->prog_data->args->oem_options[option_num])))
+    {
+      pstdout_perror (state_data->pstate,
+                      "strdup");
+      goto cleanup;
+    }
+   
+  tempptr = strchr (tempstr, '=');
+  if (!tempptr)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : no equal sign\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      goto cleanup;
+    }
+
+  (*tempptr) = '\0'; 
+  tempptr++;
+
+  if (!(tempkey = strdup (tempstr)))
+    {
+      pstdout_perror (state_data->pstate,
+                      "strdup");
+      goto cleanup;
+    }
+
+  if (!(tempvalue = strdup (tempptr)))
+    {
+      pstdout_perror (state_data->pstate,
+                      "strdup");
+      goto cleanup; 
+    }
+  
+  (*key) = tempkey;
+  (*value) = tempvalue;
+  
+  rv = 0;
+ cleanup:
+  free (tempstr);
+  if (rv < 0)
+    {
+      free (tempkey);
+      free (tempvalue);
+    }
+  return (rv);
+}
+
+int
+ipmi_oem_parse_enable (ipmi_oem_state_data_t *state_data,
+                       unsigned int option_num,
+                       const char *value,
+                       uint8_t *enable)
+{
+  assert (state_data);
+  assert (value);
+  assert (enable);
+
+  if (strcasecmp (value, "enable") && strcasecmp (value, "disable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+  
+  if (!strcasecmp (value, "enable"))
+    (*enable) = 1;
+  else
+    (*enable) = 0;
+  
+  return (0);
+}
+
+int
+ipmi_oem_parse_timeout (ipmi_oem_state_data_t *state_data,
+                        unsigned int option_num,
+                        const char *value,
+                        uint32_t *timeout)
+{ 
+  unsigned int temp;
+  char *ptr = NULL;
+  
+  assert (state_data);
+  assert (value);
+  assert (timeout);
+  
+  errno = 0;
+  
+  temp = strtoul (value, &ptr, 10);
+  
+  if (errno
+      || ptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+  
+  (*timeout) = temp;
+  return (0);
+}
+
+int
+ipmi_oem_parse_port (ipmi_oem_state_data_t *state_data,
+                     unsigned int option_num,
+                     const char *value,
+                     uint16_t *port)
+{
+  unsigned int temp;
+  char *ptr = NULL;
+
+  assert (state_data);
+  assert (value);
+  assert (port);
+
+  errno = 0;
+  
+  temp = strtoul (value, &ptr, 10);
+  
+  if (errno
+      || ptr[0] != '\0'
+      || temp > 65535)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+  
+  (*port) = temp;
+  return (0);
+}
+
+int
+ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
+                       unsigned int option_num,
+                       const char *value,
+                       uint8_t *string_length,
+                       char *stringbuf,
+                       unsigned int stringbuflen)
+{
+  assert (state_data);
+  assert (value);
+  assert (string_length);
+  assert (stringbuf);
+  assert (stringbuflen);
+  
+  if (strlen (value) > stringbuflen)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : string length too long\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+
+  (*string_length) = strlen (value);
+
+  /* use memcpy, do not need NULL termination */
+  if ((*string_length))
+    memcpy (stringbuf,
+	    value,
+	    (*string_length));
+  
+  return (0);
+}

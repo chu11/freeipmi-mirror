@@ -33,4 +33,30 @@ int ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_da
                                                  uint8_t cmd,
                                                  uint8_t netfn);
 
+int ipmi_oem_parse_key_value (ipmi_oem_state_data_t *state_data,
+                              unsigned int option_num,
+                              char **key,
+                              char **value);
+
+int ipmi_oem_parse_enable (ipmi_oem_state_data_t *state_data,
+                           unsigned int option_num,
+                           const char *value,
+                           uint8_t *enable);
+
+int ipmi_oem_parse_timeout (ipmi_oem_state_data_t *state_data,
+                            unsigned int option_num,
+                            const char *value,
+                            uint32_t *timeout);
+
+int ipmi_oem_parse_port (ipmi_oem_state_data_t *state_data,
+                         unsigned int option_num,
+                         const char *value,
+                         uint16_t *port);
+
+int ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
+                           unsigned int option_num,
+                           const char *value,
+                           uint8_t *string_length,
+                           char *stringbuf,
+                           unsigned int stringbuflen);
 #endif

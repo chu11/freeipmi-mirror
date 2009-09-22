@@ -129,11 +129,11 @@
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_IDLE_TIMEOUT_FIELD_MASK       0x0008
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_PORT_NUMBER_FIELD_MASK        0x0010
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ALL_FIELD_MASK \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ENABLE_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_MAX_CONNECTIONS_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ACTIVE_CONNECTIONS_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_IDLE_TIMEOUT_FIELD_MASK \
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ALL_FIELD_MASK                \
+  (IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ENABLE_FIELD_MASK                  \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_MAX_CONNECTIONS_FIELD_MASK       \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ACTIVE_CONNECTIONS_FIELD_MASK    \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_IDLE_TIMEOUT_FIELD_MASK          \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_PORT_NUMBER_FIELD_MASK);
 
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ENABLE_FIELD_MASK          0x0001
@@ -143,12 +143,12 @@
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_PORT_NUMBER_FIELD_MASK     0x0010
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_7FLS_BACKSPACE_FIELD_MASK  0x0020
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ALL_FIELD_MASK \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ENABLE_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_MAX_SESSIONS_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ACTIVE_SESSIONS_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_SESSION_TIMEOUT_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_PORT_NUMBER_FIELD_MASK \
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ALL_FIELD_MASK             \
+  (IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ENABLE_FIELD_MASK               \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_MAX_SESSIONS_FIELD_MASK       \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ACTIVE_SESSIONS_FIELD_MASK    \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_SESSION_TIMEOUT_FIELD_MASK    \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_PORT_NUMBER_FIELD_MASK        \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_7FLS_BACKSPACE_FIELD_MASK)
 
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ENABLE_FIELD_MASK            0x0001
@@ -158,9 +158,9 @@
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTP_PORT_NUMBER_FIELD_MASK  0x0010
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTPS_PORT_NUMBER_FIELD_MASK 0x0020
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ALL_FIELD_MASK \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ENABLE_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_MAX_SESSIONS_FIELD_MASK \
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ALL_FIELD_MASK         \
+  (IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ENABLE_FIELD_MASK           \
+   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_MAX_SESSIONS_FIELD_MASK   \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ACTIVE_SESSIONS_FIELD_MASK \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_SESSION_TIMEOUT_FIELD_MASK \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTP_PORT_NUMBER_FIELD_MASK \
@@ -183,8 +183,8 @@
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER3_FIELD_MASK                    0x4000
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_CERTIFICATE_VALIDATION_ENABLE_FIELD_MASK 0x8000
 
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_ALL_FIELD_MASK \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_ENABLE_FIELD_MASK \
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_ALL_FIELD_MASK   \
+  (IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_ENABLE_FIELD_MASK  \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_TIMEOUT_FIELD_MASK \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_ROOT_DOMAIN_FIELD_MASK \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_RAC_DOMAIN_FIELD_MASK \
@@ -1706,207 +1706,6 @@ ipmi_oem_dell_get_ssh_config (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
-static int 
-_parse_key_value (ipmi_oem_state_data_t *state_data,
-                  unsigned int option_num,
-                  char **key,
-                  char **value)
-{  
-  char *tempstr = NULL;
-  char *tempptr = NULL;
-  char *tempkey = NULL;
-  char *tempvalue = NULL;
-  int rv = -1;
-   
-  assert (state_data);
-  assert (key);
-  assert (value);
-   
-  if (!(tempstr = strdup (state_data->prog_data->args->oem_options[option_num])))
-    {
-      pstdout_perror (state_data->pstate,
-                      "strdup");
-      goto cleanup;
-    }
-   
-  tempptr = strchr (tempstr, '=');
-  if (!tempptr)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s' : no equal sign\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[option_num]);
-      goto cleanup;
-    }
-
-  (*tempptr) = '\0'; 
-  tempptr++;
-
-  if (!(tempkey = strdup (tempstr)))
-    {
-      pstdout_perror (state_data->pstate,
-                      "strdup");
-      goto cleanup;
-    }
-
-  if (!(tempvalue = strdup (tempptr)))
-    {
-      pstdout_perror (state_data->pstate,
-                      "strdup");
-      goto cleanup; 
-    }
-  
-  (*key) = tempkey;
-  (*value) = tempvalue;
-  
-  rv = 0;
- cleanup:
-  free (tempstr);
-  if (rv < 0)
-    {
-      free (tempkey);
-      free (tempvalue);
-    }
-  return (rv);
-}
-
-static int
-_parse_enable (ipmi_oem_state_data_t *state_data,
-               unsigned int option_num,
-               const char *value,
-               uint8_t *enable)
-{
-  assert (state_data);
-  assert (value);
-  assert (enable);
-
-  if (strcasecmp (value, "enable") && strcasecmp (value, "disable"))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[option_num]);
-      return (-1);
-    }
-  
-  if (!strcasecmp (value, "enable"))
-    (*enable) = 1;
-  else
-    (*enable) = 0;
-  
-  return (0);
-}
-
-static int
-_parse_timeout (ipmi_oem_state_data_t *state_data,
-                unsigned int option_num,
-                const char *value,
-                uint32_t *timeout)
-{ 
-  unsigned int temp;
-  char *ptr = NULL;
-  
-  assert (state_data);
-  assert (value);
-  assert (timeout);
-  
-  errno = 0;
-  
-  temp = strtoul (value, &ptr, 10);
-  
-  if (errno
-      || ptr[0] != '\0')
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[option_num]);
-      return (-1);
-    }
-  
-  (*timeout) = temp;
-  return (0);
-}
-
-static int
-_parse_port (ipmi_oem_state_data_t *state_data,
-             unsigned int option_num,
-             const char *value,
-             uint16_t *port)
-{
-  unsigned int temp;
-  char *ptr = NULL;
-
-  assert (state_data);
-  assert (value);
-  assert (port);
-
-  errno = 0;
-  
-  temp = strtoul (value, &ptr, 10);
-  
-  if (errno
-      || ptr[0] != '\0'
-      || temp > 65535)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[option_num]);
-      return (-1);
-    }
-  
-  (*port) = temp;
-  return (0);
-}
-
-#if 0
-/* don't support for now */
-static int
-_parse_string (ipmi_oem_state_data_t *state_data,
-	       unsigned int option_num,
-	       const char *value,
-	       uint8_t *string_length,
-	       char *stringbuf,
-	       unsigned int stringbuflen)
-{
-  assert (state_data);
-  assert (value);
-  assert (string_length);
-  assert (stringbuf);
-  assert (stringbuflen);
-  
-  if (strlen (value) > stringbuflen)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s' : string length too long\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[option_num]);
-      return (-1);
-    }
-
-  (*string_length) = strlen (value);
-
-  /* use memcpy, do not need NULL termination */
-  if ((*string_length))
-    memcpy (stringbuf,
-	    value,
-	    (*string_length));
-  
-  return (0);
-}
-#endif
-
 int
 ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
 {
@@ -1955,29 +1754,29 @@ ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
       char *key = NULL;
       char *value = NULL;
       
-      if (_parse_key_value (state_data,
-                            i,
-                            &key,
-                            &value) < 0)
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
         goto cleanup;
 
       if (!strcasecmp (key, "ssh"))
         {
-          if (_parse_enable (state_data, i, value, &sshenable) < 0)
+          if (ipmi_oem_parse_enable (state_data, i, value, &sshenable) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_ENABLE_FIELD_MASK;
         }
       else if (!strcasecmp (key, "idletimeout"))
         {
-          if (_parse_timeout (state_data, i, value, &idletimeout) < 0)
+          if (ipmi_oem_parse_timeout (state_data, i, value, &idletimeout) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_IDLE_TIMEOUT_FIELD_MASK;
         }
       else if (!strcasecmp (key, "portnumber"))
         {
-          if (_parse_port (state_data, i, value, &portnumber) < 0)
+          if (ipmi_oem_parse_port (state_data, i, value, &portnumber) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_PORT_NUMBER_FIELD_MASK;
@@ -2172,36 +1971,36 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
       char *key = NULL;
       char *value = NULL;
       
-      if (_parse_key_value (state_data,
-                            i,
-                            &key,
-                            &value) < 0)
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
         goto cleanup;
 
       if (!strcasecmp (key, "telnet"))
         {
-          if (_parse_enable (state_data, i, value, &telnetenable) < 0)
+          if (ipmi_oem_parse_enable (state_data, i, value, &telnetenable) < 0)
             goto cleanup;
 
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_ENABLE_FIELD_MASK;
         }
       else if (!strcasecmp (key, "sessiontimeout"))
         {
-          if (_parse_timeout (state_data, i, value, &sessiontimeout) < 0)
+          if (ipmi_oem_parse_timeout (state_data, i, value, &sessiontimeout) < 0)
             goto cleanup;
 
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_SESSION_TIMEOUT_FIELD_MASK;
         }
       else if (!strcasecmp (key, "portnumber"))
         {
-          if (_parse_port (state_data, i, value, &portnumber) < 0)
+          if (ipmi_oem_parse_port (state_data, i, value, &portnumber) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_PORT_NUMBER_FIELD_MASK;
         }
       else if (!strcasecmp (key, "7fls"))
         {
-          if (_parse_enable (state_data, i, value, &_7flsenable) < 0)
+          if (ipmi_oem_parse_enable (state_data, i, value, &_7flsenable) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_7FLS_BACKSPACE_FIELD_MASK;
@@ -2395,36 +2194,36 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
       char *key = NULL;
       char *value = NULL;
       
-      if (_parse_key_value (state_data,
-                            i,
-                            &key,
-                            &value) < 0)
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
         goto cleanup;
 
       if (!strcasecmp (key, "webserver"))
         {
-          if (_parse_enable (state_data, i, value, &webserverenable) < 0)
+          if (ipmi_oem_parse_enable (state_data, i, value, &webserverenable) < 0)
             goto cleanup;
 
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_ENABLE_FIELD_MASK;
         }
       else if (!strcasecmp (key, "sessiontimeout"))
         {
-          if (_parse_timeout (state_data, i, value, &sessiontimeout) < 0)
+          if (ipmi_oem_parse_timeout (state_data, i, value, &sessiontimeout) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_SESSION_TIMEOUT_FIELD_MASK;
         }
       else if (!strcasecmp (key, "httpportnumber"))
         {
-          if (_parse_port (state_data, i, value, &httpportnumber) < 0)
+          if (ipmi_oem_parse_port (state_data, i, value, &httpportnumber) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTP_PORT_NUMBER_FIELD_MASK;
         }
       else if (!strcasecmp (key, "httpsportnumber"))
         {
-          if (_parse_port (state_data, i, value, &httpsportnumber) < 0)
+          if (ipmi_oem_parse_port (state_data, i, value, &httpsportnumber) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTPS_PORT_NUMBER_FIELD_MASK;
@@ -2873,60 +2672,60 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
       char *key = NULL;
       char *value = NULL;
       
-      if (_parse_key_value (state_data,
-                            i,
-                            &key,
-                            &value) < 0)
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
         goto cleanup;
 
       if (!strcasecmp (key, "activedirectory"))
         {
-          if (_parse_enable (state_data, i, value, &ad_enable) < 0)
+          if (ipmi_oem_parse_enable (state_data, i, value, &ad_enable) < 0)
             goto cleanup;
 
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_ENABLE_FIELD_MASK;
         }
       else if (!strcasecmp (key, "timeout"))
         {
-          if (_parse_timeout (state_data, i, value, &ad_timeout) < 0)
+          if (ipmi_oem_parse_timeout (state_data, i, value, &ad_timeout) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_TIMEOUT_FIELD_MASK;
         }
 #if 0
-/* don't support for now */
+      /* don't support for now */
       else if (!strcasecmp (key, "rootdomain"))
         {
-          if (_parse_string (state_data,
-			     i,
-			     value,
-			     &ad_root_domain_string_length,
-			     ad_root_domain_string,
-			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &ad_root_domain_string_length,
+                                     ad_root_domain_string,
+                                     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_ROOT_DOMAIN_FIELD_MASK;
         }
       else if (!strcasecmp (key, "racdomain"))
         {
-          if (_parse_string (state_data,
-			     i,
-			     value,
-			     &ad_rac_domain_string_length,
-			     ad_rac_domain_string,
-			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &ad_rac_domain_string_length,
+                                     ad_rac_domain_string,
+                                     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_RAC_DOMAIN_FIELD_MASK;
         }
       else if (!strcasecmp (key, "racname"))
         {
-          if (_parse_string (state_data,
-			     i,
-			     value,
-			     &ad_rac_name_string_length,
-			     ad_rac_name_string,
-			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &ad_rac_name_string_length,
+                                     ad_rac_name_string,
+                                     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_RAC_NAME_FIELD_MASK;
@@ -2956,7 +2755,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
       /* read only on iDRAC6 */
       else if (!strcasecmp (key, "smartcardlogon"))
         {
-          if (_parse_enable (state_data, i, value, &scl_state) < 0)
+          if (ipmi_oem_parse_enable (state_data, i, value, &scl_state) < 0)
             goto cleanup;
 
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_SCL_STATE_FIELD_MASK;
@@ -2966,7 +2765,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
       /* read only on iDRAC6 */
       else if (!strcasecmp (key, "certificaterevocationlist"))
         {
-          if (_parse_enable (state_data, i, value, &crl_state) < 0)
+          if (ipmi_oem_parse_enable (state_data, i, value, &crl_state) < 0)
             goto cleanup;
 
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_CRL_STATE_FIELD_MASK;
@@ -2974,81 +2773,81 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
 #endif
       else if (!strcasecmp (key, "sso"))
         {
-          if (_parse_enable (state_data, i, value, &ad_sso_enable) < 0)
+          if (ipmi_oem_parse_enable (state_data, i, value, &ad_sso_enable) < 0)
             goto cleanup;
 
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_SSO_ENABLE_FIELD_MASK;
         }
 #if 0
-/* don't support for now */
+      /* don't support for now */
       else if (!strcasecmp (key, "dcfilter1"))
         {
-          if (_parse_string (state_data,
-			     i,
-			     value,
-			     &ad_dc_filter1_string_length,
-			     ad_dc_filter1_string,
-			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &ad_dc_filter1_string_length,
+                                     ad_dc_filter1_string,
+                                     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_DC_FILTER1_FIELD_MASK;
         }
       else if (!strcasecmp (key, "dcfilter2"))
         {
-          if (_parse_string (state_data,
-			     i,
-			     value,
-			     &ad_dc_filter2_string_length,
-			     ad_dc_filter2_string,
-			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &ad_dc_filter2_string_length,
+                                     ad_dc_filter2_string,
+                                     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_DC_FILTER2_FIELD_MASK;
         }
       else if (!strcasecmp (key, "dcfilter3"))
         {
-          if (_parse_string (state_data,
-			     i,
-			     value,
-			     &ad_dc_filter3_string_length,
-			     ad_dc_filter3_string,
-			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &ad_dc_filter3_string_length,
+                                     ad_dc_filter3_string,
+                                     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_DC_FILTER3_FIELD_MASK;
         }
       else if (!strcasecmp (key, "gcfilter1"))
         {
-          if (_parse_string (state_data,
-			     i,
-			     value,
-			     &ad_gc_filter1_string_length,
-			     ad_gc_filter1_string,
-			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &ad_gc_filter1_string_length,
+                                     ad_gc_filter1_string,
+                                     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER1_FIELD_MASK;
         }
       else if (!strcasecmp (key, "gcfilter2"))
         {
-          if (_parse_string (state_data,
-			     i,
-			     value,
-			     &ad_gc_filter2_string_length,
-			     ad_gc_filter2_string,
-			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &ad_gc_filter2_string_length,
+                                     ad_gc_filter2_string,
+                                     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER2_FIELD_MASK;
         }
       else if (!strcasecmp (key, "gcfilter3"))
         {
-          if (_parse_string (state_data,
-			     i,
-			     value,
-			     &ad_gc_filter3_string_length,
-			     ad_gc_filter3_string,
-			     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &ad_gc_filter3_string_length,
+                                     ad_gc_filter3_string,
+                                     IPMI_OEM_DELL_TOKEN_STRING_MAX) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_GC_FILTER3_FIELD_MASK;
@@ -3056,7 +2855,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
 #endif
       else if (!strcasecmp (key, "certificatevalidation"))
         {
-          if (_parse_enable (state_data, i, value, &ad_certificate_validation_enable) < 0)
+          if (ipmi_oem_parse_enable (state_data, i, value, &ad_certificate_validation_enable) < 0)
             goto cleanup;
 
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_CERTIFICATE_VALIDATION_ENABLE_FIELD_MASK;
