@@ -1,6 +1,8 @@
 2009-09-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-dcmi/: Fix output corner case.
+
+	* libfreeipmi/src/dcmi/: Fix get sensor info corner case.
 	
 2009-09-21  Albert Chu <chu11@llnl.gov>
 

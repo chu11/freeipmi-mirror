@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.4 2009-08-05 21:59:36 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.5 2009-09-22 17:31:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -312,6 +312,7 @@ fiid_template_t tmpl_dcmi_cmd_get_dcmi_sensor_info_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "sensor_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "entity_instance_start", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -523,6 +524,7 @@ fill_dcmi_cmd_get_dcmi_sensor_info (uint8_t sensor_type,
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_DCMI_CMD_GET_DCMI_SENSOR_INFO);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_type", sensor_type);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_id", entity_id);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_instance", entity_instance);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "entity_instance_start", entity_instance_start);
