@@ -24,23 +24,18 @@
 int ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_nic_selection (ipmi_oem_state_data_t *state_data);
-
 int ipmi_oem_dell_set_nic_selection (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_ssh_config (ipmi_oem_state_data_t *state_data);
-
 int ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_telnet_config (ipmi_oem_state_data_t *state_data);
-
 int ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_web_server_config (ipmi_oem_state_data_t *state_data);
-
 int ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data);
-
 int ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data);
@@ -60,30 +55,24 @@ int ipmi_oem_dell_get_average_power_history (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_dell_get_peak_power_history (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_power_capacity (ipmi_oem_state_data_t *state_data);
-
 int ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_power_capacity_status (ipmi_oem_state_data_t *state_data);
-
 int ipmi_oem_dell_set_power_capacity_status (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_board_id (ipmi_oem_state_data_t *state_data);
-
 int ipmi_oem_dell_set_board_id (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_fcb_version (ipmi_oem_state_data_t *state_data);
-
 int ipmi_oem_dell_set_fcb_version (ipmi_oem_state_data_t *state_data);
 
 #if 0
 /* cannot verify */
 int ipmi_oem_dell_get_dhcp_retry (ipmi_oem_state_data_t *state_data);
-
 int ipmi_oem_dell_set_dhcp_retry (ipmi_oem_state_data_t *state_data);
 #endif
 
 int ipmi_oem_dell_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data);
-
 int ipmi_oem_dell_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data);
 
 #endif
