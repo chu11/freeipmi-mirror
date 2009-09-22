@@ -54,6 +54,18 @@
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
+/*
+ * Dell Xanadu2 (Inventec 5441) Notes
+ *
+ * Dell appears to have implemented two equivalent OEM commands
+ * that do the same as the Inventec get/set-nic-status commands.
+ * See comments in ipmi-oem-inventec.c for information.
+ *
+ * Dell appears to have implemented two equivalent OEM commands
+ * that do the same as the Inventec get/set of web parameters.
+ * See comments in ipmi-oem-inventec.c for information.
+ */
+
 /* 256 b/c length is 8 bit field */
 #define IPMI_OEM_DELL_MAX_BYTES 256
 

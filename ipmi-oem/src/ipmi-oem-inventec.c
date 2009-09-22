@@ -41,6 +41,80 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
+/* Inventec 5441 Notes
+ *
+ * Three firmware update commands exist for firmware updates, but
+ * given that we need firmware images, install options (even
+ * documented that there are OEM specific options involved), just
+ * document these.
+ *
+ * Update Firmware Request
+ *
+ * 0x08 - network function
+ * 0x01 - OEM cmd
+ * 0x?? - interface used
+ *      - 00h - system interface (i.e. KCS)
+ *      - 01h - networking (i.e. tftp, ftp, http)
+ *      - 02h - USB MSC
+ * 0x?? - update type
+ *      [7]   - force update
+ *            - 0h - normal update, an update operation will occur only when the
+ *              BMC validate (sic) target board, target product and
+ *              version number.
+ *            - 1h - forced update, make the BMC update the image without
+ *              validate (sic) target board, target product and
+ *              version number.
+ *      [6:0] - reserved
+ * bytes 3 - 14: install options (OEM specific)
+ *
+ * Update Firmware Response
+ *
+ * 0x01 - OEM cmd
+ * 0x?? - Completion Code
+ * 0x?? - Task ID
+ *
+ * Get Update Status Request
+ *
+ * 0x08 - network function
+ * 0x02 - OEM cmd
+ * 0x?? - Task ID
+ *
+ * Get Update Status Response
+ *
+ * 0x02 - OEM cmd
+ * 0x?? - Completion Code
+ * 0x?? - Status
+ *      - 00h = transmitting image
+ *      - 01h = validating image
+ *      - 02h = programming
+ *      - 03h = ready to accept image
+ *      - 80h = general error
+ *      - 81h = cannot establish connection
+ *      - 82h = path not found
+ *      - 83h = transmission abort
+ *      - 84h = checkusm error
+ *      - 85h = incorrect platform
+ *      - FFh = completed
+ * 0x?? - Progression Indicator
+ *      - "This field is optional, if present its value indicates the
+ *        current progress of the status specified in Status byte"
+ *
+ * Copy Image Data Request
+ *
+ * 0x08 - network function
+ * 0x03 - OEM cmd
+ * 0x?? - In Progress
+ *      - 00h - data transmission is in progress
+ *      - 01h = data transmission completed
+ * bytes 3:6 - image offset to be copied
+ * bytes 7:N - image data to be copied
+ *
+ * Copy Image Data Response
+ *
+ * 0x03 - OEM cmd
+ * 0x?? - Completion Code
+ */
+
 /* achu: all named from doc except 'lan' configuration id, which I assumed names */
 
 #define IPMI_OEM_EXTENDED_CONFIGURATION_ID_LAN                      0x02
@@ -87,6 +161,44 @@
  * http port num - 2 bytes, default 80
  *
  * https port num - 2 bytes, default 443
+ */
+/* Dell Xanadu2 OEM
+ *
+ * achu: Dell appears to have also implemented an additional OEM
+ * command that duplicates this configuration.  Currently, we do not
+ * implement the Dell equivalent in ipmi-oem.
+ *
+ * achu: The document states "web port" and "http port".  That
+ * probably means "http" vs. "https" port.  The below documents this
+ * typo.
+ *
+ * Set Web Port Num Request
+ *
+ * 0x34 - OEM network function
+ * 0x02 - OEM cmd
+ * 0x?? - web port num (LSB)
+ * 0x?? - web port num (MSB)
+ * 0x?? - http num (LSB)
+ * 0x?? - http num (MSB)
+ *
+ * Set Web Port Num Response
+ *
+ * 0x02 - OEM cmd
+ * 0x?? - Completion Code
+ *
+ * Get Web Port Num Request
+ *
+ * 0x34 - OEM network function
+ * 0x03 - OEM cmd
+ *
+ * Get Web Port Num Response
+ *
+ * 0x03 - OEM cmd
+ * 0x?? - Completion Code
+ * 0x?? - web port num (LSB)
+ * 0x?? - web port num (MSB)
+ * 0x?? - http num (LSB)
+ * 0x?? - http num (MSB)
  */
 #define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED  0x01
 #define IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS    0x02
@@ -303,6 +415,25 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
    * 0x00 | 0x01 - 0x00 = shared, 0x01 = dedicated
    */
 
+  /* Dell Xanadu2 OEM
+   *
+   * achu: Dell appears to have also implemented an additional OEM
+   * command that duplicates this behavior.  Currently, we do not
+   * implement the Dell equivalent in ipmi-oem.
+   *
+   * Get LAN Source Request
+   *
+   * 0x34 - OEM network function
+   * 0x14 - OEM cmd
+   *
+   * Get LAN Source Response
+   *
+   * 0x14 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - LAN Source Setting
+   *      - 00h = shared, 01h = dedicated
+   */
+
   if (_inventec_get_reservation (state_data,
                                  &reservation_id) < 0)
     goto cleanup;
@@ -401,6 +532,26 @@ ipmi_oem_inventec_set_nic_status (ipmi_oem_state_data_t *state_data)
    * 0x03 - OEM cmd
    * 0x?? - Completion Code
    * 0x?? - bytes written
+   */
+
+  /* Dell Xanadu2 OEM
+   *
+   * achu: Dell appears to have also implemented an additional OEM
+   * command that duplicates this behavior.  Currently, we do not
+   * implement the Dell equivalent in ipmi-oem.
+   *
+   * Set LAN Source Request
+   *
+   * 0x34 - OEM network function
+   * 0x13 - OEM cmd
+   * 0x?? - LAN Source
+   *      - 00h = shared, 01h = dedicated
+   *
+   * Set LAN Source Response
+   *
+   * 0x13 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - LAN Source Setting
    */
 
   if (_inventec_get_reservation (state_data,
