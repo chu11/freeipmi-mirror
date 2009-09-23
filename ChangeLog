@@ -10,6 +10,8 @@
 	management controller sdr records have entity instance and type.
 	Adjust code in sdr-parse appropriately, adjust ipmi-sensors
 	appropriately.
+
+	* ipmi-oem/, common/src/toolsensor/: Support Sun LED get.
 	
 2009-09-22  Albert Chu <chu11@llnl.gov>
 

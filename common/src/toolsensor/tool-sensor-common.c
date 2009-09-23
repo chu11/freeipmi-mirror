@@ -94,6 +94,8 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
                                unsigned int sensor_name_buf_len)
 {
   char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+  char device_id_string[IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1];
+  char *id_string_ptr = NULL;
   uint8_t entity_id, entity_instance, entity_instance_type;
   char *entity_id_str;
   uint16_t record_id;
@@ -121,17 +123,51 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
       return (-1);
     }
   
-  memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
-  if (ipmi_sdr_parse_id_string (sdr_parse_ctx,
-                                sdr_record,
-                                sdr_record_len,
-                                id_string,
-                                IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
+  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+      || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+      || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
+    {
+      memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
+      if (ipmi_sdr_parse_id_string (sdr_parse_ctx,
+                                    sdr_record,
+                                    sdr_record_len,
+                                    id_string,
+                                    IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr,
+                           "ipmi_sdr_parse_id_string: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+          return (-1);
+        }
+
+      id_string_ptr = id_string;
+    }
+  else if (record_type == IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD
+           || record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
+    {
+      memset (device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1);
+      if (ipmi_sdr_parse_device_id_string (sdr_parse_ctx,
+                                           sdr_record,
+                                           sdr_record_len,
+                                           device_id_string,
+                                           IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING) < 0)
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr,
+                           "ipmi_sdr_parse_device_id_string: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+          return (-1);
+        }
+      
+      id_string_ptr = device_id_string;
+    }
+  else
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "ipmi_sdr_parse_id_string: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+                       "Internal Error, cannot handle record type: %Xh\n",
+                       record_type);
       return (-1);
     }
 
@@ -171,7 +207,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
       snprintf (sensor_name_buf,
                 sensor_name_buf_len,
                 "%s",
-                id_string);
+                id_string_ptr);
     }
   else
     {
@@ -253,14 +289,14 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
                                   sensor_name_buf_len,
                                   "%s %s %c",
                                   entity_id_str,
-                                  id_string,
+                                  id_string_ptr,
                                   'A' + ((id_string_instance_modifier_type + sensor_number_offset)/SENSOR_CHARS_IN_ALPHA));
                       else
                         snprintf (sensor_name_buf,
                                   sensor_name_buf_len,
                                   "%s %s %c%c",
                                   entity_id_str,
-                                  id_string,
+                                  id_string_ptr,
                                   'A' + ((id_string_instance_modifier_type + sensor_number_offset)/SENSOR_CHARS_IN_ALPHA),
                                   'A' + (id_string_instance_modifier_type % SENSOR_CHARS_IN_ALPHA));
                     }
@@ -278,7 +314,7 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
                                 sensor_name_buf_len,
                                 "%s %s %u",
                                 entity_id_str,
-                                id_string,
+                                id_string_ptr,
                                 id_string_instance_modifier_offset + sensor_number_offset);
                     }
 
@@ -292,14 +328,14 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
                     "%s %u %s",
                     entity_id_str,
                     entity_instance,
-                    id_string);
+                    id_string_ptr);
         }
       else
         snprintf (sensor_name_buf,
                   sensor_name_buf_len,
                   "%s %s",
                   entity_id_str,
-                  id_string);
+                  id_string_ptr);
     }
 
  out:
@@ -677,7 +713,9 @@ _store_entity_id_count (pstdout_state_t pstate,
     }
 
   if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
-      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
     return (0);
 
   if (ipmi_sdr_parse_entity_id_instance_type (sdr_parse_ctx,
@@ -860,7 +898,9 @@ _store_column_widths (pstdout_state_t pstate,
     }
 
   if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
-      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+      && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
     return (0);
 
   memset (record_id_buf, '\0', RECORD_ID_BUFLEN + 1);
@@ -893,72 +933,101 @@ _store_column_widths (pstdout_state_t pstate,
   else
     {
       char id_string[IPMI_SDR_CACHE_MAX_ID_STRING + 1];
+      char device_id_string[IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1];
+      char *id_string_ptr = NULL;
 
-      memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
-      if (ipmi_sdr_parse_id_string (sdr_parse_ctx,
-                                    sdr_record,
-                                    sdr_record_len,
-                                    id_string,
-                                    IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
+      if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+          || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
         {
-          PSTDOUT_FPRINTF (pstate,
-                           stderr,
-                           "ipmi_sdr_parse_id_string: %s\n",
-                           ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
-          return (-1);
+          memset (id_string, '\0', IPMI_SDR_CACHE_MAX_ID_STRING + 1);
+          if (ipmi_sdr_parse_id_string (sdr_parse_ctx,
+                                        sdr_record,
+                                        sdr_record_len,
+                                        id_string,
+                                        IPMI_SDR_CACHE_MAX_ID_STRING) < 0)
+            {
+              PSTDOUT_FPRINTF (pstate,
+                               stderr,
+                               "ipmi_sdr_parse_id_string: %s\n",
+                               ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+              return (-1);
+            }
+
+          id_string_ptr = id_string;
+        }
+      else
+        {
+          memset (device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1);
+          if (ipmi_sdr_parse_device_id_string (sdr_parse_ctx,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               device_id_string,
+                                               IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING) < 0)
+            {
+              PSTDOUT_FPRINTF (pstate,
+                               stderr,
+                               "ipmi_sdr_parse_device_id_string: %s\n",
+                               ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+              return (-1);
+            }
+
+          id_string_ptr = device_id_string;
         }
       
-      len = strlen (id_string);
+      len = strlen (id_string_ptr);
       if (len > column_width->sensor_name)
         column_width->sensor_name = len;
     }
 
-  if (ipmi_sdr_parse_sensor_type (sdr_parse_ctx,
-                                  sdr_record,
-                                  sdr_record_len,
-                                  &sensor_type) < 0)
+  if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
+      || record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "ipmi_sdr_parse_sensor_type: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
-      return (-1);
-    }
+      if (ipmi_sdr_parse_sensor_type (sdr_parse_ctx,
+                                      sdr_record,
+                                      sdr_record_len,
+                                      &sensor_type) < 0)
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr,
+                           "ipmi_sdr_parse_sensor_type: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+          return (-1);
+        }
 
-  len = strlen (get_sensor_type_output_string (sensor_type));
-  if (len > column_width->sensor_type)
-    column_width->sensor_type = len;
+      len = strlen (get_sensor_type_output_string (sensor_type));
+      if (len > column_width->sensor_type)
+        column_width->sensor_type = len;
 
+      if (ipmi_sdr_parse_event_reading_type_code (sdr_parse_ctx,
+                                                  sdr_record,
+                                                  sdr_record_len,
+                                                  &event_reading_type_code) < 0)
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr,
+                           "ipmi_sdr_parse_event_reading_type_code: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
+          return (-1);
+        }
 
-  if (ipmi_sdr_parse_event_reading_type_code (sdr_parse_ctx,
+      if (ipmi_event_reading_type_code_class (event_reading_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
+        {
+          char sensor_units_buf[SENSOR_UNITS_BUFLEN + 1];
+          
+          memset (sensor_units_buf, '\0', SENSOR_UNITS_BUFLEN + 1);
+          if (get_sensor_units_output_string (pstate,
+                                              sdr_parse_ctx,
                                               sdr_record,
                                               sdr_record_len,
-                                              &event_reading_type_code) < 0)
-    {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "ipmi_sdr_parse_event_reading_type_code: %s\n",
-                       ipmi_sdr_parse_ctx_errormsg (sdr_parse_ctx));
-      return (-1);
-    }
-
-  if (ipmi_event_reading_type_code_class (event_reading_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
-    {
-      char sensor_units_buf[SENSOR_UNITS_BUFLEN + 1];
-
-      memset (sensor_units_buf, '\0', SENSOR_UNITS_BUFLEN + 1);
-      if (get_sensor_units_output_string (pstate,
-                                          sdr_parse_ctx,
-                                          sdr_record,
-                                          sdr_record_len,
-                                          sensor_units_buf,
-                                          SENSOR_UNITS_BUFLEN,
-                                          abbreviated_units) < 0)
-        return (-1);
-
-      len = strlen (sensor_units_buf);
-      if (len > column_width->sensor_units)
-        column_width->sensor_units = len;
+                                              sensor_units_buf,
+                                              SENSOR_UNITS_BUFLEN,
+                                              abbreviated_units) < 0)
+            return (-1);
+          
+          len = strlen (sensor_units_buf);
+          if (len > column_width->sensor_units)
+            column_width->sensor_units = len;
+        }
     }
   
   return (0);
@@ -1220,7 +1289,6 @@ calculate_column_widths (pstdout_state_t pstate,
                 }
               else
                 {
-                fallthroughB:
                   if (_store_column_widths (pstate,
                                             sdr_parse_ctx,
                                             sdr_record,

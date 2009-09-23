@@ -137,6 +137,7 @@ o ipmi-sensors
   - Under very verbose output, output Resolution.
   - Under very verbose output, output Accuracy.
   - Under very verbose output, output sensor sharing information.
+  - Under very verbose output, output entity instance type.
   - Under very verbose output, output OEM bytes in generic device
     locator records.
   - Output record-type names in addition to record type hex code in
@@ -323,6 +324,7 @@ o ipmi-oem
     particular OEM ID.
   - Add additional Dell OEM commands.
   - Add additional Inventec OEM commands.
+  - Add additional Sun OEM commands.
 o bmc-watchdog
   - Removed the following short options.
     - 'h' (legacy -?)

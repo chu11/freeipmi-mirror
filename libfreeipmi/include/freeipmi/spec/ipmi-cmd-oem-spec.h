@@ -91,6 +91,17 @@ extern "C" {
 #define IPMI_CMD_OEM_INVENTEC_SET_SHARED_MAC_ADDRESS       0x23
 
 /*
+ * Sun
+ */
+  
+/*
+ * Sun 4140
+ */
+
+#define IPMI_CMD_OEM_SUN_GET_LED 0x21
+#define IPMI_CMD_OEM_SUN_SET_LED 0x22
+
+/*
  * Supermicro
  */
   

@@ -1,0 +1,363 @@
+/*
+  Copyright (C) 2008-2009 FreeIPMI Core Team
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
+*/
+
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif /* HAVE_CONFIG_H */
+
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <assert.h>
+
+#include <freeipmi/freeipmi.h>
+
+#include "ipmi-oem.h"
+#include "ipmi-oem-argp.h"
+#include "ipmi-oem-common.h"
+#include "ipmi-oem-sun.h"
+
+#include "freeipmi-portability.h"
+#include "pstdout.h"
+#include "tool-sdr-cache-common.h"
+#include "tool-sensor-common.h"
+
+#define IPMI_OEM_SUN_LED_TYPE_OK2RM    0
+#define IPMI_OEM_SUN_LED_TYPE_SERVICE  1
+#define IPMI_OEM_SUN_LED_TYPE_ACTIVITY 2
+#define IPMI_OEM_SUN_LED_TYPE_LOCATE   3
+
+#define IPMI_OEM_SUN_LED_MODE_OFF     0
+#define IPMI_OEM_SUN_LED_MODE_ON      1
+#define IPMI_OEM_SUN_LED_MODE_STANDBY 2
+#define IPMI_OEM_SUN_LED_MODE_SLOW    3
+#define IPMI_OEM_SUN_LED_MODE_FAST    4
+
+#define IPMI_OEM_SUN_LED_FORCE_GO_THRU_CONTROLLER     0
+#define IPMI_OEM_SUN_LED_FORCE_DIRECTLY_ACCESS_DEVICE 1
+
+#define IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_DEVICE_ACCESS_ADDRESS_INDEX 5
+#define IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_DEVICE_SLAVE_ADDRESS_INDEX  6
+#define IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_OEM_INDEX                   14
+
+int
+ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
+{
+  struct sensor_entity_id_counts entity_id_counts;
+  struct sensor_entity_id_counts *entity_ptr = NULL;
+  struct sensor_column_width column_width;
+  uint16_t record_count;
+  int rv = -1;
+  int header_output_flag = 0;
+  int i;
+  
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+                                 state_data->pstate,
+                                 state_data->ipmi_ctx,
+                                 state_data->prog_data->args->sdr.quiet_cache,
+                                 state_data->prog_data->args->sdr.sdr_cache_recreate,
+                                 state_data->hostname,
+                                 state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
+    goto cleanup;
+
+  if (state_data->prog_data->args->verbose_count)
+    {
+      if (calculate_entity_id_counts (state_data->pstate,
+                                      state_data->sdr_cache_ctx,
+                                      state_data->sdr_parse_ctx,
+                                      &entity_id_counts) < 0)
+        goto cleanup;
+
+      entity_ptr = &entity_id_counts;
+    }
+
+  if (calculate_column_widths (state_data->pstate,
+                               state_data->sdr_cache_ctx,
+                               state_data->sdr_parse_ctx,
+                               NULL,
+                               0,
+                               NULL,
+                               0,
+                               1,
+                               0,
+                               entity_ptr,
+                               &column_width) < 0)
+    goto cleanup;
+
+  /* Sun OEM
+   *
+   * From Ipmitool (http://ipmitool.sourceforge.net/)
+   *
+   * Get Led Request
+   *
+   * 0x2E - OEM network function (is IPMI_NET_FN_OEM_GROUP_RQ)
+   * 0x21 - OEM cmd
+   * 0x?? - Device Slave Address (in General Device Locator Record)
+   *      - Note that the IPMI command requires the entire
+   *        byte of the slave address.
+   * 0x?? - LED Type (see below [1])
+   * 0x?? - Controller Address / Device Access Address (in General Device Locator Record)
+   *      - Note that the IPMI command requires the entire
+   *        byte of the access address.
+   * 0x?? - HW Info (OEM field in General Device Locator Record)
+   * 0x?? - Force
+   *      - 0 - Go thru controller
+   *      - 1 - Directly access device
+   *
+   * An alternate format is described in the ipmitool comments for Sun
+   * Blade Moduler Systems.
+   *
+   * 0x2E - OEM network function (is IPMI_NET_FN_OEM_GROUP_RQ)
+   * 0x21 - OEM cmd
+   * 0x?? - Device Slave Address (in General Device Locator Record)
+   * 0x?? - LED Type
+   * 0x?? - Controller Address / Device Access Address (in General Device Locator Record)
+   * 0x?? - Entity ID
+   * 0x?? - Entity Instance
+   * 0x?? - HW Info (OEM field in General Device Locator Record)
+   * 0x?? - Force
+   *      - 0 - Go thru controller
+   *      - 1 - Directly access device
+   *
+   * Get Led Response
+   *
+   * 0x21 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - LED mode
+   *
+   * achu notes: 
+   *
+   * [1] - As far as I can tell, the LED type field is useless.  My
+   * assumption is that on older Sun systems, or other motherboards I
+   * don't have access to, one can specify an LED type, which allows
+   * you to enable/disable a particular LED amongst many.  On my Sun
+   * Fire 4140, it appears to do nothing and affect nothing.  I will
+   * add in a new option later if it becomes necessary for the user to
+   * specify an LED type.  In the meantime, I will copy the code use
+   * in ipmitool and set this field to the OEM field.
+   */
+
+  if (ipmi_sdr_cache_record_count (state_data->sdr_cache_ctx, &record_count) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_sdr_cache_record_count: %s\n",
+		       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+      goto cleanup;
+    }
+
+  for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_cache_ctx))
+    {
+      uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+      uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+      int rs_len;
+      uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+      int sdr_record_len = 0;
+      uint16_t record_id;
+      uint8_t record_type;
+      char fmt[IPMI_OEM_FMT_BUFLEN + 1];
+      char device_id_string[IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1];
+      char sensor_name_buf[MAX_ENTITY_ID_SENSOR_NAME_STRING + 1];
+      char *sensor_name = NULL;
+      uint8_t entity_instance_type;
+      uint8_t led_mode;
+      char *led_mode_str = NULL;
+
+      if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+							sdr_record,
+							IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_cache_record_read: %s\n",
+			   ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+	  goto cleanup;
+	}
+      
+      if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+					     sdr_record,
+					     sdr_record_len,
+					     &record_id,
+					     &record_type) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_parse_record_id_and_type: %s\n",
+			   ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+	  goto cleanup;
+	}
+      
+      
+      if (record_type != IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
+        continue;
+
+      if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_parse_ctx,
+                                                  sdr_record,
+                                                  sdr_record_len,
+                                                  NULL,
+                                                  NULL,
+                                                  &entity_instance_type) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_parse_entity_id_and_instance: %s\n",
+                           ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+          goto cleanup;
+        }
+      
+      /* if it isn't a physical instance, don't continue on */
+      if (entity_instance_type == IPMI_SDR_LOGICAL_CONTAINER_ENTITY)
+        continue;
+          
+      /* achu: the sun oem commands want the full byte, not just the
+       * sub-field, so use indexes instead of sdr-parse lib.
+       */
+
+      bytes_rq[0] = IPMI_CMD_OEM_SUN_GET_LED;
+      bytes_rq[1] = sdr_record[IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_DEVICE_SLAVE_ADDRESS_INDEX];
+      bytes_rq[2] = sdr_record[IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_OEM_INDEX];
+      bytes_rq[3] = sdr_record[IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_DEVICE_ACCESS_ADDRESS_INDEX];
+      bytes_rq[4] = sdr_record[IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_OEM_INDEX];
+      bytes_rq[5] = IPMI_OEM_SUN_LED_FORCE_GO_THRU_CONTROLLER;
+
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                                  0, /* lun */
+                                  IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
+                                  bytes_rq, /* data */
+                                  6, /* num bytes */
+                                  bytes_rs,
+                                  IPMI_OEM_MAX_BYTES)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_raw: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+      
+      /* achu: there are probably 1 or 2 completion codes that are
+       * acceptable to ignore and continue on, but who knows what they
+       * are.
+       */
+
+      if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                       bytes_rs,
+                                                       rs_len,
+                                                       3,
+                                                       IPMI_CMD_OEM_SUN_GET_LED,
+                                                       IPMI_NET_FN_OEM_GROUP_RS) < 0)
+        goto cleanup;
+      
+      if (!header_output_flag)
+        {
+          memset (fmt, '\0', IPMI_OEM_FMT_BUFLEN + 1);
+          
+          snprintf (fmt,
+                    IPMI_OEM_FMT_BUFLEN,
+                    "%%-%ds | %%-%ds | LED Mode\n",
+                    column_width.record_id,
+                    column_width.sensor_name);
+          
+          pstdout_printf (state_data->pstate,
+                          fmt,
+                          SENSORS_HEADER_RECORD_ID_STR,
+                          SENSORS_HEADER_NAME_STR);
+          
+          header_output_flag++;
+        }
+      
+      led_mode = bytes_rs[2];
+      
+      if (state_data->prog_data->args->verbose_count)
+        {
+          memset (sensor_name_buf, '\0', MAX_ENTITY_ID_SENSOR_NAME_STRING + 1);
+          
+          if (get_entity_sensor_name_string (state_data->pstate,
+                                             state_data->sdr_parse_ctx,
+                                             sdr_record,
+                                             sdr_record_len,
+                                             &entity_id_counts,
+                                             NULL,
+                                             sensor_name_buf,
+                                             MAX_ENTITY_ID_SENSOR_NAME_STRING) < 0)
+            goto cleanup;
+          
+          sensor_name = sensor_name_buf;
+        }
+      else
+        {
+          memset (device_id_string, '\0', IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING + 1);
+          
+          if (ipmi_sdr_parse_device_id_string (state_data->sdr_parse_ctx,
+                                               sdr_record,
+                                               sdr_record_len,
+                                               device_id_string,
+                                               IPMI_SDR_CACHE_MAX_DEVICE_ID_STRING) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sdr_parse_device_id_string: %s\n",
+                               ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+              goto cleanup;
+            }
+          
+          sensor_name = device_id_string;
+        }
+      
+      if (led_mode == IPMI_OEM_SUN_LED_MODE_OFF)
+        led_mode_str = "Off";
+      else if (led_mode == IPMI_OEM_SUN_LED_MODE_ON)
+        led_mode_str = "On";
+      else if (led_mode == IPMI_OEM_SUN_LED_MODE_STANDBY)
+        led_mode_str = "Standby";
+      else if (led_mode == IPMI_OEM_SUN_LED_MODE_SLOW)
+        led_mode_str = "Slow";
+      else if (led_mode == IPMI_OEM_SUN_LED_MODE_FAST)
+        led_mode_str = "Fast";
+      else
+        led_mode_str = "Unknown";
+      
+      snprintf (fmt,
+                IPMI_OEM_FMT_BUFLEN,
+                "%%-%du | %%-%ds | %s\n",
+                column_width.record_id,
+                column_width.sensor_name,
+                led_mode_str);
+      
+      pstdout_printf (state_data->pstate,
+                      fmt,
+                      record_id,
+                      sensor_name);
+    }
+  
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
+{
+  return (0);
+}
