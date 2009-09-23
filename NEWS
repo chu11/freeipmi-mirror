@@ -318,6 +318,9 @@ o ipmi-pef-config/pef-config
   - Support additional options in FreeIPMI config file.
 o ipmi-oem
   - Support common 'list' command to all OEM IDs.
+  - If user does not input OEM ID, list OEM IDs and Commands.
+  - If user does not input OEM command, list OEM commands for a
+    particular OEM ID.
   - Add additional Dell OEM commands.
   - Add additional Inventec OEM commands.
 o bmc-watchdog

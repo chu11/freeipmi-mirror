@@ -528,7 +528,8 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
           id_found++;
 
 	  /* offer "help" as well as list, for those used to ipmitool */
-          if (!strcasecmp (args->oem_command, "list")
+          if (!args->oem_command
+              || !strcasecmp (args->oem_command, "list")
 	      || !strcasecmp (args->oem_command, "help"))
             {
               while (oem_cmd && oem_cmd->oem_command)
@@ -622,35 +623,12 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
    * exitted
    */
   assert (!args->list);
+  assert (args->oem_id);
+  assert (strcasecmp (args->oem_id, "list"));
+  assert (strcasecmp (args->oem_id, "help"));
 
   if (args->sdr.flush_cache)
     return (_flush_cache (state_data));
-
-  if (!args->oem_id)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "OEM Id not specified\n");
-      goto cleanup;
-    }
-
-  /* Special case, just output list, don't do anything else */
-  /* offer "help" as well as list, for those used to ipmitool */
-  if (!strcasecmp (args->oem_id, "list")
-      || !strcasecmp (args->oem_id, "help"))
-    {
-      if (_list () < 0)
-        goto cleanup;
-      goto out;
-    }
-
-  if (!args->oem_command)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "OEM Command not specified\n");
-      goto cleanup;
-    }
 
   if (_run_oem_cmd (state_data) < 0)
     goto cleanup;
@@ -679,7 +657,9 @@ _ipmi_oem (pstdout_state_t pstate,
   state_data.hostname = (char *)hostname;
 
   /* Special case, just flush, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache)
+  /* Special case, we're going to output help info, don't do an IPMI connection */
+  if (!prog_data->args->sdr.flush_cache
+      && prog_data->args->oem_command)
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
 					     hostname,
@@ -767,7 +747,11 @@ main (int argc, char **argv)
   prog_data.args = &cmd_args;
 
   /* Special case, just output list, don't do anything else */
-  if (cmd_args.list)
+  /* offer "help" as well as list, for those used to ipmitool */
+  if (!cmd_args.oem_id
+      || !strcasecmp (cmd_args.oem_id, "list")
+      || !strcasecmp (cmd_args.oem_id, "help")
+      || cmd_args.list)
     {
       if (_list () < 0)
         {
