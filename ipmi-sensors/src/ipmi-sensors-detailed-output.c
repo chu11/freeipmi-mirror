@@ -1919,7 +1919,7 @@ _detailed_output_generic_device_locator_record (ipmi_sensors_state_data_t *state
                                                 uint8_t record_type,
                                                 uint16_t record_id)
 {
-  uint8_t direct_access_address;
+  uint8_t device_access_address;
   uint8_t channel_number;
   uint8_t device_slave_address;
   uint8_t private_bus_id;
@@ -1942,7 +1942,7 @@ _detailed_output_generic_device_locator_record (ipmi_sensors_state_data_t *state
   if (ipmi_sdr_parse_generic_device_locator_parameters (state_data->sdr_parse_ctx,
                                                         sdr_record,
                                                         sdr_record_len,
-                                                        &direct_access_address,
+                                                        &device_access_address,
                                                         &channel_number,
                                                         &device_slave_address,
                                                         &private_bus_id,
@@ -1958,8 +1958,8 @@ _detailed_output_generic_device_locator_record (ipmi_sensors_state_data_t *state
     }
 
   pstdout_printf (state_data->pstate,
-                  "Direct Access Address: %Xh\n",
-                  direct_access_address);
+                  "Device Access Address: %Xh\n",
+                  device_access_address);
   pstdout_printf (state_data->pstate,
                   "Channel Number: %Xh\n",
                   channel_number);
@@ -2001,7 +2001,7 @@ _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_dat
                                             uint8_t record_type,
                                             uint16_t record_id)
 {
-  uint8_t direct_access_address;
+  uint8_t device_access_address;
   uint8_t logical_fru_device_device_slave_address;
   uint8_t private_bus_id;
   uint8_t lun_for_master_write_read_fru_command;
@@ -2025,7 +2025,7 @@ _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_dat
   if (ipmi_sdr_parse_fru_device_locator_parameters (state_data->sdr_parse_ctx,
                                                     sdr_record,
                                                     sdr_record_len,
-                                                    &direct_access_address,
+                                                    &device_access_address,
                                                     &logical_fru_device_device_slave_address,
                                                     &private_bus_id,
                                                     &lun_for_master_write_read_fru_command,
@@ -2041,8 +2041,8 @@ _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_dat
     }
 
   pstdout_printf (state_data->pstate,
-                  "Direct Access Address: %Xh\n",
-                  direct_access_address);
+                  "Device Access Address: %Xh\n",
+                  device_access_address);
 
   if (logical_physical_fru_device)
     pstdout_printf (state_data->pstate,

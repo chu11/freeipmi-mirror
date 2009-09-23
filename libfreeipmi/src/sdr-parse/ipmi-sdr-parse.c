@@ -3888,7 +3888,7 @@ int
 ipmi_sdr_parse_generic_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
                                                   const void *sdr_record,
                                                   unsigned int sdr_record_len,
-                                                  uint8_t *direct_access_address,
+                                                  uint8_t *device_access_address,
                                                   uint8_t *channel_number,
                                                   uint8_t *device_slave_address,
                                                   uint8_t *private_bus_id,
@@ -3922,16 +3922,16 @@ ipmi_sdr_parse_generic_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
                                                  acceptable_record_types)))
     goto cleanup;
 
-  if (direct_access_address)
+  if (device_access_address)
     {
       if (FIID_OBJ_GET (obj_sdr_record,
-                        "direct_access_address",
+                        "device_access_address",
                         &val) < 0)
         {
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      *direct_access_address = val;
+      *device_access_address = val;
     }
   if (channel_number)
     {
@@ -4018,7 +4018,7 @@ int
 ipmi_sdr_parse_fru_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
                                               const void *sdr_record,
                                               unsigned int sdr_record_len,
-                                              uint8_t *direct_access_address,
+                                              uint8_t *device_access_address,
                                               uint8_t *logical_fru_device_device_slave_address,
                                               uint8_t *private_bus_id,
                                               uint8_t *lun_for_master_write_read_fru_command,
@@ -4050,16 +4050,16 @@ ipmi_sdr_parse_fru_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
                                                  acceptable_record_types)))
     goto cleanup;
 
-  if (direct_access_address)
+  if (device_access_address)
     {
       if (FIID_OBJ_GET (obj_sdr_record,
-                        "direct_access_address",
+                        "device_access_address",
                         &val) < 0)
         {
           SDR_PARSE_FIID_OBJECT_ERROR_TO_SDR_PARSE_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      *direct_access_address = val;
+      *device_access_address = val;
     }
   if (logical_fru_device_device_slave_address)
     {
