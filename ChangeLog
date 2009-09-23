@@ -2,7 +2,14 @@
 
 	* ipmi-oem/: Support get/set power management on inventec.
 
+	* ipmi-oem/: Support get/set leds on sun.
+
 	* ipmi-oem/: Various cleanup.
+
+	* ipmi-sensors/, libfreeipmi/: Make generic device locator and
+	management controller sdr records have entity instance and type.
+	Adjust code in sdr-parse appropriately, adjust ipmi-sensors
+	appropriately.
 	
 2009-09-22  Albert Chu <chu11@llnl.gov>
 
