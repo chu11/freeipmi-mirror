@@ -136,7 +136,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
   uint8_t event_reading_type_code;
   uint8_t sensor_owner_id_type, sensor_owner_id;
   uint8_t sensor_owner_lun, channel_number;
-  uint8_t entity_id, entity_instance;
+  uint8_t entity_id, entity_instance, entity_instance_type;
 
   assert (state_data);
   assert (sdr_record);
@@ -213,7 +213,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                                               sdr_record_len,
                                               &entity_id,
                                               &entity_instance,
-                                              NULL) < 0)
+                                              &entity_instance_type) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -278,6 +278,9 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
   pstdout_printf (state_data->pstate,
                   "Entity Instance: %u\n",
                   entity_instance);
+  pstdout_printf (state_data->pstate,
+                  "Entity Instance Type: %s\n",
+                  (entity_instance_type == IPMI_SDR_PHYSICAL_ENTITY) ? "Physical Entity" : "Logical Container Entity");
   pstdout_printf (state_data->pstate,
                   "Event/Reading Type Code: %Xh\n",
                   event_reading_type_code);
@@ -1864,17 +1867,19 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
 {
   uint8_t entity_id;
   uint8_t entity_instance;
+  uint8_t entity_instance_type;
 
   assert (state_data);
   assert (sdr_record);
   assert (sdr_record_len);
   assert (state_data->prog_data->args->verbose_count >= 2);
-
-  if (ipmi_sdr_parse_entity_id_and_instance (state_data->sdr_parse_ctx,
-                                             sdr_record,
-                                             sdr_record_len,
-                                             &entity_id,
-                                             &entity_instance) < 0)
+  
+  if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_parse_ctx,
+                                              sdr_record,
+                                              sdr_record_len,
+                                              &entity_id,
+                                              &entity_instance,
+                                              &entity_instance_type) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1908,6 +1913,10 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
   pstdout_printf (state_data->pstate,
                   "Entity Instance: %u\n",
                   entity_instance);
+
+  pstdout_printf (state_data->pstate,
+                  "Entity Instance Type: %s\n",
+                  (entity_instance_type == IPMI_SDR_PHYSICAL_ENTITY) ? "Physical Entity" : "Logical Container Entity");
 
   return (0);
 }

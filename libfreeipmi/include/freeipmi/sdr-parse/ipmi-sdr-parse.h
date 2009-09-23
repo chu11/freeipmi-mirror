@@ -80,7 +80,7 @@ int ipmi_sdr_parse_sensor_number (ipmi_sdr_parse_ctx_t ctx,
                                   unsigned int sdr_record_len,
                                   uint8_t *sensor_number);
 
-/* For Full, Compact, Event SDR records */
+/* For Full, Compact, Event SDR, Generic Device Locator, Management Controller Device Locator SDR records */
 int ipmi_sdr_parse_entity_id_instance_type (ipmi_sdr_parse_ctx_t ctx,
                                             const void *sdr_record,
                                             unsigned int sdr_record_len,
@@ -346,13 +346,6 @@ int ipmi_sdr_parse_device_type (ipmi_sdr_parse_ctx_t ctx,
                                 unsigned int sdr_record_len,
                                 uint8_t *device_type,
                                 uint8_t *device_type_modifier);
-
-/* For Generic Device Locator, Management Controller Device Locator SDR records */
-int ipmi_sdr_parse_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
-                                           const void *sdr_record,
-                                           unsigned int sdr_record_len,
-                                           uint8_t *entity_id,
-                                           uint8_t *entity_instance);
 
 /* For Generic Device Locator SDR records */
 int ipmi_sdr_parse_generic_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,

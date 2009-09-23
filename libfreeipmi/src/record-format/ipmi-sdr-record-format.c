@@ -957,8 +957,8 @@ fiid_template_t tmpl_sdr_generic_device_locator_record =
      * Record Key Bytes *
      ********************/
     /* Direct Access Address */
-    { 1, "direct_access_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "direct_access_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "device_access_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "device_access_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Device Slave Address */
     { 1, "channel_number_ms", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7, "device_slave_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -973,7 +973,8 @@ fiid_template_t tmpl_sdr_generic_device_locator_record =
     { 8, "device_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "device_type_modifier", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "entity_instance.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "device_id_string_type_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 128, "device_id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
@@ -994,8 +995,8 @@ fiid_template_t tmpl_sdr_fru_device_locator_record =
      * Record Key Bytes *
      ********************/
     /* Direct Access Address */
-    { 1, "direct_access_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "direct_access_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "device_access_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "device_access_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* FRU Device ID/Device Slave Address */
     { 8, "logical_fru_device_device_slave_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Logical-Physical / Access LUN / Bus ID */
@@ -1040,8 +1041,8 @@ fiid_template_t tmpl_sdr_fru_device_locator_record_non_intelligent =
      * Record Key Bytes *
      ********************/
     /* Direct Access Address */
-    { 1, "direct_access_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "direct_access_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "device_access_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "device_access_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* FRU Device ID/Device Slave Address */
     { 1, "non_intelligent_fru_device.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7, "non_intelligent_fru_device.slave_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1111,7 +1112,8 @@ fiid_template_t tmpl_sdr_management_controller_device_locator_record =
     { 1, "device_capabilities.chassis_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7, "entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "entity_instance.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "device_id_string_type_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 128, "device_id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
