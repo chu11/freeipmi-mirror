@@ -267,10 +267,14 @@
 #define IPMI_OEM_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH  0x08
 
 /* DPNM = Dynamic Power Node Management */
-#define IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_BITMASK      0x80
-#define IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_SHIFT        7
-#define IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_ENABLE_DPNM  1
-#define IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DISABLE_DPNM 0
+#define IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_BITMASK 0x80
+#define IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_SHIFT   7
+#define IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_ENABLE  1
+#define IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_DISABLE 0
+
+#define IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE    0x00
+#define IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO         0x01
+#define IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED 0x02
 
 #define IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_RESTORE_PARAMETERS_NOT_INCLUDED_BELOW 0x0
 #define IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_REMAINING_PARAMETERS_STAY_WHAT_IT_IS  0x7
@@ -551,7 +555,7 @@ _ipmi_oem_inventec_set_extended_config (ipmi_oem_state_data_t *state_data,
 int
 ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
 {
-  uint32_t value;
+  uint32_t tmpvalue;
   int rv = -1;
 
   assert (state_data);
@@ -580,10 +584,10 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
                                               IPMI_OEM_EXTENDED_CONFIGURATION_ID_LAN,
                                               IPMI_OEM_EXTENDED_ATTRIBUTE_ID_LAN_NIC_STATUS,
                                               1,
-                                              &value) < 0)
+                                              &tmpvalue) < 0)
     goto cleanup;
 
-  switch (value)
+  switch (tmpvalue)
     {
     case IPMI_OEM_EXTENDED_CONFIG_LAN_NIC_STATUS_SHARED:
       pstdout_printf (state_data->pstate, "shared\n");
@@ -592,7 +596,7 @@ ipmi_oem_inventec_get_nic_status (ipmi_oem_state_data_t *state_data)
       pstdout_printf (state_data->pstate, "dedicated\n");
       break;
     default:
-      pstdout_printf (state_data->pstate, "unknown NIC status: %Xh\n", value);
+      pstdout_printf (state_data->pstate, "unknown NIC status: %Xh\n", tmpvalue);
       break;
     }
 
@@ -844,7 +848,7 @@ static int
 _inventec_get_bmc_services (ipmi_oem_state_data_t *state_data,
                             uint8_t *services)
 {
-  uint32_t value;
+  uint32_t tmpvalue;
   int rv = -1;
 
   assert (state_data);
@@ -854,10 +858,10 @@ _inventec_get_bmc_services (ipmi_oem_state_data_t *state_data,
                                               IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
                                               IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED,
                                               1,
-                                              &value) < 0)
+                                              &tmpvalue) < 0)
     goto cleanup;
 
-  (*services) = value;
+  (*services)= tmpvalue;
 
   rv = 0;
  cleanup:
@@ -1003,7 +1007,7 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
 int
 ipmi_oem_inventec_get_authentication_config (ipmi_oem_state_data_t *state_data)
 {
-  uint32_t value;
+  uint32_t tmpvalue;
   uint8_t maxauthenticationfailures;
   uint16_t lockoutwindow;
   uint16_t lockouttime;
@@ -1016,25 +1020,25 @@ ipmi_oem_inventec_get_authentication_config (ipmi_oem_state_data_t *state_data)
                                               IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
                                               IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_MAX_AUTHENTICATION_FAILURES,
                                               1,
-                                              &value) < 0)
+                                              &tmpvalue) < 0)
     goto cleanup;
-  maxauthenticationfailures = value;
+  maxauthenticationfailures= tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config (state_data,
                                               IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
                                               IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW,
                                               2,
-                                              &value) < 0)
+                                              &tmpvalue) < 0)
     goto cleanup;
-  lockoutwindow = value;
+  lockoutwindow= tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config (state_data,
                                               IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
                                               IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME,
                                               2,
-                                              &value) < 0)
+                                              &tmpvalue) < 0)
     goto cleanup;
-  lockouttime = value;
+  lockouttime= tmpvalue;
   
   pstdout_printf (state_data->pstate,
 		  "Max Authentication Failures : %u\n",
@@ -1105,7 +1109,7 @@ ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data)
                                                       IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
                                                       IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW,
                                                       2,
-                                                      lockoutwindow) < 0)
+                                                      (uint32_t)lockoutwindow) < 0)
             goto cleanup;
         }
       else if (!strcasecmp (key, "lockouttime"))
@@ -1117,7 +1121,7 @@ ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data)
                                                       IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
                                                       IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME,
                                                       2,
-                                                      lockouttime) < 0)
+                                                      (uint32_t)lockouttime) < 0)
             goto cleanup;
         }
       else
@@ -1143,7 +1147,7 @@ ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data)
 int
 ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data)
 {
-  uint32_t value;
+  uint32_t tmpvalue;
   uint8_t webserverenabled;
   uint8_t maxwebsessions;
   uint8_t activewebsessions;
@@ -1184,49 +1188,49 @@ ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data)
                                               IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
                                               IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
                                               1,
-                                              &value) < 0)
+                                              &tmpvalue) < 0)
     goto cleanup;
-  webserverenabled = value;
+  webserverenabled= tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config (state_data,
                                               IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
                                               IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS,
                                               1,
-                                              &value) < 0)
+                                              &tmpvalue) < 0)
     goto cleanup;
-  maxwebsessions = value;
+  maxwebsessions= tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config (state_data,
                                               IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
                                               IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS,
                                               1,
-                                              &value) < 0)
+                                              &tmpvalue) < 0)
     goto cleanup;
-  activewebsessions = value;
+  activewebsessions= tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config (state_data,
                                               IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
                                               IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
                                               4,
-                                              &value) < 0)
+                                              &tmpvalue) < 0)
     goto cleanup;
-  webservertimeout = value;
+  webservertimeout= tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config (state_data,
                                               IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
                                               IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
                                               2,
-                                              &value) < 0)
+                                              &tmpvalue) < 0)
     goto cleanup;
-  httpportnum = value;
+  httpportnum= tmpvalue;
   
   if (_ipmi_oem_inventec_get_extended_config (state_data,
                                               IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
                                               IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
                                               2,
-                                              &value) < 0)
+                                              &tmpvalue) < 0)
     goto cleanup;
-  httpsportnum = value;
+  httpsportnum= tmpvalue;
   
   pstdout_printf (state_data->pstate,
 		  "Web Server          : %s\n",
@@ -1348,7 +1352,7 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
                                                       IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
                                                       IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
                                                       2,
-                                                      httpportnumber) < 0)
+                                                      (uint32_t)httpportnumber) < 0)
             goto cleanup;
         }
       else if (!strcasecmp (key, "httpsportnumber"))
@@ -1360,7 +1364,221 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
                                                       IPMI_OEM_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
                                                       IPMI_OEM_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
                                                       2,
-                                                      httpsportnumber) < 0)
+                                                      (uint32_t)httpsportnumber) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
+
+      free (key);
+      free (value);
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_get_power_management_config (ipmi_oem_state_data_t *state_data)
+{
+  uint32_t tmpvalue;
+  uint8_t powermanagementenable;
+  uint8_t dpnmpowermanagement;
+  uint8_t powerstaggeringacrecovery;
+  uint16_t powerondelay;
+  uint16_t minpowerondelay;
+  uint16_t maxpowerondelay;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (_ipmi_oem_inventec_get_extended_config (state_data,
+                                              IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                              IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_MANAGEMENT_ENABLE,
+                                              1,
+                                              &tmpvalue) < 0)
+    goto cleanup;
+  powermanagementenable= tmpvalue;
+
+  dpnmpowermanagement = (powermanagementenable & IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_BITMASK);
+  dpnmpowermanagement >>= IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_SHIFT;
+  
+  if (_ipmi_oem_inventec_get_extended_config (state_data,
+                                              IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                              IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY,
+                                              1,
+                                              &tmpvalue) < 0)
+    goto cleanup;
+  powerstaggeringacrecovery= tmpvalue;
+  
+  if (_ipmi_oem_inventec_get_extended_config (state_data,
+                                              IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                              IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY,
+                                              2,
+                                              &tmpvalue) < 0)
+    goto cleanup;
+  powerondelay= tmpvalue;
+
+  if (_ipmi_oem_inventec_get_extended_config (state_data,
+                                              IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                              IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MINIMUM_POWER_ON_DELAY,
+                                              2,
+                                              &tmpvalue) < 0)
+    goto cleanup;
+  minpowerondelay= tmpvalue; 
+
+  if (_ipmi_oem_inventec_get_extended_config (state_data,
+                                              IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                              IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY,
+                                              2,
+                                              &tmpvalue) < 0)
+    goto cleanup;
+  maxpowerondelay= tmpvalue; 
+  
+  pstdout_printf (state_data->pstate,
+		  "DPNM Power Management        : %s\n",
+		  (dpnmpowermanagement) ? "Enabled" : "Disabled");
+  
+  if (powerstaggeringacrecovery == IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE)
+    pstdout_printf (state_data->pstate,
+                    "Power Staggering AC Recovery : Immediate\n");
+  else if (powerstaggeringacrecovery == IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO)
+    pstdout_printf (state_data->pstate,
+                    "Power Staggering AC Recovery : Auto\n");
+  else if (powerstaggeringacrecovery == IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED)
+    pstdout_printf (state_data->pstate,
+                    "Power Staggering AC Recovery : User Defined\n");
+  else
+    pstdout_printf (state_data->pstate,
+                    "Power Staggering AC Recovery : %Xh\n",
+                    powerstaggeringacrecovery);
+  
+  pstdout_printf (state_data->pstate,
+		  "Power On Delay               : %u seconds\n",
+                  powerondelay);
+  
+  pstdout_printf (state_data->pstate,
+		  "Minimum Power On Delay       : %u seconds\n",
+                  minpowerondelay);
+
+  pstdout_printf (state_data->pstate,
+		  "Maximum Power On Delay       : %u seconds\n",
+                  maxpowerondelay);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_set_power_management_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t powermanagementenable = 0;
+  uint8_t dpnmpowermanagement = 0;
+  uint8_t powerstaggeringacrecovery = 0;
+  uint16_t powerondelay = 0;
+  uint16_t maxpowerondelay = 0;
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: dpnmpowermanagement=enable|disable\n"
+		      "Option: powerstaggeringacrecovery=immediate|auto|user\n"
+		      "Option: powerondelay=seconds\n"
+		      "Option: maxpowerondelay=seconds\n");
+      return (0); 
+    }
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
+        goto cleanup;
+
+      if (!strcasecmp (key, "dpnmpowermanagement"))
+        {
+          if (ipmi_oem_parse_enable (state_data, i, value, &dpnmpowermanagement) < 0)
+            goto cleanup;
+
+          powermanagementenable |= (dpnmpowermanagement << IPMI_OEM_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_SHIFT);
+          
+          if (_ipmi_oem_inventec_set_extended_config (state_data,
+                                                      IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                      IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_MANAGEMENT_ENABLE,
+                                                      1,
+                                                      (uint32_t)powermanagementenable) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "powerstaggeringacrecovery"))
+        {
+          if (strcasecmp (value, "immediate")
+              && strcasecmp (value, "auto")
+              && strcasecmp (value, "user"))
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "%s:%s invalid OEM option argument '%s' : invalid value\n",
+                               state_data->prog_data->args->oem_id,
+                               state_data->prog_data->args->oem_command,
+                               state_data->prog_data->args->oem_options[i]);
+              return (-1);
+            }
+
+          if (!strcasecmp (value, "immediate"))
+            powerstaggeringacrecovery = IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE;
+          else if (!strcasecmp (value, "auto"))
+            powerstaggeringacrecovery = IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO;
+          else /* !strcasecmp (value, "user")) */
+            powerstaggeringacrecovery = IPMI_OEM_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED;
+
+          if (_ipmi_oem_inventec_set_extended_config (state_data,
+                                                      IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                      IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY,
+                                                      1,
+                                                      (uint32_t)powerstaggeringacrecovery) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "powerondelay"))
+        {
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &powerondelay) < 0)
+            goto cleanup;
+          
+          if (_ipmi_oem_inventec_set_extended_config (state_data,
+                                                      IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                      IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY,
+                                                      2,
+                                                      (uint32_t)powerondelay) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "maxpowerondelay"))
+        {
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &maxpowerondelay) < 0)
+            goto cleanup;
+          
+          if (_ipmi_oem_inventec_set_extended_config (state_data,
+                                                      IPMI_OEM_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+                                                      IPMI_OEM_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY,
+                                                      2,
+                                                      (uint32_t)maxpowerondelay) < 0)
             goto cleanup;
         }
       else

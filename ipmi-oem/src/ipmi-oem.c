@@ -373,6 +373,20 @@ struct ipmi_oem_command oem_inventec[] =
       1,
       ipmi_oem_inventec_set_web_server_config
     },
+    {
+      "get-power-management-config",
+      NULL,
+      0,
+      0,
+      ipmi_oem_inventec_get_power_management_config
+    },
+    {
+      "set-power-management-config",
+      "KEY=VALUE ...",
+      1,
+      1,
+      ipmi_oem_inventec_set_power_management_config
+    },
 #if 0
     /* cannot verify */
     {
@@ -633,7 +647,6 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
   if (_run_oem_cmd (state_data) < 0)
     goto cleanup;
 
- out:
   rv = 0;
  cleanup:
   return (rv);
