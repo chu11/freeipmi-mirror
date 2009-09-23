@@ -325,6 +325,29 @@ IPMI.  \fIall\fR can be specified to enable/disable all services,
 and HTTPS, and \fIssh\fR specifies both SSH and Telnet.  Command
 confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
 .TP
+.B get-authentication-config
+This OEM command will display additional OEM authentication settings.
+(See \fIset\-authentication\-config\fR below for description on
+outputs.)  Command confirmed to work on Inventec 5441 (and
+subsequently Dell Xanadu2).
+.TP
+.B set-authentication-config \fIKEY=VALUE ...\fR
+This OEM command will set additional OEM authentication settings on
+the IPMI card.  The possible keys and values are
+\fImaxauthenticationfailures=count\fR, \fIlockoutwindow=seconds\fR,
+\fIlockouttime=seconds\fR, and \fIhttpsportnumber=num\fR.
+\fImaxauthenticationfailures\fR specifies the maximum number of
+allowed authentication failures.  \fIlockoutwindow\fR specifies the
+window of time the authentication failure count can be reached in to
+disable a user.  \fIlockouttime\fR specifies the time period a user is
+disabled if the authentication failure count is reached.  Setting 0 to
+any of the settings will disable the lockout feature.  Each time any
+of these settings is modified, the authentication failure count of
+each enabled user is reset to 0.  Multiple key=value pairs may be
+specified.  If no key=value pairs are specifed, available pairs are
+output.  Command confirmed to work on Inventec 5441 (and subsequently
+Dell Xanadu2).
+.TP
 .B get-web-server-config
 This OEM command will get the current web server configuration on the
 IPMI card.  Command confirmed to work on Inventec 5441 (and
@@ -333,12 +356,11 @@ subsequently Dell Xanadu2).
 .B set-web-server-config \fIKEY=VALUE ...\fR
 This OEM command will set the current Web Server configuration on the
 IPMI card.  The possible keys and values are
-\fIwebserver=enable|disable\fR,
-\fIwebservertimeout=seconds\fR, \fIhttpportnumber=num\fR,
-and \fIhttpsportnumber=num\fR.  Multiple key=value pairs may be
-specified.  If no key=value pairs are specifed, available pairs are
-output.  Some fields may be read-only on specific Poweredge systems.
-Command confirmed to work on Inventec 5441 (and subsequently Dell Xanadu2).
+\fIwebserver=enable|disable\fR, \fIwebservertimeout=seconds\fR,
+\fIhttpportnumber=num\fR, and \fIhttpsportnumber=num\fR.  Multiple
+key=value pairs may be specified.  If no key=value pairs are specifed,
+available pairs are output.  Command confirmed to work on Inventec
+5441 (and subsequently Dell Xanadu2).
 .if 0 \{
 .TP
 .B restore-to-defaults \fIall|user|lan|sol|serial|pef\fR

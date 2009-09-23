@@ -346,6 +346,20 @@ struct ipmi_oem_command oem_inventec[] =
       ipmi_oem_inventec_set_bmc_services
     },
     {
+      "get-authentication-config",
+      NULL,
+      0,
+      0,
+      ipmi_oem_inventec_get_authentication_config
+    },
+    {
+      "set-authentication-config",
+      "KEY=VALUE ...",
+      1,
+      1,
+      ipmi_oem_inventec_set_authentication_config
+    },
+    {
       "get-web-server-config",
       NULL,
       0,

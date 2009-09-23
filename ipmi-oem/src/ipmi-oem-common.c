@@ -25,6 +25,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <limits.h>
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
@@ -188,17 +189,85 @@ ipmi_oem_parse_enable (ipmi_oem_state_data_t *state_data,
 }
 
 int
-ipmi_oem_parse_timeout (ipmi_oem_state_data_t *state_data,
-                        unsigned int option_num,
-                        const char *value,
-                        uint32_t *timeout)
+ipmi_oem_parse_1_byte_field (ipmi_oem_state_data_t *state_data,
+			     unsigned int option_num,
+			     const char *value,
+			     uint8_t *value_out)
+{
+  unsigned int temp;
+  char *ptr = NULL;
+  
+  assert (state_data);
+  assert (value);
+  assert (value_out);
+  
+  errno = 0;
+  
+  temp = strtoul (value, &ptr, 10);
+  
+  if (errno
+      || temp > UCHAR_MAX
+      || ptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+  
+  (*value_out) = temp;
+  return (0);
+}
+
+int
+ipmi_oem_parse_2_byte_field (ipmi_oem_state_data_t *state_data,
+			     unsigned int option_num,
+			     const char *value,
+			     uint16_t *value_out)
+{
+  unsigned int temp;
+  char *ptr = NULL;
+  
+  assert (state_data);
+  assert (value);
+  assert (value_out);
+  
+  errno = 0;
+  
+  temp = strtoul (value, &ptr, 10);
+  
+  if (errno
+      || temp > USHRT_MAX
+      || ptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+  
+  (*value_out) = temp;
+  return (0);
+}
+
+int
+ipmi_oem_parse_4_byte_field (ipmi_oem_state_data_t *state_data,
+			     unsigned int option_num,
+			     const char *value,
+			     uint32_t *value_out)
 { 
   unsigned int temp;
   char *ptr = NULL;
   
   assert (state_data);
   assert (value);
-  assert (timeout);
+  assert (value_out);
   
   errno = 0;
   
@@ -216,41 +285,7 @@ ipmi_oem_parse_timeout (ipmi_oem_state_data_t *state_data,
       return (-1);
     }
   
-  (*timeout) = temp;
-  return (0);
-}
-
-int
-ipmi_oem_parse_port (ipmi_oem_state_data_t *state_data,
-                     unsigned int option_num,
-                     const char *value,
-                     uint16_t *port)
-{
-  unsigned int temp;
-  char *ptr = NULL;
-
-  assert (state_data);
-  assert (value);
-  assert (port);
-
-  errno = 0;
-  
-  temp = strtoul (value, &ptr, 10);
-  
-  if (errno
-      || ptr[0] != '\0'
-      || temp > 65535)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[option_num]);
-      return (-1);
-    }
-  
-  (*port) = temp;
+  (*value_out) = temp;
   return (0);
 }
 
@@ -289,3 +324,4 @@ ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
   
   return (0);
 }
+

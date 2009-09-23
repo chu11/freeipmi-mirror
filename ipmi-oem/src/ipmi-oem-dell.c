@@ -1769,14 +1769,14 @@ ipmi_oem_dell_set_ssh_config (ipmi_oem_state_data_t *state_data)
         }
       else if (!strcasecmp (key, "idletimeout"))
         {
-          if (ipmi_oem_parse_timeout (state_data, i, value, &idletimeout) < 0)
+          if (ipmi_oem_parse_4_byte_field (state_data, i, value, &idletimeout) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_IDLE_TIMEOUT_FIELD_MASK;
         }
       else if (!strcasecmp (key, "portnumber"))
         {
-          if (ipmi_oem_parse_port (state_data, i, value, &portnumber) < 0)
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &portnumber) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_PORT_NUMBER_FIELD_MASK;
@@ -1986,14 +1986,14 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
         }
       else if (!strcasecmp (key, "sessiontimeout"))
         {
-          if (ipmi_oem_parse_timeout (state_data, i, value, &sessiontimeout) < 0)
+          if (ipmi_oem_parse_4_byte_field (state_data, i, value, &sessiontimeout) < 0)
             goto cleanup;
 
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_SESSION_TIMEOUT_FIELD_MASK;
         }
       else if (!strcasecmp (key, "portnumber"))
         {
-          if (ipmi_oem_parse_port (state_data, i, value, &portnumber) < 0)
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &portnumber) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_PORT_NUMBER_FIELD_MASK;
@@ -2209,21 +2209,21 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
         }
       else if (!strcasecmp (key, "sessiontimeout"))
         {
-          if (ipmi_oem_parse_timeout (state_data, i, value, &sessiontimeout) < 0)
+          if (ipmi_oem_parse_4_byte_field (state_data, i, value, &sessiontimeout) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_SESSION_TIMEOUT_FIELD_MASK;
         }
       else if (!strcasecmp (key, "httpportnumber"))
         {
-          if (ipmi_oem_parse_port (state_data, i, value, &httpportnumber) < 0)
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &httpportnumber) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTP_PORT_NUMBER_FIELD_MASK;
         }
       else if (!strcasecmp (key, "httpsportnumber"))
         {
-          if (ipmi_oem_parse_port (state_data, i, value, &httpsportnumber) < 0)
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &httpsportnumber) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_HTTPS_PORT_NUMBER_FIELD_MASK;
@@ -2687,7 +2687,7 @@ ipmi_oem_dell_set_active_directory_config (ipmi_oem_state_data_t *state_data)
         }
       else if (!strcasecmp (key, "timeout"))
         {
-          if (ipmi_oem_parse_timeout (state_data, i, value, &ad_timeout) < 0)
+          if (ipmi_oem_parse_4_byte_field (state_data, i, value, &ad_timeout) < 0)
             goto cleanup;
           
           valid_field_mask |= IPMI_OEM_DELL_EXTENDED_CONFIG_ACTIVE_DIRECTORY_AD_TIMEOUT_FIELD_MASK;

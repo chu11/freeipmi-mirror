@@ -995,6 +995,146 @@ ipmi_oem_inventec_set_bmc_services (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_inventec_get_authentication_config (ipmi_oem_state_data_t *state_data)
+{
+  uint32_t value;
+  uint8_t maxauthenticationfailures;
+  uint16_t lockoutwindow;
+  uint16_t lockouttime;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (_ipmi_oem_inventec_get_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_MAX_AUTHENTICATION_FAILURES,
+                                     1,
+                                     &value) < 0)
+    goto cleanup;
+  maxauthenticationfailures = value;
+  
+  if (_ipmi_oem_inventec_get_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW,
+                                     2,
+                                     &value) < 0)
+    goto cleanup;
+  lockoutwindow = value;
+  
+  if (_ipmi_oem_inventec_get_config (state_data,
+                                     IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                     IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME,
+                                     2,
+                                     &value) < 0)
+    goto cleanup;
+  lockouttime = value;
+  
+  pstdout_printf (state_data->pstate,
+		  "Max Authentication Failures : %u\n",
+                  maxauthenticationfailures);
+  
+  pstdout_printf (state_data->pstate,
+		  "Lockout Window              : %u seconds\n",
+		  lockoutwindow);
+  
+  pstdout_printf (state_data->pstate,
+		  "Lockout Time                : %u seconds\n",
+		  lockouttime);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t maxauthenticationfailures = 0;
+  uint16_t lockoutwindow = 0;
+  uint16_t lockouttime = 0;
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: maxauthenticationfailures=count\n"
+		      "Option: lockoutwindow=seconds\n"
+		      "Option: lockouttime=seconds\n");
+      return (0); 
+    }
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
+        goto cleanup;
+
+      if (!strcasecmp (key, "maxauthenticationfailures"))
+        {
+          if (ipmi_oem_parse_1_byte_field (state_data, i, value, &maxauthenticationfailures) < 0)
+            goto cleanup;
+
+          if (_ipmi_oem_inventec_set_config (state_data,
+                                             IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                             IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_MAX_AUTHENTICATION_FAILURES,
+                                             1,
+                                             (uint32_t)maxauthenticationfailures) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "lockoutwindow"))
+        {
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &lockoutwindow) < 0)
+            goto cleanup;
+          
+          if (_ipmi_oem_inventec_set_config (state_data,
+                                             IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                             IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW,
+                                             2,
+                                             lockoutwindow) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "lockouttime"))
+        {
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &lockouttime) < 0)
+            goto cleanup;
+          
+          if (_ipmi_oem_inventec_set_config (state_data,
+                                             IPMI_OEM_EXTENDED_CONFIGURATION_ID_SECURITY,
+                                             IPMI_OEM_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME,
+                                             2,
+                                             lockouttime) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
+
+      free (key);
+      free (value);
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_inventec_get_web_server_config (ipmi_oem_state_data_t *state_data)
 {
   uint32_t value;
@@ -1183,7 +1323,7 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
         }
       else if (!strcasecmp (key, "webservertimeout"))
         {
-          if (ipmi_oem_parse_timeout (state_data, i, value, &webservertimeout) < 0)
+          if (ipmi_oem_parse_4_byte_field (state_data, i, value, &webservertimeout) < 0)
             goto cleanup;
           
           if (_ipmi_oem_inventec_set_config (state_data,
@@ -1195,7 +1335,7 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
         }
       else if (!strcasecmp (key, "httpportnumber"))
         {
-          if (ipmi_oem_parse_port (state_data, i, value, &httpportnumber) < 0)
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &httpportnumber) < 0)
             goto cleanup;
           
           if (_ipmi_oem_inventec_set_config (state_data,
@@ -1207,7 +1347,7 @@ ipmi_oem_inventec_set_web_server_config (ipmi_oem_state_data_t *state_data)
         }
       else if (!strcasecmp (key, "httpsportnumber"))
         {
-          if (ipmi_oem_parse_port (state_data, i, value, &httpsportnumber) < 0)
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &httpsportnumber) < 0)
             goto cleanup;
           
           if (_ipmi_oem_inventec_set_config (state_data,

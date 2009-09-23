@@ -13,6 +13,8 @@
 	* ipmi-oem/: Add set-fcb-version for dell.  Add get/set board id.
 
 	* ipmi-oem/: Add get/set web-server-config for inventec.
+
+	* ipmi-oem/: Add get/set authentication config for inventec.
 	
 2009-09-21  Albert Chu <chu11@llnl.gov>
 

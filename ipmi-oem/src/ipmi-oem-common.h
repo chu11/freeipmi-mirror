@@ -43,10 +43,20 @@ int ipmi_oem_parse_enable (ipmi_oem_state_data_t *state_data,
                            const char *value,
                            uint8_t *enable);
 
-int ipmi_oem_parse_timeout (ipmi_oem_state_data_t *state_data,
-                            unsigned int option_num,
-                            const char *value,
-                            uint32_t *timeout);
+int ipmi_oem_parse_1_byte_field (ipmi_oem_state_data_t *state_data,
+				 unsigned int option_num,
+				 const char *value,
+				 uint8_t *value_out);
+
+int ipmi_oem_parse_2_byte_field (ipmi_oem_state_data_t *state_data,
+				 unsigned int option_num,
+				 const char *value,
+				 uint16_t *value_out);
+
+int ipmi_oem_parse_4_byte_field (ipmi_oem_state_data_t *state_data,
+				 unsigned int option_num,
+				 const char *value,
+				 uint32_t *value_out);
 
 int ipmi_oem_parse_port (ipmi_oem_state_data_t *state_data,
                          unsigned int option_num,
@@ -59,4 +69,5 @@ int ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
                            uint8_t *string_length,
                            char *stringbuf,
                            unsigned int stringbuflen);
+
 #endif
