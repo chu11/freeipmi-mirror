@@ -3885,7 +3885,7 @@ ipmi_sdr_parse_entity_id_and_instance (ipmi_sdr_parse_ctx_t ctx,
 }
 
 int
-ipmi_sdr_parse_general_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
+ipmi_sdr_parse_generic_device_locator_parameters (ipmi_sdr_parse_ctx_t ctx,
                                                   const void *sdr_record,
                                                   unsigned int sdr_record_len,
                                                   uint8_t *direct_access_address,

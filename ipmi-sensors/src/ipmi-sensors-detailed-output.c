@@ -1913,7 +1913,7 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data,
 }
 
 static int
-_detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state_data,
+_detailed_output_generic_device_locator_record (ipmi_sensors_state_data_t *state_data,
                                                 const void *sdr_record,
                                                 unsigned int sdr_record_len,
                                                 uint8_t record_type,
@@ -1939,7 +1939,7 @@ _detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state
                                 record_id) < 0)
     return (-1);
 
-  if (ipmi_sdr_parse_general_device_locator_parameters (state_data->sdr_parse_ctx,
+  if (ipmi_sdr_parse_generic_device_locator_parameters (state_data->sdr_parse_ctx,
                                                         sdr_record,
                                                         sdr_record_len,
                                                         &direct_access_address,
@@ -1952,7 +1952,7 @@ _detailed_output_general_device_locator_record (ipmi_sensors_state_data_t *state
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_sdr_parse_general_device_locator_parameters: %s\n",
+                       "ipmi_sdr_parse_generic_device_locator_parameters: %s\n",
                        ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
       return (-1);
     }
@@ -2034,7 +2034,7 @@ _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_dat
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_sdr_parse_general_device_locator_parameters: %s\n",
+                       "ipmi_sdr_parse_generic_device_locator_parameters: %s\n",
                        ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
 
       return (-1);
@@ -2392,7 +2392,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                                                                               record_type,
                                                                               record_id));
         case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
-          return (_detailed_output_general_device_locator_record (state_data,
+          return (_detailed_output_generic_device_locator_record (state_data,
                                                                   sdr_record,
                                                                   sdr_record_len,
                                                                   record_type,
