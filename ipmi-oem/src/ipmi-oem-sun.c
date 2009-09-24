@@ -117,6 +117,7 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
    *        byte of the slave address.
    * 0x?? - LED Type (see below [1])
    * 0x?? - Controller Address / Device Access Address (in General Device Locator Record)
+   *      - 0x20 if the LED is local
    *      - Note that the IPMI command requires the entire
    *        byte of the access address.
    * 0x?? - HW Info (OEM field in General Device Locator Record)
@@ -132,9 +133,10 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
    * 0x?? - Device Slave Address (in General Device Locator Record)
    * 0x?? - LED Type
    * 0x?? - Controller Address / Device Access Address (in General Device Locator Record)
+   * 0x?? - HW Info (OEM field in General Device Locator Record)
    * 0x?? - Entity ID
    * 0x?? - Entity Instance
-   * 0x?? - HW Info (OEM field in General Device Locator Record)
+   *      - 7 bit version
    * 0x?? - Force
    *      - 0 - Go thru controller
    *      - 1 - Directly access device
@@ -226,6 +228,7 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
         }
       
       /* if it isn't a physical instance, don't continue on */
+
       if (entity_instance_type == IPMI_SDR_LOGICAL_CONTAINER_ENTITY)
         continue;
           
@@ -359,5 +362,239 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
 int
 ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
 {
-  return (0);
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  uint16_t record_id;
+  uint8_t led_mode;
+  long value;
+  char *ptr;
+  uint8_t sdr_record[IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH];
+  int sdr_record_len = 0;
+  uint8_t record_type;
+  uint8_t entity_instance_type;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 2);
+
+  errno = 0;
+  value = strtol (state_data->prog_data->args->oem_options[0], &ptr, 10);
+  if (errno
+      || ptr[0] != '\0'
+      || value < 0
+      || value < IPMI_SDR_RECORD_ID_FIRST
+      || value > IPMI_SDR_RECORD_ID_LAST)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid record_id\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command);
+      goto cleanup;
+    }
+
+  record_id = value;
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[1], "off")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "on")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "standby")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "slow")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "fast"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[1], "off"))
+    led_mode = IPMI_OEM_SUN_LED_MODE_OFF;
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "on"))
+    led_mode = IPMI_OEM_SUN_LED_MODE_ON;
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "standby"))
+    led_mode = IPMI_OEM_SUN_LED_MODE_STANDBY;
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "slow"))
+    led_mode = IPMI_OEM_SUN_LED_MODE_SLOW;
+  else /* !strcasecmp (state_data->prog_data->args->oem_options[1], "fast") */
+    led_mode = IPMI_OEM_SUN_LED_MODE_FAST;
+
+  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+                                 state_data->pstate,
+                                 state_data->ipmi_ctx,
+                                 state_data->prog_data->args->sdr.quiet_cache,
+                                 state_data->prog_data->args->sdr.sdr_cache_recreate,
+                                 state_data->hostname,
+                                 state_data->prog_data->args->sdr.sdr_cache_directory) < 0)
+    goto cleanup;
+
+  /* Sun OEM
+   *
+   * From Ipmitool (http://ipmitool.sourceforge.net/)
+   *
+   * Set Led Request
+   *
+   * 0x2E - OEM network function (is IPMI_NET_FN_OEM_GROUP_RQ)
+   * 0x22 - OEM cmd
+   * 0x?? - Device Slave Address (in General Device Locator Record)
+   *      - Note that the IPMI command requires the entire
+   *        byte of the slave address.
+   * 0x?? - LED Type (see below [1])
+   * 0x?? - Controller Address / Device Access Address (in General Device Locator Record)
+   *      - 0x20 if the LED is local
+   *      - Note that the IPMI command requires the entire
+   *        byte of the access address.
+   * 0x?? - HW Info (OEM field in General Device Locator Record)
+   * 0x?? - LED Mode
+   * 0x?? - Force
+   *      - 0 - Go thru controller
+   *      - 1 - Directly access device
+   * 0x?? - Role
+   *      - Ipmitool comments state "Used by BMC for authorization purposes"
+   *      - achu: I have no idea what this is for, set to 0 like in code
+   *
+   * An alternate format is described in the ipmitool comments for Sun
+   * Blade Moduler Systems.
+   *
+   * 0x2E - OEM network function (is IPMI_NET_FN_OEM_GROUP_RQ)
+   * 0x22 - OEM cmd
+   * 0x?? - Device Slave Address (in General Device Locator Record)
+   * 0x?? - LED Type
+   * 0x?? - Controller Address / Device Access Address (in General Device Locator Record)
+   * 0x?? - HW Info (OEM field in General Device Locator Record)
+   * 0x?? - LED Mode
+   * 0x?? - Entity ID
+   * 0x?? - Entity Instance
+   *      - 7 bit version
+   * 0x?? - Force
+   *      - 0 - Go thru controller
+   *      - 1 - Directly access device
+   * 0x?? - Role
+   *      - Ipmitool comments state "Used by BMC for authorization purposes"
+   *      - achu: I have no idea what this is for, set to 0 like in code
+   *
+   * Set Led Response
+   *
+   * 0x22 - OEM cmd
+   * 0x?? - Completion Code
+   *
+   * achu notes: 
+   *
+   * [1] - As far as I can tell, the LED type field is useless.  My
+   * assumption is that on older Sun systems, or other motherboards I
+   * don't have access to, one can specify an LED type, which allows
+   * you to enable/disable a particular LED amongst many.  On my Sun
+   * Fire 4140, it appears to do nothing and affect nothing.  I will
+   * add in a new option later if it becomes necessary for the user to
+   * specify an LED type.  In the meantime, I will copy the code use
+   * in ipmitool and set this field to the OEM field.
+   */
+  
+  if (ipmi_sdr_cache_search_record_id (state_data->sdr_cache_ctx,
+                                       record_id) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_cache_search_record_id: %s\n",
+                       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+      goto cleanup;
+    }
+  
+  if ((sdr_record_len = ipmi_sdr_cache_record_read (state_data->sdr_cache_ctx,
+                                                    sdr_record,
+                                                    IPMI_SDR_CACHE_MAX_SDR_RECORD_LENGTH)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_cache_record_read: %s\n",
+                       ipmi_sdr_cache_ctx_errormsg (state_data->sdr_cache_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_parse_ctx,
+                                         sdr_record,
+                                         sdr_record_len,
+                                         NULL,
+                                         &record_type) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_record_id_and_type: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+  
+  if (record_type != IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Record ID points to invalid record type: %Xh\n",
+                       record_type);
+      goto cleanup;
+    }
+  
+  if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_parse_ctx,
+                                              sdr_record,
+                                              sdr_record_len,
+                                              NULL,
+                                              NULL,
+                                              &entity_instance_type) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_entity_id_and_instance: %s\n",
+                       ipmi_sdr_parse_ctx_errormsg (state_data->sdr_parse_ctx));
+      goto cleanup;
+    }
+
+  if (entity_instance_type != IPMI_SDR_PHYSICAL_ENTITY)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Record ID points to non physical entity\n");
+      goto cleanup;
+    }
+  
+  /* achu: the sun oem commands want the full byte, not just the
+   * sub-field, so use indexes instead of sdr-parse lib.
+   */
+  
+  bytes_rq[0] = IPMI_CMD_OEM_SUN_SET_LED;
+  bytes_rq[1] = sdr_record[IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_DEVICE_SLAVE_ADDRESS_INDEX];
+  bytes_rq[2] = sdr_record[IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_OEM_INDEX];
+  bytes_rq[3] = sdr_record[IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_DEVICE_ACCESS_ADDRESS_INDEX];
+  bytes_rq[4] = sdr_record[IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_OEM_INDEX];
+  bytes_rq[5] = led_mode;
+  bytes_rq[6] = IPMI_OEM_SUN_LED_FORCE_GO_THRU_CONTROLLER;
+  bytes_rq[7] = 0;              /* see comments above, just set to 0 */
+  
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
+                              bytes_rq, /* data */
+                              8, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+      
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_SUN_SET_LED,
+                                                   IPMI_NET_FN_OEM_GROUP_RS) < 0)
+    goto cleanup;
+ 
+  rv = 0;
+ cleanup: 
+  return (rv);
 }
