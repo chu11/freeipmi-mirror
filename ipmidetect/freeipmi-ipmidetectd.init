@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: freeipmi-ipmidetectd.init,v 1.4 2009-09-24 15:57:11 chu11 Exp $
+# $Id: freeipmi-ipmidetectd.init,v 1.5 2009-09-24 16:11:22 chu11 Exp $
 #
 # chkconfig: - 70 40
 # description: ipmidetectd startup script
@@ -14,8 +14,11 @@
 ### END INIT INFO
 
 IPMIDETECTD=/usr/sbin/ipmidetectd
+IPMIDETECTD_CONF=/etc/ipmidetectd.conf
+LOCKFILE=/var/lock/subsys/ipmidetectd
 
-[ -f $IPMIDETECTD ] || exit 1
+[ -f $IPMIDETECTD ] || exit 5
+[ -f $IPMIDETECTD_CONF ] || exit 6
 
 # Load Redhat or Suse appropriate libs
 if [ -f /etc/rc.d/init.d/functions ] ; then
@@ -24,20 +27,21 @@ if [ -f /etc/rc.d/init.d/functions ] ; then
         daemon $IPMIDETECTD
         RETVAL=$?
         echo
-        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/freeipmi-ipmidetectd
+        [ $RETVAL -eq 0 ] && touch $LOCKFILE
     }
     Xstop() {
         killproc ipmidetectd -TERM
         RETVAL=$?
         echo
-        [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/freeipmi-ipmidetectd
+        [ $RETVAL -eq 0 ] && rm -f $LOCKFILE
     }
     Xstatus() {
         status ipmidetectd
         RETVAL=$?
+        return $RETVAL
     }
     Xcondrestart() {
-        if test -e /var/lock/subsys/freeipmi-ipmidetectd; then
+        if test -e $LOCKFILE; then
             $0 stop
             $0 start
             RETVAL=$?
@@ -83,13 +87,14 @@ RETVAL=0
 case "$1" in
    start)
         echo -n "Starting ipmidetectd: "
+        Xstatus >/dev/null 2>&1 && exit 0
         Xstart
         ;;
   stop)
         echo -n "Shutting down ipmidetectd: "
         Xstop
         ;;
-  restart|reload)
+  restart)
         $0 stop
         $0 start
         RETVAL=$?
@@ -97,10 +102,11 @@ case "$1" in
   status)
         Xstatus
         ;;
-  condrestart)
+  condrestart|try-restart|force-reload)
         Xcondrestart
         ;;
   *)
-        echo "Usage: $0 {start|stop|restart|status|condrestart}"
-        exit 1
+        echo "Usage: $0 {start|stop|restart|status|condrestart|try-restart|force-reload}"
+        exit 2
 esac
+exit $RETVAL

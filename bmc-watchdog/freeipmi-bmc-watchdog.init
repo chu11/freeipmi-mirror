@@ -14,10 +14,10 @@
 
 DAEMON=/usr/sbin/bmc-watchdog
 PIDFILE=/var/run/freeipmi-bmc-watchdog.pid
-LOCKFILE=/var/lock/subsys/freeipmi-bmc-watchdog
+LOCKFILE=/var/lock/subsys/bmc-watchdog
 CONFFILE=/etc/sysconfig/freeipmi-bmc-watchdog
 
-[ -f $DAEMON ] || exit 1
+[ -f $DAEMON ] || exit 5
 
 if [ -r $CONFFILE ]; then
         . $CONFFILE
@@ -51,6 +51,7 @@ if [ -f /etc/rc.d/init.d/functions ] ; then
     Xstatus() {
         status bmc-watchdog
         RETVAL=$?
+        return $RETVAL
     }
     Xcondrestart() {
         if test -e $LOCKFILE; then
@@ -99,6 +100,7 @@ RETVAL=0
 case "$1" in
    start)
         echo -n "Starting bmc-watchdog: "
+        Xstatus >/dev/null 2>&1 && exit 0
         Xstart
         ;;
 
@@ -107,7 +109,7 @@ case "$1" in
         Xstop
         ;;
 
-  restart|reload)
+  restart)
         $0 stop
         $0 start
         RETVAL=$?
@@ -115,12 +117,12 @@ case "$1" in
   status)
         Xstatus
         ;;
-  condrestart)
+  condrestart|try-restart|force-reload)
         Xcondrestart
         ;;
   *)
-        echo "Usage: $0 {start|stop|restart|status|condrestart}"
-        exit 1
+        echo "Usage: $0 {start|stop|restart|status|condrestart|try-restart|force-reload}"
+        exit 2
 esac
 
 exit $RETVAL
