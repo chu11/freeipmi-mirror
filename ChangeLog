@@ -1,3 +1,9 @@
+2009-09-24  Albert Chu <chu11@llnl.gov>
+
+	* ipmidetect/freeipmi-ipmidetectd.init,
+	bmc-watchdog/freeipmi-bmc-watchdog.init: untabify, cleanup
+	formatting.
+	
 2009-09-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support get/set power management on inventec.

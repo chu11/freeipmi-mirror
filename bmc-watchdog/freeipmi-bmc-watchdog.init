@@ -50,17 +50,17 @@ if [ -f /etc/rc.d/init.d/functions ] ; then
     }
     Xstatus() {
         status bmc-watchdog
-	RETVAL=$?
+        RETVAL=$?
     }
     Xcondrestart() {
         if test -e $LOCKFILE; then
-	    $0 stop
-	    $0 start
-   	    RETVAL=$?
+            $0 stop
+            $0 start
+            RETVAL=$?
         fi
     }
     Xexit() {
-	exit $RETVAL
+        exit $RETVAL
     }
 elif [ -f /etc/rc.status ] ; then
     . /etc/rc.status
@@ -87,7 +87,7 @@ elif [ -f /etc/rc.status ] ; then
         rc_status
     }
     Xexit() {
-	rc_exit
+        rc_exit
     }
 else
     echo "Unknown distribution type"
@@ -98,29 +98,29 @@ RETVAL=0
 
 case "$1" in
    start)
-      echo -n "Starting bmc-watchdog: "
-      Xstart
-      ;;
+        echo -n "Starting bmc-watchdog: "
+        Xstart
+        ;;
 
   stop)
-      echo -n "Shutting down bmc-watchdog: "
-      Xstop
-      ;;
+        echo -n "Shutting down bmc-watchdog: "
+        Xstop
+        ;;
 
   restart|reload)
-   	$0 stop
-   	$0 start
-   	RETVAL=$?
-	;;
+        $0 stop
+        $0 start
+        RETVAL=$?
+        ;;
   status)
-   	Xstatus
-	;;
+        Xstatus
+        ;;
   condrestart)
         Xcondrestart
         ;;
   *)
-	echo "Usage: $0 {start|stop|restart|status|condrestart}"
-	exit 1
+        echo "Usage: $0 {start|stop|restart|status|condrestart}"
+        exit 1
 esac
 
 exit $RETVAL
