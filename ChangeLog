@@ -1,3 +1,7 @@
+2009-09-24  Albert Chu <chu11@llnl.gov>
+
+	* Fix make distcheck.
+	
 2009-09-24  Jan Safranek <jsafrane@redhat.com>
 
 	* bmc-watchdog/freeipmi-bmc-watchdog.init,

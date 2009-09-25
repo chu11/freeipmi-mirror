@@ -19,7 +19,7 @@ DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 EXTRA_DIST = freeipmi-ipmidetectd.init ipmidetectd.conf
 
 install-data-local: $(INSTALL_INIT_SCRIPTS)
-       $(INSTALL) -m 644 $(srcdir)/ipmidetectd.conf $(DESTDIR)$(sysconfdir)/ipmidetectd.conf
+	$(INSTALL) -m 644 $(srcdir)/ipmidetectd.conf $(DESTDIR)$(sysconfdir)/ipmidetectd.conf
 
 install-init-scripts:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/init.d
