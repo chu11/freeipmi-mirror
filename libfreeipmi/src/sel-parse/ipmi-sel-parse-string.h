@@ -25,18 +25,26 @@
 #endif /* HAVE_CONFIG_H */
 
 #include <stdint.h>
+#if STDC_HEADERS
+#include <stdarg.h>
+#endif /* STDC_HEADERS */
 
 #include "freeipmi/sel-parse/ipmi-sel-parse.h"
 
 #include "ipmi-sel-parse-defs.h"
 
-int
-sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
-                                const char *fmt,
-                                const void *record_buf,
-                                unsigned int record_buflen,
-                                char *buf,
-                                unsigned int buflen,
-                                unsigned int flags);
+int ipmi_sel_parse_string_snprintf (char *buf,
+				    unsigned int buflen,
+				    unsigned int *wlen,
+				    const char *fmt,
+				    ...);
+
+int sel_parse_format_record_string (ipmi_sel_parse_ctx_t ctx,
+				    const char *fmt,
+				    const void *record_buf,
+				    unsigned int record_buflen,
+				    char *buf,
+				    unsigned int buflen,
+				    unsigned int flags);
 
 #endif /* _IPMI_SEL_PARSE_STRING_H */
