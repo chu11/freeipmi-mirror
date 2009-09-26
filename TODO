@@ -56,6 +56,12 @@ ipmi-oem-config
 - inventec mac/shared nic stuff
   - no, oem specific and will reboot BMC
 
+simulator
+---------
+ipmi server simulator
+- good for testing at scale
+- good intern project?
+
 oem
 ---
 dell poweredge lcd support
