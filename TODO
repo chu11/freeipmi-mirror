@@ -10,9 +10,10 @@ forwarded command support (errata 35b)
 functions to support "is supported" checks for OEM stuff
 - i.e. you don't need to check manufactur ids in two places, just use the function.
 
-hpm
----
-picmg hpm.1 standard - defines ipmi firmware update stuff
+hpm/hpmi
+--------
+picmg hpm/hpmi.1 standard - defines ipmi firmware update stuff
+- http://www.picmg.org/v2internal/specifications.htm
 
 bmc-device
 --------
