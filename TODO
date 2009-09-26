@@ -157,6 +157,7 @@ what OEM vendors can add
 - ipmi-fru/fru-parse - oem fru specifics
 - ipmi-sel/sel-parse - oem sel specifics
 - ipmi-sensors/ipmi-sensors-config/ipmimonitoring/sensor-read/libipmimonitoring - oem sensor specifics
+- ipmi-sensors - OEM sdr records
 
 DCMI functionality
 ------------------
