@@ -487,7 +487,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
-  if (slave_address != IPMI_SLAVE_ADDRESS_BMC)
+  if (slave_address == IPMI_SLAVE_ADDRESS_BMC)
     {
       if (_get_sensor_reading (ctx,
                                sensor_number,
