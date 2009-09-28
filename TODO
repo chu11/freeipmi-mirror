@@ -29,6 +29,10 @@ entity ids
 0x41, 0x42, are "identical" to other entries
 - should map them together for entity-id-names output in sensors?
 
+simulator
+---------
+server simulator, for scalable testing
+
 hostrange
 ---------
 exclude hosts option
