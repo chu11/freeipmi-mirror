@@ -224,8 +224,9 @@ ipmi_sel_parse_output_inventec_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ct
    *
    * Note: Dell engineer commented the SBE Warning threshold is 15h
    * SBE events in a 4 hour window.  SBE Critical Warning threshold is
-   * an additional 16h SBE events in the 4 hour window.  It is not
-   * clear if this is a rolling window or not.
+   * an additional 16h SBE events in the 4 hour window.  It is a
+   * rolling window.  Once the logging limit is reached, a system
+   * reboot is necessary to reset the counter.
    */
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC
       && ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441
