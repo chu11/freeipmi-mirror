@@ -32,6 +32,10 @@ entity ids
 simulator
 ---------
 server simulator, for scalable testing
+- test much larger set of corner cases, psosibilities, etc.
+- different SDR combos
+- different SEL entries
+- all permutations of sensors, etc.
 
 hostrange
 ---------
