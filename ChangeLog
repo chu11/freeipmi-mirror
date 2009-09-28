@@ -1,3 +1,8 @@
+2009-09-28  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sensor-read/ipmi-sensor-read.c: Fix error return
+	code corner case.
+	
 2009-09-26  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/: Code cleanup, split out OEM

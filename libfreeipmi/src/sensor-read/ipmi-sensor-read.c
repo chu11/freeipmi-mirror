@@ -299,6 +299,12 @@ _get_sensor_reading_ipmb (ipmi_sensor_read_ctx_t ctx,
           goto cleanup;
         }
     }
+  else if (ctx->flags & IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS
+	   && channel_number != IPMI_CHANNEL_NUMBER_PRIMARY_IPMB)
+    {
+      SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_CANNOT_BE_BRIDGED);
+      goto cleanup;
+    }
   else
     {
       SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_NOT_OWNED_BY_BMC);
@@ -481,7 +487,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
-  if (slave_address == IPMI_SLAVE_ADDRESS_BMC)
+  if (slave_address != IPMI_SLAVE_ADDRESS_BMC)
     {
       if (_get_sensor_reading (ctx,
                                sensor_number,
