@@ -171,11 +171,11 @@ oem-isms
 --------
 what OEM vendors can add
 - bmc-info - device specific info
-- ipmi-oem - any oemi-sms
+- ipmi-oem - any oem-sms
 - ipmi-dcmi - oem exception actions
-- ipmi-fru/fru-parse - oem fru specifics
-- ipmi-sel/sel-parse - oem sel specifics
-- ipmi-sensors/ipmi-sensors-config/ipmimonitoring/sensor-read/libipmimonitoring - oem sensor specifics
+- ipmi-fru/fru-parse - oem fru records
+- ipmi-sel/sel-parse - oem sel records and oem codes
+- ipmi-sensors/ipmi-sensors-config/ipmimonitoring/sensor-read/libipmimonitoring - oem sensors
 - ipmi-sensors - OEM sdr records
 
 DCMI functionality
