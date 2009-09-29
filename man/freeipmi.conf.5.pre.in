@@ -889,6 +889,9 @@ Specify if output should be comma separated or not.
 \fBipmi\-sel\-non\-abbreviated\-units\fR \fIENABLE|DISABLE\fR
 Specify if output should have units abbreviated or not.
 .TP
+\fBipmi\-sel\-no\-sensor\-type\fR \fIENABLE|DISABLE\fR
+Specify if output of the sensor type should be output or not.
+.TP
 \fBipmi\-sel\-legacy\-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be in legacy format or not.
 
@@ -1004,6 +1007,9 @@ Specify if output should be comma separated or not.
 .TP
 \fBipmi\-sensors\-non\-abbreviated\-units\fR \fIENABLE|DISABLE\fR
 Specify if output should have units abbreviated or not.
+.TP
+\fBipmi\-sensors\-no\-sensor\-type\fR \fIENABLE|DISABLE\fR
+Specify if output of the sensor type should be output or not.
 .TP
 \fBipmi\-sensors\-legacy\-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be in legacy format or not.
@@ -1251,6 +1257,9 @@ Specify if output should be comma separated or not.
 .TP
 \fBipmimonitoring\-non\-abbreviated\-units\fR \fIENABLE|DISABLE\fR
 Specify if output should have units abbreviated or not.
+.TP
+\fBipmimonitoring\-no\-sensor\-type\fR \fIENABLE|DISABLE\fR
+Specify if output of the sensor type should be output or not.
 .TP
 \fBipmimonitoring\-legacy\-output\fR \fIENABLE|DISABLE\fR
 Specify if output should be in legacy format or not.

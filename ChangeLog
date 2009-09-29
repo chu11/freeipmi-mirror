@@ -1,3 +1,8 @@
+2009-09-29  Albert Chu <chu11@llnl.gov>
+
+	* Suppoert --no-sensor-type in ipmi-sel, ipmi-sensors, and
+	ipmimonitoring.
+	
 2009-09-28  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sensor-read/ipmi-sensor-read.c: Fix error return

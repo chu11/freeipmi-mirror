@@ -537,6 +537,7 @@ output_sensor_headers (pstdout_state_t pstate,
                        int quiet_readings,
                        int output_sensor_state,
                        int comma_separated_output,
+                       int no_sensor_type,
                        struct sensor_column_width *column_width)
 {
   char fmt[SENSOR_FMT_BUFLEN + 1];
@@ -544,23 +545,44 @@ output_sensor_headers (pstdout_state_t pstate,
   assert (column_width);
 
   memset (fmt, '\0', SENSOR_FMT_BUFLEN + 1);
-  if (comma_separated_output)
-    snprintf (fmt,
-              SENSOR_FMT_BUFLEN,
-              "%%s,%%s,%%s");
+  if (no_sensor_type)
+    {
+      if (comma_separated_output)
+        snprintf (fmt,
+                  SENSOR_FMT_BUFLEN,
+                  "%%s,%%s");
+      else
+        snprintf (fmt,
+                  SENSOR_FMT_BUFLEN,
+                  "%%-%ds | %%-%ds",
+                  column_width->record_id,
+                  column_width->sensor_name);
+      
+      PSTDOUT_PRINTF (pstate,
+                      fmt,
+                      SENSORS_HEADER_RECORD_ID_STR,
+                      SENSORS_HEADER_NAME_STR);
+    }
   else
-    snprintf (fmt,
-              SENSOR_FMT_BUFLEN,
-              "%%-%ds | %%-%ds | %%-%ds",
-              column_width->record_id,
-              column_width->sensor_name,
-              column_width->sensor_type);
-
-  PSTDOUT_PRINTF (pstate,
-                  fmt,
-                  SENSORS_HEADER_RECORD_ID_STR,
-                  SENSORS_HEADER_NAME_STR,
-                  SENSORS_HEADER_TYPE_STR);
+    {
+      if (comma_separated_output)
+        snprintf (fmt,
+                  SENSOR_FMT_BUFLEN,
+                  "%%s,%%s,%%s");
+      else
+        snprintf (fmt,
+                  SENSOR_FMT_BUFLEN,
+                  "%%-%ds | %%-%ds | %%-%ds",
+                  column_width->record_id,
+                  column_width->sensor_name,
+                  column_width->sensor_type);
+      
+      PSTDOUT_PRINTF (pstate,
+                      fmt,
+                      SENSORS_HEADER_RECORD_ID_STR,
+                      SENSORS_HEADER_NAME_STR,
+                      SENSORS_HEADER_TYPE_STR);
+    }
 
   if (output_sensor_state)
     {

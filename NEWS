@@ -66,6 +66,7 @@ o ipmi-sel
   - Support --comma-separated-output option.
   - Rename --delete-all to --clear for consistency to IPMI spec.
     Backwards compatability maintained.
+  - Support --no-sensor-type output option.
   - Output manufacturer name with "Manufacturer ID" if name available.
   - Support sensor unit percentages, rates and modifiers (i.e. "%
     hit", "gigabyte per minute", "pounds / cu in").
@@ -105,6 +106,7 @@ o ipmi-sensors
     options.
   - Support --comma-separated-output option.
   - Support --shared-sensors option.
+  - Support --no-sensor-type output option.
   - Rename --sensors option to --record-ids.  Maintain old options for
     backwards compatability.
   - Do not output Sensor Reading for discrete sensors under verbose
@@ -190,6 +192,7 @@ o ipmimonitoring
   - Support --entity-sensor-names option.
   - Support --interpret-oem-data option.
   - Support --shared-sensors option.
+  - Support --no-sensor-type output option.
   - Utilize libipmimonitoring callback routines to make sensors output
     as they are read, rather than just at the end.  This removes the
     impression that the tool "hangs" on start.

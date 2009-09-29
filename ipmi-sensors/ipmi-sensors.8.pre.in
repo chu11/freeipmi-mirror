@@ -80,6 +80,7 @@ Ignore not-available (i.e. N/A) sensors in output.
 #include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
 #include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>
 #include <@top_srcdir@/common/man/manpage-common-non-abbreviated-units.man>
+#include <@top_srcdir@/common/man/manpage-common-no-sensor-type.man>
 #include <@top_srcdir@/common/man/manpage-common-legacy-output.man>
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-hostranged-options-header.man>

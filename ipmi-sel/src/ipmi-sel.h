@@ -48,7 +48,8 @@ enum ipmi_sel_argp_option_keys
     ENTITY_SENSOR_NAMES_KEY = 169,
     COMMA_SEPARATED_OUTPUT_KEY = 170,
     NON_ABBREVIATED_UNITS_KEY = 171,
-    LEGACY_OUTPUT_KEY = 172,
+    NO_SENSOR_TYPE_KEY = 172,
+    LEGACY_OUTPUT_KEY = 173,
   };
 
 struct ipmi_sel_arguments
@@ -85,6 +86,7 @@ struct ipmi_sel_arguments
   int entity_sensor_names;
   int comma_separated_output;
   int non_abbreviated_units;
+  int no_sensor_type;
   int legacy_output;
 };
 
