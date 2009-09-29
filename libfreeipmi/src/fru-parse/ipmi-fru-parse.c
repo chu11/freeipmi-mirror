@@ -17,7 +17,7 @@
 
 */
 /*****************************************************************************\
- *  $Id: ipmi-fru-parse.c,v 1.12 2009-08-11 22:36:38 chu11 Exp $
+ *  $Id: ipmi-fru-parse.c,v 1.13 2009-09-29 21:38:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -672,6 +672,16 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
       goto cleanup;
     }
   ctx->multirecord_area_starting_offset = val;
+
+  /* Special corner case, found on Dell Poweredge R710 */
+  if (!ctx->chassis_info_area_starting_offset
+      && !ctx->board_info_area_starting_offset
+      && !ctx->product_info_area_starting_offset
+      && !ctx->multirecord_area_starting_offset)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
+      goto cleanup;
+    }
 
   if (format_version != IPMI_FRU_COMMON_HEADER_FORMAT_VERSION)
     {
