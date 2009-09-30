@@ -1,9 +1,8 @@
 .SH "WORKAROUNDS"
 With so many different vendors implementing their
 own IPMI solutions, different vendors may implement their IPMI
-protocols incorrectly.  The following lists the handful of
-compliance issues discovered and the workarounds currently 
-supported.
+protocols incorrectly.  The following lists the workarounds
+currently available to handle discovered compliance issues.
 .LP
 When possible, workarounds have been implemented so they will be
 transparent to the user.  However, some will require the user to

@@ -1,6 +1,8 @@
 2009-09-30  Albert Chu <chu11@llnl.gov>
 
 	* Change --no-sensor-type to --no-sensor-type-output.
+
+	* common/man/: Various cleanup.
 	
 2009-09-29  Albert Chu <chu11@llnl.gov>
 
