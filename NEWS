@@ -422,6 +422,13 @@ Contributions
 o Update Ganglia and Nagios plugins for changes in ipmi-sensors and
 ipmimonitoring.
 
+0.7.13 - 09/30/09
+-----------------
+o Support --platform-event in bmc-device.
+o Support read/clear eeprom in ipmi-oem.
+o Fix corner case in system firmware progress error data2 output.
+o Fix documentation typos.
+
 0.7.12 - 09/08/09
 -----------------
 o In bmc-config, fix SOL config corner case.  Assume LAN channel if
