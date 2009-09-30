@@ -119,15 +119,8 @@ types are system event records and pray for the best.
 #include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
-Inventec 5441/Dell Xanadu2
-.TP
-Dell Poweredge 2900
-.TP
-Dell Poweredge 2950
-.TP
-Dell Poweredge R610
-.TP
-Dell Poweredge R710
+Inventec 5441/Dell Xanadu2, Dell Poweredge 2900, Dell Poweredge 2950,
+Dell Poweredge R610, Dell Poweredge R710
 .SH "EXAMPLES"
 .B # ipmi-sel 
 .PP

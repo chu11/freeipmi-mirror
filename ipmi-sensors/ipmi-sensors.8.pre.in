@@ -98,11 +98,7 @@ Ignore not-available (i.e. N/A) sensors in output.
 #include <@top_srcdir@/common/man/manpage-common-workaround-text.man>
 #include <@top_srcdir@/common/man/manpage-common-oem-interpretation.man>
 .LP
-Dell Poweredge R610
-.LP
-Dell Poweredge R710
-.LP
-Supermicro X8DTH
+Dell Poweredge R610, Dell Poweredge R710, Supermicro X8DTH
 .SH "EXAMPLES"
 .B # ipmi-sensors 
 .PP
