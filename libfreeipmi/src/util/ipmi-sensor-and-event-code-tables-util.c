@@ -720,7 +720,8 @@ get_fru_state_event_data2_message (unsigned int offset, uint8_t event_data2, cha
   uint64_t val;
   uint8_t previous_state_offset;
   uint8_t cause_of_state_change;
-  char *str = NULL;
+  char *previous_state_offset_str = NULL;
+  char *cause_of_state_change_str = NULL;
   fiid_obj_t obj = NULL;
   int rv = -1;
 
@@ -752,10 +753,17 @@ get_fru_state_event_data2_message (unsigned int offset, uint8_t event_data2, cha
     }
   cause_of_state_change = val;
 
-  if (cause_of_state_change <= ipmi_sensor_type_fru_state_event_data2_offset_communication_lost_cause_of_state_change_max_index)
-    str = (char *)ipmi_sensor_type_fru_state_event_data2_offset_communication_lost_cause_of_state_change[cause_of_state_change];
+  if (previous_state_offset <= ipmi_sensor_type_fru_state_max_index)
+    previous_state_offset_str = (char *)ipmi_sensor_type_fru_state[previous_state_offset];
 
-  rv = _snprintf (buf, buflen, "Previous state offset value = %d; %s", previous_state_offset, str ? str : "");
+  if (cause_of_state_change <= ipmi_sensor_type_fru_state_event_data2_offset_communication_lost_cause_of_state_change_max_index)
+    cause_of_state_change_str = (char *)ipmi_sensor_type_fru_state_event_data2_offset_communication_lost_cause_of_state_change[cause_of_state_change];
+
+  rv = _snprintf (buf,
+                  buflen,
+                  "Previous State = %s; %s",
+                  previous_state_offset_str ? previous_state_offset_str : "",
+                  cause_of_state_change_str ? cause_of_state_change_str : "");
 
  cleanup:
   fiid_obj_destroy (obj);

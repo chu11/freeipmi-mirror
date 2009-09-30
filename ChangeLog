@@ -3,6 +3,9 @@
 	* Change --no-sensor-type to --no-sensor-type-output.
 
 	* common/man/: Various cleanup.
+
+	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c:
+	Make FRU state event data 2 output more detailed.
 	
 2009-09-29  Albert Chu <chu11@llnl.gov>
 
