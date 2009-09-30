@@ -337,20 +337,18 @@ fi
 %files ipmidetectd
 %defattr(-,root,root)
 %config(noreplace) %{_initrddir}/freeipmi-ipmidetectd
+%attr(0600,root,root) %config(noreplace) %{_sysconfdir}/ipmidetectd.conf
 %{_sbindir}/ipmidetectd
 %{_mandir}/man5/ipmidetectd.conf.5*
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
-* Thu Jun 04 2009 Albert Chu <chu11@llnl.gov> 0.8.0
+* Wed Sep 30 2009 Albert Chu <chu11@llnl.gov> 0.8.0
 - Update for dcmi.
-
-* Mon Apr 23 2009 Albert Chu <chu11@llnl.gov> 0.8.0
 - Update for renaming of pef-config.
 - Update for new .h files.
-
-* Tue Nov 25 2008 Albert Chu <chu11@llnl.gov> 0.8.0
 - Add new ipmimonitoring config manpages.
+- Add ipmidetectd.conf
 
 * Tue Sep 29 2008 Albert Chu <chu11@llnl.gov> 0.7.0
 - Add README.build

@@ -6,6 +6,8 @@
 
 	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c:
 	Make FRU state event data 2 output more detailed.
+
+	* freeipmi.spec.in: Add ipmidetectd.conf.
 	
 2009-09-29  Albert Chu <chu11@llnl.gov>
 
