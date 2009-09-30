@@ -1,3 +1,7 @@
+2009-09-30  Albert Chu <chu11@llnl.gov>
+
+	* Tagged Release-0_7_13.
+
 2009-09-18  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/utils/ipmi-sensor-and-event-code-tables-util.c:
