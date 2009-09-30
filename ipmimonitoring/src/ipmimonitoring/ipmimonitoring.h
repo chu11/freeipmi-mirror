@@ -48,7 +48,7 @@ enum ipmimonitoring_argp_option_keys
     ENTITY_SENSOR_NAMES_KEY = 166,
     COMMA_SEPARATED_OUTPUT_KEY = 167,
     NON_ABBREVIATED_UNITS_KEY = 168,
-    NO_SENSOR_TYPE_KEY = 169,
+    NO_SENSOR_TYPE_OUTPUT_KEY = 169,
     LEGACY_OUTPUT_KEY = 170,
     SENSOR_CONFIG_FILE_KEY = 171,
   };
@@ -77,7 +77,7 @@ struct ipmimonitoring_arguments
   int entity_sensor_names;
   int comma_separated_output;
   int non_abbreviated_units;
-  int no_sensor_type;
+  int no_sensor_type_output;
   int legacy_output;
   char *sensor_config_file;
 

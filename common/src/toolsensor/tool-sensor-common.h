@@ -106,7 +106,7 @@ void output_sensor_headers (pstdout_state_t pstate,
                             int quiet_readings,
                             int output_sensor_state,
                             int comma_separated_output,
-                            int no_sensor_type,
+                            int no_sensor_type_output,
                             struct sensor_column_width *column_width);
 
 int calculate_entity_id_counts (pstdout_state_t pstate,

@@ -122,8 +122,8 @@ struct config_file_data_ipmi_sel
   int comma_separated_output_count;
   int non_abbreviated_units;
   int non_abbreviated_units_count;
-  int no_sensor_type;
-  int no_sensor_type_count;
+  int no_sensor_type_output;
+  int no_sensor_type_output_count;
   int legacy_output;
   int legacy_output_count;
 };
@@ -160,8 +160,8 @@ struct config_file_data_ipmi_sensors
   int comma_separated_output;
   int non_abbreviated_units;
   int non_abbreviated_units_count;
-  int no_sensor_type;
-  int no_sensor_type_count;
+  int no_sensor_type_output;
+  int no_sensor_type_output_count;
   int legacy_output;
   int legacy_output_count;
 };
@@ -214,8 +214,8 @@ struct config_file_data_ipmimonitoring
   int comma_separated_output;
   int non_abbreviated_units;
   int non_abbreviated_units_count;
-  int no_sensor_type;
-  int no_sensor_type_count;
+  int no_sensor_type_output;
+  int no_sensor_type_output_count;
   int legacy_output;
   int legacy_output_count;
   char *sensor_config_file;

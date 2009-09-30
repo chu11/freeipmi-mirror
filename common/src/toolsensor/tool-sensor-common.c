@@ -537,7 +537,7 @@ output_sensor_headers (pstdout_state_t pstate,
                        int quiet_readings,
                        int output_sensor_state,
                        int comma_separated_output,
-                       int no_sensor_type,
+                       int no_sensor_type_output,
                        struct sensor_column_width *column_width)
 {
   char fmt[SENSOR_FMT_BUFLEN + 1];
@@ -545,7 +545,7 @@ output_sensor_headers (pstdout_state_t pstate,
   assert (column_width);
 
   memset (fmt, '\0', SENSOR_FMT_BUFLEN + 1);
-  if (no_sensor_type)
+  if (no_sensor_type_output)
     {
       if (comma_separated_output)
         snprintf (fmt,

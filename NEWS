@@ -38,7 +38,8 @@ o Removed many short options for more consistent command line
   ipmiconsole, bmc-watchdog, ipmi-chassis, ipmimonitoring, ipmi-sel,
   and ipmi-raw. See details below for specific short options removed.
 o Rename pef-config to ipmi-pef-config for naming consistency.
-o Various minor feature enhancements and options.
+o Various new options and features added to various tools.
+o Various minor feature enhancements.
 o Various bug fixes.
 o Various documentation updates.
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.132 2009-09-29 18:20:23 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.133 2009-09-30 18:16:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -719,7 +719,7 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                                args->quiet_readings,
                                1,
                                state_data->prog_data->args->comma_separated_output,
-                               state_data->prog_data->args->no_sensor_type,
+                               state_data->prog_data->args->no_sensor_type_output,
                                &(state_data->column_width));
 
       state_data->output_headers++;
@@ -844,7 +844,7 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
     {
       memset (fmt, '\0', IPMIMONITORING_FMT_BUFLEN + 1);
 
-      if (args->no_sensor_type)
+      if (args->no_sensor_type_output)
         {
           if (args->comma_separated_output)
             snprintf (fmt,
