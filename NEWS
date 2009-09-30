@@ -333,6 +333,7 @@ o bmc-watchdog
   - Removed the following short options.
     - 'h' (legacy -?)
     - 'H' (legacy -?)
+o Make init scripts LSB compliant.
 o Various documentation updates.
 
 Libraries
