@@ -399,13 +399,14 @@ on Inventec 5441 (and subsequently Dell Xanadu2).
 .TP
 .B read-eeprom \fIat24c256n\fR
 This OEM command will read the specified eeprom. Command confirmed to
-work on Inventec 5441 (and subsequently Dell Xanadu2).
+work on Inventec 5441 (and subsequently Dell Xanadu2) for
+\fIat24c256\fR.
 .TP
 .B clear-eeprom \fIat24c256n\fR
 This OEM command will clear the specified eeprom.  If the verbose
 option is set, progress percent will be output as the clearing is
 being done.  Command confirmed to work on Inventec 5441 (and
-subsequently Dell Xanadu2).
+subsequently Dell Xanadu2) for \fIat24c256\fR.
 .RE
 .TP
 .B Sun
