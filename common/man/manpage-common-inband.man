@@ -11,7 +11,6 @@ value and '0' for an octal value.
 Specify the in-band driver device path to be used instead of the
 probed path.
 .TP
-\fB\fB\-\-register\-spacing\fR=\fRREGISTER-SPACING\fR
+\fB\-\-register\-spacing\fR=\fIREGISTER-SPACING\fR
 Specify the in-band driver register spacing instead of the
 probed value.
-
