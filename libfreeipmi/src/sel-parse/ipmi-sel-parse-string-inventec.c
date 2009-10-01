@@ -222,9 +222,9 @@ ipmi_sel_parse_output_inventec_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ct
    *
    * Inventec 5441/Dell Xanadu2
    *
-   * Note: Dell engineer commented the SBE Warning threshold is 15 SBE
+   * Note: Dell engineer commented the SBE Warning threshold is 15h SBE
    * events in a 4 hour window.  SBE Critical Warning threshold is an
-   * additional 15 SBE events in the 4 hour window.  After another 15
+   * additional 15h SBE events in the 4 hour window.  After another 15h
    * SBE events in the 4 hour window, event logging is diabled.  It is
    * a rolling window.  Once the logging limit is reached, a system
    * reboot is necessary to reset the counter.
