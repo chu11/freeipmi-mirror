@@ -120,10 +120,12 @@ static struct argp_option cmdline_options[] =
       "Show sensor type in output.", 49},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
       "Output fields in comma separated format.", 50},
+    { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
+      "Do not output column headers.", 51},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' insetead of 'A').", 51},
+      "Output non-abbreviated units (i.e. 'Amps' insetead of 'A').", 52},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 52},
+      "Output in legacy format.", 53},
     { 0 }
   };
 
@@ -289,6 +291,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case COMMA_SEPARATED_OUTPUT_KEY:
       cmd_args->comma_separated_output = 1;
       break;
+    case NO_HEADER_OUTPUT_KEY:
+      cmd_args->no_header_output = 1;
+      break;
     case NON_ABBREVIATED_UNITS_KEY:
       cmd_args->non_abbreviated_units = 1;
       break;
@@ -399,6 +404,8 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     cmd_args->show_sensor_type = config_file_data.show_sensor_type;
   if (config_file_data.comma_separated_output_count)
     cmd_args->comma_separated_output = config_file_data.comma_separated_output;
+  if (config_file_data.no_header_output_count)
+    cmd_args->no_header_output = config_file_data.no_header_output;
   if (config_file_data.non_abbreviated_units_count)
     cmd_args->non_abbreviated_units = config_file_data.non_abbreviated_units;
   if (config_file_data.legacy_output_count)
@@ -509,6 +516,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->entity_sensor_names = 0;
   cmd_args->show_sensor_type = 0;
   cmd_args->comma_separated_output = 0;
+  cmd_args->no_header_output = 0;
   cmd_args->non_abbreviated_units = 0;
   cmd_args->legacy_output = 0;
 

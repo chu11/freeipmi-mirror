@@ -64,13 +64,14 @@ o ipmi-sel
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
   - Support --entity-sensor-names option.
+  - Support --show-sensor-type option.
   - Support --interpret-oem-data option.
   - Support Inventec 5441/Dell Xanadu2 OEM SEL records.
   - Support Dell Poweredge R610/R710 OEM SEL records.
   - Support --comma-separated-output option.
+  - Support --no-header-output option.
   - Rename --delete-all to --clear for consistency to IPMI spec.
     Backwards compatability maintained.
-  - Support --show-sensor-type option.
   - Output manufacturer name with "Manufacturer ID" if name available.
   - Support sensor unit percentages, rates and modifiers (i.e. "%
     hit", "gigabyte per minute", "pounds / cu in").
@@ -111,8 +112,8 @@ o ipmi-sensors
   - Support "all" and "none" inputs for sensor-types and record-ids
     options.
   - Support --comma-separated-output option.
+  - Support --no-header-output option.
   - Support --shared-sensors option.
-  - Support --show-sensor-type option.
   - Rename --sensors option to --record-ids.  Maintain old options for
     backwards compatability.
   - Do not output Sensor Reading for discrete sensors under verbose
@@ -125,6 +126,7 @@ o ipmi-sensors
     of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
     each other.
   - Support --entity-sensor-names option.
+  - Support --show-sensor-type option.
   - Support --interpret-oem-data option.
   - Support Dell Poweredge R610/R710 OEM sensors.
   - Support Supermicro X8DTH OEM sensors.
@@ -197,10 +199,11 @@ o ipmimonitoring
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
   - Support --comma-separated-output option.
+  - Support --no-header-output option.
   - Support --entity-sensor-names option.
+  - Support --show-sensor-type option.
   - Support --interpret-oem-data option.
   - Support --shared-sensors option.
-  - Support --show-sensor-type option.
   - Utilize libipmimonitoring callback routines to make sensors output
     as they are read, rather than just at the end.  This removes the
     impression that the tool "hangs" on start.

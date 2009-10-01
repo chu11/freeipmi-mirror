@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.60 2009-10-01 17:13:25 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.61 2009-10-01 17:57:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -122,12 +122,14 @@ static struct argp_option cmdline_options[] =
       "Show sensor type in output.", 47},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
       "Output fields in comma separated format.", 48},
+    { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
+      "Do not output column headers.", 49},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 49},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 50},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 50},
+      "Output in legacy format.", 51},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate sensor configuration file.", 51},
+      "Specify an alternate sensor configuration file.", 52},
     { 0 }
   };
 
@@ -290,6 +292,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case COMMA_SEPARATED_OUTPUT_KEY:
       cmd_args->comma_separated_output = 1;
       break;
+    case NO_HEADER_OUTPUT_KEY:
+      cmd_args->no_header_output = 1;
+      break;
     case NON_ABBREVIATED_UNITS_KEY:
       cmd_args->non_abbreviated_units = 1;
       break;
@@ -409,6 +414,8 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     cmd_args->show_sensor_type = config_file_data.show_sensor_type;
   if (config_file_data.comma_separated_output_count)
     cmd_args->comma_separated_output = config_file_data.comma_separated_output;
+  if (config_file_data.no_header_output_count)
+    cmd_args->no_header_output = config_file_data.no_header_output;
   if (config_file_data.non_abbreviated_units_count)
     cmd_args->non_abbreviated_units = config_file_data.non_abbreviated_units;
   if (config_file_data.legacy_output_count)
@@ -459,6 +466,7 @@ ipmimonitoring_argp_parse (int argc, char **argv, struct ipmimonitoring_argument
   cmd_args->entity_sensor_names = 0;
   cmd_args->show_sensor_type = 0;
   cmd_args->comma_separated_output = 0;
+  cmd_args->no_header_output = 0;
   cmd_args->non_abbreviated_units = 0;
   cmd_args->legacy_output = 0;
   cmd_args->sensor_config_file = NULL;

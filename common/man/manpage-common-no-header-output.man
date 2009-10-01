@@ -1,0 +1,3 @@
+.TP
+\fB\-\-no\-header\-output
+Do not output column headers.  May be useful in scripting.

@@ -673,6 +673,7 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
     }
 
   if (!state_data->prog_data->args->legacy_output
+      && !state_data->prog_data->args->no_header_output
       && !state_data->output_headers)
     {
       output_sensor_headers (state_data->pstate,

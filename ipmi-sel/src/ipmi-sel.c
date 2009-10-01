@@ -1555,7 +1555,8 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
 
-  if (!state_data->output_headers)
+  if (!state_data->prog_data->args->no_header_output
+      && !state_data->output_headers)
     {
       if (state_data->prog_data->args->comma_separated_output)
         {

@@ -2,6 +2,9 @@
 
 	* Change --no-sensor-type-output to --show-sensor-type.  Adjust
 	for logical change in option.
+
+	* Support --no-header-output option in ipmi-sel, ipmi-sensors, and
+	ipmimonitoring.
 	
 2009-09-30  Albert Chu <chu11@llnl.gov>
 

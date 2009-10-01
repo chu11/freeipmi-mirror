@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.134 2009-10-01 17:13:25 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.135 2009-10-01 17:57:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -700,7 +700,8 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
   state_data = (ipmimonitoring_state_data_t *)callback_data;
   args = state_data->prog_data->args;
 
-  if (!state_data->output_headers)
+  if (!state_data->prog_data->args->no_header_output
+      && !state_data->output_headers)
     {
       if (args->legacy_output)
         {

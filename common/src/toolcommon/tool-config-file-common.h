@@ -122,6 +122,8 @@ struct config_file_data_ipmi_sel
   int show_sensor_type_count;
   int comma_separated_output;
   int comma_separated_output_count;
+  int no_header_output;
+  int no_header_output_count;
   int non_abbreviated_units;
   int non_abbreviated_units_count;
   int legacy_output;
@@ -160,6 +162,8 @@ struct config_file_data_ipmi_sensors
   int show_sensor_type_count;
   int comma_separated_output_count;
   int comma_separated_output;
+  int no_header_output;
+  int no_header_output_count;
   int non_abbreviated_units;
   int non_abbreviated_units_count;
   int legacy_output;
@@ -214,6 +218,8 @@ struct config_file_data_ipmimonitoring
   int show_sensor_type_count;
   int comma_separated_output_count;
   int comma_separated_output;
+  int no_header_output;
+  int no_header_output_count;
   int non_abbreviated_units;
   int non_abbreviated_units_count;
   int legacy_output;
