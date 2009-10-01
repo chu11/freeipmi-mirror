@@ -1989,74 +1989,12 @@ _output_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
   memset (tmpbufdata2, '\0', EVENT_BUFFER_LENGTH+1);
   memset (tmpbufdata3, '\0', EVENT_BUFFER_LENGTH+1);
 
-  if (ipmi_event_reading_type_code_class (system_event_record_data.event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
-      && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_TRIGGER_READING
-      && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE)
-    {
-      double trigger_reading;
-      double threshold_reading;
-      char trigger_sensor_units_buf[UNITS_BUFFER_LENGTH+1];
-      char threshold_sensor_units_buf[UNITS_BUFFER_LENGTH+1];
-      
-      memset (trigger_sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
-      if ((data2_ret = _get_sensor_reading (ctx,
-                                            &system_event_record_data,
-                                            flags,
-                                            system_event_record_data.event_data2,
-                                            &trigger_reading,
-                                            trigger_sensor_units_buf,
-                                            UNITS_BUFFER_LENGTH)) < 0)
-        return (-1);
-      
-      memset (threshold_sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
-      if ((data3_ret = _get_sensor_reading (ctx,
-                                            &system_event_record_data,
-                                            flags,
-                                            system_event_record_data.event_data3,
-                                            &threshold_reading,
-                                            threshold_sensor_units_buf,
-                                            UNITS_BUFFER_LENGTH)) < 0)
-        return (-1);
-
-      if (data2_ret && data3_ret)
-        {
-          /* achu:
-           *
-           * IPMI implementations aren't trustworthy for the > or < so
-           * I'm doing an actual math check to determine the output.
-           *
-           * It really should be:
-           *
-           * if assertion_event
-           *   if offset_from_event_reading_type_code & 0x1
-           *     use ">"
-           *   else
-           *     use "<"
-           * else
-           *   < do opposite for deassertion event >
-           */
-          if (ipmi_sel_parse_string_snprintf (buf,
-                         buflen,
-                         wlen,
-                         "Sensor Reading = %.2f %s %s Threshold %.2f %s",
-                         _round_double2 (trigger_reading),
-                         trigger_sensor_units_buf,
-                         _round_double2 (trigger_reading) < _round_double2 (threshold_reading) ? "<" : ">",
-                         _round_double2 (threshold_reading),
-                         threshold_sensor_units_buf))
-            return (1);
-          return (0);
-        }
-      /* else fall through to normal output */
-    }
-
   /* Special case
    *
    * The event_data3 indicates what "type" event_data2 is, and
    * subsequently what should be output.  So we only need to output
    * event_data3.
    */
-
   if (ipmi_event_reading_type_code_class (system_event_record_data.event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
       && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
       && system_event_record_data.offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_CORRECTABLE_MACHINE_CHECK_ERROR_LOGGING_DISABLED

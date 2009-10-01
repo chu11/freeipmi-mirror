@@ -1359,18 +1359,14 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
         }
     }
 
-  if (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
-      && event_data2_flag == IPMI_SEL_EVENT_DATA_TRIGGER_READING
-      && event_data3_flag == IPMI_SEL_EVENT_DATA_TRIGGER_THRESHOLD_VALUE)
-    strcat (fmtbuf, "%c");
   /* special case, event_data3 describes event_data2 type, so really
    * only want the one output
    */
-  else if (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
-           && sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
-           && event_data1_offset == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_CORRECTABLE_MACHINE_CHECK_ERROR_LOGGING_DISABLED
-           && event_data2_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
-           && event_data3_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE)
+  if (ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE
+      && sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
+      && event_data1_offset == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_CORRECTABLE_MACHINE_CHECK_ERROR_LOGGING_DISABLED
+      && event_data2_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
+      && event_data3_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE)
     strcat (fmtbuf, "%c");
   else if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE
            && event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
