@@ -3,6 +3,8 @@
 	* Fix LSB compliance issues with bmc-watchdog and ipmidetectd init
 	scripts, logrotate, and sysconfig file naming.
 
+	* ipmi-sel/, libfreeipmi/src/sel-parse/: Tweak output.
+
 2009-10-01  Albert Chu <chu11@llnl.gov>
 
 	* Change --no-sensor-type-output to --show-sensor-type.  Adjust
