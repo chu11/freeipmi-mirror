@@ -1904,7 +1904,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                    0,
                                    !state_data->prog_data->args->non_abbreviated_units,
 				   0,
-                                   NULL,
+                                   entity_ptr,
                                    &(state_data->column_width)) < 0)
         goto cleanup;
     }
