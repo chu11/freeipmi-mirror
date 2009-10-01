@@ -78,8 +78,8 @@ mkdir -p $RPM_BUILD_ROOT/%{_initrddir}/
 # if check needed for SLES systems
 if [[ "%{_sysconfdir}/init.d" != "%{_initrddir}" ]]
 then
-mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/freeipmi-bmc-watchdog $RPM_BUILD_ROOT/%{_initrddir}/freeipmi-bmc-watchdog
-mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/freeipmi-ipmidetectd $RPM_BUILD_ROOT/%{_initrddir}/freeipmi-ipmidetectd
+mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/bmc-watchdog $RPM_BUILD_ROOT/%{_initrddir}/bmc-watchdog
+mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/ipmidetectd $RPM_BUILD_ROOT/%{_initrddir}/ipmidetectd
 fi
 rm -f %{buildroot}%{_infodir}/dir
 # kludge to get around rpmlint complaining about 0 length semephore file
@@ -109,17 +109,17 @@ fi
 
 %post bmc-watchdog
 if [ "$1" = 1 ]; then
-   if [ -x %{_initrddir}/freeipmi-bmc-watchdog ]; then
-      /sbin/chkconfig --add freeipmi-bmc-watchdog
-      /sbin/chkconfig freeipmi-bmc-watchdog off
+   if [ -x %{_initrddir}/bmc-watchdog ]; then
+      /sbin/chkconfig --add bmc-watchdog
+      /sbin/chkconfig bmc-watchdog off
    fi
 fi
 if [ $1 -ge 1 ]; then
-   if [ -x %{_initrddir}/freeipmi-bmc-watchdog ]; then
-      if %{_initrddir}/freeipmi-bmc-watchdog status | grep -q running; then
-         %{_initrddir}/freeipmi-bmc-watchdog restart
+   if [ -x %{_initrddir}/bmc-watchdog ]; then
+      if %{_initrddir}/bmc-watchdog status | grep -q running; then
+         %{_initrddir}/bmc-watchdog restart
       else
-         %{_initrddir}/freeipmi-bmc-watchdog condrestart
+         %{_initrddir}/bmc-watchdog condrestart
       fi
    fi
 fi
@@ -129,27 +129,27 @@ fi
 # Stop bmc-watchdog if it is running 
 #
 if [ "$1" = 0 ]; then
-    if [ -x %{_initrddir}/freeipmi-bmc-watchdog ]; then
-       if %{_initrddir}/freeipmi-bmc-watchdog status | grep -q running; then
-          %{_initrddir}/freeipmi-bmc-watchdog stop
+    if [ -x %{_initrddir}/bmc-watchdog ]; then
+       if %{_initrddir}/bmc-watchdog status | grep -q running; then
+          %{_initrddir}/bmc-watchdog stop
        fi
-       /sbin/chkconfig --del freeipmi-bmc-watchdog
+       /sbin/chkconfig --del bmc-watchdog
     fi
 fi
 
 %post ipmidetectd
 if [ "$1" = 1 ]; then
-   if [ -x %{_initrddir}/freeipmi-ipmidetectd ]; then
-      /sbin/chkconfig --add freeipmi-ipmidetectd
-      /sbin/chkconfig freeipmi-ipmidetectd off
+   if [ -x %{_initrddir}/ipmidetectd ]; then
+      /sbin/chkconfig --add ipmidetectd
+      /sbin/chkconfig ipmidetectd off
    fi
 fi
 if [ $1 -ge 1 ]; then
-   if [ -x %{_initrddir}/freeipmi-ipmidetectd ]; then
-      if %{_initrddir}/freeipmi-ipmidetectd status | grep -q running; then
-         %{_initrddir}/freeipmi-ipmidetectd restart
+   if [ -x %{_initrddir}/ipmidetectd ]; then
+      if %{_initrddir}/ipmidetectd status | grep -q running; then
+         %{_initrddir}/ipmidetectd restart
       else
-         %{_initrddir}/freeipmi-ipmidetectd condrestart
+         %{_initrddir}/ipmidetectd condrestart
       fi
    fi
 fi
@@ -159,11 +159,11 @@ fi
 # Stop ipmidetectd if it is running 
 #
 if [ "$1" = 0 ]; then
-    if [ -x %{_initrddir}/freeipmi-ipmidetectd ]; then
-       if %{_initrddir}/freeipmi-ipmidetectd status | grep -q running; then
-          %{_initrddir}/freeipmi-ipmidetectd stop
+    if [ -x %{_initrddir}/ipmidetectd ]; then
+       if %{_initrddir}/ipmidetectd status | grep -q running; then
+          %{_initrddir}/ipmidetectd stop
        fi
-       /sbin/chkconfig --del freeipmi-ipmidetectd
+       /sbin/chkconfig --del ipmidetectd
     fi
 fi
 
@@ -327,16 +327,16 @@ fi
 %doc %{_datadir}/doc/%{name}/COPYING.bmc-watchdog
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.bmc-watchdog
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.bmc-watchdog.UC
-%config(noreplace) %{_initrddir}/freeipmi-bmc-watchdog
-%config(noreplace) %{_sysconfdir}/sysconfig/freeipmi-bmc-watchdog
-%config(noreplace) %{_sysconfdir}/logrotate.d/freeipmi-bmc-watchdog
+%config(noreplace) %{_initrddir}/bmc-watchdog
+%config(noreplace) %{_sysconfdir}/sysconfig/bmc-watchdog
+%config(noreplace) %{_sysconfdir}/logrotate.d/bmc-watchdog
 %{_sbindir}/bmc-watchdog
 %{_mandir}/man8/bmc-watchdog.8*
 %dir %{_localstatedir}/log/freeipmi
 
 %files ipmidetectd
 %defattr(-,root,root)
-%config(noreplace) %{_initrddir}/freeipmi-ipmidetectd
+%config(noreplace) %{_initrddir}/ipmidetectd
 %attr(0600,root,root) %config(noreplace) %{_sysconfdir}/ipmidetectd.conf
 %{_sbindir}/ipmidetectd
 %{_mandir}/man5/ipmidetectd.conf.5*

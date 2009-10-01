@@ -1,3 +1,8 @@
+2009-10-01  Jan Safranek <jsafrane@redhat.com>
+
+	* Fix LSB compliance issues with bmc-watchdog and ipmidetectd init
+	scripts, logrotate, and sysconfig file naming.
+
 2009-10-01  Albert Chu <chu11@llnl.gov>
 
 	* Change --no-sensor-type-output to --show-sensor-type.  Adjust

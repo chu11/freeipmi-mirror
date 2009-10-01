@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: freeipmi-ipmidetectd.init,v 1.5 2009-09-24 16:11:22 chu11 Exp $
+# $Id: ipmidetectd.init,v 1.1 2009-10-01 18:09:57 chu11 Exp $
 #
 # chkconfig: - 70 40
 # description: ipmidetectd startup script
