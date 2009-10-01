@@ -1,14 +1,18 @@
 inband
 ------
 --fail-if-ipmi-not-detected
-and build option??
-inband flag - discover vs. not-discover on locate
+- needs inband flag - discover vs. not-discover on locate
+- seems unnecessary.
+  - Ultimately it is impossible to do correctly, vendor need not store
+    anything in acpi/smbios/etc.
+  - User can use ipmi-locate if they really want to probe.
 
 general
 -------
 forwarded command support (errata 35b)
 functions to support "is supported" checks for OEM stuff
-- i.e. you don't need to check manufactur ids in two places, just use the function.
+- i.e. you don't need to check manufactur ids in two places, just use
+  the function.
 
 hpm/hpmi
 --------
@@ -18,7 +22,8 @@ picmg hpm/hpmi.1 standard - defines ipmi firmware update stuff
 bmc-device
 --------
 set bmc global enables
-- really should be done by firmware?  or OS distro?  Hold off for now.
+- really should be done by firmware? or OS distro?
+- or only as ipmi-oem-ism?
 
 ipmi-locate
 -----------
@@ -47,7 +52,9 @@ if user inputs hostname of localhost, do inband not outofband?
 
 ipmi-sel
 --------
-- head/tail on record counts
+head/tail on record counts
+- head seems useless
+- tail, useful, but will always be an estimate
 
 bmc-config
 ----------
@@ -63,12 +70,6 @@ ipmi-oem-config
 - consider maybe down the road
 - inventec mac/shared nic stuff
   - no, oem specific and will reboot BMC
-
-simulator
----------
-ipmi server simulator
-- good for testing at scale
-- good intern project?
 
 oem
 ---
@@ -93,6 +94,11 @@ bmc-config
 destination address vlan tags (or would be in ipmi-pef-config?)
 all lan destination config (or would be in ipmi-pef-config?)
 (NEVER TESTED) bmc password threshold
+
+sensor/monitoring/sel
+---------------------
+no-header-output
+- for scripting
 
 sensors/monitoring
 ------------------
