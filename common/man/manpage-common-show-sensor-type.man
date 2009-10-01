@@ -1,0 +1,8 @@
+.TP
+\fB\-\-show\-sensor\-type\fR
+Show the sensor type for each entry.  On many systems, the sensor type
+is redundant to the name of the sensor.  This can especially be true
+if \fB\-\-entity\-sensor\-names\fR is specified.  If the sensor name
+is not sufficient, or if the sensor type is of interest to the user,
+this option can be specified to list the sensor type in an additional
+column of output.

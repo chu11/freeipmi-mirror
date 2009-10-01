@@ -1,3 +1,8 @@
+2009-10-01  Albert Chu <chu11@llnl.gov>
+
+	* Change --no-sensor-type-output to --show-sensor-type.  Adjust
+	for logical change in option.
+	
 2009-09-30  Albert Chu <chu11@llnl.gov>
 
 	* Change --no-sensor-type to --no-sensor-type-output.

@@ -46,9 +46,9 @@ enum ipmi_sel_argp_option_keys
     ASSUME_SYSTEM_EVENT_RECORDS_KEY = 167,
     INTERPRET_OEM_DATA_KEY = 168,
     ENTITY_SENSOR_NAMES_KEY = 169,
-    COMMA_SEPARATED_OUTPUT_KEY = 170,
-    NON_ABBREVIATED_UNITS_KEY = 171,
-    NO_SENSOR_TYPE_OUTPUT_KEY = 172,
+    SHOW_SENSOR_TYPE_KEY = 170,
+    COMMA_SEPARATED_OUTPUT_KEY = 171,
+    NON_ABBREVIATED_UNITS_KEY = 172,
     LEGACY_OUTPUT_KEY = 173,
   };
 
@@ -84,9 +84,9 @@ struct ipmi_sel_arguments
   int assume_system_event_records;
   int interpret_oem_data;
   int entity_sensor_names;
+  int show_sensor_type;
   int comma_separated_output;
   int non_abbreviated_units;
-  int no_sensor_type_output;
   int legacy_output;
 };
 

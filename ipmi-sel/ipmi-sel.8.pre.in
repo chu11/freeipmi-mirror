@@ -98,9 +98,9 @@ formatted correctly.  Use this option to assume these invalid record
 types are system event records and pray for the best.
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
+#include <@top_srcdir@/common/man/manpage-common-show-sensor-type.man>
 #include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>
 #include <@top_srcdir@/common/man/manpage-common-non-abbreviated-units.man>
-#include <@top_srcdir@/common/man/manpage-common-no-sensor-type-output.man>
 #include <@top_srcdir@/common/man/manpage-common-legacy-output.man>
 #include <@top_srcdir@/common/man/manpage-common-sdr-options.man>
 #include <@top_srcdir@/common/man/manpage-common-ignore-sdr-cache.man>

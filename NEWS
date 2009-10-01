@@ -6,7 +6,8 @@ o Support ipmi-dcmi, Data Center Management Interface (often referred
   to as DCM or DCMI).
 o Make output of ipmi-sel, ipmi-sensors, and ipmimonitoring easier to
   read and consistent to each other.  Under default output, sensors
-  listed in ipmi-sensors and ipmimonitoring are identical.  Legacy
+  listed in ipmi-sensors and ipmimonitoring are identical.  Under
+  default output, the sensor type of each entry is not output.  Legacy
   output is supported through the --legacy-output option.
 o Make output of ipmi-chassis, bmc-info, bmc-device, and info output
   of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
@@ -51,6 +52,8 @@ o ipmi-dcmi
 o ipmi-sel
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
+  - Under default output, do not report the sensor type.  It is often
+    redundant to the name of the sensor.
   - Use short-message event strings instead of long ones for readability.
   - Support --legacy-output option.
   - Support --verbose option to offer verbose, very verbose, and very
@@ -67,7 +70,7 @@ o ipmi-sel
   - Support --comma-separated-output option.
   - Rename --delete-all to --clear for consistency to IPMI spec.
     Backwards compatability maintained.
-  - Support --no-sensor-type-output option.
+  - Support --show-sensor-type option.
   - Output manufacturer name with "Manufacturer ID" if name available.
   - Support sensor unit percentages, rates and modifiers (i.e. "%
     hit", "gigabyte per minute", "pounds / cu in").
@@ -88,6 +91,8 @@ o ipmi-sel
 o ipmi-sensors
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
+  - Under default output, do not report the sensor type.  It is often
+    redundant to the name of the sensor.
   - Support --legacy-output option.
   - For consistency to other tools, outputs of "NA" are now "N/A".
   - Events are now surrounded by single quotes (') instead of square
@@ -107,7 +112,7 @@ o ipmi-sensors
     options.
   - Support --comma-separated-output option.
   - Support --shared-sensors option.
-  - Support --no-sensor-type-output option.
+  - Support --show-sensor-type option.
   - Rename --sensors option to --record-ids.  Maintain old options for
     backwards compatability.
   - Do not output Sensor Reading for discrete sensors under verbose
@@ -161,6 +166,8 @@ o ipmi-sensors
 o ipmimonitoring
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
+  - Under default output, do not report the sensor type.  It is often
+    redundant to the name of the sensor.
   - "Monitoring Status" is now listed as "Sensor State" for
     consistency to libipmimonitoring library definition.
   - Sensor events are now output for all sensors.  Sensor readings are
@@ -193,7 +200,7 @@ o ipmimonitoring
   - Support --entity-sensor-names option.
   - Support --interpret-oem-data option.
   - Support --shared-sensors option.
-  - Support --no-sensor-type-output option.
+  - Support --show-sensor-type option.
   - Utilize libipmimonitoring callback routines to make sensors output
     as they are read, rather than just at the end.  This removes the
     impression that the tool "hangs" on start.

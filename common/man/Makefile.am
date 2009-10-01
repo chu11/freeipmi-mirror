@@ -54,5 +54,5 @@ EXTRA_DIST = \
 	manpage-common-entity-sensor-names.man \
 	manpage-common-comma-separated-output.man \
 	manpage-common-non-abbreviated-units.man \
-	manpage-common-no-sensor-type-output.man \
+	manpage-common-show-sensor-type.man \
 	manpage-common-legacy-output.man

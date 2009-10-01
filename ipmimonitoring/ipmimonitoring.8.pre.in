@@ -1,5 +1,5 @@
 .\"#############################################################################
-.\"$Id: ipmimonitoring.8.pre.in,v 1.66 2009-09-30 18:16:44 chu11 Exp $
+.\"$Id: ipmimonitoring.8.pre.in,v 1.67 2009-10-01 17:13:25 chu11 Exp $
 .\"#############################################################################
 .\"  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -105,9 +105,9 @@ identical, this is semantically different that the
 For example, if an interpretation rule has not been written for a
 sensor, it may not be output.
 #include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
+#include <@top_srcdir@/common/man/manpage-common-show-sensor-type.man>
 #include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>
 #include <@top_srcdir@/common/man/manpage-common-non-abbreviated-units.man>
-#include <@top_srcdir@/common/man/manpage-common-no-sensor-type-output.man>
 #include <@top_srcdir@/common/man/manpage-common-legacy-output.man>
 .TP
 \fB\-\-sensor\-config\-file\fR=\fIFILE\fR

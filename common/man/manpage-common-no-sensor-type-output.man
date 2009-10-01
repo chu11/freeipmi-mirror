@@ -1,7 +1,0 @@
-.TP
-\fB\-\-no\-sensor\-type\-output\fR
-Do not output the sensor type for each entry.  On some systems, the
-sensor type column output may be redundant to the name of the sensor.
-This can especially be true if \fB\-\-entity\-sensor\-names\fR is
-specified.  If the user wishes to condense output, this option can be
-specified to remove the sensor type column output.

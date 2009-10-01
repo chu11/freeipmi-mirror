@@ -377,25 +377,7 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
     }
 
   memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
-  if (state_data->prog_data->args->no_sensor_type_output)
-    {
-      if (state_data->prog_data->args->comma_separated_output)
-        snprintf (fmt,
-                  IPMI_SENSORS_FMT_BUFLEN,
-                  "%%u,%%s");
-      else
-        snprintf (fmt,
-                  IPMI_SENSORS_FMT_BUFLEN,
-                  "%%-%du | %%-%ds",
-                  state_data->column_width.record_id,
-                  state_data->column_width.sensor_name);
-      
-      pstdout_printf (state_data->pstate,
-                      fmt,
-                      record_id,
-                      sensor_name);
-    }
-  else
+  if (state_data->prog_data->args->show_sensor_type)
     {
       uint8_t sensor_type;
 
@@ -428,6 +410,24 @@ _simple_output_header (ipmi_sensors_state_data_t *state_data,
                       record_id,
                       sensor_name,
                       get_sensor_type_output_string (sensor_type));
+    }
+  else
+    {
+      if (state_data->prog_data->args->comma_separated_output)
+        snprintf (fmt,
+                  IPMI_SENSORS_FMT_BUFLEN,
+                  "%%u,%%s");
+      else
+        snprintf (fmt,
+                  IPMI_SENSORS_FMT_BUFLEN,
+                  "%%-%du | %%-%ds",
+                  state_data->column_width.record_id,
+                  state_data->column_width.sensor_name);
+      
+      pstdout_printf (state_data->pstate,
+                      fmt,
+                      record_id,
+                      sensor_name);
     }
       
   return (0);
@@ -679,7 +679,7 @@ ipmi_sensors_simple_output (ipmi_sensors_state_data_t *state_data,
                              state_data->prog_data->args->quiet_readings,
                              0,
                              state_data->prog_data->args->comma_separated_output,
-                             state_data->prog_data->args->no_sensor_type_output,
+                             state_data->prog_data->args->show_sensor_type,
                              &(state_data->column_width));
 
       state_data->output_headers++;
