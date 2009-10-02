@@ -1558,15 +1558,15 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
         {
           if (state_data->prog_data->args->no_sensor_type_output)
             pstdout_printf (state_data->pstate,
+                            "%s,Date,Time,%s",
+                            SENSORS_HEADER_RECORD_ID_STR,
+                            SENSORS_HEADER_NAME_STR);
+          else
+            pstdout_printf (state_data->pstate,
                             "%s,Date,Time,%s,%s",
                             SENSORS_HEADER_RECORD_ID_STR,
                             SENSORS_HEADER_NAME_STR,
                             SENSORS_HEADER_TYPE_STR);
-          else
-            pstdout_printf (state_data->pstate,
-                            "%s,Date,Time,%s",
-                            SENSORS_HEADER_RECORD_ID_STR,
-                            SENSORS_HEADER_NAME_STR);
 
           if (state_data->prog_data->args->verbose_count >= 2)
             pstdout_printf (state_data->pstate, ",Event Direction");
@@ -1585,6 +1585,18 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
             {
               snprintf (fmt,
                         IPMI_SEL_FMT_BUFLEN,
+                        "%%s | Date        | Time     | %%-%ds",
+                        state_data->column_width.sensor_name);
+              
+              pstdout_printf (state_data->pstate,
+                              fmt,
+                              SENSORS_HEADER_RECORD_ID_STR,
+                              SENSORS_HEADER_NAME_STR);
+            }
+          else
+            {
+              snprintf (fmt,
+                        IPMI_SEL_FMT_BUFLEN,
                         "%%s | Date        | Time     | %%-%ds | %%-%ds",
                         state_data->column_width.sensor_name,
                         state_data->column_width.sensor_type);
@@ -1594,18 +1606,6 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
                               SENSORS_HEADER_RECORD_ID_STR,
                               SENSORS_HEADER_NAME_STR,
                               SENSORS_HEADER_TYPE_STR);
-            }
-          else
-            {
-              snprintf (fmt,
-                        IPMI_SEL_FMT_BUFLEN,
-                        "%%s | Date        | Time     | %%-%ds",
-                        state_data->column_width.sensor_name);
-              
-              pstdout_printf (state_data->pstate,
-                              fmt,
-                              SENSORS_HEADER_RECORD_ID_STR,
-                              SENSORS_HEADER_NAME_STR);
             }
           
           if (state_data->prog_data->args->verbose_count >= 2)
