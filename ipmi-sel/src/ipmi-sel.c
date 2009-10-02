@@ -59,8 +59,6 @@
 
 #define IPMI_SEL_EVENT_SEPARATOR " ; "
 
-#define IPMI_SEL_EVENT_COLUMN_WIDTH 36
-
 static int
 _display_sel_info (ipmi_sel_state_data_t *state_data)
 {
@@ -1091,26 +1089,10 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
     }
   else
     {
-      char fmt[IPMI_SEL_FMT_BUFLEN + 1];
-
-      memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
-      if (state_data->prog_data->args->comma_separated_output)
-        snprintf (fmt,
-                  IPMI_SEL_FMT_BUFLEN,
-                  ",%%s");
-      else
-        snprintf (fmt,
-                  IPMI_SEL_FMT_BUFLEN,
-                  " | %%-%ds",
-                  state_data->event_column_width);
-      
-      if (outbuf_len > state_data->event_column_width)
-        state_data->event_column_width = outbuf_len;
-
       if (outbuf_len)
-        pstdout_printf (state_data->pstate, fmt, outbuf);
+        pstdout_printf (state_data->pstate, " | %s", outbuf);
       else
-        pstdout_printf (state_data->pstate, fmt, IPMI_SEL_NA_STRING);
+        pstdout_printf (state_data->pstate, " | %s", IPMI_SEL_NA_STRING);
     }
 
   return (1);
@@ -1435,20 +1417,10 @@ output:
         }
     }
 
-  if (state_data->prog_data->args->comma_separated_output)
-    {
-      if (outbuf_len)
-        pstdout_printf (state_data->pstate, ",%s", outbuf);
-      else
-        pstdout_printf (state_data->pstate, ",%s", IPMI_SEL_NA_STRING);
-    }
+  if (outbuf_len)
+    pstdout_printf (state_data->pstate, " ; %s", outbuf);
   else
-    {
-      if (outbuf_len)
-        pstdout_printf (state_data->pstate, " | %s", outbuf);
-      else
-        pstdout_printf (state_data->pstate, " | %s", IPMI_SEL_NA_STRING);
-    }
+    pstdout_printf (state_data->pstate, " ; %s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -1573,9 +1545,6 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
           
           pstdout_printf (state_data->pstate, ",Event");
           
-          if (state_data->prog_data->args->verbose_count)
-            pstdout_printf (state_data->pstate, ",Event Detail");
-          
           pstdout_printf (state_data->pstate, "\n");
         }
       else
@@ -1611,10 +1580,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
           if (state_data->prog_data->args->verbose_count >= 2)
             pstdout_printf (state_data->pstate, " | Event Direction  ");
           
-          pstdout_printf (state_data->pstate, " | Event                               ");
-          
-          if (state_data->prog_data->args->verbose_count)
-            pstdout_printf (state_data->pstate, " | Event Detail");
+          pstdout_printf (state_data->pstate, " | Event");
           
           pstdout_printf (state_data->pstate, "\n");
         }
@@ -2185,8 +2151,6 @@ _ipmi_sel (pstdout_state_t pstate,
             }
         }
     }
-
-  state_data.event_column_width = IPMI_SEL_EVENT_COLUMN_WIDTH;
 
   if (run_cmd_args (&state_data) < 0)
     {
