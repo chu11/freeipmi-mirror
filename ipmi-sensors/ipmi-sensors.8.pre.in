@@ -78,7 +78,7 @@ Show sensor data repository (SDR) information
 \fB\-\-ignore\-not\-available\-sensors\fR
 Ignore not-available (i.e. N/A) sensors in output.
 #include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
-#include <@top_srcdir@/common/man/manpage-common-show-sensor-type.man>
+#include <@top_srcdir@/common/man/manpage-common-no-sensor-type-output.man>
 #include <@top_srcdir@/common/man/manpage-common-comma-separated-output.man>
 #include <@top_srcdir@/common/man/manpage-common-no-header-output.man>
 #include <@top_srcdir@/common/man/manpage-common-non-abbreviated-units.man>

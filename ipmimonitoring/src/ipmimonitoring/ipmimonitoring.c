@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.135 2009-10-01 17:57:03 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.136 2009-10-02 17:21:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -720,7 +720,7 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                                args->quiet_readings,
                                1,
                                state_data->prog_data->args->comma_separated_output,
-                               state_data->prog_data->args->show_sensor_type,
+                               state_data->prog_data->args->no_sensor_type_output,
                                &(state_data->column_width));
 
       state_data->output_headers++;
@@ -845,7 +845,26 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
     {
       memset (fmt, '\0', IPMIMONITORING_FMT_BUFLEN + 1);
 
-      if (args->show_sensor_type)
+      if (args->no_sensor_type_output)
+        {
+          if (args->comma_separated_output)
+            snprintf (fmt,
+                      IPMIMONITORING_FMT_BUFLEN,
+                      "%%u,%%s,%%s");
+          else
+            snprintf (fmt,
+                      IPMIMONITORING_FMT_BUFLEN,
+                      "%%-%du | %%-%ds | %%-8s",
+                      state_data->column_width.record_id,
+                      state_data->column_width.sensor_name);
+          
+          pstdout_printf (state_data->pstate,
+                          fmt,
+                          record_id,
+                          sensor_name,
+                          sensor_state_str);
+        }
+      else
         {
           if (args->comma_separated_output)
             snprintf (fmt,
@@ -864,25 +883,6 @@ _ipmimonitoring_callback (ipmi_monitoring_ctx_t c, void *callback_data)
                           record_id,
                           sensor_name,
                           sensor_type_str,
-                          sensor_state_str);
-        }
-      else
-        {
-          if (args->comma_separated_output)
-            snprintf (fmt,
-                      IPMIMONITORING_FMT_BUFLEN,
-                      "%%u,%%s,%%s");
-          else
-            snprintf (fmt,
-                      IPMIMONITORING_FMT_BUFLEN,
-                      "%%-%du | %%-%ds | %%-8s",
-                      state_data->column_width.record_id,
-                      state_data->column_width.sensor_name);
-          
-          pstdout_printf (state_data->pstate,
-                          fmt,
-                          record_id,
-                          sensor_name,
                           sensor_state_str);
         }
     }

@@ -46,7 +46,7 @@ enum ipmimonitoring_argp_option_keys
     INTERPRET_OEM_DATA_KEY = 164,
     IGNORE_NON_INTERPRETABLE_SENSORS_KEY = 165,
     ENTITY_SENSOR_NAMES_KEY = 166,
-    SHOW_SENSOR_TYPE_KEY = 167,
+    NO_SENSOR_TYPE_OUTPUT_KEY = 167,
     COMMA_SEPARATED_OUTPUT_KEY = 168,
     NO_HEADER_OUTPUT_KEY = 169,
     NON_ABBREVIATED_UNITS_KEY = 170,
@@ -76,7 +76,7 @@ struct ipmimonitoring_arguments
   int interpret_oem_data;
   int ignore_non_interpretable_sensors;
   int entity_sensor_names;
-  int show_sensor_type;
+  int no_sensor_type_output;
   int comma_separated_output;
   int no_header_output;
   int non_abbreviated_units;

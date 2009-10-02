@@ -976,7 +976,7 @@ _normal_output_sensor_name_and_type (ipmi_sel_state_data_t *state_data, unsigned
   else
     pstdout_printf (state_data->pstate, fmt, IPMI_SEL_NA_STRING);
 
-  if (state_data->prog_data->args->show_sensor_type)
+  if (!state_data->prog_data->args->no_sensor_type_output)
     {
       memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
       if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
@@ -1556,7 +1556,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
     {
       if (state_data->prog_data->args->comma_separated_output)
         {
-          if (state_data->prog_data->args->show_sensor_type)
+          if (state_data->prog_data->args->no_sensor_type_output)
             pstdout_printf (state_data->pstate,
                             "%s,Date,Time,%s,%s",
                             SENSORS_HEADER_RECORD_ID_STR,
@@ -1581,7 +1581,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       else
         {          
           memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
-          if (state_data->prog_data->args->show_sensor_type)
+          if (state_data->prog_data->args->no_sensor_type_output)
             {
               snprintf (fmt,
                         IPMI_SEL_FMT_BUFLEN,

@@ -1,3 +1,8 @@
+2009-10-02  Albert Chu <chu11@llnl.gov>
+
+	* Change --show-sensor-type back to --no-sensor-type-output.
+	Adjust for logical change in option.
+
 2009-10-01  Jan Safranek <jsafrane@redhat.com>
 
 	* Fix LSB compliance issues with bmc-watchdog and ipmidetectd init

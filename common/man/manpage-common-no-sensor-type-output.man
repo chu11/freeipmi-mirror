@@ -1,0 +1,7 @@
+.TP
+\fB\-\-no\-sensor\-type\-output\fR
+Do not show sensor type output for each entry.  On many systems, the
+sensor type is redundant to the name of the sensor.  This can
+especially be true if \fB\-\-entity\-sensor\-names\fR is specified.
+If the sensor name is sufficient, or if the sensor type is of no
+interest to the user, this option can be specified to condense output.

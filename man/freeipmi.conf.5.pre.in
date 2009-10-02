@@ -883,7 +883,7 @@ should attempt to interpret OEM data by default or not.
 Specify if output of sensor names should include entity ids and
 instances.
 .TP
-\fBipmi\-sel\-show\-sensor\-type\fR \fIENABLE|DISABLE\fR
+\fBipmi\-sel\-no\-sensor\-type\-output\fR \fIENABLE|DISABLE\fR
 Specify if output of the sensor type should be output or not.
 .TP
 \fBipmi\-sel\-comma\-separated\-output\fR \fIENABLE|DISABLE\fR
@@ -1005,7 +1005,7 @@ should ignore not-available (i.e. N/A) sensors by default.
 Specify if output of sensor names should include entity ids and
 instances.
 .TP
-\fBipmi\-sensors\-show\-sensor\-type\fR \fIENABLE|DISABLE\fR
+\fBipmi\-sensors\-no\-sensor\-type\-output\fR \fIENABLE|DISABLE\fR
 Specify if output of the sensor type should be output or not.
 .TP
 \fBipmi\-sensors\-comma\-separated\-output\fR \fIENABLE|DISABLE\fR
@@ -1258,7 +1258,7 @@ Specify if non-interpretable sensors should be ignored by default or not.
 Specify if output of sensor names should include entity ids and
 instances.
 .TP
-\fBipmimonitoring\-show\-sensor\-type\fR \fIENABLE|DISABLE\fR
+\fBipmimonitoring\-no\-sensor\-type\-output\fR \fIENABLE|DISABLE\fR
 Specify if output of the sensor type should be output or not.
 .TP
 \fBipmimonitoring\-comma\-separated\-output\fR \fIENABLE|DISABLE\fR
