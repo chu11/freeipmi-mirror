@@ -98,8 +98,10 @@ ipmi_oem_sun_get_led (ipmi_oem_state_data_t *state_data)
                                0,
                                NULL,
                                0,
-                               1,
+                               1, /* abbreviated_units */
                                0,
+                               0,
+                               1, /* count_device_locator_records */
                                entity_ptr,
                                &column_width) < 0)
     goto cleanup;

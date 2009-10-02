@@ -124,6 +124,8 @@ int calculate_column_widths (pstdout_state_t pstate,
                              unsigned int record_ids_length,
                              unsigned int abbreviated_units,
                              unsigned int shared_sensors,
+                             unsigned int count_event_only_records,
+                             unsigned int count_device_locator_records,
                              struct sensor_entity_id_counts *entity_id_counts,
                              struct sensor_column_width *column_width);
 
