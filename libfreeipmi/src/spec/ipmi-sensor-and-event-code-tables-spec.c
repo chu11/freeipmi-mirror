@@ -205,11 +205,12 @@ const char * const ipmi_generic_event_reading_type_code_transition_state_short[]
   };
 unsigned int ipmi_generic_event_reading_type_code_transition_state_short_max_index = 0x02;
 
-const char * const ipmi_generic_event_reading_type_code_state_short[] =  {
-  "State Deasserted",
-  "State Asserted",
-  NULL
-};
+const char * const ipmi_generic_event_reading_type_code_state_short[] = 
+  {
+    "State Deasserted",
+    "State Asserted",
+    NULL
+  };
 unsigned int ipmi_generic_event_reading_type_code_state_short_max_index = 0x01;
 
 const char * const ipmi_generic_event_reading_type_code_predictive_failure_short[] =
