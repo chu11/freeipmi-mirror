@@ -737,6 +737,7 @@ _legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 static int
 _normal_output_record_id (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
+  char fmt[IPMI_SEL_FMT_BUFLEN + 1];
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
   int outbuf_len;
 
@@ -755,21 +756,21 @@ _normal_output_record_id (ipmi_sel_state_data_t *state_data, unsigned int flags)
       return (0);
     }
 
-
+  memset (fmt, '\0', IPMI_SEL_FMT_BUFLEN + 1);
   if (state_data->prog_data->args->comma_separated_output)
-    {
-      if (outbuf_len)
-        pstdout_printf (state_data->pstate, "%s", outbuf);
-      else
-        pstdout_printf (state_data->pstate, "%s", IPMI_SEL_NA_STRING);
-    }
+    snprintf (fmt,
+              IPMI_SEL_FMT_BUFLEN,
+              "%%s");
   else
-    {
-      if (outbuf_len)
-        pstdout_printf (state_data->pstate, "%-2s", outbuf);
-      else
-        pstdout_printf (state_data->pstate, "%-2s", IPMI_SEL_NA_STRING);
-    }
+    snprintf (fmt,
+              IPMI_SEL_FMT_BUFLEN,
+              "%%-%ds",
+              state_data->column_width.record_id);
+
+  if (outbuf_len)
+    pstdout_printf (state_data->pstate, fmt, outbuf);
+  else
+    pstdout_printf (state_data->pstate, fmt, IPMI_SEL_NA_STRING);
 
   return (1);
 }
@@ -1552,7 +1553,8 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
             {
               snprintf (fmt,
                         IPMI_SEL_FMT_BUFLEN,
-                        "%%s | Date        | Time     | %%-%ds",
+                        "%%-%ds | Date        | Time     | %%-%ds",
+                        state_data->column_width.record_id,
                         state_data->column_width.sensor_name);
               
               pstdout_printf (state_data->pstate,
@@ -1564,7 +1566,8 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
             {
               snprintf (fmt,
                         IPMI_SEL_FMT_BUFLEN,
-                        "%%s | Date        | Time     | %%-%ds | %%-%ds",
+                        "%%-%ds | Date        | Time     | %%-%ds | %%-%ds",
+                        state_data->column_width.record_id,
                         state_data->column_width.sensor_name,
                         state_data->column_width.sensor_type);
               
@@ -1806,6 +1809,42 @@ _sel_parse_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
 }
 
 static int
+_sel_record_id_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
+{
+  ipmi_sel_state_data_t *state_data;
+  char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
+  int outbuf_len;
+  int rv = -1;
+
+  assert (ctx);
+  assert (callback_data);
+
+  state_data = (ipmi_sel_state_data_t *)callback_data;
+
+  /* won't bother with exclude or record-type only options */
+
+  memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
+  if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
+                                                       "%i",
+                                                       outbuf,
+                                                       IPMI_SEL_OUTPUT_BUFLEN,
+                                                       0)) < 0)
+    {
+      if (ipmi_sel_parse_ctx_errnum (state_data->sel_parse_ctx) == IPMI_SEL_PARSE_ERR_INVALID_SEL_ENTRY)
+        goto out;
+      goto cleanup;
+    }
+
+  if (outbuf_len > state_data->column_width.record_id)
+    state_data->column_width.record_id = outbuf_len;
+
+ out:
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
 _display_sel_records (ipmi_sel_state_data_t *state_data)
 {
   struct ipmi_sel_arguments *args;
@@ -1869,6 +1908,65 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                    entity_ptr,
                                    &(state_data->column_width)) < 0)
         goto cleanup;
+
+      /* Record IDs for SEL entries are calculated a bit differently */
+
+      if (state_data->prog_data->args->display)
+        {
+          uint16_t max_record_id = 0;
+          int i;
+          
+          for (i = 0; i < state_data->prog_data->args->display_record_list_length; i++)
+            {
+              if (state_data->prog_data->args->display_record_list[i] > max_record_id)
+                max_record_id = state_data->prog_data->args->display_record_list[i];
+            }
+
+          if (ipmi_sel_parse_record_ids (state_data->sel_parse_ctx,
+                                         &max_record_id,
+                                         1,
+                                         _sel_record_id_callback,
+                                         state_data) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sel_parse_record_ids: %s\n",
+                               ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+              goto cleanup;
+            }
+        }
+      else if (state_data->prog_data->args->display_range)
+        {
+          /* assume biggest record is is the last specified */
+          if (ipmi_sel_parse (state_data->sel_parse_ctx,
+                              state_data->prog_data->args->display_range2,
+                              state_data->prog_data->args->display_range2,
+                              _sel_record_id_callback,
+                              state_data) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sel_parse: %s\n",
+                               ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+              goto cleanup;
+            }
+        }
+      else
+        {
+          /* assume biggest record id is the last one */
+          if (ipmi_sel_parse (state_data->sel_parse_ctx,
+                              IPMI_SEL_RECORD_ID_LAST,
+                              IPMI_SEL_RECORD_ID_LAST,
+                              _sel_record_id_callback,
+                              state_data) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sel_parse: %s\n",
+                               ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+              goto cleanup;
+            }
+        }
     }
 
   if (args->interpret_oem_data)
@@ -1975,7 +2073,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_sel_parse: %s\n",
+                           "ipmi_sel_parse_record_ids: %s\n",
                            ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }

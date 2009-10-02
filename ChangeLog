@@ -8,6 +8,9 @@
 
 	* ipmi-sel/: Collapse event and event detail into one column.
 
+	* ipmi-sel/, libfreeipmi/src/sel-parse/: Fix record id column
+	alignment.
+
 2009-10-01  Jan Safranek <jsafrane@redhat.com>
 
 	* Fix LSB compliance issues with bmc-watchdog and ipmidetectd init

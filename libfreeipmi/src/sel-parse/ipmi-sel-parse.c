@@ -726,6 +726,58 @@ ipmi_sel_parse (ipmi_sel_parse_ctx_t ctx,
         record_id_last = tmp_record_id_last;
     }
 
+  /* special case, need only get the last record */
+  if (record_id_start == IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
+    {
+      sel_parse_entry = NULL;
+
+      if (_get_sel_entry (ctx,
+                          obj_cmd_rs,
+                          &reservation_id,
+                          &reservation_id_initialized,
+                          record_id_start) < 0)
+        goto cleanup;
+
+      if (!(sel_parse_entry = (struct ipmi_sel_parse_entry *)malloc (sizeof (struct ipmi_sel_parse_entry))))
+        {
+          SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_OUT_OF_MEMORY);
+          goto cleanup;
+        }
+
+      if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                    "record_data",
+                                    sel_parse_entry->sel_event_record,
+                                    IPMI_SEL_RECORD_LENGTH)) < 0)
+        {
+          SEL_PARSE_FIID_OBJECT_ERROR_TO_SEL_PARSE_ERRNUM (ctx, obj_cmd_rs);
+          goto cleanup;
+        }
+      
+      sel_parse_entry->sel_event_record_len = len;
+      
+      _sel_entry_dump (ctx, sel_parse_entry);
+      
+      /* achu: should come before list_append to avoid having a freed entry on the list */
+      if (callback)
+        {
+          ctx->callback_sel_entry = sel_parse_entry;
+          if ((*callback)(ctx, callback_data) < 0)
+            {
+              ctx->errnum = IPMI_SEL_PARSE_ERR_CALLBACK_ERROR;
+              goto cleanup;
+            }
+        }
+
+      if (!list_append (ctx->sel_entries, sel_parse_entry))
+        {
+          SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+          goto cleanup;
+        }
+      sel_parse_entry = NULL;
+
+      goto out;
+    }
+
   for (record_id = record_id_start;
        record_id <= record_id_last && record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
        record_id = next_record_id)
