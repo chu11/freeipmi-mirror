@@ -52,7 +52,7 @@ EXTRA_DIST = \
 	manpage-common-interpret-oem-data.man \
 	manpage-common-oem-interpretation.man \
 	manpage-common-entity-sensor-names.man \
-	manpage-common-show-sensor-type.man \
+	manpage-common-no-sensor-type-output.man \
 	manpage-common-comma-separated-output.man \
 	manpage-common-no-header-output.man \
 	manpage-common-non-abbreviated-units.man \
