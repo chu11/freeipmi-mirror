@@ -1419,8 +1419,6 @@ output:
 
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " ; %s", outbuf);
-  else
-    pstdout_printf (state_data->pstate, " ; %s", IPMI_SEL_NA_STRING);
 
   return (1);
 }
