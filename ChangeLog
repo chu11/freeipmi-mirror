@@ -1,3 +1,9 @@
+2009-10-05  Albert Chu <chu11@llnl.gov>
+
+	*
+	libfreeipmi/include/freeipmi/cmds/ipmi-bmc-watchdog-timer-cmds.h:
+	Fix macro calculation bug.
+	
 2009-10-02  Albert Chu <chu11@llnl.gov>
 
 	* Change --show-sensor-type back to --no-sensor-type-output.
