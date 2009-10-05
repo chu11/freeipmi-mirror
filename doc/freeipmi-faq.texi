@@ -126,7 +126,7 @@ Since the 0.1.0 release, Z Research developers have contributed
 ipmi-chassis, ipmi-raw, ipmi-locate, and portions of ipmi-pef-config.
 LLNL has contributed IPMI 2.0 support, hostrange support, ipmiconsole,
 ipmimonitoring, ipmidetect, ipmi-sensors-config, ipmi-chassis-config,
-bmc-device, ipmi-oem, and portions of ipmi-pef-config.
+bmc-device, ipmi-oem, ipmi-dcmi, and portions of ipmi-pef-config.
 
 (Note: The original FreeIPMI developers from California Digital
 Corp. are now at Zresearch Inc.)
