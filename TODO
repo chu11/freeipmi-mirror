@@ -95,11 +95,6 @@ destination address vlan tags (or would be in ipmi-pef-config?)
 all lan destination config (or would be in ipmi-pef-config?)
 (NEVER TESTED) bmc password threshold
 
-sensor/monitoring/sel
----------------------
-no-header-output
-- for scripting
-
 sensors/monitoring
 ------------------
 (TEST) make sure bridging still works w/ sensor-read lib
