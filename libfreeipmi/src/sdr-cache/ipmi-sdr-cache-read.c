@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-read.c,v 1.30 2009-09-15 17:40:29 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-read.c,v 1.31 2009-10-05 21:07:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -500,7 +500,8 @@ ipmi_sdr_cache_search_sensor (ipmi_sdr_cache_ctx_t ctx, uint8_t sensor_number, u
            * for this case if the sensor_owner_id matches up.
            */
           if (sensor_owner_id_current == sensor_owner_id
-              && record_type_current == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+              && (record_type_current == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+                  || record_type_current == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD))
             {
               uint8_t share_count;
               

@@ -1902,7 +1902,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                    NULL,
                                    0,
                                    !state_data->prog_data->args->non_abbreviated_units,
-				   0,
+				   (entity_ptr) ? 1 : 0, /* shared_sensors */
                                    1, /* count_event_only_records */
                                    0,
                                    entity_ptr,

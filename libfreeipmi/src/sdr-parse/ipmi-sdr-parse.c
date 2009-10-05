@@ -3581,6 +3581,7 @@ ipmi_sdr_parse_sensor_record_sharing (ipmi_sdr_parse_ctx_t ctx,
     }
 
   acceptable_record_types = IPMI_SDR_PARSE_RECORD_TYPE_COMPACT_SENSOR_RECORD;
+  acceptable_record_types |= IPMI_SDR_PARSE_RECORD_TYPE_EVENT_ONLY_RECORD;
 
   if (!(obj_sdr_record = _sdr_record_get_common (ctx,
                                                  sdr_record,

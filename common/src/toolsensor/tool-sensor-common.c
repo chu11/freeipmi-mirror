@@ -214,7 +214,8 @@ get_entity_sensor_name_string (pstdout_state_t pstate,
       if (entity_id_counts->count[entity_id] > 1)
         {
           /* special case if sensor sharing is involved */
-          if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+          if ((record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+               || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
               && sensor_number)
             {
               uint8_t share_count;
@@ -763,7 +764,8 @@ _store_entity_id_count (pstdout_state_t pstate,
     entity_id_counts->count[entity_id] = entity_instance;
 
   /* special case if sensor sharing is involved */
-  if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+  if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+      || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
     {
       uint8_t share_count;
       uint8_t entity_instance_sharing;
@@ -1097,7 +1099,8 @@ _store_column_widths_shared (pstdout_state_t pstate,
       return (-1);
     }
 
-  if (record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
+  if (record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
+      && record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
     {
       if (_store_column_widths (pstate,
                                 sdr_parse_ctx,
