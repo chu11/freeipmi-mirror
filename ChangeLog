@@ -1,5 +1,9 @@
 2009-10-05  Albert Chu <chu11@llnl.gov>
 
+	* Tagged Release-0_8_0_beta1.
+	
+2009-10-05  Albert Chu <chu11@llnl.gov>
+
 	*
 	libfreeipmi/include/freeipmi/cmds/ipmi-bmc-watchdog-timer-cmds.h:
 	Fix macro calculation bug.
