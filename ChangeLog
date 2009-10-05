@@ -1,6 +1,8 @@
 2009-10-05  Albert Chu <chu11@llnl.gov>
 
 	* Support shared sensors w/ event only sdr records.
+
+	* doc/: Various tweaks.
 	
 2009-10-05  Albert Chu <chu11@llnl.gov>
 
