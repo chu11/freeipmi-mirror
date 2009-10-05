@@ -6,9 +6,9 @@ o Support ipmi-dcmi, Data Center Management Interface (often referred
   to as DCM or DCMI).
 o Make output of ipmi-sel, ipmi-sensors, and ipmimonitoring easier to
   read and consistent to each other.  Under default output, sensors
-  listed in ipmi-sensors and ipmimonitoring are identical.  Under
-  default output, the sensor type of each entry is not output.  Legacy
+  listed in ipmi-sensors and ipmimonitoring are identical.  Legacy
   output is supported through the --legacy-output option.
+o Rename pef-config to ipmi-pef-config for naming consistency.
 o Make output of ipmi-chassis, bmc-info, bmc-device, and info output
   of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
   each other.
@@ -23,13 +23,12 @@ o Support sensor unit percentages, rates, and modifiers (i.e. "%
 o Support non-abbreviated units (i.e. "Amps" instead of "A") in most
   tools.
 o Output IANA Manufacturer Name when appropriate in most tools.
-o Output additional information in many tools.
 o Support Entity ID based sensor naming through the
   --entity-sensor-names option in many tools.
-o Support OEM output through the --interpret-oem-data option in many
+o Support OEM interpreted output through the --interpret-oem-data
+  option in many tools.
+o "Library-ize" much of the functionality originally only included in
   tools.
-o "Library-ize" much of the functionality originally only inside the
-  tools.  
 o Re-work libipmimonitoring to return sensor events for all sensors,
   not just non-threshold sensors.  Resulted in an API change.
 o Removed many short options for more consistent command line
@@ -38,8 +37,7 @@ o Removed many short options for more consistent command line
   popular options.  Short options have been removed from ipmipower,
   ipmiconsole, bmc-watchdog, ipmi-chassis, ipmimonitoring, ipmi-sel,
   and ipmi-raw. See details below for specific short options removed.
-o Rename pef-config to ipmi-pef-config for naming consistency.
-o Various new options and features added to various tools.
+o Various new options and features added to most tools.
 o Various minor feature enhancements.
 o Various bug fixes.
 o Various documentation updates.
@@ -52,19 +50,19 @@ o ipmi-dcmi
 o ipmi-sel
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
-  - Under default output, do not report the sensor type.  It is often
-    redundant to the name of the sensor.
   - Use short-message event strings instead of long ones for readability.
-  - Support --legacy-output option.
+  - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
+    of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
+    each other.
   - Support --verbose option to offer verbose, very verbose, and very
-    very verbose additional SEL event information.
+    very verbose SEL event information.
   - Support --display and --display-range options.
   - Support --exclude-display and --exclude-display-range options.
   - Support --system-event-only and --oem-event-only options.
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
   - Support --entity-sensor-names option.
-  - Support --show-sensor-type option.
+  - Support --no-sensor-type-output option.
   - Support --interpret-oem-data option.
   - Support Inventec 5441/Dell Xanadu2 OEM SEL records.
   - Support Dell Poweredge R610/R710 OEM SEL records.
@@ -75,12 +73,9 @@ o ipmi-sel
   - Output manufacturer name with "Manufacturer ID" if name available.
   - Support sensor unit percentages, rates and modifiers (i.e. "%
     hit", "gigabyte per minute", "pounds / cu in").
-  - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
-    of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
-    each other.
   - Output allocation information with --info if available.
-  - Output OEM hex code in consistent format.
   - Output hex code more often if translation to string not available.
+  - Output OEM hex codes in consistent format.
   - Re-work to use new libfreeipmi sel-parse sub library.
   - Remove legacy option to dump hex output to optional filename.
   - Removed the following short options (long options remain).
@@ -92,9 +87,9 @@ o ipmi-sel
 o ipmi-sensors
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
-  - Under default output, do not report the sensor type.  It is often
-    redundant to the name of the sensor.
-  - Support --legacy-output option.
+  - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
+    of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
+    each other.
   - For consistency to other tools, outputs of "NA" are now "N/A".
   - Events are now surrounded by single quotes (') instead of square
     brackets ([]).
@@ -107,6 +102,8 @@ o ipmi-sensors
     maintained.
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
+  - Rename --sensors option to --record-ids.  Maintain old options for
+    backwards compatability.
   - Support --exclude-record-ids option.
   - Support --exclude-sensor-types option.
   - Support "all" and "none" inputs for sensor-types and record-ids
@@ -114,22 +111,17 @@ o ipmi-sensors
   - Support --comma-separated-output option.
   - Support --no-header-output option.
   - Support --shared-sensors option.
-  - Rename --sensors option to --record-ids.  Maintain old options for
-    backwards compatability.
+  - Support --entity-sensor-names option.
+  - Support --no-sensor-type-output option.
+  - Support --interpret-oem-data option.
+  - Support Dell Poweredge R610/R710 OEM sensors.
+  - Support Supermicro X8DTH OEM sensors.
   - Do not output Sensor Reading for discrete sensors under verbose
     mode (because the result is always "N/A").
   - Do not output SDR event records type under verbose output, only in very
     verbose output.
   - Support sensor unit percentages, rates and modifiers (i.e. "%
     hit", "gigabyte per minute", "pounds / cu in").
-  - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
-    of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
-    each other.
-  - Support --entity-sensor-names option.
-  - Support --show-sensor-type option.
-  - Support --interpret-oem-data option.
-  - Support Dell Poweredge R610/R710 OEM sensors.
-  - Support Supermicro X8DTH OEM sensors.
   - Output allocation information with --sdr-info if available.
   - Output Entity ID under verbose instead of very verbose mode.
   - Under very verbose output, "Sensor Status" is now "Sensor Event".
@@ -168,8 +160,6 @@ o ipmi-sensors
 o ipmimonitoring
   - Alter output to make fields easier to read, consistent to other
     tools, and more consistent to IPMI (legacy output option supported).
-  - Under default output, do not report the sensor type.  It is often
-    redundant to the name of the sensor.
   - "Monitoring Status" is now listed as "Sensor State" for
     consistency to libipmimonitoring library definition.
   - Sensor events are now output for all sensors.  Sensor readings are
@@ -182,6 +172,10 @@ o ipmimonitoring
     maintained.
   - With default output, output same sensors as listed in
     ipmi-sensors, including some sensors that can't be interpreted.
+  - Sensors that can't be read or don't exist (i.e. "N/A", "Unknown")
+    are now *not* surrounded by single quotes (').
+  - A sensor event of "NONE" is now output instead of "OK" if no
+    sensor events are indicated.
   - Support --exclude-record-ids option.
   - Support --exclude-sensor-types option.
   - Support "all" and "none" inputs for sensor-types and record-ids
@@ -189,19 +183,14 @@ o ipmimonitoring
   - Support --ignore-non-interpretable-sensors option.
   - Rename --sensors option to --record-ids.  Maintain old options for
     backwards compatability.
-  - Support --legacy-output option.
   - Remove --regenerate-sdr-cache legacy option due to conflict with
     newer option.
-  - Sensors that can't be read or don't exist (i.e. "N/A", "Unknown")
-    are now *not* surrounded by single quotes (').
-  - A sensor event of "NONE" is now output instead of "OK" if no
-    sensor events are indicated.
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").
   - Support --comma-separated-output option.
   - Support --no-header-output option.
   - Support --entity-sensor-names option.
-  - Support --show-sensor-type option.
+  - Support --no-sensor-type-output option.
   - Support --interpret-oem-data option.
   - Support --shared-sensors option.
   - Utilize libipmimonitoring callback routines to make sensors output
@@ -282,7 +271,6 @@ o ipmi-chassis
     etc. status fields output all fields instead of only the
     active/allowed/true/etc. fields.
   - Output some text more consistently to IPMI specification.
-  - Cleanup output formats.
   - Rename --get-status option to --get-chassis-status.  Legacy option
     still supported.
   - Rename --get-capabilities option to --get-chassis-capabilities.
