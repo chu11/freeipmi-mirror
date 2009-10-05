@@ -81,7 +81,7 @@ Using the --commit and --filename options, commit the checked out
 configuration file back to the BMC.
 
 Ensure that the default checked out configuration can be written back.
-If it cannot, is there an "default" configuration that is "invalid"?
+If it cannot, is there a "default" configuration that is "invalid"?
 
 Test)
 
@@ -341,7 +341,7 @@ If any parameters on the system are read only, does bmc-config output
 "Read Only Field" appropriately?
 
 If not, is the field returning the proper completion code (typically
-0x82).
+0x82)?
 
 Bmc-info Testing
 ----------------
@@ -524,7 +524,7 @@ Ipmiconsole Testing
 Goal: Ensure all important features function properly.
 
 Configure all BIOS settings and SOL settings to enable SOL.  Enable
-the remote machine to except sysrqs (in Linux, this requires
+the remote machine to accept sysrqs (in Linux, this requires
 configuration of console=ttySX on the kernel boot line).
 
 For purpose of this set of tests, consider this set of configuration
@@ -624,7 +624,7 @@ Configure sol_privilege_level to "user".
 Execute ipmiconsole, authentication with SOL1 and privilege level user
 (-l user), verify tool:
 - Establishes a SOL session by outputting "[SOL established]"
-- Verify session can be exitted cleanly (by default type &.).
+- Verify session can be exitted cleanly (by default type '&.').
 
 Test)
 
@@ -641,9 +641,9 @@ Test)
 
 Establish a SOL session.
 
-While in a session, generate a break (by default generated via &B)
+While in a session, generate a break (by default generated via '&B')
 and ensure the remote console has received it.  In Linux, if sysrqs
-are enabled properly, an &B? should output the linux sysrq menu.
+are enabled properly, a '&B?' should output the linux sysrq menu.
 
 Test)
 

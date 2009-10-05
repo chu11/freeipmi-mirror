@@ -190,15 +190,12 @@ the remote node.  This can disrupt the CPU of running jobs on the
 cluster and removes the advantage that IPMI over LAN does not
 interrupt a CPU.
 
-Starting with FreeIPMI 0.4.1, hostrange support has been added into
-ipmi-chassis, ipmi-fru, ipmi-raw, ipmi-sensors, ipmi-sel, bmc-info,
-and ipmimonitoring (it has existed in ipmipower since 0.1.0.  In later
-releases it has been extended to other tools).  More than one node at
-a time can be specified on the command line using the hostrange format
-similar in pdsh.  Using a threaded model similar to pdsh, each of the
-tools will create a sliding-window of threads, each executing
-out-of-band IPMI in parallel.  The number of threads in the window can
-be increased or decreased using the fanout -F option.
+Hostrange support has been added into most FreeIPMI tools.  More than
+one node at a time can be specified on the command line using the
+hostrange format similar in pdsh.  Using a threaded model similar to
+pdsh, each of the tools will create a sliding-window of threads, each
+executing out-of-band IPMI in parallel.  The number of threads in the
+window can be increased or decreased using the fanout -F option.
 
 The tools now have similar functionality to pdsh, but all of the IPMI
 communication is done out-of-band.  Ipmipower, which supported
@@ -211,69 +208,61 @@ out our local usernames and passwords of course :-)
 
 For example:
 
-> ipmi-sensors -h "pwopr[0-5]" -u XXX -p YYY -s 10
-pwopr0: 10: CPU3 Vcore (Voltage): 1.31 V (1.04/1.65): [OK]
-pwopr5: 10: CPU3 Vcore (Voltage): 1.25 V (1.04/1.65): [OK]
-pwopr1: 10: CPU3 Vcore (Voltage): 1.23 V (1.04/1.65): [OK]
-pwopr3: 10: CPU2 Vcore (Voltage): 1.26 V (1.06/1.63): [OK]
-pwopr2: 10: CPU2 Vcore (Voltage): 1.32 V (1.06/1.63): [OK]
-pwopr4: 10: CPU2 Vcore (Voltage): 1.26 V (1.06/1.63): [OK]
+> ipmi-sensors -h "pwopr[0-5]" -u XXX -p YYY --record-ids=10
+pwopr0: 10 | CPU3 Vcore | Voltage | 1.31       | V     | 'OK'
+pwopr5: 10 | CPU3 Vcore | Voltage | 1.25       | V     | 'OK'
+pwopr1: 10 | CPU3 Vcore | Voltage | 1.23       | V     | 'OK'
+pwopr3: 10 | CPU3 Vcore | Voltage | 1.26       | V     | 'OK'
+pwopr2: 10 | CPU3 Vcore | Voltage | 1.32       | V     | 'OK'
+pwopr4: 10 | CPU3 Vcore | Voltage | 1.26       | V     | 'OK'
 
 Dshback functionality has been added with the -B (--buffered) and -C
 (--consolidated) options.
 
-> bmc-info -h "pwopr[0-5]" -u XXX -p YYY -B
+> bmc-info -h "pwopr[0-5]" -u XXX -p YYY --get-device-id -B
 ----------------
 pwopr5
 ----------------
-Device ID:         22
-Device Revision:   1
-Firmware Revision: 1.12
-                   [Device Available (normal operation)]
-IPMI Version:      2.0
-Additional Device Support:
-                   [Sensor Device]
-                   [SDR Repository Device]
-                   [SEL Device]
-                   [FRU Inventory Device]
-                   [Chassis Device]
-Manufacturer ID:   28C5h
-Product ID:        4h
-Aux Firmware Revision Info: 38420000h
-Channel Information:
-       Channel No: 1
-      Medium Type: 802.3 LAN
-    Protocol Type: IPMB-1.0
-       Channel No: 5
-      Medium Type: Asynch. Serial/Modem (RS-232)
-    Protocol Type: IPMB-1.0
+Device ID             : 34
+Device Revision       : 1
+Device SDRs           : unsupported
+Firmware Revision     : 1.0c
+Device Available      : yes (normal operation)
+IPMI Version          : 2.0
+Sensor Device         : supported
+SDR Repository Device : supported
+SEL Device            : supported
+FRU Inventory Device  : supported
+IPMB Event Receiver   : unsupported
+IPMB Event Generator  : unsupported
+Bridge                : unsupported
+Chassis Device        : supported
+Manufacturer ID       : Peppercon AG (10437)
+Product ID            : 4
+Auxiliary Firmware Revision Information : 38420000h
 <snip - there's a lot more of the same stuff>
 
-> bmc-info -h "pwopr[0-5]" -u XXX -p YYY -C
+> bmc-info -h "pwopr[0-5]" -u XXX -p YYY --get-device-id -C
 ----------------
 pwopr[0-1,5]
 ----------------
-Device ID:         22
-Device Revision:   1
-Firmware Revision: 1.12
-                   [Device Available (normal operation)]
-IPMI Version:      2.0
-Additional Device Support:
-                   [Sensor Device]
-                   [SDR Repository Device]
-                   [SEL Device]
-                   [FRU Inventory Device]
-                   [Chassis Device]
-Manufacturer ID:   28C5h
-Product ID:        4h
-Aux Firmware Revision Info: 38420000h
-Channel Information:
-       Channel No: 1
-      Medium Type: 802.3 LAN
-    Protocol Type: IPMB-1.0
-       Channel No: 5
-      Medium Type: Asynch. Serial/Modem (RS-232)
-    Protocol Type: IPMB-1.0
+Device ID             : 34
+Device Revision       : 1
+Device SDRs           : unsupported
+Firmware Revision     : 1.0c
+Device Available      : yes (normal operation)
+IPMI Version          : 2.0
+Sensor Device         : supported
+SDR Repository Device : supported
+SEL Device            : supported
+FRU Inventory Device  : supported
+IPMB Event Receiver   : unsupported
+IPMB Event Generator  : unsupported
+Bridge                : unsupported
+Chassis Device        : supported
+Manufacturer ID       : Peppercon AG (10437)
+Product ID            : 4
+Auxiliary Firmware Revision Information : 38420000h
 <snip - different firmware for pwopr[2-4]>
 
 If you have happened to install pdsh on your system, you may use
@@ -296,14 +285,14 @@ undetected: 1: pwopr6
 
 For example, we re-introduce the bad 'pwopr6' node into the hostrange:
 
-> time ipmi-sensors -h "pwopr[0-6]" -u XXX -p YYY -s 10
-pwopr5: 10: CPU3 Vcore (Voltage): 1.25 V (1.04/1.65): [OK]
-pwopr4: 10: CPU2 Vcore (Voltage): 1.26 V (1.06/1.63): [OK]
-pwopr0: 10: CPU3 Vcore (Voltage): 1.31 V (1.04/1.65): [OK]
-pwopr3: 10: CPU2 Vcore (Voltage): 1.26 V (1.06/1.63): [OK]
-pwopr2: 10: CPU2 Vcore (Voltage): 1.32 V (1.06/1.63): [OK]
-pwopr1: 10: CPU3 Vcore (Voltage): 1.23 V (1.04/1.65): [OK]
-pwopr6: ipmi_open_outofband(): Connection timed out
+> time ipmi-sensors -h "pwopr[0-6]" -u XXX -p YYY --record-ids=10
+pwopr5: 10 | CPU3 Vcore | Voltage | 1.25       | V     | 'OK'
+pwopr4: 10 | CPU3 Vcore | Voltage | 1.26       | V     | 'OK'
+pwopr0: 10 | CPU3 Vcore | Voltage | 1.31       | V     | 'OK'
+pwopr3: 10 | CPU3 Vcore | Voltage | 1.26       | V     | 'OK'
+pwopr2: 10 | CPU3 Vcore | Voltage | 1.32       | V     | 'OK'
+pwopr1: 10 | CPU3 Vcore | Voltage | 1.23       | V     | 'OK'
+pwopr6: ipmi_ctx_open_outofband(): Connection timed out
 real    0m25.000s
 user    0m0.029s
 sys     0m0.003s
@@ -311,13 +300,13 @@ sys     0m0.003s
 Running with the -E option (and assuming ipmidetectd has been setup
 and is running) the -E option equickly eliminates pwopr6.
 
-> time ipmi-sensors -h "pwopr[0-6]" -u XXX -p YYY -s 10 -E
-pwopr0: 10: CPU3 Vcore (Voltage): 1.31 V (1.04/1.65): [OK]
-pwopr2: 10: CPU2 Vcore (Voltage): 1.32 V (1.06/1.63): [OK]
-pwopr1: 10: CPU3 Vcore (Voltage): 1.23 V (1.04/1.65): [OK]
-pwopr4: 10: CPU2 Vcore (Voltage): 1.26 V (1.06/1.63): [OK]
-pwopr5: 10: CPU3 Vcore (Voltage): 1.25 V (1.04/1.65): [OK]
-pwopr3: 10: CPU2 Vcore (Voltage): 1.26 V (1.06/1.63): [OK]
+> time ipmi-sensors -h "pwopr[0-6]" -u XXX -p YYY --record-ids=10 -E
+pwopr0: 10 | CPU3 Vcore | Voltage | 1.31       | V     | 'OK'
+pwopr2: 10 | CPU3 Vcore | Voltage | 1.32       | V     | 'OK'
+pwopr1: 10 | CPU3 Vcore | Voltage | 1.23       | V     | 'OK'
+pwopr4: 10 | CPU3 Vcore | Voltage | 1.26       | V     | 'OK'
+pwopr5: 10 | CPU3 Vcore | Voltage | 1.25       | V     | 'OK'
+pwopr3: 10 | CPU3 Vcore | Voltage | 1.26       | V     | 'OK'
 
 real    0m0.113s
 user    0m0.030s
@@ -370,24 +359,21 @@ output.
 
 > ipmi-sensors -h "pwopr[0-6]" -u XXX -p YYY -g temperature -E -C -q
 ----------------
-pwopr[2-3]
+pwopr[0-2,4-5]
 ----------------
-4: CPU1 Temp: [OK]
-5: CPU2 Temp: [OK]
-6: CPU3 Temp: [OK]
-7: CPU4 Temp: [OK]
-8: Sys Temp: [OK]
+4  | CPU1 Temp | Temperature | 'OK'
+5  | CPU2 Temp | Temperature | 'OK'
+6  | CPU3 Temp | Temperature | 'OK'
+7  | CPU4 Temp | Temperature | 'OK'
+8  | Sys Temp  | Temperature | 'OK'
 ----------------
-pwopr[0-1,4-5]
+pwopr3
 ----------------
-3: CPU1 Temp: [OK]
-4: CPU2 Temp: [OK]
-5: CPU3 Temp: [OK]
-6: CPU4 Temp: [OK]
-7: Sys Temp: [OK]
-
-(Note: the firmware on this particular cluster is not-consistent
-across it, leading to the different sensor record ids in the above.)
+4  | CPU1 Temp | Temperature | 'OK'
+5  | CPU2 Temp | Temperature | 'OK'
+6  | CPU3 Temp | Temperature | 'OK'
+7  | CPU4 Temp | Temperature | 'OK'
+8  | Sys Temp  | Temperature | 'At or Below (<=) Lower Non-Recoverable Threshold'
 
 Based on what you see, you can of course dig deeper on those
 individual nodes.  I imagine many users will want to run ipmi-sensors

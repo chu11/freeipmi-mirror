@@ -162,55 +162,47 @@ ipmi-sel, bmc-info, ipmimonitoring, etc.) across a cluster is
 supported through hostranged input and output.  For example:
 
 @example
-# > bmc-info -h "pwopr[0-5]" -u XXX -p XXX -C
+# > bmc-info -h "pwopr[0-5]" -u XXX -p XXX --get-device-id -C
 ----------------
 pwopr[0-1,5]
 ----------------
-Device ID:         22
-Device Revision:   1
-Firmware Revision: 1.12
-                   [Device Available (normal operation)]
-IPMI Version:      2.0
-Additional Device Support:
-                   [Sensor Device]
-                   [SDR Repository Device]
-                   [SEL Device]
-                   [FRU Inventory Device]
-                   [Chassis Device]
-Manufacturer ID:   28C5h
-Product ID:        4h
-Aux Firmware Revision Info: 38420000h
-Channel Information:
-       Channel No: 1
-      Medium Type: 802.3 LAN
-    Protocol Type: IPMB-1.0
-       Channel No: 5
-      Medium Type: Asynch. Serial/Modem (RS-232)
-    Protocol Type: IPMB-1.0
+Device ID             : 34
+Device Revision       : 1
+Device SDRs           : unsupported
+Firmware Revision     : 1.0c
+Device Available      : yes (normal operation)
+IPMI Version          : 2.0
+Sensor Device         : supported
+SDR Repository Device : supported
+SEL Device            : supported
+FRU Inventory Device  : supported
+IPMB Event Receiver   : unsupported
+IPMB Event Generator  : unsupported
+Bridge                : unsupported
+Chassis Device        : supported
+Manufacturer ID       : Peppercon AG (10437)
+Product ID            : 4
+Auxiliary Firmware Revision Information : 38420000h
 ----------------
 pwopr[2-4]
 ----------------
-Device ID:         22
-Device Revision:   1
-Firmware Revision: 1.23
-                   [Device Available (normal operation)]
-IPMI Version:      2.0
-Additional Device Support:
-                   [Sensor Device]
-                   [SDR Repository Device]
-                   [SEL Device]
-                   [FRU Inventory Device]
-                   [Chassis Device]
-Manufacturer ID:   28C5h
-Product ID:        4h
-Aux Firmware Revision Info: 38420000h
-Channel Information:
-       Channel No: 1
-      Medium Type: 802.3 LAN
-    Protocol Type: IPMB-1.0
-       Channel No: 5
-      Medium Type: Asynch. Serial/Modem (RS-232)
-    Protocol Type: IPMB-1.0
+Device ID             : 34
+Device Revision       : 1
+Device SDRs           : unsupported
+Firmware Revision     : 1.17
+Device Available      : yes (normal operation)
+IPMI Version          : 2.0
+Sensor Device         : supported
+SDR Repository Device : supported
+SEL Device            : supported
+FRU Inventory Device  : supported
+IPMB Event Receiver   : unsupported
+IPMB Event Generator  : unsupported
+Bridge                : unsupported
+Chassis Device        : supported
+Manufacturer ID       : Peppercon AG (10437)
+Product ID            : 4
+Auxiliary Firmware Revision Information : 38420000h
 @end example
 
 In the above example, its clear to see that pwopr[2-4] have different
