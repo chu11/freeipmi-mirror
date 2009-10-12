@@ -1,3 +1,7 @@
+2009-10-12  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/: Support --tail option.
+	
 2009-10-05  Albert Chu <chu11@llnl.gov>
 
 	* Support shared sensors w/ event only sdr records.

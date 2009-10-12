@@ -72,6 +72,12 @@ Display SEL records from record id START to END.
 \fB\-\-exclude\-display-range\fR=\fBSTART\-END\fR
 Exclude display of SEL records from record id START to END.
 .TP
+\fB\-\-tail\fR=\fBcount\fR
+Display approximately the last \fIcount\fR SEL records.  The display
+count is calculated by approximating the record ids of the last SEL
+records.  It's correctness depends highly on the SEL implementation by
+the vendor.
+.TP
 \fB\-\-clear\fR
 Clear SEL.
 .TP

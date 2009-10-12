@@ -58,6 +58,7 @@ o ipmi-sel
     very verbose SEL event information.
   - Support --display and --display-range options.
   - Support --exclude-display and --exclude-display-range options.
+  - Support --tail option.
   - Support --system-event-only and --oem-event-only options.
   - Support --non-abbreviated-units option to output no abbreviated
     units (i.e. "Amps" instead of "A").

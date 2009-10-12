@@ -50,12 +50,6 @@ exclude hosts option
   attribute/netgroups attribute).
 if user inputs hostname of localhost, do inband not outofband?
 
-ipmi-sel
---------
-head/tail on record counts
-- head seems useless
-- tail, useful, but will always be an estimate
-
 bmc-config
 ----------
 supermicro

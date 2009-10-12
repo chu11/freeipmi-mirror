@@ -64,7 +64,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t major, minor;
-  uint32_t entries, free_space;
+  uint16_t entries, free_space;
   uint64_t val;
   char timestr[512];
   int rv = -1;
@@ -1845,11 +1845,63 @@ _sel_record_id_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
 }
 
 static int
+_sel_record_id_first_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
+{
+  ipmi_sel_state_data_t *state_data;
+  int rv = -1;
+
+  assert (ctx);
+  assert (callback_data);
+
+  state_data = (ipmi_sel_state_data_t *)callback_data;
+
+  if (ipmi_sel_parse_read_record_id (ctx, &state_data->first_record_id) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sel_parse_read_record_id: %s\n",
+                       ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+      goto cleanup;
+    }
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_sel_record_id_last_callback (ipmi_sel_parse_ctx_t ctx, void *callback_data)
+{
+  ipmi_sel_state_data_t *state_data;
+  int rv = -1;
+
+  assert (ctx);
+  assert (callback_data);
+
+  state_data = (ipmi_sel_state_data_t *)callback_data;
+
+  if (ipmi_sel_parse_read_record_id (ctx, &state_data->last_record_id) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sel_parse_read_record_id: %s\n",
+                       ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+      goto cleanup;
+    }
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
 _display_sel_records (ipmi_sel_state_data_t *state_data)
 {
   struct ipmi_sel_arguments *args;
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
+  uint64_t val;
+
   assert (state_data);
 
   args = state_data->prog_data->args;
@@ -1971,8 +2023,6 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
   if (args->interpret_oem_data)
     {
-      uint64_t val;
-
       if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
         {
           pstdout_fprintf (state_data->pstate,
@@ -2061,6 +2111,9 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                            ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
           goto cleanup;
         }
+
+      fiid_obj_destroy (obj_cmd_rs);
+      obj_cmd_rs = NULL;
     }
 
   if (state_data->prog_data->args->display)
@@ -2093,6 +2146,122 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
           goto cleanup;
         }
     }
+  else if (state_data->prog_data->args->tail)
+    {
+      uint16_t entries;
+      uint16_t range_begin;
+
+      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sel_info_rs)))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_create: %s\n",
+                           strerror (errno));
+          goto cleanup;
+        }
+
+      if (ipmi_cmd_get_sel_info (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_get_sel_info: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+
+      if (FIID_OBJ_GET (obj_cmd_rs, "entries", &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'entries': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      entries = val;
+      
+      /* Special case, display all records */
+      if (entries <= state_data->prog_data->args->tail_count)
+        {
+          if (ipmi_sel_parse (state_data->sel_parse_ctx,
+                              IPMI_SEL_RECORD_ID_FIRST,
+                              IPMI_SEL_RECORD_ID_LAST,
+                              _sel_parse_callback,
+                              state_data) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sel_parse: %s\n",
+                               ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+              goto cleanup;
+            }
+          goto out;
+        }
+
+      if (ipmi_sel_parse (state_data->sel_parse_ctx,
+                          IPMI_SEL_RECORD_ID_FIRST,
+                          IPMI_SEL_RECORD_ID_FIRST,
+                          _sel_record_id_first_callback,
+                          state_data) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse: %s\n",
+                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+          goto cleanup;
+        }
+
+      if (ipmi_sel_parse (state_data->sel_parse_ctx,
+                          IPMI_SEL_RECORD_ID_LAST,
+                          IPMI_SEL_RECORD_ID_LAST,
+                          _sel_record_id_last_callback,
+                          state_data) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse: %s\n",
+                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+          goto cleanup;
+        }
+
+      /* Assume entries distributed evenly throughout SEL */
+
+      if ((state_data->last_record_id - state_data->first_record_id + 1) < entries)
+        {
+          /* Assume SEL record IDs separated by 1 */
+          
+          if ((state_data->prog_data->args->tail_count + 1) >= state_data->last_record_id)
+            range_begin = IPMI_SEL_RECORD_ID_FIRST;
+          else
+            range_begin = state_data->last_record_id - state_data->prog_data->args->tail_count + 1;
+        }
+      else
+        {
+          uint16_t spacing;
+
+          spacing = (state_data->last_record_id - state_data->first_record_id + 1) / entries;
+
+          if ((state_data->prog_data->args->tail_count * spacing + 1) >= state_data->last_record_id)
+            range_begin = IPMI_SEL_RECORD_ID_FIRST;
+          else
+            range_begin = state_data->last_record_id - (state_data->prog_data->args->tail_count * spacing) + 1;
+        }
+        
+      if (ipmi_sel_parse (state_data->sel_parse_ctx,
+                          range_begin,
+                          IPMI_SEL_RECORD_ID_LAST,
+                          _sel_parse_callback,
+                          state_data) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse: %s\n",
+                           ipmi_sel_parse_ctx_errormsg (state_data->sel_parse_ctx));
+          goto cleanup;
+        }
+
+      fiid_obj_destroy (obj_cmd_rs);
+      obj_cmd_rs = NULL;
+    }
   else
     {
       if (ipmi_sel_parse (state_data->sel_parse_ctx,
@@ -2109,8 +2278,10 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         }
     }
 
+ out:
   rv = 0;
  cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 

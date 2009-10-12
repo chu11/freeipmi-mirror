@@ -83,37 +83,39 @@ static struct argp_option cmdline_options[] =
       "Display SEL records from record id START to END.", 34},
     { "exclude-display-range", EXCLUDE_DISPLAY_RANGE_KEY, "START-END", 0,
       "Exclude display of SEL records from record id START to END.", 35},
+    { "tail", TAIL_KEY, "COUNT", 0,
+      "Display approximately the last count SEL records.", 36},
     { "clear", CLEAR_KEY, 0, 0,
-      "Clear SEL.", 36},
+      "Clear SEL.", 37},
     /* legacy */
     { "delete-all", DELETE_ALL_KEY, 0, OPTION_HIDDEN,
-      "Delete all SEL records.", 37},
+      "Delete all SEL records.", 38},
     { "delete",     DELETE_KEY,     "REC-LIST", 0,
-      "Delete SEL records by record ids.", 38},
+      "Delete SEL records by record ids.", 39},
     { "delete-range", DELETE_RANGE_KEY, "START-END", 0,
-      "Delete record ids from START to END in the SEL.", 39},
+      "Delete record ids from START to END in the SEL.", 40},
     { "system-event-only", SYSTEM_EVENT_ONLY_KEY, 0, 0,
-      "Output only system event records (i.e. don't output OEM records).", 40},
+      "Output only system event records (i.e. don't output OEM records).", 41},
     { "oem-event-only", OEM_EVENT_ONLY_KEY, 0, 0,
-      "Output only OEM event records.", 41},
+      "Output only OEM event records.", 42},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
-      "Hex-dump SEL records.", 42},
+      "Hex-dump SEL records.", 43},
     { "assume-system-event-records", ASSUME_SYSTEM_EVENT_RECORDS_KEY, 0, 0,
-      "Assume invalid record types are system event records.", 43},
+      "Assume invalid record types are system event records.", 44},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 44},
+      "Attempt to interpret OEM data.", 45},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 45},
+      "Output sensor names with entity ids and instances.", 46},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 46},
+      "Do not show sensor type output.", 47},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 47},
+      "Output fields in comma separated format.", 48},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 48},
+      "Do not output column headers.", 49},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 49},
+      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 50},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 50},
+      "Output in legacy format.", 51},
     { 0 }
   };
 
@@ -255,6 +257,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_sel_arguments *cmd_args = state->input;
   error_t ret;
+  char *ptr;
+  int value;
 
   switch (key)
     {
@@ -287,6 +291,25 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                    &(cmd_args->exclude_display_range1),
                    &(cmd_args->exclude_display_range2),
                    arg);
+      break;
+    case TAIL_KEY:
+      value = 0;
+      ptr = NULL;
+      errno = 0;
+      value = strtol (arg, &ptr, 10);
+      
+      if (errno
+          || ptr[0] != '\0'
+          || value <= 0
+          || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+          || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
+        {
+          fprintf (stderr, "invalid record count: %d\n", value);
+          exit (1);
+        }
+
+      cmd_args->tail = 1;
+      cmd_args->tail_count = value;
       break;
     case CLEAR_KEY:
     case DELETE_ALL_KEY:        /* legacy */
@@ -426,6 +449,8 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->exclude_display_range = 0;
   cmd_args->exclude_display_range1 = 0;
   cmd_args->exclude_display_range2 = 0;
+  cmd_args->tail = 0;
+  cmd_args->tail_count = 0;
   cmd_args->clear = 0;
   cmd_args->delete = 0;
   memset (cmd_args->delete_record_list,

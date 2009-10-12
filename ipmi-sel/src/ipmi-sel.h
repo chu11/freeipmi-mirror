@@ -32,25 +32,26 @@ enum ipmi_sel_argp_option_keys
   {
     VERBOSE_KEY = 'v',
     INFO_KEY = 'i',
-    DISPLAY_KEY,
-    EXCLUDE_DISPLAY_KEY,
-    DISPLAY_RANGE_KEY,
-    EXCLUDE_DISPLAY_RANGE_KEY,
-    CLEAR_KEY = 160,
-    DELETE_ALL_KEY = 161,       /* legacy */
-    DELETE_KEY = 162,
-    DELETE_RANGE_KEY = 163,
-    SYSTEM_EVENT_ONLY_KEY = 164,
-    OEM_EVENT_ONLY_KEY = 165,
-    HEX_DUMP_KEY = 166,
-    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 167,
-    INTERPRET_OEM_DATA_KEY = 168,
-    ENTITY_SENSOR_NAMES_KEY = 169,
-    NO_SENSOR_TYPE_OUTPUT_KEY = 170,
-    COMMA_SEPARATED_OUTPUT_KEY = 171,
-    NO_HEADER_OUTPUT_KEY = 172,
-    NON_ABBREVIATED_UNITS_KEY = 173,
-    LEGACY_OUTPUT_KEY = 174,
+    DISPLAY_KEY = 160,
+    EXCLUDE_DISPLAY_KEY = 161,
+    DISPLAY_RANGE_KEY = 162,
+    EXCLUDE_DISPLAY_RANGE_KEY = 163,
+    TAIL_KEY = 164,
+    CLEAR_KEY = 165,
+    DELETE_ALL_KEY = 166,       /* legacy */
+    DELETE_KEY = 167,
+    DELETE_RANGE_KEY = 168,
+    SYSTEM_EVENT_ONLY_KEY = 169,
+    OEM_EVENT_ONLY_KEY = 170,
+    HEX_DUMP_KEY = 171,
+    ASSUME_SYSTEM_EVENT_RECORDS_KEY = 172,
+    INTERPRET_OEM_DATA_KEY = 173,
+    ENTITY_SENSOR_NAMES_KEY = 174,
+    NO_SENSOR_TYPE_OUTPUT_KEY = 175,
+    COMMA_SEPARATED_OUTPUT_KEY = 176,
+    NO_HEADER_OUTPUT_KEY = 177,
+    NON_ABBREVIATED_UNITS_KEY = 178,
+    LEGACY_OUTPUT_KEY = 179,
   };
 
 struct ipmi_sel_arguments
@@ -72,6 +73,8 @@ struct ipmi_sel_arguments
   int exclude_display_range;
   uint16_t exclude_display_range1;
   uint16_t exclude_display_range2;
+  int tail;
+  uint16_t tail_count;
   int clear;
   int delete;
   uint16_t delete_record_list[IPMI_SEL_MAX_RECORD];
@@ -114,6 +117,9 @@ typedef struct ipmi_sel_state_data
   uint16_t product_id;
   uint8_t ipmi_version_major;
   uint8_t ipmi_version_minor;
+  /* for tail usage */
+  uint16_t first_record_id;
+  uint16_t last_record_id;
 } ipmi_sel_state_data_t;
 
 #endif
