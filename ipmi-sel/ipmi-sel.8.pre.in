@@ -41,20 +41,15 @@ To perform some advanced SEL management, please see
 The following options are specific to
 .B Ipmi-sel.
 .TP
-\fB\-v\fR, \fB\-\-verbose\fR
-Output verbose SEL output.  This option will output additional
-information such as additional event details.
+\fB\-v\fR
+Output verbose output.  This option will output event direction.
 .TP
 \fB\-vv\fR
-Output very verbose sensor output.  This option will output more
-additional information such as event direction.
-.TP
-\fB\-vvv\fR
-Output very very verbose sensor output.  This option will output more
-additional information than the very verbose option.  Most notably it
-will output additional hex codes to given information on ambiguous SEL
-entries.  For example, it will output Generator ID hex codes for
-sensors without names.
+Output very verbose output.  This option will output additional
+information than verbose output.  Most notably it will output
+additional hex codes to given information on ambiguous SEL entries.
+For example, it will output Generator ID hex codes for sensors without
+names.
 .TP
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about the SEL.

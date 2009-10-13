@@ -1,3 +1,7 @@
+2009-10-13  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/: Change verbosity defaults.
+	
 2009-10-12  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Support --tail option.

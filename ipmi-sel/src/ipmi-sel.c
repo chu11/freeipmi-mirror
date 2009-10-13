@@ -1024,7 +1024,7 @@ _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int 
 
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
-  assert (state_data->prog_data->args->verbose_count >= 2);
+  assert (state_data->prog_data->args->verbose_count >= 1);
 
   memset (outbuf, '\0', IPMI_SEL_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_parse_ctx,
@@ -1063,8 +1063,19 @@ _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int 
 static int
 _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
+  char fmtbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
   char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
   int outbuf_len;
+  char *fmt;
+  uint8_t event_type_code;
+  uint8_t event_data2_flag;
+  uint8_t event_data3_flag;
+  uint8_t event_data2;
+  uint8_t event_data3;
+  uint8_t sensor_type;
+  uint8_t event_data1_offset;
+  int check_for_na = 0;
+  int ret;
 
   assert (state_data);
   assert (!state_data->prog_data->args->legacy_output);
@@ -1096,34 +1107,6 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
         pstdout_printf (state_data->pstate, " | %s", IPMI_SEL_NA_STRING);
     }
 
-  return (1);
-}
-
-/* return 1 on success
- * return (0) on non-success, but don't fail
- * return (-1) on error
- */
-static int
-_normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int flags)
-{
-  char fmtbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
-  char outbuf[IPMI_SEL_OUTPUT_BUFLEN+1];
-  int outbuf_len;
-  char *fmt;
-  uint8_t event_type_code;
-  uint8_t event_data2_flag;
-  uint8_t event_data3_flag;
-  uint8_t event_data2;
-  uint8_t event_data3;
-  uint8_t sensor_type;
-  uint8_t event_data1_offset;
-  int check_for_na = 0;
-  int ret;
-
-  assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
-  assert (state_data->prog_data->args->verbose_count);
-
   if ((ret = _get_system_event_record_info (state_data,
                                             &event_type_code,
                                             &event_data2_flag,
@@ -1140,6 +1123,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
       if (_sel_parse_err_handle (state_data,
                                  "ipmi_sel_parse_read_sensor_type") < 0)
         return (-1);
+      return (0);
     }
   
   
@@ -1148,6 +1132,7 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
       if (_sel_parse_err_handle (state_data,
                                  "ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code") < 0)
         return (-1);
+      return (0);
     }
   
   /* note: previously set sel parse library separator to " ; "
@@ -1361,6 +1346,8 @@ _normal_output_event_detail (ipmi_sel_state_data_t *state_data, unsigned int fla
     strcat (fmtbuf, "%f");
   else if (event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
     strcat (fmtbuf, "%h");
+  else
+    goto out;
 
 output:
 
@@ -1421,6 +1408,7 @@ output:
   if (outbuf_len)
     pstdout_printf (state_data->pstate, " ; %s", outbuf);
 
+ out:
   return (1);
 }
 
@@ -1539,7 +1527,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
                             SENSORS_HEADER_NAME_STR,
                             SENSORS_HEADER_TYPE_STR);
 
-          if (state_data->prog_data->args->verbose_count >= 2)
+          if (state_data->prog_data->args->verbose_count >= 1)
             pstdout_printf (state_data->pstate, ",Event Direction");
           
           pstdout_printf (state_data->pstate, ",Event");
@@ -1578,7 +1566,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
                               SENSORS_HEADER_TYPE_STR);
             }
           
-          if (state_data->prog_data->args->verbose_count >= 2)
+          if (state_data->prog_data->args->verbose_count >= 1)
             pstdout_printf (state_data->pstate, " | Event Direction  ");
           
           pstdout_printf (state_data->pstate, " | Event");
@@ -1592,7 +1580,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   flags = IPMI_SEL_PARSE_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
   flags |= IPMI_SEL_PARSE_STRING_FLAGS_DATE_MONTH_STRING;
-  if (state_data->prog_data->args->verbose_count >= 3)
+  if (state_data->prog_data->args->verbose_count >= 2)
     flags |= IPMI_SEL_PARSE_STRING_FLAGS_VERBOSE;
   if (state_data->prog_data->args->non_abbreviated_units)
     flags |= IPMI_SEL_PARSE_STRING_FLAGS_NON_ABBREVIATED_UNITS;
@@ -1631,7 +1619,7 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
       if (!ret)
         goto newline_out;
 
-      if (state_data->prog_data->args->verbose_count >= 2)
+      if (state_data->prog_data->args->verbose_count >= 1)
         {
           if ((ret = _normal_output_event_direction (state_data, flags)) < 0)
             goto cleanup;
@@ -1645,15 +1633,6 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
 
       if (!ret)
         goto newline_out;
-
-      if (state_data->prog_data->args->verbose_count)
-        {
-          if ((ret = _normal_output_event_detail (state_data, flags)) < 0)
-            goto cleanup;
-
-          if (!ret)
-            goto newline_out;
-        }
     }
   else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
     {
