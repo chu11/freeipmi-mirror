@@ -12,6 +12,8 @@
 	Tweak message outputs appropriately for consistency and
 	correctness.
 	
+	* Tagged Release-0_8_0_beta2.
+
 2009-10-12  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Support --tail option.
