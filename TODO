@@ -108,9 +108,26 @@ OEM <manufacturer_id> <product_id> <generator_id> <sensor_type> <event_offset> <
 SPECIAL <generator_id> <sensor_type> <event_offset> <nominal|warning|critical>
 ---
 - extend to monitor/interpret SEL entries too??
-alternate idea: collapse into "sensor-read" library?
+ryan b. suggestions
+- make alternate config file to ipmi_monitoring_sensor_config
+- allow more than nominal | warning | critical, allow "info" too so like syslog
+  - allows user to config away things are normal and always happening, such as boot
+    events
 - make a "interpret sensor based on this info" function which returns
   nominal/warning/critical.
+  - so can support output in ipmi-sensors, ipmi-sel instead of new tool
+- another idea
+  - new lib "ipmiinterpret" or something like that?
+- on the other hand
+  - unlike sensors, no way to "limit" output or by record-id or sensor-type
+  - whatever events happened just happened
+  - difficult to differentiate between "info" events vs. "real issue" events
+    - on some mobos, fans/temps that don't exist, always report "lower non-recoverable"
+    - on some mobos, entity sensors always report "absent" if you never have
+      - but you can't differentiate betwwen "real issue" vs. non-issue
+        unless you program exact specific sensor numbers/record ids
+  - maybe best to leave as is, b/c that's just the nature of SEL
+  - leave to higher up analysis utilities to make use of data if they care
 
 ipmi-chassis-config
 -------------------
