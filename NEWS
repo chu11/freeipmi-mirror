@@ -54,8 +54,8 @@ o ipmi-sel
   - Make output of ipmi-chassis, bmc-info, bmc-device, and info output
     of ipmi-sel, ipmi-sensors, and ipmi-pef-config consistent to
     each other.
-  - Support --verbose option to offer verbose, very verbose, and very
-    very verbose SEL event information.
+  - Support --verbose option to offer verbose and very verbose SEL
+    event information.
   - Support --display and --display-range options.
   - Support --exclude-display and --exclude-display-range options.
   - Support --tail option.
