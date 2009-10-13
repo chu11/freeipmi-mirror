@@ -30,7 +30,7 @@ Sun X4140
 Inventec 5441/Dell Xanadu2
 Dell Poweredge R610/R710
 
-I have had some temporary access to:
+I have had some temporary access to the following for a short time:
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition)
@@ -61,8 +61,8 @@ Challenge requests from a different source port.
 
 Forgotten/Undocumented Motherboard(s): The only authentication
 supported by the motherboard is an OEM specific authentication.  No
-resolution implemented.  (Al comment: I think this was some really old
-Supermicro motherboard, but I am not really sure.)
+resolution implemented.  (Al comment: This was a really old Supermicro
+motherboard, but I can't remember which one.)
 
 Supermicro H8QME with SIMSO daughter card: The IPMI 2.0 packet
 responses for RAKP 2 have payload lengths that are off by 1.  Resolved
@@ -95,8 +95,8 @@ a workaround to adjust the hash data.
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): During the RAKP4 response, the integrity check value is
 incorrectly calculated based on the integrity algorithm instead of the
-authentication algorithm.  Resolved with a workaround
-to adjust the hash calculation.
+authentication algorithm.  Resolved with a workaround to adjust the
+hash calculation.
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): During the RAKP3 request, the name_only_lookup field must be
@@ -425,21 +425,24 @@ Dell 2950: Some sensors return sensor states that are invalid
 (i.e. return 0xC0 if only 0x1 through 0x20 are supported).  Resolved by
 ignoring sensor states that are unknown.
 
-Dell 2950: Some sensors return sensor data record not present
-completion codes (0xCB) for unknown reasons.  Resolved by ignoring
-sensors that return this return code.
+Dell 2950: Some sensors return
+IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT (0xCB)
+completion codes for unknown reasons.  Resolved by ignoring sensors
+that return this return code. [sensors-1]
 
-Sun V20Z: Some sensors return illegal sensor completion codes (0xCD)
-for unknown reasons.  Resolved by ignoring sensors that return this
-return code.
+Sun V20Z: Some sensors return
+IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE (0xCD) for
+unknown reasons.  Resolved by ignoring sensors that return this return
+code. [sensors-1]
 
-Dell 2650: Some sensors return parameter out of range completion codes
-(0xC9) for unknown reasons.  Resolved by ignoring sensors that return
-this return code.
+Dell 2650: Some sensors return IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE
+(0xC9) completion codes for unknown reasons.  Resolved by ignoring
+sensors that return this return code. [sensors-1]
 
-HP ProLiant DL145 G2: The get sensor reading command returns
-IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND for some sensors.  Resolved by
-ignoring sensors that return this return code.
+HP ProLiant DL145 G2: Some sensors return
+IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND (0xCE) completion codes for
+unknown reasons.  Resolved by ignoring sensors that return this return
+code. [sensors-1]
 
 Sun X4140: The Get Sensor Event Enable command always returns "sensor
 scanning disabled" bit.  No current resolution.
@@ -452,9 +455,10 @@ Inventec 5441/Dell Xanadu2: Several sensors have bogus Entity IDs.  In
 other words, not in the valid Entity ID range, or OEM defined range.
 No resolution required, output alternate text appropriately.
 
-Sun Fire X4450 w/ ELOM 3.0.0: Several sensors show
-IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED (0xD5 for some sensors.
-Resolved by ignoring sensors that return this return code.
+Sun Fire X4450 w/ ELOM 3.0.0: Some sensors return
+IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED (0xD5) completion codes
+for unknown reasons.  Resolved by ignoring sensors that return this
+return code. [sensors-1]
 
 ipmi-sel
 --------
@@ -472,4 +476,53 @@ resolution.
 
 HP DL 380 G5: Some SEL records report a record type of 0x00, which is
 illegal.  Resolved with workaround to assume a valid record type.
+
+Addendum
+--------
+
+[sensors-1]
+
+In all liklihood, these are all circumstances that the vendor wanted
+to say "this sensor isn't available on this motherboard".  (It is
+ironic that there are so many error codes vendors are returning for
+this circumstance, but I digress.).
+
+I get the impression vendors try to put the same SDR on multiple
+motherboards, regardless of whether a motherboard can even have a
+sensor reading/event represented in that SDR entry.  IMO, the best
+thing vendors could do is have an SDR for each motherboard that is
+actually legit.  The IPMI spec strongly suggests this as well:
+
+"Sensor Data Records are data records that contain information about
+the type and number of sensors in the platform ..." (1.7.7).
+
+"The SDR Repository is intended to hold information indicating the set
+of management controllers, sensors, and FRU Devices that is expected
+to be in the system ... For example, suppose the baseboard ahd
+connectors for five fans, but only the first four were supposed to be
+populated.  The SDRs for the system would report four fan sensors ..."
+(33)
+
+I think the next best thing vendors could do is to have the Get Sensor
+Reading command return the "sensor reading unavailable" flag if a
+particular SDR entry is not supported on the motherboard, instead of
+returning one of the random completion codes listed above.  IMO, I
+think the completion codes above don't tell a good story (assuming
+they are supposed to represent "this sensor isn't available on this
+motherboard"):
+
+IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED
+IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT
+
+aren't that great b/c the SDR lists this sensor and strongly suggests
+it is supported.
+
+IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE
+
+it is illegal, even though it is listed in the SDR?
+
+IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND
+
+to me, this suggests the sensor is broken.
+
 
