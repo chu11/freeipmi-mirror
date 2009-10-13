@@ -103,7 +103,7 @@ ipmimonitoring
 ---
 OEM <manufacturer_id> <product_id> <generator_id> <sensor_type> <event_offset> <nominal|warning|critical>
 ---
-- how to deal with one-off oddities from vendors?
+- how to deal with one-off oddities from vendors?  another config file format?
 ---
 SPECIAL <generator_id> <sensor_type> <event_offset> <nominal|warning|critical>
 ---
