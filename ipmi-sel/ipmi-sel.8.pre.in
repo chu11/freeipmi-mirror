@@ -96,7 +96,9 @@ Hex-dump SEL entries.
 Some motherboards have invalid SEL record types listed, leading to
 errors such as 'Unknown SEL Record Type'.  The records may actually be
 formatted correctly.  Use this option to assume these invalid record
-types are system event records and pray for the best.
+types are system event records and pray for the best.  This option is
+confirmed to work around compliances issues on HP DL 380 G5
+motherboards.
 #include <@top_srcdir@/common/man/manpage-common-interpret-oem-data.man>
 #include <@top_srcdir@/common/man/manpage-common-entity-sensor-names.man>
 #include <@top_srcdir@/common/man/manpage-common-no-sensor-type-output.man>
