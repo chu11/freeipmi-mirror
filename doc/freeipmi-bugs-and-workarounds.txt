@@ -23,6 +23,7 @@ masked by workarounds added to earlier motherboards.
 
 I have worked extensively on:
 
+Intel SR870BR2/Tiger 2
 Intel SR870BN4/Tiger 4
 Supermicro H8QME with SIMSO daughter card
 Sun X4140
@@ -409,8 +410,8 @@ best).
 
 Forgotten/Undocumented Motherboard(s): Some FRU data has invalid
 checksums.  Resolved with workaround to ignore the checksum (and pray
-for the best).  (Al comment: I think this was either an Intel Tiger2
-or Intel Tiger4 motherboard, but I can't remember which one.)
+for the best).  (Al comment: I know this was either an Intel Tiger 2
+or Intel Tiger 4 motherboard, but I can't remember which one.)
 
 ipmi-sensors/ipmimonitoring
 ---------------------------

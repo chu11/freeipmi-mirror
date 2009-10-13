@@ -1,5 +1,9 @@
 2009-10-13  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/, ipmi-fru/: Add motherboard documentation.
+	
+2009-10-13  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/: Change verbosity defaults.
 
 	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c
