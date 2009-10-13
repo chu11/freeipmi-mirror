@@ -11,7 +11,8 @@ need to be flushed and re-generated if the SDR has been updated on a
 system.
 .TP
 \fB\-Q\fR, \fB\-\-\quiet\-cache\fR
-Do not output information about cache creation/deletion.
+Do not output information about cache creation/deletion.  May be
+useful in scripting.
 .TP
 \fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
 Specify an alternate directory for sensor data repository (SDR) caches
