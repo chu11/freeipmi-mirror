@@ -107,10 +107,10 @@ OEM <manufacturer_id> <product_id> <generator_id> <sensor_type> <event_offset> <
 ---
 SPECIAL <generator_id> <sensor_type> <event_offset> <nominal|warning|critical>
 ---
-
-ipmimonitoring
---------------
-extend to monitor/interpret SEL entries too??
+- extend to monitor/interpret SEL entries too??
+alternate idea: collapse into "sensor-read" library?
+- make a "interpret sensor based on this info" function which returns
+  nominal/warning/critical.
 
 ipmi-chassis-config
 -------------------
