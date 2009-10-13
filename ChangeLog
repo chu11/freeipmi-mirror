@@ -1,6 +1,16 @@
 2009-10-13  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Change verbosity defaults.
+
+	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c
+	(ipmi_event_message_separator): New function.
+
+	* libfreeipmi/src/sel-parse/: Use ipmi_event_message_separator
+	appropriately for event messages.
+
+	* libfreeipmi/src/util/ipmi-sensor-and-event-code-tables-util.c:
+	Tweak message outputs appropriately for consistency and
+	correctness.
 	
 2009-10-12  Albert Chu <chu11@llnl.gov>
 

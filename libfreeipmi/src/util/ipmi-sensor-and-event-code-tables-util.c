@@ -46,6 +46,8 @@
 
 #include "freeipmi-portability.h"
 
+static char *_ipmi_event_message_separator = " ; ";
+
 int
 ipmi_event_reading_type_code_class (uint8_t event_reading_type_code)
 {
@@ -180,7 +182,7 @@ _get_system_event_event_data2_message_offset_entry_added_to_auxiliary_log (unsig
   if (str1 || str2)
     rv = _snprintf (buf, buflen, "%s%s%s",
                     (str1 ? str1 : ""),
-                    ((str1 && str2) ? "; " : ""),
+                    ((str1 && str2) ? _ipmi_event_message_separator : ""),
                     (str2 ? str2 : ""));
 
  cleanup:
@@ -189,25 +191,31 @@ _get_system_event_event_data2_message_offset_entry_added_to_auxiliary_log (unsig
 }
 
 static int
-_strcat12 (char *buf, unsigned int buflen, uint8_t flag, int str_len, int index)
+_strcat_pef_action (char *buf, unsigned int buflen, uint8_t flag, int str_len, int index)
 {
   if (flag)
     {
-      str_len += strlen (ipmi_sensor_type_system_event_event_data2_offset_pef_action[index]);
-      if (str_len < buflen)
+      int len_temp;
+
+      len_temp = strlen (ipmi_sensor_type_system_event_event_data2_offset_pef_action[index]);
+      if (str_len)
+        len_temp += strlen (_ipmi_event_message_separator);
+
+      if ((str_len + len_temp) > buflen)
         {
           SET_ERRNO (ENOSPC);
           return (-1);
         }
 
-      if (str_len)
+      if (!str_len)
         strcat (buf, ipmi_sensor_type_system_event_event_data2_offset_pef_action[index]);
       else
         {
-          strcat (buf, "; ");
+          strcat (buf, _ipmi_event_message_separator);
           strcat (buf, "%s");
         }
-      return (str_len);
+
+      return (str_len + len_temp);
     }
   return (str_len);
 }
@@ -288,37 +296,37 @@ _get_system_event_event_data2_message_offset_pef_action (unsigned int offset, ui
 
   memset (buf, '\0', buflen);
 
-  if ((str_len = _strcat12 (buf, buflen, alert, str_len, 0)) < 0)
+  if ((str_len = _strcat_pef_action (buf, buflen, alert, str_len, 0)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
     }
 
-  if ((str_len = _strcat12 (buf, buflen, power_off, str_len, 1)) < 0)
+  if ((str_len = _strcat_pef_action (buf, buflen, power_off, str_len, 1)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
     }
 
-  if ((str_len = _strcat12 (buf, buflen, reset, str_len, 2)) < 0)
+  if ((str_len = _strcat_pef_action (buf, buflen, reset, str_len, 2)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
     }
 
-  if ((str_len = _strcat12 (buf, buflen, power_cycle, str_len, 3)) < 0)
+  if ((str_len = _strcat_pef_action (buf, buflen, power_cycle, str_len, 3)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
     }
 
-  if ((str_len = _strcat12 (buf, buflen, oem_action, str_len, 4)) < 0)
+  if ((str_len = _strcat_pef_action (buf, buflen, oem_action, str_len, 4)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
     }
 
-  if ((str_len = _strcat12 (buf, buflen, diagnostic_interrupt, str_len, 5)) < 0)
+  if ((str_len = _strcat_pef_action (buf, buflen, diagnostic_interrupt, str_len, 5)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -380,8 +388,9 @@ _get_system_event_event_data2_message_offset_timestamp_clock_synch (unsigned int
   if (first_second <= ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_first_second_max_index)
     str2 = (char *)ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_first_second[first_second];
 
-  rv = _snprintf (buf, buflen, "%s; %s",
+  rv = _snprintf (buf, buflen, "%s%s%s",
                   str1 ? str1 : "",
+                  _ipmi_event_message_separator,
                   str2 ? str2 : "");
 
  cleanup:
@@ -562,7 +571,7 @@ get_watchdog2_event_data2_message (unsigned int offset, uint8_t event_data2, cha
   if (str1 || str2)
     rv = _snprintf (buf, buflen, "%s%s%s",
                     (str1 ? str1 : ""),
-                    ((str1 && str2) ? "; " : ""),
+                    ((str1 && str2) ? _ipmi_event_message_separator : ""),
                     (str2 ? str2 : ""));
 
  cleanup:
@@ -631,10 +640,12 @@ get_management_subsystem_health_event_data2_message (unsigned int offset, uint8_
       if (fru_device <= ipmi_sensor_type_management_subsystem_health_event_data2_offset_fru_failure_logical_fru_device_max_index)
         str = (char *)ipmi_sensor_type_management_subsystem_health_event_data2_offset_fru_failure_logical_fru_device[fru_device];
 
-
-      rv = _snprintf (buf, buflen, "%s; LUN for Master Write-Read command or FRU Command #%d; Private bus ID #%d",
+      rv = _snprintf (buf, buflen, "%s%sLUN for Master Write-Read command or FRU Command #%d%sPrivate bus ID #%d",
                       str ? str : "",
-                      lun, private_bus_id);
+                      str ? _ipmi_event_message_separator : "",
+                      lun,
+                      _ipmi_event_message_separator,
+                      private_bus_id);
 
     cleanup:
       fiid_obj_destroy (obj);
@@ -761,8 +772,9 @@ get_fru_state_event_data2_message (unsigned int offset, uint8_t event_data2, cha
 
   rv = _snprintf (buf,
                   buflen,
-                  "Previous State = %s; %s",
+                  "Previous State = %s%s%s",
                   previous_state_offset_str ? previous_state_offset_str : "",
+                  cause_of_state_change_str ? _ipmi_event_message_separator : "",
                   cause_of_state_change_str ? cause_of_state_change_str : "");
 
  cleanup:
@@ -874,14 +886,14 @@ get_event_logging_disabled_event_data3_message (unsigned int offset, uint8_t eve
           }
         event_offset = val;
 
-        if (FIID_OBJ_GET (obj, "assertion_deassertion_e", &val) < 0)
+        if (FIID_OBJ_GET (obj, "assertion_deassertion_event", &val) < 0)
           {
             FIID_OBJECT_ERROR_TO_ERRNO (obj);
             goto cleanup1;
           }
         assertion_deassertion_event = val;
 
-        if (FIID_OBJ_GET (obj, "logging_disabled_all_ev", &val) < 0)
+        if (FIID_OBJ_GET (obj, "logging_disabled_all_events", &val) < 0)
           {
             FIID_OBJECT_ERROR_TO_ERRNO (obj);
             goto cleanup1;
@@ -894,8 +906,12 @@ get_event_logging_disabled_event_data3_message (unsigned int offset, uint8_t eve
         if (logging_disabled_all_events <= ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_logging_disabled_all_events_max_index)
           str2 = (char *)ipmi_sensor_type_event_logging_disabled_event_data3_offset_event_type_logging_disabled_logging_disabled_all_events[logging_disabled_all_events];
 
-        rv = _snprintf (buf, buflen, "Event Offset #%d; %s%s%s",
-                        event_offset, (str1 ? str1 : ""), ((str1 && str2 && strlen (str2)) ? "; " : ""), (str2 ? str2 : ""));
+        rv = _snprintf (buf, buflen, "Event Offset #%d%s%s%s%s",
+                        event_offset,
+                        (str1 || str2) ? _ipmi_event_message_separator : "",
+                        (str1 ? str1 : ""),
+                        ((str1 && str2 && strlen (str2)) ? _ipmi_event_message_separator : ""),
+                        (str2 ? str2 : ""));
 
       cleanup1:
         fiid_obj_destroy (obj);
@@ -943,7 +959,7 @@ get_event_logging_disabled_event_data3_message (unsigned int offset, uint8_t eve
 
         rv = _snprintf (buf,
                         buflen,
-                        "%s = #%d \n",
+                        "%s = #%d",
                         str,
                         event_data2);
         
@@ -1055,7 +1071,9 @@ get_session_audit_event_data3_message (unsigned int offset, uint8_t event_data2,
     }
   
   rv = _snprintf (buf, buflen, "Channel number that session was activated/deactivated = %d%s%s",
-                  channel_number, (str) ? "; " : "", str ? str : "");
+                  channel_number,
+                  (str) ? _ipmi_event_message_separator : "",
+                  str ? str : "");
   
  cleanup:
   fiid_obj_destroy (obj);
@@ -1080,6 +1098,19 @@ _get_event_message (unsigned int offset,
     }
 
   return (snprintf (buf, buflen, string_array[offset]));
+}
+
+int
+ipmi_event_message_separator (const char *separator)
+{
+  if (!separator)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  _ipmi_event_message_separator = separator;
+  return (0);
 }
 
 int

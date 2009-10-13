@@ -425,6 +425,12 @@ ipmi_sel_parse_ctx_set_separator (ipmi_sel_parse_ctx_t ctx, const char *separato
           SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_OUT_OF_MEMORY);
           return (-1);
         }
+
+      if (ipmi_event_message_separator (ctx->separator) < 0)
+        {
+          SEL_PARSE_SET_ERRNUM (ctx, IPMI_SEL_PARSE_ERR_INTERNAL_ERROR);
+          return (-1);
+        }
     }
 
   ctx->errnum = IPMI_SEL_PARSE_ERR_SUCCESS;

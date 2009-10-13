@@ -33,6 +33,8 @@ extern "C" {
 
 int ipmi_event_reading_type_code_class (uint8_t event_reading_type_code);
 
+int ipmi_event_message_separator (const char *separator);
+
 /* return length of string written into buffer on success, -1 on error */
 int ipmi_get_generic_event_message (uint8_t event_reading_type_code,
                                     unsigned int offset,
