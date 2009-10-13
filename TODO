@@ -97,6 +97,21 @@ specify sensors by name too
 - useful in libipmimonitoring, if heterogenous firmware versions, but
 same sensor names?
 
+ipmimonitoring
+--------------
+- how to deal with OEM sensors??  special config file format?
+---
+OEM <manufacturer_id> <product_id> <generator_id> <sensor_type> <event_offset> <nominal|warning|critical>
+---
+- how to deal with one-off oddities from vendors?
+---
+SPECIAL <generator_id> <sensor_type> <event_offset> <nominal|warning|critical>
+---
+
+ipmimonitoring
+--------------
+extend to monitor/interpret SEL entries too??
+
 ipmi-chassis-config
 -------------------
 * conf.5 manpage
