@@ -489,7 +489,7 @@ this circumstance, but I digress.).
 
 I get the impression vendors try to put the same SDR on multiple
 motherboards, regardless of whether a motherboard can even have a
-sensor reading/event represented in that SDR entry.  IMO, the best
+sensor reading/event represented by that SDR entry.  IMO, the best
 thing vendors could do is have an SDR for each motherboard that is
 actually legit.  The IPMI spec strongly suggests this as well:
 
@@ -507,22 +507,7 @@ I think the next best thing vendors could do is to have the Get Sensor
 Reading command return the "sensor reading unavailable" flag if a
 particular SDR entry is not supported on the motherboard, instead of
 returning one of the random completion codes listed above.  IMO, I
-think the completion codes above don't tell a good story (assuming
-they are supposed to represent "this sensor isn't available on this
-motherboard"):
-
-IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED
-IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT
-
-aren't that great b/c the SDR lists this sensor and strongly suggests
-it is supported.
-
-IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE
-
-it is illegal, even though it is listed in the SDR?
-
-IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND
-
-to me, this suggests the sensor is broken.
-
+think the completion codes above don't give an accurate description of
+what's going on (assuming they are supposed to represent "this sensor
+isn't available on this motherboard").
 
