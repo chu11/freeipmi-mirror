@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.1.2.1 2009-10-14 17:08:00 chu11 Exp $
+ *  $Id: pstdout.c,v 1.1.2.2 2009-10-14 21:29:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -53,7 +53,14 @@
 #include "hostlist.h"
 #include "list.h"
 
-#define PSTDOUT_BUFLEN            4096
+/* max hostrange size is typically 16 bytes
+ *
+ * counting the comma, a 1000 node non-expanded hostrange list could
+ * be (16 + 1) * 1000 = 17000 bytes.
+ *
+ * So we round up from there to the nearest 16K
+ */
+#define PSTDOUT_BUFLEN            32768
 
 static char * pstdout_errmsg[] =
   {

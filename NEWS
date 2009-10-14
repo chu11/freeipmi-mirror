@@ -1,3 +1,7 @@
+0.7.14 - 10/XX/09
+-----------------
+o Fix consolidated-output corner case.
+
 0.7.13 - 09/30/09
 -----------------
 o Support --platform-event in bmc-device.
