@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.62 2009-10-02 17:21:38 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.63 2009-10-14 22:30:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -354,7 +354,7 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
     cmd_args->verbose_count = config_file_data.verbose_count;
   if (config_file_data.quiet_readings_count)
     cmd_args->quiet_readings = config_file_data.quiet_readings;
-  if (config_file_data.record_ids_count && config_file_data.record_ids_count)
+  if (config_file_data.record_ids_count && config_file_data.record_ids_length)
     {
       unsigned int i;
 
@@ -364,7 +364,7 @@ _ipmimonitoring_config_file_parse (struct ipmimonitoring_arguments *cmd_args)
         cmd_args->record_ids[i] = config_file_data.record_ids[i];
       cmd_args->record_ids_length = config_file_data.record_ids_length;
     }
-  if (config_file_data.exclude_record_ids_count && config_file_data.exclude_record_ids_count)
+  if (config_file_data.exclude_record_ids_count && config_file_data.exclude_record_ids_length)
     {
       unsigned int i;
 

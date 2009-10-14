@@ -721,7 +721,7 @@ _config_file_sensor_record_ids (struct conffile_data *data,
       exit (1);
     }
 
-  for (i = 0; i < data->stringlist_len; i++)
+  for (i = 0; i < data->intlist_len; i++)
     {
       if (data->intlist[i] < 0
           || data->intlist[i] > IPMI_SDR_RECORD_ID_LAST)
@@ -2874,7 +2874,7 @@ config_file_parse (const char *filename,
         0,
       },
       {
-        "ipmi-sensors-record_ids",
+        "ipmi-sensors-record-ids",
         CONFFILE_OPTION_LIST_INT,
         -1,
         config_file_ipmi_sensors_record_ids,
@@ -2885,7 +2885,7 @@ config_file_parse (const char *filename,
         0,
       },
       {
-        "ipmi-sensors-exclude-record_ids",
+        "ipmi-sensors-exclude-record-ids",
         CONFFILE_OPTION_LIST_INT,
         -1,
         config_file_ipmi_sensors_exclude_record_ids,
@@ -3402,7 +3402,7 @@ config_file_parse (const char *filename,
         0,
       },
       {
-        "ipmimonitoring-record_ids",
+        "ipmimonitoring-record-ids",
         CONFFILE_OPTION_LIST_INT,
         -1,
         config_file_ipmimonitoring_record_ids,
@@ -3413,7 +3413,7 @@ config_file_parse (const char *filename,
         0,
       },
       {
-        "ipmimonitoring-exclude-record_ids",
+        "ipmimonitoring-exclude-record-ids",
         CONFFILE_OPTION_LIST_INT,
         -1,
         config_file_ipmimonitoring_exclude_record_ids,
@@ -4127,6 +4127,8 @@ config_file_parse (const char *filename,
                  config_file_options_len,
                  ipmi_dcmi_options,
                  options_len);
+
+  config_file_options_len += options_len;
 
   options_len = sizeof (ipmi_fru_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_FRU))

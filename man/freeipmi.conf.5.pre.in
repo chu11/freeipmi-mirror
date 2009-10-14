@@ -867,7 +867,7 @@ Specify default verbose count to use for
 \fBipmi\-sel\-system\-event\-only\fR \fIENABLE|DISABLE\fR
 Specify if output should only include system event records.
 .TP
-\fBipmi\-sel\-oem\-only\fR \fIENABLE|DISABLE\fR
+\fBipmi\-sel\-oem\-event\-only\fR \fIENABLE|DISABLE\fR
 Specify if output should only include OEM event records.
 .TP
 \fBipmi\-sel\-assume\-system\-event\-records\fR \fIENABLE|DISABLE\fR

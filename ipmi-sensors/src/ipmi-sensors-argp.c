@@ -344,7 +344,7 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     cmd_args->verbose_count = config_file_data.verbose_count;
   if (config_file_data.quiet_readings_count)
     cmd_args->quiet_readings = config_file_data.quiet_readings;
-  if (config_file_data.record_ids_count && config_file_data.record_ids_count)
+  if (config_file_data.record_ids_count && config_file_data.record_ids_length)
     {
       unsigned int i;
 
@@ -354,7 +354,7 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
         cmd_args->record_ids[i] = config_file_data.record_ids[i];
       cmd_args->record_ids_length = config_file_data.record_ids_length;
     }
-  if (config_file_data.exclude_record_ids_count && config_file_data.exclude_record_ids_count)
+  if (config_file_data.exclude_record_ids_count && config_file_data.exclude_record_ids_length)
     {
       unsigned int i;
 
