@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.1 2008-09-24 04:00:28 chu11 Exp $
+ *  $Id: pstdout.c,v 1.1.2.1 2009-10-14 17:08:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -1163,7 +1163,7 @@ _pstdout_output_consolidated_finish(void)
         goto cleanup;
     }
 
-  if (pstdout_output_flags & PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE)
+  if (pstdout_output_flags & PSTDOUT_OUTPUT_STDERR_CONSOLIDATE)
     {
       if (_pstdout_output_consolidated(stderr,
 				       pstdout_consolidated_stderr,
