@@ -2,6 +2,8 @@
 
 	* common/src/toolhostrange/pstdout.c
 	(_pstdout_output_consolidated_finish): Fix typo.
+
+	* common/src/toolhostrange/pstdout.c: Up output buffer size.
 	
 2009-10-13  Albert Chu <chu11@llnl.gov>
 
