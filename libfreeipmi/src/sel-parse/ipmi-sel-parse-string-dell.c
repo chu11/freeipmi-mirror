@@ -262,10 +262,13 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
         }
 
       /* From Dell Spec */
-      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
-          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
-          && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_RECOVERABLE
-          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CPU_MACHINE_CHECK_ERROR)
+      if ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+           && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_RECOVERABLE
+           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CPU_MACHINE_CHECK_ERROR)
+          || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+              && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+              && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_IERR))
         {
           unsigned int num = 0;
           int found = 0;
@@ -292,17 +295,11 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
             }
         }
 
-      /* From Dell Spec
-       *
-       * achu: XXX: doc says "FSB" then "CPU", I'm assuming they mean FSB
-       */
-      if ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
-           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_IERR)
-          || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
-              && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
-              && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_RECOVERABLE
-              && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CPU_PROTOCOL_ERROR))
+      /* From Dell Spec */
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_RECOVERABLE
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CPU_PROTOCOL_ERROR)
         {
           unsigned int num = 0;
           int found = 0;
@@ -399,16 +396,63 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
         }
 
       /* From Dell Spec */
-      /* XXX: no oem data3 byte, should be together in one byte */
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_DELL_POST_FATAL_ERROR)
         {
-          snprintf (tmpbuf,
-                    tmpbuflen,
-                    "BIOS Fatal Error code: %02Xh",
-                    system_event_record_data->event_data2);
+          char *error_code_str = NULL;
+
+          /* achu: I am assuming only fatal error codes are possible, not progress codes */
+          if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_NO_MEMORY_DETECTED)
+            error_code_str = "No memory detected";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_MEMORY_DETECTED_BUT_IS_NOT_CONFIGURABLE)
+            error_code_str = "Memory detected but is not configurable";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_MEMORY_CONFIGURED_BUT_NOT_USABLE)
+            error_code_str = "Memory configured but not usable";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_SYSTEM_BIOS_SHADOW_FAILURE)
+            error_code_str = "System BIOS shadow failure";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_CMOS_FAILURE)
+            error_code_str = "CMOS failure";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_DMA_CONTROLLER_FAILURE)
+            error_code_str = "DMA controller failure";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_INTERRUPT_CONTROLLER_FAILURE)
+            error_code_str = "Interrupt controller failure";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_TIMER_REFRESH_FAILURE)
+            error_code_str = "Timer refresh failure";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_PROGRAMMABLE_INTERVAL_TIMER_ERROR)
+            error_code_str = "Programmable interval timer error";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_PARITY_ERROR)
+            error_code_str = "Parity error";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_SIO_FAILURE)
+            error_code_str = "SIO failure";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_KEYBOARD_CONTROLLER_FAILURE)
+            error_code_str = "Keyboard controller failure";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_SMI_INITIALIZATION_FAILURE)
+            error_code_str = "SMI initialization failure";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_SHUTDOWN_TEST_FAILURE)
+            error_code_str = "Shutdown test failure";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_POST_MEMORY_TEST_FAILURE)
+            error_code_str = "POST Memory test failure";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_RAC_CONFIGURATION_FAILURE)
+            error_code_str = "RAC configuration failure";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_CPU_CONFIGURATION_FAILURE)
+            error_code_str = "CPU configuration failure";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_INCORRECT_MEMORY_CONFIGURATION)
+            error_code_str = "Incorrect memory configuration";
+          else if (system_event_record_data->event_data2 == IPMI_OEM_DELL_BIOS_FATAL_ERROR_CODE_GENERAL_FAILURE_AFTER_VIDEO)
+            error_code_str = "General failure after video";
+          else
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "BIOS Fatal Error code: %02Xh",
+                      system_event_record_data->event_data2);
           
+          if (error_code_str)
+            snprintf (tmpbuf,
+                      tmpbuflen,
+                      "%s",
+                      error_code_str);
+
           return (1);
         }
 
@@ -600,10 +644,7 @@ ipmi_sel_parse_output_dell_event_data3_discrete_oem (ipmi_sel_parse_ctx_t ctx,
       && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
     {
-      /* From Dell Spec
-       *
-       * achu: XXX: doc says "unspecified" for data 3 flag, I am assuming this is a typo.
-       */
+      /* From Dell Spec */
       if ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
            && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
            && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_IERR)
@@ -940,6 +981,7 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                * DIMM locations can be thought of in this mapping, lets
                * say dimms per node is 4.
                *
+               * Dimm # = Location
                * 1 = A1
                * 2 = A2
                * 3 = A3
@@ -948,6 +990,15 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
                * 6 = B2
                * ...
                * 
+               * lets say dimms per node is 9
+               *
+               * Dimm # = Location
+               * 1 = A1
+               * ...
+               * 8 = A8
+               * 9 = A9
+               * 10 = B1
+               * ...
                */
               
               for (i = 0; i < 8; i++)
