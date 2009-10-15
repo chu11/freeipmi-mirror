@@ -1,7 +1,3 @@
-2009-10-15  Albert Chu <chu11@llnl.gov>
-
-	* Tagged Release-0_7_14.
-
 2009-10-14  Albert Chu <chu11@llnl.gov>
 
 	* common/src/toolhostrange/pstdout.c
