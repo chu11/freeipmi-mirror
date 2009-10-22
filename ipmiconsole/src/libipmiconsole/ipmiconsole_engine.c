@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.89 2009-06-06 00:09:02 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.90 2009-10-22 20:20:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1148,13 +1148,6 @@ ipmiconsole_engine_thread_create (void)
     }
 
   assert (console_engine_thread_count < IPMICONSOLE_THREAD_COUNT_MAX);
-
-  if ((perr = pthread_mutex_unlock (&console_engine_thread_count_mutex)))
-    {
-      IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
-      errno = perr;
-      goto cleanup;
-    }
 
   if ((perr = pthread_attr_init (&attr)))
     {
