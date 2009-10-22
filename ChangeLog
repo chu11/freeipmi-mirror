@@ -1,3 +1,7 @@
+2009-10-15  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/sel-parse/: Fix/enhance Dell SEL event interpretations.
+	
 2009-10-14  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, ipmimonitoring/, common/src/toolcommon/, etc/:
