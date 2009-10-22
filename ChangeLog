@@ -1,3 +1,8 @@
+2009-10-22  Albert Chu <chu11@llnl.gov>
+
+	* Fix Netbsd portability bugs discovered by John Heasley <heas at
+	shrubbery dot net>.
+	
 2009-10-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/sel-parse/: Fix/enhance Dell SEL event interpretations.

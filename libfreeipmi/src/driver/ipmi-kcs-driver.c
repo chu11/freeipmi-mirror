@@ -200,28 +200,28 @@ struct ipmi_kcs_ctx {
 };
 
 static void
-_set_kcs_ctx_errnum_by_errno (ipmi_kcs_ctx_t ctx, int __errno)
+_set_kcs_ctx_errnum_by_errno (ipmi_kcs_ctx_t ctx, int _errno)
 {
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
     return;
 
-  if (errno == 0)
+  if (_errno == 0)
     ctx->errnum = IPMI_KCS_ERR_SUCCESS;
-  else if (errno == EINTR)
+  else if (_errno == EINTR)
     ctx->errnum = IPMI_KCS_ERR_BUSY;
-  else if (errno == EAGAIN)
+  else if (_errno == EAGAIN)
     ctx->errnum = IPMI_KCS_ERR_BUSY;
-  else if (errno == EPERM)
+  else if (_errno == EPERM)
     ctx->errnum = IPMI_KCS_ERR_PERMISSION;
-  else if (errno == EACCES)
+  else if (_errno == EACCES)
     ctx->errnum = IPMI_KCS_ERR_PERMISSION;
-  else if (errno == ENOENT)
+  else if (_errno == ENOENT)
     ctx->errnum = IPMI_KCS_ERR_DEVICE_NOT_FOUND;
-  else if (errno == ENOMEM)
+  else if (_errno == ENOMEM)
     ctx->errnum = IPMI_KCS_ERR_OUT_OF_MEMORY;
-  else if (errno == EINVAL)
+  else if (_errno == EINVAL)
     ctx->errnum = IPMI_KCS_ERR_INTERNAL_ERROR;
-  else if (errno == ETIMEDOUT)
+  else if (_errno == ETIMEDOUT)
     ctx->errnum = IPMI_KCS_ERR_DRIVER_TIMEOUT;
   else
     ctx->errnum = IPMI_KCS_ERR_SYSTEM_ERROR;
@@ -507,7 +507,8 @@ ipmi_kcs_ctx_io_init (ipmi_kcs_ctx_t ctx)
     }
 #else /* !HAVE_IOPL */
   /* otherwise, we always return a system error */
-  KCS_ERR_SYSTEM_ERROR (0);
+  KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
+  return (-1);
 #endif /* !HAVE_IOPL */
 #endif /* !__FreeBSD__ */
 

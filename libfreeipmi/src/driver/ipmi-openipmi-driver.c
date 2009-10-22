@@ -168,28 +168,28 @@ struct ipmi_openipmi_ctx {
 };
 
 static void
-_set_openipmi_ctx_errnum_by_errno (ipmi_openipmi_ctx_t ctx, int __errno)
+_set_openipmi_ctx_errnum_by_errno (ipmi_openipmi_ctx_t ctx, int _errno)
 {
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     return;
 
-  if (errno == 0)
+  if (_errno == 0)
     ctx->errnum = IPMI_OPENIPMI_ERR_SUCCESS;
-  else if (errno == EPERM)
+  else if (_errno == EPERM)
     ctx->errnum = IPMI_OPENIPMI_ERR_PERMISSION;
-  else if (errno == EACCES)
+  else if (_errno == EACCES)
     ctx->errnum = IPMI_OPENIPMI_ERR_PERMISSION;
-  else if (errno == ENOENT)
+  else if (_errno == ENOENT)
     ctx->errnum = IPMI_OPENIPMI_ERR_DEVICE_NOT_FOUND;
-  else if (errno == ENOTDIR)
+  else if (_errno == ENOTDIR)
     ctx->errnum = IPMI_OPENIPMI_ERR_DEVICE_NOT_FOUND;
-  else if (errno == ENAMETOOLONG)
+  else if (_errno == ENAMETOOLONG)
     ctx->errnum = IPMI_OPENIPMI_ERR_DEVICE_NOT_FOUND;
-  else if (errno == ENOMEM)
+  else if (_errno == ENOMEM)
     ctx->errnum = IPMI_OPENIPMI_ERR_OUT_OF_MEMORY;
-  else if (errno == EINVAL)
+  else if (_errno == EINVAL)
     ctx->errnum = IPMI_OPENIPMI_ERR_INTERNAL_ERROR;
-  else if (errno == ETIMEDOUT)
+  else if (_errno == ETIMEDOUT)
     ctx->errnum = IPMI_OPENIPMI_ERR_DRIVER_TIMEOUT;
   else
     ctx->errnum = IPMI_OPENIPMI_ERR_SYSTEM_ERROR;
