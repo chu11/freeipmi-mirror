@@ -421,6 +421,10 @@ Contributions
 o Update Ganglia and Nagios plugins for changes in ipmi-sensors and
 ipmimonitoring.
 
+0.7.14 - 10/16/09
+-----------------
+o Fix consolidated-output corner cases.
+
 0.7.13 - 09/30/09
 -----------------
 o Support --platform-event in bmc-device.
