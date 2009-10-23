@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.65 2009-06-10 16:51:43 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.66 2009-10-23 17:44:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -139,11 +139,11 @@ _stdin (ipmiconsole_ctx_t c,
           last_char_escape = 0;
           if (buf[i] == '?')
             {
-              printf ("&? - this menu\r\n");
-              printf ("&. - exit\r\n");
-              printf ("&B - generate break\r\n");
-              printf ("&D - send DEL character\r\n");
-              printf ("&& - & character\r\n");
+              printf ("%c? - this menu\r\n", escape_char);
+              printf ("%c. - exit\r\n", escape_char);
+              printf ("%cB - generate break\r\n", escape_char);
+              printf ("%cD - send DEL character\r\n", escape_char);
+              printf ("%c& - & character\r\n", escape_char);
             }
           else if (buf[i] == '.')
             {

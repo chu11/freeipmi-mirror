@@ -1,5 +1,10 @@
 2009-10-23  Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/src/ipmiconsole/: Output escape menu with
+	appropriate escape char.
+	
+2009-10-23  Albert Chu <chu11@llnl.gov>
+
 	* Tagged Release-0_8_0_beta3.
 
 2009-10-22  Albert Chu <chu11@llnl.gov>
