@@ -47,6 +47,11 @@ server simulator, for scalable testing
 - different SEL entries
 - all permutations of sensors, etc.
 
+ipmiconsole
+-----------
+suport other escape codes like w/ &D
+- F1-F12 suggested by user
+
 hostrange
 ---------
 exclude hosts option
