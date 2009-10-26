@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.117 2009-06-26 03:55:27 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.118 2009-10-26 22:08:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -374,9 +374,9 @@ _cmd_workaround_flags (char **argv)
 
   if (argv[1])
     {
-      int tmp;
+      unsigned int tmp;
 
-      if ((tmp = parse_workaround_flags (argv[1])) < 0)
+      if (parse_workaround_flags (argv[1], &tmp, NULL) < 0)
         ipmipower_cbuf_printf (ttyout,
                                "%s invalid workaround flags specified\n",
                                argv[1]);

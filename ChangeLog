@@ -1,6 +1,10 @@
 2009-10-26  Albert Chu <chu11@llnl.gov>
 
 	* Various code cleanup.
+
+	* common/src/toolcommon/tool-cmdline-common.h,
+	common/src/toolcommon/tool-cmdline-common.c: Return errors on bad
+	workaround flags.  Split out tool specific workaround flags.
 	
 2009-10-23  Albert Chu <chu11@llnl.gov>
 

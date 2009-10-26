@@ -59,9 +59,12 @@ struct cmd_args_config
   int privilege_level;
   int privilege_level_set;
   int tool_option_privilege_level_set;
-  int workaround_flags;
+  unsigned int workaround_flags;
   int workaround_flags_set;
   int tool_option_workaround_flags_set;
+  unsigned int tool_specific_workaround_flags;
+  int tool_specific_workaround_flags_set;
+  int tool_option_tool_specific_workaround_flags_set;
 };
 
 int
@@ -412,7 +415,6 @@ config_file_workaround_flags (conffile_t cf,
 {
   struct cmd_args_config *cmd_args_config;
   unsigned int i;
-  int tmp;
 
   assert (option_ptr);
 
@@ -422,17 +424,29 @@ config_file_workaround_flags (conffile_t cf,
     return (0);
 
   cmd_args_config->workaround_flags = 0;
+  cmd_args_config->tool_specific_workaround_flags = 0;
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      if ((tmp = parse_workaround_flags (data->stringlist[i])) < 0)
+      unsigned int tmp1, tmp2;
+
+      if (parse_workaround_flags (data->stringlist[i], &tmp1, &tmp2) < 0)
         {
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
           exit (1);
         }
-      cmd_args_config->workaround_flags |= tmp;
+      
+      if (tmp1)
+        {
+          cmd_args_config->workaround_flags |= tmp1;
+          cmd_args_config->workaround_flags_set++;
+        }
+      if (tmp2)
+        {
+          cmd_args_config->tool_specific_workaround_flags |= tmp2;
+          cmd_args_config->tool_specific_workaround_flags_set++;
+        }
     }
-  cmd_args_config->workaround_flags_set++;
 
   return (0);
 }
@@ -652,7 +666,6 @@ config_file_tool_option_workaround_flags (conffile_t cf,
 {
   struct cmd_args_config *cmd_args_config;
   unsigned int i;
-  int tmp;
 
   assert (option_ptr);
 
@@ -662,15 +675,29 @@ config_file_tool_option_workaround_flags (conffile_t cf,
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      if ((tmp = parse_workaround_flags (data->stringlist[i])) < 0)
+      unsigned int tmp1, tmp2;
+
+      if (parse_workaround_flags (data->stringlist[i], &tmp1, &tmp2) < 0)
         {
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
           exit (1);
         }
-      cmd_args_config->workaround_flags |= tmp;
+      
+      if (tmp1)
+        {
+          cmd_args_config->workaround_flags |= tmp1;
+          cmd_args_config->workaround_flags_set++;
+          cmd_args_config->workaround_flags_set++;
+          cmd_args_config->tool_option_workaround_flags_set++;
+        }
+      if (tmp2)
+        {
+          cmd_args_config->tool_specific_workaround_flags |= tmp2;
+          cmd_args_config->tool_specific_workaround_flags_set++;
+          cmd_args_config->tool_specific_workaround_flags_set++;
+          cmd_args_config->tool_option_tool_specific_workaround_flags_set++;
+        }
     }
-  cmd_args_config->workaround_flags_set++;
-  cmd_args_config->tool_option_workaround_flags_set++;
 
   return (0);
 }
@@ -4330,6 +4357,9 @@ config_file_parse (const char *filename,
 
   if (cmd_args_config.workaround_flags_set)
     cmd_args->workaround_flags = cmd_args_config.workaround_flags;
+
+  if (cmd_args_config.tool_specific_workaround_flags_set)
+    cmd_args->tool_specific_workaround_flags = cmd_args_config.tool_specific_workaround_flags;
 
   /* copy tool specific stuff */
 

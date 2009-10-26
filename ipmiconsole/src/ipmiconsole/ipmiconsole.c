@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.66 2009-10-23 17:44:57 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.67 2009-10-26 22:08:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -317,10 +317,6 @@ main (int argc, char **argv)
 
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES;
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE)
-    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE;
-  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PORT)
-    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT;
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION;
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
@@ -329,6 +325,11 @@ main (int argc, char **argv)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION;
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE;
+
+  if (cmd_args.common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE)
+    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE;
+  if (cmd_args.common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PORT)
+    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT;
 
   memset (&protocol_config, '\0', sizeof (struct ipmiconsole_protocol_config));
   protocol_config.session_timeout_len = cmd_args.common.session_timeout;

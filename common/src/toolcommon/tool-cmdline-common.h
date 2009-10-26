@@ -217,6 +217,7 @@ struct common_cmd_args
   int privilege_level;
   char *config_file;
   unsigned int workaround_flags;
+  unsigned int tool_specific_workaround_flags;
   int debug;
 };
 
@@ -255,8 +256,6 @@ struct hostrange_cmd_args
 #define IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION      0x00000040
 #define IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION             0x00000080
 #define IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE      0x00000100
-#define IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE     0x00000200
-#define IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PORT             0x00000400
 
 #define IPMI_TOOL_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR      "idzero"
 #define IPMI_TOOL_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR "forcepermsg"
@@ -267,8 +266,12 @@ struct hostrange_cmd_args
 #define IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR      "supermicro20"
 #define IPMI_TOOL_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR             "sun20"
 #define IPMI_TOOL_WORKAROUND_FLAGS_OPEN_SESSION_PRIVILEGE_STR      "opensesspriv"
-#define IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE_STR     "solpayloadsize"
-#define IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PORT_STR             "solport"
+
+#define IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE     0x00000001
+#define IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PORT             0x00000002
+
+#define IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE_STR "solpayloadsize"
+#define IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PORT_STR         "solport"
 
 #define IPMI_AUTHENTICATION_TYPE_NONE_STR                               "none"
 #define IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR              "straight_password_key"
@@ -291,7 +294,9 @@ int parse_authentication_type (const char *str);
 
 int parse_privilege_level (const char *str);
 
-int parse_workaround_flags (const char *str);
+int parse_workaround_flags (const char *str,
+                            unsigned int *workaround_flags,
+                            unsigned int *tool_specific_workaround_flags);
 
 error_t common_parse_opt (int key,
                           char *arg,
