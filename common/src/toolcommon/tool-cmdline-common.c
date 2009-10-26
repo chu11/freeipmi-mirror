@@ -75,8 +75,7 @@ cmdline_config_file_parse (int key, char *arg, struct argp_state *state)
 int
 parse_inband_driver_type (const char *str)
 {
-  if (!str)
-    return (-1);
+  assert (str);
 
   if (strcasecmp (str, "kcs") == 0)
     return (IPMI_DEVICE_KCS);
@@ -101,8 +100,7 @@ parse_inband_driver_type (const char *str)
 int
 parse_outofband_driver_type (const char *str)
 {
-  if (!str)
-    return (-1);
+  assert (str);
 
   if (strcasecmp (str, "lan") == 0)
     return (IPMI_DEVICE_LAN);
@@ -125,8 +123,7 @@ parse_driver_type (const char *str)
 {
   int ret;
 
-  if (!str)
-    return (-1);
+  assert (str);
 
   if ((ret = parse_inband_driver_type (str)) < 0)
     ret = parse_outofband_driver_type (str);
@@ -137,8 +134,7 @@ parse_driver_type (const char *str)
 int
 parse_authentication_type (const char *str)
 {
-  if (!str)
-    return (-1);
+  assert (str);
 
   if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_NONE_STR) == 0)
     return (IPMI_AUTHENTICATION_TYPE_NONE);
@@ -157,8 +153,7 @@ parse_authentication_type (const char *str)
 int
 parse_privilege_level (const char *str)
 {
-  if (!str)
-    return (-1);
+  assert (str);
 
   if (strcasecmp (str, IPMI_PRIVILEGE_LEVEL_USER_STR) == 0)
     return (IPMI_PRIVILEGE_LEVEL_USER);
@@ -178,8 +173,7 @@ parse_workaround_flags (const char *str)
   char *tok;
   int flags = 0;
 
-  if (!str)
-    return (-1);
+  assert (str);
 
   memset (buf, '\0', WORKAROUND_FLAG_BUFLEN+1);
   strncpy (buf, str, WORKAROUND_FLAG_BUFLEN);

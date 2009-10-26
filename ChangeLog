@@ -1,3 +1,7 @@
+2009-10-26  Albert Chu <chu11@llnl.gov>
+
+	* Various code cleanup.
+	
 2009-10-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/ipmiconsole/: Output escape menu with
