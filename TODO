@@ -12,6 +12,7 @@ ipmi-seld
 log sel events to syslog?
 - could work across cluster?
 - need filtering thingie to remove crud?
+requires a sel montioring lib? like ipmimonitoring?
 
 general
 -------
