@@ -2436,6 +2436,10 @@ main (int argc, char **argv)
   ipmi_sel_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
+  /* Special case, if user specified workaround via flags instead of option */
+  if (prog_data.args->common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT)
+    prog_data.args->assume_system_event_records = 1;
+  
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
                                     prog_data.args->hostrange.buffer_output,
                                     prog_data.args->hostrange.consolidate_output,

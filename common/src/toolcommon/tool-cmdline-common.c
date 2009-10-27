@@ -175,7 +175,7 @@ parse_workaround_flags (const char *str,
   char *tok;
 
   assert (str);
-  assert (workaroud_flags);
+  assert (workaround_flags);
 
   memset (buf, '\0', WORKAROUND_FLAG_BUFLEN+1);
   strncpy (buf, str, WORKAROUND_FLAG_BUFLEN);
@@ -211,6 +211,12 @@ parse_workaround_flags (const char *str,
       else if (tool_specific_workaround_flags
                && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PORT_STR))
         (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PORT;
+      else if (tool_specific_workaround_flags
+               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS_STR))
+        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS;
+      else if (tool_specific_workaround_flags
+               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT_STR))
+        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT;
       else
         return (-1);
       tok = strtok (NULL, ",");

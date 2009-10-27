@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.54 2009-05-22 02:33:39 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.55 2009-10-27 00:26:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -625,6 +625,10 @@ main (int argc, char **argv)
   prog_data.progname = argv[0];
   ipmi_fru_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
+
+  /* Special case, if user specified workaround via flags instead of option */
+  if (prog_data.args->common.tool_specific_workaround_flags & IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS)
+    prog_data.args->skip_checks = 1;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
                                     prog_data.args->hostrange.buffer_output,

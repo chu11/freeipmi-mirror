@@ -5,6 +5,8 @@
 	* common/src/toolcommon/tool-cmdline-common.h,
 	common/src/toolcommon/tool-cmdline-common.c: Return errors on bad
 	workaround flags.  Split out tool specific workaround flags.
+
+	* ipmi-fru/, ipmi-sel/: Make tool specific workaround flags.
 	
 2009-10-23  Albert Chu <chu11@llnl.gov>
 
