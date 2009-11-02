@@ -1,0 +1,192 @@
+IPMI OEM additions/extensions documentation requirements
+
+Albert Chu
+chu11@llnl.gov
+
+The following is a list of the common OEM documentation that is often
+required for OEM support in FreeIPMI.
+
+OEM IPMI Additions
+------------------
+
+All OEM IPMI additions for setting up, controlling, configuring,
+monitoring, and managing the system that are not in the IPMI
+specification.  Without this information it is often difficult to move
+forward to configure hardware, gather information for monitoring,
+diagnose problems, etc.
+
+Examples include:
+ 
+OEM commands for configuring the hardware for IPMI.  For example,
+configuring the ethernet port to be shared, dedicated, w/ failover
+(ipmi-oem's Inventec's get/set-nic-status commands are an example of
+this).
+
+OEM commands for retrieving motherboard specific information.  For
+example, OEM commands for reading firmware versions (ipmi-oem's
+Supermicro extra-firmware-info command is an example of this).
+
+OEM commands for retrieving/configuring motherboard specific hardware.
+For example, reading and configuring power capacity status (ipmi-oem's
+Dell set-power-capacity-status command is an example of this).
+
+OEM commands for resetting configuration back to the manufacturer
+defaults (ipmi-oem's Dell reset-to-defaults command is an
+example of this).
+
+OEM commands for configuring any additional "features" added to IPMI
+by the vendor.  For example, how to configure the ports, timeout,
+on/off of web server abilities on the BMC (ipmi-oem's Dell
+get/set-web-server-config commands are an example of this).
+
+IPMI OEM Extensions
+-------------------
+
+All IPMI OEM extensions to IPMI for setting up, controlling,
+configuring, monitoring, and managing the system that are not in the
+IPMI specification.  For example, IPMI extensions for reading asset
+tags and product names via the Get System Info Parameters or setting
+SOL Inactivity Timeouts via Set SOL Configuration Parameters
+(ipmi-oem's Dell get-system-info and get/set-sol-inactivity-timeout
+commands are examples of this).
+
+The following is a (likely) incomplete list of IPMI commands the
+vendor may have added OEM extensions.
+
+Get/Set System Info Parameters (22.14a/22.14b)
+
+Get/Set LAN Configuration Parameters (23.1/23.2)
+
+Get/Set PEF Configuration Parameters (30.3/30.4)
+
+Get/Set SOL Configuration Parameters (26.2/26.3)
+
+Get/Set Serial Modem Configuration Parameters (25.1/25.2)
+
+Get/Set System Boot Options (28.12/28.13)
+
+IPMI OEM data details
+---------------------
+
+All IPMI OEM data information to properly interpret system
+information, sensors, system event log information, etc.  The
+following is an (likely) incomplete list of IPMI OEM data that would
+be needed:
+
+OEM Sensors/System Events
+- OEM Event Type Codes (see Table 42-1)
+- OEM Sensor Types and Offsets and Event Data2/3 information (see Table 42-3)
+- OEM Entity IDs (see 43.14)
+- OEM System Event Data2 and Data3 information for all possible events (see 29.7)
+
+OEM SEL Records (32.2 and 32.3)
+
+OEM SDR Records (43.12)
+
+OEM FRU Records (see Platform Management FRU Information Storage Definition v1.0)
+
+OEM Get Device ID information (see 20.1)
+
+Documentation details that are needed:
+--------------------------------------
+
+Often when I receive information from vendors, the documentation is
+often incomplete, not detailed, or not clear.  The following are the
+common mistakes, that if vendors could do better on, would make things
+a lot easier.
+
+A)
+
+Whenver packet or record formats are given, please give details on the
+exact bit/hex and field layout of the packet or record.  Sometimes I
+am given nothing more than a hex string, i.e.
+
+"0x21 0x33 0x44 0x00 0x00 0x01"
+
+and told this will do FOO activity.  This isn't useful because we
+don't know what each byte does or what additional options are
+available.  For example, suppose the above disables a particular
+feature.  A bit/flag flip above likely allows us to re-enable the
+feature.  However, without any field/packet detail, it's impossible to
+know.  What is optimal is a specific packet/record layout similar to
+what is in the IPMI spec.
+
+B) 
+
+Sample code is not documentation.  I hope this one is self
+explanatory.  Code is often not descriptive or detailed.
+
+C) 
+
+A number of times, hex to string/flag mapping information in sensors,
+system event logs, configuration fields, etc. are missing and not
+documented.  For example, I might see something like this:
+
+"[0:3] - FOO type"
+
+with nothing else.  So what the heck is "FOO type" and how do I map
+"FOO type" to a string or flag?  Without that information, the type is
+nothing more than a random hex byte.  Another example I've seen is
+something like:
+
+"event data 2 - FOO error, see FOO error doc."
+
+And I wasn't given the error doc.  Without that document, the event
+data 2 is nothing more than a random hex byte.
+
+There needs to be details for how to map hex/masks to strings/flags.
+For example, we're looking for tables that say things like:
+
+0x1 = shared
+0x2 = dedicated
+0x3 = failover
+
+OR
+
+0x1 = bitmask condition 1
+0x2 = bitmask condition 2
+0x4 = bitmask condition 3
+
+OR
+
+0x80 = error message 1
+0x81 = error message 2
+
+etc.
+
+D)
+
+The units of fields are always needed.  For example, a timeout field
+was given to me once that did not specify if it was seconds,
+milliseconds, minutes, etc.  Another time, a field in a packet was
+named "rated amps", but the field actually stored the data in units of
+"deca Amps".  Only because the output values looked incorrect
+(relative to some volts/watts output surrounding it) did I think
+something was wrong.
+
+E)
+
+The endian of multibyte fields is needed.  Different vendors use
+different endian, it's not a good idea to assume the user magically
+knows what endian your platform uses.
+
+F)
+
+Configuration fields should be documented as read only, write only, or
+read/write.  Many times this is not listed and I end up having to
+guess.  Naturally when I guess wrong, it just ends up delaying
+implementation.
+
+G)
+
+Details for mapping between technical information and "real life"
+information.
+
+Most notable example is DIMM locations.  Documents may show how to
+calculate hex codes into DIMM locations such as DIMM 0, DIMM 1, DIMM2,
+DIMM 3, etc.  That's good.  However, the algorithm for mapping this
+information into the information physically printed on the motherboard
+(i.e. DIMM A1, DIMM A2, DIMM B1, DIMM B2) is not given.  Without it,
+the information is of very little use to those using FreeIPMI to
+diagnose problems.
+

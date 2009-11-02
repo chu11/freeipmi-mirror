@@ -653,10 +653,10 @@ FieldB.4     Value5
 Suppose FieldA is read/written using a single IPMI packet and fields
 FieldB.1-FieldB.4 can be read/written using a single IPMI packet.
 
-In the architecture that the Configtools are currently based on, the above
-would require 5 read requests to read all 5 values.  It would require
-4 read requests (for FieldB.1-FieldB.4) and 5 write requests to write
-the values.
+In the architecture that the Configtools are currently based on, the
+above would require 5 read requests to read all 5 values.  It would
+require 1 read request for FieldA, 4 read requests for
+FieldB.1-FieldB.4, and 5 write requests to write the values.
 
 Obviously, this sounds like (and is!) very inefficient. 
 
@@ -697,6 +697,27 @@ independently depending on the vendor.
 C) In the beginning of the Configtools development, 'FieldA' type
 fields were a bit more common than 'FieldB' type fields.  Currently,
 it's about 50-50.
+
+One of the major fallouts from this design is that if an
+invalid/illegal configuration exists on the motherboard by default,
+some configuration values may not be configurable.  For example,
+suppose we want to write the following config to the BMC.
+
+FieldA.1     Value1
+FieldA.2     Value2
+FieldA.3     Value3
+FieldA.4     Value4
+
+The architecture of the config tools will read FieldA.1-FieldA.4 from
+the BMC, change only FieldA.1, then try to write all the fields back
+to the BMC.  Then it would be repeated for FieldA.2, etc.
+
+However, suppose the default setting on the motherboard for FieldA.4
+is illegal.  Then every attempt to write a value to the motherboard
+will result in a "invalid input" error.
+
+Currently, this has been seen a very small minority of systems and
+work arounds have been added for those systems.
 
 9) Dealing with workarounds
 ---------------------------

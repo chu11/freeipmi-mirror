@@ -9,7 +9,8 @@ EXTRA_DIST = \
 	freeipmi-hostrange.txt \
 	freeipmi-libraries.txt \
 	freeipmi-testing.txt \
-	freeipmi-bugs-and-workarounds.txt
+	freeipmi-bugs-and-workarounds.txt \
+	freeipmi-oem-documentation-requirements.txt
 
 docdir = $(datadir)/doc/$(PACKAGE)
 
