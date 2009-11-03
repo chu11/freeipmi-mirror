@@ -460,6 +460,11 @@ IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED (0xD5) completion codes
 for unknown reasons.  Resolved by ignoring sensors that return this
 return code. [sensors-1]
 
+Intel SR2500, Intel SR1500SAS, Intel S5000PAL: Some sensors report
+invalid event bitmasks.  For example, when the lower critical
+threshold has *not* been crossed, the lower critical threshold event
+bitmask is set.  No current resolution.
+
 ipmi-sel
 --------
 

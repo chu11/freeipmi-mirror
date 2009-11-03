@@ -108,6 +108,8 @@ sensors/monitoring
 specify sensors by name too
 - useful in libipmimonitoring, if heterogenous firmware versions, but
 same sensor names?
+- manually check thresholds, don't trust motherboard to help deal w/ 
+issues on some motherboards.
 
 ipmimonitoring
 --------------
