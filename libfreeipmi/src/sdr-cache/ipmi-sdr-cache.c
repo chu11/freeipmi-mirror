@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache.c,v 1.17 2009-05-16 05:29:56 chu11 Exp $
+ *  $Id: ipmi-sdr-cache.c,v 1.18 2009-11-03 18:58:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -62,7 +62,6 @@ static char *ipmi_sdr_cache_errmsgs[] =
     "SDR cache exists",
     "SDR cache context set for reading",
     "SDR record with an identical record id already written",
-    "SDR record with an identical sensor number already written",
     "SDR record length invalid",
     "SDR record count invalid",
     "SDR cache reading initialization already called",

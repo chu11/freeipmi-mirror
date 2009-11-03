@@ -390,6 +390,8 @@ o libfreeipmi
     Results in API change.
   - Support 'change_bits' flag in Set User Access.  Results in API
     change.
+  - Remove duplicate sensor number checks in sdr-cache sub library,
+    which was invalid b/c of potential duplicate generator ids.
   - Collapse v1.5 and v2.0 "Get Authentication Capabilities"
     templates, functions, etc. into one.  Results in API change.
   - Collapse v1.5 and v2.0 "Set User Password" templates, functions,

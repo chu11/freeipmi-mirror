@@ -1,3 +1,9 @@
+2009-11-03  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/sdr-cache/,
+	libfreeipmi/src/sdr-cache/: Remove ability to check for duplicate
+	sensor numbers, is invalid b/c of different slave addresses.
+	
 2009-11-02  Albert Chu <chu11@llnl.gov>
 	
 	* Tagged Release-0_8_0_beta4.

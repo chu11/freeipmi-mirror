@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sdr-cache-create.c,v 1.38 2009-08-13 22:49:08 chu11 Exp $
+ *  $Id: ipmi-sdr-cache-create.c,v 1.39 2009-11-03 18:58:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -458,8 +458,6 @@ _sdr_cache_record_write (ipmi_sdr_cache_ctx_t ctx,
                          unsigned int *total_bytes_written,
                          uint16_t *record_ids,
                          unsigned int *record_ids_count,
-                         uint8_t *sensor_numbers,
-                         unsigned int *sensor_numbers_count,
                          uint8_t *buf,
                          unsigned int buflen)
 {
@@ -470,7 +468,6 @@ _sdr_cache_record_write (ipmi_sdr_cache_ctx_t ctx,
   assert (fd);
   assert (total_bytes_written);
   assert (!record_ids || (record_ids && record_ids_count));
-  assert (!sensor_numbers || (sensor_numbers && sensor_numbers_count));
   assert (buf);
   assert (buflen);
 
@@ -509,31 +506,6 @@ _sdr_cache_record_write (ipmi_sdr_cache_ctx_t ctx,
       (*record_ids_count)++;
     }
 
-  /* Not all SDR entries may contain a sensor number, buf[3] indicates
-   * SDR record type
-   */
-  if (sensor_numbers
-      && (buf[IPMI_SDR_CACHE_SDR_RECORD_TYPE_INDEX] == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
-          || buf[IPMI_SDR_CACHE_SDR_RECORD_TYPE_INDEX] == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
-          || buf[IPMI_SDR_CACHE_SDR_RECORD_TYPE_INDEX] == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD))
-    {
-      uint8_t sensor_number;
-      unsigned int i;
-
-      sensor_number = (uint8_t)buf[IPMI_SDR_CACHE_SDR_RECORD_SENSOR_NUMBER_INDEX];
-
-      for (i = 0; i < *sensor_numbers_count; i++)
-        {
-          if (sensor_numbers[i] == sensor_number)
-            {
-              SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_CACHE_CREATE_DUPLICATE_SENSOR_NUMBER);
-              return (-1);
-            }
-        }
-      sensor_numbers[*sensor_numbers_count] = sensor_number;
-      (*sensor_numbers_count)++;
-    }
-
   if ((n = fd_write_n (fd, buf, buflen)) < 0)
     {
       SDR_CACHE_ERRNO_TO_SDR_CACHE_ERRNUM (ctx, errno);
@@ -570,8 +542,6 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
   unsigned int total_bytes_written = 0;
   uint16_t *record_ids = NULL;
   unsigned int record_ids_count = 0;
-  uint8_t *sensor_numbers = NULL;
-  unsigned int sensor_numbers_count = 0;
 
   int fd = -1;
   int rv = -1;
@@ -588,7 +558,7 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
       || (strlen (filename) > MAXPATHLEN)
       || (create_flags != IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT
           && create_flags != IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE)
-      || (validation_flags & ~(IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_RECORD_ID | IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_SENSOR_NUMBER)))
+      || (validation_flags & ~(IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_RECORD_ID)))
     {
       SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_PARAMETERS);
       return (-1);
@@ -671,16 +641,6 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
       record_ids_count = 0;
     }
 
-  if (validation_flags & IPMI_SDR_CACHE_VALIDATION_FLAGS_DUPLICATE_SENSOR_NUMBER)
-    {
-      if (!(sensor_numbers = (uint8_t *)malloc (ctx->record_count * sizeof (uint8_t))))
-        {
-          SDR_CACHE_SET_ERRNUM (ctx, IPMI_SDR_CACHE_ERR_OUT_OF_MEMORY);
-          goto cleanup;
-        }
-      sensor_numbers_count = 0;
-    }
-
   if (_sdr_cache_reservation_id (ctx,
                                  ipmi_ctx,
                                  &reservation_id) < 0)
@@ -741,8 +701,6 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
                                        &total_bytes_written,
                                        record_ids,
                                        &record_ids_count,
-                                       sensor_numbers,
-                                       &sensor_numbers_count,
                                        record_buf,
                                        record_len) < 0)
             goto cleanup;
@@ -836,8 +794,6 @@ ipmi_sdr_cache_create (ipmi_sdr_cache_ctx_t ctx,
     }
   if (record_ids)
     free (record_ids);
-  if (sensor_numbers)
-    free (sensor_numbers);
   ipmi_sdr_cache_init_ctx (ctx);
   return (rv);
 }
