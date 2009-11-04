@@ -18,9 +18,9 @@ o When querying active/inactive, allowed/unallowed, true/false,
 o Support exclusion equivalent options (such as
   --exclude-sensor-types) in various tools such as ipmi-sel,
   ipmi-sensors, and ipmimonitoring.
-o Support sensor unit percentages, rates, and modifiers (i.e. "%
+o Support sensor unit percentages, rates, and modifiers (e.g. "%
   hit", "gigabyte per minute", "pounds / cu in") in most tools.
-o Support non-abbreviated units (i.e. "Amps" instead of "A") in most
+o Support non-abbreviated units (e.g. "Amps" instead of "A") in most
   tools.
 o Output IANA Manufacturer Name when appropriate in most tools.
 o Support Entity ID based sensor naming through the
@@ -61,7 +61,7 @@ o ipmi-sel
   - Support --tail option.
   - Support --system-event-only and --oem-event-only options.
   - Support --non-abbreviated-units option to output no abbreviated
-    units (i.e. "Amps" instead of "A").
+    units (e.g. "Amps" instead of "A").
   - Support --entity-sensor-names option.
   - Support --no-sensor-type-output option.
   - Support --interpret-oem-data option.
@@ -72,7 +72,7 @@ o ipmi-sel
   - Rename --delete-all to --clear for consistency to IPMI spec.
     Backwards compatability maintained.
   - Output manufacturer name with "Manufacturer ID" if name available.
-  - Support sensor unit percentages, rates and modifiers (i.e. "%
+  - Support sensor unit percentages, rates and modifiers (e.g. "%
     hit", "gigabyte per minute", "pounds / cu in").
   - Output allocation information with --info if available.
   - Output hex code more often if translation to string not available.
@@ -102,7 +102,7 @@ o ipmi-sensors
     --list-groups to --list-sensor-types.  Backwards compatability
     maintained.
   - Support --non-abbreviated-units option to output no abbreviated
-    units (i.e. "Amps" instead of "A").
+    units (e.g. "Amps" instead of "A").
   - Rename --sensors option to --record-ids.  Maintain old options for
     backwards compatability.
   - Support --exclude-record-ids option.
@@ -121,7 +121,7 @@ o ipmi-sensors
     mode (because the result is always "N/A").
   - Do not output SDR event records type under verbose output, only in very
     verbose output.
-  - Support sensor unit percentages, rates and modifiers (i.e. "%
+  - Support sensor unit percentages, rates and modifiers (e.g. "%
     hit", "gigabyte per minute", "pounds / cu in").
   - Output allocation information with --sdr-info if available.
   - Output Entity ID under verbose instead of very verbose mode.
@@ -187,7 +187,7 @@ o ipmimonitoring
   - Remove --regenerate-sdr-cache legacy option due to conflict with
     newer option.
   - Support --non-abbreviated-units option to output no abbreviated
-    units (i.e. "Amps" instead of "A").
+    units (e.g. "Amps" instead of "A").
   - Support --comma-separated-output option.
   - Support --no-header-output option.
   - Support --entity-sensor-names option.
@@ -306,7 +306,7 @@ o ipmi-chassis-config
   - Support ability to report not supported field error.
   - Support additional options in FreeIPMI config file.
 o ipmi-sensors-config
-  - Support sensor unit percentages, rates and modifiers (i.e. "%
+  - Support sensor unit percentages, rates and modifiers (e.g. "%
     hit", "gigabyte per minute", "pounds / cu in").
   - Support ability to report read only field error.
   - Support ability to report not supported field error.
@@ -375,12 +375,12 @@ o libfreeipmi
   - Suppot FIID_FIELD_MAKES_PACKET_SUFFICIENT fiid field flags and new
     functions.
   - Support ipmi_sensor_units_string utility function to support
-    units, percentages, rates, and units modifiers (i.e. "% hit",
+    units, percentages, rates, and units modifiers (e.g. "% hit",
     "gigabyte per minute", "pounds / cu in").
   - Properly handle int/unsigned int potential overflow conditions.
   - Fix several sensor units abbreviations.
   - More detailed KCS and SSIF debug output with header information.
-  - Always output debug key fields (i.e. 'raw_data' from ipmi-raw) in
+  - Always output debug key fields (e.g. 'raw_data' from ipmi-raw) in
     byte array format instead of an integer even if the field length
     is < 64 bits.
   - Update various macros, fields, etc. for IPMI errata updates.

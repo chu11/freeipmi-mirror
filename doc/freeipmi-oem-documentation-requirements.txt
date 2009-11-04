@@ -99,7 +99,7 @@ A)
 
 Whenver packet or record formats are given, please give details on the
 exact bit/hex and field layout of the packet or record.  Sometimes I
-am given nothing more than a hex string, i.e.
+am given nothing more than a hex string, e.g.
 
 "0x21 0x33 0x44 0x00 0x00 0x01"
 
@@ -229,7 +229,7 @@ The most notable example is DIMM locations.  Documents may show how to
 calculate hex codes into DIMM locations such as DIMM 0, DIMM 1, DIMM2,
 DIMM 3, etc.  That's good.  However, the algorithm for mapping this
 information into the information physically printed on the motherboard
-(i.e. DIMM A1, DIMM A2, DIMM B1, DIMM B2) is not given.  Without it,
+(e.g. DIMM A1, DIMM A2, DIMM B1, DIMM B2) is not given.  Without it,
 the information is of very little use to those using FreeIPMI to
 diagnose problems.
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.103 2009-09-01 15:59:41 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.104 2009-11-04 18:45:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -662,8 +662,8 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
         }
 
       /* I don't think there is a guarantee the other data
-       * (i.e. authentication keys, session id's, etc.)  will be valid
-       * in the responses if the status code contains an error.  So
+       * (authentication keys, session id's, etc.)  will be valid in
+       * the responses if the status code contains an error.  So
        * unlike the IPMI 1.5 pre-session or IPMI 2.0 session checks,
        * we check the status code prior to checking remaining data
        */

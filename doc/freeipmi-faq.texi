@@ -157,7 +157,7 @@ A number of HPC aspects have been added to the tools and/or are
 supported by other HPC software due to the need for FreeIPMI to work
 on LLNL's Linux clusters.
 
-Scalable parallel execution of many FreeIPMI tools (i.e. ipmi-sensors,
+Scalable parallel execution of many FreeIPMI tools (ipmi-sensors,
 ipmi-sel, bmc-info, ipmimonitoring, etc.) across a cluster is
 supported through hostranged input and output.  For example:
 
@@ -303,7 +303,7 @@ bit libraries reside under lib64 and 32 bit libs under lib. Autotools
 by default installs libfreeipmi.so under /usr/lib, instead of
 /usr/lib64 causing dynamic linking errors.  Pass libdir appropriately
 to configure script to workaround this
-problem. (i.e. --libdir=/usr/lib64)
+problem. (e.g. --libdir=/usr/lib64)
 
 Example:
 @example
@@ -315,7 +315,7 @@ Example:
 
 In order to compile the sunbmc driver, the bmc_intf.h header file must
 be in your include path.  This can be added by to the include search
-path by adding the path to the CPPFLAGS environment variable.  i.e.
+path by adding the path to the CPPFLAGS environment variable.  e.g.
 
 in bash
 

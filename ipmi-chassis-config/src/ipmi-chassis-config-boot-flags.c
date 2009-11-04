@@ -1035,7 +1035,7 @@ ipmi_chassis_config_boot_flags_get (ipmi_chassis_config_state_data_t *state_data
   if (config_section_add_key (state_data->pstate,
                               section,
                               "Device_Instance_Selector",
-                              "Possible values: None/Internal-{1-15}/External-{1-15} (i.e. Internal-5)",
+                              "Possible values: None/Internal-{1-15}/External-{1-15} (e.g. Internal-5)",
                               0,
                               device_instance_selector_checkout,
                               device_instance_selector_commit,

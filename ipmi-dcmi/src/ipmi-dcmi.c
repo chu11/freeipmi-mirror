@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-dcmi.c,v 1.2 2009-09-22 17:26:48 chu11 Exp $
+ *  $Id: ipmi-dcmi.c,v 1.3 2009-11-04 18:45:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2009 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -122,7 +122,7 @@ _dcmi_specification_conformance (ipmi_dcmi_state_data_t *state_data, uint8_t *pa
    * formmatted.  decimal?  BCD?  On the one hand, I think to be
    * consistent to the "IPMI Version" of a Get Device ID call, it
    * should be BCD.  But, these are 8 bit fields instead of 4 bit
-   * fields (i.e. would I output "01.00" instead of "1.0"?).  So I'm
+   * fields (e.g. would I output "01.00" instead of "1.0"?).  So I'm
    * going to assume decimal for now.
    */
   pstdout_printf (state_data->pstate,

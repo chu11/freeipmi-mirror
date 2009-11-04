@@ -53,8 +53,8 @@
  * 0x08 - network function
  * 0x01 - OEM cmd
  * 0x?? - interface used
- *      - 00h - system interface (i.e. KCS)
- *      - 01h - networking (i.e. tftp, ftp, http)
+ *      - 00h - system interface (e.g. KCS)
+ *      - 01h - networking (e.g. tftp, ftp, http)
  *      - 02h - USB MSC
  * 0x?? - update type
  *      [7]   - force update

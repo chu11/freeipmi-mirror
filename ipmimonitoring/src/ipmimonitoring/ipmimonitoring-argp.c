@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring-argp.c,v 1.63 2009-10-14 22:30:28 chu11 Exp $
+ *  $Id: ipmimonitoring-argp.c,v 1.64 2009-11-04 18:45:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -125,7 +125,7 @@ static struct argp_option cmdline_options[] =
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
       "Do not output column headers.", 49},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' instead of 'A').", 50},
+      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 50},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
       "Output in legacy format.", 51},
     { "sensor-config-file", SENSOR_CONFIG_FILE_KEY, "FILE", 0,

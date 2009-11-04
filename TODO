@@ -170,7 +170,7 @@ IPv6
 - assume OEM extensions to configure IPv6 addresses?
 have funcs that return buflen return ssize_t?, input should be size_t and void *? like read(), write()?
 config file support per host.
-i.e. workarounds FOO nodes[0-100]
+e.g. workarounds FOO nodes[0-100]
 
 bmc-device
 --------
@@ -261,7 +261,7 @@ The Intelligent Platform Management Interface (IPMI) specification
 defines a set of interfaces for platform management.  It is
 implemented by a large number of hardware manufacturers to support
 system management on motherboards. The features of IPMI that most
-users will be interested in are sensor monitoring (i.e. CPU
+users will be interested in are sensor monitoring (e.g. CPU
 temperatures, fan speeds), remote power control, and serial-over-LAN
 (SOL).
 

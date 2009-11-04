@@ -123,7 +123,7 @@ static struct argp_option cmdline_options[] =
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
       "Do not output column headers.", 51},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (i.e. 'Amps' insetead of 'A').", 52},
+      "Output non-abbreviated units (e.g. 'Amps' insetead of 'A').", 52},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
       "Output in legacy format.", 53},
     { 0 }

@@ -98,12 +98,12 @@ get_threshold_message_list (struct ipmi_sensors_state_data *state_data,
   assert (event_message_list_len);
   assert (no_event_msg);
 
-  /* achu: multiple threshold flags can be set (i.e. if we pass the
+  /* achu: multiple threshold flags can be set (e.g. if we pass the
    * critical threshold, we've also passed the non-critical threshold)
-   * but we only want to * output one message at the max.  Luckily for
-   * us (and due to smarts by the IPMI specification authors) if we
-   * go from high bits to low bits, we will read the flags in the
-   * correct order for output.
+   * but we only want to output one message at the max.  Luckily for
+   * us (and due to smarts by the IPMI specification authors) if we go
+   * from high bits to low bits, we will read the flags in the correct
+   * order for output.
    *
    * If you're confused why were use 'ipmi_get_threshold_message'
    * instead of 'ipmi_get_generic_event_message' (b/c this is

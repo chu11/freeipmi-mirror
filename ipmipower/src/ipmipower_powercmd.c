@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.194 2009-08-31 17:05:08 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.195 2009-11-04 18:45:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -922,11 +922,10 @@ _recv_packet (ipmipower_powercmd_t ip, packet_type_t pkt)
           goto cleanup;
         }
       
-      /* I don't think there is a guarantee the data
-       * (i.e. authentication keys, session id's, etc.) in the
-       * RAKP response will be valid if there is a status code
-       * error.  So we check this status code first, then the
-       * other stuff afterwards.
+      /* I don't think there is a guarantee the data (authentication
+       * keys, session id's, etc.) in the RAKP response will be valid
+       * if there is a status code error.  So we check this status
+       * code first, then the other stuff afterwards.
        */
       if (!ipmipower_check_rmcpplus_status_code (ip, pkt))
         {

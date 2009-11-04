@@ -16,7 +16,7 @@ board, slot connector, watchdog2, entity presence, management
 subsystem health, battery, fru state.
 
 It will also monitor the sensor readings for temperature, fan, and
-voltage sensors (i.e. 99.0 C, 130000.00 RPM, 1.2 V).
+voltage sensors (e.g. 99.0 C, 130000.00 RPM, 1.2 V).
 
 ganglia_ipmi_sensors.pl
 -----------------------

@@ -77,7 +77,7 @@ API style, please bring it up with the FreeIPMI authors.
 For example, pretty much all of the "fill" functions in libfreeipmi
 take the exact parameters they need to fill the fiid object which is
 passed along as a parameter.  All parameters are passed by value, not
-by a pointer or other method (i.e. object, struct, etc.).
+by a pointer or other method (e.g. object, struct, etc.).
 
 Exceptions do exist.  For example, fill_cmd_chassis_identify() takes
 parameters passed by pointer instead of passed by value.  The reason
@@ -296,7 +296,7 @@ B) The struct definition describes packets closely and is relatively
    easy to use and understand.
 C) Relatively efficient.
 D) General usage code size is relatively small.
-E) General usage need not determine field type (i.e. is it an unsigned
+E) General usage need not determine field type (e.g. is it an unsigned
    or signed integer).
 
 Cons:
@@ -369,7 +369,7 @@ B) General usage code size is relatively small.
 C) The struct definition describes packets exactly and is relatively
    easy to use and understand.
 D) Very efficient (little actual marshalling/unmarshalling needs to be done.)
-E) General usage need not determine field type (i.e. is it an unsigned
+E) General usage need not determine field type (e.g. is it an unsigned
    or signed integer).
 
 Cons:
@@ -469,7 +469,7 @@ C) Lots of duplicate templates (relative inability to "inherit"
 structs without #define mangling/hackery).
 D) General usage code size is increased.
 E) General usage must determine and cast field to appropriate type
-   (i.e. is it an unsigned or signed integer).
+   (e.g. is it an unsigned or signed integer).
 
 (Side Comments: 
 
@@ -478,7 +478,7 @@ macros/enums for the field names rather than strings.  Many of the
 above benefits are identical, except the debug dump output
 capabilities are weaker in exchange for better performance.
 
-Some other networking APIs may return a type of a field (i.e. signed
+Some other networking APIs may return a type of a field (e.g. signed
 vs unsigned, 16bit vs 32bit, etc.).  That would remove need to
 determine casting in general usage in exchange for larger general
 usage code size.)
@@ -570,7 +570,7 @@ The Get Channel Authentication Capabilities Command is typically the
 first packet sent in the IPMI session.  It returns information 
 on the remote machine's support of:
 
-A) IPMI 1.5 authentication mechanisms (i.e. md2, md5, etc.)
+A) IPMI 1.5 authentication mechanisms (e.g. md2, md5, etc.)
 B) IPMI 1.5 and/or IPMI 2.0
 C) per msg authentication
 D) K_g status
@@ -733,7 +733,7 @@ vendor, turn on the workarounds.
 
 On the other hand, a number of these workarounds are due to vendor
 compliance problems.  In some cases, the workarounds are so intrusive
-(i.e. using a different hashing algorithm for keys) they must require
+(e.g. using a different hashing algorithm for keys) they must require
 a workaround on the command line b/c there is really no other way to
 handle it.  However, some could be handled seemlessly, but would
 require altered behavior to handle the "common case".

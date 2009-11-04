@@ -324,7 +324,7 @@ in FreeIPMI implemented.  Worked with vendor to implement fix in
 firmware.
 
 Supermicro H8QME with SIMSO daughter card: Setting a channel privilege
-limit (i.e. LAN channel privilege limit) does not seem to affect
+limit (e.g. LAN channel privilege limit) does not seem to affect
 authentication and/or execution of IPMI commands.  No current
 resolution.
 
@@ -349,7 +349,7 @@ Inventec 5441/Dell Xanadu2: When disabling IPMI via Enable_IPMI_Msgs,
 IPMI over LAN still works for a user.  No current resolution.
 
 Inventec 5441/Dell Xanadu2: Setting a channel privilege limit
-(i.e. LAN channel privilege limit) does not seem to affect
+(e.g. LAN channel privilege limit) does not seem to affect
 authentication and/or execution of IPMI commands.  No current
 resolution.
 
@@ -422,7 +422,7 @@ Resolved by assuming the sensor state is 0 (i.e. no sensor states have
 been asserted).
 
 Dell 2950: Some sensors return sensor states that are invalid
-(i.e. return 0xC0 if only 0x1 through 0x20 are supported).  Resolved by
+(e.g. return 0xC0 if only 0x1 through 0x20 are supported).  Resolved by
 ignoring sensor states that are unknown.
 
 Dell 2950: Some sensors return
@@ -473,7 +473,7 @@ incorrectly report the generator_id slave address.  Resolved with
 special case handling.
 
 Supermicro H8QME with SIMSO daughter card: It appears different record
-ids (i.e. 280 vs. 281) can be used to retrieve identical SEL records.
+ids (e.g. 280 vs. 281) can be used to retrieve identical SEL records.
 No workaround provided, assumed to be a non-issue.
 
 HP DL 585: The Get SEL Entry command is not supported.  No current

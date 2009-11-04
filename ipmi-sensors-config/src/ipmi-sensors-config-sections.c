@@ -93,7 +93,7 @@ ipmi_sensors_config_sections_create (ipmi_sensors_config_state_data_t *state_dat
        * Technically, the IPMI spec lists that compact record formats
        * also support settable thresholds.  However, since compact
        * records don't contain any information for interpreting
-       * threshold sensors (i.e. R exponent) I don't know how they
+       * threshold sensors (e.g. R exponent) I don't know how they
        * could be of any use.  No vendor that I know of supports
        * threshold sensors via a compact record (excluding possible
        * OEM ones).

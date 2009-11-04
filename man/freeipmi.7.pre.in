@@ -199,7 +199,7 @@ for more information and general trouble-shooting information.
 .SH "Configuration"
 In order to avoid typing in a long list of command line options to
 specify IPMI communication requirements everytime a command is
-executed (i.e. driver paths, usernames, passwords, etc.), an
+executed (e.g. driver paths, usernames, passwords, etc.), an
 alternate set of default values can be set for most FreeIPMI
 tools in the FreeIPMI configuration file.  See 
 .B freeipmi.conf(5)

@@ -1103,7 +1103,7 @@ _setup_threshold_fields (ipmi_sensors_config_state_data_t *state_data,
   assert (description);
 
   /* We will adjust this list as necessary later on.  Many
-   * measurements could technically be negative (i.e. temperature)
+   * measurements could technically be negative (e.g. temperature)
    * even though its unrealistic for IPMI's sake.  Others, I'm just
    * not sure about.
    */
@@ -1245,7 +1245,7 @@ _setup_threshold_hysteresis_fields (ipmi_sensors_config_state_data_t *state_data
             description);
 
   /* We will adjust this list as necessary later on.  Many
-   * measurements could technically be negative (i.e. temperature)
+   * measurements could technically be negative (e.g. temperature)
    * even though its unrealistic for IPMI's sake.  Others, I'm just
    * not sure about.
    */

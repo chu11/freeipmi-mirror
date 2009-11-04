@@ -2508,10 +2508,10 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
             }
         }
 
-      /* There is no guarantee that other data (i.e. authentication
-       * keys, session id's, etc.) in the RAKP response will be valid
-       * if there is a status code error.  So we check this status
-       * code along with this stuff.
+      /* There is no guarantee that other data (authentication keys,
+       * session id's, etc.) in the RAKP response will be valid if
+       * there is a status code error.  So we check this status code
+       * along with this stuff.
        */
 
       if (FIID_OBJ_GET (obj_cmd_rs,
@@ -2574,7 +2574,7 @@ _ipmi_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
             }
         }
 
-      /* There is no guarantee that other data (i.e. authentication
+      /* There is no guarantee that other data (e.g. authentication
        * keys, session id's, etc.) in the RAKP response will be valid
        * if there is a status code error.  So we check this status
        * code along with this stuff.

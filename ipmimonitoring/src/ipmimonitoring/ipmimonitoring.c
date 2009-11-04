@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.137 2009-10-02 22:00:12 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.138 2009-11-04 18:45:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -576,7 +576,7 @@ _output_sensor_bitmask (ipmimonitoring_state_data_t *state_data,
       unsigned int output_count = 0;
       int j, j_start = 0, j_end = 16, j_decr_flag = 0;
 
-      /* achu: multiple threshold flags can be set (i.e. if we pass the
+      /* achu: multiple threshold flags can be set (e.g. if we pass the
        * critical threshold, we've also passed the non-critical threshold)
        * but we only want to * output one message at the max.  Luckily for
        * us (and due to smarts by the IPMI specification authors) if we

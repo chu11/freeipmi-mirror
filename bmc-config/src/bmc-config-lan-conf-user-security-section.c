@@ -379,7 +379,7 @@ bmc_config_lan_conf_user_security_section_get (bmc_config_state_data_t *state_da
   if (config_section_add_key (state_data->pstate,
                               section,
                               "Attempt_Count_Reset_Interval",
-                              "Possible values: 0-65535, in 10 second increments (i.e. 2 = 20 sec)\n"
+                              "Possible values: 0-65535, in 10 second increments (e.g. 2 = 20 sec)\n"
                               "                 0 indicates no interval (i.e. don't reset counter)",
                               0,
                               attempt_count_reset_interval_checkout,
@@ -390,7 +390,7 @@ bmc_config_lan_conf_user_security_section_get (bmc_config_state_data_t *state_da
   if (config_section_add_key (state_data->pstate,
                               section,
                               "User_Lockout_Interval",
-                              "Possible values: 0-65535, in 10 second increments (i.e. 2 = 20 sec)\n"
+                              "Possible values: 0-65535, in 10 second increments (e.g. 2 = 20 sec)\n"
                               "                 0 indicates no interval (i.e. don't re-enable user)",
                               0,
                               user_lockout_interval_checkout,

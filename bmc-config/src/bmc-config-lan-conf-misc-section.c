@@ -417,7 +417,7 @@ bmc_config_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
   if (config_section_add_key (state_data->pstate,
                               section,
                               "Gratuitous_ARP_Interval",
-                              "Possible values: 0-255, in 500ms increments (i.e. 2 = 1000ms)",
+                              "Possible values: 0-255, in 500ms increments (e.g. 2 = 1000ms)",
                               0,
                               gratuitous_arp_interval_checkout,
                               gratuitous_arp_interval_commit,

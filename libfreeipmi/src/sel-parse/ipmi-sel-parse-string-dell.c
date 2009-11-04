@@ -916,9 +916,9 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
        * Data3
        * [7:0] - 00h - FFh = DIMM bitmap
        *
-       * i.e. Increment = 0
+       * e.g. Increment = 0
        *      DIMM bitmap = 00000001b = DIMM 1
-       * i.e. Increment = 1
+       * e.g. Increment = 1
        *      DIMM bitmap = 00000001b = DIMM 9
        */
       if (((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -1236,9 +1236,9 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
        * 
        * Data2
        * [7:6] - blade format
-       *         0 - single height (i.e. Mezz B, Mezz C)
-       *         1 - double height (i.e. Mezz B1, Mezz B2, Mezz C1, Mezz C2)
-       *         2 - double height, double width (i.e. Mezz B1, Mezz B2, Mezz C1, Mezz C2)
+       *         0 - single height (e.g. Mezz B, Mezz C)
+       *         1 - double height (e.g. Mezz B1, Mezz B2, Mezz C1, Mezz C2)
+       *         2 - double height, double width (e.g. Mezz B1, Mezz B2, Mezz C1, Mezz C2)
        * [5:0] - reserved
        *
        * Data3

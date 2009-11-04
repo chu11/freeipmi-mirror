@@ -1682,7 +1682,7 @@ ipmi_sdr_parse_threshold_assertion_supported (ipmi_sdr_parse_ctx_t ctx,
    * Technically, the IPMI spec lists that compact record formats also
    * support settable thresholds.  However, since compact records
    * don't contain any information for interpreting threshold sensors
-   * (i.e. R exponent) I don't know how they could be of any use.  No
+   * (e.g. R exponent) I don't know how they could be of any use.  No
    * vendor that I know of supports threshold sensors via a compact
    * record (excluding possible OEM ones).
    *
@@ -1915,7 +1915,7 @@ ipmi_sdr_parse_threshold_deassertion_supported (ipmi_sdr_parse_ctx_t ctx,
    * Technically, the IPMI spec lists that compact record formats also
    * support settable thresholds.  However, since compact records
    * don't contain any information for interpreting threshold sensors
-   * (i.e. R exponent) I don't know how they could be of any use.  No
+   * (e.g. R exponent) I don't know how they could be of any use.  No
    * vendor that I know of supports threshold sensors via a compact
    * record (excluding possible OEM ones).
    *
@@ -2142,7 +2142,7 @@ ipmi_sdr_parse_threshold_readable (ipmi_sdr_parse_ctx_t ctx,
    * Technically, the IPMI spec lists that compact record formats also
    * support settable thresholds.  However, since compact records
    * don't contain any information for interpreting threshold sensors
-   * (i.e. R exponent) I don't know how they could be of any use.  No
+   * (e.g. R exponent) I don't know how they could be of any use.  No
    * vendor that I know of supports threshold sensors via a compact
    * record (excluding possible OEM ones).
    *
@@ -2297,7 +2297,7 @@ ipmi_sdr_parse_threshold_settable (ipmi_sdr_parse_ctx_t ctx,
    * Technically, the IPMI spec lists that compact record formats also
    * support settable thresholds.  However, since compact records
    * don't contain any information for interpreting threshold sensors
-   * (i.e. R exponent) I don't know how they could be of any use.  No
+   * (e.g. R exponent) I don't know how they could be of any use.  No
    * vendor that I know of supports threshold sensors via a compact
    * record (excluding possible OEM ones).
    *

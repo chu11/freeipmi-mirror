@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.65 2009-09-16 23:12:23 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.66 2009-11-04 18:45:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -1112,7 +1112,7 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
       /* IPMI spec has bitmasks as the offset bit number, not the
        * actual offset.
        *
-       * i.e. bitmask = 0x0020.  IPMI spec offset = 5.
+       * e.g. bitmask = 0x0020.  IPMI spec offset = 5.
        */
       for (i = 0; i < 16; i++)
         {
@@ -1193,7 +1193,7 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
       /* IPMI spec has bitmasks as the offset bit number, not the
        * actual offset.
        *
-       * i.e. bitmask = 0x0020.  IPMI spec offset = 5.
+       * e.g. bitmask = 0x0020.  IPMI spec offset = 5.
        */
       for (i = 0; i < 16; i++)
         {
@@ -1296,7 +1296,7 @@ ipmi_monitoring_bitmask_string (ipmi_monitoring_ctx_t c,
       /* IPMI spec has bitmasks as the offset bit number, not the
        * actual offset.
        *
-       * i.e. bitmask = 0x0020.  IPMI spec offset = 5.
+       * e.g. bitmask = 0x0020.  IPMI spec offset = 5.
        */
       for (i = 0; i < 16; i++)
         {

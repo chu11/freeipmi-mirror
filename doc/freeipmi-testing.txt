@@ -34,7 +34,7 @@ FreeIPMI tools.  Please see FreeIPMI documentation/manpages for
 additional information.
 
 All tool testing listed below is generally agnostic to execution
-in-band vs. out-of-band with obvious exceptions (i.e. testing
+in-band vs. out-of-band with obvious exceptions (e.g. testing
 ipmipower in-band, configuring the MAC address out-of-band, etc).
 Naturally, the testing below assumes the tester is not
 configuring/using FreeIPMI workarounds.  That defeats the point of
@@ -266,7 +266,7 @@ Configuration changes to try:
   * Enable_ARP_Response
     o Can configure both Yes and No
   * Gratuitous_ARP_Interval
-    o Can configure a different value (i.e. 5 to 6)
+    o Can configure a different value (e.g. 5 to 6)
 - For Rmcpplus_Conf_Privilege section:
   * Maximum_Privilege_Cipher_Suite_Id_0
     o Can configure Unused, User, Operator, and Administrator.
@@ -286,17 +286,17 @@ Configuration changes to try:
   * Force_SOL_Payload_Encryption
     o Can configure both Yes and No
   * Character_Accumulate_Interval
-    o Can configure a different value (i.e. 5 to 6)
+    o Can configure a different value (e.g. 5 to 6)
   * Character_Send_Threshold
-    o Can configure a different value (i.e. 5 to 6)
+    o Can configure a different value (e.g. 5 to 6)
   * SOL_Retry_Count
-    o Can configure a different value (i.e. 5 to 6)
+    o Can configure a different value (e.g. 5 to 6)
   * SOL_Retry_Interval
-    o Can configure a different value (i.e. 5 to 6)
+    o Can configure a different value (e.g. 5 to 6)
   * Non_Volatile_Bit_Rate
-    o Can configure a different bit rate (i.e. 57600 to 115200)
+    o Can configure a different bit rate (e.g. 57600 to 115200)
   * Volatile_Bit_Rate
-    o Can configure a different bit rate (i.e. 57600 to 115200)
+    o Can configure a different bit rate (e.g. 57600 to 115200)
 
 Test)
 
@@ -320,7 +320,7 @@ Test)
 
 Reboot the machine.  Using --checkout, checkout the current
 configuration.  Configure all fields to be the "opposite" or
-"different" of what they currently are (i.e. No to Yes, User to
+"different" of what they currently are (e.g. No to Yes, User to
 Administrator, etc.).
 
 Power off the machine and power it back on.
@@ -358,7 +358,7 @@ Execute bmc-info with no bmc-info specific options, verify tool:
   * Manufacturer ID
     o The name of the manufacter outputs
  
-      i.e. "Manufacturer ID       : SOME-COMPANY (1234)"
+      e.g. "Manufacturer ID       : SOME-COMPANY (1234)"
            vs.
            "Manufacturer ID       : 1234"
       
@@ -406,7 +406,7 @@ Execute ipmi-sensors with no ipmi-sensors specific options, verify tool:
   * If N/A is output instead, is the sensor improperly listed a
     software sensor?  Is the sensor disabled?  Is sensor scanning
     disabled?  Is the event-reading-type-code of the sensor correct?
-- All threshold values (i.e. temperature, rpm, voltage, etc.) are
+- All threshold values (temperature, rpm, voltage, etc.) are
   valid/correct values (no invalid numbers, no negative temperatures,
   etc.).
   * If not, are stored SDR values for this sensor correct?
@@ -427,7 +427,7 @@ Execute ipmi-sensors with very verbose output (-vv), verify tool:
       point to a unique sensor.
   * Entity ID
     o The name of the Entity ID outputs 
-      i.e. "Entity ID: system board (7)"
+      e.g. "Entity ID: system board (7)"
            vs.
            "Entity ID: 7"
       If the above is not the case, are all the Entity IDs valid?  Do they
@@ -934,7 +934,7 @@ and no password input), verify tool:
 - Exits with error.  Most likely/best error message "username invalid".
 * It is most important that the connection not succeed.
 
-Execute bmc-info, authenticating with a bogus username (i.e. FOO)
+Execute bmc-info, authenticating with a bogus username (e.g. FOO)
 - Exits with error.  Most likely/best error message "username invalid".
 * It is most important that the connection not succeed.
 
@@ -1160,7 +1160,7 @@ and no password input), verify tool:
 - Exits with error.  Most likely/best error message "username invalid".
 * It is most important that the connection not succeed.
 
-Execute bmc-info, authenticating with a bogus username (i.e. FOO)
+Execute bmc-info, authenticating with a bogus username (e.g. FOO)
 - Exits with error.  Most likely/best error message "username invalid".
 * It is most important that the connection not succeed.
 
