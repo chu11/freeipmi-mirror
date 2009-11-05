@@ -110,6 +110,8 @@ specify sensors by name too
 same sensor names?
 - manually check thresholds, don't trust motherboard to help deal w/ 
 issues on some motherboards.
+check sensor thresholds manually instead of trust flags
+- some mobos seem to set flags incorrectly
 
 ipmimonitoring
 --------------
