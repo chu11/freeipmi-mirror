@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.74.12.1 2009-04-08 21:12:37 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.74.12.2 2009-11-05 17:41:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -133,6 +133,13 @@ extern "C" {
  * an invalid SOL port.  This workaround flag will ignore the invalid
  * port and continue with the default.
  *
+ * SKIP_SOL_ACTIVATION_STATUS
+ *
+ * Discovered on Supermicro X8SIL-F motherboard, the motherboard does
+ * not support the Get Payload Activation Status command.  This
+ * workaround flag will skip that portion of the protocol and pray for
+ * the best.
+ *
  * INTEL_2_0_SESSION
  *
  * All currently known IPMI 2.0 implementations on Intel motherboards
@@ -168,6 +175,7 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES 0x00000010
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE     0x00010000
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT             0x00020000
+#define IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS  0x00040000
 #define IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION           0x01000000
 #define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION      0x02000000
 #define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION             0x04000000

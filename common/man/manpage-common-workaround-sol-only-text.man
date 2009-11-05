@@ -48,3 +48,7 @@ Asus P5MT-R: An invalid IPMI 2.0 SOL port is reported by the
 motherboard.  This may cause "session timeout" errors to occur.  In
 order to work around this issue, the "solport" workaround must be
 specified.
+.LP
+Supermicro X8SIL-F: The Get Payload Activation Status command isn't
+supported.  This may cause "BMC Error" errors to occur.  In order to
+work around this issue, the "solstatus" workaround must be specified.

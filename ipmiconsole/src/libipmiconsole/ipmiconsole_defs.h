@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.65.10.3 2009-04-08 21:12:38 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.65.10.4 2009-11-05 17:41:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -205,6 +205,7 @@ typedef enum
         (IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES \
          | IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE \
          | IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT \
+         | IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS \
          | IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION \
 	 | IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION \
          | IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION \

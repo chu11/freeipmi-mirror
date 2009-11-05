@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.74.2.3 2009-04-08 21:12:38 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.74.2.4 2009-11-05 17:41:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -2783,6 +2783,27 @@ _process_protocol_state_get_channel_payload_support_sent(ipmiconsole_ctx_t c)
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return -1;
       c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      return 0;
+    }
+
+  /* IPMI Workaround
+   *
+   * Discovered on Supermicro X8SIL-F
+   *
+   * The Get Payload Activation Status isn't supported.  Skip this
+   * part of the state machine and pray for the best I guess.
+   */
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS)
+    {
+      if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ) < 0)
+        {
+          c->session.close_session_flag++;
+          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
+            return -1;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+          return 0;
+        }
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 

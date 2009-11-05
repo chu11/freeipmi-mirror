@@ -1,3 +1,7 @@
+2009-11-05  Albert Chu <chu11@llnl.gov>
+
+	* Add "solstatus" workaround to ipmiconsole.
+	
 2009-10-16  Albert Chu <chu11@llnl.gov>
 
 	* Tagged Release-0_7_14.

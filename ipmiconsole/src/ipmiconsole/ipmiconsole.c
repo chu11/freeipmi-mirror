@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.53.4.5 2009-06-10 16:53:34 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.53.4.6 2009-11-05 17:41:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2008 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -321,6 +321,8 @@ main(int argc, char **argv)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE;
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_IGNORE_SOL_PORT)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT;
+  if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SKIP_SOL_ACTIVATION_STATUS)
+    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS;
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION;
   if (cmd_args.common.workaround_flags & IPMI_TOOL_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)

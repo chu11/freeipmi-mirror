@@ -1,3 +1,7 @@
+0.7.15 - xx/xx/xx
+-----------------
+o Add "solstatus" workaround to ipmiconsole.
+
 0.7.14 - 10/16/09
 -----------------
 o Fix consolidated-output corner cases.
