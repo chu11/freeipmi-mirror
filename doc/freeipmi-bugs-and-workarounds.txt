@@ -290,6 +290,13 @@ session, the initial SOL session is not given a "SOL is deactivating"
 flag in a BMC to Remote Console packet.  Not a severe issue, since the
 SOL session will eventually timeout.  No current resolution.
 
+Supermicro X8SIL-F: The Get Payload Activation Status command appears
+to not be supported (or not implemented correctly, it is unclear given
+the completion code CCh = "Invalid data field in request").  Resolved
+with a workaround to skip this point in the state machine (and pray
+things still work).  Note that while this command is listed as
+optional in the IPMI spec, it is not optional if SOL is supported.
+
 bmc-config
 ----------
 

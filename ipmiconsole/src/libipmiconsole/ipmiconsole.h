@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.80 2009-04-08 20:47:06 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.81 2009-11-05 17:41:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -115,32 +115,37 @@ extern "C" {
  *
  * AUTHENTICATION_CAPABILITIES
  *
- * Discoverd on an ASUS P5M2 motherboard, the motherboard does not
- * properly report username capabilities or K_g status, leading to
- * invalid username or K_g errors.  This workaround flag will work
- * around the problem.  This problem is also confirmed on an ASUS
- * P5MT-R.
+ * This workaround flag will skip early checks for username
+ * capabilities, authentication capabilities, and K_g support and
+ * allow IPMI authentication to succeed.  It works around multiple
+ * issues in which the remote system does not properly report username
+ * capabilities, authentication capabilities, or K_g status.
  *
  * IGNORE_SOL_PAYLOAD_SIZE
  *
- * Discovered on an ASUS P5M2 motherboard, the motherboard reports
- * invalid SOL payload sizes.  This workaround flag will ignore the
- * payload size and choose a reasonable default.
+ * This workaround flag will not check for valid SOL payload sizes and
+ * assume a proper set.  It works around remote systems that report
+ * invalid IPMI 2.0 SOL payload sizes.
  *
  * IGNORE_SOL_PORT
  *
- * Discovered on an ASUS P5MT-R motherboard, the motherboard reports
- * an invalid SOL port.  This workaround flag will ignore the invalid
- * port and continue with the default.
+ * This workaround flag will ignore alternate SOL ports specified
+ * during the protocol.  It works around remote systems that report
+ * invalid alternate SOL ports.
+ *
+ * SKIP_SOL_ACTIVATION_STATUS
+ *
+ * This workaround flag will not check the current activation status
+ * of SOL during the protocol setup.  It works around remote systems
+ * that do not properly support this command.
  *
  * INTEL_2_0_SESSION
  *
- * All currently known IPMI 2.0 implementations on Intel motherboards
- * contain a number of authentication bugs.  They include username
- * padding bugs, RAKP 4 integrity check values calculation bugs, and
- * password truncation if the authentication algorithm is
- * HMAC-MD5-128.  This workaround flag will allow the library to
- * authenticate with an Intel motherboard.
+ * This workaround flag will work around several Intel IPMI 2.0
+ * authentication issues.  The issues covered include padding of
+ * usernames, automatic acceptance of a RAKP 4 response integrity
+ * check when using the integrity algorithm MD5-128, and password
+ * truncation if the authentication algorithm is HMAC-MD5-128.
  *
  * Security Note: When the Integrity Algorithm is MD5-128 (Cipher
  * Suite ID 11 & 12), the integrity check value of a RAKP 4 packet
@@ -151,16 +156,25 @@ extern "C" {
  *
  * SUPERMICRO_2_0_SESSION
  *
- * There are several small IPMI compliance issues on early Supermicro
- * IPMI SOL implementations.  Most involve the authentication codes
- * returned during the RAKP2 portion of authentication.  This
- * workaround flag will get around the problem.  These compliance bugs
- * are confirmed to be fixed on newer firmware.
+ * This workaround flag will work around several early Supermicro IPMI
+ * 2.0 authentication issues.  The issues covered include handling
+ * invalid length authentication codes.
  *
  * SUN_2_0_SESSION
  *
- * Work around several IPMI 2.0 compliance problems, mostly involving
- * invalid lengthed hash keys and unsupported payload types.
+ * This workaround flag will work work around several Sun IPMI 2.0
+ * authentication issues.  The issues covered include invalid lengthed
+ * hash keys, improperly hashed keys, and invalid cipher suite
+ * records.
+ *
+ * OPEN_SESSION_PRIVILEGE
+ * 
+ * This workaround flag will slightly alter FreeIPMI's IPMI 2.0
+ * connection protocol to workaround an invalid hashing algorithm used
+ * by the remote system.  The privilege level sent during the Open
+ * Session stage of an IPMI 2.0 connection is used for hashing keys
+ * instead of the privilege level sent during the RAKP1 connection
+ * stage.
  *
  * Note: The non-logical bitmask order below is set for consistency of
  * masks with libfreeipmi bitmasks.
@@ -168,6 +182,7 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES 0x00000010
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE     0x00010000
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT             0x00020000
+#define IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS  0x00040000
 #define IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION           0x01000000
 #define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION      0x02000000
 #define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION             0x04000000

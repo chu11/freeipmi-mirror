@@ -50,3 +50,9 @@ and Sun x4100.
 specified during the protocol.  It works around remote systems that
 report invalid alternate SOL ports.  Those hitting this issue may see
 "session timeout" errors.  Issue observed on Asus P5MT-R.
+.LP
+"solstatus" - This workaround option will not check the current
+activation status of SOL during the protocol setup.  It works around
+remote systems that do not properly support this command.  Those
+hitting this issue may see "BMC Error" errors.  Issue observed on
+Supermicro X8SIL-F.

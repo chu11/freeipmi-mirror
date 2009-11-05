@@ -1,5 +1,10 @@
 2009-11-04  Albert Chu <chu11@llnl.gov>
 
+	* Support "skip sol activation status" workaround for
+	ipmiconsole/libipmiconsole.
+	
+2009-11-04  Albert Chu <chu11@llnl.gov>
+
 	* Cleanup documents and code, i.e. != e.g.
 
 	* Add more documentation.

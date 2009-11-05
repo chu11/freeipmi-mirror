@@ -212,6 +212,9 @@ parse_workaround_flags (const char *str,
                && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PORT_STR))
         (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PORT;
       else if (tool_specific_workaround_flags
+               && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SKIP_SOL_ACTIVATION_STATUS_STR))
+        (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SKIP_SOL_ACTIVATION_STATUS;
+      else if (tool_specific_workaround_flags
                && !strcasecmp (tok, IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS_STR))
         (*tool_specific_workaround_flags) |= IPMI_TOOL_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS;
       else if (tool_specific_workaround_flags
