@@ -1,3 +1,7 @@
+2009-11-06  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pef-config/ipmi-pef-config.8.pre.in: Fix typo.
+	
 2009-11-04  Albert Chu <chu11@llnl.gov>
 
 	* Support "skip sol activation status" workaround for
