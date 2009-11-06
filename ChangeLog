@@ -1,3 +1,7 @@
+2009-11-06  Albert Chu <chu11@llnl.gov>
+
+	* pef-config/: Support hex codes for event filter sensor types.
+	
 2009-11-05  Albert Chu <chu11@llnl.gov>
 
 	* Add "solstatus" workaround to ipmiconsole.
