@@ -297,6 +297,9 @@ with a workaround to skip this point in the state machine (and pray
 things still work).  Note that while this command is listed as
 optional in the IPMI spec, it is not optional if SOL is supported.
 
+Supermicro X8DTH-iF: SOL payload sizes are reported incorrectly.
+Resolved with a workaround to skip payload size checks.
+
 Supermicro X8DTH-iF: The reported SOL port is specified w/ the wrong
 endian.  Resolved with a workaround to ignore this port and use the
 default SOL port anyways.
