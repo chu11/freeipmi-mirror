@@ -1103,16 +1103,30 @@ sensor_type_checkout (const char *section_name,
   ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
+  char *str;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             sensor_type_string (eft.sensor_type)) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+  /* If string available, output that, else output OEM code */
+
+  str = sensor_type_string (eft.sensor_type);
+  if (str && strlen (str))
+    {
+      if (config_section_update_keyvalue_output (state_data->pstate,
+                                                 kv,
+                                                 str) < 0)
+        return (CONFIG_ERR_FATAL_ERROR);
+    }
+  else
+    {
+      if (_config_section_update_keyvalue_output_hex (state_data->pstate,
+                                                      kv,
+                                                      eft.sensor_type) < 0)
+        return (CONFIG_ERR_FATAL_ERROR);
+    }
 
   return (CONFIG_ERR_SUCCESS);
 }
@@ -1125,14 +1139,20 @@ sensor_type_commit (const char *section_name,
   ipmi_pef_config_state_data_t *state_data = (ipmi_pef_config_state_data_t *)arg;
   config_err_t ret;
   struct event_filter_table eft;
+  int num;
 
   if ((ret = _get_event_filter_table (state_data,
                                       section_name,
                                       &eft)) != CONFIG_ERR_SUCCESS)
     return (ret);
 
-  eft.sensor_type = sensor_type_number (kv->value_input);
-
+  num = sensor_type_number (kv->value_input);
+  
+  if (num < 0)
+    eft.sensor_type = strtol (kv->value_input, NULL, 0);
+  else
+    eft.sensor_type = num;
+  
   return (_set_event_filter_table (state_data,
                                    section_name,
                                    &eft));
@@ -1823,7 +1843,7 @@ ipmi_pef_config_event_filter_table_section_get (ipmi_pef_config_state_data_t *st
   if (config_section_add_key (state_data->pstate,
                               section,
                               "Sensor_Type",
-                              "Specify a Sensor Type, For options see the MAN page",
+                              "Specify a Sensor Type, via hex or see MAN page for string options",
                               0,
                               sensor_type_checkout,
                               sensor_type_commit,

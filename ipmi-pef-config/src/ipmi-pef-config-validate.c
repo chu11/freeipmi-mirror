@@ -99,7 +99,13 @@ sensor_type_validate (const char *section_name,
                       const char *value,
                       void *arg)
 {
+  /* can be string or hex code */
+
   if (sensor_type_number (value) != -1)
     return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+
+  return (config_number_range_one_byte (section_name,
+                                        key_name,
+                                        value,
+                                        arg));
 }
