@@ -49,7 +49,8 @@ and Sun x4100.
 "solport" - This workaround option will ignore alternate SOL ports
 specified during the protocol.  It works around remote systems that
 report invalid alternate SOL ports.  Those hitting this issue may see
-"session timeout" errors.  Issue observed on Asus P5MT-R.
+"session timeout" or "BMC Implementation" errors.  Issue observed on
+Asus P5MT-R.
 .LP
 "solstatus" - This workaround option will not check the current
 activation status of SOL during the protocol setup.  It works around
