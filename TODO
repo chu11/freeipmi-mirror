@@ -182,6 +182,7 @@ bmc-device
 ipmi-pef-config
 -----------
 * conf.5 manpage
+* allow oem sensor types as input
 
 inband code
 -----------
