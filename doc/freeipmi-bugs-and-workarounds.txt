@@ -126,13 +126,14 @@ using the privilege specified in the open session stage rather than
 the privilege used during the RAKP1 stage.  This can be problematic if
 you specify IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL during that stage
 instead of a real privilege level.  Resolved with a workaround to
-handle this specific situation.
+handle this specific situation.  This bug is confirmed to be fixed on
+newer firmware.
 
 Inventec 5441/Dell Xanadu2: Given specific configuration of IPMI 1.5
 authentication types, certain user privileges are not specified
 correctly during Get Authentication Capabilities and a CCh = "Invalid
-data field in request" is returned during Activiate Session.  No
-resolution currently available.
+data field in request" is returned during Activiate Session.  This bug
+is confirmed to be fixed on newer firmware.
 
 Supermicro X8DTH: The remote BMC incorrectly calculates keys using the
 privilege specified in the open session stage rather than the
@@ -156,8 +157,8 @@ early.
 Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
 packet responses return empty session IDs (i.e. 00000000h) to the
 client.  Resolved with a workaround allowing empty session IDs to be
-accepted by the client.  This problem is apparently fixed in later
-firmware releases.
+accepted by the client.  This problem is reported to be fixed in newer
+firmware.
 
 Dell PowerEdge 2850,SC1425: When Per-Message Authentication is
 disabled, packet responses contain non-null authentication data (when
@@ -270,6 +271,7 @@ Resolved with an Intel specific workaround.
 
 Inventec 5441/Dell Xanadu2: SOL payload sizes are reported
 incorrectly.  Resolved with a workaround to skip payload size checks.
+This bug is confirmed to be fixed on newer firmware.
 
 Inventec 5441/Dell Xanadu2: When a SOL session is closed by another
 session, the initial SOL session is not given a "SOL is deactivating"
@@ -280,7 +282,7 @@ Inventec 5441/Dell Xanadu2: If the remote system requires encryption,
 but the user attempts to connect without encryption, an error response
 other than "Cannot activate payload without encryption." is returned.
 Not a severe issue, since the SOL session will connect with another
-error.  Resolved with firmware fix.
+error.  This bug is confirmed to be fixed on newer firmware.
 
 Supermicro X8DTH: SOL payload sizes are reported incorrectly.
 Resolved with a workaround to skip payload size checks.
@@ -296,13 +298,16 @@ the completion code CCh = "Invalid data field in request").  Resolved
 with a workaround to skip this point in the state machine (and pray
 things still work).  Note that while this command is listed as
 optional in the IPMI spec, it is not optional if SOL is supported.
+This bug is reported to be fixed on newer firmware.
 
 Supermicro X8DTH-iF: SOL payload sizes are reported incorrectly.
-Resolved with a workaround to skip payload size checks.
+Resolved with a workaround to skip payload size checks.  This bug is
+reported to be fixed on newer firmware.
 
 Supermicro X8DTH-iF: The reported SOL port is specified w/ the wrong
 endian.  Resolved with a workaround to ignore this port and use the
-default SOL port anyways.
+default SOL port anyways.  This bug is reported to be fixed on newer
+firmware.
 
 bmc-config
 ----------
@@ -360,7 +365,8 @@ users.  The values are not changeable until a username has been set.
 No current resolution.
 
 Inventec 5441/Dell Xanadu2: When disabling IPMI via Enable_IPMI_Msgs,
-IPMI over LAN still works for a user.  No current resolution.
+IPMI over LAN still works for a user.  This bug is confirmed to be
+fixed on newer firmware.
 
 Inventec 5441/Dell Xanadu2: Setting a channel privilege limit
 (e.g. LAN channel privilege limit) does not seem to affect
@@ -372,8 +378,8 @@ also change volatile settings for channel configuration.  No current
 resolution.
 
 Inventec 5441/Dell Xanadu2: ARP response configuration is not
-functional even though the BMC ARP responds.  Resolved via firmware
-fix.
+functional even though the BMC ARP responds.  This bug is confirmed to
+be fixed on newer firmware.
 
 Supermicro X8DTH: User access parameters Enable_IPMI_Msgs and
 Privilege_Limit are not changeable via Set User Access for some users.
