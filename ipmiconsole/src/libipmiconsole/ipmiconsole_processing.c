@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.105 2009-11-05 17:41:19 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.106 2009-11-07 00:18:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2009 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -53,6 +53,7 @@
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
 #include <sys/types.h>
+#include <sys/socket.h>
 #include <limits.h>
 #include <assert.h>
 #include <errno.h>
@@ -1461,7 +1462,10 @@ _ipmi_retransmission_timeout (ipmiconsole_ctx_t c)
   if (c->session.retransmission_count > c->config.maximum_retransmission_count)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("closing session due to excessive retransmissions"));
-      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT);
+      if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_SENT)
+        ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_CONNECTION_TIMEOUT);
+      else
+        ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT);
       return (-1);
     }
 #if 0
@@ -2165,6 +2169,8 @@ _check_payload_sizes_legitimate (ipmiconsole_ctx_t c)
    *
    * Also seen on Supermicro X8DTH motherboard.
    *
+   * Also seen on Supermicro X8DTH-iF motherboard.
+   *
    * Motherboard reports incorrect payload sizes.  Skip the check and
    * assume a reasonable size.
    *
@@ -2201,6 +2207,7 @@ static int
 _check_try_new_port (ipmiconsole_ctx_t c)
 {
   int16_t console_port;
+  int16_t console_port_bad_endian;
   uint64_t val;
 
   assert (c);
@@ -2217,6 +2224,18 @@ _check_try_new_port (ipmiconsole_ctx_t c)
       return (-1);
     }
   console_port = val;
+
+  /* IPMI Workaround
+   *
+   * Discovered on Supermicro X8DTH-iF
+   *
+   * The port is stored w/ the wrong endian.  If the port is the wrong
+   * endian, lets assume they really mean to use port 623 instead of
+   * 28418.
+   */
+  console_port_bad_endian = ((RMCP_PRIMARY_RMCP_PORT & 0x00FF) << 8) | ((RMCP_PRIMARY_RMCP_PORT & 0xFF00) >> 8);
+  if (console_port == console_port_bad_endian)
+    console_port = RMCP_PRIMARY_RMCP_PORT;
 
   /* Note: The state machine currently gives the new console port
    * only 1 try.  No cycling through a bunch of port options.
@@ -3576,7 +3595,12 @@ _process_protocol_state_close_session_sent (ipmiconsole_ctx_t c)
         /* Session is closed, just exit on error */
         return (-1);
 
+      /* now reset up w/ new console port */
       c->session.console_port = console_port;
+
+      memset (&(c->session.addr), '\0', sizeof (struct sockaddr_in));
+      c->session.addr.sin_family = AF_INET;
+      c->session.addr.sin_port = htons (c->session.console_port);
 
       IPMICONSOLE_CTX_DEBUG (c, ("trying new port: %Xh", c->session.console_port));
 

@@ -275,6 +275,41 @@ increments (e.g. 1 = 1 minute), 0 or "none" will configure no timeout.
 Command confirmed to work on Dell Xanadu2.
 .RE
 .TP
+.B Fujitsu
+.RS
+.TP
+.B get-bmc-network-name
+.TP
+.B set-bmc-network-name \fIstring\fR
+
+.TP
+.B get-name-extension
+.TP
+.B set-name-extension \fIstring\fR
+
+.TP
+.B get-use-network-name
+.TP
+.B set-use-network-name \fIyes|no\fR
+
+.TP
+.B get-add-serial-number
+.TP
+.B set-add-serial-number \fIyes|no\fR
+
+.TP
+.B get-add-extension
+.TP
+.B set-add-extension \fIyes|no\fR
+
+.TP
+.B get-register-dhcp-in-dns
+.TP
+.B set-register-dhcp-in-dns \fIyes|no\fR
+
+
+.RE
+.TP
 .B inventec
 .RS
 .TP

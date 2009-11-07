@@ -1,5 +1,20 @@
 2009-11-06  Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
+	(_ipmi_retransmission_timeout): On excessive retransmissions,
+	error with "connection timeout" if we are at the beginning of the
+	protocol.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
+	(_check_try_new_port): Add special case.  If reported console port
+	is the wrong endian, flip it back to the right endian.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
+	(_process_protocol_state_close_session_sent): Fix corner case
+	dealing with console port change.
+
+2009-11-06  Albert Chu <chu11@llnl.gov>
+
 	* Document SOL bugs on Supermicro X8DTH-iF.
 	
 2009-11-06  Albert Chu <chu11@llnl.gov>
