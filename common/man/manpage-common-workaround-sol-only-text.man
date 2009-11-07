@@ -45,9 +45,9 @@ reported by motherboard SOL packet responses.  This will likely cause
 issue, the "solpayloadsize" workaround must be specified.
 .LP
 Asus P5MT-R, Supermicro X8DTH-iF: An invalid IPMI 2.0 SOL port is
-reported by the motherboard.  This may cause "session timeout" or "BMC
-Implementation" errors to occur.  In order to work around this issue,
-the "solport" workaround must be specified.
+reported by the motherboard.  This may cause "connection timeout"
+errors to occur.  In order to work around this issue, the "solport"
+workaround must be specified.
 .LP
 Supermicro X8SIL-F: The Get Payload Activation Status command isn't
 supported.  This may cause "BMC Error" errors to occur.  In order to
