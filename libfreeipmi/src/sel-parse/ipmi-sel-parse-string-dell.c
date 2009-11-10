@@ -237,10 +237,7 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
     {
       /* From Dell Engineer and Dell code */
-      if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-              || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
         {
           if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_INTRUSION_WHILE_SYSTEM_ON)
@@ -327,10 +324,7 @@ ipmi_sel_parse_output_dell_event_data2_discrete_oem (ipmi_sel_parse_ctx_t ctx,
         }
 
       /* From Dell Engineer and Dell Code */
-      if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-              || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED
           && (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_PSU_COMMUNICATION_ERROR
@@ -800,6 +794,7 @@ ipmi_sel_parse_output_dell_event_data3_class_oem (ipmi_sel_parse_ctx_t ctx,
   return (0);
 }
 
+#if 0
 static char *
 _dell_version_change_entity_string (uint8_t data_entity)
 {
@@ -816,6 +811,7 @@ _dell_version_change_entity_string (uint8_t data_entity)
   else
     return "Unrecognized Entity";
 }
+#endif
 
 /* return (0) - no OEM match
  * return (1) - OEM match
@@ -858,10 +854,7 @@ ipmi_sel_parse_output_dell_event_data2_event_data3 (ipmi_sel_parse_ctx_t ctx,
     {
       /* From Dell Engineer and Dell Code */
       /* Note that the normal event_data3 event still occurs here, so need to output that too */
-      if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
-          && (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-              || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR
           && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
