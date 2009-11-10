@@ -1,3 +1,7 @@
+2009-11-10  Albert Chu <chu11@llnl.gov>
+
+	* common/src/toolhostrange/, contrib/: Update copyrights.
+	
 2009-11-06  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
