@@ -417,6 +417,11 @@ commands.  No current resolution.
 Dell Poweredge R610/R710: ARP response configuration is not available
 even though the BMC ARP responds.  No current resolution.
 
+Inventec 5441/Dell Xanadu2: Configuring the Subnet Mask will also lead
+to the "Default Gateway IP Address" to be configured (i.e. there is
+some type of memory corruption, memory something that causes both to
+be configured via one IPMI command).  No current resolution.
+
 ipmi-fru
 --------
 
