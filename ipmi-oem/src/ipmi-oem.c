@@ -33,6 +33,7 @@
 #include "ipmi-oem-argp.h"
 #include "ipmi-oem-common.h"
 #include "ipmi-oem-dell.h"
+#include "ipmi-oem-fujitsu.h"
 #include "ipmi-oem-inventec.h"
 #include "ipmi-oem-supermicro.h"
 
@@ -203,6 +204,101 @@ struct ipmi_oem_command oem_dell[] =
     },
   };
 
+struct ipmi_oem_command oem_fujitsu[] =
+  {
+    {
+      "get-network-name",
+      NULL,
+      0,
+      0,
+      ipmi_oem_fujitsu_get_network_name
+    },
+    {
+      "set-network-name",
+      "<string>",
+      1,
+      0,
+      ipmi_oem_fujitsu_set_network_name
+    },
+    {
+      "get-use-network-name",
+      NULL,
+      0,
+      0,
+      ipmi_oem_fujitsu_get_use_network_name
+    },
+    {
+      "set-use-network-name",
+      "<yes|no>",
+      1,
+      0,
+      ipmi_oem_fujitsu_set_use_network_name
+    },
+    {
+      "get-name-extension",
+      NULL,
+      0,
+      0,
+      ipmi_oem_fujitsu_get_name_extension
+    },
+    {
+      "set-name-extension",
+      "<string>",
+      1,
+      0,
+      ipmi_oem_fujitsu_set_name_extension
+    },
+    {
+      "get-add-name-extension",
+      NULL,
+      0,
+      0,
+      ipmi_oem_fujitsu_get_add_name_extension
+    },
+    {
+      "set-add-name-extension",
+      "<yes|no>",
+      1,
+      0,
+      ipmi_oem_fujitsu_set_add_name_extension
+    },
+    {
+      "get-add-serial-number",
+      NULL,
+      0,
+      0,
+      ipmi_oem_fujitsu_get_add_serial_number
+    },
+    {
+      "set-add-serial-number",
+      "<yes|no>",
+      1,
+      0,
+      ipmi_oem_fujitsu_set_add_serial_number
+    },
+    {
+      "get-register-dhcp-in-dns",
+      NULL,
+      0,
+      0,
+      ipmi_oem_fujitsu_get_register_dhcp_in_dns
+    },
+    {
+      "set-register-dhcp-in-dns",
+      "<yes|no>",
+      1,
+      0,
+      ipmi_oem_fujitsu_set_register_dhcp_in_dns
+    },
+    {
+      NULL,
+      NULL,
+      0,
+      0,
+      NULL
+    },
+  };
+
 struct ipmi_oem_command oem_inventec[] =
   {
     {
@@ -300,6 +396,10 @@ struct ipmi_oem_id oem_cb[] =
     {
       "dell",
       oem_dell
+    },
+    {
+      "fujitsu",
+      oem_fujitsu
     },
     {
       "inventec",
