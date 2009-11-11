@@ -14,7 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
- */
+*/
 
 #ifndef _IPMI_CMD_OEM_SPEC_H
 #define _IPMI_CMD_OEM_SPEC_H
@@ -71,6 +71,16 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_GET_FCB_VERSION  0x16
 
 /* 
+ * Fujitsu
+ */
+
+/*
+ * Fujitsu RX100 S5
+ */
+/* IPMI_NET_FN_OEM_GROUP_RQ / IPMI_NET_FN_OEM_GROUP_RS */
+#define IPMI_CMD_OEM_FUJITSU_CONFIG_BMC 0xE0
+
+/* 
  * Inventec
  */
 
@@ -98,6 +108,7 @@ extern "C" {
  * Sun 4140
  */
 
+/* IPMI_NET_FN_OEM_GROUP_RQ / IPMI_NET_FN_OEM_GROUP_RS */
 #define IPMI_CMD_OEM_SUN_GET_LED 0x21
 #define IPMI_CMD_OEM_SUN_SET_LED 0x22
 
